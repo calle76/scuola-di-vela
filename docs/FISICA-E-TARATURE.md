@@ -60,7 +60,7 @@ Sotto circa 33° la barca non avanza, tra 33° e 40° arranca: l'angolo morto ef
 
 **Strambata con la vela tutta aperta:** 6 nodi, circa 19° di sbandamento; 10 nodi, tra 39° e 58°; 15 nodi, scuffia sempre.
 
-**Regate** (percorso a bastone, boa a 140 m): 3–5 minuti; avversari al via tra 0,5 e 11 secondi dopo lo zero, con 3 o 5 minuti di preparazione.
+**Regate** (percorso a bastone, boa a 140 m): 3,5–6 minuti; avversari al via di solito entro 12 secondi dallo zero con 3 o 5 minuti di preparazione (in circa una partenza su dieci di più: difetto noto). Dalla 0.14, con il giro di boa vero, gli avversari principianti impiegano in media circa 150 s di bolina e 93 s di poppa con 10 nodi.
 
 ## Semplificazioni dichiarate
 

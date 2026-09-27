@@ -92,3 +92,6 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | Allo scadere del conto alla rovescia bisogna essere dietro la linea; chi è oltre deve tornare indietro. | |
 | Tra barche con le stesse mure, lascia strada quella sopravento. | |
 | La procedura reale di partenza dura 5 minuti (il gioco permette anche 1 e 3). | |
+| Nelle regate il lato da cui lasciare le boe lo stabiliscono le istruzioni di regata; di solito si lasciano a sinistra (il gioco le lascia sempre a sinistra, anche nelle prove). | |
+| Chi gira una boa dal lato sbagliato può rimediare tornando indietro e rifacendo il giro: il percorso della barca, immaginato come un filo teso, deve passare dal lato giusto di ogni boa (regola del «filo teso» del regolamento di regata). | |
+| Toccare una boa in regata comporta una penalità (nel gioco non è ancora gestito). | |

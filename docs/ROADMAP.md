@@ -11,8 +11,8 @@ Aggiornata al 27 settembre 2026.
 
 ## Fase A — Misura degli errori, brevetto ed esame
 
-1. **Registro degli errori** in lezioni, prove e regate: scuffie, strambate involontarie, secondi piantati nell'angolo morto, contatti, partenze anticipate, boe mancate.
-2. **Fasce di tempo** per le prove (bronzo, argento, oro), tarate sui tempi degli avversari esperti, con vento fisso durante i tentativi validi.
+1. **Registro degli errori** in lezioni, prove e regate: scuffie, strambate involontarie, secondi piantati nell'angolo morto, contatti, partenze anticipate, boe girate dal lato sbagliato (già contate dalla 0.14: `wrongMarks`).
+2. **Fasce di tempo** per le prove (bronzo, argento, oro), tarate sui tempi degli avversari esperti **dalla 0.14 in poi** (il giro di boa vero ha allungato i tempi), con vento fisso durante i tentativi validi.
 3. **Esame a risposte chiuse**: banca di 80–100 domande, 20 estratte a caso, soglia 80%. Due tipi:
    - glossario (come i quiz attuali);
    - situazioni con un piccolo disegno di barca e vento («che andatura è?», «cosa fai se entra una raffica?», «chi ha la precedenza?»).
@@ -67,11 +67,15 @@ Classifiche comuni e fantasmi condivisi («sfida il record di un amico»).
 - Vista 3D con camera dietro la barca.
 - Regate in tempo reale tra più persone.
 
+## Decisioni prese nella versione 0.14
+
+- Andatura nel pannello nascosta nelle lezioni 1 e 2.
+- Boe da lasciare a sinistra, in prove e regate.
+- Barra che torna al centro: spenta di default in prove e regate, riattivabile.
+
 ## Decisioni aperte
 
 | Decisione | Opzioni |
 | --- | --- |
-| Andatura nel pannello già dalla lezione 1 | Lasciarla o nasconderla fino alla lezione 3. |
-| Regole di regata | Lato di giro della boa (di norma lasciandola a sinistra) e giri di penalità invece dei 15 secondi. |
-| Barra che torna al centro | Disattivarla automaticamente nelle regate. |
+| Regole di regata | Giri di penalità invece dei 15 secondi; penalità per il contatto con la boa. |
 | Licenza | MIT (attuale) o una licenza non commerciale (vedi `LICENSE`). |

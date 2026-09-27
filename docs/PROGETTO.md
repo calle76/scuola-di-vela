@@ -45,7 +45,7 @@ Dentro `index.html`, nell'ordine:
 
 | Chiave | Contenuto |
 | --- | --- |
-| `scuolaVelaSim.v1` | Voci completate, record delle prove e delle regate, migliori punteggi dei quiz. |
+| `scuolaVelaSim.v1` | Voci completate, record delle prove e delle regate, migliori punteggi dei quiz. I record dei percorsi cambiati nella 0.14 (prove 4 e 5, regate) usano chiavi nuove (`m3.2`, `m4.2`, `r0.2`, `r1.2`); vedi `KEYV`. |
 | `scuolaVelaGhost.v1` | Fantasmi: un campione ogni 0,2 s (tempo, posizione, rotta e boma rispetto al vento, sbandamento). |
 
 ### Aggancio per i collaudi
@@ -82,7 +82,7 @@ Ogni passo è un oggetto nell'array della lezione. I campi principali:
 
 ### Una prova o una regata
 
-Le prove (`MISSIONS`) e le regate (`RACES`) sono descritte con il vento da nord; all'avvio vengono ruotate secondo il vento scelto. Le boe hanno un raggio di 12 m nelle prove e 15 m nelle regate.
+Le prove (`MISSIONS`) e le regate (`RACES`) sono descritte con il vento da nord; all'avvio vengono ruotate secondo il vento scelto. Nelle prove le boe intermedie vanno girate lasciandole a sinistra (`roundCheck`, `markOut`); la boa di arrivo si raggiunge entro 12 m. Nelle regate la boa di bolina va girata a sinistra e l'arrivo è la linea. Un percorso di prova deve girare in senso antiorario, cioè con svolte a sinistra: con svolte a destra, lasciare le boe a sinistra richiederebbe un giro di quasi 360°. Se si cambia un percorso, cambiano i tempi: va aggiornata la sua chiave in `KEYV`.
 
 ## Avversari
 
@@ -92,10 +92,13 @@ Gli avversari sono guidati da regole scritte, con la stessa fisica del giocatore
 - **Mai virare da fermi:** se la rotta voluta attraversa il vento e la velocità è bassa, prima poggiano per prendere abbrivio. La regola vale solo *prima* di iniziare la virata: applicata a metà virata la interrompeva, e la barca girava attorno alla boa senza fine.
 - **Isteresi di 8 secondi** nella scelta del bordo vicino a un bersaglio, altrimenti virano avanti e indietro senza avanzare.
 - **Evitare le altre barche** senza mai portare la prua nell'angolo morto.
+- **Giro di boa:** tre punti di passaggio in coordinate del vento: sotto e a destra della boa, poi oltre e a sinistra (lì si attraversa la semiretta e la boa è girata); un terzo, sotto a sinistra, solo per riprovare dopo un giro mancato. Il secondo punto si punta solo da sopra il livello della boa: da più in basso la bolina porta la barca sopra la boa.
+- **Virare da un'andatura larga:** se il bersaglio è sull'altra mura e a proravia del traverso, prima orzano fino alla bolina, poi virano. Virare direttamente dal traverso al traverso opposto fa perdere l'abbrivio a metà.
+- **Barca piantata:** sotto 44° dal vento e sotto 0,6 m/s poggiano per ripartire (40° in partenza, dove 44° le faceva poggiare troppo presto vicino alla linea).
 
 ## Limiti noti
 
 - File unico di circa 2000 righe: comodo da distribuire, ma andrà diviso in moduli se il progetto cresce (fisica, contenuti, disegno, avversari).
 - Gli avversari «esperti» sono solo poco più forti dei «principianti».
-- Regole di regata semplificate: non si controlla da che lato si gira la boa, e la penalità è di 15 secondi invece dei giri di penalità.
+- Regole di regata semplificate: la boa va girata dal lato giusto (dalla 0.14), ma la penalità per un contatto è di 15 secondi invece dei giri di penalità, e toccare la boa non è punito.
 - Le semplificazioni della fisica sono elencate in `FISICA-E-TARATURE.md`.
