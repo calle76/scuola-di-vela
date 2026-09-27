@@ -1,0 +1,7 @@
+# file generati dai collaudi
+tests/output/
+__pycache__/
+*.pyc
+# file di sistema
+.DS_Store
+Thumbs.db
