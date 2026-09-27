@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scuola di vela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sea-a:#2B6F8C; --sea-b:#245E78; --ripple:rgba(255,255,255,.16); --foam:rgba(255,255,255,.55);
+  --hull:#F6F7F4; --hull-edge:#9AA7B0; --cockpit:#C9D1D3; --sail:#FBFBF7; --sail-shade:#DCE3E8; --spar:#3B434B;
+  --sailor:#E0662C; --tt-port:#D2302F; --tt-stbd:#1E9E55; --true:#FFFFFF; --app:#FFD447; --label:#FFE27A;
+  --ink:#1C2B45; --ink-soft:#56657D; --panel:#FFFFFF; --page:#EEF4F7; --line:#D6DEE6; --btn:#E9EFF5; --good:#2E7D5B; --warn:#B5541C; --accent:#A8267A;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --sea-a:#16435A; --sea-b:#113749; --ripple:rgba(255,255,255,.10); --foam:rgba(255,255,255,.4);
+    --ink:#D8E3EE; --ink-soft:#91A2B5; --panel:#12202D; --page:#0D1924; --line:#243647; --btn:#1B2C3C; --good:#5CC393; --warn:#E8935A; --accent:#E06CB6;
+  }
+}
+:root[data-theme="dark"]{
+  --sea-a:#16435A; --sea-b:#113749; --ripple:rgba(255,255,255,.10); --foam:rgba(255,255,255,.4);
+  --ink:#D8E3EE; --ink-soft:#91A2B5; --panel:#12202D; --page:#0D1924; --line:#243647; --btn:#1B2C3C; --good:#5CC393; --warn:#E8935A; --accent:#E06CB6;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--panel);color:var(--ink);font-family:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;font-size:16px}
+[hidden]{display:none!important}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---- menu ---- */
+#menu{min-height:100vh;min-height:100dvh;background:var(--page)}
+.menu-inner{max-width:780px;margin:0 auto;padding:40px 22px 64px}
+.menu-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.menu-head h1{font-size:clamp(2.4rem,7vw,3.6rem);font-weight:700;line-height:.95;margin:0}
+.menu-head p{font-family:"Source Serif 4",Georgia,serif;font-size:1.05rem;line-height:1.5;margin:10px 0 0;max-width:36em;color:var(--ink-soft)}
+.pill{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:6px 14px;border-radius:16px;cursor:pointer}
+.part{margin-top:28px}
+.part-head{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);padding-top:8px;margin-bottom:12px}
+.part-head h2{font-size:1.45rem;font-weight:700;margin:0}
+.part-head span{font-size:.95rem;color:var(--ink-soft)}
+.items{display:flex;flex-direction:column;gap:8px}
+.item{font:inherit;color:var(--ink);text-align:left;width:100%;display:grid;grid-template-columns:2.4rem 1fr auto;gap:4px 14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;cursor:pointer}
+.item:hover{border-color:var(--ink)}
+.item .num{font-size:1.5rem;font-weight:700;color:var(--ink-soft);text-align:center}
+.item .kind{font-size:.85rem;color:var(--accent);font-weight:600}
+.item .title{font-size:1.3rem;font-weight:700;line-height:1.1}
+.item .desc{font-family:"Source Serif 4",Georgia,serif;font-size:.93rem;color:var(--ink-soft);margin-top:2px}
+.item .state{font-size:.95rem;font-weight:600;text-align:right;white-space:nowrap}
+.item .state.ok{color:var(--good)} .item .state.todo{color:var(--ink-soft);font-weight:400}
+.item.free{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.item.free .kind{color:var(--label)} .item.free .desc,.item.free .num{color:inherit;opacity:.8}
+.part.future .item{cursor:default;opacity:.55}
+.menu-foot{margin-top:36px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.9rem;color:var(--ink-soft)}
+.linkish{font:inherit;background:none;border:none;color:var(--ink-soft);text-decoration:underline;cursor:pointer;padding:0}
+
+/* ---- gioco ---- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;height:100vh;height:100dvh}
+.stage{position:relative;background:var(--sea-a);min-height:0}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+canvas:focus{outline:none}
+.overlay{position:absolute;left:50%;top:16%;transform:translateX(-50%);background:rgba(10,24,36,.84);color:#fff;border-radius:10px;padding:14px 18px;text-align:center;max-width:min(420px,86%)}
+.overlay p{margin:0 0 10px;font-size:1.05rem;line-height:1.35}
+.overlay button{font:inherit;font-size:1.1rem;font-weight:700;border:none;border-radius:8px;padding:10px 20px;background:#F2C14E;color:#1C2B45;cursor:pointer}
+.focusTip{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(10,24,36,.7);color:#fff;border-radius:16px;padding:5px 14px;font-size:.95rem;pointer-events:none}
+.zoomBox{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
+.zoomBox button{width:40px;height:40px;border-radius:8px;border:none;background:rgba(10,24,36,.65);color:#fff;font-size:1.4rem;cursor:pointer}
+.panel{border-left:1px solid var(--line);overflow-y:auto;padding:14px 18px 24px;display:flex;flex-direction:column;gap:14px}
+.topbar{display:flex;align-items:center;gap:8px}
+.topbar .where{flex:1;font-size:1rem;font-weight:600;color:var(--ink-soft);line-height:1.2}
+.topbar button{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 12px;border-radius:14px;cursor:pointer}
+.card .step{font-size:.9rem;color:var(--ink-soft);margin:0 0 4px}
+.card h2{font-size:1.55rem;font-weight:700;margin:0 0 8px;line-height:1.1}
+.card p{font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.6;margin:0 0 10px}
+.card em{font-style:normal;font-weight:600;color:var(--accent)}
+.feedback{border-left:3px solid var(--good);padding:4px 0 4px 12px;margin-top:4px}
+.feedback p{margin:0}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row button,.btn{font:inherit;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:7px 16px;border-radius:6px;cursor:pointer}
+.row button.primary,.btn.primary{background:var(--ink);color:var(--panel)}
+.done{border:2px solid var(--good);border-radius:8px;padding:12px}
+.done p{margin:0 0 10px;font-size:1.1rem;font-weight:600}
+.standings{margin:10px 0 0;padding-left:24px;font-size:1.05rem}
+.standings li{margin:3px 0}
+.standings li.me b{color:var(--accent)}
+.standings span{color:var(--ink-soft);font-size:.92rem}
+.rule{font-family:"Source Serif 4",Georgia,serif;font-size:.92rem;line-height:1.5;border-left:3px solid var(--warn);padding-left:10px;margin:10px 0 0}
+.hint{font-size:1.02rem;font-weight:600;padding:9px 11px;border-radius:6px;background:var(--btn);line-height:1.3;min-height:calc(2.6em + 18px)}
+.hint.good{color:var(--good)} .hint.bad{color:var(--warn)}
+.instr{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.instr div{display:flex;flex-direction:column}
+.instr span{font-size:.82rem;color:var(--ink-soft)}
+.instr b{font-size:1.28rem;font-weight:600;font-variant-numeric:tabular-nums}
+.sem{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sem button{font:inherit;border:none;background:var(--btn);color:var(--ink);border-radius:10px;padding:11px 8px 9px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;display:flex;flex-direction:column;align-items:center;gap:1px}
+.sem button strong{font-size:1.25rem}
+.sem button small{font-size:.8rem;color:var(--ink-soft)}
+.sem button.held{background:var(--ink);color:var(--panel)} .sem button.held small{color:inherit}
+.sem button:disabled{opacity:.25;cursor:default}
+.ctl label{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:2px}
+.ctl label b{font-variant-numeric:tabular-nums}
+.ctl input[type=range]{width:100%;height:34px;accent-color:var(--ink)}
+.ctl.off{opacity:.3}
+.ctl + .ctl{margin-top:12px}
+.ends{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-soft);margin-top:-4px}
+.keys{font-size:.85rem;color:var(--ink-soft);line-height:1.6;margin:0}
+.keys kbd{font:inherit;font-weight:600;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:0 5px}
+details.settings summary{cursor:pointer;font-weight:600;font-size:1.02rem}
+.opts{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{flex:1;font:inherit;font-size:.9rem;border:none;background:transparent;color:var(--ink);padding:7px 6px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.optrow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.95rem}
+select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
+.check{display:flex;gap:8px;align-items:center;font-size:.95rem;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--ink)}
+
+/* ---- glossario ---- */
+dialog#quiz{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
+dialog#quiz::backdrop{background:rgba(13,25,36,.5)}
+.qz{padding:20px 22px 22px}
+.qz-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.qz-top span{font-size:.9rem;color:var(--ink-soft)}
+.qz h2{margin:0 0 4px;font-size:1.25rem;color:var(--ink-soft);font-weight:600}
+.qz .q{font-family:"Source Serif 4",Georgia,serif;font-size:1.15rem;line-height:1.45;margin:10px 0 14px}
+.qz .opts2{display:flex;flex-direction:column;gap:8px}
+.qz .opt{font:inherit;font-size:1.05rem;text-align:left;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:10px 14px;cursor:pointer}
+.qz .opt:hover:not(:disabled){border-color:var(--ink)}
+.qz .opt.right{border-color:var(--good);background:color-mix(in srgb, var(--good) 14%, var(--panel));font-weight:600}
+.qz .opt.wrong{border-color:var(--warn);background:color-mix(in srgb, var(--warn) 12%, var(--panel))}
+.qz .opt:disabled{cursor:default}
+.qz .expl{font-family:"Source Serif 4",Georgia,serif;line-height:1.5;margin:14px 0 0;padding-left:12px;border-left:3px solid var(--line)}
+.qz .expl b{font-family:"Barlow Semi Condensed",sans-serif}
+.qz .score{font-size:2.4rem;font-weight:700;margin:6px 0}
+.qz .row{margin-top:16px}
+.review{display:flex;flex-wrap:wrap;gap:8px}
+.review button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left}
+.review button small{display:block;color:var(--ink-soft);font-size:.85rem}
+.review button:hover{border-color:var(--ink)}
+dialog#gloss{border:none;border-radius:10px;padding:0;width:min(640px,94vw);max-height:86vh;background:var(--panel);color:var(--ink)}
+dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
+.gl-head{position:sticky;top:0;background:var(--panel);padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+.gl-head div{display:flex;justify-content:space-between;align-items:center}
+.gl-head h2{margin:0;font-size:1.7rem}
+.gl-head input{margin-top:10px;width:100%;font:inherit;font-size:1rem;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--page);color:var(--ink)}
+.gl-list{margin:0;padding:8px 20px 20px}
+.gl-list dt{font-size:1.2rem;font-weight:700;margin-top:14px}
+.gl-list dt small{font-size:.8rem;font-weight:500;color:var(--accent);margin-left:8px}
+.gl-list dd{margin:2px 0 0;font-family:"Source Serif 4",Georgia,serif;line-height:1.5}
+.gl-empty{font-family:"Source Serif 4",Georgia,serif;color:var(--ink-soft);padding:12px 0}
+
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr;grid-template-rows:55vh auto;height:auto}
+  .panel{border-left:none;border-top:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div id="menu"></div>
+
+<dialog id="quiz" aria-labelledby="qzTitle"><div class="qz" id="qzBody"></div></dialog>
+
+<dialog id="gloss" aria-labelledby="glTitle">
+  <div class="gl-head">
+    <div><h2 id="glTitle">Glossario</h2><button id="glClose" class="linkish">Chiudi</button></div>
+    <input id="glSearch" type="search" placeholder="Cerca un termine" autocomplete="off">
+  </div>
+  <dl class="gl-list" id="glList"></dl>
+</dialog>
+
+<div class="layout" id="game" hidden>
+  <div class="stage">
+    <canvas id="c" tabindex="0" aria-label="Vista dall'alto della deriva sul mare. Clicca qui per usare la tastiera."></canvas>
+    <div class="overlay" id="capOverlay" hidden><p id="capText">Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.</p><button id="capBtn">Raddrizza la barca</button></div>
+    <div class="zoomBox"><button id="zIn" aria-label="Avvicina">+</button><button id="zOut" aria-label="Allontana">−</button></div>
+    <div class="focusTip" id="focusTip" hidden>Clicca sul mare per usare la tastiera</div>
+  </div>
+  <aside class="panel">
+    <div class="topbar">
+      <button id="toMenu">Menu</button>
+      <span class="where" id="where"></span>
+      <button id="openGloss">Glossario</button>
+    </div>
+
+    <section class="card" id="lesson" hidden>
+      <p class="step" id="lStep"></p>
+      <h2 id="lTitle"></h2>
+      <div id="lText"></div>
+      <div class="feedback" id="lFeedback" hidden></div>
+      <div class="row" style="margin-top:12px">
+        <button id="lBack">Indietro</button>
+        <button id="lRetry">Ricomincia il passo</button>
+        <button id="lQuiz" hidden>Fai il ripasso</button>
+        <button class="primary" id="lNext">Avanti</button>
+      </div>
+    </section>
+
+    <section class="card" id="mission" hidden>
+      <h2 id="mTitle"></h2>
+      <p id="mText"></p>
+    </section>
+    <section class="done" id="done" hidden>
+      <p id="doneText"></p>
+      <div class="row"><button class="primary" id="mNext">Prosegui</button><button id="mRetry2">Rifai</button><button id="mWind2">Rifai con altro vento</button></div>
+    </section>
+
+    <section class="card" id="race" hidden>
+      <h2 id="rTitle"></h2>
+      <p id="rText"></p>
+      <ol class="standings" id="standings"></ol>
+      <p class="rule" id="rRule" hidden></p>
+      <div class="done" id="rDone" hidden><p id="rDoneText"></p>
+        <div class="row"><button class="primary" id="rAgain">Nuova regata</button><button id="rWind2">Con altro vento</button></div></div>
+      <div class="row" style="margin-top:10px;align-items:center">
+        <button id="rRestart">Ricomincia</button><button id="rWind">Cambia vento</button>
+        <label style="display:flex;gap:6px;align-items:center">Avversari <select id="aiLevel"><option value="principianti">principianti</option><option value="esperti">esperti</option><option value="nessuno">nessuno, solo il fantasma</option></select></label>
+        <label style="display:flex;gap:6px;align-items:center">Preparazione <select id="cdSel"><option value="60">1 minuto</option><option value="180" selected>3 minuti</option><option value="300">5 minuti</option></select></label>
+      </div>
+    </section>
+
+    <section class="card" id="free" hidden>
+      <h2>Navigazione libera</h2>
+      <p>Nessun obiettivo: prendi confidenza con la barca. Nelle impostazioni puoi cambiare direzione e forza del vento e le raffiche.</p>
+    </section>
+
+    <div class="hint" id="hint">—</div>
+    <div class="hint bad" id="errBox" hidden></div>
+
+    <div class="sem" id="sem">
+      <button data-a="orza"><strong>Orza</strong><small>prua verso il vento · A</small></button>
+      <button data-a="poggia"><strong>Poggia</strong><small>prua via dal vento · D</small></button>
+      <button data-a="cazza"><strong>Cazza</strong><small>tira la scotta · W</small></button>
+      <button data-a="lasca"><strong>Lasca</strong><small>molla la scotta · S</small></button>
+    </div>
+
+    <section class="instr" id="instr">
+      <div data-l="1"><span>Velocità</span><b id="iSpd">—</b></div>
+      <div data-l="1"><span>Andatura</span><b id="iAnd">—</b></div>
+      <div data-l="2"><span>Vento reale</span><b id="iTw">—</b></div>
+      <div data-l="2"><span>Vento apparente</span><b id="iAw">—</b></div>
+      <div data-l="3"><span>Prua</span><b id="iHdg">—</b></div>
+      <div data-l="3"><span>Rilevamento boa</span><b id="iBrg">—</b></div>
+      <div data-l="3"><span>Sbandamento</span><b id="iHeel">—</b></div>
+      <div data-l="3"><span>Scarroccio</span><b id="iLee">—</b></div>
+    </section>
+
+    <div id="direct">
+      <section class="ctl" id="ctlTiller">
+        <label for="tiller"><span>Barra del timone</span><b id="vTil">al centro</b></label>
+        <input id="tiller" type="range" min="-100" max="100" value="0">
+        <div class="ends"><span>verso sinistra</span><span>verso dritta</span></div>
+      </section>
+      <section class="ctl" id="ctlSheet">
+        <label for="sheet"><span>Scotta della randa</span><b id="vSh">—</b></label>
+        <input id="sheet" type="range" min="0" max="100" value="40">
+        <div class="ends"><span>cazzata</span><span>lascata</span></div>
+      </section>
+      <p class="keys"><kbd>←</kbd> <kbd>→</kbd> barra &nbsp; <kbd>↑</kbd> cazza &nbsp; <kbd>↓</kbd> lasca &nbsp; <kbd>Spazio</kbd> barra al centro &nbsp; <kbd>R</kbd> raddrizza</p>
+    </div>
+
+    <div class="row" id="mRow" hidden><button id="mRetry">Ricomincia la prova</button><button id="mWind">Cambia vento</button></div>
+    <button class="btn" id="rightBtn" hidden>Raddrizza la barca (R)</button>
+
+    <details class="settings">
+      <summary>Impostazioni</summary>
+      <div class="opts">
+        <div><div class="optrow" style="margin-bottom:6px"><span>Frecce ← →</span></div>
+          <div class="seg" id="helmMode"><button data-v="barra" aria-pressed="true">Muovono la barra (reale)</button><button data-v="prua" aria-pressed="false">Girano la prua (aiutato)</button></div></div>
+        <div><div class="optrow" style="margin-bottom:6px"><span>Vista</span></div>
+          <div class="seg" id="viewMode"><button data-v="prua" aria-pressed="true">Prua in alto</button><button data-v="nord" aria-pressed="false">Nord in alto</button></div>
+          <p class="keys" style="margin-top:6px">Con «prua in alto» la barca resta ferma sullo schermo e ruota il mare: quando la barca gira a destra, il mare sembra girare a sinistra. Con «nord in alto» è la barca a girare.</p></div>
+        <div id="freeOpts" class="opts" style="margin-top:0">
+          <div class="optrow"><span>Vento da</span>
+            <select id="wDir"><option value="0">nord</option><option value="45">nord-est</option><option value="90">est</option><option value="135">sud-est</option><option value="180">sud</option><option value="225">sud-ovest</option><option value="270">ovest</option><option value="315">nord-ovest</option></select></div>
+          <div class="optrow"><span>Intensità</span>
+            <select id="wSpd"><option value="6">6 nodi, brezza leggera</option><option value="10" selected>10 nodi, brezza tesa</option><option value="15">15 nodi, vento fresco</option></select></div>
+          <div class="optrow"><span>Raffiche</span>
+            <select id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
+        </div>
+        <label class="check"><input type="checkbox" id="autoCenter" checked> La barra torna al centro da sola</label>
+        <label class="check"><input type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
+        <label class="check"><input type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente</label>
+        <label class="check"><input type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
+      </div>
+    </details>
+  </aside>
+</div>
+
+<script>
+(() => {
+// Motore fisico di una deriva singola da circa 4,2 m. Unità SI, angoli in gradi dove indicato.
+const D2R = Math.PI / 180;
+const norm180 = a => ((a + 180) % 360 + 360) % 360 - 180;
+const norm360 = a => ((a % 360) + 360) % 360;
+
+const BOAT = {
+  mass: 135,          // kg, barca + timoniere
+  sailArea: 7.0,      // m²
+  rho: 1.225,
+  hullK2: 12,         // resistenza ~ k2·u²
+  hullK4: 0.9,        // + k4·u⁴ (limita la velocità)
+  rudderDragK: 45,
+  foilK: 520,         // resistenza laterale della deriva
+  maxBoom: 85,
+  minBoom: 12,
+  turnLen: 1.3,       // m, lunghezza efficace per la virata
+  maxRudder: 30,
+  zCE: 2.0,           // m, altezza del centro velico
+  sailorMass: 75,     // kg
+  hikeArm: 1.0,       // m, braccio massimo del timoniere sporto fuori
+  formK: 400,         // Nm, stabilità di forma dello scafo
+  rollI: 260,         // kg·m², inerzia di rollio
+  rollDamp: 520,      // smorzamento
+  capsizeAt: 60       // gradi
+};
+
+function CL(a){ // a: angolo di incidenza (gradi, >=0)
+  if (a <= 0) return 0;
+  if (a < 20) return 1.35 * a / 20;
+  return Math.max(0.55, 1.35 - (a - 20) * 0.022);
+}
+function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.06 + 1.15 * s * s + 0.12 * cl * cl; }
+
+// state: {x,y,h,u,r,boomSide,boom}  controls: {sheet 0..1, tiller -1..1 (+ = barra a dritta)}  env: {twd (da), tws m/s}
+function step(S, C, E, dt){
+  const h = S.h * D2R;
+  const fwd = [Math.sin(h), -Math.cos(h)], stbd = [Math.cos(h), Math.sin(h)];
+  // vento reale (vettore verso cui soffia)
+  const tdir = (E.twd + 180) * D2R, tw = [Math.sin(tdir) * E.tws, -Math.cos(tdir) * E.tws];
+  // velocità barca: avanti + scarroccio
+  const bv = [fwd[0] * S.u + stbd[0] * S.vl, fwd[1] * S.u + stbd[1] * S.vl];
+  const aw = [tw[0] - bv[0], tw[1] - bv[1]];
+  const aws = Math.hypot(aw[0], aw[1]);
+  const awFrom = norm360(Math.atan2(-aw[0], aw[1]) / D2R); // direzione DA cui arriva
+  const awa = norm180(awFrom - S.h);                         // + = vento da dritta
+  const A = Math.abs(awa);
+  // boma: limitato dalla scotta, il vento lo spinge sottovento
+  const sheetMax = BOAT.minBoom + C.sheet * (BOAT.maxBoom - BOAT.minBoom); // anche cazzata a ferro la randa non sta a 0°
+  const boom = Math.min(sheetMax, Math.max(0, A - 2));
+  const alpha = A - boom;
+  const ch = Math.cos((S.heel || 0) * D2R);
+  const q = 0.5 * BOAT.rho * BOAT.sailArea * aws * aws * ch; // la vela inclinata prende meno vento
+  const L = q * CL(alpha), Dg = q * (CD(alpha) + (alpha < 6 ? 0.2 * (1 - alpha / 6) : 0)); // vela che sbatte: più resistenza
+  const drive = L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
+  const side = L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento
+  const rud = C.tiller * BOAT.maxRudder;
+  const res = 4 * S.u + BOAT.hullK2 * S.u * Math.abs(S.u) + BOAT.hullK4 * S.u ** 3 * Math.sign(S.u) * Math.abs(S.u) +
+              BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
+  const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
+  S.u += (drive - res * heelDrag) / BOAT.mass * dt;
+  S.u = Math.max(-1.2, S.u);
+  // scarroccio: la deriva resiste molto, meno a bassa velocità
+  const leewardSign = awa >= 0 ? -1 : 1; // vento da dritta -> scarroccia verso sinistra
+  const latTarget = leewardSign * side / (BOAT.foilK * (S.u * S.u + 0.4) + 60);
+  S.vl += (Math.max(-0.8, Math.min(0.8, latTarget)) - S.vl) * Math.min(1, dt * 2);
+  // sbandamento: momento sbandante della vela contro timoniere sporto fuori e forma dello scafo
+  S.heel = S.heel || 0; S.heelRate = S.heelRate || 0; S.hike = S.hike === undefined ? 0.2 : S.hike;
+  const phi = S.heel * D2R;
+  const mHeel = side * BOAT.zCE * Math.cos(phi);
+  const rmMax = BOAT.sailorMass * 9.81 * BOAT.hikeArm;
+  const hikeTarget = Math.max(0, Math.min(1, (mHeel - BOAT.formK * 0.08) / rmMax)); // punta a tenere la barca quasi piatta
+  S.hike += (hikeTarget - S.hike) * Math.min(1, dt / 0.9); // il timoniere reagisce con un certo ritardo
+  const mRight = rmMax * S.hike * Math.cos(phi) + BOAT.formK * Math.sin(2 * phi) / 2 * (Math.abs(phi) < Math.PI / 4 ? 1 : 1);
+  const acc = (mHeel - mRight) / BOAT.rollI - BOAT.rollDamp / BOAT.rollI * S.heelRate;
+  S.heelRate += acc * dt;
+  S.heel += S.heelRate / D2R * dt;
+  // virata: la barra a dritta porta la pala a sinistra -> la prua gira a sinistra
+  let rTarget = -(S.u / BOAT.turnLen) * Math.sin(rud * D2R) / D2R; // gradi/s
+  // barca ferma nel vento: la prua scade
+  if (A < 30 && Math.abs(S.u) < 0.5) rTarget += (awa >= 0 ? -1 : 1) * 6 * (1 - Math.abs(S.u) / 0.5);
+  S.r += (rTarget - S.r) * Math.min(1, dt * 4);
+  S.h = norm360(S.h + S.r * dt);
+  S.x += bv[0] * dt; S.y += bv[1] * dt;
+  S.boomSide = awa >= 0 ? -1 : 1; // -1: boma a sinistra
+  S.boom = boom;
+  return { heel: S.heel, hike: S.hike, awa, aws, alpha, awFrom, drive, side, twa: norm180(E.twd - S.h), leeway: Math.atan2(S.vl, Math.max(0.3, Math.abs(S.u))) / D2R };
+}
+  const $ = id => document.getElementById(id);
+  const KN = 1.943844;
+  const canvas = $("c"), ctx = canvas.getContext("2d");
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const sgn = v => v < 0 ? -1 : 1;
+  const deg3 = d => String(Math.round(norm360(d)) % 360).padStart(3, "0") + "°";
+  const CARD = ["nord","nord-est","est","sud-est","sud","sud-ovest","ovest","nord-ovest"];
+  const cardName = d => CARD[Math.round(norm360(d) / 45) % 8];
+  const card = d => ["N","NE","E","SE","S","SO","O","NO"][Math.round(norm360(d) / 45) % 8];
+  const ANDATURE = [[30,"Angolo morto"],[55,"Bolina stretta"],[75,"Bolina larga"],[105,"Traverso"],[135,"Lasco"],[165,"Gran lasco"],[181,"Poppa"]];
+  const andName = twa => ANDATURE.find(a => twa < a[0])[1];
+
+  // ======================================================================
+  // CONTENUTI
+  // Nelle lezioni il vento arriva da nord. Condizioni: I = lettura istantanea (vedi readI).
+  // ======================================================================
+  const PAUSE = { pause: true };
+  const L1 = [
+    { title: "La barca", ...PAUSE, zoom: 3, labels: ["prua", "poppa"],
+      text: ["Questa è una <em>deriva</em>: una piccola barca a vela per una persona, la barca su cui di solito si impara. La vedi dall'alto.",
+             "La punta si chiama <em>prua</em>, la parte posteriore <em>poppa</em>."] },
+    { title: "Dritta e sinistra", ...PAUSE, zoom: 3, labels: ["prua", "dritta", "sinistra"],
+      text: ["Immagina di stare a bordo guardando verso prua: il lato alla tua destra si chiama <em>dritta</em>, quello alla tua sinistra <em>sinistra</em>.",
+             "Dritta e sinistra appartengono alla barca, non allo schermo: se la barca gira, girano con lei."] },
+    { title: "Albero, boma, randa", ...PAUSE, zoom: 3, labels: ["albero", "boma", "randa"],
+      text: ["Il pallino scuro verso prua è la base dell'<em>albero</em>, il palo verticale che regge la vela.",
+             "Dall'albero parte il <em>boma</em>, l'asta orizzontale che tiene il lato basso della vela. La vela si chiama <em>randa</em>, e si regola con una cima, la <em>scotta</em>."] },
+    { title: "Timone e deriva", ...PAUSE, zoom: 3, labels: ["timone", "barra", "deriva"],
+      text: ["A poppa c'è il <em>timone</em>, una pala immersa in acqua che fa girare la barca. Il timoniere lo comanda con la <em>barra</em>, il manico che tiene in mano.",
+             "Al centro dello scafo scende sott'acqua la <em>deriva</em>, una lama che impedisce alla barca di essere spinta di lato dal vento. Senza, la barca scivolerebbe via di fianco. Da questa lama prendono il nome le barche come questa."] },
+    { title: "Il vento", ...PAUSE, zoom: 1.2, arrows: true,
+      text: ["Le increspature sul mare e la freccia <em>bianca</em> mostrano il vento. In alto a sinistra c'è scritto da dove arriva; in alto a destra c'è la bussola.",
+             "In vela si dice sempre <em>da dove arriva</em> il vento, non dove va: questo è un «vento da nord»."] },
+    { title: "Sopravento e sottovento", ...PAUSE, zoom: 2.4, labels: ["sopravento", "sottovento", "boma"],
+      text: ["Il lato della barca colpito per primo dal vento si chiama <em>sopravento</em>; quello opposto, riparato, <em>sottovento</em>.",
+             "Nota dove sta il boma: sottovento. Il vento spinge la vela, che si piazza sempre dalla parte opposta a quella da cui arriva il vento. Il timoniere invece siede sopravento, per fare contrappeso."] },
+    { title: "Poggiare", sem: ["poggia"], autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["Ora la barca naviga. Tieni premuto <em>Poggia</em> (o il tasto D): la prua si allontana dal vento.",
+             "Continua finché il vento arriva quasi da dietro. Per ora la vela si regola da sola."],
+      cond: I => I.twa >= 135,
+      done: "Hai poggiato: ora il vento arriva da dietro, e il boma si è aperto verso l'esterno per ricevere il vento." },
+    { title: "Orzare e l'angolo morto", sem: ["orza"], autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["Ora tieni premuto <em>Orza</em> (tasto A): la prua gira verso il vento. Continua finché la barca non si ferma quasi del tutto."],
+      cond: I => I.twa < 32 && I.kn < 1.5, hold: 0.5,
+      done: "Questo è l'<em>angolo morto</em>: con la prua troppo vicina al vento la vela sbatte come una bandiera e non spinge, e la barca si ferma. Nessuna barca a vela può andare dritta contro il vento." },
+    { title: "Ripartire", sem: ["poggia"], autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["Tieni premuto <em>Poggia</em> per uscire dall'angolo morto, finché la vela torna a gonfiarsi e la barca riparte."],
+      cond: I => I.twa > 75 && I.kn > 2.5,
+      done: "La barca è ripartita. Ricapitolando: <em>orzare</em> avvicina la prua al vento, <em>poggiare</em> la allontana. Si riferiscono al vento, non a destra o sinistra." },
+    { title: "La scotta: lascare", sem: ["lasca"], hud: 1, hintKind: "sail",
+      text: ["<em>Lascare</em> significa mollare la scotta: la vela si apre verso l'esterno. <em>Cazzare</em> significa tirarla: la vela si avvicina al centro della barca.",
+             "Da qui la vela non si regola più da sola. Tieni premuto <em>Lasca</em> (tasto S) e apri la vela del tutto."],
+      cond: I => I.sheet > 0.9 && (I.tt === "wind" || I.tt === "flog"), hold: 0.5,
+      done: "Vedi come sbatte? Si dice che la vela <em>fileggia</em>: troppo aperta, prende il vento di taglio e non spinge. La barca rallenta." },
+    { title: "La scotta: cazzare", sem: ["cazza", "lasca"], hud: 1, hintKind: "sail",
+      text: ["Ora tieni premuto <em>Cazza</em> (tasto W), poco alla volta, finché la vela smette di sbattere e si gonfia. Se esageri, correggi con Lasca."],
+      cond: I => I.tt === "ok", hold: 1,
+      done: "Vela regolata: la barca riprende velocità. La regola pratica: <em>lasca finché la vela comincia a sbattere, poi cazza quanto basta perché smetta</em>." },
+    { title: "Troppo cazzata", sem: ["cazza", "lasca"], hud: 1, hintKind: "sail",
+      text: ["E se si cazza troppo? Tieni premuto <em>Cazza</em> fino a chiudere del tutto la vela, e guarda la velocità."],
+      cond: I => I.sheet < 0.03 && I.tt === "lee", hold: 1,
+      done: "La vela non sbatte, ma la barca rallenta: troppo chiusa, il vento non ci scorre sopra bene. Si dice che la vela è <em>in stallo</em>. Lasca per ripartire." },
+    { title: "Navigazione libera", sem: ["orza", "poggia", "cazza", "lasca"], hud: 1, hintKind: "sail", final: true,
+      text: ["Hai le basi: <em>prua</em> e <em>poppa</em>, <em>dritta</em> e <em>sinistra</em>, <em>timone</em> e <em>deriva</em>, <em>sopravento</em> e <em>sottovento</em>, <em>orzare</em> e <em>poggiare</em>, <em>cazzare</em> e <em>lascare</em>.",
+             "Naviga liberamente per prendere confidenza. Nella prossima lezione lascerai i pulsanti Orza e Poggia e userai la barra, come in una barca vera."] }
+  ];
+
+  const L2 = [
+    { title: "Come si timona", ...PAUSE, zoom: 3, labels: ["barra", "timone"],
+      text: ["In una deriva non c'è un volante: il timoniere spinge la <em>barra</em>. La barra ruota la pala del timone dalla parte opposta, e l'acqua che scorre sulla pala spinge la poppa.",
+             "Il risultato va imparato bene perché è controintuitivo: <em>la prua gira dalla parte opposta a quella verso cui spingi la barra</em>."] },
+    { title: "Barra a sinistra", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["Spingi la barra verso sinistra con la freccia <em>←</em> (o con il cursore «Barra del timone») e guarda da che parte gira la prua."],
+      cond: I => I.tiller < -0.3 && I.r > 6, hold: 0.4,
+      done: "Barra a sinistra, prua verso dritta." },
+    { title: "Barra a dritta", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["Ora spingi la barra verso dritta con la freccia <em>→</em>."],
+      cond: I => I.tiller > 0.3 && I.r < -6, hold: 0.4,
+      done: "Barra a dritta, prua verso sinistra. Quando rilasci, la barra torna al centro da sola (si può cambiare nelle impostazioni); con <em>Spazio</em> la centri subito." },
+    { title: "Barra sottovento: si orza", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["La regola che usano i velisti: <em>barra sottovento, la barca orza</em>; <em>barra sopravento, la barca poggia</em>. Il lato sottovento è quello dove sta il boma.",
+             "Spingi la barra verso il boma e orza fino alla <em>bolina</em>, con il vento tra 40° e 60° dalla prua. Poi centra la barra."],
+      cond: I => I.twa >= 38 && I.twa <= 62 && Math.abs(I.r) < 4, hold: 1,
+      done: "Esatto: barra verso il boma, cioè sottovento, e la prua è salita verso il vento." },
+    { title: "Barra sopravento: si poggia", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["Ora spingi la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, con il vento tra 110° e 145°. Poi centra la barra."],
+      cond: I => I.twa >= 110 && I.twa <= 145 && Math.abs(I.r) < 4, hold: 1,
+      done: "Barra sopravento, la barca poggia." },
+    { title: "Tenere la rotta", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: ["Ora ci sono piccole onde che spostano la prua, e la barca tende a salire da sola verso il vento: si dice che è <em>orziera</em>. Tieni la rotta indicata nel riquadro sopra i comandi, correggendo con piccoli colpi di barra: resta entro 6° per 8 secondi di fila.",
+             "Timonare bene vuol dire usare poca barra: ogni angolo di barra frena la barca."],
+      course: true, yawNoise: true,
+      cond: (I, S) => Math.abs(norm180(S.h - S.course)) < 6 && I.kn > 2, hold: 8,
+      done: "Rotta tenuta. Piccole correzioni, fatte presto, sono meglio di grandi correzioni fatte tardi." },
+    { title: "Navigazione libera", tiller: true, sheet: true, hud: 1, hintKind: "sail", final: true,
+      text: ["Ora hai la barra e la scotta: la barra con le frecce ← → o il cursore, la scotta con le frecce ↑ (cazza) e ↓ (lasca) o il cursore.",
+             "Esercitati a orzare e poggiare con la barra, regolando la vela ogni volta. Nella prossima lezione vedrai le andature e i filetti, che ti diranno esattamente come regolare la vela."] }
+  ];
+
+  const L3 = [
+    { title: "Le andature", ...PAUSE, zoom: 1.2, rose: true,
+      text: ["Ogni direzione rispetto al vento ha un nome: si chiama <em>andatura</em>. Il cerchio attorno alla barca le mostra tutte; l'angolo morto è dalla parte da cui arriva il vento, e le andature si ripetono uguali sui due lati.",
+             "La linea tratteggiata indica dove punta la prua: ora sei al <em>traverso</em>, con il vento di fianco."] },
+    { title: "Bolina", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
+      text: ["Orza fino alla <em>bolina</em> (settore colorato nel cerchio), con il vento tra circa 30° e 75° dalla prua. La vela si regola da sola: guarda come si chiude il boma."],
+      cond: I => I.twa >= 35 && I.twa <= 70 && Math.abs(I.r) < 4, hold: 1,
+      done: "Bolina: l'andatura più vicina al vento. <em>Bolina stretta</em> è il massimo che la barca riesce a stringere, <em>bolina larga</em> un po' più aperta. La vela sta molto cazzata." },
+    { title: "Traverso", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
+      text: ["Poggia fino al <em>traverso</em>, con il vento a circa 90°."],
+      cond: I => I.twa >= 80 && I.twa <= 100 && Math.abs(I.r) < 4, hold: 1,
+      done: "Al traverso il vento arriva di fianco. È un'andatura veloce, e la vela va aperta circa a metà: il boma a una quarantina di gradi dal centro barca, a metà strada tra tutto cazzato e tutto lascato. Il valore esatto lo leggi sotto il cursore della scotta." },
+    { title: "Lasco e gran lasco", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
+      text: ["Continua a poggiare attraverso il <em>lasco</em> (circa 120°) fino al <em>gran lasco</em> (circa 150°)."],
+      cond: I => I.twa >= 138 && I.twa <= 163 && Math.abs(I.r) < 4, hold: 1,
+      done: "Nel lasco il vento arriva da dietro il fianco; nel gran lasco quasi da dietro, e la vela è molto aperta." },
+    { title: "Poppa", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
+      text: ["Poggia ancora, piano, finché il vento arriva esattamente da dietro: la <em>poppa</em>.", "Attenzione a non superare i 180°. Il vento passerebbe dall'altro lato della vela e il boma attraverserebbe la barca di colpo: è una <em>strambata</em>, e con la vela tutta aperta spesso fa scuffiare. Come farla in sicurezza lo vedrai nella lezione 5."],
+      cond: I => I.twa >= 167, hold: 1,
+      done: "In poppa la vela è aperta al massimo e il vento la spinge da dietro. Sembra strano, ma non è l'andatura più veloce: il traverso e il lasco lo sono di più." },
+    { title: "Le mure", ...PAUSE, zoom: 2, rose: true, labels: ["sopravento", "boma"],
+      text: ["Se il vento arriva sul lato sinistro della barca si naviga <em>mure a sinistra</em>; se arriva sul lato destro, <em>mure a dritta</em>. Il boma sta sempre dal lato opposto alle mure.",
+             "Questa barca ha il vento da sinistra: è mure a sinistra. Le mure contano anche per le precedenze: quando due barche a vela si incrociano con mure diverse, quella mure a sinistra deve lasciare strada."] },
+    { title: "I filetti", ...PAUSE, zoom: 3.2, labels: ["filetti"],
+      text: ["Sulla randa ci sono due nastrini, i <em>filetti</em>: rosso sul lato sinistro della vela, verde sul lato destro. Mostrano come scorre l'aria.",
+             "Entrambi dritti verso il boma: vela regolata. Si agita quello <em>sopravento</em>: vela troppo lascata, cazza. Si agita quello <em>sottovento</em>: vela troppo cazzata, lasca."] },
+    { title: "Filetto sopravento", sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
+      text: ["Da qui la vela la regoli tu. Lasca la scotta (freccia ↓) finché il filetto <em>sopravento</em> comincia ad agitarsi. Il suggerimento è spento: guarda i filetti."],
+      cond: I => I.tt === "wind", hold: 1,
+      done: "Il filetto sopravento si agita: la vela è troppo lascata e l'aria la prende di taglio." },
+    { title: "Filetti dritti", sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
+      text: ["Ora cazza (freccia ↑) poco alla volta, finché entrambi i filetti scorrono dritti."],
+      cond: I => I.tt === "ok", hold: 1.5,
+      done: "Vela regolata." },
+    { title: "Filetto sottovento", sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
+      text: ["Cazza ancora, troppo, finché si agita il filetto <em>sottovento</em>."],
+      cond: I => I.tt === "lee", hold: 1,
+      done: "Vela troppo cazzata: l'aria si stacca dal lato sottovento, la vela va in stallo e la barca rallenta." },
+    { title: "Poggi e laschi", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
+      text: ["Poggia fino al <em>lasco</em> e regola la vela finché i filetti sono dritti."],
+      cond: I => I.twa >= 105 && I.twa <= 140 && I.tt === "ok", hold: 1.5,
+      done: "Poggiando la vela era troppo chiusa: hai dovuto lascare." },
+    { title: "Orzi e cazzi", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
+      text: ["Ora orza fino alla <em>bolina</em> e regola di nuovo."],
+      cond: I => I.twa >= 35 && I.twa <= 70 && I.tt === "ok", hold: 1.5,
+      done: "Orzando la vela era troppo aperta: hai dovuto cazzare. Regola da ricordare: <em>orzi e cazzi, poggi e laschi</em>." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 2, rose: true, hintKind: "tt", final: true,
+      text: ["Le andature, dalla più vicina alla più lontana dal vento: <em>bolina</em>, <em>traverso</em>, <em>lasco</em>, <em>gran lasco</em>, <em>poppa</em>. Si naviga <em>mure a dritta</em> o <em>mure a sinistra</em>.",
+             "Ogni andatura vuole la sua regolazione, e i <em>filetti</em> te la indicano. Esercitati, poi passa alle prove 1 e 2, dove il vento non arriva più sempre da nord."] }
+  ];
+
+  const L4 = [
+    { title: "Il vento che senti a bordo", ...PAUSE, zoom: 1.4, arrows: true, hud: 2,
+      text: ["Quando vai in bicicletta senti vento in faccia anche in una giornata calma: è il vento creato dal tuo movimento. In barca succede lo stesso.",
+             "Il vento che senti a bordo, e su cui lavora la vela, è il <em>vento apparente</em>: la somma del <em>vento reale</em> e del vento dovuto al moto della barca. Freccia bianca: reale. Freccia gialla, e segnavento in cima all'albero: apparente."] },
+    { title: "Da fermi", sheet: true, hud: 2, arrows: true, hintKind: "none",
+      text: ["Lasca tutta la vela (freccia ↓) e aspetta che la barca rallenti sotto i 2 nodi. Guarda le due frecce e i numeri nel pannello."],
+      cond: I => I.kn < 2, hold: 1.5,
+      done: "Con la barca quasi ferma, vento apparente e vento reale quasi coincidono: direzione e forza simili. Da ferma sarebbero identici." },
+    { title: "Accelerando", sheet: true, hud: 2, arrows: true, hintKind: "tt",
+      text: ["Ora cazza finché la vela è regolata e lascia accelerare la barca oltre i 4 nodi. Guarda la freccia gialla."],
+      cond: I => I.kn > 4 && I.tt === "ok", hold: 1,
+      done: "Il vento reale arriva a 90°, ma quello apparente è più avanti, tra 60° e 70° (lo leggi nel pannello), ed è più forte. Per questo, quando la barca accelera, <em>bisogna cazzare</em>: la vela deve seguire il vento apparente." },
+    { title: "In poppa", tiller: true, sheet: true, hud: 2, arrows: true, hintKind: "tt",
+      text: ["Poggia fino alla <em>poppa</em>, regolando la vela, e guarda di nuovo le frecce e i numeri."],
+      cond: I => I.twa >= 165, hold: 1.5,
+      done: "In poppa la barca «scappa» dal vento: il vento apparente è più debole del reale. Di bolina succede il contrario, e il vento apparente è più forte. Per questo di bolina sembra sempre che tiri più vento." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 2, arrows: true, hintKind: "tt", final: true,
+      text: ["La vela lavora sul <em>vento apparente</em>. Più la barca va veloce, più il vento apparente si sposta verso prua. Andando controvento è più forte del reale, andando col vento a favore è più debole.",
+             "Naviga liberamente osservando le due frecce a diverse andature."] }
+  ];
+
+  const L5 = [
+    { title: "Cambiare mure", ...PAUSE, zoom: 1.2, rose: true, maneuvers: true,
+      text: ["Per passare da mure a sinistra a mure a dritta, o viceversa, ci sono due manovre.",
+             "La <em>virata</em>: la prua attraversa il vento, cioè l'angolo morto. La <em>strambata</em> (detta anche abbattuta): è la poppa ad attraversare il vento. Si vira per risalire il vento, si stramba navigando col vento da dietro."] },
+    { title: "Prepararsi a virare", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "tt",
+      text: ["Mettiti in <em>bolina</em>, regola la vela e lascia che la barca arrivi ad almeno 3,3 nodi."],
+      cond: I => I.twa >= 35 && I.twa <= 70 && I.tt === "ok" && I.kn >= 3.3, hold: 1,
+      done: "Pronto. Durante la virata la prua attraversa l'angolo morto, dove la vela non spinge: la barca lo supera grazie all'<em>abbrivio</em>, la velocità che ha già." },
+    { title: "Virare", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "tt",
+      text: ["Spingi la barra <em>sottovento</em> (verso il boma) con decisione e tienila finché la prua ha attraversato il vento e sei in bolina sull'altro lato. Poi centra la barra.",
+             "In bolina la vela resta cazzata su entrambe le mure: non serve toccarla."],
+      cond: (I, S, B) => S.tacks > B.tacks && I.twa >= 35 && I.twa <= 75 && I.kn > 1.5, hold: 0.8,
+      done: "Virata riuscita: il boma è passato dall'altra parte e il timoniere ha cambiato lato. A bordo si annuncia così: «Pronti a virare?», «Pronti!», «Viro!»." },
+    { title: "Una virata che non riesce", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
+      text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare."],
+      cond: (I, S) => (I.twa < 30 && I.kn < 0.4) || S.u < -0.1, hold: 1,
+      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: centra la barra, lascia che la prua scada, poi poggia e riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
+    { title: "Risalire il vento", tiller: true, sheet: true, hud: 1, hintKind: "tt", mark: [0, -110],
+      text: ["Riparti. La boa è controvento: non puoi puntarla direttamente.",
+             "Raggiungila a zig-zag: un tratto di bolina su una mura, una virata, un tratto sull'altra. Si chiama <em>bordeggiare</em>, e ogni tratto è un <em>bordo</em>."],
+      cond: (I, S, B) => S.markReached && S.tacks > B.tacks,
+      done: "Boa raggiunta. La scia mostra quanto è più lunga la strada rispetto alla distanza in linea d'aria: risalire il vento costa tempo." },
+    { title: "La strambata", ...PAUSE, zoom: 1.2, rose: true, maneuvers: true,
+      text: ["La strambata è più delicata. In poppa la vela è tutta aperta: quando il vento passa dall'altro lato, il boma attraversa la barca di colpo. Se lo fa con violenza può far scuffiare la barca o colpire qualcuno in testa.",
+             "Per questo la si fa <em>controllata</em>: si cazza la vela finché il boma è a circa 45° dal centro barca, si poggia finché il vento passa dall'altro lato, poi subito si lasca."] },
+    { title: "Strambata violenta", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "none",
+      text: ["Prima vediamo cosa <em>non</em> fare. Poggia fino alla poppa e continua a poggiare con la vela tutta aperta (si regola da sola) finché il vento passa dall'altro lato."],
+      cond: (I, S, B) => S.gybesV > B.gybesV, hold: 0.6,
+      done: "Il boma ha attraversato la barca di colpo, la barca ha sbandato e rallentato: <em>strambata violenta</em>. Se capita senza volerlo, navigando in poppa distratti, si chiama <em>strambata involontaria</em>." },
+    { title: "Strambata controllata", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
+      text: ["Ora fai bene: in poppa <em>cazza</em> finché il boma è a 45° o meno (guarda il valore sotto il cursore della scotta), <em>poggia</em> finché il vento passa dall'altro lato, poi <em>lasca</em> e regola."],
+      cond: (I, S, B) => S.gybesC > B.gybesC && I.twa > 115 && I.tt === "ok", hold: 1,
+      done: "Strambata controllata: il boma ha fatto un tragitto breve e la barca non si è scomposta. Il comando a bordo: «Pronti a strambare?», «Pronti!», «Strambo!»." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 2, rose: true, hintKind: "tt", final: true,
+      text: ["<em>Virata</em>: prua nel vento, con la barca lanciata. <em>Strambata</em>: poppa nel vento, cazzando prima e lascando dopo. Per risalire il vento si <em>bordeggia</em>.",
+             "Esercitati, poi passa alle prove 3 e 4."] }
+  ];
+
+  const L6 = [
+    { title: "Raffiche e sbandamento", ...PAUSE, zoom: 0.8, env: { tws: 12, gusts: 1 }, hud: 3,
+      text: ["Il vento non è mai costante. Le chiazze più scure e increspate sull'acqua sono <em>raffiche</em>: lì il vento è più forte e spesso gira di qualche grado. Viaggiano col vento, quindi le vedi arrivare da sopravento.",
+             "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo <em>sbandamento</em>, che vedi sull'indicatore in basso a sinistra. Il timoniere si sporge fuori bordo per contrastarlo, ma con un attimo di ritardo."] },
+    { title: "Assorbire una raffica", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt",
+      text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco (e di bolina puoi anche <em>orzare</em> leggermente) per tenere lo sbandamento sotto i 20°. Passata la raffica, cazza di nuovo."],
+      cond: I => I.inGust && I.heel < 20 && I.kn > 2, hold: 3,
+      done: "Ben fatto. Lascare riduce la forza sulla vela; orzare di poco la scarica. È la tecnica principale per navigare con vento rafficato." },
+    { title: "La scuffia", tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
+      text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: vela tutta cazzata, e in raffica non lascare."],
+      cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
+      done: "Oltre circa 60° di sbandamento la barca si è rovesciata: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
+    { title: "Raddrizzare", tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",
+      text: ["Premi <em>Raddrizza</em> (o il tasto R). Nella realtà il timoniere sale sulla lama della deriva e fa leva con il proprio peso finché la barca torna dritta, poi risale a bordo e riparte con la vela lascata."],
+      cond: (I, S) => !S.capsized && S.capsizes > 0, hold: 1,
+      done: "Barca dritta. Riparti con la scotta lascata e cazza solo quando la barca ha preso velocità." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,
+      text: ["Guarda le raffiche arrivare, <em>lasca</em> quando entri, <em>cazza</em> quando escono. Oltre circa 60° di sbandamento si <em>scuffia</em>.",
+             "Esercitati, poi prova il percorso nelle raffiche."] }
+  ];
+
+  const LESSONS = [
+    { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
+    { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si spinge dalla parte opposta: barra sottovento orza, sopravento poggia." },
+    { name: "Lezione 3", title: "Andature e filetti", steps: L3, desc: "Bolina, traverso, lasco, poppa; le mure; regolare la vela leggendo i filetti." },
+    { name: "Lezione 4", title: "Vento reale e apparente", steps: L4, desc: "Perché andando veloci il vento sembra arrivare più da prua." },
+    { name: "Lezione 5", title: "Virata e strambata", steps: L5, desc: "Cambiare mure, risalire il vento a zig-zag, strambare senza rischi." },
+    { name: "Lezione 6", title: "Raffiche e scuffia", steps: L6, desc: "Riconoscere le raffiche, tenere la barca piatta, scuffiare e raddrizzare." }
+  ];
+
+  // Prove: geometria descritta con il vento da nord (m), poi ruotata secondo il vento della prova
+  const MISSIONS = [
+    { title: "Al traverso", desc: "Raggiungi una boa con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
+      text: "Il vento non arriva più da nord: guarda la freccia. La boa si raggiunge al traverso. La vela parte troppo cazzata: regolala sui filetti e raggiungi la boa.",
+      start: { x: 0, y: 0, h: 90, sheet: 0.02 }, marks: [{ x: 230, y: 0, label: "Boa" }] },
+    { title: "Lasco e poppa", desc: "Raggiungi una boa sottovento.", wind: 45, tws: 10, gusts: 0,
+      text: "La boa è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo.",
+      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, marks: [{ x: 60, y: 260, label: "Boa" }] },
+    { title: "Risalire il vento", desc: "Raggiungi una boa controvento.", wind: 180, tws: 10, gusts: 0,
+      text: "La boa è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
+      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -220, label: "Boa" }] },
+    { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
+      text: "Risali di bolina fino alla boa, poi torna all'arrivo con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
+    { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
+      text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi all'arrivo. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: 150, y: -90, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
+  ];
+
+  const SEQ = [["l",0],["l",1],["l",2],["m",0],["m",1],["l",3],["l",4],["m",2],["m",3],["l",5],["m",4]];
+  const FUTURE = [
+    { title: "Parte 2: il carteggio", items: [
+      ["Lezione", "Gradi e direzioni", "La rosa dei venti, la prua in gradi, il rilevamento."],
+      ["Lezione", "Velocità, tempo, distanza", "Nodi e miglia, il punto stimato."],
+      ["Lezione", "Fare il punto", "Due rilevamenti e il loro incrocio."],
+      ["Lezione", "Il segnalamento", "Boe laterali e cardinali, fari."],
+      ["Lezione", "Nord vero e nord magnetico", "Perché la bussola non punta al nord della carta."] ] },
+    { title: "Parte 3: il mare vero", items: [
+      ["Lezione", "Il cabinato", "Una barca più grande, con fiocco e cabina, per navigare lontano."],
+      ["Lezione", "Corrente e scarroccio", "Il mare che si muove sotto la barca."],
+      ["Prova", "La traversata", "Una navigazione nell'arcipelago che mette insieme tutto."] ] }
+  ];
+
+
+  // Quiz di ripasso: [domanda, risposta giusta, [sbagliate], spiegazione]
+  const QUIZ = [
+    [ ["Guardando verso prua, come si chiama il lato destro della barca?", "Dritta", ["Sinistra", "Poppa", "Sottovento"], "Dritta e sinistra si riferiscono sempre alla barca guardando verso prua, non allo schermo né al vento."],
+      ["A cosa serve la deriva, la lama sotto lo scafo?", "Impedisce alla barca di essere spinta di lato dal vento", ["Fa girare la barca", "Regge la vela", "Frena la barca quando serve"], "Senza deriva la barca scivolerebbe via di fianco. A girarla è il timone."],
+      ["«Vento da nord» significa che il vento…", "arriva da nord", ["va verso nord", "soffia parallelo alla costa nord", "cambia direzione verso nord"], "In vela si indica sempre la direzione da cui il vento arriva."],
+      ["Orzare significa…", "girare la prua verso il vento", ["girare la prua lontano dal vento", "tirare la scotta", "girare a sinistra"], "Orzare e poggiare si riferiscono al vento, non a destra o sinistra."],
+      ["Da che parte sta il boma?", "Sottovento, dalla parte opposta a quella da cui arriva il vento", ["Sopravento", "Sempre a dritta", "Sempre al centro della barca"], "Il vento spinge la vela e il boma dalla parte opposta; il timoniere siede sopravento per fare contrappeso."],
+      ["La vela sbatte perché è troppo lascata. Come si dice?", "Fileggia", ["È in stallo", "Scuffia", "È a segno"], "Troppo lascata la vela fileggia; troppo cazzata va in stallo."] ],
+    [ ["Spingi la barra verso sinistra. Dove va la prua?", "Verso dritta", ["Verso sinistra", "Dritta avanti, la barca rallenta", "Dipende dal vento"], "La barra muove la pala del timone dalla parte opposta: la prua gira dalla parte opposta a dove spingi la barra."],
+      ["Barra sottovento, cioè verso il boma: cosa fa la barca?", "Orza", ["Poggia", "Si ferma", "Stramba"], "La regola: barra sottovento orza, barra sopravento poggia."],
+      ["Perché conviene timonare usando poca barra?", "Perché ogni angolo di barra frena la barca", ["Perché la barra si può rompere", "Perché la barca scarroccia di più", "Non conviene: più barra si usa, meglio è"], "La pala angolata oppone resistenza all'acqua: piccole correzioni fatte presto sono meglio di grandi correzioni tardive."],
+      ["La barca si è fermata nel vento e comincia ad andare all'indietro. Cosa succede alla barra?", "Funziona al contrario", ["Non ha più nessun effetto", "Funziona come prima", "Si blocca al centro"], "Con l'acqua che scorre sulla pala da dietro, l'effetto del timone si inverte."] ],
+    [ ["Qual è l'andatura più vicina al vento?", "Bolina", ["Traverso", "Lasco", "Poppa"], "Bolina stretta è il massimo che la barca riesce a stringere; più vicino si entra nell'angolo morto."],
+      ["Il vento arriva perpendicolare alla barca, a 90°. In che andatura sei?", "Traverso", ["Bolina larga", "Gran lasco", "Poppa"], "Al traverso il vento è di fianco: andatura veloce, con la vela aperta circa a metà (boma a una quarantina di gradi dal centro barca)."],
+      ["Si agita il filetto sopravento. Cosa fai?", "Cazzo la vela, oppure poggio", ["Lasco la vela, oppure orzo", "Non faccio nulla: è normale", "Centro la barra"], "Filetto sopravento agitato: vela troppo lascata, o prua troppo vicina al vento."],
+      ["Orzando, come va regolata la vela?", "Va cazzata", ["Va lascata", "Non va toccata", "Va lasciata sbattere"], "Orzi e cazzi, poggi e laschi."],
+      ["Il vento arriva sul lato sinistro della barca. Come si naviga?", "Mure a sinistra", ["Mure a dritta", "Al traverso", "Sottovento"], "Le mure prendono il nome dal lato da cui arriva il vento."],
+      ["Due barche a vela si incrociano, una mure a sinistra e una mure a dritta. Chi deve lasciare strada?", "Quella mure a sinistra", ["Quella mure a dritta", "La più piccola", "Quella che va più veloce"], "Tra barche a vela con mure diverse, quella mure a sinistra lascia strada a quella mure a dritta."] ],
+    [ ["Che cos'è il vento apparente?", "Il vento che si sente a bordo: vento reale più vento dovuto al moto della barca", ["Il vento indicato dalle previsioni", "Il vento misurato da fermi", "Il vento delle raffiche"], "È il vento su cui lavora la vela, ed è quello indicato dal segnavento in cima all'albero."],
+      ["Quando la barca accelera, il vento apparente si sposta…", "verso prua", ["verso poppa", "non si sposta", "verso il lato sottovento"], "Il vento dovuto al moto arriva da prua e si somma al vento reale."],
+      ["Navigando in poppa, il vento apparente è…", "più debole del vento reale", ["più forte del vento reale", "uguale al vento reale", "sempre nullo"], "In poppa la barca «scappa» dal vento; di bolina invece il vento apparente è più forte."],
+      ["Al traverso la barca accelera. Cosa conviene fare con la vela?", "Cazzarla un po'", ["Lascarla un po'", "Lasciarla com'è", "Lascarla del tutto"], "Il vento apparente si sposta verso prua, quindi la vela deve seguirlo e va cazzata."] ],
+    [ ["Che cos'è una virata?", "Cambiare mure passando con la prua attraverso il vento", ["Cambiare mure passando con la poppa attraverso il vento", "Girare di 360°", "Poggiare fino alla poppa"], "La virata attraversa l'angolo morto; la strambata attraversa la poppa."],
+      ["Perché una virata può fallire?", "Perché la barca non ha abbastanza velocità per attraversare l'angolo morto", ["Perché la vela è troppo cazzata", "Perché il vento è troppo forte", "Perché la barra è al centro"], "Nell'angolo morto la vela non spinge: la barca deve attraversarlo con l'abbrivio."],
+      ["Come si fa una strambata controllata?", "Si cazza la vela, si poggia finché il vento passa dall'altro lato, poi si lasca", ["Si lasca tutta la vela e si poggia", "Si orza con decisione", "Si lascia fare alla barca"], "Cazzando prima, il boma fa un tragitto breve invece di attraversare la barca con violenza."],
+      ["Che cosa significa bordeggiare?", "Risalire il vento a zig-zag, virando fra un tratto e l'altro", ["Navigare vicino alla costa", "Navigare in poppa", "Fare il giro di una boa"], "Ogni tratto di bolina fra due virate si chiama bordo."],
+      ["Con quale comando il timoniere annuncia la virata?", "«Pronti a virare?», poi «Viro!»", ["«Pronti a strambare?», poi «Strambo!»", "«Barra!»", "«Molla!»"], "Per la strambata si usa invece «Pronti a strambare?» e poi «Strambo!»."] ],
+    [ ["Come si riconosce una raffica in arrivo?", "Una chiazza d'acqua più scura e increspata che arriva da sopravento", ["Onde più alte da sottovento", "Un cambio di colore del cielo", "Non si può riconoscere"], "Le raffiche viaggiano col vento: si vedono arrivare da sopravento."],
+      ["Entri in una raffica e la barca sbanda molto. Qual è la prima cosa da fare?", "Lascare la scotta", ["Cazzare la scotta", "Poggiare con decisione", "Centrare la barra"], "Lascare riduce la forza sulla vela; di bolina si può anche orzare di poco per scaricarla."],
+      ["Che cosa significa scuffiare?", "Rovesciarsi", ["Fermarsi nell'angolo morto", "Virare male", "Andare all'indietro"], "Succede alle derive quando lo sbandamento diventa eccessivo."],
+      ["Come si raddrizza una deriva scuffiata?", "Salendo sulla lama di deriva e facendo leva col proprio peso", ["Tirando la scotta da dentro l'acqua", "Aspettando che il vento la raddrizzi", "Spingendo sull'albero"], "Col peso sulla lama la barca ruota e torna dritta; poi si risale a bordo."] ]
+  ];
+
+  const GLOSS = [
+    ["Abbrivio", "La velocità che la barca conserva per inerzia, per esempio mentre attraversa il vento durante una virata.", "Lezione 5"],
+    ["Albero", "Il palo verticale che regge la vela.", "Lezione 1"],
+    ["Andatura", "La direzione della barca rispetto al vento: bolina, traverso, lasco, gran lasco, poppa.", "Lezione 3"],
+    ["Angolo morto", "Il settore attorno alla direzione del vento in cui la vela non spinge e non si può navigare.", "Lezione 1"],
+    ["Barra", "Il manico del timone. Si spinge dalla parte opposta a quella verso cui si vuole girare: barra sottovento, la barca orza; barra sopravento, la barca poggia.", "Lezione 2"],
+    ["Boa", "Galleggiante ancorato al fondo, usato come riferimento o come segnale.", "Prove"],
+    ["Bolina", "L'andatura più vicina al vento. Bolina stretta: il massimo che la barca riesce a stringere; bolina larga: un po' più aperta.", "Lezione 3"],
+    ["Boma", "L'asta orizzontale, fissata all'albero, che tiene il lato basso della randa.", "Lezione 1"],
+    ["Bordeggiare", "Risalire il vento a zig-zag, alternando tratti di bolina sulle due mure. Ogni tratto è un bordo.", "Lezione 5"],
+    ["Cazzare", "Tirare una scotta: la vela si avvicina al centro della barca.", "Lezione 1"],
+    ["Cima", "A bordo le corde si chiamano cime.", "Lezione 1"],
+    ["Deriva (barca)", "Piccola barca a vela senza cabina, con la lama di deriva mobile. È la barca su cui di solito si impara.", "Lezione 1"],
+    ["Deriva (lama)", "La lama che scende sotto lo scafo e impedisce alla barca di essere spinta di lato dal vento.", "Lezione 1"],
+    ["Dritta", "Il lato destro della barca, guardando verso prua.", "Lezione 1"],
+    ["Filetti", "Nastrini sulla vela che mostrano come scorre l'aria: dritti se la vela è regolata; si agita quello sopravento se è troppo lascata, quello sottovento se è troppo cazzata.", "Lezione 3"],
+    ["Fileggiare", "Il movimento della vela che sbatte perché è troppo lascata o perché la barca è nell'angolo morto.", "Lezione 1"],
+    ["Gran lasco", "Andatura con il vento quasi da dietro, circa 150°.", "Lezione 3"],
+    ["Lascare", "Mollare una scotta: la vela si apre verso l'esterno.", "Lezione 1"],
+    ["Lasco", "Andatura con il vento che arriva da dietro il fianco, circa 120°.", "Lezione 3"],
+    ["Mure", "Il lato da cui arriva il vento: mure a dritta se arriva da destra, mure a sinistra se arriva da sinistra. Tra due barche a vela con mure diverse, quella mure a sinistra deve lasciare strada.", "Lezione 3"],
+    ["Nodo", "Unità di velocità in mare: un miglio nautico all'ora, cioè 1,852 km/h.", "Lezione 1"],
+    ["Orzare", "Girare la prua verso il vento.", "Lezione 1"],
+    ["Poggiare", "Girare la prua allontanandola dal vento.", "Lezione 1"],
+    ["Poppa (andatura)", "Andatura con il vento esattamente da dietro.", "Lezione 3"],
+    ["Poppa (parte della barca)", "La parte posteriore della barca.", "Lezione 1"],
+    ["Prua", "La parte anteriore della barca.", "Lezione 1"],
+    ["Raddrizzare", "Rimettere dritta una deriva scuffiata, salendo sulla lama di deriva e facendo leva col proprio peso.", "Lezione 6"],
+    ["Raffica", "Aumento breve del vento, visibile sull'acqua come una chiazza più scura e increspata.", "Lezione 6"],
+    ["Randa", "La vela principale, fissata all'albero e al boma.", "Lezione 1"],
+    ["Rilevamento", "La direzione, in gradi a partire da nord in senso orario, in cui si vede un oggetto dalla barca.", "Prove"],
+    ["Sbandamento", "L'inclinazione laterale della barca spinta dal vento.", "Lezione 6"],
+    ["Scarroccio", "Lo scivolamento laterale della barca spinta dal vento, che la deriva riduce ma non annulla.", "Lezione 1"],
+    ["Scotta", "La cima con cui si regola la vela.", "Lezione 1"],
+    ["Scuffiare", "Rovesciarsi: succede alle derive quando lo sbandamento diventa eccessivo.", "Lezione 6"],
+    ["Sinistra", "Il lato sinistro della barca, guardando verso prua.", "Lezione 1"],
+    ["Sopravento", "Il lato colpito per primo dal vento; in generale, la parte da cui arriva il vento.", "Lezione 1"],
+    ["Sottovento", "Il lato riparato, opposto a quello da cui arriva il vento.", "Lezione 1"],
+    ["Sporgersi fuori bordo", "Spostare il peso fuori dalla barca, sopravento, per contrastare lo sbandamento.", "Lezione 6"],
+    ["Stallo", "Vela troppo cazzata: non sbatte, ma l'aria non ci scorre sopra bene e la barca rallenta.", "Lezione 1"],
+    ["Strambata", "Cambio di mure passando con la poppa attraverso il vento; detta anche abbattuta. Se involontaria o fatta con la vela aperta, il boma attraversa la barca con violenza.", "Lezione 5"],
+    ["Timone", "La pala immersa a poppa che fa girare la barca, comandata dalla barra.", "Lezione 1"],
+    ["Traverso", "Andatura con il vento perpendicolare alla barca, circa 90°.", "Lezione 3"],
+    ["Vento apparente", "Il vento che si sente a bordo: combinazione del vento reale e del vento creato dal moto della barca. È quello su cui lavora la vela.", "Lezione 4"],
+    ["Vento reale", "Il vento come soffia rispetto al mare, quello che si misura da fermi.", "Lezione 4"],
+    ["Virata", "Cambio di mure passando con la prua attraverso il vento.", "Lezione 5"]
+  ];
+
+  // ======================================================================
+  // STATO
+  // ======================================================================
+  let mode = "menu", lessonIdx = 0, stepIdx = 0, stepDone = false, holdT = 0, missionIdx = 0;
+  const env = { twd: 0, tws: 10 / KN };
+  const local = { twd: 0, tws: 10 / KN };
+  let gustLevel = 0, gustTimer = 0;
+  const gusts = [], wake = [];
+  const ctl = { sheet: 0.4, tiller: 0 };
+  const opt = { helm: "barra", view: "prua", autoCenter: true, hint: true, arrows: true, ghost: true, aiLevel: "principianti", countdown: 180 };
+  let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
+  let allowSem = [], allowTiller = false, allowSheet = false;
+  const freeEnv = { twd: 0, tws: 10, gusts: 1 };
+
+  function freshState(x, y, h, sheet){
+    const twa = norm180(env.twd - h);
+    S = { x, y, h, u: 1.5, vl: 0, r: 0, boomSide: twa >= 0 ? -1 : 1, boom: 30, heel: 0, heelRate: 0, hike: 0.3,
+          capsized: false, righting: 0, capSide: 1, prevSide: sgn(twa), dispBoom: (twa >= 0 ? -1 : 1) * 30, boomRate: 6,
+          tacks: 0, gybesV: 0, gybesC: 0, capsizes: 0, markIdx: 0, time: 0, finished: false,
+          lessonMark: null, markReached: false, shake: 0, toast: null };
+    ctl.sheet = sheet; ctl.tiller = 0;
+    wake.length = 0;
+    Object.assign(local, env);
+    info = step(S, ctl, local, 0);
+    S.dispBoom = S.boomSide * S.boom;
+  }
+  const curStep = () => mode === "lesson" ? LESSONS[lessonIdx].steps[stepIdx] : null;
+
+  // ---------- raffiche ----------
+  function gustGeom(g, x, y){
+    const to = (env.twd + 180) * D2R, ax = Math.sin(to), ay = -Math.cos(to);
+    const dx = x - g.x, dy = y - g.y, along = dx * ax + dy * ay, across = dx * -ay + dy * ax;
+    return (along / (g.r * 1.4)) ** 2 + (across / g.r) ** 2;
+  }
+  function windAt(x, y){
+    let k = 0, sh = 0;
+    for (const g of gusts){ const d2 = gustGeom(g, x, y); if (d2 < 1){ const f = (g.big ? Math.min(1, (1 - d2) * 4) : (1 - d2) ** 2) * g.life; k += f * g.k; sh += f * g.sh; } } // la raffica garantita ha un fronte netto
+    const osc = gustLevel ? Math.sin(simTime / 45) * 3 + Math.sin(simTime / 17) * 1.5 : 0;
+    return { twd: norm360(env.twd + sh + osc), tws: env.tws * (1 + k) };
+  }
+  function gustAt(x, y){
+    let k = 0;
+    for (const g of gusts){ const d2 = gustGeom(g, x, y); if (d2 < 1) k += (1 - d2) * g.life * g.k; }
+    return k;
+  }
+  function spawnGust(dist, lat, mature){
+    const to = (env.twd + 180) * D2R, ax = Math.sin(to), ay = -Math.cos(to);
+    gusts.push({ x: S.x - ax * dist - ay * lat, y: S.y - ay * dist + ax * lat, r: 9 + Math.random() * 11,
+      k: gustLevel === 1 ? 0.2 + Math.random() * 0.2 : 0.35 + Math.random() * 0.3,
+      sh: (Math.random() - 0.5) * (gustLevel === 1 ? 12 : 20), age: mature ? 3 : 0, ttl: 40 + Math.random() * 20, life: mature ? 1 : 0 });
+  }
+  function setGusts(level){
+    gustLevel = level; gusts.length = 0;
+    if (level){ spawnGust(22, -14, true); spawnGust(45, 18, true); spawnGust(70, -6, true); spawnGust(95, 25, true); gustTimer = 3; }
+  }
+  function updateGusts(dt){
+    const to = (env.twd + 180) * D2R, ax = Math.sin(to), ay = -Math.cos(to);
+    for (const g of gusts){ g.x += ax * env.tws * 0.8 * dt; g.y += ay * env.tws * 0.8 * dt; g.age += dt; g.life = Math.max(0, Math.min(1, g.age / 3, (g.ttl - g.age) / 3)); }
+    for (let i = gusts.length - 1; i >= 0; i--) if (gusts[i].age > gusts[i].ttl) gusts.splice(i, 1);
+    if (!gustLevel) return;
+    gustTimer -= dt;
+    if (gustTimer <= 0 && gusts.length < 12){
+      gustTimer = (gustLevel === 1 ? 4 : 2.6) * (0.6 + Math.random() * 0.8);
+      spawnGust(55 + Math.random() * 60, (Math.random() - 0.5) * 90, false);
+    }
+  }
+
+  // ---------- lettura per le condizioni ----------
+  function ttState(){
+    if (Math.abs(info.awa) < BOAT.minBoom + 4) return "flog";
+    if (info.alpha < 8) return "wind";
+    if (info.alpha > 27) return "lee";
+    return "ok";
+  }
+  function readI(){
+    return { twa: Math.abs(norm180(local.twd - S.h)), kn: S.u * KN, tt: ttState(), heel: S.heel, r: S.r,
+             sheet: ctl.sheet, tiller: ctl.tiller, inGust: local.tws > env.tws * 1.12 };
+  }
+  function autoSheet(){
+    const A = Math.abs(info.awa), target = Math.max(BOAT.minBoom, A - 17);
+    return clamp((target - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1);
+  }
+
+  // ======================================================================
+  // MENU, PROGRESSI, GLOSSARIO
+  // ======================================================================
+  const STORE = "scuolaVelaSim.v1";
+  let progress = { done: {}, best: {} };
+  try { const raw = localStorage.getItem(STORE); if (raw) progress = Object.assign(progress, JSON.parse(raw)); } catch(e){}
+  const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
+  const itemName = ([t, i]) => t === "l" ? LESSONS[i].name + ": " + LESSONS[i].title : "Prova " + (i + 1) + ": " + MISSIONS[i].title;
+  const seqPos = () => SEQ.findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
+  const nextItem = () => { const p = seqPos(); return p >= 0 && p < SEQ.length - 1 ? SEQ[p + 1] : null; };
+  const nextLabel = () => { const n = nextItem(); return n ? "Prosegui: " + itemName(n) : "Torna al menu"; };
+  const goNext = () => { const n = nextItem(); n ? openItem(n) : showMenu(); };
+  const fmtTime = sec => { const m = Math.floor(sec / 60), s2 = sec % 60; return m ? m + " min " + s2 + " s" : s2 + " s"; };
+
+  function openItem(it){
+    $("menu").hidden = true; $("game").hidden = false; resize();
+    if (it === "free") startFree(); else if (it[0] === "r") startRace(it[1]); else it[0] === "l" ? startLesson(it[1]) : startMission(it[1]);
+    window.scrollTo(0, 0); canvas.focus();
+  }
+  function showMenu(){
+    mode = "menu"; setControls([], false, false);
+    $("game").hidden = true; $("menu").hidden = false;
+    const doneCount = SEQ.filter(([t, i]) => progress.done[t + i]).length;
+    const rows = SEQ.map(([t, i], k) => {
+      const key = t + i, done = progress.done[key];
+      const kind = t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
+      const title = t === "l" ? LESSONS[i].title : MISSIONS[i].title;
+      const desc = t === "l" ? LESSONS[i].desc : MISSIONS[i].desc;
+      let state = done ? "Completata" : "Da fare";
+      if (t === "m" && progress.best[key]) state = "Record: " + fmtTime(progress.best[key]);
+      return `<button class="item" data-k="${k}"><span class="num">${k + 1}</span><span><div class="kind">${kind}</div><div class="title">${title}</div><div class="desc">${desc}</div></span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
+    }).join("");
+    const future = FUTURE.map(part => `<section class="part future"><div class="part-head"><h2>${part.title}</h2><span>In arrivo</span></div><div class="items">${
+      part.items.map(([k, t, d]) => `<div class="item" aria-disabled="true"><span class="num">·</span><span><div class="kind">${k}</div><div class="title">${t}</div><div class="desc">${d}</div></span><span></span></div>`).join("")}</div></section>`).join("");
+    $("menu").innerHTML = `<div class="menu-inner">
+      <header class="menu-head"><div><h1>Scuola di vela</h1><p>Un simulatore per imparare a governare una deriva e, più avanti, a navigare con la carta. L'ordine consigliato è quello numerato, ma puoi aprire qualsiasi voce.</p></div>
+        <button class="pill" id="menuGloss">Glossario</button></header>
+      <div class="items"><button class="item free" id="goFree"><span class="num">⛵</span><span><div class="kind">Sempre disponibile</div><div class="title">Navigazione libera</div><div class="desc">Nessun obiettivo: scegli vento e raffiche e naviga.</div></span><span></span></button></div>
+      <section class="part"><div class="part-head"><h2>Parte 1: governare la barca</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></section>
+      <section class="part"><div class="part-head"><h2>Regate</h2><span>contro avversari guidati dal computer</span></div>
+        <div class="items">${RACES.map((rc, i) => { const b = progress.best["r" + i]; return `<button class="item" data-r="${i}"><span class="num">⚑</span><span><div class="kind">Regata</div><div class="title">${rc.title}</div><div class="desc">${rc.desc}</div></span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}</span></button>`; }).join("")}</div></section>
+      <section class="part"><div class="part-head"><h2>Ripasso</h2><span>domande a scelta multipla</span></div>
+        <div class="review">${LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i]; return `<button data-q="${i}">${L.name}: ${L.title}<small>${best !== undefined ? "Migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("")}</div></section>
+      ${future}
+      <footer class="menu-foot"><span>I progressi restano salvati in questo browser.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
+    $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
+    $("goFree").onclick = () => openItem("free");
+    $("menuGloss").onclick = openGloss;
+    $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
+    $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));
+    $("resetProg").onclick = () => { if (confirm("Azzerare tutti i progressi?")){ progress = { done: {}, best: {} }; saveProgress(); showMenu(); } };
+    window.scrollTo(0, 0);
+  }
+  $("toMenu").onclick = showMenu;
+
+  function renderGloss(q = ""){
+    const n = q.trim().toLowerCase();
+    const list = GLOSS.filter(([t, d]) => !n || t.toLowerCase().includes(n) || d.toLowerCase().includes(n));
+    $("glList").innerHTML = list.length ? list.map(([t, d, w]) => `<dt>${t}<small>${w}</small></dt><dd>${d}</dd>`).join("")
+      : `<p class="gl-empty">Nessun termine trovato. Prova con una parola più breve.</p>`;
+  }
+  function openGloss(){ keys.clear(); semHeld.clear(); $("glSearch").value = ""; renderGloss(); $("gloss").showModal ? $("gloss").showModal() : $("gloss").setAttribute("open", ""); }
+  $("openGloss").onclick = openGloss;
+  $("glClose").onclick = () => $("gloss").close ? $("gloss").close() : $("gloss").removeAttribute("open");
+  $("glSearch").addEventListener("input", e => renderGloss(e.target.value));
+
+
+  // ---------- quiz ----------
+  let qz = null;
+  function openQuiz(li){
+    keys.clear(); semHeld.clear();
+    const qs = QUIZ[li].map(([q, right, wrong, expl]) => {
+      const opts = [right, ...wrong].map(t => ({ t, ok: t === right }));
+      for (let i = opts.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [opts[i], opts[j]] = [opts[j], opts[i]]; }
+      return { q, opts, expl };
+    });
+    qz = { li, qs, i: 0, score: 0, answered: false };
+    renderQuiz();
+    $("quiz").showModal ? $("quiz").showModal() : $("quiz").setAttribute("open", "");
+  }
+  function closeQuiz(){ $("quiz").close ? $("quiz").close() : $("quiz").removeAttribute("open"); }
+  $("quiz").addEventListener("close", () => { if (mode === "menu") showMenu(); }); // aggiorna il punteggio migliore nel menu
+  function renderQuiz(){
+    const L = LESSONS[qz.li], b = $("qzBody");
+    if (qz.i >= qz.qs.length){
+      const n = qz.qs.length, key = "q" + qz.li, prev = progress.quiz?.[key];
+      progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score; saveProgress();
+      b.innerHTML = `<h2>Ripasso · ${L.name}: ${L.title}</h2><div class="score">${qz.score} su ${n}</div>
+        <p class="q">${qz.score === n ? "Tutto giusto." : qz.score >= n - 1 ? "Quasi tutto giusto: rileggi la spiegazione della domanda sbagliata." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati."}</p>
+        <div class="row"><button class="primary" id="qzAgain">Rifai il ripasso</button><button id="qzClose">Chiudi</button></div>`;
+      $("qzAgain").onclick = () => openQuiz(qz.li); $("qzClose").onclick = closeQuiz;
+      return;
+    }
+    const Q = qz.qs[qz.i];
+    b.innerHTML = `<div class="qz-top"><h2>Ripasso · ${L.name}</h2><span>Domanda ${qz.i + 1} di ${qz.qs.length}</span></div>
+      <p class="q">${Q.q}</p><div class="opts2">${Q.opts.map((o, k) => `<button class="opt" data-k="${k}">${o.t}</button>`).join("")}</div>
+      <div id="qzAfter"></div>`;
+    b.querySelectorAll(".opt").forEach(btn => btn.onclick = () => {
+      if (qz.answered) return; qz.answered = true;
+      const o = Q.opts[+btn.dataset.k]; if (o.ok) qz.score++;
+      b.querySelectorAll(".opt").forEach((x, k) => { x.disabled = true; if (Q.opts[k].ok) x.classList.add("right"); });
+      if (!o.ok) btn.classList.add("wrong");
+      $("qzAfter").innerHTML = `<p class="expl"><b>${o.ok ? "Giusto." : "Non proprio."}</b> ${Q.expl}</p>
+        <div class="row"><button class="primary" id="qzNext">${qz.i + 1 < qz.qs.length ? "Domanda successiva" : "Vedi il risultato"}</button></div>`;
+      $("qzNext").onclick = () => { qz.i++; qz.answered = false; renderQuiz(); };
+      $("qzNext").focus();
+    });
+  }
+
+  // ======================================================================
+  // MODALITÀ
+  // ======================================================================
+  function showCards(which){
+    $("lesson").hidden = which !== "lesson"; $("mission").hidden = which !== "mission"; $("free").hidden = which !== "free"; $("race").hidden = which !== "race";
+    $("done").hidden = true; $("mRow").hidden = which !== "mission"; $("freeOpts").hidden = which !== "free";
+  }
+  function setControls(sem, tiller, sheet){
+    allowSem = sem; allowTiller = tiller; allowSheet = sheet;
+    $("sem").hidden = sem.length === 0;
+    $("sem").querySelectorAll("button").forEach(b => { b.disabled = !sem.includes(b.dataset.a); if (b.disabled) b.classList.remove("held"); });
+    $("direct").hidden = !tiller && !sheet;
+    $("ctlTiller").classList.toggle("off", !tiller); $("tiller").disabled = !tiller;
+    $("ctlSheet").classList.toggle("off", !sheet); $("sheet").disabled = !sheet;
+    keys.clear(); semHeld.clear();
+  }
+  function setHud(level){ $("instr").querySelectorAll("[data-l]").forEach(d => d.hidden = +d.dataset.l > level); $("instr").hidden = level === 0; }
+  function setWhere(t){ $("where").textContent = t; }
+
+  // ---- lezioni ----
+  function startLesson(i){
+    mode = "lesson"; lessonIdx = i; showCards("lesson");
+    setWhere(LESSONS[i].name + ": " + LESSONS[i].title);
+    env.twd = 0; env.tws = 10 / KN; setGusts(0);
+    freshState(0, 0, 90, 0.4);
+    showStep(0);
+  }
+  function showStep(i){
+    const steps = LESSONS[lessonIdx].steps, st = steps[i], prev = steps[i - 1];
+    stepIdx = i; stepDone = false; holdT = 0;
+    const e = st.env || { tws: 10, gusts: 0 };
+    if (Math.abs(env.tws - e.tws / KN) > 0.01) env.tws = e.tws / KN;
+    if (gustLevel !== e.gusts) setGusts(e.gusts);
+    if (st.pause) freshState(0, 0, 90, 0.4);
+    else if (!prev || prev.pause) { freshState(0, 0, 90, st.autoTrim ? 0.4 : 0.3); }
+    base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes };
+    S.markReached = false;
+    S.lessonMark = st.mark ? { x: S.x + st.mark[0], y: S.y + st.mark[1] } : null;
+    if (st.course) S.course = Math.round(norm360(S.h) / 5) * 5;
+    $("lStep").textContent = "Passo " + (i + 1) + " di " + steps.length;
+    $("lTitle").textContent = st.title;
+    $("lText").innerHTML = st.text.map(t => "<p>" + t + "</p>").join("");
+    $("lFeedback").hidden = true;
+    $("lBack").hidden = i === 0;
+    $("lRetry").hidden = !!st.pause;
+    $("lNext").hidden = !!st.cond;
+    $("lNext").textContent = st.final ? nextLabel() : "Avanti";
+    $("lQuiz").hidden = !st.final;
+    if (st.final){ progress.done["l" + lessonIdx] = true; saveProgress(); }
+    setControls(st.sem || [], !!st.tiller, !!st.sheet);
+    setHud(st.hud || 0);
+    $("hint").hidden = st.pause || st.hintKind === "none" || !st.hud;
+  }
+  function completeStep(){
+    stepDone = true;
+    const st = curStep();
+    $("lFeedback").innerHTML = "<p>" + st.done + "</p>"; $("lFeedback").hidden = false;
+    $("lNext").hidden = false;
+  }
+  $("lNext").onclick = () => { const st = curStep(); if (st.final) return goNext(); showStep(Math.min(LESSONS[lessonIdx].steps.length - 1, stepIdx + 1)); };
+  $("lBack").onclick = () => showStep(Math.max(0, stepIdx - 1));
+  $("lQuiz").onclick = () => openQuiz(lessonIdx);
+  $("lRetry").onclick = () => { freshState(0, 0, 90, curStep().autoTrim ? 0.4 : 0.3); showStep(stepIdx); };
+
+  // ---- prove ----
+  function startMission(i, wind){
+    mode = "mission"; missionIdx = i; showCards("mission");
+    const m = MISSIONS[i];
+    setWhere("Prova " + (i + 1) + ": " + m.title);
+    env.twd = wind === undefined ? m.wind : wind; env.tws = m.tws / KN;
+    const th = env.twd * D2R, rot = (x, y) => [x * Math.cos(th) - y * Math.sin(th), x * Math.sin(th) + y * Math.cos(th)];
+    curMarks = m.marks.map(mk => { const [x, y] = rot(mk.x, mk.y); return { x, y, label: mk.label }; });
+    const [sx, sy] = rot(m.start.x, m.start.y);
+    freshState(sx, sy, norm360(m.start.h + env.twd), m.start.sheet);
+    setGusts(m.gusts);
+    recStart("m" + i);
+    $("mTitle").textContent = "Prova " + (i + 1) + ". " + m.title;
+    $("mText").textContent = m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi.";
+    $("mNext").textContent = nextLabel();
+    setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
+  }
+  const changeWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); startMission(missionIdx, w); };
+  $("mRetry").onclick = $("mRetry2").onclick = () => startMission(missionIdx, env.twd);
+  $("mWind").onclick = $("mWind2").onclick = changeWind;
+  $("mNext").onclick = goNext;
+
+  // ---- navigazione libera ----
+  function startFree(){
+    mode = "free"; showCards("free"); setWhere("Navigazione libera");
+    env.twd = freeEnv.twd; env.tws = freeEnv.tws / KN;
+    curMarks = [{ x: 0, y: -160, label: "Boa 1" }, { x: 110, y: -40, label: "Boa 2" }, { x: -110, y: -40, label: "Boa 3" }];
+    freshState(0, 30, norm360(env.twd + 90), 0.3);
+    setGusts(freeEnv.gusts);
+    setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
+  }
+  $("wDir").onchange = e => { freeEnv.twd = +e.target.value; env.twd = freeEnv.twd; setGusts(gustLevel); };
+  $("wSpd").onchange = e => { freeEnv.tws = +e.target.value; env.tws = freeEnv.tws / KN; };
+  $("gustSel").onchange = e => { freeEnv.gusts = +e.target.value; setGusts(freeEnv.gusts); };
+
+  // ======================================================================
+  // INPUT
+  // ======================================================================
+  const keys = new Set(), semHeld = new Set();
+  const semDir = { orza: 1, poggia: -1 };
+  let dragTiller = false;
+  const KEYSEM = { a: "orza", d: "poggia", w: "cazza", s: "lasca" };
+  function semPress(a){
+    if (!allowSem.includes(a) || semHeld.has(a)) return;
+    semHeld.add(a);
+    // il verso si fissa alla pressione: tenendo premuto Orza si può attraversare il vento
+    if (a === "orza") semDir.orza = S.boomSide;
+    if (a === "poggia") semDir.poggia = -S.boomSide;
+    const b = $("sem").querySelector(`[data-a="${a}"]`); b && b.classList.add("held");
+  }
+  function semRelease(a){ semHeld.delete(a); const b = $("sem").querySelector(`[data-a="${a}"]`); b && b.classList.remove("held"); }
+  addEventListener("keydown", e => {
+    if (mode === "menu" || $("gloss").open || $("quiz").open || e.target.tagName === "INPUT" && e.target.type === "search") return;
+    const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (KEYSEM[k]){ semPress(KEYSEM[k]); if (allowSem.length) e.preventDefault(); return; }
+    if (k === "r"){ rightBoat(); return; }
+    if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
+      if (e.target.tagName === "SELECT") return;
+      e.preventDefault(); keys.add(k);
+      if (k === " " && allowTiller) ctl.tiller = 0;
+    }
+  });
+  addEventListener("keyup", e => { const k = e.key.length === 1 ? e.key.toLowerCase() : e.key; keys.delete(k); if (KEYSEM[k]) semRelease(KEYSEM[k]); });
+  addEventListener("blur", () => { keys.clear(); [...semHeld].forEach(semRelease); });
+  $("sem").querySelectorAll("button").forEach(btn => {
+    const a = btn.dataset.a;
+    btn.addEventListener("pointerdown", e => { e.preventDefault(); btn.setPointerCapture?.(e.pointerId); semPress(a); });
+    ["pointerup","pointercancel","lostpointercapture"].forEach(ev => btn.addEventListener(ev, () => semRelease(a)));
+    btn.addEventListener("contextmenu", e => e.preventDefault());
+  });
+  $("tiller").addEventListener("input", e => { ctl.tiller = e.target.value / 100; dragTiller = true; });
+  ["pointerup","change","touchend"].forEach(ev => $("tiller").addEventListener(ev, () => dragTiller = false));
+  $("sheet").addEventListener("input", e => ctl.sheet = e.target.value / 100);
+  function seg(id, key){
+    $(id).addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      opt[key] = b.dataset.v; $(id).querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    });
+  }
+  seg("helmMode", "helm"); seg("viewMode", "view");
+  $("autoCenter").onchange = e => opt.autoCenter = e.target.checked;
+  $("showHint").onchange = e => { opt.hint = e.target.checked; if (mode !== "lesson") $("hint").hidden = !opt.hint; };
+  $("showArrows").onchange = e => opt.arrows = e.target.checked;
+  $("showGhost").onchange = e => opt.ghost = e.target.checked;
+  const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
+  $("rRestart").onclick = $("rAgain").onclick = () => startRace(raceIdx, env.twd);
+  $("rWind").onclick = $("rWind2").onclick = () => startRace(raceIdx, otherWind());
+  $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
+  $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
+  $("zIn").onclick = () => userZoom = Math.min(3, userZoom * 1.25);
+  $("zOut").onclick = () => userZoom = Math.max(0.4, userZoom / 1.25);
+  canvas.addEventListener("wheel", e => { e.preventDefault(); userZoom = clamp(userZoom * (e.deltaY > 0 ? 0.9 : 1.1), 0.4, 3); }, { passive: false });
+  canvas.addEventListener("pointerdown", () => canvas.focus());
+  const updFocus = () => $("focusTip").hidden = mode === "menu" || document.hasFocus();
+  addEventListener("focus", updFocus); addEventListener("blur", updFocus); setInterval(updFocus, 1000);
+  function rightBoat(){ if (S && S.capsized && !S.righting) S.righting = 0.001; }
+  $("rightBtn").onclick = rightBoat; $("capBtn").onclick = rightBoat;
+
+  function applyInput(dt){
+    let tillerInput = false;
+    if (allowTiller){
+      const l = keys.has("ArrowLeft"), r = keys.has("ArrowRight");
+      if (l || r){
+        let dir = (r ? 1 : 0) - (l ? 1 : 0);
+        if (opt.helm === "prua") dir = -dir * (S.u < 0 ? -1 : 1);
+        ctl.tiller = clamp(ctl.tiller + dir * 1.6 * dt, -1, 1); tillerInput = true;
+      }
+    }
+    if (semHeld.has("orza")){
+      // con i pulsanti non si vira: arrivati nell'angolo morto la barra torna al centro e la barca si ferma
+      if (Math.abs(norm180(local.twd - S.h)) < 28){ ctl.tiller *= Math.exp(-6 * dt); }
+      else ctl.tiller = clamp(ctl.tiller + semDir.orza * 1.6 * dt, -1, 1);
+      tillerInput = true;
+    }
+    if (semHeld.has("poggia")){
+      // con i pulsanti non si stramba: vicino alla poppa la barra torna al centro
+      if (Math.abs(norm180(local.twd - S.h)) > 160){ ctl.tiller *= Math.exp(-6 * dt); }
+      else ctl.tiller = clamp(ctl.tiller + semDir.poggia * 1.6 * dt, -1, 1);
+      tillerInput = true;
+    }
+    if (!tillerInput && (opt.autoCenter || allowSem.length) && !dragTiller){
+      ctl.tiller *= Math.exp((allowSem.length ? -6 : -2.5) * dt); if (Math.abs(ctl.tiller) < 0.01) ctl.tiller = 0;
+    }
+    if ((allowSheet && keys.has("ArrowUp")) || semHeld.has("cazza")) ctl.sheet = Math.max(0, ctl.sheet - 0.27 * dt);
+    if ((allowSheet && keys.has("ArrowDown")) || semHeld.has("lasca")) ctl.sheet = Math.min(1, ctl.sheet + 0.27 * dt);
+  }
+
+  // ======================================================================
+  // SIMULAZIONE
+  // ======================================================================
+  let GYBE_KICK = 260; // gradi/s: circa 19° di sbandamento con 6 nodi, 45° con 10, scuffia con 15
+  function toast(text){ S.toast = { text, t: 2.6 }; }
+  function detectManeuvers(){
+    const twa = norm180(local.twd - S.h), side = sgn(twa), A = Math.abs(twa);
+    if (side === S.prevSide || A < 1 || A > 179) return;
+    const mure = side > 0 ? "mure a dritta" : "mure a sinistra";
+    if (A < 90){ S.tacks++; S.boomRate = 3; toast("Virata: ora " + mure); }
+    else {
+      const sheetMax = BOAT.minBoom + ctl.sheet * (BOAT.maxBoom - BOAT.minBoom);
+      if (sheetMax > 45){ S.gybesV++; S.gybeAt = simTime; S.u *= 0.55; S.heelRate += GYBE_KICK * D2R * Math.pow(local.tws / (15 / KN), 1.6) * (0.85 + Math.random() * 0.4); // colpo del boma in gradi/s (il motore usa radianti/s); più vento, colpo più forte
+        S.shake = 0.5; S.boomRate = 22; toast("Strambata violenta!"); }
+      else { S.gybesC++; S.boomRate = 8; toast("Strambata: ora " + mure); }
+    }
+    S.prevSide = side;
+  }
+  function simulate(dt, st){
+    applyInput(dt);
+    if (st && st.autoTrim) ctl.sheet = autoSheet();
+    if (st && st.yawNoise && !S.capsized){ // onde: spinte irregolari sulla prua
+      S.noiseT = (S.noiseT || 0) - dt;
+      if (S.noiseT <= 0){ S.noiseT = 1.8 + Math.random() * 1.6; S.noiseR = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 3); S.noiseLeft = 0.8; }
+      if (S.noiseLeft > 0){ S.noiseLeft -= dt; S.h = norm360(S.h + S.noiseR * dt); }
+      S.h = norm360(S.h + sgn(norm180(local.twd - S.h)) * 2 * dt); // la barca tende a orzare da sola (orziera)
+    }
+    if (st && st.bigGust && !S.capsized){
+      // se non c'è una raffica forte in arrivo vicino alla barca, ne crea una
+      const to = (env.twd + 180) * D2R, ux = S.x - Math.sin(to) * 20, uy = S.y + Math.cos(to) * 20;
+      if (gustAt(ux, uy) < 0.3 && gustAt(S.x, S.y) < 0.3 && !gusts.some(g => g.big && g.age < 12)){
+        spawnGust(45, 0, true); const g = gusts[gusts.length - 1]; g.k = 0.8; g.r = 18; g.sh = 0; g.big = true;
+      }
+    }
+    updateGusts(dt);
+    Object.assign(local, windAt(S.x, S.y));
+    if (!S.capsized){
+      const n = 4; for (let i = 0; i < n; i++) info = step(S, ctl, local, dt / n);
+      detectManeuvers();
+      if (S.heel > BOAT.capsizeAt || S.heel < -45){
+        S.capCause = S.gybeAt !== undefined && simTime - S.gybeAt < 4 ? "gybe" : "heel";
+        S.capsized = true; S.capsizes++; S.capSide = S.heel > 0 ? S.boomSide : -S.boomSide; S.u = 0; S.vl = 0; S.r = 0; S.heel = 90 * Math.sign(S.heel); S.heelRate = 0;
+      }
+    } else {
+      const to = (local.twd + 180) * D2R;
+      S.x += Math.sin(to) * 0.25 * dt; S.y -= Math.cos(to) * 0.25 * dt;
+      if (S.righting){
+        S.righting += dt;
+        if (S.righting > 3){
+          const side = S.capSide;
+          S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = 0.3;
+          S.h = norm360(local.twd + side * 60); ctl.sheet = 0.8; ctl.tiller = 0;
+          S.prevSide = sgn(norm180(local.twd - S.h));
+        }
+      }
+    }
+    S.dispBoom += (S.boomSide * S.boom - S.dispBoom) * Math.min(1, dt * S.boomRate);
+    S.boomRate += (6 - S.boomRate) * Math.min(1, dt * 0.8);
+    S.shake = Math.max(0, S.shake - dt);
+    if (S.toast){ S.toast.t -= dt; if (S.toast.t <= 0) S.toast = null; }
+    wakeT += dt;
+    if (wakeT > 0.08 && !S.capsized){
+      wakeT = 0; const h = S.h * D2R;
+      wake.push({ x: S.x - Math.sin(h) * 2.1, y: S.y + Math.cos(h) * 2.1, nx: Math.cos(h), ny: Math.sin(h), t: simTime });
+      if (wake.length > 140) wake.shift();
+    }
+    if (S.lessonMark && !S.markReached && Math.hypot(S.x - S.lessonMark.x, S.y - S.lessonMark.y) < 12) S.markReached = true;
+    // obiettivi
+    if (mode === "lesson" && st.cond && !stepDone){
+      if (st.cond(readI(), S, base)){ holdT += dt; if (holdT >= (st.hold || 0.3)) completeStep(); } else holdT = 0;
+    }
+    if ((mode === "mission" || mode === "free") && curMarks.length && !S.finished){
+      S.time += dt;
+      const mk = curMarks[S.markIdx];
+      if (mode === "mission" && Math.hypot(S.x - mk.x, S.y - mk.y) < 12){
+        S.markIdx++;
+        if (S.markIdx >= curMarks.length){
+          S.finished = true;
+          const sec = Math.round(S.time), key = "m" + missionIdx, prev = progress.best[key];
+          progress.done[key] = true; if (!prev || sec < prev){ progress.best[key] = sec; recSave(); } saveProgress();
+          $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".");
+          $("done").hidden = false; toast("Arrivato!");
+        } else toast("Boa girata: ora verso " + curMarks[S.markIdx].label.toLowerCase());
+      }
+      if (mode === "mission" && !S.finished) recSample(S.time, dt);
+    }
+    if (mode === "race") updateRace(dt);
+  }
+
+  // ======================================================================
+  // FANTASMA E REGATE
+  // ======================================================================
+  const GHOST_STORE = "scuolaVelaGhost.v1";
+  let ghosts = {};
+  try { ghosts = JSON.parse(localStorage.getItem(GHOST_STORE) || "{}"); } catch(e){ ghosts = {}; }
+  const saveGhosts = () => { try { localStorage.setItem(GHOST_STORE, JSON.stringify(ghosts)); } catch(e){} };
+  // coordinate "del vento": il vento arriva sempre da -y; così il fantasma vale con qualsiasi direzione del vento
+  const toWF = (x, y) => { const th = -env.twd * D2R; return [x * Math.cos(th) - y * Math.sin(th), x * Math.sin(th) + y * Math.cos(th)]; };
+  const fromWF = (x, y) => { const th = env.twd * D2R; return [x * Math.cos(th) - y * Math.sin(th), x * Math.sin(th) + y * Math.cos(th)]; };
+  const rec = { key: null, samples: [], t: 0, acc: 0 };
+  function recStart(key){ rec.key = key; rec.samples = []; rec.acc = 1; }
+  function recSample(t, dt){
+    if (!rec.key) return;
+    rec.acc += dt; if (rec.acc < 0.2) return; rec.acc = 0;
+    const [wx, wy] = toWF(S.x, S.y);
+    rec.samples.push([+t.toFixed(2), +wx.toFixed(1), +wy.toFixed(1), Math.round(norm360(S.h - env.twd)), Math.round(S.dispBoom), Math.round(S.capsized ? 0 : S.heel)]);
+    if (rec.samples.length > 6000) rec.key = null; // oltre 20 minuti non si registra
+  }
+  function recSave(){ if (rec.key && rec.samples.length > 5){ ghosts[rec.key] = rec.samples; saveGhosts(); } }
+  function ghostAt(key, t){
+    const g = ghosts[key]; if (!g || !g.length || t < g[0][0] || t > g[g.length - 1][0] + 3) return null;
+    let i = 0; while (i < g.length - 2 && g[i + 1][0] < t) i++;
+    const a = g[i], b = g[Math.min(i + 1, g.length - 1)], f = b[0] > a[0] ? clamp((t - a[0]) / (b[0] - a[0]), 0, 1) : 0;
+    const L = (p, q) => p + (q - p) * f, La = (p, q) => p + norm180(q - p) * f;
+    const [x, y] = fromWF(L(a[1], b[1]), L(a[2], b[2]));
+    const boom = L(a[4], b[4]);
+    return { x, y, h: norm360(La(a[3], b[3]) + env.twd), heel: L(a[5], b[5]), hike: 0.5, boomSide: sgn(boom), dispBoom: boom, boom: Math.abs(boom), capsized: false };
+  }
+
+  // disegna un'altra barca riusando drawBoat (scambia per un attimo lo stato globale)
+  function drawOther(bs, inf, tiller, alpha){
+    const s0 = S, i0 = info, t0 = ctl.tiller, g0 = geo;
+    S = bs; info = inf; ctl.tiller = tiller;
+    ctx.save(); ctx.globalAlpha = alpha;
+    try { drawBoat(); } finally { ctx.restore(); S = s0; info = i0; ctl.tiller = t0; geo = g0; }
+  }
+  function drawWakeOf(wk, u){
+    ctx.lineWidth = 0.12;
+    for (const side of [-1, 1]){
+      ctx.beginPath(); let started = false;
+      for (let i = wk.length - 1; i >= 0; i--){
+        const w = wk[i], age = simTime - w.t; if (age > 6) break;
+        const sp = 0.35 + age * 0.35, x = w.x + w.nx * sp * side, y = w.y + w.ny * sp * side;
+        started ? ctx.lineTo(x, y) : ctx.moveTo(x, y); started = true;
+      }
+      ctx.strokeStyle = colors.foam; ctx.globalAlpha = Math.min(1, Math.abs(u) / 2) * 0.6; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+  }
+
+  // ---------------- regate ----------------
+  const RACES = [
+    { title: "Regata a bastone", desc: "Tre avversari, vento costante: partenza, bolina, poppa, arrivo.", wind: 0, tws: 10, gusts: 0 },
+    { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 }
+  ];
+  const LINE_HALF = 35, MARK_UP = 140;
+  const FLEET_LOOK = [
+    { name: "Rossa", hull: "#E9E4DF", sail: "#F6D5D0", sailor: "#C7362F" },
+    { name: "Verde", hull: "#E3EAE4", sail: "#D6EEDC", sailor: "#1F8A4C" },
+    { name: "Blu",   hull: "#E1E6EE", sail: "#D5E2F6", sailor: "#2B5DB8" }
+  ];
+  let R = null, raceIdx = 0;
+
+  function newBoat(x, y, h){
+    const twa = norm180(env.twd - h);
+    const b = { x, y, h, u: 1.2, vl: 0, r: 0, boomSide: twa >= 0 ? -1 : 1, boom: 30, heel: 0, heelRate: 0, hike: 0.3,
+                capsized: false, capT: 0, capSide: 1, dispBoom: 0 };
+    return b;
+  }
+  function aiParams(level){
+    const r = () => Math.random();
+    return level === "esperti"
+      ? { up: 43 + r() * 3, down: 150 + r() * 5, trim: (r() - 0.5) * 4, gain: 18, boardMin: 35, boardMax: 90, react: 5 }
+      : { up: 48 + r() * 5, down: 142 + r() * 8, trim: (r() - 0.5) * 12, gain: 26, boardMin: 25, boardMax: 60, react: 3 };
+  }
+  function startRace(i, wind){
+    mode = "race"; raceIdx = i; showCards("race");
+    const rc = RACES[i];
+    setWhere("Regata: " + rc.title);
+    env.twd = wind === undefined ? rc.wind : wind; env.tws = rc.tws / KN;
+    curMarks = [];
+    const [px, py] = fromWF(10, 45);
+    freshState(px, py, norm360(env.twd + 90), 0.35);
+    setGusts(rc.gusts);
+    const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -MARK_UP), [cX, cY] = fromWF(0, 0);
+    R = { t: -opt.countdown, phase: "pre", pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY }, center: { x: cX, y: cY },
+          boats: [], contacts: {}, signals: new Set(), doneAt: null };
+    const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: 45 };
+    R.boats.push(me);
+    const starts = [[-25, 55], [5, 70], [28, 50]];
+    const slots = [-24, 2, 24].sort(() => Math.random() - 0.5);
+    (opt.aiLevel === "nessuno" ? [] : FLEET_LOOK).forEach((look, k) => {
+      const [x, y] = fromWF(starts[k][0], starts[k][1]);
+      const bs = newBoat(x, y, norm360(env.twd + (k % 2 ? 90 : -90)));
+      Object.assign(bs, { hullColor: look.hull, sailColor: look.sail, sailorColor: look.sailor });
+      const b = { me: false, name: look.name, S: bs, ctl: { sheet: 0.4, tiller: 0 }, info: null, wake: [], wakeT: 0, leg: 0, ocs: false, pen: 0, fin: null,
+                  prevWY: starts[k][1], ai: aiParams(opt.aiLevel), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6 };
+      b.info = step(bs, b.ctl, env, 0); bs.dispBoom = bs.boomSide * bs.boom;
+      R.boats.push(b);
+    });
+    recStart("r" + i + "b");
+    $("rTitle").textContent = rc.title;
+    $("rText").textContent = "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
+      ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: l'ideale è tagliarla lanciato proprio allo zero." +
+      (opt.aiLevel === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record." : "");
+    $("rDone").hidden = true;
+    setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
+  }
+
+  const bearingTo = (s, p) => norm360(Math.atan2(p.x - s.x, -(p.y - s.y)) / D2R);
+  function targetOf(b){
+    if (b.leg === 0 || b.ocs){
+      if (b.ocs){ const [x, y] = fromWF(0, 20); return { x, y, kind: "line" }; }
+      if (!b.me && R.t >= 0){ // dopo il segnale: un punto oltre la linea, davanti alla barca
+        const bx = toWF(b.S.x, b.S.y)[0], [x, y] = fromWF(clamp(bx * 0.6, -LINE_HALF + 8, LINE_HALF - 8), -25); return { x, y, kind: "line" };
+      }
+      const [x, y] = fromWF(b.me ? 0 : b.startX, 0); return { x, y, kind: "line" };
+    }
+    if (b.leg === 1) return { ...R.mark, kind: "mark" };
+    if (!b.me){ const [x, y] = fromWF(b.startX * 0.8, 0); return { x, y, kind: "finish" }; }
+    return { ...R.center, kind: "finish" };
+  }
+
+  function aiControl(b, dt){
+    const s = b.S, w = windAt(s.x, s.y), twd = w.twd, twa = norm180(twd - s.h), side = sgn(twa), A = Math.abs(twa);
+    const ai = b.ai;
+    let desired, hold = false;
+    const tgt = targetOf(b);
+    let dest = tgt;
+    // prima della partenza: blocco a sé, senza la logica di bolina generale
+    let pre = false;
+    if (R.t < 0 && b.leg === 0){
+      pre = true;
+      const [bx, by] = toWF(s.x, s.y);
+      const [hx, hy] = fromWF(b.startX - 55, 18), [lx, ly] = fromWF(b.startX, -10);
+      const go = -R.t <= Math.hypot(s.x - lx, s.y - ly) / 1.9 + 5;
+      const aim = p => { let d = bearingTo(s, p); const r = norm180(d - twd); if (Math.abs(r) < ai.up + 4) d = twd + (r >= 0 ? 1 : -1) * (ai.up + 4); return d; };
+      if (go) b.preDesired = aim({ x: lx, y: ly });
+      else if (Math.hypot(s.x - hx, s.y - hy) > 15) b.preDesired = aim({ x: hx, y: hy });
+      else hold = true;
+      if (by < 4 && Math.abs(bx) <= LINE_HALF + 5 && R.t < -1) hold = true; // davanti alla linea: non superarla prima dello zero
+    }
+    const brg = bearingTo(s, dest);
+    const rel = norm180(brg - twd);
+    b.boardT += dt;
+    if (hold){ desired = twd + 62; } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
+    else if (pre){ desired = b.preDesired; }
+    else if (Math.abs(rel) < ai.up){ // bolina: bordi alternati
+      const near = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
+      if (near){ // vicino al bersaglio: il bordo che punta più vicino
+        const best = Math.abs(norm180(twd - ai.up - brg)) < Math.abs(norm180(twd + ai.up - brg)) ? 1 : -1;
+        if (best !== b.side && b.boardT > 8){ b.side = best; b.boardT = 0; } // isteresi: niente virate a raffica
+      } else if (b.boardT > b.boardMax){ b.side = -b.side; b.boardT = 0; b.boardMax = ai.boardMin + Math.random() * (ai.boardMax - ai.boardMin); }
+      desired = twd - b.side * ai.up;
+    } else if (Math.abs(rel) > 180 - (180 - ai.down)){ // bersaglio in poppa piena: lasco con abbattute
+      if (b.boardT > b.boardMax){ b.side = -b.side; b.boardT = 0; b.boardMax = ai.boardMin + Math.random() * (ai.boardMax - ai.boardMin); }
+      desired = twd - b.side * ai.down;
+    } else { desired = brg; b.side = sgn(norm180(twd - brg)); b.boardT = Math.min(b.boardT, b.boardMax * 0.5); }
+    // mure a sinistra: lascia strada a chi è mure a dritta, passandogli di poppa
+    if (side < 0 && !hold){
+      for (const o of R.boats){
+        if (o === b || o.S.capsized) continue;
+        const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > 30) continue;
+        const oTwa = norm180(local.twd - o.S.h); if (oTwa < 0) continue;
+        const ang = Math.abs(norm180(bearingTo(s, o.S) - s.h)); if (ang > 70) continue;
+        desired -= side * 28; break;
+      }
+    }
+    // evita qualsiasi barca vicina davanti (anche quando avrebbe diritto di rotta: meglio non urtare)
+    for (const o of R.boats){
+      if (o === b || o.fin !== null) continue;
+      const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > 14) continue;
+      const relB = norm180(bearingTo(s, o.S) - s.h); if (Math.abs(relB) > 60) continue;
+      desired -= (relB >= 0 ? 1 : -1) * 35 * (1 - d / 14 + 0.3); break;
+    }
+    // la prua desiderata non deve mai finire nell'angolo morto (tranne durante una virata voluta)
+    const dTwa = norm180(twd - desired);
+    const wantsTack = !hold && Math.abs(rel) < ai.up && sgn(dTwa) !== side;
+    if (!wantsTack && Math.abs(dTwa) < ai.up - 2) desired = twd - (sgn(dTwa) || side) * (ai.up - 2);
+    // se per arrivare alla rotta voluta bisogna attraversare il vento e manca velocità: prima poggia e prendi abbrivio
+    const turn = norm180(desired - s.h), toWind = norm180(twd - s.h);
+    // (vale solo prima di iniziare: a virata in corso la velocità cala per forza, e non va interrotta)
+    if (sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) > 38 && s.u < 1.1) desired = twd - side * 95;
+    // piantata nell'angolo morto: poggia e lascia sbattere la vela finché riparte
+    const irons = A < 36 && s.u < 0.6;
+    if (irons) desired = twd - side * 80;
+    const err = norm180(s.h - desired);
+    const tTarget = clamp(err / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1);
+    b.ctl.tiller += (tTarget - b.ctl.tiller) * Math.min(1, dt * ai.react);
+    // scotta: regolata sul vento apparente, con l'errore tipico di questo avversario
+    const aw = Math.abs(b.info ? b.info.awa : 60);
+    let boomT = Math.max(BOAT.minBoom, aw - 17 + ai.trim);
+    let sheet = clamp((boomT - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1);
+    if (hold || irons) sheet = 1;
+    if (A > 158) sheet = Math.min(sheet, 0.42); // abbattuta controllata
+    if (s.heel > 22) sheet = Math.min(1, sheet + 0.2);
+    b.ctl.sheet += (sheet - b.ctl.sheet) * Math.min(1, dt * 3);
+  }
+
+  function stepAI(b, dt){
+    const s = b.S;
+    if (s.capsized){
+      s.capT += dt; s.u = 0;
+      if (s.capT > 5){ s.capsized = false; s.capT = 0; s.heel = 0; s.heelRate = 0; s.h = norm360(env.twd + s.capSide * 60); b.ctl.sheet = 0.8; }
+      return;
+    }
+    aiControl(b, dt);
+    const w = windAt(s.x, s.y);
+    for (let i = 0; i < 3; i++) b.info = step(s, b.ctl, w, dt / 3);
+    if (s.heel > BOAT.capsizeAt || s.heel < -45){ s.capsized = true; s.capSide = s.heel > 0 ? s.boomSide : -s.boomSide; s.heel = 0; s.u = 0; }
+    s.dispBoom += (s.boomSide * s.boom - s.dispBoom) * Math.min(1, dt * 6);
+    b.wakeT += dt;
+    if (b.wakeT > 0.1){ b.wakeT = 0; const h = s.h * D2R; b.wake.push({ x: s.x - Math.sin(h) * 2.1, y: s.y + Math.cos(h) * 2.1, nx: Math.cos(h), ny: Math.sin(h), t: simTime }); if (b.wake.length > 70) b.wake.shift(); }
+  }
+
+  function raceLegs(b){
+    const s = b.S, [wx, wy] = toWF(s.x, s.y), prev = b.prevWY; b.prevWY = wy;
+    const onLine = Math.abs(wx) <= LINE_HALF;
+    if (b.fin !== null) return;
+    if (b.leg === 0){
+      if (R.t >= 0){
+        if (b.ocs){ if (wy > 0){ b.ocs = false; if (b.me) toast("Sei tornato dietro la linea: ora riparti"); } }
+        else if (prev > 0 && wy <= 0 && onLine){ b.leg = 1; if (b.me) toast("Partito! Ora la boa di bolina"); }
+        else if (prev > 0 && wy <= 0 && !onLine){ b.ocs = true; if (b.me) toast("Sei passato fuori dalla linea: torna dietro e passa tra giuria e boa"); }
+        else if (wy < -5 && !b.ocs){ b.ocs = true; } // oltre la linea senza averla tagliata: deve tornare indietro
+      }
+    } else if (b.leg === 1){
+      if (Math.hypot(s.x - R.mark.x, s.y - R.mark.y) < 15){ b.leg = 2; if (b.me) toast("Boa girata: ora all'arrivo"); }
+    } else if (b.leg === 2){
+      if (prev < 0 && wy >= 0 && onLine){ b.fin = R.t + b.pen; if (b.me) toast("Arrivato!"); }
+    }
+  }
+
+  function contacts(){
+    const bs = R.boats;
+    for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
+      const A = bs[i], B = bs[j], key = i + "-" + j;
+      if (A.fin !== null || B.fin !== null || A.S.capsized || B.S.capsized) continue;
+      const d = Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y);
+      if (R.contacts[key]){ if (d > 8) delete R.contacts[key]; continue; } // stesso contatto finché non si separano
+      if (d > 4.2) continue;
+      R.contacts[key] = simTime;
+      const tA = sgn(norm180(local.twd - A.S.h)), tB = sgn(norm180(local.twd - B.S.h));
+      let guilty, why;
+      if (tA !== tB){ guilty = tA < 0 ? A : B; why = "era mure a sinistra e doveva lasciare strada a chi era mure a dritta"; }
+      else { const ya = toWF(A.S.x, A.S.y)[1], yb = toWF(B.S.x, B.S.y)[1]; guilty = ya < yb ? A : B; why = "era sopravento con le stesse mure e doveva stare lontano"; }
+      guilty.pen += 15;
+      for (const o of [A, B]){ o.S.u *= 0.6; }
+      const dx = (A.S.x - B.S.x) / (d || 1), dy = (A.S.y - B.S.y) / (d || 1);
+      const push = (4.6 - d) / 2 + 0.3;
+      A.S.x += dx * push; A.S.y += dy * push; B.S.x -= dx * push; B.S.y -= dy * push;
+      if (A.me || B.me){
+        const other = A.me ? B : A;
+        toast(guilty.me ? "Contatto! Penalità +15 s" : "Contatto: penalità a " + other.name);
+        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + ". Penalità di 15 secondi.";
+      }
+    }
+  }
+
+  function updateRace(dt){
+    if (!R) return;
+    const prevT = R.t; R.t += dt;
+    // segnali di partenza (versione accorciata a un minuto)
+    const sig = (at, text) => { if (prevT < at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
+    sig(-opt.countdown, "Segnale di avviso: partenza tra " + Math.round(opt.countdown / 60) + (opt.countdown >= 120 ? " minuti" : " minuto"));
+    if (opt.countdown > 60) sig(-60, "Un minuto"); sig(-30, "30 secondi"); sig(-10, "10 secondi");
+    if (prevT < 0 && R.t >= 0){
+      R.phase = "race";
+      for (const b of R.boats){ const wy = toWF(b.S.x, b.S.y)[1]; if (wy <= 0) b.ocs = true; }
+      toast(R.boats[0].ocs ? "Partenza anticipata! Torna dietro la linea" : "Partenza!");
+    }
+    for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
+    contacts();
+    recSample(R.t, dt);
+    const me = R.boats[0];
+    if (me.fin !== null && R.phase !== "done"){
+      R.phase = "done"; R.doneAt = R.t;
+      const key = "r" + raceIdx, prev = progress.best[key], tot = Math.round(me.fin);
+      if (!prev || tot < prev){ progress.best[key] = tot; recSave(); }
+      progress.done[key] = true; saveProgress();
+      raceResults(prev, tot);
+    }
+  }
+  function ranking(){
+    const score = b => b.fin !== null ? 1e7 - b.fin : (b.ocs ? -1e6 : b.leg * 1e4 - Math.hypot(b.S.x - targetOf(b).x, b.S.y - targetOf(b).y));
+    return [...R.boats].sort((a, b) => score(b) - score(a));
+  }
+  function raceResults(prev, tot, quiet){
+    const rank = ranking(), pos = rank.indexOf(R.boats[0]) + 1;
+    $("rDone").hidden = false;
+    if (!quiet) $("rDoneText").textContent = pos + "° su " + rank.length + " in " + fmtTime(tot) +
+      (R.boats[0].pen ? " (penalità comprese: " + R.boats[0].pen + " s)" : "") + "." + (!prev ? "" : tot < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".");
+  }
+  function legName(b){
+    if (b.fin !== null) return "arrivata · " + fmtTime(Math.round(b.fin));
+    if (b.S.capsized) return "scuffiata!";
+    if (b.ocs) return "partenza anticipata";
+    return ["prima della partenza", "di bolina", "in poppa verso l'arrivo"][b.leg];
+  }
+  function racePanel(){
+    if (!R) return;
+    const rank = ranking();
+    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · +" + b.pen + " s" : ""}</span></li>`).join("");
+    $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
+  }
+
+  function drawRaceWorld(){
+    if (!R) return;
+    // linea di partenza e arrivo
+    ctx.strokeStyle = R.t < 0 ? "rgba(255,255,255,.55)" : "rgba(255,226,122,.7)"; ctx.lineWidth = 0.18; ctx.setLineDash([1.2, 1.2]);
+    ctx.beginPath(); ctx.moveTo(R.pin.x, R.pin.y); ctx.lineTo(R.cb.x, R.cb.y); ctx.stroke(); ctx.setLineDash([]);
+    // boa di partenza (arancione) e barca giuria
+    ctx.fillStyle = "#F28C1B"; ctx.beginPath(); ctx.arc(R.pin.x, R.pin.y, 0.8, 0, Math.PI * 2); ctx.fill();
+    ctx.save(); ctx.translate(R.cb.x, R.cb.y); ctx.rotate(env.twd * D2R);
+    ctx.fillStyle = "#DADFE2"; ctx.strokeStyle = "#5E6A72"; ctx.lineWidth = 0.08;
+    ctx.beginPath(); ctx.moveTo(0, -4); ctx.lineTo(1.6, -1.5); ctx.lineTo(1.5, 4); ctx.lineTo(-1.5, 4); ctx.lineTo(-1.6, -1.5); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#9AA7B0"; ctx.fillRect(-1, -0.5, 2, 2.4);
+    ctx.fillStyle = R.t < 0 ? "#F2C14E" : "#2B5DB8"; ctx.fillRect(0.2, -3.2, 1.2, 0.8);
+    ctx.restore();
+    // boa di bolina
+    ctx.fillStyle = "#F2D43C"; ctx.beginPath(); ctx.arc(R.mark.x, R.mark.y, 0.9, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(255,226,122,.8)"; ctx.lineWidth = 0.15; ctx.setLineDash([0.8, 0.8]); ctx.beginPath(); ctx.arc(R.mark.x, R.mark.y, 15, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    // avversari
+    for (const b of R.boats){ if (b.me) continue; drawWakeOf(b.wake, b.S.u); drawOther(b.S, b.info, b.ctl.tiller, 1); }
+  }
+  function drawRaceScreen(v){
+    if (!R) return;
+    ctx.save(); ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (const b of R.boats){ if (b.me) continue; const [sx, sy] = toScreen(v, b.S.x, b.S.y); ctx.fillStyle = "rgba(10,24,36,.6)"; const w = ctx.measureText(b.name).width + 10; ctx.fillRect(sx - w / 2, sy - 58, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(b.name, sx, sy - 49); }
+    const [gx, gy] = toScreen(v, R.mark.x, R.mark.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Boa di bolina", gx + 10, gy - 10);
+    const [lx, ly] = toScreen(v, R.cb.x, R.cb.y); ctx.fillText(R.t < 0 ? "Linea di partenza" : "Arrivo", lx + 10, ly + 14);
+    // orologio e posizione
+    const me = R.boats[0], rank = ranking(), pos = rank.indexOf(me) + 1;
+    let big, small = "";
+    if (R.t < 0){
+      const s = Math.ceil(-R.t); big = "Partenza tra " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+      const [wx, wy] = toWF(S.x, S.y), dLine = Math.max(0, wy);
+      const h = (S.h - env.twd) * D2R, vUp = S.u * Math.cos(h); // velocità verso la linea (verso il vento)
+      const tLine = vUp > 0.2 ? Math.round(dLine / vUp) : null;
+      small = "Alla linea: " + Math.round(dLine) + " m" + (tLine !== null ? " · " + tLine + " s alla velocità attuale" : "") + (Math.abs(wx) > LINE_HALF ? " (fuori dagli estremi)" : "");
+    }
+    else { const s = Math.floor(me.fin !== null ? me.fin : R.t); big = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); small = pos + "° su " + rank.length; }
+    ctx.textAlign = "center"; ctx.font = `700 26px "Barlow Semi Condensed", sans-serif`;
+    const w = Math.max(ctx.measureText(big).width, 90) + 30;
+    ctx.font = `600 15px "Barlow Semi Condensed", sans-serif`; const w2 = small ? ctx.measureText(small).width + 30 : 0; ctx.font = `700 26px "Barlow Semi Condensed", sans-serif`;
+    const bw = Math.max(w, w2);
+    ctx.fillStyle = me.ocs ? "rgba(160,40,30,.85)" : "rgba(10,24,36,.7)"; ctx.fillRect(W / 2 - bw / 2, 10, bw, small ? 58 : 40);
+    ctx.fillStyle = "#fff"; ctx.fillText(big, W / 2, 30);
+    if (small){ ctx.font = `600 15px "Barlow Semi Condensed", sans-serif`; ctx.fillText(small, W / 2, 55); }
+    if (R.t > -10 && R.t < 0){ ctx.font = `700 64px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fillText(String(Math.ceil(-R.t)), W / 2, H * 0.3); }
+    if (me.ocs){ ctx.font = `700 16px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "#FFD447"; ctx.fillText(R.t < 0 || R.t < 3 ? "Partenza anticipata: torna dietro la linea" : "Non sei partito: torna dietro la linea e tagliala tra giuria e boa", W / 2, 88); }
+    ctx.restore();
+    if (me.fin === null) offscreenArrow(v, targetOf(me));
+  }
+  // freccia curva sulla prua: da che parte sta girando davvero la barca
+  function drawTurnHint(){
+    if (S.capsized || Math.abs(S.r) < 2.5) return;
+    const st = curStep(); if (st && (st.pause || !st.hud)) return;
+    const d = S.r > 0 ? 1 : -1, k = Math.min(1, Math.abs(S.r) / 20);
+    ctx.save(); ctx.translate(S.x, S.y); ctx.rotate(S.h * D2R);
+    ctx.strokeStyle = "rgba(255,212,71,.9)"; ctx.fillStyle = "rgba(255,212,71,.9)"; ctx.lineWidth = 0.18; ctx.lineCap = "round";
+    const ex = d * (1.2 + 1.2 * k), ey = -3.2 - 0.6 * k;
+    ctx.beginPath(); ctx.moveTo(0, -2.5); ctx.quadraticCurveTo(0, -3.6, ex, ey); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ex + d * 0.45, ey); ctx.lineTo(ex - d * 0.15, ey - 0.4); ctx.lineTo(ex - d * 0.15, ey + 0.4); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  // scritta in basso: cosa fa la barra in questo momento
+  function drawHelmLegend(){
+    const st = curStep();
+    if (S.capsized || (st && (st.pause || !st.tiller)) || Math.abs(ctl.tiller) < 0.12) return;
+    const tl = ctl.tiller < 0 ? "a sinistra" : "a dritta";
+    const turn = S.u < -0.05 ? (ctl.tiller < 0 ? "sinistra" : "dritta") : (ctl.tiller < 0 ? "dritta" : "sinistra");
+    const txt = "Barra " + tl + " → la prua gira a " + turn + (S.u < -0.05 ? " (stai andando all'indietro)" : "");
+    ctx.save(); ctx.font = `600 15px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const w = ctx.measureText(txt).width + 24, y = H - 70;
+    ctx.fillStyle = "rgba(10,24,36,.7)"; ctx.fillRect(W / 2 - w / 2, y - 14, w, 28);
+    ctx.fillStyle = "#FFD447"; ctx.fillText(txt, W / 2, y); ctx.restore();
+  }
+  function drawGhost(){
+    if (!opt.ghost) return;
+    let g = null;
+    if (mode === "mission") g = ghostAt("m" + missionIdx, S.time);
+    if (mode === "race" && R) g = ghostAt("r" + raceIdx + "b", R.t);
+    if (!g) return;
+    drawOther(g, { alpha: 17, awa: -g.boomSide * 40 }, 0, 0.35);
+  }
+
+  // ======================================================================
+  // PANNELLO
+  // ======================================================================
+  function panel(){
+    const st = curStep(), I = readI();
+    $("iSpd").textContent = (S.u * KN).toFixed(1) + " kn";
+    $("iAnd").textContent = S.capsized ? "—" : andName(I.twa);
+    $("iTw").textContent = Math.round(I.twa) + "° · " + (local.tws * KN).toFixed(0) + " kn";
+    $("iAw").textContent = Math.round(Math.abs(info.awa)) + "° · " + (info.aws * KN).toFixed(1) + " kn";
+    $("iHdg").textContent = deg3(S.h);
+    const mk = mode === "race" && R ? targetOf(R.boats[0]) : curMarks[Math.min(S.markIdx, curMarks.length - 1)];
+    $("iBrg").textContent = mode === "lesson" || !mk || S.finished ? "—" : deg3(Math.atan2(mk.x - S.x, -(mk.y - S.y)) / D2R);
+    $("iHeel").textContent = S.capsized ? "scuffia" : Math.round(Math.abs(S.heel)) + "°";
+    $("iLee").textContent = Math.abs(info.leeway || 0).toFixed(0) + "°";
+    const t = ctl.tiller;
+    $("vTil").textContent = Math.abs(t) < 0.03 ? "al centro" : (t < 0 ? "a sinistra " : "a dritta ") + Math.round(Math.abs(t) * 100) + "%";
+    $("vSh").textContent = "boma a " + Math.round(S.boom) + "°";
+    if (!dragTiller) $("tiller").value = Math.round(ctl.tiller * 100);
+    $("sheet").value = Math.round(ctl.sheet * 100);
+    $("rightBtn").hidden = !S.capsized || S.righting > 0;
+    $("capOverlay").hidden = !S.capsized || S.righting > 0;
+    $("capText").textContent = S.capCause === "gybe"
+      ? "Hai scuffiato per una strambata: il vento è passato dall'altro lato con la vela tutta aperta e il boma ha attraversato la barca di colpo. Per strambare senza rischi: prima cazza, poi poggia, poi lasca (lezione 5)."
+      : "Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.";
+    // suggerimento
+    const kind = st ? (st.hintKind || "sail") : "tt";
+    let cls = "good", msg = "";
+    const ttMsg = { flog: ["bad", "Troppo vicino al vento: la vela sbatte. Poggia."], wind: ["bad", "Si agita il filetto sopravento: cazza, oppure poggia."],
+                    lee: ["bad", "Si agita il filetto sottovento: lasca, oppure orza."], ok: ["good", "Filetti dritti: vela regolata."] }[I.tt];
+    const sailMsg = { flog: ["bad", "La vela sbatte: sei nell'angolo morto."], wind: ["bad", "La vela sbatte: è troppo lascata."],
+                      lee: ["bad", "La vela è in stallo: troppo cazzata."], ok: ["good", "Vela gonfia e regolata."] }[I.tt];
+    [cls, msg] = kind === "sail" ? sailMsg : ttMsg;
+    const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
+    if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
+    else if (S.heel > 25){ cls = "bad"; msg = "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
+    else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
+    else if (S.u < -0.05){ cls = "bad"; msg = "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia scadere la prua."; }
+    else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = "bad"; msg = "Raffica in arrivo: preparati a lascare."; }
+    if (mode === "lesson" && st.course && !S.capsized){
+      const off = norm180(S.h - S.course);
+      cls = Math.abs(off) < 6 ? "good" : "bad";
+      msg = "Rotta da tenere " + deg3(S.course) + ", ora " + deg3(S.h) + (Math.abs(off) < 6 ? ": in rotta." : off > 0 ? ": la prua è troppo a dritta." : ": la prua è troppo a sinistra.");
+    }
+    if (mode === "lesson" && kind === "none" && !S.capsized) { $("hint").hidden = true; }
+    else if (mode === "lesson" && !st.pause && st.hud) $("hint").hidden = false;
+    $("hint").className = "hint " + cls; $("hint").textContent = msg;
+    if (mode === "race") racePanel();
+  }
+
+  // ======================================================================
+  // DISEGNO
+  // ======================================================================
+  let W = 0, H = 0, dpr = 1, colors = {};
+  function readColors(){
+    const cs = getComputedStyle(document.documentElement);
+    ["sea-a","sea-b","ripple","foam","hull","hull-edge","cockpit","sail","sail-shade","spar","sailor","tt-port","tt-stbd","true","app","label","accent"]
+      .forEach(k => colors[k] = cs.getPropertyValue("--" + k).trim());
+  }
+  readColors();
+  try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColors); } catch(e){}
+  function resize(){ const r = canvas.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
+  addEventListener("resize", resize);
+  const hash = (i, j, k) => { let n = i * 374761393 + j * 668265263 + k * 2147483647; n = (n ^ (n >> 13)) * 1274126177; return ((n ^ (n >> 16)) >>> 0) / 4294967295; };
+  let rippleOff = [0, 0], wakeT = 0;
+  function view(){
+    const ppm = Math.min(W, H) / 48 * camZoom;
+    const rot = opt.view === "prua" ? -S.h * D2R : 0;
+    return { ppm, rot, cx: W / 2, cy: H * (opt.view === "prua" ? 0.6 : 0.5) };
+  }
+  function toScreen(v, x, y){
+    const dx = (x - S.x) * v.ppm, dy = (y - S.y) * v.ppm, c = Math.cos(v.rot), s = Math.sin(v.rot);
+    return [v.cx + dx * c - dy * s, v.cy + dx * s + dy * c];
+  }
+  function localToWorld(lx, ly){ const h = S.h * D2R, c = Math.cos(h), s = Math.sin(h); return [S.x + lx * c - ly * s, S.y + lx * s + ly * c]; }
+
+  function draw(dt){
+    const st = curStep();
+    camZoom += ((st && st.zoom ? st.zoom : 1) * userZoom - camZoom) * Math.min(1, dt * 3);
+    const v = view();
+    const sh = S.shake > 0 ? S.shake * 14 : 0;
+    ctx.setTransform(dpr, 0, 0, dpr, (Math.random() - 0.5) * sh * dpr, (Math.random() - 0.5) * sh * dpr);
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, colors["sea-a"]); g.addColorStop(1, colors["sea-b"]);
+    ctx.fillStyle = g; ctx.fillRect(-20, -20, W + 40, H + 40);
+
+    ctx.save();
+    ctx.translate(v.cx, v.cy); ctx.rotate(v.rot); ctx.scale(v.ppm, v.ppm); ctx.translate(-S.x, -S.y);
+    // increspature
+    const to = (env.twd + 180) * D2R, wx = Math.sin(to), wy = -Math.cos(to);
+    rippleOff[0] += wx * env.tws * 0.35 * dt; rippleOff[1] += wy * env.tws * 0.35 * dt;
+    const cell = 7, R = Math.hypot(W, H) / v.ppm / 2 + cell;
+    ctx.strokeStyle = colors.ripple; ctx.lineCap = "round"; ctx.lineWidth = Math.max(0.04, 1.1 / v.ppm);
+    const x0 = Math.floor((S.x - R - rippleOff[0]) / cell), x1 = Math.ceil((S.x + R - rippleOff[0]) / cell);
+    const y0 = Math.floor((S.y - R - rippleOff[1]) / cell), y1 = Math.ceil((S.y + R - rippleOff[1]) / cell);
+    const px = -wy, py = wx, len = 0.35 + env.tws * 0.07;
+    if ((x1 - x0) * (y1 - y0) < 2500){
+      for (let i = x0; i <= x1; i++) for (let j = y0; j <= y1; j++) for (let k = 0; k < 4; k++){
+        const rx = (i + hash(i, j, k)) * cell + rippleOff[0], ry = (j + hash(j, i, k + 7)) * cell + rippleOff[1];
+        let l = len * (0.5 + hash(i, k, j));
+        const gk = gusts.length ? gustAt(rx, ry) : 0;
+        if (gk > 0.04){
+          l *= 1 + gk * 2;
+          ctx.strokeStyle = `rgba(0,14,28,${Math.min(0.6, gk * 1.8).toFixed(3)})`;
+          ctx.beginPath(); ctx.moveTo(rx - px * l + 0.6, ry - py * l + 0.4);
+          ctx.quadraticCurveTo(rx + wx * l * 0.25 + 0.6, ry + wy * l * 0.25 + 0.4, rx + px * l + 0.6, ry + py * l + 0.4); ctx.stroke();
+          ctx.strokeStyle = colors.ripple;
+        }
+        ctx.beginPath(); ctx.moveTo(rx - px * l, ry - py * l);
+        ctx.quadraticCurveTo(rx + wx * l * 0.25, ry + wy * l * 0.25, rx + px * l, ry + py * l); ctx.stroke();
+      }
+    }
+    // raffiche
+    for (const gg of gusts){
+      ctx.save(); ctx.translate(gg.x, gg.y); ctx.rotate(to); ctx.scale(1, 1.4);
+      const rg = ctx.createRadialGradient(0, 0, 0, 0, 0, gg.r);
+      const a = Math.min(0.6, 0.55 * gg.life * Math.min(1.2, gg.k / 0.3));
+      rg.addColorStop(0, `rgba(0,16,32,${Math.max(0, a).toFixed(3)})`); rg.addColorStop(0.65, `rgba(0,16,32,${Math.max(0, a * 0.6).toFixed(3)})`); rg.addColorStop(1, "rgba(0,16,32,0)");
+      ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(0, 0, gg.r, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+    // scia
+    ctx.lineWidth = 0.12;
+    for (const side of [-1, 1]){
+      ctx.beginPath(); let started = false;
+      for (let i = wake.length - 1; i >= 0; i--){
+        const w = wake[i], age = simTime - w.t; if (age > 8) break;
+        const spread = 0.35 + age * 0.35, x = w.x + w.nx * spread * side, y = w.y + w.ny * spread * side;
+        started ? ctx.lineTo(x, y) : ctx.moveTo(x, y); started = true;
+      }
+      ctx.strokeStyle = colors.foam; ctx.globalAlpha = Math.min(1, Math.abs(S.u) / 2) * 0.8; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // traccia (per le prove e il bordeggio)
+    // boe
+    const marks = (mode === "lesson" ? (S.lessonMark ? [{ ...S.lessonMark, label: "Boa" }] : []) : curMarks);
+    marks.forEach((m, i) => {
+      const done = mode === "mission" ? i < S.markIdx : (mode === "lesson" && S.markReached);
+      const active = mode === "mission" ? i === S.markIdx : !done;
+      ctx.fillStyle = done ? "#8FA3AF" : "#F28C1B"; ctx.beginPath(); ctx.arc(m.x, m.y, 0.7, 0, Math.PI * 2); ctx.fill();
+      if (active && mode !== "free"){ ctx.strokeStyle = "rgba(255,226,122,.8)"; ctx.lineWidth = 0.15; ctx.setLineDash([0.8, 0.8]); ctx.beginPath(); ctx.arc(m.x, m.y, 12, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
+      ctx.strokeStyle = "rgba(255,255,255,.5)"; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.arc(m.x, m.y, 1 + 0.15 * Math.sin(simTime * 2), 0, Math.PI * 2); ctx.stroke();
+    });
+    if (mode === "race") drawRaceWorld();
+    drawGhost();
+    drawBoat();
+    drawTurnHint();
+    ctx.restore();
+
+    // sopra il mondo, in coordinate schermo
+    ctx.font = `600 13px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    marks.forEach(m => { const [sx, sy] = toScreen(v, m.x, m.y); ctx.fillText(m.label, sx + 10, sy - 8); });
+    const act = mode === "mission" && !S.finished ? curMarks[S.markIdx] : (mode === "lesson" && S.lessonMark && !S.markReached ? S.lessonMark : null);
+    if (act) offscreenArrow(v, act);
+    if (st && st.rose) drawRose(v, st.maneuvers);
+    if (opt.arrows && (!st || st.arrows || st.hud >= 2 || (!st.pause && st.hud))) drawWindArrows(v, mode === "lesson" && lessonIdx < 3); // il vento apparente si spiega nella lezione 4
+    if (st && st.labels) drawLabels(v, st.labels);
+    drawCompass(v);
+    drawWindBox(v);
+    if (!st || st.hud >= 3) drawHeelGauge();
+    if (mode === "race") drawRaceScreen(v);
+    drawHelmLegend();
+    if (S.toast) drawToast();
+  }
+
+  function offscreenArrow(v, m){
+    const [sx, sy] = toScreen(v, m.x, m.y), pad = 30;
+    if (sx > 0 && sx < W && sy > 0 && sy < H) return;
+    const ang = Math.atan2(sy - H / 2, sx - W / 2);
+    const t = Math.min((W / 2 - pad) / Math.abs(Math.cos(ang) || 1e-6), (H / 2 - pad) / Math.abs(Math.sin(ang) || 1e-6));
+    let ax = W / 2 + Math.cos(ang) * t, ay = H / 2 + Math.sin(ang) * t;
+    if (mode === "race" && ay < 80 && Math.abs(ax - W / 2) < 170) ay = 80; // non coprire l'orologio della regata
+    ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang); ctx.fillStyle = "#F28C1B";
+    ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-8, -9); ctx.lineTo(-8, 9); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+
+  function drawToast(){
+    const a = Math.min(1, S.toast.t / 0.4);
+    ctx.save(); ctx.globalAlpha = a; ctx.font = `700 20px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const w = ctx.measureText(S.toast.text).width + 28;
+    const ty = mode === "race" ? 100 : 58;
+    ctx.fillStyle = "rgba(10,24,36,.75)"; ctx.fillRect(W / 2 - w / 2, ty, w, 36);
+    ctx.fillStyle = "#fff"; ctx.fillText(S.toast.text, W / 2, ty + 19); ctx.restore();
+  }
+
+  // cerchio delle andature, in coordinate schermo attorno alla barca
+  function drawRose(v, showManeuvers){
+    const [cx, cy] = toScreen(v, S.x, S.y), R = Math.min(W, H) * 0.3, r0 = R * 0.72, rotDeg = v.rot / D2R;
+    const toCanvas = bearing => (bearing + rotDeg - 90) * D2R;
+    const sectors = [[0,30],[30,55],[55,75],[75,105],[105,135],[135,165],[165,180]];
+    const twaS = norm180(local.twd - S.h), twa = Math.abs(twaS);
+    const curIdx = ANDATURE.findIndex(a => twa < a[0]), curSide = twaS >= 0 ? -1 : 1; // lato del settore in cui si trova la prua
+    ctx.save();
+    for (const side of [1, -1]){
+      sectors.forEach(([a1, a2], k) => {
+        const b1 = env.twd + side * a1, b2 = env.twd + side * a2;
+        const s1 = Math.min(toCanvas(b1), toCanvas(b2)), s2 = Math.max(toCanvas(b1), toCanvas(b2));
+        ctx.beginPath(); ctx.arc(cx, cy, R, s1, s2); ctx.arc(cx, cy, r0, s2, s1, true); ctx.closePath();
+        const isCur = k === curIdx && (side === curSide || k === 0 || k === 6);
+        ctx.globalAlpha = isCur ? 0.5 : (k === 0 ? 0.3 : (k % 2 ? 0.12 : 0.2));
+        ctx.fillStyle = isCur ? colors.label : (k === 0 ? "#E0553A" : "#FFFFFF"); ctx.fill();
+        ctx.globalAlpha = 0.35; ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
+      });
+    }
+    ctx.globalAlpha = 1;
+    ctx.font = `600 ${Math.round(clamp(R * 0.075, 12, 16))}px "Barlow Semi Condensed", sans-serif`; ctx.textBaseline = "middle";
+    const put = (bearing, text, cur) => {
+      const a = toCanvas(bearing), x = cx + Math.cos(a) * (R + 8), y = cy + Math.sin(a) * (R + 8);
+      ctx.textAlign = Math.cos(a) > 0.2 ? "left" : Math.cos(a) < -0.2 ? "right" : "center";
+      const yy = y + (ctx.textAlign === "center" ? (Math.sin(a) > 0 ? 10 : -10) : 0);
+      ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.fillText(text, x + 1, yy + 1);
+      ctx.fillStyle = cur ? colors.label : "#fff"; ctx.fillText(text, x, yy);
+    };
+    put(env.twd, "Angolo morto", curIdx === 0);
+    put(env.twd + 180, "Poppa", curIdx === 6);
+    ANDATURE.slice(1, 6).forEach((an, j) => { const [a1, a2] = sectors[j + 1]; put(env.twd + curSide * (a1 + a2) / 2, an[1], curIdx === j + 1); });
+    const hA = toCanvas(S.h);
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(hA) * R, cy + Math.sin(hA) * R); ctx.stroke(); ctx.setLineDash([]);
+    if (showManeuvers){
+      const rm = (R + r0) / 2;
+      const arc = (b1, b2, label) => {
+        const a1 = toCanvas(b1), a2 = toCanvas(b2);
+        ctx.strokeStyle = colors.label; ctx.fillStyle = colors.label; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(cx, cy, rm, a1, a2); ctx.stroke();
+        for (const [a, dir] of [[a1, -1], [a2, 1]]){
+          const x = cx + Math.cos(a) * rm, y = cy + Math.sin(a) * rm, tx = -Math.sin(a) * dir, ty = Math.cos(a) * dir;
+          ctx.beginPath(); ctx.moveTo(x + tx * 10, y + ty * 10); ctx.lineTo(x - ty * 7, y + tx * 7); ctx.lineTo(x + ty * 7, y - tx * 7); ctx.closePath(); ctx.fill();
+        }
+        const am = toCanvas((b1 + b2) / 2);
+        ctx.textAlign = "center"; ctx.font = `700 15px "Barlow Semi Condensed", sans-serif`;
+        ctx.fillText(label, cx + Math.cos(am) * (r0 - 16), cy + Math.sin(am) * (r0 - 16));
+      };
+      arc(env.twd - 30, env.twd + 30, "virata");
+      arc(env.twd + 150, env.twd + 210, "strambata");
+    }
+    ctx.restore();
+  }
+
+  // etichette delle parti della barca
+  function drawLabels(v, names){
+    if (!geo) return;
+    const L = (lx, ly) => toScreen(v, ...localToWorld(lx, ly));
+    const to = (env.twd + 180) * D2R;
+    const P = {
+      prua: L(0, -2.1), poppa: L(0, 2.1), dritta: L(0.62, 0.5), sinistra: L(-0.62, 0.5), albero: L(0, geo.mastY),
+      boma: L(geo.ex * 0.75, geo.mastY + (geo.ey - geo.mastY) * 0.75), randa: L((geo.mx + geo.tx) / 2, (geo.my + geo.ty) / 2),
+      timone: L(-Math.sin(geo.tau) * 0.45, 2.05 + Math.cos(geo.tau) * 0.45), barra: L(Math.sin(geo.tau) * 0.6, 2.05 - Math.cos(geo.tau) * 0.6),
+      deriva: L(0, 0.28), filetti: L(geo.qx, geo.qy),
+      sopravento: toScreen(v, S.x - Math.sin(to) * 2.2, S.y + Math.cos(to) * 2.2), sottovento: toScreen(v, S.x + Math.sin(to) * 2.2, S.y - Math.cos(to) * 2.2)
+    };
+    const [bx, by] = toScreen(v, S.x, S.y);
+    const used = [];
+    ctx.save(); ctx.font = `700 16px "Barlow Semi Condensed", sans-serif`; ctx.textBaseline = "middle";
+    for (const n of names){
+      const [x, y] = P[n];
+      let a = Math.atan2(y - by, x - bx);
+      if (Math.hypot(x - bx, y - by) < 6) a = -Math.PI * 0.75;
+      if (n === "barra") a += 0.6; if (n === "timone") a -= 0.6; if (n === "deriva") a = Math.atan2(y - by, x - bx) + Math.PI / 2;
+      if (n === "randa") a += 0.5;
+      let d = 58;
+      let ex = x + Math.cos(a) * d, ey = y + Math.sin(a) * d;
+      for (const u of used) if (Math.hypot(ex - u[0], ey - u[1]) < 28){ d += 30; ex = x + Math.cos(a) * d; ey = y + Math.sin(a) * d; }
+      used.push([ex, ey]);
+      ctx.strokeStyle = colors.label; ctx.fillStyle = colors.label; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.textAlign = Math.cos(a) > 0.3 ? "left" : Math.cos(a) < -0.3 ? "right" : "center";
+      const tx = ex + (ctx.textAlign === "left" ? 6 : ctx.textAlign === "right" ? -6 : 0), ty = ey + (ctx.textAlign === "center" ? (Math.sin(a) > 0 ? 12 : -12) : 0);
+      const w = ctx.measureText(n).width, bxx = ctx.textAlign === "left" ? tx : ctx.textAlign === "right" ? tx - w : tx - w / 2;
+      ctx.fillStyle = "rgba(10,24,36,.75)"; ctx.fillRect(bxx - 5, ty - 12, w + 10, 24);
+      ctx.fillStyle = colors.label; ctx.fillText(n, tx, ty);
+    }
+    ctx.restore();
+  }
+
+  function drawBoat(){
+    const t = simTime;
+    ctx.save(); ctx.translate(S.x, S.y); ctx.rotate(S.h * D2R);
+    if (S.capsized){ drawCapsized(t); ctx.restore(); return; }
+    const sinH = Math.sin(Math.max(-40, Math.min(70, S.heel)) * D2R), lee = S.boomSide; // lato verso cui sbanda (se positivo)
+    // ombra
+    ctx.fillStyle = "rgba(0,0,0,.18)"; hullPath(0.12 + lee * sinH * 0.9, 0.18); ctx.fill();
+    // scafo (sbandando, visto dall'alto appare più stretto)
+    ctx.save(); ctx.scale(1 - Math.abs(sinH) * 0.35, 1);
+    ctx.fillStyle = S.hullColor || colors.hull; ctx.strokeStyle = colors["hull-edge"]; ctx.lineWidth = 0.05; hullPath(0, 0); ctx.fill(); ctx.stroke();
+    // pozzetto e scassa della deriva
+    ctx.fillStyle = colors.cockpit;
+    ctx.beginPath(); ctx.moveTo(-0.38, 0.35); ctx.lineTo(0.38, 0.35); ctx.lineTo(0.42, 1.55); ctx.lineTo(-0.42, 1.55); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = colors.spar; ctx.fillRect(-0.04, 0.05, 0.08, 0.45);
+    ctx.restore();
+    // timone: pala dietro lo specchio di poppa, barra in avanti
+    const tau = ctl.tiller * BOAT.maxRudder * D2R;
+    ctx.strokeStyle = colors.spar; ctx.lineCap = "round";
+    ctx.lineWidth = 0.09; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(-Math.sin(tau) * 0.55, 2.05 + Math.cos(tau) * 0.55); ctx.stroke();
+    ctx.lineWidth = 0.06; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(Math.sin(tau) * 1.0, 2.05 - Math.cos(tau) * 1.0); ctx.stroke();
+    // timoniere seduto sopravento
+    const ws = -S.boomSide; // lato sopravento: opposto al boma
+    ctx.fillStyle = S.sailorColor || colors.sailor;
+    const sx = ws * (0.45 + 0.5 * (S.hike || 0)); // più si sporge, più esce dallo scafo
+    ctx.beginPath(); ctx.ellipse(sx, 1.05, 0.2 + 0.12 * (S.hike || 0), 0.3, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#F2D2B6"; ctx.beginPath(); ctx.arc(sx + ws * 0.18 * (S.hike || 0), 1.0, 0.13, 0, Math.PI * 2); ctx.fill();
+    // randa e boma
+    const bs = S.dispBoom >= 0 ? 1 : -1; // lato su cui sta il boma (anche durante lo spostamento)
+    const mastY = -0.95, boomLen = 2.75, b = S.dispBoom * D2R;
+    const ex = Math.sin(b) * boomLen, ey = mastY + Math.cos(b) * boomLen;
+    const st = ttState();
+    const load = Math.min(1, CL(Math.max(0, info.alpha)) / 1.2);
+    const nx = Math.cos(b) * bs, ny = -Math.sin(b) * bs; // normale verso sottovento
+    // vista dall'alto: si vede la randa fra il boma (base) e il profilo alto, più svergolato sottovento
+    let camber = 0.22 + 0.3 * load, twist = 0.35 + 0.25 * load;
+    if (st === "flog"){ camber = Math.sin(t * 28) * 0.3; twist = 0.15 + Math.sin(t * 19) * 0.25; }
+    else if (st === "wind"){ camber *= 0.55 + 0.45 * Math.sin(t * 22); }
+    // sbandando, la parte alta della vela si sposta sottovento (proiezione dall'alto)
+    const hs = lee * sinH * 2.6;
+    const tx = ex + nx * twist + hs, ty = ey + ny * twist;
+    const mx = tx / 2 + nx * camber * 2 + hs * 0.5, my = (mastY + ty) / 2 + ny * camber * 2;
+    const sg = ctx.createLinearGradient(0, mastY, ex + nx, ey + ny); sg.addColorStop(0, colors["sail-shade"]); sg.addColorStop(0.55, S.sailColor || colors.sail); sg.addColorStop(1, colors["sail-shade"]);
+    ctx.fillStyle = sg; ctx.strokeStyle = "rgba(60,70,80,.6)"; ctx.lineWidth = 0.04;
+    ctx.beginPath(); ctx.moveTo(0, mastY); ctx.quadraticCurveTo(mx, my, tx, ty); ctx.lineTo(ex, ey); ctx.lineTo(0, mastY); ctx.fill(); ctx.stroke();
+    // stecche
+    ctx.strokeStyle = "rgba(60,70,80,.25)";
+    for (const f of [0.3, 0.55, 0.8]){
+      const qx = 2 * (1 - f) * f * mx + f * f * tx, qy = (1 - f) * (1 - f) * mastY + 2 * (1 - f) * f * my + f * f * ty;
+      const lx = f * ex, ly = mastY + f * (ey - mastY);
+      ctx.beginPath(); ctx.moveTo(qx, qy); ctx.lineTo(qx + (lx - qx) * 0.6, qy + (ly - qy) * 0.6); ctx.stroke();
+    }
+    // boma
+    ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.09; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(ex, ey); ctx.stroke();
+    // filetti: vicino all'inferitura, uno per lato della vela
+    const f = 0.3, qx = 2 * (1 - f) * f * mx + f * f * tx, qy = (1 - f) * (1 - f) * mastY + 2 * (1 - f) * f * my + f * f * ty;
+    const cx = tx, cy = ty - mastY, cl = Math.hypot(cx, cy), ax = cx / cl, ay = cy / cl; // direzione verso la balumina
+    for (const side of [-1, 1]){
+      const isLee = side === bs; // lato sottovento della vela = lato del boma
+      const col = side < 0 ? colors["tt-port"] : colors["tt-stbd"];
+      const ox = qx + Math.cos(b) * side * 0.1, oy = qy - Math.sin(b) * side * 0.1;
+      const bad = (st === "flog") || (st === "wind" && !isLee) || (st === "lee" && isLee);
+      ctx.strokeStyle = col; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(ox, oy);
+      const segs = 6, Lt = 0.65;
+      for (let i = 1; i <= segs; i++){
+        const u = i / segs;
+        let wig = 0, curl = 0;
+        if (bad){ wig = Math.sin(t * 25 + u * 6 + side) * 0.09 * u; curl = (isLee ? 0.25 : -0.25) * u * u * side * bs; }
+        const px = ox + ax * Lt * u + (-ay) * (wig + curl), py = oy + ay * Lt * u + ax * (wig + curl);
+        ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    // albero (visibile come linea quando la barca sbanda) e segnavento
+    if (Math.abs(sinH) > 0.05){ ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(lee * sinH * 5.5, mastY); ctx.stroke(); }
+    ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(0, mastY, 0.08, 0, Math.PI * 2); ctx.fill();
+    const awRel = info.awa * D2R; // da dove arriva, rispetto alla prua (+ dritta)
+    const vx = Math.sin(awRel), vy = -Math.cos(awRel);
+    ctx.strokeStyle = colors.app; ctx.fillStyle = colors.app; ctx.lineWidth = 0.06;
+    ctx.beginPath(); ctx.moveTo(vx * 0.7, mastY + vy * 0.7); ctx.lineTo(-vx * 0.3, mastY - vy * 0.3); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(vx * 0.7, mastY + vy * 0.7); ctx.lineTo(vx * 0.45 - vy * 0.12, mastY + vy * 0.45 + vx * 0.12); ctx.lineTo(vx * 0.45 + vy * 0.12, mastY + vy * 0.45 - vx * 0.12); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    geo = { mastY, ex, ey, mx, my, tx, ty, qx, qy, tau };
+  }
+  function drawCapsized(t){
+    const side = S.capSide || 1, prog = S.righting ? Math.min(1, S.righting / 3) : 0;
+    const lie = 1 - prog; // 1 = sdraiata, 0 = dritta
+    // scafo sul fianco: si vede la carena
+    ctx.save(); ctx.scale(1 - 0.45 * lie, 1);
+    ctx.fillStyle = lie > 0.5 ? "#B9C4CB" : colors.hull; ctx.strokeStyle = colors["hull-edge"]; ctx.lineWidth = 0.05; hullPath(0, 0); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    // albero e vela distesi sull'acqua
+    const mastY = -0.95, L = 5.8 * lie;
+    ctx.fillStyle = "rgba(251,251,247,.8)"; ctx.strokeStyle = "rgba(60,70,80,.6)"; ctx.lineWidth = 0.04;
+    ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(side * L, mastY - 0.2); ctx.lineTo(side * 0.4 * lie, mastY + 2.7); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(side * L, mastY - 0.2); ctx.stroke();
+    // timoniere in acqua, sulla deriva per raddrizzare
+    ctx.fillStyle = colors.sailor; ctx.beginPath(); ctx.arc(-side * (0.9 - 0.4 * prog), 0.4, 0.22, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.5)"; ctx.lineWidth = 0.06;
+    ctx.beginPath(); ctx.arc(-side * (0.9 - 0.4 * prog), 0.4, 0.35 + 0.1 * Math.sin(t * 3), 0, Math.PI * 2); ctx.stroke();
+  }
+  function hullPath(ox, oy){
+    ctx.beginPath();
+    ctx.moveTo(ox, -2.1 + oy);
+    ctx.bezierCurveTo(0.55 + ox, -1.5 + oy, 0.72 + ox, -0.2 + oy, 0.68 + ox, 0.7 + oy);
+    ctx.lineTo(0.56 + ox, 2.1 + oy); ctx.lineTo(-0.56 + ox, 2.1 + oy); ctx.lineTo(-0.68 + ox, 0.7 + oy);
+    ctx.bezierCurveTo(-0.72 + ox, -0.2 + oy, -0.55 + ox, -1.5 + oy, ox, -2.1 + oy);
+    ctx.closePath();
+  }
+
+  function arrow(x, y, ang, len, col, label){
+    const dx = Math.sin(ang), dy = -Math.cos(ang);
+    const sx = x - dx * len, sy = y - dy * len;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(x - dx * 10, y - dy * 10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - dx * 14 - dy * 7, y - dy * 14 + dx * 7); ctx.lineTo(x - dx * 14 + dy * 7, y - dy * 14 - dx * 7); ctx.closePath(); ctx.fill();
+    ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center";
+    ctx.fillText(label, sx - dx * 12, sy - dy * 12 + 4);
+  }
+  // frecce che puntano verso la barca, dalla direzione da cui arriva ciascun vento
+  function drawWindArrows(v, trueOnly){
+    const [bx, by] = toScreen(v, S.x, S.y), rr = 2.9 * v.ppm + 10;
+    const scr = d => (d + (v.rot / D2R)) * D2R; // direzione mondo -> schermo
+    const tFrom = scr(local.twd), aFrom = scr(info.awFrom);
+    const tl = 25 + local.tws * 5, al = 25 + info.aws * 5;
+    arrow(bx + Math.sin(tFrom) * rr, by - Math.cos(tFrom) * rr, tFrom + Math.PI, tl, colors.true, "reale");
+    if (!trueOnly) arrow(bx + Math.sin(aFrom) * (rr + 6), by - Math.cos(aFrom) * (rr + 6), aFrom + Math.PI, al, colors.app, "apparente");
+  }
+  function drawCompass(v){
+    const r = 26, cx = W - r - 16, cy = r + 22, a = v.rot;
+    ctx.save(); ctx.translate(cx, cy);
+    ctx.fillStyle = "rgba(0,0,0,.22)"; ctx.beginPath(); ctx.arc(0, 0, r + 4, 0, Math.PI * 2); ctx.fill();
+    ctx.rotate(a); ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.fillStyle = "#fff"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, -r + 5); ctx.lineTo(-5, 0); ctx.lineTo(5, 0); ctx.closePath(); ctx.fill();
+    ctx.font = `700 12px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("N", Math.sin(0) * 0, -r - 9);
+    ctx.restore();
+  }
+  function drawHeelGauge(){
+    const r = 44, cx = 84, cy = H - 20;
+    const heel = S.capsized ? 90 * (S.righting ? 1 - Math.min(1, S.righting / 3) : 1) : Math.max(-60, Math.min(90, S.heel));
+    ctx.save(); ctx.translate(cx, cy);
+    ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.beginPath(); ctx.arc(0, 0, r + 8, Math.PI, 0); ctx.closePath(); ctx.fill();
+    const zone = (a1, a2, col) => { ctx.strokeStyle = col; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(0, 0, r, -Math.PI / 2 + a1 * D2R, -Math.PI / 2 + a2 * D2R); ctx.stroke(); };
+    zone(-60, -15, "#E8935A"); zone(-15, 20, "#5CC393"); zone(20, 35, "#F2C14E"); zone(35, 60, "#E0553A"); zone(60, 90, "#8E1F14");
+    const a = -Math.PI / 2 + heel * D2R;
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * (r - 4), Math.sin(a) * (r - 4)); ctx.stroke();
+    ctx.fillStyle = "#fff"; ctx.font = `600 12px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center";
+    ctx.fillText("sbandamento " + (S.capsized ? "— scuffia" : Math.round(Math.abs(S.heel)) + "°"), 0, -r - 12);
+    ctx.restore();
+  }
+  function drawWindBox(v){
+    ctx.save(); ctx.font = `600 14px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    ctx.fillText("Vento reale da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", 16, 26);
+    ctx.restore();
+  }
+
+
+
+  // ======================================================================
+  // CICLO
+  // ======================================================================
+  let last = performance.now(), panelT = 0, lastErr = "", timeScale = 1;
+  function frame(now){
+    requestAnimationFrame(frame);
+    try { tick(now); }
+    catch (err){ if (String(err) !== lastErr){ lastErr = String(err); console.error(err); $("errBox").hidden = false; $("errBox").textContent = "Errore interno: " + lastErr + ". Il gioco prosegue; se qualcosa non risponde, torna al menu."; } }
+  }
+  function tick(now){
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (mode === "menu") return;
+    const st = curStep(), paused = (st && st.pause) || $("gloss").open || $("quiz").open;
+    if (!paused){ for (let k = 0; k < timeScale; k++){ simulate(dt, st); simTime += dt; } }
+    else { if (st && st.pause) ctl.sheet = autoSheet(); info = step(S, ctl, local, 0); S.dispBoom = S.boomSide * S.boom; }
+    draw(paused ? 0.016 : dt);
+    panelT -= dt; if (panelT <= 0){ panel(); panelT = 0.1; }
+  }
+  env.twd = 0; freshState(0, 0, 90, 0.4);
+  showMenu();
+  // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
+  if (location.hash === "#collaudo") window.__sv = { openItem, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; } };
+  requestAnimationFrame(frame);
+
+})();
+</script>
+</body>
+</html>
