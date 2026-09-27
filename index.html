@@ -635,8 +635,8 @@ function step(S, C, E, dt){
       text: "Risali di bolina fino alla boa e girala lasciandola a sinistra, poi torna all'arrivo con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
       start: { x: 0, y: 20, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
-      text: "Tre lati: bolina fino alla boa 1, lasco fino alla boa 2, poi di nuovo lasco, con le altre mure, fino all'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -90, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
+      text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino all'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 
   const SEQ = [["l",0],["l",1],["l",2],["m",0],["m",1],["l",3],["l",4],["m",2],["m",3],["l",5],["m",4]];
@@ -823,7 +823,7 @@ function step(S, C, E, dt){
   // ======================================================================
   const STORE = "scuolaVelaSim.v1";
   // record e fantasmi dei percorsi cambiati nella 0.14 (giro di boa dal lato giusto) usano chiavi nuove; i completamenti restano
-  const KEYV = { m3: "m3.2", m4: "m4.2", r0: "r0.2", r1: "r1.2" };
+  const KEYV = { m3: "m3.2", m4: "m4.3", r0: "r0.2", r1: "r1.2" };
   const recK = k => KEYV[k] || k;
   let progress = { done: {}, best: {} };
   try { const raw = localStorage.getItem(STORE); if (raw) progress = Object.assign(progress, JSON.parse(raw)); } catch(e){}

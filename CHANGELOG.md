@@ -2,6 +2,11 @@
 
 Tutte le versioni sono del 26–27 settembre 2026. I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a non ripeterli.
 
+## 0.14.1 — Prova 5 con tre andature
+- **Decisione:** nella prova 5 la boa 2 è spostata a sinistra della boa 1, alla stessa altezza. Il percorso diventa bolina, traverso (90° dal vento), gran lasco (circa 146°): tre andature diverse, come prometteva il testo originale. Lunghezza da circa 590 a 636 m.
+- Testo della prova aggiornato; record e fantasma della prova 5 ripartono da zero (chiave `m4.3`).
+- Collaudi: triangolo con le boe a sinistra completato; con la boa 2 a dritta non si completa e compare il messaggio del lato sbagliato.
+
 ## 0.14 — Giro di boa, andatura nascosta, barra ferma in gara
 - **Decisioni (fase A):** andatura nascosta nel pannello delle lezioni 1 e 2; boe da lasciare a sinistra in prove e regate; barra che non torna al centro in prove e regate, riattivabile.
 - **Andatura nel pannello:** nascosta nelle lezioni 1 e 2, perché le andature si spiegano nella lezione 3.
