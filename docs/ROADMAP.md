@@ -23,6 +23,7 @@ Aggiornata al 27 settembre 2026.
 - Tornei di più regate contro gli avversari del computer, con il sistema a punti delle regate (1 punto al primo, 2 al secondo, e così via; vince chi ne ha meno), eventualmente con uno scarto.
 - Classifica dei record personali per prova e regata.
 - Avversari «esperti» più forti: virate più rapide, scelta del bordo migliore, uso delle raffiche.
+- **Difetto noto degli avversari:** in circa una partenza su cinque un avversario parte in anticipo o con più di un minuto di ritardo (con 1 minuto di preparazione i ritardi sono più frequenti). Le regate si concludono comunque.
 
 ## Fase C — Più tipi di barca
 
@@ -70,7 +71,6 @@ Classifiche comuni e fantasmi condivisi («sfida il record di un amico»).
 
 | Decisione | Opzioni |
 | --- | --- |
-| Angolo morto | 30° (attuale, coerente col motore) o 40–45° (molti manuali); se cambia, vanno allineati motore, testi e quiz. |
 | Andatura nel pannello già dalla lezione 1 | Lasciarla o nasconderla fino alla lezione 3. |
 | Regole di regata | Lato di giro della boa (di norma lasciandola a sinistra) e giri di penalità invece dei 15 secondi. |
 | Barra che torna al centro | Disattivarla automaticamente nelle regate. |

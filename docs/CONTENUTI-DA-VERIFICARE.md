@@ -10,9 +10,9 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 
 | Punto | Cosa dice il gioco | Perché c'è un dubbio | Esito |
 | --- | --- | --- | --- |
-| Strambata e abbattuta | Sono sinonimi | Alcuni testi chiamano abbattuta la manovra voluta e strambata quella involontaria. | |
-| Confini delle andature | Angolo morto fino a circa 30°, bolina 30–75°, traverso 75–105°, lasco 105–135°, gran lasco 135–165°, poppa oltre 165° | Convenzioni scelte per il gioco; i manuali danno valori indicativi, e per l'angolo morto spesso 40–45°. | |
-| Posizione dei filetti | Due filetti sulla randa, vicino all'albero | Sulla randa i filetti classici stanno sulla balumina; quelli vicino all'inferitura sono tipici del fiocco. | |
+| Strambata e abbattuta | Sono sinonimi | Alcuni testi chiamano abbattuta la manovra voluta e strambata quella involontaria. | ❓ La dispensa della Scuola Vela Argentario usa «abbattuta» per la manovra; resta da capire se «strambata» sia usata anche per quella voluta. |
+| Confini delle andature | Angolo morto fino a circa 40° (testi: «circa 45° per lato»), bolina 40–75°, traverso 75–105°, lasco 105–135°, gran lasco 135–165°, poppa oltre 165° | Valori indicativi, variano con la barca. | ✅ Allineato alle dispense: 90° in tutto (45° per lato) come convenzione didattica (Scuola Vela Argentario, Mediterranea Sailing); circa 70° per le derive (Lega Navale, «A vela sulla deriva»). Versione 0.13. |
+| Posizione dei filetti | Due filetti sulla randa, vicino all'albero | Sulla randa i filetti classici stanno sulla balumina; quelli vicino all'inferitura sono tipici del fiocco. | ❓ La regola di lettura è confermata dalla Lega Navale («cazzare se il filetto tende sopravvento, lascare se tende sottovento»); la posizione resta da verificare. |
 | Colori dei filetti | Rosso sul lato sinistro, verde sul lato destro | Scelta del gioco, ispirata ai fanali; sulle vele reali i colori variano. | |
 | Comandi di manovra | «Pronti a virare?», «Pronti!», «Viro!»; «Pronti a strambare?», «Strambo!» | D'uso comune, ma con varianti tra scuole. | |
 | Precedenza tra mure | Tra due barche a vela con mure diverse, quella mure a sinistra lascia strada | Regola del regolamento per prevenire gli abbordi in mare; il gioco tratta anche il caso delle stesse mure (lascia strada la barca sopravento). | |

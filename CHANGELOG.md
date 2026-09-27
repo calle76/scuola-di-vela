@@ -2,6 +2,13 @@
 
 Tutte le versioni sono del 26–27 settembre 2026. I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a non ripeterli.
 
+## 0.13 — Angolo morto realistico
+- **Decisione:** angolo morto allineato alle dispense di vela (45° per lato come convenzione didattica, circa 35° per le derive). Prima la barca avanzava fino a 25–30° dal vento, più di qualsiasi fonte.
+- Fisica: la vela si sgonfia quando il vento apparente è troppo stretto (`luffA0` 27°, `luffW` 7°), angolo minimo del boma 14°. Ora la barca è ferma sotto circa 33° dal vento, arranca fino a 40° e risale meglio a 45–48°.
+- Timone leggermente più efficace (`turnLen` 1,05 m): con l'angolo morto più largo la virata lanciata durava 6 secondi; ora circa 4, come una deriva vera.
+- Cerchio delle andature: angolo morto fino a 40°. Aggiornate le condizioni delle lezioni 1, 2, 3 e 5, i testi (bolina «tra 45° e 75°»), il glossario (angolo morto, bolina) e gli angoli di bolina degli avversari.
+- Collaudi: tutte le lezioni completabili; 6 regate su 6 concluse; strambata invariata. Resta il difetto noto delle partenze degli avversari (vedi ROADMAP, fase B).
+
 ## 0.12 — Revisione generale
 - Lezione 2, «Tenere la rotta»: onde che spostano la prua e barca orziera. Prima l'esercizio si completava senza fare nulla.
 - Lezione 4: vento apparente indicato «tra 60° e 70°», coerente con il pannello.
