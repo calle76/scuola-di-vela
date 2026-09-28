@@ -1,6 +1,26 @@
 # Diario delle modifiche
 
-Tutte le versioni sono del 26–27 settembre 2026. I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a non ripeterli.
+Tutte le versioni sono del 26–28 settembre 2026. I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a non ripeterli.
+
+## 0.15 — Registro degli errori e pannello ordinato
+- **Decisioni (fase A):** registro degli errori in lezioni, prove e regate; nelle lezioni non conta l'errore che il passo chiede apposta. Contatore sempre visibile durante il gioco. Segno ★ nel menu per le prove e le regate completate almeno una volta senza errori. Pannello leggibile tutto senza scorrere su uno schermo 1360×768, anche senza schermo intero.
+- **Registro degli errori.** Voci e definizioni:
+  - scuffia;
+  - strambata a vela aperta (boma oltre 45°, la soglia del colpo del boma). Il gioco non può sapere se una strambata era voluta, quindi non la chiama «involontaria»;
+  - piantato nell'angolo morto: prua a meno di 40° dal vento e velocità sotto 1 nodo per almeno 3 secondi di fila; si contano gli episodi e i secondi. Non conta prima della partenza delle regate né da scuffiati. Taratura: una virata partita a 3,1 nodi resta 1,9 s sotto 1 nodo e non conta; una partita a 2,3 nodi ne resta 4,2 e conta. Il pilota automatico dei collaudi, in 27 virate nelle prove 3, 4 e 5, non ne ha contata nessuna;
+  - boa girata dal lato sbagliato (ogni attraversamento della semiretta nel verso sbagliato);
+  - contatto (solo regate), separando quelli con penalità;
+  - partenza anticipata e linea tagliata fuori dagli estremi (solo regate).
+- Il registro si chiude all'arrivo e riparte a ogni nuovo tentativo. I record restano tempi: il registro non li modifica.
+- **Lezioni:** campo `allow` nei passi che chiedono l'errore (lezione 1 «Orzare e l'angolo morto», lezione 5 «Una virata che non riesce» e «Strambata violenta», lezione 6 «La scuffia»). Un episodio di barca piantata iniziato in un passo che lo chiede non conta nemmeno se prosegue nel passo dopo.
+- **Pannello riordinato** in prove, regate e navigazione libera: strumenti su tre colonne, suggerimento, barra e scotta, poi stato (tempo e record nelle prove, che prima non si vedevano; classifica nelle regate; errori), poi i comandi. Nelle lezioni l'ordine resta quello di prima, con spazi più compatti; dalla lezione 3 in poi spariscono le scritte agli estremi dei cursori.
+- **Istruzioni di prove e regate** in un riquadro sul mare, a gioco fermo. Il cronometro della prova e il conto alla rovescia della regata partono con «Parti» o Invio; prima il conto alla rovescia scorreva mentre si leggeva. Il pulsante «Istruzioni» le riapre, sempre a gioco fermo. Avversari e Preparazione si scelgono nel riquadro.
+- **Impostazioni** in una finestra aperta dal pulsante ⚙; mentre è aperta il gioco è fermo, come con il glossario.
+- Legenda dei tasti su una riga: «R raddrizza» resta sul pulsante e nel messaggio di scuffia. «Ricomincia il passo» diventa «Ricomincia».
+- **Misure** (con i caratteri veri del gioco): a 1360×650, cioè 1360×768 meno le barre del browser, il pannello sta tutto nella finestra in ogni passo di lezione, prova e regata. Nei riepiloghi finali delle lezioni il margine è zero: con F11 (schermo intero) ci sono circa 118 pixel in più.
+- **Nuovi collaudi:** `collaudo_registro.py` (provoca ogni errore guidando la barca: 13 verifiche) e `collaudo_pannello.py` (altezza del pannello e riquadro delle istruzioni). Nei collaudi automatici il riquadro delle istruzioni è saltato; `collaudo_partenze.py` e `collaudo_fantasma.py` impostano Avversari e Preparazione direttamente, perché ora stanno nel riquadro.
+- **Collaudi:** registro 13 verifiche su 13 (due volte); 10 regate su 10 concluse con tutti gli avversari; partenze confrontate con la 0.14.1 nello stesso momento su 36 partenze ciascuna: ritardo medio 8,2 s contro 8,3, due ritardi oltre un minuto in entrambe (difetto noto), nessuna partenza anticipata; lezioni, schermate, quiz, rotta, strambata, fantasma e giro di boa invariati.
+- **Lacuna trovata durante il lavoro:** nelle prove il tempo non era mostrato da nessuna parte mentre si navigava, solo all'arrivo.
 
 ## 0.14.1 — Prova 5 con tre andature
 - **Decisione:** nella prova 5 la boa 2 è spostata a sinistra della boa 1, alla stessa altezza. Il percorso diventa bolina, traverso (90° dal vento), gran lasco (circa 146°): tre andature diverse, come prometteva il testo originale. Lunghezza da circa 590 a 636 m.

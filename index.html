@@ -68,32 +68,60 @@ canvas:focus{outline:none}
 .focusTip{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(10,24,36,.7);color:#fff;border-radius:16px;padding:5px 14px;font-size:.95rem;pointer-events:none}
 .zoomBox{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
 .zoomBox button{width:40px;height:40px;border-radius:8px;border:none;background:rgba(10,24,36,.65);color:#fff;font-size:1.4rem;cursor:pointer}
-.panel{border-left:1px solid var(--line);overflow-y:auto;padding:14px 18px 24px;display:flex;flex-direction:column;gap:14px}
+.panel{border-left:1px solid var(--line);overflow-y:auto;padding:10px 16px 10px;display:flex;flex-direction:column;gap:9px}
+/* prove, regate, navigazione libera: prima strumenti e comandi, poi stato, istruzioni in fondo */
+.panel.play > .topbar{order:0} .panel.play > #instr{order:1} .panel.play > #hint,.panel.play > #errBox{order:2}
+.panel.play > #sem,.panel.play > #direct{order:3} .panel.play > #status{order:4}
+.panel.play > #done,.panel.play > #rDone,.panel.play > #rightBtn{order:5}
+.panel.play > #mission,.panel.play > #race,.panel.play > #free{order:6} .panel.play > #mRow,.panel.play > #rRow{order:7}
+.panel.noends .ends{display:none} /* le scritte agli estremi dei cursori servono nelle lezioni 1 e 2 */
+.brief-line{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.brief-line h2{margin:0!important}
+.pillbtn{font:inherit;font-size:.92rem;border:1px solid var(--line);background:transparent;color:var(--ink);padding:3px 11px;border-radius:14px;cursor:pointer;white-space:nowrap}
+.overlay.briefOv{top:50%;transform:translate(-50%,-50%);max-width:min(540px,90%);max-height:92%;overflow-y:auto;text-align:left;padding:18px 22px 20px}
+.briefOv h2{margin:0 0 8px;font-size:1.5rem;line-height:1.15}
+.briefOv p{font-family:"Source Serif 4",Georgia,serif;font-size:1.02rem;line-height:1.5}
+.briefOv .opts-inline{margin:4px 0 12px;font-size:1rem}
+.briefOv select{background:#fff;color:#1C2B45;border-color:#fff}
+.briefOv .bNote{font-family:inherit;font-size:.92rem;opacity:.8;margin:0 0 12px}
+.status{display:flex;flex-direction:column;gap:6px}
+.status .clock{margin:0;font-size:1.05rem;font-weight:600;font-variant-numeric:tabular-nums}
+.status .clock span{font-weight:400;color:var(--ink-soft)}
+.errs{margin:0;font-size:.95rem;color:var(--ink-soft);line-height:1.3}
+.errs.some{color:var(--warn);font-weight:600}
+.stepline{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 2px;line-height:1.2}
+.stepline .step{margin:0!important;white-space:nowrap}
+#lErr{font-size:.9rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.item .state .star{color:var(--good);margin-left:4px}
+.opts-inline{display:flex;gap:8px 14px;flex-wrap:wrap;align-items:center}
+.opts-inline label{display:flex;gap:6px;align-items:center}
 .topbar{display:flex;align-items:center;gap:8px}
 .topbar .where{flex:1;font-size:1rem;font-weight:600;color:var(--ink-soft);line-height:1.2}
 .topbar button{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 12px;border-radius:14px;cursor:pointer}
 .card .step{font-size:.9rem;color:var(--ink-soft);margin:0 0 4px}
-.card h2{font-size:1.55rem;font-weight:700;margin:0 0 8px;line-height:1.1}
-.card p{font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.6;margin:0 0 10px}
+.card h2{font-size:1.55rem;font-weight:700;margin:0 0 6px;line-height:1.1}
+.panel.play .card h2{font-size:1.3rem}
+.card p{font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.5;margin:0 0 8px}
 .card em{font-style:normal;font-weight:600;color:var(--accent)}
 .feedback{border-left:3px solid var(--good);padding:4px 0 4px 12px;margin-top:4px}
 .feedback p{margin:0}
 .row{display:flex;gap:8px;flex-wrap:wrap}
 .row button,.btn{font:inherit;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:7px 16px;border-radius:6px;cursor:pointer}
+.panel .row button,.panel .btn{padding:5px 12px}
 .row button.primary,.btn.primary{background:var(--ink);color:var(--panel)}
 .done{border:2px solid var(--good);border-radius:8px;padding:12px}
 .done p{margin:0 0 10px;font-size:1.1rem;font-weight:600}
-.standings{margin:10px 0 0;padding-left:24px;font-size:1.05rem}
-.standings li{margin:3px 0}
+.standings{margin:0;padding-left:22px;font-size:1rem;line-height:1.3}
+.standings li{margin:1px 0}
 .standings li.me b{color:var(--accent)}
 .standings span{color:var(--ink-soft);font-size:.92rem}
-.rule{font-family:"Source Serif 4",Georgia,serif;font-size:.92rem;line-height:1.5;border-left:3px solid var(--warn);padding-left:10px;margin:10px 0 0}
-.hint{font-size:1.02rem;font-weight:600;padding:9px 11px;border-radius:6px;background:var(--btn);line-height:1.3;min-height:calc(2.6em + 18px)}
+.rule{font-size:.92rem;line-height:1.3;border-left:3px solid var(--warn);padding-left:10px;margin:0}
+.hint{font-size:1rem;font-weight:600;padding:7px 10px;border-radius:6px;background:var(--btn);line-height:1.25;min-height:calc(2.5em + 14px)}
 .hint.good{color:var(--good)} .hint.bad{color:var(--warn)}
-.instr{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.instr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px 10px}
 .instr div{display:flex;flex-direction:column}
-.instr span{font-size:.82rem;color:var(--ink-soft)}
-.instr b{font-size:1.28rem;font-weight:600;font-variant-numeric:tabular-nums}
+.instr span{font-size:.8rem;color:var(--ink-soft)}
+.instr b{font-size:1.15rem;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sem{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sem button{font:inherit;border:none;background:var(--btn);color:var(--ink);border-radius:10px;padding:11px 8px 9px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;display:flex;flex-direction:column;align-items:center;gap:1px}
 .sem button strong{font-size:1.25rem}
@@ -102,13 +130,16 @@ canvas:focus{outline:none}
 .sem button:disabled{opacity:.25;cursor:default}
 .ctl label{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:2px}
 .ctl label b{font-variant-numeric:tabular-nums}
-.ctl input[type=range]{width:100%;height:34px;accent-color:var(--ink)}
+.ctl input[type=range]{width:100%;height:24px;margin:0;accent-color:var(--ink)}
 .ctl.off{opacity:.3}
-.ctl + .ctl{margin-top:12px}
+.ctl + .ctl{margin-top:6px}
 .ends{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-soft);margin-top:-4px}
-.keys{font-size:.85rem;color:var(--ink-soft);line-height:1.6;margin:0}
-.keys kbd{font:inherit;font-weight:600;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:0 5px}
-details.settings summary{cursor:pointer;font-weight:600;font-size:1.02rem}
+.keys{font-size:.8rem;color:var(--ink-soft);line-height:1.5;margin:4px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.keys kbd{font:inherit;font-weight:600;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-right:2px}
+dialog#setDlg{border:none;border-radius:10px;padding:0;width:min(480px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
+dialog#setDlg::backdrop{background:rgba(13,25,36,.5)}
+.set-body{padding:4px 20px 20px}
+#openSet{font-size:1.1rem;line-height:1;padding:5px 9px}
 .opts{display:flex;flex-direction:column;gap:10px;margin-top:10px}
 .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{flex:1;font:inherit;font-size:.9rem;border:none;background:transparent;color:var(--ink);padding:7px 6px;cursor:pointer}
@@ -171,10 +202,47 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
   <dl class="gl-list" id="glList"></dl>
 </dialog>
 
+<dialog id="setDlg" aria-labelledby="setTitle">
+  <div class="gl-head"><div><h2 id="setTitle">Impostazioni</h2><button id="setClose" class="linkish">Chiudi</button></div></div>
+  <div class="set-body">
+    <div class="opts">
+        <div><div class="optrow" style="margin-bottom:6px"><span>Frecce ← →</span></div>
+          <div class="seg" id="helmMode"><button data-v="barra" aria-pressed="true">Muovono la barra (reale)</button><button data-v="prua" aria-pressed="false">Girano la prua (aiutato)</button></div></div>
+        <div><div class="optrow" style="margin-bottom:6px"><span>Vista</span></div>
+          <div class="seg" id="viewMode"><button data-v="prua" aria-pressed="true">Prua in alto</button><button data-v="nord" aria-pressed="false">Nord in alto</button></div>
+          <p class="keys" style="margin-top:6px">Con «prua in alto» la barca resta ferma sullo schermo e ruota il mare: quando la barca gira a destra, il mare sembra girare a sinistra. Con «nord in alto» è la barca a girare.</p></div>
+        <div id="freeOpts" class="opts" style="margin-top:0">
+          <div class="optrow"><span>Vento da</span>
+            <select id="wDir"><option value="0">nord</option><option value="45">nord-est</option><option value="90">est</option><option value="135">sud-est</option><option value="180">sud</option><option value="225">sud-ovest</option><option value="270">ovest</option><option value="315">nord-ovest</option></select></div>
+          <div class="optrow"><span>Intensità</span>
+            <select id="wSpd"><option value="6">6 nodi, brezza leggera</option><option value="10" selected>10 nodi, brezza tesa</option><option value="15">15 nodi, vento fresco</option></select></div>
+          <div class="optrow"><span>Raffiche</span>
+            <select id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
+        </div>
+        <label class="check"><input type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (vale per la modalità in corso: nelle prove e nelle regate parte spenta)</label>
+        <label class="check"><input type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
+        <label class="check"><input type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente</label>
+        <label class="check"><input type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
+      </div>
+  </div>
+</dialog>
+
 <div class="layout" id="game" hidden>
   <div class="stage">
     <canvas id="c" tabindex="0" aria-label="Vista dall'alto della deriva sul mare. Clicca qui per usare la tastiera."></canvas>
     <div class="overlay" id="capOverlay" hidden><p id="capText">Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.</p><button id="capBtn">Raddrizza la barca</button></div>
+    <div class="overlay briefOv" id="briefOv" hidden role="dialog" aria-labelledby="bTitle">
+      <h2 id="bTitle"></h2>
+      <p id="bText"></p>
+      <div id="bRaceOpts">
+        <div class="opts-inline">
+        <label>Avversari <select id="aiLevel"><option value="principianti">principianti</option><option value="esperti">esperti</option><option value="nessuno">nessuno, solo il fantasma</option></select></label>
+        <label style="display:flex;gap:6px;align-items:center">Preparazione <select id="cdSel"><option value="60">1 minuto</option><option value="180" selected>3 minuti</option><option value="300">5 minuti</option></select></label>
+      </div>
+      </div>
+      <p class="bNote" id="bNote"></p>
+      <button id="bGo">Parti</button>
+    </div>
     <div class="zoomBox"><button id="zIn" aria-label="Avvicina">+</button><button id="zOut" aria-label="Allontana">−</button></div>
     <div class="focusTip" id="focusTip" hidden>Clicca sul mare per usare la tastiera</div>
   </div>
@@ -183,47 +251,42 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
       <button id="toMenu">Menu</button>
       <span class="where" id="where"></span>
       <button id="openGloss">Glossario</button>
+      <button id="openSet" aria-label="Impostazioni" title="Impostazioni">⚙</button>
     </div>
 
     <section class="card" id="lesson" hidden>
-      <p class="step" id="lStep"></p>
+      <div class="stepline"><p class="step" id="lStep"></p><p class="errs" id="lErr"></p></div>
       <h2 id="lTitle"></h2>
       <div id="lText"></div>
       <div class="feedback" id="lFeedback" hidden></div>
       <div class="row" style="margin-top:12px">
         <button id="lBack">Indietro</button>
-        <button id="lRetry">Ricomincia il passo</button>
+        <button id="lRetry">Ricomincia</button>
         <button id="lQuiz" hidden>Fai il ripasso</button>
         <button class="primary" id="lNext">Avanti</button>
       </div>
     </section>
 
-    <section class="card" id="mission" hidden>
-      <h2 id="mTitle"></h2>
-      <p id="mText"></p>
-    </section>
+    <section class="card brief-line" id="mission" hidden><h2 id="mTitle"></h2><button class="pillbtn" id="mBrief">Istruzioni</button></section>
     <section class="done" id="done" hidden>
       <p id="doneText"></p>
       <div class="row"><button class="primary" id="mNext">Prosegui</button><button id="mRetry2">Rifai</button><button id="mWind2">Rifai con altro vento</button></div>
     </section>
 
-    <section class="card" id="race" hidden>
-      <h2 id="rTitle"></h2>
-      <p id="rText"></p>
+    <section class="card brief-line" id="race" hidden><h2 id="rTitle"></h2><button class="pillbtn" id="rBrief">Istruzioni</button></section>
+    <section class="status" id="status" hidden>
+      <p class="clock" id="stClock"></p>
       <ol class="standings" id="standings"></ol>
       <p class="rule" id="rRule" hidden></p>
-      <div class="done" id="rDone" hidden><p id="rDoneText"></p>
-        <div class="row"><button class="primary" id="rAgain">Nuova regata</button><button id="rWind2">Con altro vento</button></div></div>
-      <div class="row" style="margin-top:10px;align-items:center">
-        <button id="rRestart">Ricomincia</button><button id="rWind">Cambia vento</button>
-        <label style="display:flex;gap:6px;align-items:center">Avversari <select id="aiLevel"><option value="principianti">principianti</option><option value="esperti">esperti</option><option value="nessuno">nessuno, solo il fantasma</option></select></label>
-        <label style="display:flex;gap:6px;align-items:center">Preparazione <select id="cdSel"><option value="60">1 minuto</option><option value="180" selected>3 minuti</option><option value="300">5 minuti</option></select></label>
-      </div>
+      <p class="errs" id="stErr"></p>
     </section>
+    <div class="done" id="rDone" hidden><p id="rDoneText"></p>
+      <div class="row"><button class="primary" id="rAgain">Nuova regata</button><button id="rWind2">Con altro vento</button></div></div>
+    <div class="row" id="rRow" hidden><button id="rRestart">Ricomincia</button><button id="rWind">Cambia vento</button></div>
 
     <section class="card" id="free" hidden>
       <h2>Navigazione libera</h2>
-      <p>Nessun obiettivo: prendi confidenza con la barca. Nelle impostazioni puoi cambiare direzione e forza del vento e le raffiche.</p>
+      <p>Nessun obiettivo: prendi confidenza con la barca. Nelle impostazioni (pulsante ⚙ in alto) puoi cambiare direzione e forza del vento e le raffiche.</p>
     </section>
 
     <div class="hint" id="hint">—</div>
@@ -258,34 +321,12 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
         <input id="sheet" type="range" min="0" max="100" value="40">
         <div class="ends"><span>cazzata</span><span>lascata</span></div>
       </section>
-      <p class="keys"><kbd>←</kbd> <kbd>→</kbd> barra &nbsp; <kbd>↑</kbd> cazza &nbsp; <kbd>↓</kbd> lasca &nbsp; <kbd>Spazio</kbd> barra al centro &nbsp; <kbd>R</kbd> raddrizza</p>
+      <p class="keys"><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>↑</kbd> cazza &nbsp;<kbd>↓</kbd> lasca &nbsp;<kbd>Spazio</kbd> centra la barra</p>
     </div>
 
     <div class="row" id="mRow" hidden><button id="mRetry">Ricomincia la prova</button><button id="mWind">Cambia vento</button></div>
     <button class="btn" id="rightBtn" hidden>Raddrizza la barca (R)</button>
 
-    <details class="settings">
-      <summary>Impostazioni</summary>
-      <div class="opts">
-        <div><div class="optrow" style="margin-bottom:6px"><span>Frecce ← →</span></div>
-          <div class="seg" id="helmMode"><button data-v="barra" aria-pressed="true">Muovono la barra (reale)</button><button data-v="prua" aria-pressed="false">Girano la prua (aiutato)</button></div></div>
-        <div><div class="optrow" style="margin-bottom:6px"><span>Vista</span></div>
-          <div class="seg" id="viewMode"><button data-v="prua" aria-pressed="true">Prua in alto</button><button data-v="nord" aria-pressed="false">Nord in alto</button></div>
-          <p class="keys" style="margin-top:6px">Con «prua in alto» la barca resta ferma sullo schermo e ruota il mare: quando la barca gira a destra, il mare sembra girare a sinistra. Con «nord in alto» è la barca a girare.</p></div>
-        <div id="freeOpts" class="opts" style="margin-top:0">
-          <div class="optrow"><span>Vento da</span>
-            <select id="wDir"><option value="0">nord</option><option value="45">nord-est</option><option value="90">est</option><option value="135">sud-est</option><option value="180">sud</option><option value="225">sud-ovest</option><option value="270">ovest</option><option value="315">nord-ovest</option></select></div>
-          <div class="optrow"><span>Intensità</span>
-            <select id="wSpd"><option value="6">6 nodi, brezza leggera</option><option value="10" selected>10 nodi, brezza tesa</option><option value="15">15 nodi, vento fresco</option></select></div>
-          <div class="optrow"><span>Raffiche</span>
-            <select id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
-        </div>
-        <label class="check"><input type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (vale per la modalità in corso: nelle prove e nelle regate parte spenta)</label>
-        <label class="check"><input type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
-        <label class="check"><input type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente</label>
-        <label class="check"><input type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
-      </div>
-    </details>
   </aside>
 </div>
 
@@ -422,7 +463,7 @@ function step(S, C, E, dt){
              "Continua finché il vento arriva quasi da dietro. Per ora la vela si regola da sola."],
       cond: I => I.twa >= 135,
       done: "Hai poggiato: ora il vento arriva da dietro, e il boma si è aperto verso l'esterno per ricevere il vento." },
-    { title: "Orzare e l'angolo morto", sem: ["orza"], autoTrim: true, hud: 1, hintKind: "sail",
+    { title: "Orzare e l'angolo morto", allow: ["irons"], sem: ["orza"], autoTrim: true, hud: 1, hintKind: "sail",
       text: ["Ora tieni premuto <em>Orza</em> (tasto A): la prua gira verso il vento. Continua finché la barca non si ferma quasi del tutto."],
       cond: I => I.twa < 40 && I.kn < 1.5, hold: 0.5,
       done: "Questo è l'<em>angolo morto</em>: con la prua troppo vicina al vento (nelle scuole si indica in circa 45° per lato) la vela sbatte come una bandiera e non spinge, e la barca si ferma. Nessuna barca a vela può andare dritta contro il vento." },
@@ -565,7 +606,7 @@ function step(S, C, E, dt){
              "In bolina la vela resta cazzata su entrambe le mure: non serve toccarla."],
       cond: (I, S, B) => S.tacks > B.tacks && I.twa >= 40 && I.twa <= 78 && I.kn > 1.2, hold: 0.8,
       done: "Virata riuscita: il boma è passato dall'altra parte e il timoniere ha cambiato lato. A bordo si annuncia così: «Pronti a virare?», «Pronti!», «Viro!»." },
-    { title: "Una virata che non riesce", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
+    { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare."],
       cond: (I, S) => (I.twa < 40 && I.kn < 0.4) || S.u < -0.1, hold: 1,
       done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: centra la barra, lascia che la prua scada, poi poggia e riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
@@ -577,7 +618,7 @@ function step(S, C, E, dt){
     { title: "La strambata", ...PAUSE, zoom: 1.2, rose: true, maneuvers: true,
       text: ["La strambata è più delicata. In poppa la vela è tutta aperta: quando il vento passa dall'altro lato, il boma attraversa la barca di colpo. Se lo fa con violenza può far scuffiare la barca o colpire qualcuno in testa.",
              "Per questo la si fa <em>controllata</em>: si cazza la vela finché il boma è a circa 45° dal centro barca, si poggia finché il vento passa dall'altro lato, poi subito si lasca."] },
-    { title: "Strambata violenta", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "none",
+    { title: "Strambata violenta", allow: ["gybesV", "capsizes"], tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "none",
       text: ["Prima vediamo cosa <em>non</em> fare. Poggia fino alla poppa e continua a poggiare con la vela tutta aperta (si regola da sola) finché il vento passa dall'altro lato."],
       cond: (I, S, B) => S.gybesV > B.gybesV, hold: 0.6,
       done: "Il boma ha attraversato la barca di colpo, la barca ha sbandato e rallentato: <em>strambata violenta</em>. Se capita senza volerlo, navigando in poppa distratti, si chiama <em>strambata involontaria</em>." },
@@ -598,7 +639,7 @@ function step(S, C, E, dt){
       text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco (e di bolina puoi anche <em>orzare</em> leggermente) per tenere lo sbandamento sotto i 20°. Passata la raffica, cazza di nuovo."],
       cond: I => I.inGust && I.heel < 20 && I.kn > 2, hold: 3,
       done: "Ben fatto. Lascare riduce la forza sulla vela; orzare di poco la scarica. È la tecnica principale per navigare con vento rafficato." },
-    { title: "La scuffia", tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
+    { title: "La scuffia", allow: ["capsizes"], tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
       text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: vela tutta cazzata, e in raffica non lascare."],
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
       done: "Oltre circa 60° di sbandamento la barca si è rovesciata: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
@@ -825,7 +866,8 @@ function step(S, C, E, dt){
   // record e fantasmi dei percorsi cambiati nella 0.14 (giro di boa dal lato giusto) usano chiavi nuove; i completamenti restano
   const KEYV = { m3: "m3.2", m4: "m4.3", r0: "r0.2", r1: "r1.2" };
   const recK = k => KEYV[k] || k;
-  let progress = { done: {}, best: {} };
+  let progress = { done: {}, best: {}, clean: {} };
+  const STAR = '<span class="star" title="Completata almeno una volta senza errori">★</span>';
   try { const raw = localStorage.getItem(STORE); if (raw) progress = Object.assign(progress, JSON.parse(raw)); } catch(e){}
   const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name + ": " + LESSONS[i].title : "Prova " + (i + 1) + ": " + MISSIONS[i].title;
@@ -851,6 +893,7 @@ function step(S, C, E, dt){
       const desc = t === "l" ? LESSONS[i].desc : MISSIONS[i].desc;
       let state = done ? "Completata" : "Da fare";
       if (t === "m" && progress.best[recK(key)]) state = "Record: " + fmtTime(progress.best[recK(key)]);
+      if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-k="${k}"><span class="num">${k + 1}</span><span><div class="kind">${kind}</div><div class="title">${title}</div><div class="desc">${desc}</div></span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
     const future = FUTURE.map(part => `<section class="part future"><div class="part-head"><h2>${part.title}</h2><span>In arrivo</span></div><div class="items">${
@@ -861,17 +904,17 @@ function step(S, C, E, dt){
       <div class="items"><button class="item free" id="goFree"><span class="num">⛵</span><span><div class="kind">Sempre disponibile</div><div class="title">Navigazione libera</div><div class="desc">Nessun obiettivo: scegli vento e raffiche e naviga.</div></span><span></span></button></div>
       <section class="part"><div class="part-head"><h2>Parte 1: governare la barca</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></section>
       <section class="part"><div class="part-head"><h2>Regate</h2><span>contro avversari guidati dal computer</span></div>
-        <div class="items">${RACES.map((rc, i) => { const b = progress.best[recK("r" + i)]; return `<button class="item" data-r="${i}"><span class="num">⚑</span><span><div class="kind">Regata</div><div class="title">${rc.title}</div><div class="desc">${rc.desc}</div></span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}</span></button>`; }).join("")}</div></section>
+        <div class="items">${RACES.map((rc, i) => { const b = progress.best[recK("r" + i)]; return `<button class="item" data-r="${i}"><span class="num">⚑</span><span><div class="kind">Regata</div><div class="title">${rc.title}</div><div class="desc">${rc.desc}</div></span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span></button>`; }).join("")}</div></section>
       <section class="part"><div class="part-head"><h2>Ripasso</h2><span>domande a scelta multipla</span></div>
         <div class="review">${LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i]; return `<button data-q="${i}">${L.name}: ${L.title}<small>${best !== undefined ? "Migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("")}</div></section>
       ${future}
-      <footer class="menu-foot"><span>I progressi restano salvati in questo browser.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
+      <footer class="menu-foot"><span>I progressi restano salvati in questo browser. ★ indica una prova o regata completata almeno una volta senza errori.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
     $("menuGloss").onclick = openGloss;
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));
-    $("resetProg").onclick = () => { if (confirm("Azzerare tutti i progressi?")){ progress = { done: {}, best: {} }; saveProgress(); showMenu(); } };
+    $("resetProg").onclick = () => { if (confirm("Azzerare tutti i progressi?")){ progress = { done: {}, best: {}, clean: {} }; saveProgress(); showMenu(); } };
     window.scrollTo(0, 0);
   }
   $("toMenu").onclick = showMenu;
@@ -884,6 +927,8 @@ function step(S, C, E, dt){
   }
   function openGloss(){ keys.clear(); semHeld.clear(); $("glSearch").value = ""; renderGloss(); $("gloss").showModal ? $("gloss").showModal() : $("gloss").setAttribute("open", ""); }
   $("openGloss").onclick = openGloss;
+  $("openSet").onclick = () => { keys.clear(); semHeld.clear(); $("setDlg").showModal ? $("setDlg").showModal() : $("setDlg").setAttribute("open", ""); };
+  $("setClose").onclick = () => $("setDlg").close ? $("setDlg").close() : $("setDlg").removeAttribute("open");
   $("glClose").onclick = () => $("gloss").close ? $("gloss").close() : $("gloss").removeAttribute("open");
   $("glSearch").addEventListener("input", e => renderGloss(e.target.value));
 
@@ -935,11 +980,16 @@ function step(S, C, E, dt){
   // ======================================================================
   // la barra che torna al centro ha due impostazioni: lezioni e navigazione libera (attiva), prove e regate (spenta: un regatante tiene la barra ferma)
   const centerKey = () => mode === "mission" || mode === "race" ? "autoCenterComp" : "autoCenter";
-  const centerNote = () => opt.autoCenterComp ? "" : " La barra resta dove la lasci: la riporta al centro la barra spaziatrice (si può cambiare nelle impostazioni).";
+  const centerNote = () => opt.autoCenterComp ? "" : " La barra resta dove la lasci: la riporta al centro la barra spaziatrice (si può cambiare nelle impostazioni, pulsante ⚙).";
   function showCards(which){
     $("autoCenter").checked = opt[centerKey()];
     $("lesson").hidden = which !== "lesson"; $("mission").hidden = which !== "mission"; $("free").hidden = which !== "free"; $("race").hidden = which !== "race";
     $("done").hidden = true; $("mRow").hidden = which !== "mission"; $("freeOpts").hidden = which !== "free";
+    $("rRow").hidden = which !== "race"; $("rDone").hidden = true;
+    document.querySelector(".panel").classList.toggle("play", which !== "lesson");
+    document.querySelector(".panel").classList.toggle("noends", which !== "lesson" || lessonIdx >= 2);
+    $("status").hidden = which !== "mission" && which !== "race"; $("standings").hidden = which !== "race"; $("stClock").hidden = which !== "mission";
+    $("briefOv").hidden = true; briefing = false;
   }
   function setControls(sem, tiller, sheet){
     allowSem = sem; allowTiller = tiller; allowSheet = sheet;
@@ -956,10 +1006,60 @@ function step(S, C, E, dt){
     $("instr").hidden = level === 0;
   }
   function setWhere(t){ $("where").textContent = t; }
+  // ---- registro degli errori (lezioni, prove, regate) ----
+  // Nelle lezioni un passo può chiedere apposta un «errore» (allow): lì quel tipo non conta.
+  const REG_ZERO = () => ({ capsizes: 0, gybesV: 0, irons: 0, ironsSec: 0, wrongMarks: 0, contacts: 0, contactsPen: 0, ocs: 0, outLine: 0 });
+  let reg = REG_ZERO(), ironsT = 0, ironsFree = false;
+  const IRONS_A = 40, IRONS_U = 1 / 1.944, IRONS_T = 3; // prua a meno di 40° dal vento, sotto 1 nodo, per almeno 3 s di fila
+  function regReset(){ reg = REG_ZERO(); ironsT = 0; ironsFree = false; }
+  function regClosed(){
+    if (mode === "mission") return S.finished;
+    if (mode === "race") return !R || R.boats[0].fin !== null;
+    return mode !== "lesson";
+  }
+  function regAllowed(kind){ const st = mode === "lesson" ? curStep() : null; return !!(st && st.allow && st.allow.includes(kind)); }
+  function regAdd(kind, n = 1){ if (regClosed() || regAllowed(kind)) return; reg[kind] += n; }
+  function ironsCheck(dt){
+    const A = Math.abs(norm180(local.twd - S.h));
+    const preStart = mode === "race" && R && R.t < 0;
+    if (regClosed() || preStart || S.capsized || A >= IRONS_A || S.u >= IRONS_U){ ironsT = 0; ironsFree = false; return; }
+    if (regAllowed("irons")) ironsFree = true; // un episodio iniziato in un passo che lo chiede non conta neppure se prosegue nel passo dopo
+    ironsT += dt;
+    if (ironsFree) return;
+    if (ironsT >= IRONS_T && ironsT - dt < IRONS_T){ reg.irons++; reg.ironsSec += IRONS_T; }
+    else if (ironsT > IRONS_T) reg.ironsSec += dt;
+  }
+  const regTotal = () => reg.capsizes + reg.gybesV + reg.irons + reg.wrongMarks + reg.contacts + reg.ocs + reg.outLine;
+  function regText(){
+    const n = (k, one, many) => k === 1 ? one : k + " " + many, parts = [];
+    if (reg.capsizes) parts.push(n(reg.capsizes, "1 scuffia", "scuffie"));
+    if (reg.gybesV) parts.push(n(reg.gybesV, "1 strambata a vela aperta", "strambate a vela aperta"));
+    if (reg.irons) parts.push("piantato " + (reg.irons === 1 ? "1 volta" : reg.irons + " volte") + " (" + Math.round(reg.ironsSec) + " s)");
+    if (reg.wrongMarks) parts.push(n(reg.wrongMarks, "1 boa dal lato sbagliato", "boe dal lato sbagliato"));
+    if (reg.contacts) parts.push(n(reg.contacts, "1 contatto", "contatti") + (reg.contactsPen ? " (" + (reg.contactsPen === reg.contacts ? (reg.contacts === 1 ? "con penalità" : "tutti con penalità") : reg.contactsPen + " con penalità") + ")" : ""));
+    if (reg.ocs) parts.push("partenza anticipata");
+    if (reg.outLine) parts.push("linea tagliata fuori dagli estremi" + (reg.outLine > 1 ? " (" + reg.outLine + " volte)" : ""));
+    return parts.length ? "Errori: " + parts.join(", ") : "Errori: nessuno";
+  }
+  function regShow(el){ const t = regText(); el.textContent = t; el.title = t; el.classList.toggle("some", regTotal() > 0); }
+
+  // istruzioni di prove e regate: riquadro sul mare a gioco fermo; il tempo parte con «Parti»
+  let briefing = false, briefSkip = false; // briefSkip: solo per i collaudi automatici
+  function showBrief(title, text, first){
+    $("bTitle").textContent = title; $("bText").textContent = text;
+    $("bRaceOpts").hidden = mode !== "race" || !first;
+    $("bNote").textContent = !first ? "Il gioco è fermo finché non riprendi." : mode === "race" ? "Il conto alla rovescia parte quando premi Parti (o Invio)." : "Il cronometro parte quando premi Parti (o Invio).";
+    $("bGo").textContent = first ? "Parti" : "Riprendi";
+    keys.clear(); semHeld.clear();
+    briefing = true; $("briefOv").hidden = false;
+    if (first && briefSkip) return hideBrief();
+    setTimeout(() => $("bGo").focus(), 0);
+  }
+  function hideBrief(){ briefing = false; $("briefOv").hidden = true; $("c").focus(); }
 
   // ---- lezioni ----
   function startLesson(i){
-    mode = "lesson"; lessonIdx = i; showCards("lesson");
+    mode = "lesson"; lessonIdx = i; showCards("lesson"); regReset();
     setWhere(LESSONS[i].name + ": " + LESSONS[i].title);
     env.twd = 0; env.tws = 10 / KN; setGusts(0);
     freshState(0, 0, 90, 0.4);
@@ -1034,7 +1134,7 @@ function step(S, C, E, dt){
 
   // ---- prove ----
   function startMission(i, wind){
-    mode = "mission"; missionIdx = i; showCards("mission");
+    mode = "mission"; missionIdx = i; showCards("mission"); regReset();
     const m = MISSIONS[i];
     setWhere("Prova " + (i + 1) + ": " + m.title);
     env.twd = wind === undefined ? m.wind : wind; env.tws = m.tws / KN;
@@ -1046,10 +1146,13 @@ function step(S, C, E, dt){
     setGusts(m.gusts);
     recStart(recK("m" + i));
     $("mTitle").textContent = "Prova " + (i + 1) + ". " + m.title;
-    $("mText").textContent = m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote();
     $("mNext").textContent = nextLabel();
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
+    showBrief($("mTitle").textContent, missionText(), true);
   }
+  const missionText = () => { const m = MISSIONS[missionIdx]; return m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote(); };
+  $("mBrief").onclick = () => showBrief($("mTitle").textContent, missionText(), false);
+  $("bGo").onclick = hideBrief;
   const changeWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); startMission(missionIdx, w); };
   $("mRetry").onclick = $("mRetry2").onclick = () => startMission(missionIdx, env.twd);
   $("mWind").onclick = $("mWind2").onclick = changeWind;
@@ -1057,7 +1160,7 @@ function step(S, C, E, dt){
 
   // ---- navigazione libera ----
   function startFree(){
-    mode = "free"; showCards("free"); setWhere("Navigazione libera");
+    mode = "free"; showCards("free"); regReset(); setWhere("Navigazione libera");
     env.twd = freeEnv.twd; env.tws = freeEnv.tws / KN;
     curMarks = [{ x: 0, y: -160, label: "Boa 1" }, { x: 110, y: -40, label: "Boa 2" }, { x: -110, y: -40, label: "Boa 3" }];
     freshState(0, 30, norm360(env.twd + 90), 0.3);
@@ -1085,7 +1188,8 @@ function step(S, C, E, dt){
   }
   function semRelease(a){ semHeld.delete(a); const b = $("sem").querySelector(`[data-a="${a}"]`); b && b.classList.remove("held"); }
   addEventListener("keydown", e => {
-    if (mode === "menu" || $("gloss").open || $("quiz").open || e.target.tagName === "INPUT" && e.target.type === "search") return;
+    if (briefing && !$("gloss").open && !$("setDlg").open && e.key === "Enter"){ e.preventDefault(); hideBrief(); return; }
+    if (mode === "menu" || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || e.target.tagName === "INPUT" && e.target.type === "search") return;
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (KEYSEM[k]){ semPress(KEYSEM[k]); if (allowSem.length) e.preventDefault(); return; }
     if (k === "r"){ rightBoat(); return; }
@@ -1105,7 +1209,7 @@ function step(S, C, E, dt){
   });
   $("tiller").addEventListener("input", e => { ctl.tiller = e.target.value / 100; dragTiller = true; });
   ["pointerup","change","touchend"].forEach(ev => $("tiller").addEventListener(ev, () => dragTiller = false));
-  $("sheet").addEventListener("input", e => ctl.sheet = e.target.value / 100);
+  $("sheet").addEventListener("input", e => { ctl.sheet = e.target.value / 100; });
   function seg(id, key){
     $(id).addEventListener("click", e => {
       const b = e.target.closest("button"); if (!b) return;
@@ -1120,6 +1224,7 @@ function step(S, C, E, dt){
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
   $("rRestart").onclick = $("rAgain").onclick = () => startRace(raceIdx, env.twd);
   $("rWind").onclick = $("rWind2").onclick = () => startRace(raceIdx, otherWind());
+  $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
   $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
   $("zIn").onclick = () => userZoom = Math.min(3, userZoom * 1.25);
@@ -1172,7 +1277,7 @@ function step(S, C, E, dt){
     if (A < 90){ S.tacks++; S.boomRate = 3; toast("Virata: ora " + mure); }
     else {
       const sheetMax = BOAT.minBoom + ctl.sheet * (BOAT.maxBoom - BOAT.minBoom);
-      if (sheetMax > 45){ S.gybesV++; S.gybeAt = simTime; S.u *= 0.55; S.heelRate += GYBE_KICK * D2R * Math.pow(local.tws / (15 / KN), 1.6) * (0.85 + Math.random() * 0.4); // colpo del boma in gradi/s (il motore usa radianti/s); più vento, colpo più forte
+      if (sheetMax > 45){ S.gybesV++; regAdd("gybesV"); S.gybeAt = simTime; S.u *= 0.55; S.heelRate += GYBE_KICK * D2R * Math.pow(local.tws / (15 / KN), 1.6) * (0.85 + Math.random() * 0.4); // colpo del boma in gradi/s (il motore usa radianti/s); più vento, colpo più forte
         S.shake = 0.5; S.boomRate = 22; toast("Strambata violenta!"); }
       else { S.gybesC++; S.boomRate = 8; toast("Strambata: ora " + mure); }
     }
@@ -1199,9 +1304,10 @@ function step(S, C, E, dt){
     if (!S.capsized){
       const n = 4; for (let i = 0; i < n; i++) info = step(S, ctl, local, dt / n);
       detectManeuvers();
+      ironsCheck(dt);
       if (S.heel > BOAT.capsizeAt || S.heel < -45){
         S.capCause = S.gybeAt !== undefined && simTime - S.gybeAt < 4 ? "gybe" : "heel";
-        S.capsized = true; S.capsizes++; S.capSide = S.heel > 0 ? S.boomSide : -S.boomSide; S.u = 0; S.vl = 0; S.r = 0; S.heel = 90 * Math.sign(S.heel); S.heelRate = 0;
+        S.capsized = true; S.capsizes++; regAdd("capsizes"); S.capSide = S.heel > 0 ? S.boomSide : -S.boomSide; S.u = 0; S.vl = 0; S.r = 0; S.heel = 90 * Math.sign(S.heel); S.heelRate = 0;
       }
     } else {
       const to = (local.twd + 180) * D2R;
@@ -1237,7 +1343,7 @@ function step(S, C, E, dt){
       let reached = false;
       if (mode === "mission" && mk.round){
         const k = roundCheck(S, S.x, S.y, mk);
-        if (k < 0) S.wrongMarks = (S.wrongMarks || 0) + 1;
+        if (k < 0){ S.wrongMarks = (S.wrongMarks || 0) + 1; regAdd("wrongMarks"); }
         if (S.rnd >= 1){ reached = true; S.rnd = 0; S.rndA = undefined; }
         else if (k < 0) roundToast(-1);
         else if (k > 0) toast("Hai rimediato: ora girala lasciandola a sinistra");
@@ -1247,8 +1353,10 @@ function step(S, C, E, dt){
         if (S.markIdx >= curMarks.length){
           S.finished = true;
           const sec = Math.round(S.time), key = "m" + missionIdx, bk = recK(key), prev = progress.best[bk];
-          progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); } saveProgress();
-          $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".");
+          progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); }
+          const clean = regTotal() === 0; if (clean) progress.clean[bk] = true; saveProgress();
+          $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
+            (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
           $("done").hidden = false; toast("Arrivato!");
         } else toast("Boa girata: ora verso " + curMarks[S.markIdx].label.toLowerCase());
       }
@@ -1333,7 +1441,7 @@ function step(S, C, E, dt){
       : { up: 49 + r() * 5, down: 142 + r() * 8, trim: (r() - 0.5) * 12, gain: 26, boardMin: 25, boardMax: 60, react: 3 };
   }
   function startRace(i, wind){
-    mode = "race"; raceIdx = i; showCards("race");
+    mode = "race"; raceIdx = i; showCards("race"); regReset();
     const rc = RACES[i];
     setWhere("Regata: " + rc.title);
     env.twd = wind === undefined ? rc.wind : wind; env.tws = rc.tws / KN;
@@ -1359,11 +1467,12 @@ function step(S, C, E, dt){
     });
     recStart(recK("r" + i) + "b");
     $("rTitle").textContent = rc.title;
-    $("rText").textContent = "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
+    R.brief = "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
       ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: l'ideale è tagliarla lanciato proprio allo zero." +
       (opt.aiLevel === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record." : "") + centerNote();
     $("rDone").hidden = true;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
+    showBrief(rc.title, R.brief, true);
   }
 
   const bearingTo = (s, p) => norm360(Math.atan2(p.x - s.x, -(p.y - s.y)) / D2R);
@@ -1498,12 +1607,12 @@ function step(S, C, E, dt){
       if (R.t >= 0){
         if (b.ocs){ if (wy > 0){ b.ocs = false; if (b.me) toast("Sei tornato dietro la linea: ora riparti"); } }
         else if (prev > 0 && wy <= 0 && onLine){ b.leg = 1; if (b.me) toast("Partito! Ora la boa di bolina"); }
-        else if (prev > 0 && wy <= 0 && !onLine){ b.ocs = true; if (b.me) toast("Sei passato fuori dalla linea: torna dietro e passa tra giuria e boa"); }
-        else if (wy < -5 && !b.ocs){ b.ocs = true; } // oltre la linea senza averla tagliata: deve tornare indietro
+        else if (prev > 0 && wy <= 0 && !onLine){ b.ocs = true; if (b.me) regAdd("outLine"); if (b.me) toast("Sei passato fuori dalla linea: torna dietro e passa tra giuria e boa"); }
+        else if (wy < -5 && !b.ocs){ b.ocs = true; if (b.me) regAdd("outLine"); } // oltre la linea senza averla tagliata: deve tornare indietro
       }
     } else if (b.leg === 1){
       const k = roundCheck(b, s.x, s.y, R.mark);
-      if (k < 0) b.wrongMarks = (b.wrongMarks || 0) + 1;
+      if (k < 0){ b.wrongMarks = (b.wrongMarks || 0) + 1; if (b.me) regAdd("wrongMarks"); }
       if (b.rnd >= 1){ b.leg = 2; if (b.me) toast("Boa girata: ora all'arrivo"); }
       else if (k < 0 && b.me) roundToast(-1);
       else if (k > 0 && b.me) toast("Hai rimediato: ora girala lasciandola a sinistra");
@@ -1531,6 +1640,7 @@ function step(S, C, E, dt){
       const push = (4.6 - d) / 2 + 0.3;
       A.S.x += dx * push; A.S.y += dy * push; B.S.x -= dx * push; B.S.y -= dy * push;
       if (A.me || B.me){
+        regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
         toast(guilty.me ? "Contatto! Penalità +15 s" : "Contatto: penalità a " + other.name);
         R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + ". Penalità di 15 secondi.";
@@ -1548,6 +1658,7 @@ function step(S, C, E, dt){
     if (prevT < 0 && R.t >= 0){
       R.phase = "race";
       for (const b of R.boats){ const wy = toWF(b.S.x, b.S.y)[1]; if (wy <= 0) b.ocs = true; }
+      if (R.boats[0].ocs) regAdd("ocs");
       toast(R.boats[0].ocs ? "Partenza anticipata! Torna dietro la linea" : "Partenza!");
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
@@ -1558,7 +1669,7 @@ function step(S, C, E, dt){
       R.phase = "done"; R.doneAt = R.t;
       const key = "r" + raceIdx, bk = recK(key), prev = progress.best[bk], tot = Math.round(me.fin);
       if (!prev || tot < prev){ progress.best[bk] = tot; recSave(); }
-      progress.done[key] = true; saveProgress();
+      progress.done[key] = true; if (regTotal() === 0) progress.clean[bk] = true; saveProgress();
       raceResults(prev, tot);
     }
   }
@@ -1570,7 +1681,8 @@ function step(S, C, E, dt){
     const rank = ranking(), pos = rank.indexOf(R.boats[0]) + 1;
     $("rDone").hidden = false;
     if (!quiet) $("rDoneText").textContent = pos + "° su " + rank.length + " in " + fmtTime(tot) +
-      (R.boats[0].pen ? " (penalità comprese: " + R.boats[0].pen + " s)" : "") + "." + (!prev ? "" : tot < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".");
+      (R.boats[0].pen ? " (penalità comprese: " + R.boats[0].pen + " s)" : "") + "." + (!prev ? "" : tot < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
+      (regTotal() === 0 ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
   }
   function legName(b){
     if (b.fin !== null) return "arrivata · " + fmtTime(Math.round(b.fin));
@@ -1714,7 +1826,14 @@ function step(S, C, E, dt){
     else if (mode === "lesson" && !st.pause && st.hud) $("hint").hidden = false;
     $("hint").className = "hint " + cls; $("hint").textContent = msg;
     if (mode === "race") racePanel();
+    if (mode === "mission" || mode === "race") regShow($("stErr"));
+    if (mode === "lesson"){ $("lErr").hidden = !!st.pause; regShow($("lErr")); }
+    if (mode === "mission"){
+      const prev = progress.best[recK("m" + missionIdx)];
+      $("stClock").innerHTML = "Tempo " + fmtClock(S.time) + (prev ? " <span>· record " + fmtClock(prev) + "</span>" : "");
+    }
   }
+  const fmtClock = sec => { const s = Math.floor(sec); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
 
   // ======================================================================
   // DISEGNO
@@ -2112,7 +2231,7 @@ function step(S, C, E, dt){
   function tick(now){
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (mode === "menu") return;
-    const st = curStep(), paused = (st && st.pause) || $("gloss").open || $("quiz").open;
+    const st = curStep(), paused = (st && st.pause) || briefing || $("gloss").open || $("quiz").open || $("setDlg").open;
     if (!paused){ for (let k = 0; k < timeScale; k++){ simulate(dt, st); simTime += dt; } }
     else { if (st && st.pause) ctl.sheet = autoSheet(); info = step(S, ctl, local, 0); S.dispBoom = S.boomSide * S.boom; }
     draw(paused ? 0.016 : dt);
@@ -2122,7 +2241,8 @@ function step(S, C, E, dt){
   showMenu();
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
   if (location.hash === "#collaudo") window.__sv = { openItem, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
-    ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; } };
+    ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief };
+    briefSkip = true; // i collaudi guidano subito; __sv.skipBrief = false per collaudare il riquadro
   requestAnimationFrame(frame);
 
 })();

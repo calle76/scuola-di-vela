@@ -95,3 +95,11 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | Nelle regate il lato da cui lasciare le boe lo stabiliscono le istruzioni di regata; di solito si lasciano a sinistra (il gioco le lascia sempre a sinistra, anche nelle prove). | |
 | Chi gira una boa dal lato sbagliato può rimediare tornando indietro e rifacendo il giro: il percorso della barca, immaginato come un filo teso, deve passare dal lato giusto di ogni boa (regola del «filo teso» del regolamento di regata). | |
 | Toccare una boa in regata comporta una penalità (nel gioco non è ancora gestito). | |
+| Una barca deve evitare il contatto quando è ragionevolmente possibile, anche se ha la precedenza (il registro degli errori conta tutti i contatti, distinguendo quelli con penalità). | |
+
+## Per la fase B (non ancora nel gioco)
+
+| Affermazione | Esito |
+| --- | --- |
+| Una vela toglie vento alle barche sottovento: il «cono d'ombra» o copertura segue la direzione del vento apparente della barca che copre. Lunghezza del cono e perdita di vento: valori da cercare nelle fonti. | |
+| Una barca poco sottovento e a proravia devia il vento verso chi le sta dietro sopravento, peggiorandogli l'angolo («posizione sottovento e a proravia»). | |

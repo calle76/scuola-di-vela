@@ -22,6 +22,7 @@ Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
 | Prove 1–5 | Traverso, lasco e poppa, risalire il vento, giro di boa, percorso nelle raffiche. |
 | Regate | Regata a bastone e regata nelle raffiche, contro tre avversari guidati dal computer o in solitaria contro il proprio fantasma. |
 | Ripasso | 29 domande a scelta multipla sulle sei lezioni. |
+| Registro degli errori | Scuffie, strambate a vela aperta, barca piantata nel vento, boe girate dal lato sbagliato, contatti e partenze irregolari: contati durante lezioni, prove e regate. ★ nel menu per le prove e regate completate senza errori. |
 | Glossario | 45 termini nautici con definizione. |
 
 Tutto è sempre accessibile: nessuna lezione o regata va sbloccata.
@@ -34,8 +35,11 @@ Tutto è sempre accessibile: nessuna lezione o regata va sbloccata.
 | ↑ ↓ | Cazza e lasca la scotta |
 | Spazio | Barra al centro |
 | R | Raddrizza la barca dopo una scuffia |
+| Invio | Parte dopo aver letto le istruzioni di una prova o di una regata |
 | A D W S | Orza, poggia, cazza, lasca (solo nella lezione 1) |
 | Rotella o + − | Zoom |
+
+Le impostazioni si aprono con il pulsante ⚙ in alto a destra. Su uno schermo piccolo conviene il tasto F11 (schermo intero).
 
 La barra funziona come nella realtà: si spinge dalla parte opposta a quella in cui si vuole girare la prua. Una freccia gialla sulla prua mostra da che parte la barca sta girando davvero.
 

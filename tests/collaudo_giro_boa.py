@@ -68,4 +68,5 @@ async def main():
         if "e" in casi: await prova(pg, 4, [[0, giusto], [1, sbagliato]], "triangolo, boa 2 a dritta (deve NON finire)")
         await pg.screenshot(path=str(OUT / "giro_boa.png"))
         print("errori:", errs); await b.close()
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

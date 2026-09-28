@@ -1,3 +1,4 @@
+# Le opzioni di regata stanno nel riquadro delle istruzioni, che nei collaudi è saltato: si impostano direttamente.
 # Regate con avversari esperti, poi prova 1 completata da un pilota automatico: verifica che il fantasma venga salvato e mostrato.
 import asyncio
 from playwright.async_api import async_playwright
@@ -13,7 +14,7 @@ async def main():
             pg = await b.new_page(viewport={"width":1280,"height":800})
             await pg.goto(URL); await pg.wait_for_timeout(300)
             await pg.click("[data-r='0']"); await pg.wait_for_timeout(200)
-            await pg.select_option("#aiLevel", "esperti"); await pg.wait_for_timeout(200)
+            await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#aiLevel", "esperti"]); await pg.wait_for_timeout(200)
             await pg.evaluate("__sv.fast(25)")
             for i in range(24):
                 await pg.wait_for_timeout(1000)

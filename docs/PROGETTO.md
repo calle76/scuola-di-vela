@@ -30,7 +30,8 @@ Dentro `index.html`, nell'ordine:
 | Input | Tastiera, pulsanti delle lezioni, cursori. |
 | Simulazione | `simulate(dt)`: comandi, raffiche, fisica, manovre (virata, strambata), scuffia, obiettivi. |
 | Fantasma e regate | Registrazione e riproduzione del fantasma; avversari guidati dal computer; partenza, precedenze, classifica. |
-| Pannello | Strumenti e suggerimenti, aggiornati 10 volte al secondo. |
+| Registro degli errori | `reg`: scuffie, strambate a vela aperta, episodi e secondi da piantato, boe dal lato sbagliato, contatti, partenze anticipate, linea fuori dagli estremi. `regAdd`, `ironsCheck`, `regText`. Si azzera a ogni avvio e si chiude all'arrivo. |
+| Pannello | Strumenti, suggerimento, comandi, stato (tempo, classifica, errori), aggiornati 10 volte al secondo. In prove, regate e navigazione libera l'ordine è fissato con la proprietà CSS `order` (classe `play`); nelle lezioni vale l'ordine dell'HTML. Istruzioni di prove e regate in un riquadro sul mare a gioco fermo (`showBrief`, `hideBrief`); impostazioni in una finestra (`setDlg`). |
 | Disegno | Mare, raffiche, scia, boe, barca, cerchio delle andature, etichette, strumenti a schermo. |
 | Ciclo | `requestAnimationFrame`; un errore imprevisto viene mostrato nel pannello senza bloccare il gioco. |
 
@@ -45,12 +46,12 @@ Dentro `index.html`, nell'ordine:
 
 | Chiave | Contenuto |
 | --- | --- |
-| `scuolaVelaSim.v1` | Voci completate, record delle prove e delle regate, migliori punteggi dei quiz. I record dei percorsi cambiati nella 0.14 (prove 4 e 5, regate) usano chiavi nuove (`m3.2`, `m4.2`, `r0.2`, `r1.2`); vedi `KEYV`. |
+| `scuolaVelaSim.v1` | Voci completate (`done`), record delle prove e delle regate (`best`), prove e regate completate almeno una volta senza errori (`clean`, dalla 0.15), migliori punteggi dei quiz. I record dei percorsi cambiati nella 0.14 (prove 4 e 5, regate) usano chiavi nuove (`m3.2`, `m4.3`, `r0.2`, `r1.2`); vedi `KEYV`. Anche `clean` usa queste chiavi. |
 | `scuolaVelaGhost.v1` | Fantasmi: un campione ogni 0,2 s (tempo, posizione, rotta e boma rispetto al vento, sbandamento). |
 
 ### Aggancio per i collaudi
 
-Aprendo il gioco con `#collaudo` in fondo all'indirizzo, la pagina espone `window.__sv`, che serve solo ai collaudi automatici: apertura diretta di lezioni e passi, lettura dello stato, accelerazione del tempo. Senza `#collaudo` l'aggancio non esiste.
+Aprendo il gioco con `#collaudo` in fondo all'indirizzo, la pagina espone `window.__sv`, che serve solo ai collaudi automatici: apertura diretta di lezioni e passi, lettura dello stato e del registro degli errori (`reg`), accelerazione del tempo. Con `#collaudo` il riquadro delle istruzioni è saltato (`__sv.skipBrief = false` lo riattiva). Senza `#collaudo` l'aggancio non esiste.
 
 ## Come aggiungere contenuti
 
@@ -75,6 +76,7 @@ Ogni passo è un oggetto nell'array della lezione. I campi principali:
 | `bigGust` | Garantisce una raffica forte (usato per la scuffia volontaria). |
 | `cond`, `hold`, `done` | Condizione di completamento `(I, S, B) => …`, secondi in cui deve restare vera, testo mostrato al completamento. |
 | `final` | Ultimo passo: segna la lezione come completata. |
+| `allow` | Errori che il passo chiede apposta e che quindi non entrano nel registro: `capsizes`, `gybesV`, `irons`. |
 
 `I` è la lettura istantanea (`twa`, `kn`, `tt` stato dei filetti, `heel`, `r`, `sheet`, `tiller`, `inGust`), `S` lo stato della barca, `B` i contatori all'inizio del passo (virate, strambate, scuffie).
 
@@ -95,6 +97,10 @@ Gli avversari sono guidati da regole scritte, con la stessa fisica del giocatore
 - **Giro di boa:** tre punti di passaggio in coordinate del vento: sotto e a destra della boa, poi oltre e a sinistra (lì si attraversa la semiretta e la boa è girata); un terzo, sotto a sinistra, solo per riprovare dopo un giro mancato. Il secondo punto si punta solo da sopra il livello della boa: da più in basso la bolina porta la barca sopra la boa.
 - **Virare da un'andatura larga:** se il bersaglio è sull'altra mura e a proravia del traverso, prima orzano fino alla bolina, poi virano. Virare direttamente dal traverso al traverso opposto fa perdere l'abbrivio a metà.
 - **Barca piantata:** sotto 44° dal vento e sotto 0,6 m/s poggiano per ripartire (40° in partenza, dove 44° le faceva poggiare troppo presto vicino alla linea).
+
+## Pannello: una regola da rispettare
+
+Su uno schermo 1360×768 con le barre del browser (finestra di circa 1360×650) il pannello deve stare tutto nella finestra, senza scorrere. Nei riepiloghi finali delle lezioni il margine è zero: ogni riga aggiunta al pannello va verificata con `collaudo_pannello.py`.
 
 ## Limiti noti
 

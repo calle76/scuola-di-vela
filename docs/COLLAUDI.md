@@ -38,11 +38,17 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 | `collaudo_strambata.py K N` | N strambate con vela aperta e K nodi | 6 nodi: nessuna scuffia; 15 nodi: scuffia sempre |
 | `collaudo_rotta.py` | Esercizio «Tenere la rotta» | Senza correzioni fallisce, con correzioni riesce |
 | `collaudo_fantasma.py` | Avversari esperti e salvataggio del fantasma | Tutti arrivano; fantasma salvato e visibile |
+| `collaudo_registro.py [casi]` | Provoca ogni errore guidando la barca: prova pulita con stella nel menu, boa dal lato sbagliato, barca piantata, strambata a vela aperta, scuffia, partenza anticipata, linea fuori dagli estremi, contatto; nelle lezioni, gli errori richiesti dal passo | `13 su 13 verifiche riuscite` |
+| `collaudo_pannello.py [larghezza altezza]` | Altezza del pannello in ogni passo di lezione, nelle prove, in navigazione libera e in regata; riquadro delle istruzioni (gioco fermo, Invio, riapertura) | `pannello che eccede: nessuno` a 1360×650 e 1360×768; quattro `True` |
 | `collaudo_giro_boa.py [casi]` | Un pilota automatico guida con barra e scotta: boa a sinistra, a dritta, sbagliata e corretta (prova 4), triangolo giusto e con la boa 2 a dritta (prova 5), prove 1–3 | Finisce solo quando la boa è girata a sinistra; `giri sbagliati` 1 nei casi sbagliati; prove 1–3 completate |
 
 Il collaudo del giro di boa dura alcuni minuti; i casi si possono lanciare separatamente (per esempio `python collaudo_giro_boa.py ab`). Il pilota automatico è volutamente semplice: se non arriva, prima di dare la colpa al gioco controlla dove si è fermato (angolo morto, marcia indietro, scuffia).
 
 Le regate usano il tempo accelerato, e ogni collaudo dura da pochi secondi a qualche minuto.
+
+**Riquadro delle istruzioni.** Con `#collaudo` il riquadro che ferma il gioco all'avvio di prove e regate viene saltato, perché i collaudi devono guidare subito. Per collaudarlo si scrive `__sv.skipBrief = false` (lo fa `collaudo_pannello.py`). Avversari e Preparazione stanno nel riquadro: i collaudi li impostano direttamente sui menu a tendina.
+
+**Caratteri.** Le misure del pannello dipendono dai caratteri. Se Barlow Semi Condensed e Source Serif 4 non sono installati, il browser senza finestra usa caratteri di riserva più larghi e le misure risultano peggiori del vero.
 
 ## Limiti dei collaudi
 
