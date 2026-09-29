@@ -1,6 +1,6 @@
 # Roadmap
 
-Aggiornata al 28 settembre 2026.
+Aggiornata al 29 settembre 2026.
 
 ## Principi che valgono per ogni fase
 
@@ -23,11 +23,22 @@ Aggiornata al 28 settembre 2026.
 | Versione | Contenuto |
 | --- | --- |
 | 0.15 | Registro degli errori, pannello ordinato, segno «senza errori» (fatto) |
-| 0.16 | Menu principale a riquadri (Scuola, Regate, Ripasso ed esame, Navigazione libera, In arrivo; Glossario in alto) e fasce di tempo, insieme perché le medaglie andranno mostrate nel menu |
+| 0.16 | Menu principale a riquadri e fasce di tempo; lezione 1 con il solo timone; rosa dell'angolo morto; freccia della velocità; pannello ridotto (dettagli sotto) |
 | 0.17 | Esame a risposte chiuse, nel suo riquadro del menu |
 | poi | Brevetto con attestato |
 
 Il quiz di ripasso resta subito dopo ogni lezione; l'esame per il brevetto è separato, perché riguarda tutte le lezioni.
+
+### Contenuto della 0.16 (deciso il 29 settembre 2026, dopo il collaudo della 0.15)
+
+1. **Menu principale a riquadri**, tutto visibile in una schermata: Scuola (lezioni e prove nell'ordine consigliato), Regate, Ripasso ed esame, Navigazione libera, In arrivo; Glossario in alto.
+2. **Fasce di tempo** bronzo, argento e oro, mostrate nel menu insieme alla ★.
+3. **Lezione 1 con il solo timone.** Via i pulsanti Orza e Poggia (tasti A e D): un comando riferito al vento non si comporta come una barra, e tenendolo premuto la barca attraversava il vento continuando a «orzare». I passi si fanno con le frecce ← →; «orzare» e «poggiare» restano nei testi e in una scritta che, mentre la barca gira, dice se sta orzando o poggiando. Cazza e Lasca restano. Versione minima: niente riorganizzazione delle lezioni 1 e 2. Controllare le domande del ripasso che citano i pulsanti.
+4. **Rosa dell'angolo morto** accanto all'indicatore di sbandamento: vento sempre in alto, settore di 40° per lato in rosso, lancetta della prua che diventa rossa dentro il settore. Stesso limite della voce «Andatura» e del registro. Aiuto del gioco: nelle impostazioni, acceso di norma, disattivabile.
+5. **Freccia della velocità** dal centro della barca, nella direzione in cui la barca si muove davvero (mostra lo scarroccio; all'indietro esce dalla poppa), lunga in proporzione alla velocità, nascosta sotto qualche decimo di nodo, di colore diverso dalle frecce del vento. Il triangolo reale + moto = apparente solo nella lezione 4.
+6. **Pannello ridotto** in prove e regate, da decidere sulle schermate dopo aver visto rosa e freccia. Proposta: togliere Sbandamento, Scarroccio, Vento reale e Vento apparente (quest'ultimo resta nella lezione 4); tenere Velocità, Andatura, Prua e Rilevamento boa.
+
+Scartato: pulsante «Schermo intero» nel gioco. Sul PC di prova lo schermo intero di Chrome con MATE torna subito indietro anche dal menu di Chrome (non dipende dal gioco); con Firefox F11 funziona.
 
 ## Fase B — Tornei e classifiche personali
 
