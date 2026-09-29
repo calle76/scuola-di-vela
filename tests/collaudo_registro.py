@@ -149,8 +149,8 @@ async def main():
                 raise Exception("passo non trovato: " + titolo)
             await pg.evaluate("__sv.fast(3)")
             k = await passo(0, "Orzare e l'angolo morto"); await pg.click("#c")
-            await pg.keyboard.down("a"); ok1 = await attendi(pg, "__sv.stepDone", 30); await pg.wait_for_timeout(1500); await pg.keyboard.up("a")
-            await pg.evaluate(f"__sv.showStep({k + 1})"); await pg.keyboard.down("d"); await attendi(pg, "__sv.stepDone", 30); await pg.keyboard.up("d")
+            await pg.keyboard.down("ArrowRight"); ok1 = await attendi(pg, "__sv.stepDone", 30); await pg.wait_for_timeout(1500); await pg.keyboard.up("ArrowRight")
+            await pg.evaluate(f"__sv.showStep({k + 1})"); await pg.keyboard.down("ArrowLeft"); await attendi(pg, "__sv.stepDone", 30); await pg.keyboard.up("ArrowLeft")
             r1 = await reg(pg)
             k = await passo(4, "Una virata che non riesce"); await pg.evaluate(VAI, [[], "luff"]); ok2 = await attendi(pg, "__sv.stepDone", 30)
             await pg.evaluate(f"__sv.showStep({k + 1})"); await pg.wait_for_timeout(2000); await pg.evaluate(FERMA)   # ancora piantato nel passo dopo: stesso episodio

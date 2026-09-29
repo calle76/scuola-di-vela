@@ -1,6 +1,6 @@
 # Scuola di vela
 
-Un simulatore didattico per imparare a governare una piccola barca a vela (una deriva) e, più avanti, a navigare con la carta nautica. È un progetto personale e non commerciale, nato per studiare la vela partendo da zero.
+Un simulatore didattico per imparare a governare una piccola barca a vela (una deriva). Il carteggio e la navigazione in mare aperto sono previsti come espansione a parte. È un progetto personale e non commerciale, nato per studiare la vela partendo da zero.
 
 Il gioco è un unico file, `index.html`: si apre in un browser recente senza installare nulla.
 
@@ -19,7 +19,7 @@ Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
 | --- | --- |
 | Navigazione libera | Vento, forza e raffiche a scelta, nessun obiettivo. |
 | Lezioni 1–6 | La barca e il vento; il timone; andature e filetti; vento reale e apparente; virata e strambata; raffiche e scuffia. |
-| Prove 1–5 | Traverso, lasco e poppa, risalire il vento, giro di boa, percorso nelle raffiche. |
+| Prove 1–5 | Traverso, lasco e poppa, risalire il vento, giro di boa, percorso nelle raffiche. Fasce di tempo oro, argento e bronzo. |
 | Regate | Regata a bastone e regata nelle raffiche, contro tre avversari guidati dal computer o in solitaria contro il proprio fantasma. |
 | Ripasso | 29 domande a scelta multipla sulle sei lezioni. |
 | Registro degli errori | Scuffie, strambate a vela aperta, barca piantata nel vento, boe girate dal lato sbagliato, contatti e partenze irregolari: contati durante lezioni, prove e regate. ★ nel menu per le prove e regate completate senza errori. |
@@ -36,10 +36,12 @@ Tutto è sempre accessibile: nessuna lezione o regata va sbloccata.
 | Spazio | Barra al centro |
 | R | Raddrizza la barca dopo una scuffia |
 | Invio | Parte dopo aver letto le istruzioni di una prova o di una regata |
-| A D W S | Orza, poggia, cazza, lasca (solo nella lezione 1) |
+| W S | Cazza e lasca con i pulsanti della lezione 1 (anche ↑ ↓) |
 | Rotella o + − | Zoom |
 
-Le impostazioni si aprono con il pulsante ⚙ in alto a destra. Su uno schermo piccolo conviene il tasto F11 (schermo intero).
+Il menu principale è diviso in riquadri: Scuola (lezioni e prove nell'ordine consigliato), Regate, Navigazione libera, Ripasso ed esame.
+
+In basso a sinistra ci sono l'indicatore di sbandamento e la rosa dell'angolo morto (vento sempre in alto, settore rosso di 40° per lato); la freccia verde mostra la direzione in cui la barca si muove davvero. Le impostazioni si aprono con il pulsante ⚙ in alto a destra. Su uno schermo piccolo conviene il tasto F11 (schermo intero).
 
 La barra funziona come nella realtà: si spinge dalla parte opposta a quella in cui si vuole girare la prua. Una freccia gialla sulla prua mostra da che parte la barca sta girando davvero.
 

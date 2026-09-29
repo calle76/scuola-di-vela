@@ -31,7 +31,7 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 | Script | Cosa verifica | Esito atteso |
 | --- | --- | --- |
 | `collaudo_schermate.py` | Apre ogni passo di ogni lezione, ogni prova e la navigazione libera | `errori: []` |
-| `collaudo_lezioni.py` | Completa i passi pratici guidando la barca | Tutti `OK`, salvo i due casi noti indicati nello script |
+| `collaudo_lezioni.py` | Completa i passi pratici guidando la barca (dalla 0.16 la lezione 1 con le frecce del timone) | Tutti `OK`, salvo i casi di attesa noti indicati nello script |
 | `collaudo_quiz.py` | I sei quiz e il salvataggio del miglior punteggio | Sei righe con il punteggio, `errori: []` |
 | `collaudo_regate.py N T` | N regate accelerate, tipo T (0 a bastone, 1 nelle raffiche) | Tutti gli avversari arrivano, nessuno `BLOCCATA` |
 | `collaudo_partenze.py` | Ritardo degli avversari al via con 1, 3 e 5 minuti | Con 3 e 5 minuti, entro circa 12 s e nessuna partenza anticipata |
@@ -40,11 +40,14 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 | `collaudo_fantasma.py` | Avversari esperti e salvataggio del fantasma | Tutti arrivano; fantasma salvato e visibile |
 | `collaudo_registro.py [casi]` | Provoca ogni errore guidando la barca: prova pulita con stella nel menu, boa dal lato sbagliato, barca piantata, strambata a vela aperta, scuffia, partenza anticipata, linea fuori dagli estremi, contatto; nelle lezioni, gli errori richiesti dal passo | `13 su 13 verifiche riuscite` |
 | `collaudo_pannello.py [larghezza altezza]` | Altezza del pannello in ogni passo di lezione, nelle prove, in navigazione libera e in regata; riquadro delle istruzioni (gioco fermo, Invio, riapertura) | `pannello che eccede: nessuno` a 1360×650 e 1360×768; quattro `True` |
+| `collaudo_fasce.py [ripetizioni] [prove]` | Taratura delle fasce di tempo: un pilota automatico percorre le prove a passi fissi di 1/60 s, con direzioni del vento diverse | Prove 1–4 con tempi identici per ogni vento (circa 87, 136, 185, 327 s); prova 5 intorno a 350 s, con alcuni tentativi non finiti (il pilota si pianta nelle raffiche) |
 | `collaudo_giro_boa.py [casi]` | Un pilota automatico guida con barra e scotta: boa a sinistra, a dritta, sbagliata e corretta (prova 4), triangolo giusto e con la boa 2 a dritta (prova 5), prove 1–3 | Finisce solo quando la boa è girata a sinistra; `giri sbagliati` 1 nei casi sbagliati; prove 1–3 completate |
 
 Il collaudo del giro di boa dura alcuni minuti; i casi si possono lanciare separatamente (per esempio `python collaudo_giro_boa.py ab`). Il pilota automatico è volutamente semplice: se non arriva, prima di dare la colpa al gioco controlla dove si è fermato (angolo morto, marcia indietro, scuffia).
 
-Le regate usano il tempo accelerato, e ogni collaudo dura da pochi secondi a qualche minuto.
+Le regate usano il tempo accelerato, e ogni collaudo dura da pochi secondi a qualche minuto. Il collaudo completo del registro supera i 5 minuti: se l'ambiente ha un limite di tempo, si lancia a gruppi di casi (per esempio `ab`, `cde`, `fgh`, `i`; il caso `b` controlla la stella della prova 1 e va lanciato insieme ad `a`).
+
+**Tempo accelerato e misure di tempo.** Con `__sv.fast(n)` la simulazione fa n passi per fotogramma, mentre un pilota automatico in `setInterval` reagisce in tempo reale: se il computer è carico (per esempio più browser aperti insieme) il pilota reagisce più di rado e i tempi misurati peggiorano. Nella 0.16 questo ha falsato la prima taratura delle fasce (108 s invece di 87). Per misurare tempi si usa `__sv.run(dt, n)`, che fa avanzare la simulazione a passi fissi senza il ciclo del browser, come fa `collaudo_fasce.py`.
 
 **Riquadro delle istruzioni.** Con `#collaudo` il riquadro che ferma il gioco all'avvio di prove e regate viene saltato, perché i collaudi devono guidare subito. Per collaudarlo si scrive `__sv.skipBrief = false` (lo fa `collaudo_pannello.py`). Avversari e Preparazione stanno nel riquadro: i collaudi li impostano direttamente sui menu a tendina.
 

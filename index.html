@@ -11,7 +11,7 @@
 :root{
   --sea-a:#2B6F8C; --sea-b:#245E78; --ripple:rgba(255,255,255,.16); --foam:rgba(255,255,255,.55);
   --hull:#F6F7F4; --hull-edge:#9AA7B0; --cockpit:#C9D1D3; --sail:#FBFBF7; --sail-shade:#DCE3E8; --spar:#3B434B;
-  --sailor:#E0662C; --tt-port:#D2302F; --tt-stbd:#1E9E55; --true:#FFFFFF; --app:#FFD447; --label:#FFE27A;
+  --sailor:#E0662C; --tt-port:#D2302F; --tt-stbd:#1E9E55; --true:#FFFFFF; --app:#FFD447; --label:#FFE27A; --moto:#A6F26B;
   --ink:#1C2B45; --ink-soft:#56657D; --panel:#FFFFFF; --page:#EEF4F7; --line:#D6DEE6; --btn:#E9EFF5; --good:#2E7D5B; --warn:#B5541C; --accent:#A8267A;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
@@ -33,29 +33,37 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
 /* ---- menu ---- */
 #menu{min-height:100vh;min-height:100dvh;background:var(--page)}
-.menu-inner{max-width:780px;margin:0 auto;padding:40px 22px 64px}
-.menu-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:28px}
-.menu-head h1{font-size:clamp(2.4rem,7vw,3.6rem);font-weight:700;line-height:.95;margin:0}
-.menu-head p{font-family:"Source Serif 4",Georgia,serif;font-size:1.05rem;line-height:1.5;margin:10px 0 0;max-width:36em;color:var(--ink-soft)}
+.menu-inner{max-width:1320px;margin:0 auto;padding:18px 24px 14px}
+.menu-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:14px}
+.menu-head h1{font-size:2.5rem;font-weight:700;line-height:.95;margin:0}
+.menu-head p{font-family:"Source Serif 4",Georgia,serif;font-size:.98rem;line-height:1.4;margin:6px 0 0;color:var(--ink-soft)}
 .pill{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:6px 14px;border-radius:16px;cursor:pointer}
-.part{margin-top:28px}
-.part-head{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);padding-top:8px;margin-bottom:12px}
-.part-head h2{font-size:1.45rem;font-weight:700;margin:0}
-.part-head span{font-size:.95rem;color:var(--ink-soft)}
-.items{display:flex;flex-direction:column;gap:8px}
-.item{font:inherit;color:var(--ink);text-align:left;width:100%;display:grid;grid-template-columns:2.4rem 1fr auto;gap:4px 14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;cursor:pointer}
+.tiles{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.tile{display:flex;flex-direction:column;gap:14px;min-width:0}
+.part-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:2px solid var(--ink);padding-top:6px;margin-bottom:8px}
+.part-head h2{font-size:1.3rem;font-weight:700;margin:0}
+.part-head span{font-size:.9rem;color:var(--ink-soft);text-align:right}
+.items{display:flex;flex-direction:column;gap:4px}
+.item{font:inherit;color:var(--ink);text-align:left;width:100%;display:grid;grid-template-columns:1.6rem 4.6rem minmax(0,1fr) auto;gap:0 8px;align-items:baseline;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 10px;cursor:pointer}
 .item:hover{border-color:var(--ink)}
-.item .num{font-size:1.5rem;font-weight:700;color:var(--ink-soft);text-align:center}
-.item .kind{font-size:.85rem;color:var(--accent);font-weight:600}
-.item .title{font-size:1.3rem;font-weight:700;line-height:1.1}
-.item .desc{font-family:"Source Serif 4",Georgia,serif;font-size:.93rem;color:var(--ink-soft);margin-top:2px}
-.item .state{font-size:.95rem;font-weight:600;text-align:right;white-space:nowrap}
+.item:focus-visible,.review button:focus-visible,.pill:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.item .num{font-size:1.05rem;font-weight:700;color:var(--ink-soft);text-align:center}
+.item .kind{font-size:.85rem;color:var(--accent);font-weight:600;white-space:nowrap}
+.item .title{font-size:1.08rem;font-weight:700;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .desc{font-family:"Source Serif 4",Georgia,serif;font-size:.9rem;line-height:1.35;color:var(--ink-soft);grid-column:2 / 5;margin-top:2px}
+.item .state{font-size:.9rem;font-weight:600;text-align:right;white-space:nowrap}
 .item .state.ok{color:var(--good)} .item .state.todo{color:var(--ink-soft);font-weight:400}
-.item.free{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.item.wide{grid-template-columns:1.6rem minmax(0,1fr) auto}
+.item.wide .desc{grid-column:2 / 4}
+.item.free{background:var(--ink);color:var(--panel);border-color:var(--ink);padding:10px 12px}
 .item.free .kind{color:var(--label)} .item.free .desc,.item.free .num{color:inherit;opacity:.8}
-.part.future .item{cursor:default;opacity:.55}
-.menu-foot{margin-top:36px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.9rem;color:var(--ink-soft)}
+.item.off{cursor:default;opacity:.55} .item.off:hover{border-color:var(--line)}
+.soon{margin:0;font-size:.95rem;line-height:1.35;color:var(--ink-soft)}
+.medal{display:inline-block;width:.8em;height:.8em;border-radius:50%;margin-left:5px;vertical-align:-.05em;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.medal.m1{background:#D4A017} .medal.m2{background:#A9B3BC} .medal.m3{background:#B87333}
+.menu-foot{margin-top:14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.88rem;color:var(--ink-soft)}
 .linkish{font:inherit;background:none;border:none;color:var(--ink-soft);text-decoration:underline;cursor:pointer;padding:0}
+@media (max-width:1000px){ .tiles{grid-template-columns:1fr} }
 
 /* ---- gioco ---- */
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;height:100vh;height:100dvh}
@@ -167,10 +175,11 @@ dialog#quiz::backdrop{background:rgba(13,25,36,.5)}
 .qz .expl b{font-family:"Barlow Semi Condensed",sans-serif}
 .qz .score{font-size:2.4rem;font-weight:700;margin:6px 0}
 .qz .row{margin-top:16px}
-.review{display:flex;flex-wrap:wrap;gap:8px}
-.review button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left}
-.review button small{display:block;color:var(--ink-soft);font-size:.85rem}
+.review{display:flex;flex-direction:column;gap:4px}
+.review button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.review button small{color:var(--ink-soft);font-size:.85rem;white-space:nowrap}
 .review button:hover{border-color:var(--ink)}
+.review button.off{cursor:default;opacity:.55} .review button.off:hover{border-color:var(--line)}
 dialog#gloss{border:none;border-radius:10px;padding:0;width:min(640px,94vw);max-height:86vh;background:var(--panel);color:var(--ink)}
 dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
 .gl-head{position:sticky;top:0;background:var(--panel);padding:18px 20px 12px;border-bottom:1px solid var(--line)}
@@ -221,7 +230,9 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
         </div>
         <label class="check"><input type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (vale per la modalità in corso: nelle prove e nelle regate parte spenta)</label>
         <label class="check"><input type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
-        <label class="check"><input type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente</label>
+        <label class="check"><input type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente e della velocità</label>
+        <label class="check"><input type="checkbox" id="showDead" checked> Rosa dell'angolo morto, in basso a sinistra</label>
+        <label class="check"><input type="checkbox" id="allInstr"> Tutti gli strumenti nel pannello anche fuori dalle lezioni (venti, sbandamento, scarroccio)</label>
         <label class="check"><input type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
       </div>
   </div>
@@ -293,21 +304,19 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
     <div class="hint bad" id="errBox" hidden></div>
 
     <div class="sem" id="sem">
-      <button data-a="orza"><strong>Orza</strong><small>prua verso il vento · A</small></button>
-      <button data-a="poggia"><strong>Poggia</strong><small>prua via dal vento · D</small></button>
-      <button data-a="cazza"><strong>Cazza</strong><small>tira la scotta · W</small></button>
-      <button data-a="lasca"><strong>Lasca</strong><small>molla la scotta · S</small></button>
+      <button data-a="cazza"><strong>Cazza</strong><small>tira la scotta · W o ↑</small></button>
+      <button data-a="lasca"><strong>Lasca</strong><small>molla la scotta · S o ↓</small></button>
     </div>
 
     <section class="instr" id="instr">
       <div data-l="1"><span>Velocità</span><b id="iSpd">—</b></div>
       <div data-l="1"><span>Andatura</span><b id="iAnd">—</b></div>
-      <div data-l="2"><span>Vento reale</span><b id="iTw">—</b></div>
-      <div data-l="2"><span>Vento apparente</span><b id="iAw">—</b></div>
+      <div data-l="2" data-x><span>Vento reale</span><b id="iTw">—</b></div>
+      <div data-l="2" data-x><span>Vento apparente</span><b id="iAw">—</b></div>
       <div data-l="3"><span>Prua</span><b id="iHdg">—</b></div>
       <div data-l="3"><span>Rilevamento boa</span><b id="iBrg">—</b></div>
-      <div data-l="3"><span>Sbandamento</span><b id="iHeel">—</b></div>
-      <div data-l="3"><span>Scarroccio</span><b id="iLee">—</b></div>
+      <div data-l="3" data-x><span>Sbandamento</span><b id="iHeel">—</b></div>
+      <div data-l="3" data-x><span>Scarroccio</span><b id="iLee">—</b></div>
     </section>
 
     <div id="direct">
@@ -439,6 +448,12 @@ function step(S, C, E, dt){
   // Nelle lezioni il vento arriva da nord. Condizioni: I = lettura istantanea (vedi readI).
   // ======================================================================
   const PAUSE = { pause: true };
+  // Lezione 1 (0.16): orzare e poggiare con le frecce del timone. Il testo dice quale freccia premere,
+  // secondo il lato da cui arriva il vento in quel momento e secondo l'impostazione delle frecce (barra o prua).
+  const windLeft = () => norm180(local.twd - S.h) < 0;
+  const poggiaSide = () => windLeft() ? "destra" : "sinistra", orzaSide = () => windLeft() ? "sinistra" : "destra";
+  const turnKey = side => (opt.helm === "prua") === (side === "destra") ? "→" : "←";
+  const barraNote = side => opt.helm === "prua" ? "" : ` La freccia sposta la barra a ${side === "destra" ? "sinistra" : "dritta"}: perché la prua giri dall'altra parte lo vedrai nella lezione 2.`;
   const L1 = [
     { title: "La barca", ...PAUSE, zoom: 3, labels: ["prua", "poppa"],
       text: ["Questa è una <em>deriva</em>: una piccola barca a vela per una persona, la barca su cui di solito si impara. La vedi dall'alto.",
@@ -458,35 +473,35 @@ function step(S, C, E, dt){
     { title: "Sopravento e sottovento", ...PAUSE, zoom: 2.4, labels: ["sopravento", "sottovento", "boma"],
       text: ["Il lato della barca colpito per primo dal vento si chiama <em>sopravento</em>; quello opposto, riparato, <em>sottovento</em>.",
              "Nota dove sta il boma: sottovento. Il vento spinge la vela, che si piazza sempre dalla parte opposta a quella da cui arriva il vento. Il timoniere invece siede sopravento, per fare contrappeso."] },
-    { title: "Poggiare", sem: ["poggia"], autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Ora la barca naviga. Tieni premuto <em>Poggia</em> (o il tasto D): la prua si allontana dal vento.",
-             "Continua finché il vento arriva quasi da dietro. Per ora la vela si regola da sola."],
+    { title: "Poggiare", tiller: true, turnHint: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: [() => `Ora guidi tu, con le frecce ← →. Tieni premuto <em>${turnKey(poggiaSide())}</em>: la prua gira a ${poggiaSide()}, lontano dal vento. Si dice <em>poggiare</em>.` + barraNote(poggiaSide()),
+             "Rilascia quando il vento arriva quasi da dietro. Non andare oltre: il boma cambierebbe lato di colpo (è una <em>strambata</em>, lezione 5). La vela si regola da sola."],
       cond: I => I.twa >= 135,
       done: "Hai poggiato: ora il vento arriva da dietro, e il boma si è aperto verso l'esterno per ricevere il vento." },
-    { title: "Orzare e l'angolo morto", allow: ["irons"], sem: ["orza"], autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Ora tieni premuto <em>Orza</em> (tasto A): la prua gira verso il vento. Continua finché la barca non si ferma quasi del tutto."],
+    { title: "Orzare e l'angolo morto", allow: ["irons"], tiller: true, turnHint: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: [() => `Ora tieni premuto <em>${turnKey(orzaSide())}</em>: la prua gira a ${orzaSide()}, verso il vento. Si dice <em>orzare</em>. Continua finché la barca non si ferma quasi del tutto, poi rilascia.`],
       cond: I => I.twa < 40 && I.kn < 1.5, hold: 0.5,
       done: "Questo è l'<em>angolo morto</em>: con la prua troppo vicina al vento (nelle scuole si indica in circa 45° per lato) la vela sbatte come una bandiera e non spinge, e la barca si ferma. Nessuna barca a vela può andare dritta contro il vento." },
-    { title: "Ripartire", sem: ["poggia"], autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Tieni premuto <em>Poggia</em> per uscire dall'angolo morto, finché la vela torna a gonfiarsi e la barca riparte."],
-      cond: I => I.twa > 75 && I.kn > 2.5,
-      done: "La barca è ripartita. Ricapitolando: <em>orzare</em> avvicina la prua al vento, <em>poggiare</em> la allontana. Si riferiscono al vento, non a destra o sinistra." },
-    { title: "La scotta: lascare", sem: ["lasca"], hud: 1, hintKind: "sail",
+    { title: "Ripartire", tiller: true, turnHint: true, autoTrim: true, hud: 1, hintKind: "sail",
+      text: [() => `Tieni premuto <em>${turnKey(poggiaSide())}</em> per poggiare e uscire dall'angolo morto, finché il vento arriva di fianco e la barca riparte. Se giri troppo, correggi con l'altra freccia. Con la prua proprio nel vento va bene anche l'altra freccia: da entrambi i lati si poggia.`],
+      cond: I => I.twa > 70 && I.twa < 105 && I.kn > 2.5, hold: 1, // al traverso: più poggiati la vela non sbatterebbe nel passo «lascare»
+      done: "La barca è ripartita. Ricapitolando: <em>orzare</em> avvicina la prua al vento, <em>poggiare</em> la allontana. Si riferiscono al vento, non a destra o sinistra: con il vento dall'altro lato della barca, per poggiare gireresti dall'altra parte." },
+    { title: "La scotta: lascare", sem: ["lasca"], tiller: true, turnHint: true, hud: 1, hintKind: "sail",
       text: ["<em>Lascare</em> significa mollare la scotta: la vela si apre verso l'esterno. <em>Cazzare</em> significa tirarla: la vela si avvicina al centro della barca.",
              "Da qui la vela non si regola più da sola. Tieni premuto <em>Lasca</em> (tasto S) e apri la vela del tutto."],
       cond: I => I.sheet > 0.9 && (I.tt === "wind" || I.tt === "flog"), hold: 0.5,
       done: "Vedi come sbatte? Si dice che la vela <em>fileggia</em>: troppo aperta, prende il vento di taglio e non spinge. La barca rallenta." },
-    { title: "La scotta: cazzare", sem: ["cazza", "lasca"], hud: 1, hintKind: "sail",
+    { title: "La scotta: cazzare", sem: ["cazza", "lasca"], tiller: true, turnHint: true, hud: 1, hintKind: "sail",
       text: ["Ora tieni premuto <em>Cazza</em> (tasto W), poco alla volta, finché la vela smette di sbattere e si gonfia. Se esageri, correggi con Lasca."],
       cond: I => I.tt === "ok", hold: 1,
       done: "Vela regolata: la barca riprende velocità. La regola pratica: <em>lasca finché la vela comincia a sbattere, poi cazza quanto basta perché smetta</em>." },
-    { title: "Troppo cazzata", sem: ["cazza", "lasca"], hud: 1, hintKind: "sail",
+    { title: "Troppo cazzata", sem: ["cazza", "lasca"], tiller: true, turnHint: true, hud: 1, hintKind: "sail",
       text: ["E se si cazza troppo? Tieni premuto <em>Cazza</em> fino a chiudere del tutto la vela, e guarda la velocità."],
       cond: I => I.sheet < 0.03 && I.tt === "lee", hold: 1,
       done: "La vela non sbatte, ma la barca rallenta: troppo chiusa, il vento non ci scorre sopra bene. Si dice che la vela è <em>in stallo</em>. Lasca per ripartire." },
-    { title: "Navigazione libera", sem: ["orza", "poggia", "cazza", "lasca"], hud: 1, hintKind: "sail", final: true,
+    { title: "Navigazione libera", sem: ["cazza", "lasca"], tiller: true, turnHint: true, hud: 1, hintKind: "sail", final: true,
       text: ["Hai le basi: <em>prua</em> e <em>poppa</em>, <em>dritta</em> e <em>sinistra</em>, <em>timone</em> e <em>deriva</em>, <em>sopravento</em> e <em>sottovento</em>, <em>orzare</em> e <em>poggiare</em>, <em>cazzare</em> e <em>lascare</em>.",
-             "Naviga liberamente per prendere confidenza. Nella prossima lezione lascerai i pulsanti Orza e Poggia e userai la barra, come in una barca vera."] }
+             "Naviga liberamente per prendere confidenza. Nella prossima lezione vedrai come funziona la barra e perché la prua gira dalla parte opposta."] }
   ];
 
   const L2 = [
@@ -661,38 +676,33 @@ function step(S, C, E, dt){
     { name: "Lezione 6", title: "Raffiche e scuffia", steps: L6, desc: "Riconoscere le raffiche, tenere la barca piatta, scuffiare e raddrizzare." }
   ];
 
-  // Prove: geometria descritta con il vento da nord (m), poi ruotata secondo il vento della prova
+  // Prove: geometria descritta con il vento da nord (m), poi ruotata secondo il vento della prova.
+  // bands: tempi massimi in secondi per oro, argento e bronzo (0.16), tarati con tests/collaudo_fasce.py:
+  // oro = tempo del pilota automatico arrotondato ai 5 s superiori, argento +25%, bronzo +60%.
   const MISSIONS = [
     { title: "Al traverso", desc: "Raggiungi una boa con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
       text: "Il vento non arriva più da nord: guarda la freccia. La boa si raggiunge al traverso. La vela parte troppo cazzata: regolala sui filetti e raggiungi la boa.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.02 }, marks: [{ x: 230, y: 0, label: "Boa" }] },
+      start: { x: 0, y: 0, h: 90, sheet: 0.02 }, bands: [90, 110, 140],
+      marks: [{ x: 230, y: 0, label: "Boa" }] },
     { title: "Lasco e poppa", desc: "Raggiungi una boa sottovento.", wind: 45, tws: 10, gusts: 0,
       text: "La boa è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, marks: [{ x: 60, y: 260, label: "Boa" }] },
+      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [140, 175, 220],
+      marks: [{ x: 60, y: 260, label: "Boa" }] },
     { title: "Risalire il vento", desc: "Raggiungi una boa controvento.", wind: 180, tws: 10, gusts: 0,
       text: "La boa è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -220, label: "Boa" }] },
+      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [185, 235, 300],
+      marks: [{ x: 0, y: -220, label: "Boa" }] },
     { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
       text: "Risali di bolina fino alla boa e girala lasciandola a sinistra, poi torna all'arrivo con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [330, 410, 525],
+      marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
       text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino all'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [355, 440, 565],
+      marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 
   const SEQ = [["l",0],["l",1],["l",2],["m",0],["m",1],["l",3],["l",4],["m",2],["m",3],["l",5],["m",4]];
-  const FUTURE = [
-    { title: "Parte 2: il carteggio", items: [
-      ["Lezione", "Gradi e direzioni", "La rosa dei venti, la prua in gradi, il rilevamento."],
-      ["Lezione", "Velocità, tempo, distanza", "Nodi e miglia, il punto stimato."],
-      ["Lezione", "Fare il punto", "Due rilevamenti e il loro incrocio."],
-      ["Lezione", "Il segnalamento", "Boe laterali e cardinali, fari."],
-      ["Lezione", "Nord vero e nord magnetico", "Perché la bussola non punta al nord della carta."] ] },
-    { title: "Parte 3: il mare vero", items: [
-      ["Lezione", "Il cabinato", "Una barca più grande, con fiocco e cabina, per navigare lontano."],
-      ["Lezione", "Corrente e scarroccio", "Il mare che si muove sotto la barca."],
-      ["Prova", "La traversata", "Una navigazione nell'arcipelago che mette insieme tutto."] ] }
-  ];
 
 
   // Quiz di ripasso: [domanda, risposta giusta, [sbagliate], spiegazione]
@@ -785,7 +795,7 @@ function step(S, C, E, dt){
   let gustLevel = 0, gustTimer = 0;
   const gusts = [], wake = [];
   const ctl = { sheet: 0.4, tiller: 0 };
-  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, ghost: true, aiLevel: "principianti", countdown: 180 };
+  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180 };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
@@ -868,6 +878,11 @@ function step(S, C, E, dt){
   const recK = k => KEYV[k] || k;
   let progress = { done: {}, best: {}, clean: {} };
   const STAR = '<span class="star" title="Completata almeno una volta senza errori">★</span>';
+  // fasce di tempo delle prove: bands = [oro, argento, bronzo] in secondi (tempo massimo per ciascuna)
+  const MEDALS = ["oro", "argento", "bronzo"];
+  const medalOf = (i, sec) => { const b = MISSIONS[i].bands; if (!b || !sec) return 0; for (let k = 0; k < 3; k++) if (sec <= b[k]) return k + 1; return 0; };
+  const medalTag = (i, sec) => { const m = medalOf(i, sec); return m ? `<span class="medal m${m}" title="Fascia: ${MEDALS[m - 1]}"></span>` : ""; };
+  const MEDAL_ON = () => MISSIONS.some(m => m.bands);
   try { const raw = localStorage.getItem(STORE); if (raw) progress = Object.assign(progress, JSON.parse(raw)); } catch(e){}
   const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name + ": " + LESSONS[i].title : "Prova " + (i + 1) + ": " + MISSIONS[i].title;
@@ -886,29 +901,37 @@ function step(S, C, E, dt){
     mode = "menu"; setControls([], false, false);
     $("game").hidden = true; $("menu").hidden = false;
     const doneCount = SEQ.filter(([t, i]) => progress.done[t + i]).length;
+    const esc = t => t.replace(/"/g, "&quot;");
     const rows = SEQ.map(([t, i], k) => {
       const key = t + i, done = progress.done[key];
       const kind = t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
       const title = t === "l" ? LESSONS[i].title : MISSIONS[i].title;
       const desc = t === "l" ? LESSONS[i].desc : MISSIONS[i].desc;
       let state = done ? "Completata" : "Da fare";
-      if (t === "m" && progress.best[recK(key)]) state = "Record: " + fmtTime(progress.best[recK(key)]);
+      if (t === "m" && progress.best[recK(key)]) state = fmtTime(progress.best[recK(key)]) + medalTag(i, progress.best[recK(key)]);
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
-      return `<button class="item" data-k="${k}"><span class="num">${k + 1}</span><span><div class="kind">${kind}</div><div class="title">${title}</div><div class="desc">${desc}</div></span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
+      return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
-    const future = FUTURE.map(part => `<section class="part future"><div class="part-head"><h2>${part.title}</h2><span>In arrivo</span></div><div class="items">${
-      part.items.map(([k, t, d]) => `<div class="item" aria-disabled="true"><span class="num">·</span><span><div class="kind">${k}</div><div class="title">${t}</div><div class="desc">${d}</div></span><span></span></div>`).join("")}</div></section>`).join("");
+    const races = RACES.map((rc, i) => { const b = progress.best[recK("r" + i)];
+      return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
+    const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
+      return `<button data-q="${i}">${L.name}: ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
-      <header class="menu-head"><div><h1>Scuola di vela</h1><p>Un simulatore per imparare a governare una deriva e, più avanti, a navigare con la carta. L'ordine consigliato è quello numerato, ma puoi aprire qualsiasi voce.</p></div>
+      <header class="menu-head"><div><h1>Scuola di vela</h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
         <button class="pill" id="menuGloss">Glossario</button></header>
-      <div class="items"><button class="item free" id="goFree"><span class="num">⛵</span><span><div class="kind">Sempre disponibile</div><div class="title">Navigazione libera</div><div class="desc">Nessun obiettivo: scegli vento e raffiche e naviga.</div></span><span></span></button></div>
-      <section class="part"><div class="part-head"><h2>Parte 1: governare la barca</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></section>
-      <section class="part"><div class="part-head"><h2>Regate</h2><span>contro avversari guidati dal computer</span></div>
-        <div class="items">${RACES.map((rc, i) => { const b = progress.best[recK("r" + i)]; return `<button class="item" data-r="${i}"><span class="num">⚑</span><span><div class="kind">Regata</div><div class="title">${rc.title}</div><div class="desc">${rc.desc}</div></span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span></button>`; }).join("")}</div></section>
-      <section class="part"><div class="part-head"><h2>Ripasso</h2><span>domande a scelta multipla</span></div>
-        <div class="review">${LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i]; return `<button data-q="${i}">${L.name}: ${L.title}<small>${best !== undefined ? "Migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("")}</div></section>
-      ${future}
-      <footer class="menu-foot"><span>I progressi restano salvati in questo browser. ★ indica una prova o regata completata almeno una volta senza errori.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
+      <div class="tiles">
+        <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></div></section>
+        <section class="tile">
+          <div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div>
+          <div><div class="part-head"><h2>Navigazione libera</h2></div><div class="items"><button class="item wide free" id="goFree"><span class="num">⛵</span><span class="title">Naviga senza obiettivi</span><span></span><span class="desc">Scegli vento e raffiche e prova quello che vuoi.</span></button></div></div>
+        </section>
+        <section class="tile">
+          <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
+            <button class="off" disabled aria-disabled="true">Esame su tutte le lezioni<small>in arrivo</small></button></div></div>
+          <div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">L'esame su tutte le lezioni, i tornei, altri tipi di barca.</p></div>
+        </section>
+      </div>
+      <footer class="menu-foot"><span>I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori.${MEDAL_ON() ? " I pallini oro, argento e bronzo indicano la fascia del tuo record." : ""}</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
     $("menuGloss").onclick = openGloss;
@@ -991,17 +1014,22 @@ function step(S, C, E, dt){
     $("status").hidden = which !== "mission" && which !== "race"; $("standings").hidden = which !== "race"; $("stClock").hidden = which !== "mission";
     $("briefOv").hidden = true; briefing = false;
   }
-  function setControls(sem, tiller, sheet){
+  function setControls(sem, tiller, sheet, hideSheetOff){
     allowSem = sem; allowTiller = tiller; allowSheet = sheet;
     $("sem").hidden = sem.length === 0;
     $("sem").querySelectorAll("button").forEach(b => { b.disabled = !sem.includes(b.dataset.a); if (b.disabled) b.classList.remove("held"); });
     $("direct").hidden = !tiller && !sheet;
     $("ctlTiller").classList.toggle("off", !tiller); $("tiller").disabled = !tiller;
     $("ctlSheet").classList.toggle("off", !sheet); $("sheet").disabled = !sheet;
+    $("ctlSheet").hidden = !sheet && !!hideSheetOff; // lezione 1: il cursore spento della scotta non serve e ruberebbe spazio
     keys.clear(); semHeld.clear();
   }
+  let hudLevel = 0;
   function setHud(level){
-    $("instr").querySelectorAll("[data-l]").forEach(d => d.hidden = +d.dataset.l > level);
+    hudLevel = level;
+    // pannello ridotto (0.16): fuori dalle lezioni sbandamento, scarroccio e venti si vedono già sullo schermo (indicatore, freccia della velocità, rosa)
+    const extra = mode !== "lesson" && !opt.allInstr;
+    $("instr").querySelectorAll("[data-l]").forEach(d => d.hidden = +d.dataset.l > level || (extra && d.hasAttribute("data-x")));
     if (mode === "lesson" && lessonIdx < 2) $("iAnd").parentElement.hidden = true; // le andature si spiegano nella lezione 3
     $("instr").hidden = level === 0;
   }
@@ -1079,7 +1107,7 @@ function step(S, C, E, dt){
     if (st.course) S.course = Math.round(norm360(S.h) / 5) * 5;
     $("lStep").textContent = "Passo " + (i + 1) + " di " + steps.length;
     $("lTitle").textContent = st.title;
-    $("lText").innerHTML = st.text.map(t => "<p>" + t + "</p>").join("");
+    $("lText").innerHTML = st.text.map(t => "<p>" + (typeof t === "function" ? t() : t) + "</p>").join("");
     $("lFeedback").hidden = true;
     $("lBack").hidden = i === 0;
     $("lRetry").hidden = !!st.pause;
@@ -1087,7 +1115,7 @@ function step(S, C, E, dt){
     $("lNext").textContent = st.final ? nextLabel() : "Avanti";
     $("lQuiz").hidden = !st.final;
     if (st.final){ progress.done["l" + lessonIdx] = true; saveProgress(); }
-    setControls(st.sem || [], !!st.tiller, !!st.sheet);
+    setControls(st.sem || [], !!st.tiller, !!st.sheet, st.turnHint);
     setHud(st.hud || 0);
     $("hint").hidden = st.pause || st.hintKind === "none" || !st.hud;
   }
@@ -1150,7 +1178,8 @@ function step(S, C, E, dt){
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief($("mTitle").textContent, missionText(), true);
   }
-  const missionText = () => { const m = MISSIONS[missionIdx]; return m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote(); };
+  const bandText = b => "Fasce di tempo: oro entro " + fmtTime(b[0]) + ", argento entro " + fmtTime(b[1]) + ", bronzo entro " + fmtTime(b[2]) + ".";
+  const missionText = () => { const m = MISSIONS[missionIdx]; return m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote() + (m.bands ? " " + bandText(m.bands) : ""); };
   $("mBrief").onclick = () => showBrief($("mTitle").textContent, missionText(), false);
   $("bGo").onclick = hideBrief;
   const changeWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); startMission(missionIdx, w); };
@@ -1175,15 +1204,11 @@ function step(S, C, E, dt){
   // INPUT
   // ======================================================================
   const keys = new Set(), semHeld = new Set();
-  const semDir = { orza: 1, poggia: -1 };
   let dragTiller = false;
-  const KEYSEM = { a: "orza", d: "poggia", w: "cazza", s: "lasca" };
+  const KEYSEM = { w: "cazza", s: "lasca" };
   function semPress(a){
     if (!allowSem.includes(a) || semHeld.has(a)) return;
     semHeld.add(a);
-    // il verso si fissa alla pressione: tenendo premuto Orza si può attraversare il vento
-    if (a === "orza") semDir.orza = S.boomSide;
-    if (a === "poggia") semDir.poggia = -S.boomSide;
     const b = $("sem").querySelector(`[data-a="${a}"]`); b && b.classList.add("held");
   }
   function semRelease(a){ semHeld.delete(a); const b = $("sem").querySelector(`[data-a="${a}"]`); b && b.classList.remove("held"); }
@@ -1220,6 +1245,8 @@ function step(S, C, E, dt){
   $("autoCenter").onchange = e => opt[centerKey()] = e.target.checked;
   $("showHint").onchange = e => { opt.hint = e.target.checked; if (mode !== "lesson") $("hint").hidden = !opt.hint; };
   $("showArrows").onchange = e => opt.arrows = e.target.checked;
+  $("showDead").onchange = e => opt.dead = e.target.checked;
+  $("allInstr").onchange = e => { opt.allInstr = e.target.checked; setHud(hudLevel); };
   $("showGhost").onchange = e => opt.ghost = e.target.checked;
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
   $("rRestart").onclick = $("rAgain").onclick = () => startRace(raceIdx, env.twd);
@@ -1246,23 +1273,13 @@ function step(S, C, E, dt){
         ctl.tiller = clamp(ctl.tiller + dir * 1.6 * dt, -1, 1); tillerInput = true;
       }
     }
-    if (semHeld.has("orza")){
-      // con i pulsanti non si vira: arrivati nell'angolo morto la barra torna al centro e la barca si ferma
-      if (Math.abs(norm180(local.twd - S.h)) < 36){ ctl.tiller *= Math.exp(-6 * dt); }
-      else ctl.tiller = clamp(ctl.tiller + semDir.orza * 1.6 * dt, -1, 1);
-      tillerInput = true;
+    // lezione 1: la barra torna al centro in fretta, così la prua smette di girare appena si rilascia la freccia
+    const quick = allowSem.length || (mode === "lesson" && curStep() && curStep().turnHint);
+    if (!tillerInput && (opt[centerKey()] || quick) && !dragTiller){
+      ctl.tiller *= Math.exp((quick ? -6 : -2.5) * dt); if (Math.abs(ctl.tiller) < 0.01) ctl.tiller = 0;
     }
-    if (semHeld.has("poggia")){
-      // con i pulsanti non si stramba: vicino alla poppa la barra torna al centro
-      if (Math.abs(norm180(local.twd - S.h)) > 160){ ctl.tiller *= Math.exp(-6 * dt); }
-      else ctl.tiller = clamp(ctl.tiller + semDir.poggia * 1.6 * dt, -1, 1);
-      tillerInput = true;
-    }
-    if (!tillerInput && (opt[centerKey()] || allowSem.length) && !dragTiller){
-      ctl.tiller *= Math.exp((allowSem.length ? -6 : -2.5) * dt); if (Math.abs(ctl.tiller) < 0.01) ctl.tiller = 0;
-    }
-    if ((allowSheet && keys.has("ArrowUp")) || semHeld.has("cazza")) ctl.sheet = Math.max(0, ctl.sheet - 0.27 * dt);
-    if ((allowSheet && keys.has("ArrowDown")) || semHeld.has("lasca")) ctl.sheet = Math.min(1, ctl.sheet + 0.27 * dt);
+    if ((allowSheet || allowSem.includes("cazza")) && keys.has("ArrowUp") || semHeld.has("cazza")) ctl.sheet = Math.max(0, ctl.sheet - 0.27 * dt);
+    if ((allowSheet || allowSem.includes("lasca")) && keys.has("ArrowDown") || semHeld.has("lasca")) ctl.sheet = Math.min(1, ctl.sheet + 0.27 * dt);
   }
 
   // ======================================================================
@@ -1356,6 +1373,7 @@ function step(S, C, E, dt){
           progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); }
           const clean = regTotal() === 0; if (clean) progress.clean[bk] = true; saveProgress();
           $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
+            (MISSIONS[missionIdx].bands ? (medalOf(missionIdx, sec) ? " Fascia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Fuori dalle fasce: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") : "") +
             (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
           $("done").hidden = false; toast("Arrivato!");
         } else toast("Boa girata: ora verso " + curMarks[S.markIdx].label.toLowerCase());
@@ -1822,6 +1840,10 @@ function step(S, C, E, dt){
       cls = Math.abs(off) < 6 ? "good" : "bad";
       msg = "Rotta da tenere " + deg3(S.course) + ", ora " + deg3(S.h) + (Math.abs(off) < 6 ? ": in rotta." : off > 0 ? ": la prua è troppo a dritta." : ": la prua è troppo a sinistra.");
     }
+    if (mode === "lesson" && st.turnHint && !S.capsized && S.u > -0.05 && S.heel <= 25 && Math.abs(S.r) > 3){
+      const a = norm180(local.twd - S.h), orza = Math.sign(a) === Math.sign(S.r);
+      cls = "good"; msg = orza ? "Stai orzando: la prua va verso il vento." : "Stai poggiando: la prua si allontana dal vento.";
+    }
     if (mode === "lesson" && kind === "none" && !S.capsized) { $("hint").hidden = true; }
     else if (mode === "lesson" && !st.pause && st.hud) $("hint").hidden = false;
     $("hint").className = "hint " + cls; $("hint").textContent = msg;
@@ -1830,7 +1852,9 @@ function step(S, C, E, dt){
     if (mode === "lesson"){ $("lErr").hidden = !!st.pause; regShow($("lErr")); }
     if (mode === "mission"){
       const prev = progress.best[recK("m" + missionIdx)];
-      $("stClock").innerHTML = "Tempo " + fmtClock(S.time) + (prev ? " <span>· record " + fmtClock(prev) + "</span>" : "");
+      const bd = MISSIONS[missionIdx].bands, k = bd ? bd.findIndex(v => S.time <= v) : -1;
+      $("stClock").innerHTML = "Tempo " + fmtClock(S.time) + (prev ? " <span>· record " + fmtClock(prev) + "</span>" : "") +
+        (k >= 0 && !S.finished ? " <span>· " + MEDALS[k] + " entro " + fmtClock(bd[k]) + "</span>" : "");
     }
   }
   const fmtClock = sec => { const s = Math.floor(sec); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
@@ -1841,7 +1865,7 @@ function step(S, C, E, dt){
   let W = 0, H = 0, dpr = 1, colors = {};
   function readColors(){
     const cs = getComputedStyle(document.documentElement);
-    ["sea-a","sea-b","ripple","foam","hull","hull-edge","cockpit","sail","sail-shade","spar","sailor","tt-port","tt-stbd","true","app","label","accent"]
+    ["sea-a","sea-b","ripple","foam","hull","hull-edge","cockpit","sail","sail-shade","spar","sailor","tt-port","tt-stbd","true","app","label","accent","moto"]
       .forEach(k => colors[k] = cs.getPropertyValue("--" + k).trim());
   }
   readColors();
@@ -1943,7 +1967,10 @@ function step(S, C, E, dt){
     if (st && st.labels) drawLabels(v, st.labels);
     drawCompass(v);
     drawWindBox(v);
-    if (!st || st.hud >= 3) drawHeelGauge();
+    const heelG = !st || st.hud >= 3;
+    if (heelG) drawHeelGauge();
+    // rosa dell'angolo morto (0.16): dove c'è lo sbandamento e nei passi pratici delle lezioni, tranne quando c'è già la rosa grande
+    if (opt.dead && !(st && (st.pause || st.rose || !st.hud))) drawDeadRose(heelG ? 196 : 84);
     if (mode === "race") drawRaceScreen(v);
     drawHelmLegend();
     if (S.toast) drawToast();
@@ -2186,6 +2213,27 @@ function step(S, C, E, dt){
     const tl = 25 + local.tws * 5, al = 25 + info.aws * 5;
     arrow(bx + Math.sin(tFrom) * rr, by - Math.cos(tFrom) * rr, tFrom + Math.PI, tl, colors.true, "reale");
     if (!trueOnly) arrow(bx + Math.sin(aFrom) * (rr + 6), by - Math.cos(aFrom) * (rr + 6), aFrom + Math.PI, al, colors.app, "apparente");
+    drawSpeedArrow(v, bx, by, rr);
+  }
+  // Freccia della velocità (0.16): dal centro della barca, nella direzione in cui la barca si muove davvero
+  // (avanti più scarroccio; all'indietro esce dalla poppa), lunga in proporzione alla velocità, nascosta sotto 0,3 nodi.
+  function drawSpeedArrow(v, bx, by, rr){
+    const st = curStep(); if (S.capsized || (st && st.pause)) return; // nelle pause la scena è ferma: niente freccia
+    const h = S.h * D2R, vx = Math.sin(h) * S.u + Math.cos(h) * S.vl, vy = -Math.cos(h) * S.u + Math.sin(h) * S.vl, sp = Math.hypot(vx, vy);
+    if (sp * KN < 0.3) return;
+    const ang = (Math.atan2(vx, -vy) / D2R + v.rot / D2R) * D2R, dx = Math.sin(ang), dy = -Math.cos(ang);
+    const len = rr + 22 * sp, tx = bx + dx * len, ty = by + dy * len;
+    ctx.save(); ctx.strokeStyle = ctx.fillStyle = colors.moto; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(tx - dx * 10, ty - dy * 10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - dx * 14 - dy * 7, ty - dy * 14 + dx * 7); ctx.lineTo(tx - dx * 14 + dy * 7, ty - dy * 14 - dx * 7); ctx.closePath(); ctx.fill();
+    // scritta di fianco alla punta, dal lato opposto a quello da cui arriva il vento: così non si sovrappone alle frecce del vento
+    const wf = (local.twd + v.rot / D2R) * D2R; let nx = -dy, ny = dx;
+    if (nx * Math.sin(wf) - ny * Math.cos(wf) > 0){ nx = -nx; ny = -ny; }
+    const lx = tx - dx * 8 + nx * 10, ly = ty - dy * 8 + ny * 10;
+    ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = nx >= 0 ? "left" : "right"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.fillText("velocità", lx + 1, ly + 1);
+    ctx.fillStyle = colors.moto; ctx.fillText("velocità", lx, ly);
+    ctx.restore();
   }
   function drawCompass(v){
     const r = 26, cx = W - r - 16, cy = r + 22, a = v.rot;
@@ -2209,6 +2257,22 @@ function step(S, C, E, dt){
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * (r - 4), Math.sin(a) * (r - 4)); ctx.stroke();
     ctx.fillStyle = "#fff"; ctx.font = `600 12px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center";
     ctx.fillText("sbandamento " + (S.capsized ? "— scuffia" : Math.round(Math.abs(S.heel)) + "°"), 0, -r - 12);
+    ctx.restore();
+  }
+  // Rosa dell'angolo morto: il vento arriva sempre dall'alto; il settore rosso è l'angolo morto (IRONS_A per lato,
+  // lo stesso limite della voce «Andatura» e del registro); la lancetta è la prua, rossa quando ci entra.
+  function drawDeadRose(cx){
+    const r = 34, cy = H - 44, rel = norm180(S.h - local.twd), inDead = Math.abs(rel) < IRONS_A && !S.capsized;
+    ctx.save(); ctx.translate(cx, cy);
+    ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.beginPath(); ctx.arc(0, 0, r + 8, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.35)"; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "#E0553A"; ctx.beginPath(); ctx.arc(0, 0, r, -Math.PI / 2 - IRONS_A * D2R, -Math.PI / 2 + IRONS_A * D2R); ctx.stroke();
+    ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.moveTo(0, -r + 12); ctx.lineTo(-5, -r + 3); ctx.lineTo(5, -r + 3); ctx.closePath(); ctx.fill(); // il vento entra dall'alto
+    const a = -Math.PI / 2 + rel * D2R;
+    ctx.strokeStyle = inDead ? "#E0553A" : "#fff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * (r - 4), Math.sin(a) * (r - 4)); ctx.stroke();
+    ctx.fillStyle = inDead ? "#E0553A" : "#fff"; ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.font = `600 12px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+    ctx.fillText(inDead ? "nell'angolo morto" : "prua e vento", 0, -r - 12);
     ctx.restore();
   }
   function drawWindBox(v){
@@ -2241,7 +2305,8 @@ function step(S, C, E, dt){
   showMenu();
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
   if (location.hash === "#collaudo") window.__sv = { openItem, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
-    ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief };
+    ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief,
+    run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; } } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce)
     briefSkip = true; // i collaudi guidano subito; __sv.skipBrief = false per collaudare il riquadro
   requestAnimationFrame(frame);
 

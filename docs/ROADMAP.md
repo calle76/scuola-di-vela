@@ -5,14 +5,15 @@ Aggiornata al 29 settembre 2026.
 ## Principi che valgono per ogni fase
 
 - **Tutto sempre giocabile**: nessun contenuto va sbloccato nella modalità libera.
-- La **carriera** sarà una modalità separata e facoltativa, con salvataggio proprio.
+- La **carriera** sarà una modalità separata e facoltativa, con salvataggio proprio. Il menu avrà un primo bivio: **gioco libero** (tutto sbloccato, il menu a riquadri di oggi) oppure **carriera**.
+- Nei titoli del gioco si dice **brevetto**, mai «patente» o «patentino».
 - **Confini legali**: niente marchi, niente titoli che sembrino ufficiali, dati esterni solo con licenza libera e citazione.
 - Ogni novità si collauda **guidando davvero la barca** (vedi `COLLAUDI.md`), non solo leggendo il codice.
 
 ## Fase A — Misura degli errori, brevetto ed esame
 
 1. ~~**Registro degli errori**~~ in lezioni, prove e regate: **fatto nella 0.15** (definizioni nel `CHANGELOG.md`). Registra anche i dati che serviranno all'esame e alla carriera; le regole di promozione (numero massimo di errori, tempi limite) si decideranno lì.
-2. **Fasce di tempo** per le prove (bronzo, argento, oro), tarate sui tempi degli avversari esperti **dalla 0.14 in poi** (il giro di boa vero ha allungato i tempi), con vento fisso durante i tentativi validi.
+2. ~~**Fasce di tempo**~~ per le prove: **fatto nella 0.16**, tarate con un pilota automatico (vedi `CHANGELOG.md`). Da ritoccare dopo averci giocato, a partire dalla prova 1.
 3. **Esame a risposte chiuse**: banca di 80–100 domande, 20 estratte a caso, soglia 80%. Due tipi:
    - glossario (come i quiz attuali);
    - situazioni con un piccolo disegno di barca e vento («che andatura è?», «cosa fai se entra una raffica?», «chi ha la precedenza?»).
@@ -23,13 +24,13 @@ Aggiornata al 29 settembre 2026.
 | Versione | Contenuto |
 | --- | --- |
 | 0.15 | Registro degli errori, pannello ordinato, segno «senza errori» (fatto) |
-| 0.16 | Menu principale a riquadri e fasce di tempo; lezione 1 con il solo timone; rosa dell'angolo morto; freccia della velocità; pannello ridotto (dettagli sotto) |
+| 0.16 | Menu principale a riquadri e fasce di tempo; lezione 1 con il solo timone; rosa dell'angolo morto; freccia della velocità; pannello ridotto (fatto) |
 | 0.17 | Esame a risposte chiuse, nel suo riquadro del menu |
 | poi | Brevetto con attestato |
 
 Il quiz di ripasso resta subito dopo ogni lezione; l'esame per il brevetto è separato, perché riguarda tutte le lezioni.
 
-### Contenuto della 0.16 (deciso il 29 settembre 2026, dopo il collaudo della 0.15)
+### Contenuto della 0.16 (deciso il 29 settembre 2026, dopo il collaudo della 0.15; fatto, dettagli nel `CHANGELOG.md`)
 
 1. **Menu principale a riquadri**, tutto visibile in una schermata: Scuola (lezioni e prove nell'ordine consigliato), Regate, Ripasso ed esame, Navigazione libera, In arrivo; Glossario in alto.
 2. **Fasce di tempo** bronzo, argento e oro, mostrate nel menu insieme alla ★.
@@ -37,6 +38,8 @@ Il quiz di ripasso resta subito dopo ogni lezione; l'esame per il brevetto è se
 4. **Rosa dell'angolo morto** accanto all'indicatore di sbandamento: vento sempre in alto, settore di 40° per lato in rosso, lancetta della prua che diventa rossa dentro il settore. Stesso limite della voce «Andatura» e del registro. Aiuto del gioco: nelle impostazioni, acceso di norma, disattivabile.
 5. **Freccia della velocità** dal centro della barca, nella direzione in cui la barca si muove davvero (mostra lo scarroccio; all'indietro esce dalla poppa), lunga in proporzione alla velocità, nascosta sotto qualche decimo di nodo, di colore diverso dalle frecce del vento. Il triangolo reale + moto = apparente solo nella lezione 4.
 6. **Pannello ridotto** in prove e regate, da decidere sulle schermate dopo aver visto rosa e freccia. Proposta: togliere Sbandamento, Scarroccio, Vento reale e Vento apparente (quest'ultimo resta nella lezione 4); tenere Velocità, Andatura, Prua e Rilevamento boa.
+
+Dopo la 0.16, da verificare giocando: soglie delle fasce; comportamento della lezione 1 (strambata a vela aperta se si tiene premuta la freccia nel passo «Poggiare»); oscillazione della rosa nelle raffiche; scritte «reale» e «apparente» sovrapposte con la prua nel vento (difetto noto).
 
 Scartato: pulsante «Schermo intero» nel gioco. Sul PC di prova lo schermo intero di Chrome con MATE torna subito indietro anche dal menu di Chrome (non dipende dal gioco); con Firefox F11 funziona.
 
@@ -62,7 +65,9 @@ Il motore è parametrico: una barca nuova è un nuovo insieme di costanti più u
 
 Nelle regate miste: compenso di tempo tra barche diverse, come nelle regate reali.
 
-## Fase D — Carteggio (resta in programma)
+## Fase D — Carteggio e mare aperto: espansione o gioco a parte
+
+Deciso a settembre 2026: il carteggio e la navigazione in mare aperto sono quasi un altro gioco (vista a carta nautica, cabinato, tempi lunghi, dati geografici con licenza). Escono dal menu della Scuola di vela e diventeranno un'espansione o un gioco nuovo che riusa il motore fisico. Sarà anche il momento di dividere il file unico in moduli.
 
 1. Gradi e direzioni: rosa dei venti, prua in gradi, rilevamento.
 2. Velocità, tempo, distanza: nodi e miglia, punto stimato.
@@ -75,6 +80,8 @@ Serve una vista «carta nautica» accanto a quella di navigazione. Per coste rea
 ## Fase E — Modalità carriera
 
 Percorso facoltativo: brevetto ed esame, regate di circolo, livelli più difficili; vincendo si guadagnano barche più veloci. Non toglie nulla alla modalità libera.
+
+Visione (settembre 2026): **tornei al centro** della schermata di carriera e, ai lati, **scuole da sbloccare** per livello (principiante, intermedio, avanzato) e per tipo di barca, con pochi corsi mirati sulla barca nuova; un **esame per categoria** dà il brevetto per gareggiare con quella barca. Le tendine per livello nel riquadro della Scuola serviranno quando arriverà la seconda barca (fase C): con una barca sola le 11 voci attuali sono tutto il livello principiante.
 
 Idea (settembre 2026): **più brevetti progressivi.** Un primo brevetto facile dà accesso alle regate con le barche di oggi; piazzandosi bene in un campionato si accede al brevetto successivo, più restrittivo (prove a tempo, meno errori ammessi). L'esame si supera o si viene rimandati. I nomi dei brevetti restano generici e con la scritta «nessun valore legale»: niente «patente» o «patentino», che richiamano titoli ufficiali.
 

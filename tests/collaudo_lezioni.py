@@ -1,4 +1,5 @@
 # Guida la barca con la tastiera simulata per verificare che i passi pratici delle lezioni siano completabili.
+# Dalla 0.16 la lezione 1 si guida con le frecce del timone (barra): vento da nord, prua a est, ← poggia e → orza.
 # Nota: i passi «cazzare» della lezione 1 e «prepararsi» della lezione 5 possono risultare NON COMPLETATI perché lo script
 # cazza troppo e non corregge: non è un difetto del gioco.
 import asyncio
@@ -35,11 +36,17 @@ async def main():
         await pg.goto(URL); await pg.wait_for_timeout(500)
         # Lezione 1
         await pg.evaluate("__sv.openItem(['l',0])"); await pg.evaluate("__sv.showStep(6)"); await pg.click("#c")
-        await hold_until(pg, "d", 12, "L1 poggiare")
+        await hold_until(pg, "ArrowLeft", 12, "L1 poggiare")
         await pg.evaluate("__sv.showStep(7)")
-        await hold_until(pg, "a", 25, "L1 orzare fino all'angolo morto")
+        await hold_until(pg, "ArrowRight", 25, "L1 orzare fino all'angolo morto")
         await pg.evaluate("__sv.showStep(8)")
-        await hold_until(pg, "d", 25, "L1 ripartire")
+        # come un giocatore: poggia finché il vento arriva di fianco, poi rilascia e aspetta che la barca riparta
+        await pg.keyboard.down("ArrowLeft")
+        for i in range(100):
+            await pg.wait_for_timeout(250)
+            if await pg.evaluate("__sv.readI().twa > 80"): break
+        await pg.keyboard.up("ArrowLeft")
+        await wait_until(pg, 15, "L1 ripartire")
         await pg.evaluate("__sv.showStep(9)")
         await hold_until(pg, "s", 10, "L1 lascare")
         await pg.evaluate("__sv.showStep(10)")

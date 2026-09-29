@@ -2,7 +2,7 @@
 
 ## Scopo e principi
 
-La Scuola di vela è un simulatore didattico per imparare la vela su una deriva e, in seguito, il carteggio. Queste decisioni guidano tutto il resto:
+La Scuola di vela è un simulatore didattico per imparare la vela su una deriva. Il carteggio e il mare aperto sono previsti come espansione o gioco a parte (vedi `ROADMAP.md`). Queste decisioni guidano tutto il resto:
 
 1. **Simulatore prima che gioco.** La fisica deve essere plausibile, perché quello che si impara deve valere anche in barca: vento apparente, filetti, barra invertita, abbrivio, sbandamento, scuffia.
 2. **Tutto sempre giocabile.** Nessuna lezione, prova o regata va sbloccata: deve essere sempre possibile provare al volo una cosa specifica. Un'eventuale modalità carriera, con progressione e barche da conquistare, sarà una modalità separata con un salvataggio suo.
@@ -22,12 +22,12 @@ Dentro `index.html`, nell'ordine:
 | CSS | Colori come variabili (tema chiaro e scuro), menu, pannello, dialoghi di quiz e glossario. |
 | HTML | Menu, dialoghi, area di gioco (canvas più pannello laterale con schede per lezione, prova, regata, navigazione libera). |
 | Motore fisico | Costanti della barca (`BOAT`), coefficienti della vela (`CL`, `CD`), funzione `step(stato, comandi, vento, dt)`. È puro: non tocca la pagina. |
-| Contenuti | Lezioni `L1`–`L6`, `LESSONS`, prove `MISSIONS`, sequenza consigliata `SEQ`, parti future `FUTURE`, `QUIZ`, `GLOSS`. |
+| Contenuti | Lezioni `L1`–`L6`, `LESSONS`, prove `MISSIONS` (con le fasce di tempo `bands`), sequenza consigliata `SEQ`, `QUIZ`, `GLOSS`. |
 | Stato | Modalità corrente, vento (`env` generale, `local` sulla barca), raffiche, comandi, opzioni. |
 | Raffiche | Chiazze che viaggiano col vento; `windAt(x, y)` dà il vento in un punto. |
 | Menu, progressi, glossario, quiz | Salvataggi in `localStorage`. |
 | Modalità | `startLesson`, `showStep`, `startMission`, `startFree`, `startRace`. |
-| Input | Tastiera, pulsanti delle lezioni, cursori. |
+| Input | Tastiera, pulsanti Cazza e Lasca della lezione 1, cursori. |
 | Simulazione | `simulate(dt)`: comandi, raffiche, fisica, manovre (virata, strambata), scuffia, obiettivi. |
 | Fantasma e regate | Registrazione e riproduzione del fantasma; avversari guidati dal computer; partenza, precedenze, classifica. |
 | Registro degli errori | `reg`: scuffie, strambate a vela aperta, episodi e secondi da piantato, boe dal lato sbagliato, contatti, partenze anticipate, linea fuori dagli estremi. `regAdd`, `ironsCheck`, `regText`. Si azzera a ogni avvio e si chiude all'arrivo. |
@@ -61,10 +61,11 @@ Ogni passo è un oggetto nell'array della lezione. I campi principali:
 
 | Campo | Significato |
 | --- | --- |
-| `title`, `text` | Titolo e paragrafi (HTML ammesso: `<em>` per i termini). |
+| `title`, `text` | Titolo e paragrafi (HTML ammesso: `<em>` per i termini). Un paragrafo può essere una funzione, calcolata all'apertura del passo (la lezione 1 la usa per dire quale freccia premere). |
 | `pause` | Passo di sola spiegazione: la barca è ferma. |
 | `zoom`, `labels` | Ingrandimento; etichette delle parti (`prua`, `poppa`, `dritta`, `sinistra`, `albero`, `boma`, `randa`, `timone`, `barra`, `deriva`, `filetti`, `sopravento`, `sottovento`). |
-| `sem` | Pulsanti semplificati (`orza`, `poggia`, `cazza`, `lasca`), usati nella lezione 1. |
+| `sem` | Pulsanti semplificati `cazza` e `lasca`, usati nella lezione 1 (rispondono anche a W S e ↑ ↓). Orza e Poggia sono stati tolti nella 0.16. |
+| `turnHint` | Mentre la prua gira, la riga di stato dice se si sta orzando o poggiando; la barra torna al centro in fretta e il cursore spento della scotta è nascosto (lezione 1). |
 | `tiller`, `sheet` | Abilitano barra e scotta. |
 | `autoTrim` | La vela si regola da sola. |
 | `hud` | Strumenti visibili: 0 nessuno, 1 base, 2 venti, 3 tutti. |
