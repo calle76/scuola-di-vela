@@ -1307,7 +1307,7 @@ function step(S, C, E, dt){
       S.noiseT = (S.noiseT || 0) - dt;
       if (S.noiseT <= 0){ S.noiseT = 1.8 + Math.random() * 1.6; S.noiseR = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 3); S.noiseLeft = 0.8; }
       if (S.noiseLeft > 0){ S.noiseLeft -= dt; S.h = norm360(S.h + S.noiseR * dt); }
-      S.h = norm360(S.h + sgn(norm180(local.twd - S.h)) * 2 * dt); // la barca tende a orzare da sola (orziera)
+      S.h = norm360(S.h + sgn(norm180(local.twd - S.h)) * 3 * dt); // la barca tende a orzare da sola (orziera). 3°/s e non 2: con 2 le spinte delle onde (3-6°/s) potevano cancellarla per gli 8 s dell'esercizio e il passo si completava da sé una volta su otto
     }
     if (st && st.bigGust && !S.capsized){
       // se non c'è una raffica forte in arrivo vicino alla barca, ne crea una
@@ -1452,6 +1452,42 @@ function step(S, C, E, dt){
                 capsized: false, capT: 0, capSide: 1, dispBoom: 0 };
     return b;
   }
+  // Posizioni di partenza casuali dietro la linea. Prima erano fisse, e il giocatore nasceva a 18 m dalla Blu
+  // con le prue una contro l'altra: contatto quasi garantito, e la penalità toccava sempre a lui (mure a sinistra).
+  // Vincoli: almeno START_GAP fra due barche, e nessuna coppia che si avvicini sotto START_CPA entro 25 secondi.
+  const START_GAP = 20, START_CPA = 14;
+  const AGGRO_OFF = 15; // metri: sotto questa distanza l'aggressiva smette di stringere (spirito della regola 16)
+  function startSpots(n){
+    // in coordinate del vento una barca mure a sinistra (s = 1) avanza verso +x, una mure a dritta verso -x
+    const ok = (a, c) => {
+      const rx = c.x - a.x, ry = c.y - a.y;
+      if (Math.hypot(rx, ry) < START_GAP) return false;
+      const vx = c.s - a.s, vv = vx * vx;
+      if (vv < 1e-6) return true;                                   // stesse mure: non si avvicinano
+      const t = -(rx * vx) / vv;
+      return t <= 0 || t > 25 || Math.hypot(rx + vx * t, ry) >= START_CPA;
+    };
+    // Dietro la linea, ma più vicini quando la preparazione è corta: risalendo si guadagna circa 1 m al secondo verso
+    // la linea, e con un minuto chi nasceva lontano partiva con una ventina di secondi di ritardo contro i cinque di
+    // chi nasceva vicino (misurato su 30 partenze). Le barche si piazzano una alla volta: con la banda corta quattro
+    // barche a 20 m l'una dall'altra ci stanno appena, e sorteggiare tutto l'insieme in blocco riusciva troppo di rado.
+    const vicino = opt.countdown <= 60, yMin = vicino ? 26 : 38, yMax = vicino ? 54 : 74;
+    const estrai = () => ({ x: -30 + Math.random() * 60, y: yMin + Math.random() * (yMax - yMin), s: Math.random() < 0.5 ? 1 : -1 });
+    for (let giro = 0; giro < 40; giro++){             // se una barca non trova posto si riparte da zero
+      const P = [];
+      for (let k = 0; k < n; k++){
+        let p = null;
+        for (let tries = 0; tries < 200 && !p; tries++){ const q = estrai(); if (P.every(o => ok(o, q))) p = q; }
+        if (!p) break;
+        P.push(p);
+      }
+      if (P.length === n) return P;
+    }
+    // ripiego: in fila a zigzag, distanze verificate per quattro barche (consecutive 24,4 m, alterne 40 m)
+    return Array.from({ length: n }, (_, k) => ({ x: -30 + k * (60 / Math.max(1, n - 1)), y: yMin + (k % 2) * Math.min(14, yMax - yMin), s: k % 2 ? 1 : -1 }));
+  }
+  const CHAR_TEXT = { prudente: "prudente e sta alla larga", normale: "normale", aggressiva: "aggressiva in partenza" };
+
   function aiParams(level){
     const r = () => Math.random();
     return level === "esperti"
@@ -1464,22 +1500,26 @@ function step(S, C, E, dt){
     setWhere("Regata: " + rc.title);
     env.twd = wind === undefined ? rc.wind : wind; env.tws = rc.tws / KN;
     curMarks = [];
-    const [px, py] = fromWF(10, 45);
-    freshState(px, py, norm360(env.twd + 90), 0.35);
+    const spots = startSpots(opt.aiLevel === "nessuno" ? 1 : 1 + FLEET_LOOK.length);
+    const [px, py] = fromWF(spots[0].x, spots[0].y);
+    freshState(px, py, norm360(env.twd + spots[0].s * 90), 0.35);
     setGusts(rc.gusts);
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -MARK_UP), [cX, cY] = fromWF(0, 0);
     R = { t: -opt.countdown, phase: "pre", pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, signals: new Set(), doneAt: null };
-    const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: 45 };
+    const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: spots[0].y };
     R.boats.push(me);
-    const starts = [[-25, 55], [5, 70], [28, 50]];
     const slots = [-24, 2, 24].sort(() => Math.random() - 0.5);
+    // una sola aggressiva, e solo con gli esperti; le altre prudenti o normali
+    const aggro = opt.aiLevel === "esperti" ? Math.floor(Math.random() * FLEET_LOOK.length) : -1;
     (opt.aiLevel === "nessuno" ? [] : FLEET_LOOK).forEach((look, k) => {
-      const [x, y] = fromWF(starts[k][0], starts[k][1]);
-      const bs = newBoat(x, y, norm360(env.twd + (k % 2 ? 90 : -90)));
+      const spot = spots[k + 1];
+      const [x, y] = fromWF(spot.x, spot.y);
+      const bs = newBoat(x, y, norm360(env.twd + spot.s * 90));
       Object.assign(bs, { hullColor: look.hull, sailColor: look.sail, sailorColor: look.sailor });
       const b = { me: false, name: look.name, S: bs, ctl: { sheet: 0.4, tiller: 0 }, info: null, wake: [], wakeT: 0, leg: 0, ocs: false, pen: 0, fin: null,
-                  prevWY: starts[k][1], rOff: Math.random() * 6, ai: aiParams(opt.aiLevel), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6 };
+                  prevWY: spot.y, rOff: Math.random() * 6, ai: aiParams(opt.aiLevel), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6,
+                  char: k === aggro ? "aggressiva" : (Math.random() < 0.5 ? "prudente" : "normale") };
       b.info = step(bs, b.ctl, env, 0); bs.dispBoom = bs.boomSide * bs.boom;
       R.boats.push(b);
     });
@@ -1487,7 +1527,9 @@ function step(S, C, E, dt){
     $("rTitle").textContent = rc.title;
     R.brief = "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
       ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: l'ideale è tagliarla lanciato proprio allo zero." +
-      (opt.aiLevel === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record." : "") + centerNote();
+      (opt.aiLevel === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
+        : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
+          ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
     $("rDone").hidden = true;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief(rc.title, R.brief, true);
@@ -1530,13 +1572,14 @@ function step(S, C, E, dt){
     if (R.t < 0 && b.leg === 0){
       pre = true;
       const [bx, by] = toWF(s.x, s.y);
-      const [hx, hy] = fromWF(b.startX - 55, 18), [lx, ly] = fromWF(b.startX, -10);
+      // l'aggressiva attende dall'altro lato, così arriva alla linea mure a dritta: con la precedenza in mano
+      const [hx, hy] = fromWF(b.startX + (b.char === "aggressiva" ? 55 : -55), 18), [lx, ly] = fromWF(b.startX, -10);
       const go = -R.t <= Math.hypot(s.x - lx, s.y - ly) / 1.9 + 5;
       const aim = p => { let d = bearingTo(s, p); const r = norm180(d - twd); if (Math.abs(r) < ai.up + 4) d = twd + (r >= 0 ? 1 : -1) * (ai.up + 4); return d; };
       if (go) b.preDesired = aim({ x: lx, y: ly });
       else if (Math.hypot(s.x - hx, s.y - hy) > 15) b.preDesired = aim({ x: hx, y: hy });
       else hold = true;
-      if (by < 4 && Math.abs(bx) <= LINE_HALF + 5 && R.t < -1) hold = true; // davanti alla linea: non superarla prima dello zero
+      if (by < 7 && Math.abs(bx) <= LINE_HALF + 5 && R.t < -1) hold = true; // davanti alla linea: non superarla prima dello zero. 7 m e non 4: con le posizioni casuali e la prudente che evita da 22 m, qualcuna scivolava oltre la linea prima del via
     }
     const brg = bearingTo(s, dest);
     const rel = norm180(brg - twd);
@@ -1570,12 +1613,28 @@ function step(S, C, E, dt){
         desired -= side * 28; break;
       }
     }
+    // carattere aggressivo: prima del via punta le barche mure a sinistra che ha vicine, per costringerle a manovrare.
+    // Spirito delle regole 14 e 16: sotto AGGRO_OFF smette di stringere, così una manovra per evitarla esiste sempre,
+    // e sotto il raggio del blocco qui sotto cerca comunque di non urtare. La colpa resta decisa solo da mure e sopravento.
+    if (b.char === "aggressiva" && pre && !hold && side > 0){
+      let prey = null, best = 1e9;
+      for (const o of R.boats){
+        if (o === b || o.S.capsized || o.fin !== null) continue;
+        if (norm180(twd - o.S.h) >= 0) continue;                           // solo chi è mure a sinistra
+        const d = Math.hypot(o.S.x - s.x, o.S.y - s.y);
+        if (d < AGGRO_OFF || d > 40 || d >= best) continue;
+        best = d; prey = o;
+      }
+      if (prey) desired = bearingTo(s, prey.S);
+    }
     // evita qualsiasi barca vicina davanti (anche quando avrebbe diritto di rotta: meglio non urtare)
+    // la prudente comincia da più lontano: è il suo carattere
+    const avoidR = b.char === "prudente" ? 22 : 14;
     for (const o of R.boats){
       if (o === b || o.fin !== null) continue;
-      const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > 14) continue;
+      const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > avoidR) continue;
       const relB = norm180(bearingTo(s, o.S) - s.h); if (Math.abs(relB) > 60) continue;
-      desired -= (relB >= 0 ? 1 : -1) * 35 * (1 - d / 14 + 0.3); break;
+      desired -= (relB >= 0 ? 1 : -1) * 35 * (1 - d / avoidR + 0.3); break;
     }
     // la prua desiderata non deve mai finire nell'angolo morto (tranne durante una virata voluta)
     const dTwa = norm180(twd - desired);

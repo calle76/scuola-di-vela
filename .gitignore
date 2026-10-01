@@ -5,3 +5,18 @@ __pycache__/
 # file di sistema
 .DS_Store
 Thumbs.db
+
+# resoconti di sessione, non fanno parte del gioco
+RESOCONTO.md
+# file creati dall'ambiente di lavoro (editor, shell, strumenti), non dal progetto
+.claude/
+.bashrc
+.bash_profile
+.profile
+.zshrc
+.zprofile
+.gitconfig
+.ripgreprc
+.mcp.json
+.idea
+.vscode
