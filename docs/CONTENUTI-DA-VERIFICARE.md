@@ -97,6 +97,31 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | Toccare una boa in regata comporta una penalità (nel gioco non è ancora gestito). | |
 | Una barca deve evitare il contatto quando è ragionevolmente possibile, anche se ha la precedenza (il registro degli errori conta tutti i contatti, distinguendo quelli con penalità). | |
 
+## Ipotesi del prototipo del fiocco (`sperimentale/fiocco.html`, non nel gioco)
+
+Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due. **Nessuno di questi valori viene da una fonte:** sono scelte fatte perché il comportamento risultasse plausibile, da confrontare con un manuale o con chi conosce le derive a due. Il resto della barca (scafo, massa, un solo timoniere) è rimasto quello del gioco, quindi **nessuna di queste misure calibra la futura barca a due**.
+
+| Grandezza | Valore del prototipo | Perché così | Esito |
+| --- | --- | --- | --- |
+| Area del fiocco | 2,6 m², cioè il 37% della randa (7,0 m²) | Su una deriva a due da circa 4,2 m il fiocco sta attorno a un terzo della randa | |
+| Angolo minimo della scotta | 10° (la randa 14°) | Il fiocco non ha boma e si cazza su un carrello più interno, quindi arriva più al centro | |
+| Angolo massimo della scotta | 80° (la randa 85°) | Un fiocco su carrello fisso non si apre quanto un boma | |
+| Altezza del centro velico | 1,6 m (la randa 2,0 m) | Vela più bassa e più a prua: a parità di forza sbanda meno | |
+| Coefficienti di portanza e resistenza | gli stessi della randa (`CL`, `CD`) | Nessun numero nuovo finché non serve | |
+| Angolo morto del fiocco | lo stesso della randa (27°) | In tappa A le due vele non interagiscono, quindi tenerli uguali è la scelta onesta | |
+| Interazione fra le vele (fessura) | **assente** | È l'oggetto della tappa B | |
+| Lunghezza della base nel disegno | 1,5 m (il boma 2,75 m) | Solo disegno, non entra nella fisica | |
+| Tasti | E cazza, Q lasca | Scelta di comandi, non un dato | |
+
+### Affermazioni nautiche del prototipo, da verificare
+
+| Affermazione | Perché c'è un dubbio | Esito |
+| --- | --- | --- |
+| Il fiocco si legge con gli stessi filetti della randa: sopravento agitato = cazza, sottovento agitato = lasca | Sul fiocco i filetti vicino all'inferitura sono la posizione classica; la regola di lettura dovrebbe essere la stessa | |
+| Alle andature larghe (dal lasco in giù) il fiocco non si può aprire abbastanza e smette di lavorare bene | Nel prototipo è un limite della scotta; nella realtà conta anche che la randa gli tolga il vento, e si usa un tangone | |
+| Entrando in virata il fiocco va tenuto cazzato: tutto lascato la virata riesce peggio | Nel prototipo il fiocco non va mai a collo (è la tappa C); l'effetto misurato viene solo dalla resistenza della vela che sbatte | |
+| Con randa e fiocco la barca è sovrainvelata per un solo timoniere: una raffica da 10 a 20 nodi senza reagire fa scuffiare | Atteso, essendo la stessa barca del gioco con il 37% di vela in più; va rivisto quando si passerà a una barca a due | |
+
 ## Per la fase B (non ancora nel gioco)
 
 | Affermazione | Esito |
