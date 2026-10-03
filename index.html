@@ -2363,10 +2363,11 @@ function step(S, C, E, dt){
   env.twd = 0; freshState(0, 0, 90, 0.4);
   showMenu();
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
-  if (location.hash === "#collaudo") window.__sv = { openItem, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
+  if (location.hash === "#collaudo"){ window.__sv = { openItem, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief,
     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; } } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce)
     briefSkip = true; // i collaudi guidano subito; __sv.skipBrief = false per collaudare il riquadro
+  }
   requestAnimationFrame(frame);
 
 })();

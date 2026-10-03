@@ -44,6 +44,40 @@ async def main():
         prova = await pg.evaluate("__sv.S.time") == 0; await pg.click("#bGo"); await pg.wait_for_timeout(800)
         prova = prova and await pg.evaluate("__sv.S.time") > 0.5
         print("istruzioni: regata ferma prima di Parti", fermo, "| parte con Invio", parte, "| riaperte a gioco fermo", riaperto, "| cronometro della prova parte con Parti", prova)
-        print("errori:", errs)
+        # Il riquadro nel gioco vero, senza #collaudo: il valore di partenza di briefSkip si vede solo qui.
+        # Dalla 0.15 alla 0.17 era vero anche fuori dai collaudi (una graffa mancante) e nessuno se n'era accorto,
+        # perche i collaudi lo mettevano a mano con __sv.skipBrief = false.
+        pg2 = await b.new_page(viewport={"width": W, "height": H}); errs2 = []
+        pg2.on("pageerror", lambda e: errs2.append(str(e)))
+        await pg2.goto(BASE); await pg2.wait_for_timeout(500)
+        async def riquadro(regata):
+            # «Parti», e i menu Avversari e Preparazione solo in regata
+            return (not await pg2.evaluate("document.getElementById('briefOv').hidden")
+                    and await pg2.evaluate("document.getElementById('bRaceOpts').hidden") != regata
+                    and await pg2.inner_text("#bGo") == "Parti")
+        # 2,5 s col riquadro aperto: se il tempo contasse, l'orologio della prova segnerebbe 0:02
+        async def giro(nome, apri, rifai, regata):
+            await apri(); await pg2.wait_for_timeout(2500)
+            ok = await riquadro(regata)
+            fermo = regata or await pg2.inner_text("#stClock") == atteso[nome]
+            await pg2.keyboard.press("Enter"); await pg2.wait_for_timeout(1500)   # non un clic su #bGo: se il riquadro manca, il clic aspetterebbe invano
+            parte = regata or await pg2.inner_text("#stClock") == atteso[nome].replace("0:00", "0:01")
+            await pg2.click(rifai); await pg2.wait_for_timeout(2500)
+            ok2 = await riquadro(regata)
+            da_zero = regata or await pg2.inner_text("#stClock") == atteso[nome]
+            print(f"  {nome}: riquadro dal menu {ok} | con Ricomincia {ok2}" +
+                  ("" if regata else f" | orologio fermo {fermo} | parte con Parti {parte} | riparte da zero {da_zero}"))
+            if not (ok and ok2): errs2.append(f"{nome}: il riquadro iniziale non compare nel gioco vero")
+            if not (fermo and parte and da_zero): errs2.append(f"{nome}: il cronometro non parte con Parti")
+            await pg2.click("#toMenu"); await pg2.wait_for_timeout(300)
+        # le fasce stampate nell'orologio: se cambiassero, il confronto qui sotto lo direbbe
+        atteso = {"prova 1": "Tempo 0:00 \u00b7 oro entro 1:30", "prova 2": "Tempo 0:00 \u00b7 oro entro 2:20",
+                  "prova 3": "Tempo 0:00 \u00b7 oro entro 3:05", "prova 4": "Tempo 0:00 \u00b7 oro entro 5:30",
+                  "prova 5": "Tempo 0:00 \u00b7 oro entro 5:55"}
+        print("gioco vero, senza #collaudo:")
+        await giro("regata 1", lambda: pg2.click("[data-r='0']"), "#rRestart", True)
+        for n in range(1, 6):
+            await giro(f"prova {n}", lambda n=n: pg2.locator("#menu button.item", has_text=f"Prova {n}").click(), "#mRetry", False)
+        print("errori:", errs + errs2)
         await b.close()
 asyncio.run(main())
