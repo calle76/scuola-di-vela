@@ -124,8 +124,11 @@ canvas:focus{outline:none}
 .standings li.me b{color:var(--accent)}
 .standings span{color:var(--ink-soft);font-size:.92rem}
 .rule{font-size:.92rem;line-height:1.3;border-left:3px solid var(--warn);padding-left:10px;margin:0}
-.hint{font-size:1rem;font-weight:600;padding:7px 10px;border-radius:6px;background:var(--btn);line-height:1.25;min-height:calc(2.5em + 14px)}
+.hint{font-size:1rem;font-weight:600;padding:7px 10px;border-radius:6px;background:var(--btn);line-height:1.25;min-height:calc(2.2em + 14px)} /* FIOCCO: 2,2 e non 2,5 righe: il riquadro ora ne contiene due (randa e fiocco) e il pannello deve stare in 1360x650 */
 .hint.good{color:var(--good)} .hint.bad{color:var(--warn)}
+.hint span{display:block} /* FIOCCO */
+#hintJib{font-size:.85rem;font-weight:500;margin-top:1px;color:var(--ink-soft)} /* FIOCCO: riga del fiocco, più minuta */
+#hintJib.good{color:var(--good)} #hintJib.bad{color:var(--warn)} /* FIOCCO */
 .instr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px 10px}
 .instr div{display:flex;flex-direction:column}
 .instr span{font-size:.8rem;color:var(--ink-soft)}
@@ -301,7 +304,7 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
       <p>Nessun obiettivo: prendi confidenza con la barca. Nelle impostazioni (pulsante ⚙ in alto) puoi cambiare direzione e forza del vento e le raffiche.</p>
     </section>
 
-    <div class="hint" id="hint">—</div>
+    <div class="hint" id="hint"><span id="hintMain">—</span><span id="hintJib" hidden>—</span></div><!-- FIOCCO: randa e fiocco in un riquadro solo, per non far crescere il pannello -->
     <div class="hint bad" id="errBox" hidden></div>
 
     <div class="sem" id="sem">
@@ -336,8 +339,7 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
         <input id="jib" type="range" min="0" max="100" value="40">
         <div class="ends"><span>cazzata</span><span>lascata</span></div>
       </section>
-      <p class="keys"><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>Spazio</kbd> centra la barra</p>
-      <p class="keys">lasca e cazza: randa <kbd>A</kbd><kbd>D</kbd> (o <kbd>↓</kbd><kbd>↑</kbd>) &nbsp; fiocco <kbd>Q</kbd><kbd>E</kbd></p>
+      <p class="keys"><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>A</kbd><kbd>D</kbd> randa &nbsp;<kbd>Q</kbd><kbd>E</kbd> fiocco &nbsp;<kbd>Spazio</kbd> centra</p><!-- FIOCCO: una riga sola, il pannello non ne ha due -->
     </div>
 
     <div class="row" id="mRow" hidden><button id="mRetry">Ricomincia la prova</button><button id="mWind">Cambia vento</button></div>
@@ -382,8 +384,9 @@ const BOAT = {
   // FIOCCO tappa B: la randa copre il fiocco alle andature larghe. SEMPLIFICAZIONE DICHIARATA: quanto lo copre
   // dipende SOLO dall'angolo del vento apparente, non da come sono regolate le due vele. Nella realtà conta anche
   // la regolazione: una randa cazzata a ferro copre meno di una tutta lascata, a parità di andatura.
-  slotA0: 40,         // FIOCCO gradi di vento apparente: sotto questo, fessura piena e fiocco scoperto
-  slotW: 60,          // FIOCCO ampiezza della transizione: a slotA0 + slotW il fiocco è coperto del tutto
+  slotA0: 85,         // FIOCCO gradi di vento apparente: sotto questo, fessura piena e fiocco scoperto.
+                      // 85 e non 40: con 40 l'ombra cominciava al traverso, dove le fonti non la mettono
+  slotW: 50,          // FIOCCO ampiezza della transizione: a slotA0 + slotW (135°) il fiocco è coperto del tutto
   slotShade: 0.70     // FIOCCO quota di pressione che il fiocco perde quando è coperto del tutto
 };
 
@@ -393,6 +396,28 @@ function CL(a){ // a: angolo di incidenza (gradi, >=0)
   return Math.max(0.55, 1.35 - (a - 20) * 0.022);
 }
 function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.06 + 1.15 * s * s + 0.12 * cl * cl; }
+
+// FIOCCO: lettura dei filetti e posizione giusta del fiocco. Stanno QUI, nel motore, e non nel codice di gioco,
+// perché il pannello e il banco di misura in Node devono usare la stessa identica regola: una sola fonte.
+// A = vento apparente in gradi (valore assoluto), alpha = incidenza della vela guardata.
+function ttOf(A, alpha){
+  if (A < BOAT.luffA0 + BOAT.luffW * 0.5) return "flog";
+  if (alpha < 8) return "wind";
+  if (alpha > 27) return "lee";
+  return "ok";
+}
+// quanto le due vele collaborano: 1 di bolina, 0 alle andature molto larghe, dove la randa copre il fiocco
+function fessuraDi(A){ return Math.max(0, Math.min(1, (BOAT.slotA0 + BOAT.slotW - A) / BOAT.slotW)); }
+function jibShadedAt(A){ return BOAT.slotShade * (1 - fessuraDi(A)) > BOAT.slotShade / 2; }
+// Esiste una posizione del fiocco con i filetti dritti? Se sì, fra quali angoli di bugna.
+// Filetti dritti = incidenza fra 8° e 27°, cioè angolo fra A-27 e A-8; la bugna sta fra minJib e maxJib.
+// Restituisce null sia quando la randa copre il fiocco sia quando la scotta è già al massimo: per chi gioca
+// il risultato è lo stesso, e il messaggio del pannello nomina tutte e due le cause senza sceglierne una.
+function jibRange(A){
+  if (A < BOAT.luffA0 + BOAT.luffW * 0.5) return null;
+  const lo = Math.max(BOAT.minJib, A - 27), hi = Math.min(BOAT.maxJib, A - 8);
+  return hi >= lo ? [lo, hi] : null;
+}
 
 // FIOCCO: le forze di UNA vela, estratte dal corpo di step() perché ora servono due volte (randa e fiocco).
 // Stesse espressioni e stesso ordine di prima, così con area 0 i numeri della randa non cambiano di un bit.
@@ -427,7 +452,7 @@ function step(S, C, E, dt){
   const jibA = C.jib === undefined ? 0 : BOAT.jibArea;                                              // FIOCCO
   const jibMax = BOAT.minJib + (C.jib || 0) * (BOAT.maxJib - BOAT.minJib);                          // FIOCCO
   // FIOCCO tappa B: fessura piena (1) di bolina, nulla (0) alle andature larghe, dove la randa copre il fiocco.
-  const fessura = Math.max(0, Math.min(1, (BOAT.slotA0 + BOAT.slotW - A) / BOAT.slotW));            // FIOCCO
+  const fessura = fessuraDi(A);                                                                     // FIOCCO
   const shadeJ = BOAT.slotShade * (1 - fessura); // quota di pressione tolta al fiocco                  FIOCCO
   const M = sailF(BOAT.sailArea, sheetMax, A, aws, ch, lf);                                         // FIOCCO
   const J = sailF(jibA * (1 - shadeJ), jibMax, A, aws, ch, lf); // l'area scala la pressione           FIOCCO
@@ -844,13 +869,17 @@ function step(S, C, E, dt){
           capsized: false, righting: 0, capSide: 1, prevSide: sgn(twa), dispBoom: (twa >= 0 ? -1 : 1) * 30, boomRate: 6,
           tacks: 0, gybesV: 0, gybesC: 0, capsizes: 0, markIdx: 0, time: 0, finished: false,
           lessonMark: null, markReached: false, shake: 0, toast: null };
-    ctl.sheet = sheet; ctl.tiller = 0; ctl.jib = sheet; // FIOCCO: parte regolato come la randa
-    S.dispJib = (twa >= 0 ? -1 : 1) * 20;              // FIOCCO
+    ctl.sheet = sheet; ctl.tiller = 0;
+    // FIOCCO: nelle lezioni il prototipo naviga con la sola randa. I testi delle lezioni parlano di «la vela»,
+    // e il pannello delle lezioni ha margine zero a 1360x650: una riga e un cursore in più non ci stanno.
+    // Senza scotta del fiocco step() non gli assegna area, quindi la fisica delle lezioni resta quella del gioco.
+    if (mode === "lesson"){ delete ctl.jib; delete S.dispJib; }
+    else { ctl.jib = sheet; S.dispJib = (twa >= 0 ? -1 : 1) * 20; } // FIOCCO
     wake.length = 0;
     Object.assign(local, env);
     info = step(S, ctl, local, 0);
     S.dispBoom = S.boomSide * S.boom;
-    S.dispJib = S.boomSide * S.jib; // FIOCCO
+    if (ctl.jib !== undefined) S.dispJib = S.boomSide * S.jib; // FIOCCO
   }
   const curStep = () => mode === "lesson" ? LESSONS[lessonIdx].steps[stepIdx] : null;
 
@@ -894,19 +923,13 @@ function step(S, C, E, dt){
   }
 
   // ---------- lettura per le condizioni ----------
-  // FIOCCO: la regola di lettura dei filetti è una sola; cambia solo l'incidenza della vela guardata.
-  function ttOf(alpha){
-    if (Math.abs(info.awa) < BOAT.luffA0 + BOAT.luffW * 0.5) return "flog";
-    if (alpha < 8) return "wind";
-    if (alpha > 27) return "lee";
-    return "ok";
-  }
-  function ttState(){ return ttOf(info.alpha); }
-  // FIOCCO: un fiocco molto coperto dalla randa non è in stallo, è sgonfio. Soglia ricavata da slotShade:
-  // metà della pressione che si può perdere. Con l'ombreggiamento lineare di oggi equivale a fessura < 0,5.
+  // FIOCCO: ttOf, jibRange e jibShadedAt stanno nel motore (una sola fonte); qui si passano solo le letture
+  function ttState(){ return ttOf(Math.abs(info.awa), info.alpha); }
+  // FIOCCO: un fiocco molto coperto dalla randa non è in stallo, è sgonfio: i filetti sbattono.
   function ttJib(){
     if (info.alphaJ === undefined) return "flog";
-    return info.shadeJ > BOAT.slotShade / 2 ? "flog" : ttOf(info.alphaJ);
+    const A = Math.abs(info.awa);
+    return jibShadedAt(A) ? "flog" : ttOf(A, info.alphaJ);
   }
   function readI(){
     return { twa: Math.abs(norm180(local.twd - S.h)), kn: S.u * KN, tt: ttState(), heel: S.heel, r: S.r,
@@ -1074,7 +1097,8 @@ function step(S, C, E, dt){
     $("ctlTiller").classList.toggle("off", !tiller); $("tiller").disabled = !tiller;
     $("ctlSheet").classList.toggle("off", !sheet); $("sheet").disabled = !sheet;
     $("ctlSheet").hidden = !sheet && !!hideSheetOff; // lezione 1: il cursore spento della scotta non serve e ruberebbe spazio
-    $("ctlJib").classList.toggle("off", !sheet); $("jib").disabled = !sheet; $("ctlJib").hidden = !sheet && !!hideSheetOff; // FIOCCO
+    $("ctlJib").hidden = ctl.jib === undefined || (!sheet && !!hideSheetOff); // FIOCCO: nelle lezioni il fiocco non c'è
+    $("ctlJib").classList.toggle("off", !sheet); $("jib").disabled = !sheet;
     keys.clear(); semHeld.clear();
   }
   let hudLevel = 0;
@@ -1334,8 +1358,8 @@ function step(S, C, E, dt){
     }
     if ((allowSheet || allowSem.includes("cazza")) && (keys.has("ArrowUp") || keys.has("d")) || semHeld.has("cazza")) ctl.sheet = Math.max(0, ctl.sheet - 0.27 * dt); // FIOCCO: D oltre a ↑
     if ((allowSheet || allowSem.includes("lasca")) && (keys.has("ArrowDown") || keys.has("a")) || semHeld.has("lasca")) ctl.sheet = Math.min(1, ctl.sheet + 0.27 * dt); // FIOCCO: A oltre a ↓
-    if (allowSheet && keys.has("e")) ctl.jib = Math.max(0, ctl.jib - 0.27 * dt);   // FIOCCO
-    if (allowSheet && keys.has("q")) ctl.jib = Math.min(1, ctl.jib + 0.27 * dt);   // FIOCCO
+    if (allowSheet && ctl.jib !== undefined && keys.has("e")) ctl.jib = Math.max(0, ctl.jib - 0.27 * dt);   // FIOCCO
+    if (allowSheet && ctl.jib !== undefined && keys.has("q")) ctl.jib = Math.min(1, ctl.jib + 0.27 * dt);   // FIOCCO
   }
 
   // ======================================================================
@@ -1358,7 +1382,7 @@ function step(S, C, E, dt){
   }
   function simulate(dt, st){
     applyInput(dt);
-    if (st && st.autoTrim){ ctl.sheet = autoSheet(); ctl.jib = autoJib(); } // FIOCCO
+    if (st && st.autoTrim){ ctl.sheet = autoSheet(); if (ctl.jib !== undefined) ctl.jib = autoJib(); } // FIOCCO
     if (st && st.yawNoise && !S.capsized){ // onde: spinte irregolari sulla prua
       S.noiseT = (S.noiseT || 0) - dt;
       if (S.noiseT <= 0){ S.noiseT = 1.8 + Math.random() * 1.6; S.noiseR = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 3); S.noiseLeft = 0.8; }
@@ -1396,7 +1420,7 @@ function step(S, C, E, dt){
       }
     }
     S.dispBoom += (S.boomSide * S.boom - S.dispBoom) * Math.min(1, dt * S.boomRate);
-    S.dispJib += (S.boomSide * S.jib - S.dispJib) * Math.min(1, dt * S.boomRate); // FIOCCO
+    if (ctl.jib !== undefined) S.dispJib += (S.boomSide * S.jib - S.dispJib) * Math.min(1, dt * S.boomRate); // FIOCCO
     S.boomRate += (6 - S.boomRate) * Math.min(1, dt * 0.8);
     S.shake = Math.max(0, S.shake - dt);
     if (S.toast){ S.toast.t -= dt; if (S.toast.t <= 0) S.toast = null; }
@@ -1931,10 +1955,10 @@ function step(S, C, E, dt){
     const t = ctl.tiller;
     $("vTil").textContent = Math.abs(t) < 0.03 ? "al centro" : (t < 0 ? "a sinistra " : "a dritta ") + Math.round(Math.abs(t) * 100) + "%";
     $("vSh").textContent = "boma a " + Math.round(S.boom) + "°";
-    $("vJib").textContent = "fiocco a " + Math.round(S.jib || 0) + "° · " + TTWORD[ttJib()]; // FIOCCO
+    if (ctl.jib !== undefined) $("vJib").textContent = "fiocco a " + Math.round(S.jib || 0) + "° · " + TTWORD[ttJib()]; // FIOCCO
     if (!dragTiller) $("tiller").value = Math.round(ctl.tiller * 100);
     $("sheet").value = Math.round(ctl.sheet * 100);
-    $("jib").value = Math.round(ctl.jib * 100); // FIOCCO
+    if (ctl.jib !== undefined) $("jib").value = Math.round(ctl.jib * 100); // FIOCCO
     $("rightBtn").hidden = !S.capsized || S.righting > 0;
     $("capOverlay").hidden = !S.capsized || S.righting > 0;
     $("capText").textContent = S.capCause === "gybe"
@@ -1943,10 +1967,11 @@ function step(S, C, E, dt){
     // suggerimento
     const kind = st ? (st.hintKind || "sail") : "tt";
     let cls = "good", msg = "";
-    const ttMsg = { flog: ["bad", "Troppo vicino al vento: la vela sbatte. Poggia."], wind: ["bad", "Si agita il filetto sopravento: cazza, oppure poggia."],
-                    lee: ["bad", "Si agita il filetto sottovento: lasca, oppure orza."], ok: ["good", "Filetti dritti: vela regolata."] }[I.tt];
-    const sailMsg = { flog: ["bad", "La vela sbatte: sei nell'angolo morto."], wind: ["bad", "La vela sbatte: è troppo lascata."],
-                      lee: ["bad", "La vela è in stallo: troppo cazzata."], ok: ["good", "Vela gonfia e regolata."] }[I.tt];
+    // FIOCCO: «randa» e non «vela», perché ora le vele sono due e il fiocco ha la sua riga
+    const ttMsg = { flog: ["bad", "Troppo vicino al vento: la randa sbatte. Poggia."], wind: ["bad", "Randa: si agita il filetto sopravento, cazza oppure poggia."],
+                    lee: ["bad", "Randa: si agita il filetto sottovento, lasca oppure orza."], ok: ["good", "Filetti dritti: randa regolata."] }[I.tt];
+    const sailMsg = { flog: ["bad", "La randa sbatte: sei nell'angolo morto."], wind: ["bad", "La randa sbatte: è troppo lascata."],
+                      lee: ["bad", "La randa è in stallo: troppo cazzata."], ok: ["good", "Randa gonfia e regolata."] }[I.tt];
     [cls, msg] = kind === "sail" ? sailMsg : ttMsg;
     const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
     if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
@@ -1965,7 +1990,23 @@ function step(S, C, E, dt){
     }
     if (mode === "lesson" && kind === "none" && !S.capsized) { $("hint").hidden = true; }
     else if (mode === "lesson" && !st.pause && st.hud) $("hint").hidden = false;
-    $("hint").className = "hint " + cls; $("hint").textContent = msg;
+    $("hint").className = "hint " + cls; $("hintMain").textContent = msg; // FIOCCO: il testo della randa sta nello span
+    // FIOCCO: riga del fiocco. Dove una posizione giusta non esiste, dice perché, invece di consigliare una manovra inutile.
+    const vedeFiocco = allowSheet && ctl.jib !== undefined && !S.capsized; // FIOCCO
+    $("hintJib").hidden = !vedeFiocco;
+    if (vedeFiocco){
+      // FIOCCO: il messaggio dipende solo dall'esistenza di una posizione con i filetti dritti, quale che sia la
+      // causa (randa che copre o scotta al massimo). Niente memoria: i due lati della soglia dicono la stessa cosa.
+      const A = Math.abs(info.awa), range = jibRange(A);
+      let jc = "bad", jm;
+      // l'angolo morto è l'unico caso tenuto a parte: lì non si regola perché il vento è di prua, non perché la randa copra
+      if (A < BOAT.luffA0 + BOAT.luffW * 0.5) jm = "Fiocco: sei nell'angolo morto, sbatte anche lui.";
+      else if (!range) jm = "Fiocco: qui non si regola (coperto dalla randa o scotta al massimo). Nella realtà si porta dal lato opposto: non ancora nel gioco.";
+      else if (range[1] - range[0] < 10) jm = `Fiocco: regolazione stretta, fra ${Math.round(range[0])}° e ${Math.round(range[1])}°.`;
+      else [jc, jm] = { wind: ["bad", "Fiocco: filetto sopravento agitato, cazza."], lee: ["bad", "Fiocco: filetto sottovento agitato, lasca."],
+                        ok: ["good", "Fiocco regolato."], flog: ["bad", "Fiocco: sbatte."] }[ttJib()];
+      $("hintJib").className = jc; $("hintJib").textContent = jm;
+    }
     if (mode === "race") racePanel();
     if (mode === "mission" || mode === "race") regShow($("stErr"));
     if (mode === "lesson"){ $("lErr").hidden = !!st.pause; regShow($("lErr")); }
@@ -2445,7 +2486,7 @@ function step(S, C, E, dt){
     if (mode === "menu") return;
     const st = curStep(), paused = (st && st.pause) || briefing || $("gloss").open || $("quiz").open || $("setDlg").open;
     if (!paused){ for (let k = 0; k < timeScale; k++){ simulate(dt, st); simTime += dt; } }
-    else { if (st && st.pause){ ctl.sheet = autoSheet(); ctl.jib = autoJib(); } info = step(S, ctl, local, 0); S.dispBoom = S.boomSide * S.boom; S.dispJib = S.boomSide * S.jib; } // FIOCCO
+    else { if (st && st.pause){ ctl.sheet = autoSheet(); if (ctl.jib !== undefined) ctl.jib = autoJib(); } info = step(S, ctl, local, 0); S.dispBoom = S.boomSide * S.boom; if (ctl.jib !== undefined) S.dispJib = S.boomSide * S.jib; } // FIOCCO
     draw(paused ? 0.016 : dt);
     panelT -= dt; if (panelT <= 0){ panel(); panelT = 0.1; }
   }

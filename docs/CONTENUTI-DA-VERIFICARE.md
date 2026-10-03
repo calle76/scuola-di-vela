@@ -103,18 +103,20 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 
 | Grandezza | Valore del prototipo | Perché così | Esito |
 | --- | --- | --- | --- |
-| Area del fiocco | 2,6 m², cioè il 37% della randa (7,0 m²) | Su una deriva a due da circa 4,2 m il fiocco sta attorno a un terzo della randa | |
+| Area del fiocco | 2,6 m², cioè il 37% della randa (7,0 m²) | Su una deriva a due da circa 4,2 m il fiocco sta attorno a un terzo della randa | ✅ **Coerente.** Su tre derive a due reali il rapporto fiocco/randa sta fra il 32% e il 39% (vedi «Fonti» in fondo). Il 37% del prototipo ci sta dentro. |
 | Angolo minimo della scotta | 10° (la randa 14°) | Il fiocco non ha boma e si cazza su un carrello più interno, quindi arriva più al centro | |
 | Angolo massimo della scotta | 80° (la randa 85°) | Un fiocco su carrello fisso non si apre quanto un boma | |
 | Altezza del centro velico | 1,6 m (la randa 2,0 m) | Vela più bassa e più a prua: a parità di forza sbanda meno | |
 | Coefficienti di portanza e resistenza | gli stessi della randa (`CL`, `CD`) | Nessun numero nuovo finché non serve | |
 | Angolo morto del fiocco | lo stesso della randa (27°) | In tappa A le due vele non interagiscono, quindi tenerli uguali è la scelta onesta | |
 | Interazione fra le vele (fessura), tappa A | **assente** | Aggiunta nella tappa B | |
-| Angolo sotto cui la fessura è piena (tappa B) | 40° di vento apparente, circa 50° reali | È circa il vento apparente che la barca vede in bolina larga | |
-| Ampiezza della transizione (tappa B) | 60°: il fiocco è coperto del tutto a 100° apparenti, circa 125° reali | Il fiocco finisce dietro la randa attorno al gran lasco | |
+| Angolo sotto cui la fessura è piena (tappa B) | **85°** di vento apparente | Con 40° l'ombra cominciava al traverso, dove le fonti non la mettono: le fonti parlano di fiocco coperto alle andature larghe e in poppa | |
+| Ampiezza della transizione (tappa B) | **50°**: il fiocco è coperto del tutto a 135° apparenti | Il fiocco finisce dietro la randa fra il gran lasco e la poppa | |
 | Pressione persa dal fiocco quando è coperto del tutto (tappa B) | 70% | Coperto dalla randa ma non azzerato: qualcosa prende ancora | |
-| Soglia dei filetti del fiocco coperto (tappa B) | metà della pressione che si può perdere, cioè fessura sotto 0,5 | Ricavata dalla costante sopra, non è un numero a sé | |
+| Soglia a cui i filetti del fiocco sbattono per copertura | metà della pressione perdibile, cioè **111° apparenti** | Ricavata dalla costante sopra, non è un numero a sé. **La soglia vera resta da verificare.** | |
+| Limite della scotta del fiocco: 80° | — | **Da verificare.** È questo limite, più dell'ombra, a far sparire la posizione giusta del fiocco oltre i 107° apparenti | |
 | La copertura dipende **solo** dall'angolo del vento apparente | semplificazione dichiarata | Nella realtà conta anche la regolazione: una randa cazzata a ferro copre il fiocco meno di una tutta lascata, a parità di andatura | |
+| Il fiocco a farfalla, dal lato opposto alla randa | **non modellato** | È la manovra vera per far lavorare il fiocco in poppa, spesso con un'asta. Nel prototipo non c'è: il pannello lo dice a chi gioca. **Da modellare più avanti.** Da verificare: da quale andatura serve, e se sulle derive a due si usa l'asta. | |
 | Lunghezza della base nel disegno | 1,5 m (il boma 2,75 m) | Solo disegno, non entra nella fisica | |
 | Tasti | E cazza, Q lasca | Scelta di comandi, non un dato | |
 
@@ -124,8 +126,24 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 | --- | --- | --- |
 | Il fiocco si legge con gli stessi filetti della randa: sopravento agitato = cazza, sottovento agitato = lasca | Sul fiocco i filetti vicino all'inferitura sono la posizione classica; la regola di lettura dovrebbe essere la stessa | |
 | Un fiocco molto coperto dalla randa non è «in stallo»: è sgonfio, e i suoi filetti sbattono | Nel prototipo (tappa B) sopra metà copertura i filetti del fiocco dicono «sbatte» invece di «filetto sottovento agitato». Va verificato che sia la lettura giusta e da che andatura comincia. | |
+| Un fiocco che i filetti mostrano sgonfio continua però a dare il 10–19% della spinta | È un'**incoerenza fra quello che si vede e la forza**: l'ombra toglie al massimo il 70% della pressione, non tutta. Da giudicare con una persona esperta: quanto spinge davvero un fiocco coperto in poppa. | |
 | Entrando in virata il fiocco va tenuto cazzato: tutto lascato la virata riesce peggio | Nel prototipo il fiocco non va mai a collo (è la tappa C); l'effetto misurato viene solo dalla resistenza della vela che sbatte | |
 | Con randa e fiocco la barca è sovrainvelata per un solo timoniere: una raffica da 10 a 20 nodi senza reagire fa scuffiare | Atteso, essendo la stessa barca del gioco con il 37% di vela in più; va rivisto quando si passerà a una barca a due | |
+
+### Messaggi del pannello sul fiocco (prototipo)
+
+| Quando | Testo | Esito |
+| --- | --- | --- |
+| Esiste una posizione con i filetti dritti, larga almeno 10° | «Fiocco regolato.» / «Fiocco: filetto sopravento agitato, cazza.» / «Fiocco: filetto sottovento agitato, lasca.» | |
+| Esiste ma stretta (meno di 10°, cioè da 98° apparenti in su) | «Fiocco: regolazione stretta, fra X° e Y°.» | |
+| Non esiste (oltre 107° apparenti): la randa copre, o la scotta è già al massimo | «Fiocco: qui non si regola (coperto dalla randa o scotta al massimo). Nella realtà si porta dal lato opposto: non ancora nel gioco.» | |
+| Angolo morto | «Fiocco: sei nell'angolo morto, sbatte anche lui.» | |
+
+Il messaggio **non dice mai «lasca, oppure orza»** per il fiocco, perché dove non si regola quel consiglio sarebbe inutile. Dove esiste una posizione giusta (vento apparente da 31° a 107°), l'intervallo di angolo è questo:
+
+| Vento apparente | 40° | 50° | 60° | 70° | 80° | 90° | 100° | 110° e oltre |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Angolo del fiocco | 13–32° | 23–42° | 33–52° | 43–62° | 53–72° | 63–80° | 73–80° (stretta) | nessuno |
 
 ### Affermazioni sulla realtà usate per spiegare i risultati della tappa A
 
@@ -143,3 +161,24 @@ Non sono nel gioco né nel prototipo: sono le spiegazioni date nel rapporto dell
 | --- | --- |
 | Una vela toglie vento alle barche sottovento: il «cono d'ombra» o copertura segue la direzione del vento apparente della barca che copre. Lunghezza del cono e perdita di vento: valori da cercare nelle fonti. | |
 | Una barca poco sottovento e a proravia devia il vento verso chi le sta dietro sopravento, peggiorandogli l'angolo («posizione sottovento e a proravia»). | |
+
+## Fonti trovate finora per il prototipo del fiocco
+
+I nomi delle classi di deriva compaiono **solo qui**, mai nel gioco (vedi `PROGETTO.md`, principio 5).
+
+**Rapporto fra area del fiocco e della randa, su derive a due reali: circa 32–39%.** Il prototipo usa 2,6 su 7,0 m², cioè il 37%: coerente.
+- `en.wikipedia.org/wiki/420_(dinghy)`
+- `en.wikipedia.org/wiki/470_(dinghy)`
+- `en.wikipedia.org/wiki/Cadet_(dinghy)`
+
+**La spiegazione corretta della fessura fra randa e fiocco è upwash e downwash** (la randa induce un flusso ascendente sul fiocco; il fiocco devia il flusso sulla randa), secondo Gentry. **Non** è l'accelerazione «Venturi» dell'aria nella fessura, che le fonti indicano come spiegazione sbagliata e diffusa.
+- `en.wikipedia.org/wiki/Genoa_(sail)`
+- `uksailmakers.com/2021/10/21/2021-10-21-setting-the-record-straight-on-inhaulers/`
+- `sailingscuttlebutt.com/2021/10/06/taking-a-deep-dive-into-sail-slots/`
+
+**Alle andature larghe e in poppa la randa copre il fiocco**, che smette di lavorare; per farlo lavorare lo si porta dal lato opposto (a farfalla), spesso con un'asta.
+- `sailingworld.com/how-to/downwind-under-jib-and-main/`
+- `speedandsmarts.com/toolbox/articles2/smallboat-sailing/sailing-downwind`
+- `morganscloud.com/2015/05/24/downwind-sailing-poling-out/`
+
+**Restano senza fonte:** il limite della scotta del fiocco a 80°; da quale andatura serve davvero il fiocco a farfalla e se sulle derive a due si usa l'asta; la soglia vera a cui la randa comincia a coprire il fiocco.

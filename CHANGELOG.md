@@ -2,6 +2,12 @@
 
 Tutte le versioni fino alla 0.16 sono del 26–29 settembre 2026; la 0.17 è del 1 ottobre 2026. I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a non ripeterli.
 
+## Sperimentale
+
+Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non toccano `index.html`. Verificato a ogni passo che, per una barca a una vela sola, polare, virate e raffiche restino identiche a quelle del gioco.
+
+- **Prototipo del fiocco** (`sperimentale/fiocco.html`), in vista di una futura deriva a due. Tappa A: il fiocco come seconda superficie portante, con scotta propria (tasti Q ed E), filetti e disegno. Tappa B: la randa che copre il fiocco alle andature larghe, e il pannello che dice chiaramente dove il fiocco non si regola. Costanti, semplificazioni e fonti in `FISICA-E-TARATURE.md` e `CONTENUTI-DA-VERIFICARE.md`. Non ci sono ancora l'upwash della randa sul fiocco, il fiocco a collo in virata e la manovra a farfalla.
+
 ## 0.17 — in corso: «Tenere la rotta» che si vinceva da sé, partenza di regata rifatta
 
 Fatti i punti 1 e 2; i punti da 3 a 8 sono elencati in fondo alla sezione.

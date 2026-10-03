@@ -14,20 +14,20 @@ con fiocco: primo angolo sopra 0,5 nodi = 33°; a 30° = -0.28 nodi
  45°: senza 3.42 → con 3.59 nodi (4.9%) | randa 4% fiocco 8% sband. 4.8°
  48°: senza 4.03 → con 4.24 nodi (5.1%) | randa 0% fiocco 6% sband. 4.9°
  60°: senza 4.62 → con 5.25 nodi (13.6%) | randa 8% fiocco 14% sband. 4.9°
- 90°: senza 5.17 → con 5.65 nodi (9.4%) | randa 36% fiocco 44% sband. 4.8°
-110°: senza 4.95 → con 5.30 nodi (7.1%) | randa 62% fiocco 70% sband. 4.7°
-135°: senza 4.21 → con 4.39 nodi (4.2%) | randa 100% fiocco 100% sband. 0.0°
-150°: senza 3.82 → con 3.95 nodi (3.3%) | randa 42% fiocco 48% sband. 4.6°
+ 90°: senza 5.17 → con 5.83 nodi (12.8%) | randa 36% fiocco 42% sband. 4.8°
+110°: senza 4.95 → con 5.57 nodi (12.4%) | randa 60% fiocco 66% sband. 4.7°
+135°: senza 4.21 → con 4.59 nodi (8.9%) | randa 100% fiocco 100% sband. 0.4°
+150°: senza 3.82 → con 3.96 nodi (3.5%) | randa 42% fiocco 48% sband. 4.6°
 180°: senza 3.53 → con 3.63 nodi (3.0%) | randa 100% fiocco 100% sband. -7.8°
 migliore velocità controvento: senza fiocco 2.70 a 48°, con fiocco 2.99 a 50°
 angolo più veloce: senza fiocco 90°, con fiocco 90°
-6 nodi: 45° 2.01→2.11 (5%)  60° 2.92→3.40 (16%)  90° 3.33→3.74 (12%)  135° 2.63→2.77 (5%)
-15 nodi: 45° 4.97→5.15 (4%)  60° 5.95→6.18 (4%)  90° 6.94→7.50 (8%)  135° 5.82→6.03 (4%)
+6 nodi: 45° 2.01→2.11 (5%)  60° 2.92→3.40 (16%)  90° 3.33→3.85 (15%)  135° 2.63→2.93 (11%)
+15 nodi: 45° 4.97→5.15 (4%)  60° 5.95→6.19 (4%)  90° 6.94→7.65 (10%)  135° 5.82→6.24 (7%)
 
 === 4. REGOLARE IL FIOCCO CONTA (10 nodi) ===
  45°: migliore 3.59 (fiocco 8% = 16°) | tutta lascata 3.31 (−7.7%) | tutta cazzata 3.54 (−1.2%)
- 60°: migliore 5.25 (fiocco 14% = 20°) | tutta lascata 4.53 (−13.7%) | tutta cazzata 4.99 (−4.9%)
- 90°: migliore 5.65 (fiocco 44% = 41°) | tutta lascata 5.18 (−8.2%) | tutta cazzata 5.24 (−7.2%)
+ 60°: migliore 5.25 (fiocco 14% = 20°) | tutta lascata 4.53 (−13.7%) | tutta cazzata 5.00 (−4.9%)
+ 90°: migliore 5.83 (fiocco 42% = 39°) | tutta lascata 5.19 (−11.0%) | tutta cazzata 5.26 (−9.7%)
 segno dell'errore (incidenza del fiocco a 60°, 10 nodi):
   migliore: fiocco a 20°, incidenza 29° (stallo sopra 20°, fileggia sotto 6°)
   tutta cazzata: fiocco a 10°, incidenza 39° (stallo sopra 20°, fileggia sotto 6°)
@@ -36,18 +36,18 @@ segno dell'errore (incidenza del fiocco a 60°, 10 nodi):
 === 5. SBANDAMENTO ===
  45° con 10 nodi: senza 4.8° → con 4.8° (+0.0°)
  60° con 10 nodi: senza 4.8° → con 4.9° (+0.1°)
- 90° con 10 nodi: senza 4.7° → con 4.8° (+0.0°)
+ 90° con 10 nodi: senza 4.7° → con 4.8° (+0.1°)
 raffica 16 nodi senza reagire, di bolina: senza fiocco 18° | con fiocco 22°
 raffica 18 nodi senza reagire, di bolina: senza fiocco 23° | con fiocco 30°
 raffica 20 nodi senza reagire, di bolina: senza fiocco 29° | con fiocco 42°
 60 s di bolina con 10 nodi costanti, tutto regolato: sbandamento massimo 5° (scuffia a 60°)
 
 === 7. STABILITÀ NUMERICA ===
-10 corse da 120 s con scotte e barra a caso: NaN 0, velocità da -1.99 a 4.45 nodi (soglia −2,5…9), sbandamento massimo 16°
+10 corse da 120 s con scotte e barra a caso: NaN 0, velocità da -1.99 a 4.57 nodi (soglia −2,5…9), sbandamento massimo 16°
 
 === B2. IL GUADAGNO SI ROVESCIA? ===
   bolina 45-60°: 45° 4.9%  50° 12.0%  55° 13.0%  60° 13.6%  → media 10.9%
-  larghe 110-150°: 110° 7.1%  120° 5.7%  135° 4.2%  150° 3.3%  → media 5.1%
+  larghe 110-150°: 110° 12.4%  120° 12.4%  135° 8.9%  150° 3.5%  → media 9.3%
   confronto (deve essere bolina >= larghe): RISPETTATO
   fascia attesa (ipotesi nostra): bolina +8…+18%, larghe +2…+8%
 
@@ -58,24 +58,45 @@ raffica 20 nodi senza reagire, di bolina: senza fiocco 29° | con fiocco 42°
   differenza fra 48° e 50°: 5.41%
 
 === B4. IL FIOCCO ALLE ANDATURE LARGHE ===
-  110°: fessura 0.36 ombra 45% | incidenza 20° | filetti sbatte (coperto) | quota di spinta del fiocco 16.85%
-  135°: fessura 0.00 ombra 70% | incidenza 31° | filetti sbatte (coperto) | quota di spinta del fiocco 9.44%
-  150°: fessura 0.00 ombra 70% | incidenza 90° | filetti sbatte (coperto) | quota di spinta del fiocco 10.03%
-  180°: fessura 0.00 ombra 70% | incidenza 100° | filetti sbatte (coperto) | quota di spinta del fiocco 9.84%
+  110°: fessura 1.00 ombra 0% | incidenza 21° | filetti dritti | quota di spinta del fiocco 26.93%
+  135°: fessura 0.51 ombra 34% | incidenza 29° | filetti STALLO · nessuna posizione giusta | quota di spinta del fiocco 18.61%
+  150°: fessura 0.03 ombra 68% | incidenza 90° | filetti sbatte (coperto) · nessuna posizione giusta | quota di spinta del fiocco 10.71%
+  180°: fessura 0.00 ombra 70% | incidenza 100° | filetti sbatte (coperto) · nessuna posizione giusta | quota di spinta del fiocco 9.84%
 
 === B5. REGOLARE IL FIOCCO (10 nodi) ===
    45°: migliore 3.59 | tutta lascata −7.7% | tutta cazzata −1.2%  (a 45° «troppo cazzata» è senza soglia: la scotta non chiude oltre 10°)
    60°: migliore 5.25 | tutta lascata −13.7% | tutta cazzata −4.9%
-   90°: migliore 5.65 | tutta lascata −8.2% | tutta cazzata −7.2%
+   90°: migliore 5.83 | tutta lascata −11.0% | tutta cazzata −9.7%
 
 === B6. GUADAGNI ASSURDI E POLARE LISCIA ===
-  guadagno massimo 13.6% a 60° (soglia 30%)
-  massimi e minimi locali fra 30° e 180°, a passi di 5° (tolleranza 0,04 nodi): nessuno oltre il massimo della polare
-  angolo più veloce: 85° (5.68 nodi)
-  polare con fiocco: 30°=-0.22 45°=3.59 60°=5.25 75°=5.62 90°=5.65 105°=5.43 120°=4.99 135°=4.39 150°=3.95 165°=3.86 180°=3.63
+  guadagno massimo 13.8% a 65° (soglia 30%)
+  massimi e minimi locali fra 30° e 180°, a passi di 5° (tolleranza 0,04 nodi): 90° (5.78 5.83 5.79)
+  angolo più veloce: 90° (5.83 nodi)
+  polare con fiocco: 30°=-0.22 45°=3.59 60°=5.25 75°=5.67 90°=5.83 105°=5.67 120°=5.31 135°=4.59 150°=3.96 165°=3.86 180°=3.63
 
 === B7. SICUREZZA ===
   raffica da 10 a 16 nodi senza reagire: senza fiocco 27° | con fiocco 42°
   raffica da 10 a 18 nodi senza reagire: senza fiocco 41° | con fiocco 59°
   raffica da 10 a 20 nodi senza reagire: senza fiocco 55° | con fiocco 71° (SCUFFIA)
   60 s di bolina con 10 nodi costanti, regolato: sbandamento massimo 5° (scuffia a 60°)
+
+=== B8. POSIZIONE GIUSTA DEL FIOCCO, per vento apparente ===
+  (randa regolata; «dritti» = incidenza del fiocco fra 8° e 27°; regola presa dal motore)
+   30° apparenti: no — angolo morto: sbattono tutte e due le vele   (ombra 0%)
+   40° apparenti: SÌ, fiocco fra 13° e 32°   (ombra 0%)
+   50° apparenti: SÌ, fiocco fra 23° e 42°   (ombra 0%)
+   60° apparenti: SÌ, fiocco fra 33° e 52°   (ombra 0%)
+   70° apparenti: SÌ, fiocco fra 43° e 62°   (ombra 0%)
+   80° apparenti: SÌ, fiocco fra 53° e 72°   (ombra 0%)
+   90° apparenti: SÌ, fiocco fra 63° e 80°   (ombra 7%)
+  100° apparenti: SÌ, fiocco fra 73° e 80°  (stretta)   (ombra 21%)
+  110° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 35%)
+  120° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 49%)
+  130° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 63%)
+  140° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 70%)
+  150° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 70%)
+  160° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 70%)
+  170° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 70%)
+  180° apparenti: no — coperto dalla randa o scotta al massimo   (ombra 70%)
+  ultimo angolo con una posizione giusta: 107° apparenti; da 98° la regolazione è stretta
+  i filetti del fiocco cominciano a sbattere per copertura a 111° apparenti

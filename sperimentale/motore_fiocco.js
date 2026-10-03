@@ -5,4 +5,4 @@ const html = fs.readFileSync(path.join(__dirname, "fiocco.html"), "utf8");
 const start = html.indexOf("// Motore fisico di una deriva");
 const end = html.indexOf("  const $ = id =>");
 if (start < 0 || end < 0) throw new Error("Motore fisico non trovato in sperimentale/fiocco.html: controlla i marcatori in motore_fiocco.js");
-module.exports = new Function(html.slice(start, end) + "\nreturn { step, BOAT, CL, CD, sailF, norm180, norm360 };")();
+module.exports = new Function(html.slice(start, end) + "\nreturn { step, BOAT, CL, CD, sailF, ttOf, jibRange, jibShadedAt, fessuraDi, norm180, norm360 };")();

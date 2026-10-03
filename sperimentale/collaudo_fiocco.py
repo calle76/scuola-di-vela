@@ -173,26 +173,63 @@ async def main():
         v0 = await virata(pg2, None, "gioco, senza fiocco")
         v1 = await virata(pg, 0.05, "prototipo, fiocco cazzato")
         v2 = await virata(pg, 1.0, "prototipo, fiocco tutto lascato")
-        # ---- il pannello con un cursore in più, e un'immagine del fiocco ----
-        print("\n=== PANNELLO E IMMAGINE ===")
-        pg3 = await b.new_page(viewport={"width": 1360, "height": 650})
-        pg3.on("pageerror", lambda e: errs.append(str(e)))
-        await pg3.goto(PROTO); await pg3.wait_for_timeout(400)
+        # ---- il pannello del PROTOTIPO, stesso giro di tests/collaudo_pannello.py ----
+        # Misura fiocco.html, non index.html: il prototipo ha un cursore e una riga in più.
+        # Il caso che conta è l'ultimo, la regata con la spiegazione di un contatto: è il pannello più pieno.
+        print("\n=== PANNELLO DEL PROTOTIPO ===")
         PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clientHeight}"
-        for it, nome in [("'free'", "navigazione libera"), ("['m',0]", "prova 1"), ("['r',0]", "regata 1")]:
-            await pg3.evaluate(f"__sv.openItem({it})"); await pg3.wait_for_timeout(400)
+        for W, H in [(1360, 650), (1360, 768)]:
+            pg3 = await b.new_page(viewport={"width": W, "height": H})
+            pg3.on("pageerror", lambda e: errs.append(str(e)))
+            await pg3.goto(PROTO); await pg3.wait_for_timeout(400)
+            eccede = []
+            for li, n in enumerate([13, 7, 13, 5, 9, 5]):
+                await pg3.evaluate(f"__sv.openItem(['l',{li}])")
+                for k in range(n):
+                    await pg3.evaluate(f"__sv.showStep({k})"); await pg3.wait_for_timeout(60)
+                    d = await pg3.evaluate(PH)
+                    if d > 0: eccede.append(f"lezione {li+1} passo {k+1}: +{d}")
+            for it, nome in [("['m',0]", "prova 1"), ("['m',4]", "prova 5"), ("'free'", "navigazione libera")]:
+                await pg3.evaluate(f"__sv.openItem({it})"); await pg3.wait_for_timeout(300)
+                d = await pg3.evaluate(PH)
+                if d > 0: eccede.append(f"{nome}: +{d}")
+            await pg3.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#cdSel", "60"])
+            await pg3.evaluate("__sv.openItem(['r',0])"); await pg3.evaluate("__sv.fast(10)")
+            await pg3.wait_for_timeout(7000); await pg3.evaluate("__sv.fast(1)")
+            await pg3.evaluate("__sv.R.lastRule='Contatto con Blu: tu eri mure a sinistra e dovevi lasciare strada a chi era mure a dritta. Penalità di 15 secondi.'")
+            await pg3.wait_for_timeout(400)
             d = await pg3.evaluate(PH)
-            print(f"  {nome} a 1360x650: pannello che eccede {'+' + str(d) if d > 0 else 'no'}")
-        await pg3.evaluate("""() => { const S = __sv.S;
-            S.x = 0; S.y = 0; S.h = 55; S.u = 3.4 / 1.943844; S.vl = 0; S.r = 0;
-            __sv.ctl.tiller = 0; __sv.ctl.sheet = 0.1; __sv.ctl.jib = 0.1; }""")
-        await pg3.evaluate("__sv.openItem('free')"); await pg3.wait_for_timeout(200)
-        await pg3.evaluate("""() => { const S = __sv.S; S.h = 55; __sv.ctl.sheet = 0.1; __sv.ctl.jib = 0.1; }""")
-        await pg3.click("#zIn"); await pg3.click("#zIn"); await pg3.click("#zIn"); await pg3.wait_for_timeout(600)
-        await pg3.screenshot(path=str(OUT / "fiocco_bolina.png"))
-        print(f"  immagine: {OUT / 'fiocco_bolina.png'}")
+            if d > 0: eccede.append(f"regata con la spiegazione di un contatto: +{d}")
+            print(f"  finestra {W}x{H}: pannello che eccede: {eccede or 'nessuno'}")
+            if eccede: errs.append(f"pannello che eccede a {W}x{H}")
+            if (W, H) == (1360, 650):
+                await pg3.screenshot(path=str(OUT / "pannello_regata.png"))
+                await pg3.evaluate("__sv.openItem('free')"); await pg3.wait_for_timeout(400)
+                await pg3.evaluate("""() => { const S = __sv.S; S.h = 55; __sv.ctl.sheet = 0.1; __sv.ctl.jib = 0.1; }""")
+                await pg3.click("#zIn"); await pg3.click("#zIn"); await pg3.click("#zIn"); await pg3.wait_for_timeout(600)
+                await pg3.screenshot(path=str(OUT / "fiocco_bolina.png"))
+            await pg3.close()
+
+        # ---- messaggi del fiocco nel pannello, a varie andature ----
+        print("\n=== MESSAGGI DEL FIOCCO NEL PANNELLO ===")
+        pg4 = await b.new_page(viewport={"width": 1360, "height": 650})
+        pg4.on("pageerror", lambda e: errs.append(str(e)))
+        await pg4.goto(PROTO); await pg4.wait_for_timeout(400)
+        await pg4.evaluate("__sv.openItem('free')"); await pg4.wait_for_timeout(300)
+        await pg4.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#gustSel", "0"])
+        for twa in [20, 60, 90, 120, 135, 160]:
+            await pg4.evaluate("""a => { const S = __sv.S; S.x = 0; S.y = 0; S.h = a; S.u = 3 / 1.943844; S.vl = 0; S.r = 0;
+                __sv.ctl.tiller = 0; __sv.ctl.sheet = __sv.autoSheet(); __sv.ctl.jib = __sv.autoJib(); }""", twa)
+            await pg4.evaluate("__sv.run(1/240, 240)")
+            # regola DOPO l'assestamento: autoSheet/autoJib leggono l'ultimo vento apparente, non quello di partenza
+            await pg4.evaluate("""() => { __sv.ctl.sheet = __sv.autoSheet(); __sv.ctl.jib = __sv.autoJib(); }""")
+            await pg4.evaluate("__sv.run(1/240, 120)"); await pg4.wait_for_timeout(250)
+            A = await pg4.evaluate("Math.round(Math.abs(__sv.info.awa))")
+            print(f"  {twa:3d}° reali ({A:3d}° apparenti): «{await pg4.inner_text('#hintJib')}»")
+        await pg4.close()
+
         print("\nerrori di pagina:", errs)
         await b.close()
-        bad = errori_tasti or errori6 or any(not r[0] or r[2] for k, r in fatte if k != "gioco") or not v1
+        bad = errs or errori_tasti or errori6 or any(not r[0] or r[2] for k, r in fatte if k != "gioco") or not v1
         print("ESITO:", "tutto a posto" if not bad else "qualcosa non torna (vedi sopra)")
 asyncio.run(main())

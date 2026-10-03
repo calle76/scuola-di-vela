@@ -172,7 +172,10 @@ for (const twa of [110, 135, 150, 180]){
   const t = vel(P, twa, 10, "best"); const S = { x: 0, y: 0, h: 0, u: 1, vl: 0, r: 0 }; let inf;
   for (let k = 0; k < 1200; k++){ S.h = 0; inf = P.step(S, { sheet: t.trim.sheet, tiller: 0, jib: t.trim.jib }, { twd: twa, tws: 10 / KN }, 0.05); }
   const quota = inf.driveJ / (inf.driveM + inf.driveJ) * 100;
-  const filetti = inf.shadeJ > P.BOAT.slotShade / 2 ? "sbatte (coperto)" : inf.alphaJ > 27 ? "STALLO" : inf.alphaJ < 8 ? "sopravento" : "dritti";
+  // stessa regola del gioco, presa dal motore: niente copia qui (la copia leggeva «stallo» dove il gioco diceva «coperto»)
+  const A = Math.abs(inf.awa);
+  const stato = { flog: "sbatte", wind: "sopravento", lee: "STALLO", ok: "dritti" };
+  const filetti = (P.jibShadedAt(A) ? "sbatte (coperto)" : stato[P.ttOf(A, inf.alphaJ)]) + (P.jibRange(A) ? "" : " · nessuna posizione giusta");
   console.log(`  ${String(twa).padStart(3)}°: fessura ${inf.fessura.toFixed(2)} ombra ${(inf.shadeJ * 100).toFixed(0)}% | incidenza ${inf.alphaJ.toFixed(0)}° | filetti ${filetti} | quota di spinta del fiocco ${quota.toFixed(2)}%`);
 }
 
@@ -222,3 +225,18 @@ for (const g of [16, 18, 20]){
   for (let t = 0; t < 60; t += 1 / 240){ P.step(S, { sheet: 0.2, tiller: 0, jib: 0.2 }, { twd: 0, tws: 10 / KN }, 1 / 240); max = Math.max(max, Math.abs(S.heel)); }
   console.log(`  60 s di bolina con 10 nodi costanti, regolato: sbandamento massimo ${max.toFixed(0)}° (scuffia a 60°)`);
 }
+
+console.log("\n=== B8. POSIZIONE GIUSTA DEL FIOCCO, per vento apparente ===");
+console.log("  (randa regolata; «dritti» = incidenza del fiocco fra 8° e 27°; regola presa dal motore)");
+for (let A = 30; A <= 180; A += 10){
+  const r = P.jibRange(A);
+  const nota = r ? (r[1] - r[0] < 10 ? "  (stretta)" : "") : "";
+  const perche = A < P.BOAT.luffA0 + P.BOAT.luffW * 0.5 ? "angolo morto: sbattono tutte e due le vele" : "coperto dalla randa o scotta al massimo";
+  console.log(`  ${String(A).padStart(3)}° apparenti: ${r ? "SÌ, fiocco fra " + r[0].toFixed(0) + "° e " + r[1].toFixed(0) + "°" + nota
+    : "no — " + perche}   (ombra ${(P.BOAT.slotShade * (1 - P.fessuraDi(A)) * 100).toFixed(0)}%)`);
+}
+const ultimo = [...Array(160).keys()].map(i => i + 30).filter(a => P.jibRange(a)).pop();
+const stretta = [...Array(160).keys()].map(i => i + 30).find(a => { const r = P.jibRange(a); return r && r[1] - r[0] < 10; });
+const coperto = [...Array(160).keys()].map(i => i + 30).find(a => P.jibShadedAt(a));
+console.log(`  ultimo angolo con una posizione giusta: ${ultimo}° apparenti; da ${stretta}° la regolazione è stretta`);
+console.log(`  i filetti del fiocco cominciano a sbattere per copertura a ${coperto}° apparenti`);
