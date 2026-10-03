@@ -62,6 +62,15 @@ Sotto circa 33° la barca non avanza, tra 33° e 40° arranca: l'angolo morto ef
 
 **Regate** (percorso a bastone, boa a 140 m): 3,5–6 minuti; avversari al via di solito entro 12 secondi dallo zero con 3 o 5 minuti di preparazione (in circa una partenza su dieci di più: difetto noto). Dalla 0.14, con il giro di boa vero, gli avversari principianti impiegano in media circa 150 s di bolina e 93 s di poppa con 10 nodi.
 
+## Prototipo del fiocco (`sperimentale/fiocco.html`, non nel gioco)
+
+Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **Non è una versione del gioco**, e il motore di `index.html` non cambia: verificato che, per una barca senza scotta del fiocco, polare, virate e raffiche restano identiche carattere per carattere. Le costanti sono ipotesi, elencate in `CONTENUTI-DA-VERIFICARE.md`.
+
+- **Tappa A — il fiocco come seconda superficie portante.** Stesso vento apparente delle due vele, area 2,6 m² (37% della randa), scotta propria (10°–80°), centro velico a 1,6 m. Spinta e forza laterale si sommano; il momento sbandante diventa `forza_randa · 2,0 m + forza_fiocco · 1,6 m`.
+- **Tappa B — l'interazione, nella sola forma dell'ombreggiamento.** Alle andature larghe la randa copre il fiocco: la pressione del fiocco è ridotta fino al 70% secondo un fattore «fessura» che vale 1 sotto 40° di vento apparente e 0 sopra 100°. **Semplificazione dichiarata: la copertura dipende solo dall'angolo del vento apparente, non da come sono regolate le due vele.** Nella realtà una randa cazzata a ferro copre il fiocco meno di una tutta lascata, a parità di andatura. Un fiocco coperto oltre metà legge «sbatte» nei filetti, non «stallo».
+- **Non c'è**, per ora, l'effetto opposto: la fessura che fa rendere di più il fiocco di bolina, e la deviazione del flusso del fiocco sulla randa. Di conseguenza il fiocco **non migliora la bolina**: la velocità utile controvento resta migliore a 50° invece dei 48° della barca a una vela.
+- **La barca del prototipo è sovrainvelata:** stessa deriva del gioco, stesso timoniere da 75 kg, il 37% di vela in più. Una raffica da 10 a 20 nodi senza reagire fa scuffiare, dove con la sola randa si fermava a 55°. **Nessuna di queste misure calibra la futura barca a due.**
+
 ## Semplificazioni dichiarate
 
 - Nessuna planata: con vento fresco la barca è più lenta di una deriva vera.

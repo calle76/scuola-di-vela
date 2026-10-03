@@ -1,0 +1,54 @@
+=== TASTI (navigazione libera, premuti davvero) ===
+  barra a sinistra                   ArrowLeft              barra giù   randa fermo fiocco fermo  ok
+  barra a dritta                     ArrowRight             barra su    randa fermo fiocco fermo  ok
+  D cazza la randa                   d                      barra fermo randa giù   fiocco fermo  ok
+  A lasca la randa                   a                      barra fermo randa su    fiocco fermo  ok
+  freccia su cazza la randa          ArrowUp                barra fermo randa giù   fiocco fermo  ok
+  freccia giù lasca la randa         ArrowDown              barra fermo randa su    fiocco fermo  ok
+  E cazza il fiocco                  e                      barra fermo randa fermo fiocco giù    ok
+  Q lasca il fiocco                  q                      barra fermo randa fermo fiocco su     ok
+  barra+randa+fiocco insieme         ArrowLeft+d+e          barra giù   randa giù   fiocco giù    ok
+  gli stessi nell'altro verso        ArrowRight+a+q         barra su    randa su    fiocco su     ok
+  randa e fiocco in versi opposti    d+q                    barra fermo randa giù   fiocco su     ok
+  D da solo cazza 0.166, D+freccia su cazzano 0.175: doppia velocità? False
+  barra lasciata: da -0.61 a -0.03 (torna al centro da sola)
+  esito tasti: tutti come attesi
+=== 6. FILETTI DEL FIOCCO (10 nodi da nord, navigazione libera) ===
+   20° tutta lascata : fiocco flog (incidenza   2°, angolo 13°, vento app.  15°) | randa flog | pannello: «fiocco a 13° · sbatte»
+   20° regolata      : fiocco flog (incidenza   5°, angolo 10°, vento app.  15°) | randa flog | pannello: «fiocco a 10° · sbatte»
+   20° tutta cazzata : fiocco flog (incidenza   5°, angolo 10°, vento app.  15°) | randa flog | pannello: «fiocco a 10° · sbatte»
+   60° tutta lascata : fiocco wind (incidenza   2°, angolo 41°, vento app.  43°) | randa lee  | pannello: «fiocco a 41° · filetto sopravento agitato»
+   60° regolata      : fiocco ok   (incidenza  14°, angolo 26°, vento app.  40°) | randa ok   | pannello: «fiocco a 26° · filetti dritti»
+   60° tutta cazzata : fiocco lee  (incidenza  29°, angolo 10°, vento app.  39°) | randa ok   | pannello: «fiocco a 10° · filetto sottovento agitato»
+   90° tutta lascata : fiocco wind (incidenza   2°, angolo 65°, vento app.  67°) | randa lee  | pannello: «fiocco a 65° · filetto sopravento agitato»
+   90° regolata      : fiocco ok   (incidenza  12°, angolo 49°, vento app.  62°) | randa ok   | pannello: «fiocco a 49° · filetti dritti»
+   90° tutta cazzata : fiocco lee  (incidenza  52°, angolo 10°, vento app.  62°) | randa ok   | pannello: «fiocco a 10° · filetto sottovento agitato»
+  135° tutta lascata : fiocco flog (incidenza  31°, angolo 80°, vento app. 111°) | randa lee  | pannello: «fiocco a 80° · sbatte»
+  135° regolata      : fiocco flog (incidenza  30°, angolo 80°, vento app. 110°) | randa ok   | pannello: «fiocco a 80° · sbatte»
+  135° tutta cazzata : fiocco flog (incidenza 101°, angolo 10°, vento app. 111°) | randa ok   | pannello: «fiocco a 10° · sbatte»
+  esito criterio 6: tutti come attesi
+
+=== 8. GUIDANDO DAVVERO LA BARCA ===
+ prove 1, 2 e 3 col pilota automatico (la 3 è tutta di bolina, con virate):
+  prova 1 — gioco, senza fiocco: finita=True tempo=87 s scuffie=0 virate=0 strambate a vela aperta=0
+  prova 1 — prototipo, fiocco fisso al 20%: finita=True tempo=82 s scuffie=0 virate=0 strambate a vela aperta=0
+  prova 1 — prototipo, fiocco regolato da solo: finita=True tempo=79 s scuffie=0 virate=0 strambate a vela aperta=0
+  prova 2 — gioco, senza fiocco: finita=True tempo=149 s scuffie=0 virate=0 strambate a vela aperta=0
+  prova 2 — prototipo, fiocco fisso al 20%: finita=True tempo=145 s scuffie=0 virate=0 strambate a vela aperta=0
+  prova 2 — prototipo, fiocco regolato da solo: finita=True tempo=142 s scuffie=0 virate=0 strambate a vela aperta=0
+  prova 3 — gioco, senza fiocco: finita=True tempo=185 s scuffie=0 virate=7 strambate a vela aperta=0
+  prova 3 — prototipo, fiocco fisso al 20%: finita=True tempo=169 s scuffie=0 virate=8 strambate a vela aperta=0
+  prova 3 — prototipo, fiocco regolato da solo: finita=True tempo=166 s scuffie=0 virate=8 strambate a vela aperta=0
+ virata di bolina a circa 4 nodi:
+  gioco, senza fiocco: partita a 3.5 nodi, virata riuscita in 4.7 s
+  prototipo, fiocco cazzato: partita a 3.6 nodi, virata riuscita in 5.3 s
+  prototipo, fiocco tutto lascato: partita a 3.4 nodi, virata riuscita in 6.1 s
+
+=== PANNELLO E IMMAGINE ===
+  navigazione libera a 1360x650: pannello che eccede no
+  prova 1 a 1360x650: pannello che eccede no
+  regata 1 a 1360x650: pannello che eccede no
+  immagine: /home/callle/scuola-di-vela/sperimentale/output/fiocco_bolina.png
+
+errori di pagina: []
+ESITO: tutto a posto

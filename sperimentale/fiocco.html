@@ -378,7 +378,13 @@ const BOAT = {
   jibArea: 2.6,       // FIOCCO m², 37% della randa
   minJib: 10,         // FIOCCO gradi: cazzato a ferro arriva più al centro della randa (carrello interno, niente boma)
   maxJib: 80,         // FIOCCO gradi
-  zJibCE: 1.6         // FIOCCO m, centro velico più basso della randa (2,0 m)
+  zJibCE: 1.6,        // FIOCCO m, centro velico più basso della randa (2,0 m)
+  // FIOCCO tappa B: la randa copre il fiocco alle andature larghe. SEMPLIFICAZIONE DICHIARATA: quanto lo copre
+  // dipende SOLO dall'angolo del vento apparente, non da come sono regolate le due vele. Nella realtà conta anche
+  // la regolazione: una randa cazzata a ferro copre meno di una tutta lascata, a parità di andatura.
+  slotA0: 40,         // FIOCCO gradi di vento apparente: sotto questo, fessura piena e fiocco scoperto
+  slotW: 60,          // FIOCCO ampiezza della transizione: a slotA0 + slotW il fiocco è coperto del tutto
+  slotShade: 0.70     // FIOCCO quota di pressione che il fiocco perde quando è coperto del tutto
 };
 
 function CL(a){ // a: angolo di incidenza (gradi, >=0)
@@ -420,8 +426,11 @@ function step(S, C, E, dt){
   // fiocco ne ha uno: le barche degli avversari e il fantasma restano identici al gioco.
   const jibA = C.jib === undefined ? 0 : BOAT.jibArea;                                              // FIOCCO
   const jibMax = BOAT.minJib + (C.jib || 0) * (BOAT.maxJib - BOAT.minJib);                          // FIOCCO
+  // FIOCCO tappa B: fessura piena (1) di bolina, nulla (0) alle andature larghe, dove la randa copre il fiocco.
+  const fessura = Math.max(0, Math.min(1, (BOAT.slotA0 + BOAT.slotW - A) / BOAT.slotW));            // FIOCCO
+  const shadeJ = BOAT.slotShade * (1 - fessura); // quota di pressione tolta al fiocco                  FIOCCO
   const M = sailF(BOAT.sailArea, sheetMax, A, aws, ch, lf);                                         // FIOCCO
-  const J = sailF(jibA, jibMax, A, aws, ch, lf);                                                    // FIOCCO
+  const J = sailF(jibA * (1 - shadeJ), jibMax, A, aws, ch, lf); // l'area scala la pressione           FIOCCO
   const boom = M.ang, alpha = M.alpha;                                                              // FIOCCO
   const drive = M.drive + J.drive;                                                                  // FIOCCO
   const side = M.side + J.side; // spinge sottovento                                                   FIOCCO
@@ -457,7 +466,8 @@ function step(S, C, E, dt){
   S.boom = boom;
   S.jib = J.ang; // FIOCCO: il fiocco sta dallo stesso lato del boma
   return { heel: S.heel, hike: S.hike, awa, aws, alpha, awFrom, drive, side, twa: norm180(E.twd - S.h), leeway: Math.atan2(S.vl, Math.max(0.3, Math.abs(S.u))) / D2R,
-           alphaJ: J.alpha, jib: J.ang, driveM: M.drive, driveJ: J.drive, sideM: M.side, sideJ: J.side }; // FIOCCO
+           alphaJ: J.alpha, jib: J.ang, driveM: M.drive, driveJ: J.drive, sideM: M.side, sideJ: J.side,
+           fessura, shadeJ }; // FIOCCO
 }
   const $ = id => document.getElementById(id);
   const KN = 1.943844;
@@ -892,7 +902,12 @@ function step(S, C, E, dt){
     return "ok";
   }
   function ttState(){ return ttOf(info.alpha); }
-  function ttJib(){ return info.alphaJ === undefined ? "flog" : ttOf(info.alphaJ); } // FIOCCO
+  // FIOCCO: un fiocco molto coperto dalla randa non è in stallo, è sgonfio. Soglia ricavata da slotShade:
+  // metà della pressione che si può perdere. Con l'ombreggiamento lineare di oggi equivale a fessura < 0,5.
+  function ttJib(){
+    if (info.alphaJ === undefined) return "flog";
+    return info.shadeJ > BOAT.slotShade / 2 ? "flog" : ttOf(info.alphaJ);
+  }
   function readI(){
     return { twa: Math.abs(norm180(local.twd - S.h)), kn: S.u * KN, tt: ttState(), heel: S.heel, r: S.r,
              sheet: ctl.sheet, tiller: ctl.tiller, inGust: local.tws > env.tws * 1.12 };

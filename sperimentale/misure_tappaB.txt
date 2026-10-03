@@ -1,0 +1,81 @@
+=== 1. NON-REGRESSIONE (fiocco assente) ===
+30 casi, scarto massimo 0.00e+0 nodi () — soglia 0,001
+30 casi con area 0 e scotta presente, scarto massimo 0.00e+0 nodi ()
+virata a 3,9 nodi senza fiocco: gioco 5.942 s, prototipo 5.942 s
+raffica 16 nodi senza fiocco: gioco 17.54°, prototipo 17.54°
+raffica 18 nodi senza fiocco: gioco 23.00°, prototipo 23.00°
+raffica 20 nodi senza fiocco: gioco 28.97°, prototipo 28.97°
+
+=== 2. ANGOLO MORTO ===
+senza fiocco: primo angolo sopra 0,5 nodi = 33°; a 30° = -0.18 nodi
+con fiocco: primo angolo sopra 0,5 nodi = 33°; a 30° = -0.28 nodi
+
+=== 3. GUADAGNO (10 nodi, tutto regolato al meglio) ===
+ 45°: senza 3.42 → con 3.59 nodi (4.9%) | randa 4% fiocco 8% sband. 4.8°
+ 48°: senza 4.03 → con 4.24 nodi (5.1%) | randa 0% fiocco 6% sband. 4.9°
+ 60°: senza 4.62 → con 5.25 nodi (13.6%) | randa 8% fiocco 14% sband. 4.9°
+ 90°: senza 5.17 → con 5.65 nodi (9.4%) | randa 36% fiocco 44% sband. 4.8°
+110°: senza 4.95 → con 5.30 nodi (7.1%) | randa 62% fiocco 70% sband. 4.7°
+135°: senza 4.21 → con 4.39 nodi (4.2%) | randa 100% fiocco 100% sband. 0.0°
+150°: senza 3.82 → con 3.95 nodi (3.3%) | randa 42% fiocco 48% sband. 4.6°
+180°: senza 3.53 → con 3.63 nodi (3.0%) | randa 100% fiocco 100% sband. -7.8°
+migliore velocità controvento: senza fiocco 2.70 a 48°, con fiocco 2.99 a 50°
+angolo più veloce: senza fiocco 90°, con fiocco 90°
+6 nodi: 45° 2.01→2.11 (5%)  60° 2.92→3.40 (16%)  90° 3.33→3.74 (12%)  135° 2.63→2.77 (5%)
+15 nodi: 45° 4.97→5.15 (4%)  60° 5.95→6.18 (4%)  90° 6.94→7.50 (8%)  135° 5.82→6.03 (4%)
+
+=== 4. REGOLARE IL FIOCCO CONTA (10 nodi) ===
+ 45°: migliore 3.59 (fiocco 8% = 16°) | tutta lascata 3.31 (−7.7%) | tutta cazzata 3.54 (−1.2%)
+ 60°: migliore 5.25 (fiocco 14% = 20°) | tutta lascata 4.53 (−13.7%) | tutta cazzata 4.99 (−4.9%)
+ 90°: migliore 5.65 (fiocco 44% = 41°) | tutta lascata 5.18 (−8.2%) | tutta cazzata 5.24 (−7.2%)
+segno dell'errore (incidenza del fiocco a 60°, 10 nodi):
+  migliore: fiocco a 20°, incidenza 29° (stallo sopra 20°, fileggia sotto 6°)
+  tutta cazzata: fiocco a 10°, incidenza 39° (stallo sopra 20°, fileggia sotto 6°)
+  tutta lascata: fiocco a 48°, incidenza 2° (stallo sopra 20°, fileggia sotto 6°)
+
+=== 5. SBANDAMENTO ===
+ 45° con 10 nodi: senza 4.8° → con 4.8° (+0.0°)
+ 60° con 10 nodi: senza 4.8° → con 4.9° (+0.1°)
+ 90° con 10 nodi: senza 4.7° → con 4.8° (+0.0°)
+raffica 16 nodi senza reagire, di bolina: senza fiocco 18° | con fiocco 22°
+raffica 18 nodi senza reagire, di bolina: senza fiocco 23° | con fiocco 30°
+raffica 20 nodi senza reagire, di bolina: senza fiocco 29° | con fiocco 42°
+60 s di bolina con 10 nodi costanti, tutto regolato: sbandamento massimo 5° (scuffia a 60°)
+
+=== 7. STABILITÀ NUMERICA ===
+10 corse da 120 s con scotte e barra a caso: NaN 0, velocità da -1.99 a 4.45 nodi (soglia −2,5…9), sbandamento massimo 16°
+
+=== B2. IL GUADAGNO SI ROVESCIA? ===
+  bolina 45-60°: 45° 4.9%  50° 12.0%  55° 13.0%  60° 13.6%  → media 10.9%
+  larghe 110-150°: 110° 7.1%  120° 5.7%  135° 4.2%  150° 3.3%  → media 5.1%
+  confronto (deve essere bolina >= larghe): RISPETTATO
+  fascia attesa (ipotesi nostra): bolina +8…+18%, larghe +2…+8%
+
+=== B3. VELOCITÀ UTILE CONTROVENTO ===
+  40°=1.856 42°=2.156 44°=2.418 45°=2.535 46°=2.645 48°=2.836 50°=2.989 52°=2.966 54°=2.894 56°=2.814
+  migliore a 50° (2.989 nodi di velocità utile)
+  velocità utile: 45° 2.535 | 48° 2.836 | 50° 2.989
+  differenza fra 48° e 50°: 5.41%
+
+=== B4. IL FIOCCO ALLE ANDATURE LARGHE ===
+  110°: fessura 0.36 ombra 45% | incidenza 20° | filetti sbatte (coperto) | quota di spinta del fiocco 16.85%
+  135°: fessura 0.00 ombra 70% | incidenza 31° | filetti sbatte (coperto) | quota di spinta del fiocco 9.44%
+  150°: fessura 0.00 ombra 70% | incidenza 90° | filetti sbatte (coperto) | quota di spinta del fiocco 10.03%
+  180°: fessura 0.00 ombra 70% | incidenza 100° | filetti sbatte (coperto) | quota di spinta del fiocco 9.84%
+
+=== B5. REGOLARE IL FIOCCO (10 nodi) ===
+   45°: migliore 3.59 | tutta lascata −7.7% | tutta cazzata −1.2%  (a 45° «troppo cazzata» è senza soglia: la scotta non chiude oltre 10°)
+   60°: migliore 5.25 | tutta lascata −13.7% | tutta cazzata −4.9%
+   90°: migliore 5.65 | tutta lascata −8.2% | tutta cazzata −7.2%
+
+=== B6. GUADAGNI ASSURDI E POLARE LISCIA ===
+  guadagno massimo 13.6% a 60° (soglia 30%)
+  massimi e minimi locali fra 30° e 180°, a passi di 5° (tolleranza 0,04 nodi): nessuno oltre il massimo della polare
+  angolo più veloce: 85° (5.68 nodi)
+  polare con fiocco: 30°=-0.22 45°=3.59 60°=5.25 75°=5.62 90°=5.65 105°=5.43 120°=4.99 135°=4.39 150°=3.95 165°=3.86 180°=3.63
+
+=== B7. SICUREZZA ===
+  raffica da 10 a 16 nodi senza reagire: senza fiocco 27° | con fiocco 42°
+  raffica da 10 a 18 nodi senza reagire: senza fiocco 41° | con fiocco 59°
+  raffica da 10 a 20 nodi senza reagire: senza fiocco 55° | con fiocco 71° (SCUFFIA)
+  60 s di bolina con 10 nodi costanti, regolato: sbandamento massimo 5° (scuffia a 60°)

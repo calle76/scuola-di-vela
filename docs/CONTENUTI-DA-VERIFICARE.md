@@ -109,7 +109,12 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 | Altezza del centro velico | 1,6 m (la randa 2,0 m) | Vela più bassa e più a prua: a parità di forza sbanda meno | |
 | Coefficienti di portanza e resistenza | gli stessi della randa (`CL`, `CD`) | Nessun numero nuovo finché non serve | |
 | Angolo morto del fiocco | lo stesso della randa (27°) | In tappa A le due vele non interagiscono, quindi tenerli uguali è la scelta onesta | |
-| Interazione fra le vele (fessura) | **assente** | È l'oggetto della tappa B | |
+| Interazione fra le vele (fessura), tappa A | **assente** | Aggiunta nella tappa B | |
+| Angolo sotto cui la fessura è piena (tappa B) | 40° di vento apparente, circa 50° reali | È circa il vento apparente che la barca vede in bolina larga | |
+| Ampiezza della transizione (tappa B) | 60°: il fiocco è coperto del tutto a 100° apparenti, circa 125° reali | Il fiocco finisce dietro la randa attorno al gran lasco | |
+| Pressione persa dal fiocco quando è coperto del tutto (tappa B) | 70% | Coperto dalla randa ma non azzerato: qualcosa prende ancora | |
+| Soglia dei filetti del fiocco coperto (tappa B) | metà della pressione che si può perdere, cioè fessura sotto 0,5 | Ricavata dalla costante sopra, non è un numero a sé | |
+| La copertura dipende **solo** dall'angolo del vento apparente | semplificazione dichiarata | Nella realtà conta anche la regolazione: una randa cazzata a ferro copre il fiocco meno di una tutta lascata, a parità di andatura | |
 | Lunghezza della base nel disegno | 1,5 m (il boma 2,75 m) | Solo disegno, non entra nella fisica | |
 | Tasti | E cazza, Q lasca | Scelta di comandi, non un dato | |
 
@@ -118,9 +123,19 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 | Affermazione | Perché c'è un dubbio | Esito |
 | --- | --- | --- |
 | Il fiocco si legge con gli stessi filetti della randa: sopravento agitato = cazza, sottovento agitato = lasca | Sul fiocco i filetti vicino all'inferitura sono la posizione classica; la regola di lettura dovrebbe essere la stessa | |
-| Alle andature larghe (dal lasco in giù) il fiocco non si può aprire abbastanza e smette di lavorare bene | Nel prototipo è un limite della scotta; nella realtà conta anche che la randa gli tolga il vento, e si usa un tangone | |
+| Un fiocco molto coperto dalla randa non è «in stallo»: è sgonfio, e i suoi filetti sbattono | Nel prototipo (tappa B) sopra metà copertura i filetti del fiocco dicono «sbatte» invece di «filetto sottovento agitato». Va verificato che sia la lettura giusta e da che andatura comincia. | |
 | Entrando in virata il fiocco va tenuto cazzato: tutto lascato la virata riesce peggio | Nel prototipo il fiocco non va mai a collo (è la tappa C); l'effetto misurato viene solo dalla resistenza della vela che sbatte | |
 | Con randa e fiocco la barca è sovrainvelata per un solo timoniere: una raffica da 10 a 20 nodi senza reagire fa scuffiare | Atteso, essendo la stessa barca del gioco con il 37% di vela in più; va rivisto quando si passerà a una barca a due | |
+
+### Affermazioni sulla realtà usate per spiegare i risultati della tappa A
+
+Non sono nel gioco né nel prototipo: sono le spiegazioni date nel rapporto della tappa A per dire **perché** certi risultati non convincevano, e su di esse è costruito il modello della tappa B. Se una di queste è sbagliata, è sbagliata anche la tappa B.
+
+| Affermazione | Perché c'è un dubbio | Esito |
+| --- | --- | --- |
+| La fessura fra randa e fiocco fa rendere il fiocco **di più di bolina** che alle andature larghe | È il motivo per cui nel prototipo, che la fessura non ce l'ha, il guadagno risulta rovesciato (+5% di bolina, +13% alle andature larghe). Va confermato che l'effetto reale abbia questo verso e questo ordine di grandezza. | |
+| Un fiocco su carrello fisso **non si apre abbastanza** alle andature larghe, e per questo smette di lavorare bene | Nel prototipo l'apertura massima è 80° contro gli 85° del boma, ed è l'unica causa modellata. Va verificato quanto si apra davvero un fiocco di deriva e se sia questo il limite che conta. | |
+| Alle andature larghe **la randa toglie vento al fiocco** (lo copre), ed è questa la causa principale per cui il fiocco non rende | È la causa che manca nel prototipo e che la tappa B vuole aggiungere. Va verificato che sia davvero la causa principale, e da che andatura comincia a contare. | |
 
 ## Per la fase B (non ancora nel gioco)
 

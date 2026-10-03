@@ -141,3 +141,84 @@ for (let r = 0; r < 10; r++){
   }
 }
 console.log(`10 corse da 120 s con scotte e barra a caso: NaN ${brutti}, velocità da ${uMin.toFixed(2)} a ${uMax.toFixed(2)} nodi (soglia −2,5…9), sbandamento massimo ${hMax.toFixed(0)}°`);
+
+// ======================================================================
+// TAPPA B — interazione fra le vele (solo ombreggiamento)
+// ======================================================================
+const pct = (a, b) => (b / a - 1) * 100;
+console.log("\n=== B2. IL GUADAGNO SI ROVESCIA? ===");
+const guad = twa => { const a = vel(P, twa, 10, null), b = vel(P, twa, 10, "best"); return pct(a.kn, b.kn); };
+const bolina = [45, 50, 55, 60].map(guad), larghe = [110, 120, 135, 150].map(guad);
+const med = v => v.reduce((a, b) => a + b, 0) / v.length;
+console.log("  bolina 45-60°: " + bolina.map((g, i) => `${[45,50,55,60][i]}° ${g.toFixed(1)}%`).join("  ") + `  → media ${med(bolina).toFixed(1)}%`);
+console.log("  larghe 110-150°: " + larghe.map((g, i) => `${[110,120,135,150][i]}° ${g.toFixed(1)}%`).join("  ") + `  → media ${med(larghe).toFixed(1)}%`);
+console.log(`  confronto (deve essere bolina >= larghe): ${med(bolina) >= med(larghe) ? "RISPETTATO" : "NON rispettato"}`);
+console.log(`  fascia attesa (ipotesi nostra): bolina +8…+18%, larghe +2…+8%`);
+
+console.log("\n=== B3. VELOCITÀ UTILE CONTROVENTO ===");
+const vmcList = [40, 42, 44, 45, 46, 48, 50, 52, 54, 56].map(a => {
+  const u = vel(P, a, 10, "best").kn; return { a, kn: u, vmc: u * Math.cos(a * Math.PI / 180) };
+});
+console.log("  " + vmcList.map(x => `${x.a}°=${x.vmc.toFixed(3)}`).join(" "));
+const mig = vmcList.reduce((b, x) => x.vmc > b.vmc ? x : b);
+const q45 = vmcList.find(x => x.a === 45), q48 = vmcList.find(x => x.a === 48), q50 = vmcList.find(x => x.a === 50);
+console.log(`  migliore a ${mig.a}° (${mig.vmc.toFixed(3)} nodi di velocità utile)`);
+console.log(`  velocità utile: 45° ${q45.vmc.toFixed(3)} | 48° ${q48.vmc.toFixed(3)} | 50° ${q50.vmc.toFixed(3)}`);
+const d4850 = Math.abs(pct(q48.vmc, q50.vmc));
+console.log(`  differenza fra 48° e 50°: ${d4850.toFixed(2)}%` + (d4850 < 1 ? "  → SOTTO L'1%: l'ottimo è piatto, il criterio sta misurando rumore" : ""));
+
+console.log("\n=== B4. IL FIOCCO ALLE ANDATURE LARGHE ===");
+for (const twa of [110, 135, 150, 180]){
+  const t = vel(P, twa, 10, "best"); const S = { x: 0, y: 0, h: 0, u: 1, vl: 0, r: 0 }; let inf;
+  for (let k = 0; k < 1200; k++){ S.h = 0; inf = P.step(S, { sheet: t.trim.sheet, tiller: 0, jib: t.trim.jib }, { twd: twa, tws: 10 / KN }, 0.05); }
+  const quota = inf.driveJ / (inf.driveM + inf.driveJ) * 100;
+  const filetti = inf.shadeJ > P.BOAT.slotShade / 2 ? "sbatte (coperto)" : inf.alphaJ > 27 ? "STALLO" : inf.alphaJ < 8 ? "sopravento" : "dritti";
+  console.log(`  ${String(twa).padStart(3)}°: fessura ${inf.fessura.toFixed(2)} ombra ${(inf.shadeJ * 100).toFixed(0)}% | incidenza ${inf.alphaJ.toFixed(0)}° | filetti ${filetti} | quota di spinta del fiocco ${quota.toFixed(2)}%`);
+}
+
+console.log("\n=== B5. REGOLARE IL FIOCCO (10 nodi) ===");
+for (const twa of [45, 60, 90]){
+  const best = vel(P, twa, 10, "best"), lasc = vel(P, twa, 10, 1), cazz = vel(P, twa, 10, 0);
+  const vl = x => (1 - x.kn / best.kn) * 100;
+  const nota = twa === 45 ? "  (a 45° «troppo cazzata» è senza soglia: la scotta non chiude oltre 10°)" : "";
+  console.log(`  ${String(twa).padStart(3)}°: migliore ${best.kn.toFixed(2)} | tutta lascata −${vl(lasc).toFixed(1)}% | tutta cazzata −${vl(cazz).toFixed(1)}%${nota}`);
+}
+
+console.log("\n=== B6. GUADAGNI ASSURDI E POLARE LISCIA ===");
+let maxG = -9, dove = "", denti = [];
+const curva = [];
+for (let a = 30; a <= 180; a += 5){
+  const s0 = vel(P, a, 10, null).kn, c0 = vel(P, a, 10, "best").kn;
+  curva.push({ a, c0 });
+  if (s0 > 0.2){ const g = pct(s0, c0); if (g > maxG){ maxG = g; dove = a + "°"; } }
+}
+for (let i = 1; i < curva.length - 1; i++){
+  const p0 = curva[i - 1].c0, p1 = curva[i].c0, p2 = curva[i + 1].c0;
+  // tolleranza 0,04 nodi: la regolazione migliore è cercata a passi di 0,02, e vicino al massimo
+  // della polare due angoli vicini danno numeri che differiscono meno della risoluzione della ricerca
+  if ((p1 - p0) * (p2 - p1) < 0 && Math.max(Math.abs(p1 - p0), Math.abs(p2 - p1)) > 0.04) denti.push(`${curva[i].a}° (${p0.toFixed(2)} ${p1.toFixed(2)} ${p2.toFixed(2)})`);
+}
+console.log(`  guadagno massimo ${maxG.toFixed(1)}% a ${dove} (soglia 30%)`);
+console.log(`  massimi e minimi locali fra 30° e 180°, a passi di 5° (tolleranza 0,04 nodi): ${denti.length ? denti.join(", ") : "nessuno oltre il massimo della polare"}`);
+const picco = curva.reduce((b, x) => x.c0 > b.c0 ? x : b);
+console.log(`  angolo più veloce: ${picco.a}° (${picco.c0.toFixed(2)} nodi)`);
+console.log("  polare con fiocco: " + curva.filter(x => x.a % 15 === 0).map(x => `${x.a}°=${x.c0.toFixed(2)}`).join(" "));
+
+console.log("\n=== B7. SICUREZZA ===");
+for (const g of [16, 18, 20]){
+  const prova = jib => {
+    const S = { x: 0, y: 0, h: 0, u: 1.5, vl: 0, r: 0 };
+    const C = jib === null ? { sheet: 0.1, tiller: 0 } : { sheet: 0.1, tiller: 0, jib: 0.1 };
+    for (let t = 0; t < 30; t += 0.02){ S.h = 0; P.step(S, C, { twd: 45, tws: 10 / KN }, 0.02); }
+    let max = 0;
+    for (let t = 0; t < 6; t += 0.02){ S.h = 0; P.step(S, C, { twd: 45, tws: g / KN }, 0.02); max = Math.max(max, S.heel); }
+    return max.toFixed(0) + "°" + (max > 60 ? " (SCUFFIA)" : "");
+  };
+  console.log(`  raffica da 10 a ${g} nodi senza reagire: senza fiocco ${prova(null)} | con fiocco ${prova(0.1)}`);
+}
+{
+  const S = { x: 0, y: 0, h: 45, u: 3.4 / KN, vl: 0, r: 0, heel: 0, heelRate: 0, hike: 0.3 };
+  let max = 0;
+  for (let t = 0; t < 60; t += 1 / 240){ P.step(S, { sheet: 0.2, tiller: 0, jib: 0.2 }, { twd: 0, tws: 10 / KN }, 1 / 240); max = Math.max(max, Math.abs(S.heel)); }
+  console.log(`  60 s di bolina con 10 nodi costanti, regolato: sbandamento massimo ${max.toFixed(0)}° (scuffia a 60°)`);
+}

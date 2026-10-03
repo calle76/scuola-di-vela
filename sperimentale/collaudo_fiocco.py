@@ -153,7 +153,8 @@ async def main():
                 print(f"  {twa:3d}° {nome:14s}: fiocco {r[0]:4s} (incidenza {r[2]:3d}°, angolo {r[3]:2d}°, vento app. {r[4]:3d}°) | randa {r[1]:4s} | pannello: «{pannello}»")
         # attese: nell'angolo morto sbatte comunque; altrove lascata = sopravento, cazzata = sottovento, regolata = dritti
         for twa, nome, tj, tm, aj, ang, awa, pan in casi:
-            atteso = "flog" if twa == 20 else {"tutta lascata": "wind", "regolata": "ok", "tutta cazzata": "lee"}[nome]
+            # dalla tappa B, alle andature larghe il fiocco è coperto dalla randa: i filetti dicono «sbatte», non stallo
+            atteso = "flog" if twa in (20, 135) else {"tutta lascata": "wind", "regolata": "ok", "tutta cazzata": "lee"}[nome]
             if tj != atteso: errori6.append(f"{twa}° {nome}: filetti {tj}, attesi {atteso}")
         print("  esito criterio 6:", "tutti come attesi" if not errori6 else errori6)
 
