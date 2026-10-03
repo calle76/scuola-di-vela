@@ -1,4 +1,5 @@
 # Collaudi nel browser del prototipo del fiocco (tappa A).
+# Tasti: barra con le frecce, randa con A e D (o le frecce su e giù), fiocco con Q ed E, anche premuti insieme.
 # Criterio 6: i filetti del fiocco rispondono alla sua scotta come quelli della randa.
 # Criterio 8: la barca si guida davvero — giro della prova 1 col pilota automatico e virata di bolina.
 # Uso: python collaudo_fiocco.py
@@ -71,6 +72,9 @@ VIRATA = """
 
 async def virata(pg, jib, nome):
     await pg.evaluate("__sv.openItem('free')"); await pg.wait_for_timeout(200)
+    # senza raffiche: in navigazione libera sono accese, e spostavano il tempo della virata di circa un secondo fra una corsa e l'altra
+    await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#gustSel", "0"])
+    await pg.wait_for_timeout(200)
     r = await pg.evaluate(VIRATA, jib)
     print(f"  {nome}: partita a {r['kn0']:.1f} nodi, " +
           (f"virata riuscita in {r['t']:.1f} s" if r["ok"] else f"NON virata (prua a {r['h']}°, {r['kn']} nodi)"))
@@ -82,6 +86,54 @@ async def main():
         pg = await b.new_page(viewport={"width": 1280, "height": 800}); errs = []
         pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(PROTO); await pg.wait_for_timeout(400)
+
+        # ---- i tasti, premuti davvero sulla tastiera ----
+        print("=== TASTI (navigazione libera, premuti davvero) ===")
+        await pg.evaluate("__sv.openItem('free')"); await pg.wait_for_timeout(300)
+        errori_tasti = []
+        async def premi(tasti, atteso, nome):
+            # si parte sempre dal centro, con le due scotte a metà, così c'è spazio in entrambi i versi
+            await pg.evaluate("() => { __sv.ctl.tiller = 0; __sv.ctl.sheet = 0.5; __sv.ctl.jib = 0.5; }")
+            for t in tasti: await pg.keyboard.down(t)
+            await pg.wait_for_timeout(500)
+            dopo = await pg.evaluate("[__sv.ctl.tiller, __sv.ctl.sheet, __sv.ctl.jib]")
+            for t in tasti: await pg.keyboard.up(t)
+            await pg.wait_for_timeout(100)
+            verso = lambda v, p: "fermo" if abs(v - p) < 1e-6 else ("giù" if v < p else "su")
+            got = (verso(dopo[0], 0), verso(dopo[1], 0.5), verso(dopo[2], 0.5))
+            ok = got == atteso
+            print(f"  {nome:34s} {'+'.join(tasti):22s} barra {got[0]:5s} randa {got[1]:5s} fiocco {got[2]:5s}  {'ok' if ok else 'ATTESO ' + str(atteso)}")
+            if not ok: errori_tasti.append(f"{nome}: {got}, atteso {atteso}")
+        #                                      barra   randa   fiocco
+        await premi(["ArrowLeft"],  ("giù",   "fermo", "fermo"), "barra a sinistra")
+        await premi(["ArrowRight"], ("su",    "fermo", "fermo"), "barra a dritta")
+        await premi(["d"],          ("fermo", "giù",   "fermo"), "D cazza la randa")
+        await premi(["a"],          ("fermo", "su",    "fermo"), "A lasca la randa")
+        await premi(["ArrowUp"],    ("fermo", "giù",   "fermo"), "freccia su cazza la randa")
+        await premi(["ArrowDown"],  ("fermo", "su",    "fermo"), "freccia giù lasca la randa")
+        await premi(["e"],          ("fermo", "fermo", "giù"),   "E cazza il fiocco")
+        await premi(["q"],          ("fermo", "fermo", "su"),    "Q lasca il fiocco")
+        await premi(["ArrowLeft", "d", "e"], ("giù", "giù", "giù"), "barra+randa+fiocco insieme")
+        await premi(["ArrowRight", "a", "q"], ("su", "su", "su"), "gli stessi nell'altro verso")
+        await premi(["d", "q"],     ("fermo", "giù",   "su"),    "randa e fiocco in versi opposti")
+        # ↑ e D insieme non devono cazzare il doppio: stessa condizione, non due righe
+        await pg.evaluate("() => { __sv.ctl.tiller = 0; __sv.ctl.sheet = 0.9; __sv.ctl.jib = 0.5; }")
+        await pg.keyboard.down("d"); await pg.wait_for_timeout(600); await pg.keyboard.up("d")
+        solo = 0.9 - await pg.evaluate("__sv.ctl.sheet")
+        await pg.evaluate("() => { __sv.ctl.sheet = 0.9; }")
+        await pg.keyboard.down("d"); await pg.keyboard.down("ArrowUp"); await pg.wait_for_timeout(600)
+        await pg.keyboard.up("d"); await pg.keyboard.up("ArrowUp")
+        insieme = 0.9 - await pg.evaluate("__sv.ctl.sheet")
+        doppio = insieme > solo * 1.5
+        print(f"  D da solo cazza {solo:.3f}, D+freccia su cazzano {insieme:.3f}: doppia velocità? {doppio}")
+        if doppio: errori_tasti.append("D e freccia su insieme cazzano il doppio")
+        # la barra torna al centro quando si lascia il tasto
+        await pg.keyboard.down("ArrowLeft"); await pg.wait_for_timeout(400); await pg.keyboard.up("ArrowLeft")
+        t1 = await pg.evaluate("__sv.ctl.tiller"); await pg.wait_for_timeout(1200)
+        t2 = await pg.evaluate("__sv.ctl.tiller")
+        print(f"  barra lasciata: da {t1:.2f} a {t2:.2f} (torna al centro da sola)")
+        if not (abs(t2) < abs(t1)): errori_tasti.append("la barra non torna al centro")
+        print("  esito tasti:", "tutti come attesi" if not errori_tasti else errori_tasti)
 
         # ---- criterio 6: filetti del fiocco ----
         print("=== 6. FILETTI DEL FIOCCO (10 nodi da nord, navigazione libera) ===")
@@ -140,6 +192,6 @@ async def main():
         print(f"  immagine: {OUT / 'fiocco_bolina.png'}")
         print("\nerrori di pagina:", errs)
         await b.close()
-        bad = errori6 or any(not r[0] or r[2] for k, r in fatte if k != "gioco") or not v1
+        bad = errori_tasti or errori6 or any(not r[0] or r[2] for k, r in fatte if k != "gioco") or not v1
         print("ESITO:", "tutto a posto" if not bad else "qualcosa non torna (vedi sopra)")
 asyncio.run(main())

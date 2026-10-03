@@ -129,11 +129,12 @@ for (const g of [16, 18, 20]) console.log(`raffica ${g} nodi senza reagire, di b
 // ---- criterio 7: stabilità numerica ----
 console.log("\n=== 7. STABILITÀ NUMERICA ===");
 let brutti = 0, uMin = 9, uMax = -9, hMax = 0;
+let seme = 12345; const caso = () => (seme = (seme * 1103515245 + 12345) % 2147483648) / 2147483648; // numeri casuali ripetibili: così il confronto fra due versioni è esatto
 for (let r = 0; r < 10; r++){
-  const S = { x: 0, y: 0, h: Math.random() * 360, u: 1, vl: 0, r: 0, heel: 0, heelRate: 0, hike: 0.3 };
-  const C = { sheet: Math.random(), tiller: 0, jib: Math.random() };
+  const S = { x: 0, y: 0, h: caso() * 360, u: 1, vl: 0, r: 0, heel: 0, heelRate: 0, hike: 0.3 };
+  const C = { sheet: caso(), tiller: 0, jib: caso() };
   for (let t = 0; t < 120; t += 1 / 240){
-    if (Math.random() < 0.01){ C.sheet = Math.random(); C.jib = Math.random(); C.tiller = Math.random() * 2 - 1; }
+    if (caso() < 0.01){ C.sheet = caso(); C.jib = caso(); C.tiller = caso() * 2 - 1; }
     P.step(S, C, { twd: 0, tws: 10 / KN }, 1 / 240);
     if (!Number.isFinite(S.u) || !Number.isFinite(S.heel) || !Number.isFinite(S.h)) brutti++;
     uMin = Math.min(uMin, S.u * KN); uMax = Math.max(uMax, S.u * KN); hMax = Math.max(hMax, Math.abs(S.heel));

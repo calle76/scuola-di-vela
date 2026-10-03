@@ -43,4 +43,4 @@ raffica 20 nodi senza reagire, di bolina: senza fiocco 29° | con fiocco 42°
 60 s di bolina con 10 nodi costanti, tutto regolato: sbandamento massimo 5° (scuffia a 60°)
 
 === 7. STABILITÀ NUMERICA ===
-10 corse da 120 s con scotte e barra a caso: NaN 0, velocità da -2.06 a 4.92 nodi (soglia −2,5…9), sbandamento massimo 17°
+10 corse da 120 s con scotte e barra a caso: NaN 0, velocità da -1.99 a 4.46 nodi (soglia −2,5…9), sbandamento massimo 16°
