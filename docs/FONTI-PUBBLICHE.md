@@ -83,12 +83,13 @@ I forum citano anche, come lettura pratica sulla regolazione delle vele, *Sail P
 - La soglia dell'ombra della randa sul fiocco senza spinnaker.
 - Polari pubbliche di derive; tabelle di coefficienti di portanza e resistenza delle vele leggibili nel testo (le figure del 470 non lo sono).
 - A quale andatura serve il fiocco a farfalla nelle derive a due e se si usa l'asta.
+- Quanto spinge un fiocco a collo, in gradi al secondo o in newton: nessuna fonte.
 
 ## Calibrazioni future (elencate, non fatte)
 
 1. ~~Coerenza fra vista e forza del fiocco coperto: portare `slotShade` verso 1,0 e rimisurare (tappa C, primo compito).~~ **Fatta** (tappa C, primo compito): `slotShade` 1,00, ombra da 95° a 107° apparenti. `slotShade` da solo non bastava: fra 107° e 135° il pannello diceva «non si regola» e il fiocco dava ancora il 16-10%. Restano da verificare i tre punti nuovi in `CONTENUTI-DA-VERIFICARE.md`.
 2. ~~Momento di imbardata dovuto alle vele, spegnibile: la barca senza fiocco deve restare identica.~~ **Deciso il 4 ottobre 2026: non modellato nel prototipo del fiocco.** Riguarda tutta la barca — randa, fiocco, scafo sbandato — non il solo fiocco: modellare solo il fiocco dà una barca sempre poggiera, il contrario di quello che dice F4 (misure in `sperimentale/misure_tappaC2.txt`). Resta una calibrazione futura, da affrontare sull'intera barca.
-3. Fiocco in virata (controvento, a collo).
+3. ~~Fiocco in virata (controvento, a collo).~~ **Deciso il 4 ottobre 2026: non modellato nel prototipo del fiocco.** Il motore è cinematico, quindi l'effetto sarebbe una taratura con due costanti senza fonte; il meccanismo (memoria del lato del fiocco) sostituisce l'equipaggio e andrebbe rifatto con il prodiere della barca a due; il guadagno misurato è modesto. Modello pronto e numeri in `sperimentale/PROPOSTA-C3.md` e `sperimentale/banco_tappaC3.txt`.
 4. Timone: stallo oltre circa 15° contro il massimo del motore (30°).
 5. Soglia di scuffia e coppia raddrizzante, contro il 25° di sbandamento della fonte.
 6. Massa dello scafo a due: da 190 a 250 kg secondo la barca presa a modello.

@@ -68,7 +68,7 @@ Il primo contatto con il fiocco è da timoniere, con il fiocco regolato dal comp
 | 2.5 Raffiche in due | Entrambi | Il prodiere lascia e sposta il peso, il timoniere orza | Una raffica forte senza scuffia, in entrambi i ruoli |
 | 2.6 Gli occhi dell'equipaggio | Prodiere, poi timoniere | Il prodiere segnala raffiche, boe e barche vicine; il timoniere decide | Una prova in cui l'avviso cambia la decisione |
 
-Attenzione al contenuto: la fessura tra le vele si spiega con il flusso ascendente e discendente tra le due vele (upwash e downwash), **non** con l'accelerazione dell'aria come in un tubo di Venturi, che le fonti indicano come spiegazione sbagliata. Alle andature larghe il fiocco è coperto dalla randa e non si regola con la sola scotta: nella realtà si porta dal lato opposto, a farfalla. Il prototipo ancora non lo fa.
+Attenzione al contenuto: la fessura tra le vele si spiega con il flusso ascendente e discendente tra le due vele (upwash e downwash), **non** con l'accelerazione dell'aria come in un tubo di Venturi, che le fonti indicano come spiegazione sbagliata. Alle andature larghe il fiocco è coperto dalla randa e non si regola con la sola scotta: nella realtà si porta dal lato opposto, a farfalla. Il prototipo ancora non lo fa. Nella lezione 2.3 il **fiocco a collo si insegna come errore di coordinamento** nel registro degli errori (la scotta nuova va cazzata entro un certo tempo dal passaggio del vento), **non come effetto fisico sulla virata**: nel prototipo il fiocco a collo non è modellato (tappa C, terzo compito).
 
 ### Livello 3: gennaker **[proposta]**
 

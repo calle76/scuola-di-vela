@@ -1,0 +1,125 @@
+=== C3.0 — DOVE VIVE IL TERMINE: QUANTO VALE (1 − lf) ALLE ANDATURE NORMALI ===
+  (1 − lf) è il fattore con cui il motore sgonfia le vele: 1 sotto 27° apparenti, 0 sopra 34°.
+  Se non è 0 alle andature normali, il termine del modello A tocca anche chi naviga e basta.
+  10 nodi, rotta inchiodata, vele regolate da sole, fiocco presente.
+
+  reali  nodi   apparente  (1−lf)   modello A a 8 °/s   modello B a 8 °/s
+    40°   2.31      31.5°   0.362       3.70 °/s            0.00 °/s
+    42°   2.86      31.9°   0.293       3.21 °/s            0.00 °/s
+    45°   3.59      32.7°   0.185       2.18 °/s            0.00 °/s
+    48°   4.22      33.5°   0.069       0.86 °/s            0.00 °/s
+    50°   4.57      34.2°   0.000       0.00 °/s            0.00 °/s
+    55°   4.84      37.2°   0.000       0.00 °/s            0.00 °/s
+    60°   5.05      40.3°   0.000       0.00 °/s            0.00 °/s
+    90°   5.53      60.9°   0.000       0.00 °/s            0.00 °/s
+
+=== C3.1 — LA VIRATA OGGI (nessun modello) ===
+  10 nodi da nord, raffiche spente, randa cazzata, freccia tenuta premuta a fondo.
+  Riuscita = la prua passa dall'altra parte e arriva a 44° dal vento entro 12 s.
+
+  partenza di bolina a 45°, 3,5 nodi — senza fiocco        : partita a 3.42 nodi → riuscita in  3.88 s
+  partenza di bolina a 45°, 3,5 nodi — fiocco cazzato      : partita a 3.52 nodi → riuscita in  4.35 s
+  partenza di bolina a 45°, 3,5 nodi — fiocco a metà       : partita a 3.33 nodi → riuscita in  4.75 s
+  partenza di bolina a 45°, 3,5 nodi — fiocco tutto lascato: partita a 3.33 nodi → riuscita in  4.75 s
+
+  Griglia fissa di 84 casi: 4 andature di partenza (42 45 48 52°) × 7 velocità (1,0…4,0 nodi)
+  × 3 regolazioni del fiocco (cazzato, a metà, lascato). Nessun caso è casuale.
+
+  modello                    45° 3,5 kn: cazz./lasc.   riuscite  di cui ≤2 kn   media  più lenta
+  nessuno                     4.35 s /  4.75 s    75/84   27/36    4.99 s   8.81 s
+     fiocco a 0.00: 27 su 28 (media 4.76 s), lente ≤2 kn 11 su 12
+     fiocco a 0.35: 24 su 28 (media 5.05 s), lente ≤2 kn 8 su 12
+     fiocco a 1.00: 24 su 28 (media 5.20 s), lente ≤2 kn 8 su 12
+
+=== C3.2 — I DUE MODELLI, A VARI backRate ===
+  modello                    45° 3,5 kn: cazz./lasc.   riuscite  di cui ≤2 kn   media  più lenta
+  A senza memoria, 4 °/s      4.23 s /  4.75 s    77/84   29/36    5.01 s  10.60 s
+  A senza memoria, 8 °/s      4.78 s /  4.75 s    69/84   22/36    5.12 s   7.97 s
+  A senza memoria, 12 °/s    FALLITA  /  4.75 s    41/84   12/36    5.30 s   7.66 s
+  A senza memoria, 16 °/s    FALLITA  /  4.75 s    26/84    8/36    5.23 s   7.66 s
+  B a collo, 4 °/s            4.15 s /  4.75 s    76/84   28/36    4.87 s   8.16 s
+  B a collo, 8 °/s            3.97 s /  4.75 s    77/84   29/36    4.77 s   7.89 s
+  B a collo, 12 °/s           3.79 s /  4.75 s    78/84   30/36    4.67 s   7.66 s
+  B a collo, 16 °/s           3.62 s /  4.75 s    78/84   30/36    4.55 s   7.66 s
+  B a collo, 24 °/s           3.32 s /  4.75 s    79/84   31/36    4.37 s   7.66 s
+
+  Durata del ricordo (modello B a 12 °/s):
+  B 12 °/s, backT 0.6 s       4.05 s /  4.75 s    77/84   29/36    4.85 s   8.80 s
+  B 12 °/s, backT 1.2 s       3.79 s /  4.75 s    78/84   30/36    4.67 s   7.66 s
+  B 12 °/s, backT 2 s         3.51 s /  4.75 s    79/84   31/36    4.51 s   8.42 s
+  B 12 °/s, backT 3 s         3.36 s /  4.75 s    79/84   31/36    4.34 s   7.66 s
+
+=== C3.3 — VIRATA LENTA: IL CASO IN CUI IL FIOCCO A COLLO SERVE DAVVERO ===
+  Partenza di bolina a 45°, poca velocità. Secondi per arrivare a 44° dal vento dall'altra parte.
+
+  nodi di partenza    nessuno    A 8 °/s    B 12 °/s   B 24 °/s
+       1.0 nodi        5.78 s     FALLITA     4.94 s     4.29 s
+       1.5 nodi        5.15 s     FALLITA     4.45 s     3.88 s
+       2.0 nodi        4.80 s     6.51 s     4.17 s     3.65 s
+       2.5 nodi        4.59 s     5.56 s     3.99 s     3.49 s
+       3.0 nodi        4.45 s     5.10 s     3.87 s     3.39 s
+
+=== C3.4 — DA FERMI NELL'ANGOLO MORTO, ARRIVANDOCI DA UNA VIRATA FALLITA ===
+  Si vira partendo a 1,0 nodi (oggi fallisce): la barca si pianta con la prua nel vento.
+  Misura: angolo dal vento e nodi dopo 20 s dall'inizio della virata, barra lasciata al centro
+  dopo 6 s. A velocità zero il timone non fa nulla: quello che resta è il fiocco a collo.
+
+  modello        fiocco cazzato        fiocco lascato        senza fiocco
+  nessuno          58° a 4.84 kn         43° a 2.85 kn         67° a 4.10 kn
+  A 8 °/s          49° a 4.31 kn         43° a 2.85 kn         67° a 4.10 kn
+  B 12 °/s         80° a 3.73 kn         43° a 2.85 kn         67° a 4.10 kn
+  B 24 °/s        102° a 3.51 kn         43° a 2.85 kn         67° a 4.10 kn
+
+=== C3.5 — GIOCABILITÀ: BARRA AL CENTRO, 60 s SENZA TOCCARE NULLA ===
+  È il difetto che ha affossato C2 (3 °/s di scarto). Vele regolate da sole, barra mai toccata.
+  Rotta dopo 60 s, partendo dalla rotta indicata.
+
+  partenza   nessuno   A 8 °/s   A 16 °/s   B 12 °/s   B 24 °/s
+     45°     45.0°     49.7°     49.7°      45.0°      45.0°
+     50°     50.0°     50.0°     50.0°      50.0°      50.0°
+     60°     60.0°     60.0°     60.0°      60.0°      60.0°
+     90°     90.0°     90.0°     90.0°      90.0°      90.0°
+    135°    135.0°    135.0°    135.0°     135.0°     135.0°
+
+=== C3.6 — FERMARSI NELL'ANGOLO MORTO (si può ancora?) ===
+  Si orza a fondo da 3,5 nodi fino a 10° dal vento, poi si molla la barra. Angolo dopo 15 s.
+  Qui la prua NON attraversa il vento: il fiocco non va a collo e il modello B deve dare zero.
+
+  fiocco     nessuno   A 8 °/s   B 12 °/s   B 24 °/s
+  cazzato      21.6°      48.4°      42.9°       42.5°
+  lascato      19.7°      19.7°      19.7°       19.7°
+  assente      42.9°      42.9°      42.9°       42.9°
+
+=== C3.7 — IL TERMINE TREMA? (prua che attraversa il vento avanti e indietro) ===
+  Barca lenta (1,5 nodi) con la prua nel vento e la barra mossa da una parte e dall'altra ogni 8 s:
+  la prua attraversa il vento più volte. Massimo del termine e cambi di verso in 40 s (modello B).
+
+  modello     attraversamenti   massimo   cambi di verso   rotta finale
+  B 12 °/s            4         7.93 °/s          4        11.5°
+  B 24 °/s            4        15.85 °/s          4        85.3°
+  A 8 °/s             2        11.38 °/s          1         1.7°
+
+=== C3.9 — VENTO DIVERSO: il termine cresce col quadrato del vento apparente ===
+  Virata di bolina a 45° partendo a 3,5 nodi, fiocco cazzato, con 6, 10 e 15 nodi di vento reale.
+
+  vento    nessuno    B 12 °/s   B 24 °/s   | lascato, B 12 °/s
+   6 nodi    5.35 s     5.13 s     4.92 s   |   5.54 s
+  10 nodi    4.35 s     3.79 s     3.32 s   |   4.75 s
+  15 nodi    FALLITA     FALLITA     5.64 s   |   FALLITA
+
+=== C3.10 — MOLTI TENTATIVI CON SEMI FISSI ===
+  200 virate per modello. Ogni tentativo scuote la partenza con numeri pseudocasuali di un
+  generatore con seme dichiarato (seme 20261004, stesso seme per tutti i modelli, quindi le
+  200 partenze sono LE STESSE): velocità 1,0-4,0 nodi, rotta 40-55°, randa 0-0,25,
+  fiocco 0-0,15 (cazzato) oppure 0,85-1 (lascato), ritardo 0-0,6 s prima di spingere la barra.
+
+  modello      cazzato: riuscite / media    lascato: riuscite / media
+  nessuno      179/200   5.04 s        136/200   5.81 s
+  A 8 °/s      154/200   5.14 s        140/200   5.79 s
+  B 8 °/s      184/200   4.66 s        137/200   5.78 s
+  B 12 °/s     188/200   4.54 s        138/200   5.77 s
+  B 24 °/s     192/200   4.05 s        138/200   5.67 s
+
+=== C3.11 — NON-REGRESSIONE PER COSTRUZIONE ===
+  barca SENZA scotta del fiocco, nessun modello contro B a 24 °/s: scarto massimo 0.0e+0 nodi su 12 casi
+  (il termine è moltiplicato per la presenza del fiocco: senza fiocco vale zero, come in tappa A)

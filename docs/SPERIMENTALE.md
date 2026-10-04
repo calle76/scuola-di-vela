@@ -29,14 +29,14 @@ Verificare un'idea prima di portarla in `index.html`: se la fisica di una cosa n
 | B | La randa che copre il fiocco alle andature larghe; messaggi del pannello anche per il fiocco | Fatta e approvata dopo il giudizio di chi gioca |
 | C1 | Coerenza fra vista e forza del fiocco coperto: ombra totale da 107° apparenti, cioè dove il pannello dice che il fiocco non si regola | Fatta, da approvare |
 | C2 | Momento di imbardata dovuto alle vele | **Non modellato: semplificazione dichiarata** |
-| C3 | Fiocco in virata (a collo) | Da fare |
+| C3 | Fiocco in virata (a collo) | **Non modellato: semplificazione dichiarata** |
 | C4 | Massa dello scafo a due: solo confronto | Da fare |
 
 La manovra a farfalla (fiocco dal lato opposto) non è nel prototipo.
 
 Sul C2: misurato fuori dal motore che il momento del **solo** fiocco farebbe una barca sempre poggiera, il contrario di quello che dicono le fonti, e ingiocabile (circa 3 °/s di scarto con la barra al centro). Il momento di imbardata riguarda tutta la barca e non si aggiunge a metà. Numeri in `misure_tappaC2.txt`, ragioni in `FISICA-E-TARATURE.md`.
 
-Sul C3: il termine che fa girare la prua col fiocco a collo **starà dentro il C3**, non nel C2, e dovrà funzionare **anche a barca ferma** — che è proprio il caso in cui serve, e in cui il termine proposto per il C2 valeva zero.
+Sul C3: deciso di **non** modellare il fiocco a collo. In un motore cinematico sarebbe una taratura (due costanti senza fonte e il verso scritto nel codice), il meccanismo sostituisce l'equipaggio e andrebbe rifatto con il prodiere della barca a due, e il guadagno misurato è modesto: da 75 a 78 virate riuscite su 84. In virata il fiocco conta solo per la resistenza della vela che sbatte. Il modello provato, i criteri e tutti i numeri restano in `PROPOSTA-C3.md`, `banco_tappaC3.js` e `banco_tappaC3.txt` come registro della decisione.
 
 ## Tasti del prototipo
 
