@@ -10,7 +10,8 @@ Verificare un'idea prima di portarla in `index.html`: se la fisica di una cosa n
 
 - **`index.html` non si tocca.** Il prototipo è una copia con le righe cambiate marcate `// FIOCCO`, così il passaggio al gioco è meccanico.
 - **Una sola fonte per la fisica.** `motore_fiocco.js` legge `step()` direttamente dal prototipo, senza una copia; lo stesso vale per la regola di lettura dei filetti, usata dal pannello e dal banco di prova.
-- **Misure e collaudi.** `misure_fiocco.js` produce le misure (`misure_tappa*.txt`); `collaudo_fiocco.py` guida il prototipo in un browser (`collaudo_tappa*.txt` e `output/`).
+- **Misure e collaudi.** `misure_fiocco.js` produce le misure (`misure_tappa*.txt`); `collaudo_fiocco.py` guida il prototipo in un browser (`collaudo_tappa*.txt` e `output/`). Ogni tappa riscrive gli stessi due script e salva un file di risultati nuovo: i file delle tappe precedenti restano come erano.
+- **Una soglia derivata va ricontrollata quando cambia ciò da cui deriva.** Nella tappa C `jibShadedAt` è passata da «metà della pressione perdibile» a «non esiste una posizione giusta», che è vera anche nell'angolo morto: la riga del rapporto che cercava la prima andatura con il fiocco coperto rispondeva 30° invece di 108°. Il modello era giusto, il rapporto no.
 - **Non-regressione.** Per una barca senza fiocco, la polare, le virate e le raffiche devono restare identiche a quelle del gioco (scarto zero sui 30 casi di `polare.js`; uscite di `polare.js` e `raffiche_e_virate.js` uguali carattere per carattere).
 - **Salvataggi separati.** Il prototipo usa chiavi proprie (`scuolaVelaSim.v1-fiocco` e `scuolaVelaGhost.v1-fiocco`), per non mescolarsi con quelle del gioco.
 - **Non è una versione.** Nessun numero di versione; nel `CHANGELOG.md` va sotto il titolo «Sperimentale».
@@ -26,7 +27,10 @@ Verificare un'idea prima di portarla in `index.html`: se la fisica di una cosa n
 | --- | --- | --- |
 | A | Il fiocco come seconda vela con scotta propria e filetti, senza interazione | Fatta e approvata |
 | B | La randa che copre il fiocco alle andature larghe; messaggi del pannello anche per il fiocco | Fatta e approvata dopo il giudizio di chi gioca |
-| C | Coerenza fra vista e forza del fiocco coperto; momento di imbardata dovuto alle vele; fiocco in virata; massa dello scafo a due | Da fare |
+| C1 | Coerenza fra vista e forza del fiocco coperto: ombra totale da 107° apparenti, cioè dove il pannello dice che il fiocco non si regola | Fatta, da approvare |
+| C2 | Momento di imbardata dovuto alle vele | Da fare |
+| C3 | Fiocco in virata (a collo) | Da fare |
+| C4 | Massa dello scafo a due: solo confronto | Da fare |
 
 La manovra a farfalla (fiocco dal lato opposto) non è nel prototipo.
 

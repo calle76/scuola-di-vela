@@ -3,7 +3,7 @@
 # Criterio 6: i filetti del fiocco rispondono alla sua scotta come quelli della randa.
 # Criterio 8: la barca si guida davvero — giro della prova 1 col pilota automatico e virata di bolina.
 # Uso: python collaudo_fiocco.py
-import asyncio, pathlib, sys
+import asyncio, pathlib, re, sys
 from playwright.async_api import async_playwright
 QUI = pathlib.Path(__file__).resolve().parent
 OUT = QUI / "output"; OUT.mkdir(exist_ok=True)
@@ -39,9 +39,10 @@ PILOTA = """
 }
 """
 
-async def giro(pg, idx, jib, nome):
+async def giro(pg, idx, jib, nome, twd=0):
     # piano vuoto: la boa si raggiunge soltanto, come fa il caso «prove 1-3» di tests/collaudo_giro_boa.py
-    await pg.evaluate(f"__sv.startMission({idx}, 0)")      # vento da nord: coordinate semplici
+    # FIOCCO tappa C: la direzione del vento è un parametro, per ripetere la stessa prova più volte
+    await pg.evaluate(f"__sv.startMission({idx}, {twd})")
     await pg.evaluate("__sv.fast(8)")
     await pg.evaluate(PILOTA, {"plan": [], "jib": jib})
     for _ in range(90):
@@ -49,7 +50,7 @@ async def giro(pg, idx, jib, nome):
         if await pg.evaluate("__sv.S.finished || window.__pilDone > 80"): break
     r = await pg.evaluate("[__sv.S.finished, Math.round(__sv.S.time), __sv.S.capsizes, __sv.S.tacks, __sv.S.gybesV]")
     await pg.evaluate("clearInterval(window.__pil); __sv.fast(1)")
-    print(f"  prova {idx+1} — {nome}: finita={r[0]} tempo={r[1]} s scuffie={r[2]} virate={r[3]} strambate a vela aperta={r[4]}")
+    print(f"  prova {idx+1} — vento da {twd:3d}° — {nome}: finita={r[0]} tempo={r[1]} s scuffie={r[2]} virate={r[3]} strambate a vela aperta={r[4]}")
     return r
 
 # Tutta la virata dentro una sola chiamata: fuori da qui girerebbe anche il ciclo del browser
@@ -160,15 +161,17 @@ async def main():
 
         # ---- criterio 8: guidare davvero ----
         print("\n=== 8. GUIDANDO DAVVERO LA BARCA ===")
-        print(" prove 1, 2 e 3 col pilota automatico (la 3 è tutta di bolina, con virate):")
+        print(" prove 1, 2 e 3 col pilota automatico, 3 direzioni di vento ciascuna (la 3 è tutta di bolina, con virate):")
         pg2 = await b.new_page(viewport={"width": 1280, "height": 800})
         pg2.on("pageerror", lambda e: errs.append(str(e)))
         await pg2.goto(GIOCO); await pg2.wait_for_timeout(400)
         fatte = []
+        # FIOCCO tappa C: tre ripetizioni per prova, con direzioni di vento diverse. Un solo tentativo non basta.
         for idx in (0, 1, 2):
-            fatte.append(("gioco", await giro(pg2, idx, None, "gioco, senza fiocco")))
-            fatte.append(("fisso", await giro(pg, idx, 0.2, "prototipo, fiocco fisso al 20%")))
-            fatte.append(("auto", await giro(pg, idx, "auto", "prototipo, fiocco regolato da solo")))
+            for twd in (0, 120, 240):
+                fatte.append(("gioco", await giro(pg2, idx, None, "gioco, senza fiocco", twd)))
+                fatte.append(("fisso", await giro(pg, idx, 0.2, "prototipo, fiocco fisso al 20%", twd)))
+                fatte.append(("auto", await giro(pg, idx, "auto", "prototipo, fiocco regolato da solo", twd)))
         print(" virata di bolina a circa 4 nodi:")
         v0 = await virata(pg2, None, "gioco, senza fiocco")
         v1 = await virata(pg, 0.05, "prototipo, fiocco cazzato")
@@ -227,6 +230,69 @@ async def main():
             A = await pg4.evaluate("Math.round(Math.abs(__sv.info.awa))")
             print(f"  {twa:3d}° reali ({A:3d}° apparenti): «{await pg4.inner_text('#hintJib')}»")
         await pg4.close()
+
+        # ---- FIOCCO tappa C: una pagina caricata come la carica un giocatore, senza #collaudo ----
+        # Qui non c'è __sv: si entra dal menu, si guida con i tasti e si legge solo quello che si vede.
+        # Non si mette a mano nessuna andatura né nessuna scotta: altrimenti si collauderebbe l'impostazione
+        # messa dal collaudo, non quella che trova un giocatore (avvertenza di COLLAUDI.md).
+        print("\n=== SENZA #collaudo, GUIDANDO COI TASTI (quello che trova un giocatore) ===")
+        pg5 = await b.new_page(viewport={"width": 1360, "height": 650})
+        pg5.on("pageerror", lambda e: errs.append(str(e)))
+        await pg5.goto((QUI / "fiocco.html").as_uri()); await pg5.wait_for_timeout(500)
+        print("  __sv esiste?", await pg5.evaluate("typeof window.__sv !== 'undefined'"), "(atteso False)")
+        # il pulsante, non il titolo: «text=Navigazione libera» prendeva l'intestazione del menu e il gioco
+        # non partiva; tutte le letture restavano «—» e la verifica passava senza misurare niente
+        await pg5.click("#goFree"); await pg5.wait_for_timeout(800)
+        assert not await pg5.is_visible("#menu"), "senza #collaudo: la navigazione libera non è partita"
+        await pg5.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#gustSel", "0"])
+        await pg5.wait_for_timeout(300)
+
+        async def apparente():
+            m = re.search(r"(\d+)", await pg5.inner_text("#iAw")); return int(m.group(1)) if m else -1
+        # quale freccia poggia non si dà per scontato: si prova e si guarda se il vento apparente si apre
+        a0 = await apparente()
+        await pg5.keyboard.down("ArrowLeft"); await pg5.wait_for_timeout(1500); await pg5.keyboard.up("ArrowLeft")
+        await pg5.wait_for_timeout(400)
+        poggia = "ArrowLeft" if await apparente() > a0 else "ArrowRight"
+        orza = "ArrowRight" if poggia == "ArrowLeft" else "ArrowLeft"
+
+        async def porta(verso, fino_a, giri=30):
+            for _ in range(giri):
+                for t in (verso, "a", "q"): await pg5.keyboard.down(t)   # girando si lascano le due scotte
+                await pg5.wait_for_timeout(500); await pg5.keyboard.up(verso)
+                await pg5.wait_for_timeout(250)
+                for t in ("a", "q"): await pg5.keyboard.up(t)
+                if (await pg5.inner_text("#iAnd")).strip() in fino_a: return True
+            return False
+
+        senza = []
+        for nome, verso, meta in [("poggiando fino alle andature larghe", poggia, ("Gran lasco", "Poppa")),
+                                  ("risalendo fino al traverso", orza, ("Traverso", "Bolina larga"))]:
+            arrivato = await porta(verso, meta)
+            for tasto, etichetta in [("e", "tutto cazzato"), ("q", "tutto lascato")]:
+                await pg5.keyboard.down(tasto); await pg5.wait_for_timeout(4500); await pg5.keyboard.up(tasto)
+                await pg5.wait_for_timeout(400)
+                riga = (await pg5.inner_text("#hintJib")).strip()
+                strum = (await pg5.inner_text("#vJib")).strip()
+                andatura = (await pg5.inner_text("#iAnd")).strip()
+                app = (await pg5.inner_text("#iAw")).strip()
+                print(f"  {nome} ({'arrivato' if arrivato else 'NON arrivato'}), fiocco {etichetta}: {andatura}, apparente {app}")
+                print(f"      strumento «{strum}» | pannello «{riga}»")
+                senza.append((andatura, riga, strum))
+        # la prova vale solo se ha davvero attraversato le due zone
+        zone = {"larghe": any(a in ("Gran lasco", "Poppa") for a, _, _ in senza),
+                "traverso": any(a in ("Traverso", "Bolina larga") for a, _, _ in senza)}
+        print("  zone raggiunte:", zone)
+        if not all(zone.values()): errs.append(f"senza #collaudo: zone non raggiunte {zone}: la prova non misura quello che deve")
+        contro = []
+        for andatura, riga, strum in senza:
+            # dove il pannello dice che non si regola, lo strumento deve dire che il fiocco sbatte
+            if "non si regola" in riga and "sbatte" not in strum: contro.append((andatura, riga, strum))
+            # e al traverso non deve mai dire che non si regola
+            if andatura in ("Traverso", "Bolina larga") and "non si regola" in riga: contro.append((andatura, riga, strum))
+        print("  coerenza fra pannello e strumento:", "nessuna contraddizione" if not contro else contro)
+        if contro: errs.append("senza #collaudo: pannello e strumento in contraddizione")
+        await pg5.close()
 
         print("\nerrori di pagina:", errs)
         await b.close()

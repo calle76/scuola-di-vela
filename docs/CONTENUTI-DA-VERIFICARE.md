@@ -110,15 +110,23 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 | Coefficienti di portanza e resistenza | gli stessi della randa (`CL`, `CD`) | Nessun numero nuovo finché non serve | |
 | Angolo morto del fiocco | lo stesso della randa (27°) | In tappa A le due vele non interagiscono, quindi tenerli uguali è la scelta onesta | |
 | Interazione fra le vele (fessura), tappa A | **assente** | Aggiunta nella tappa B | |
-| Angolo sotto cui la fessura è piena (tappa B) | **85°** di vento apparente | Con 40° l'ombra cominciava al traverso, dove le fonti non la mettono: le fonti parlano di fiocco coperto alle andature larghe e in poppa | |
-| Ampiezza della transizione (tappa B) | **50°**: il fiocco è coperto del tutto a 135° apparenti | Il fiocco finisce dietro la randa fra il gran lasco e la poppa | |
-| Pressione persa dal fiocco quando è coperto del tutto (tappa B) | 70% | Coperto dalla randa ma non azzerato: qualcosa prende ancora | |
-| Soglia a cui i filetti del fiocco sbattono per copertura | metà della pressione perdibile, cioè **111° apparenti** | Ricavata dalla costante sopra, non è un numero a sé. **La soglia vera resta da verificare.** | |
+| Angolo sotto cui la fessura è piena (tappa C) | **95°** di vento apparente (era 85° in tappa B, 40° nella prima prova) | Con 40° l'ombra cominciava al traverso, dove le fonti non la mettono. Con 95° si resta vicini all'unica fonte quantitativa: nel 470 il fiocco aggiunge spinta fino a circa 100° apparenti (F4) | |
+| Ampiezza della transizione (tappa C) | **12°**: il fiocco è coperto del tutto a 107° apparenti (era 50°, cioè 135°) | 107° **non è scelto**: è l'angolo oltre il quale non esiste più una posizione del fiocco con i filetti dritti. Così la forza si annulla esattamente dove il pannello dice che non si regola | |
+| Pressione persa dal fiocco quando è coperto del tutto (tappa C) | **100%** (era 70%) | Una vela che sbatte non tira. Con il 70% il fiocco dava ancora il 10-19% della spinta dove il pannello lo dava per sgonfio | |
+| Soglia a cui i filetti del fiocco sbattono per copertura | **108° apparenti**, cioè dove non esiste più una posizione giusta (`jibRange` nullo) | Dalla tappa C non è più un numero a sé: prima era metà della pressione perdibile, 111°. **Resta da verificare a quale andatura i filetti di un fiocco coperto cominciano davvero a sbattere.** | |
 | Limite della scotta del fiocco: 80° | — | **Da verificare.** È questo limite, più dell'ombra, a far sparire la posizione giusta del fiocco oltre i 107° apparenti | |
 | La copertura dipende **solo** dall'angolo del vento apparente | semplificazione dichiarata | Nella realtà conta anche la regolazione: una randa cazzata a ferro copre il fiocco meno di una tutta lascata, a parità di andatura | |
 | Il fiocco a farfalla, dal lato opposto alla randa | **non modellato** | È la manovra vera per far lavorare il fiocco in poppa, spesso con un'asta. Nel prototipo non c'è: il pannello lo dice a chi gioca. **Da modellare più avanti.** Da verificare: da quale andatura serve, e se sulle derive a due si usa l'asta. | |
 | Lunghezza della base nel disegno | 1,5 m (il boma 2,75 m) | Solo disegno, non entra nella fisica | |
 | Tasti | E cazza, Q lasca | Scelta di comandi, non un dato | |
+
+### Rischi dichiarati della taratura della tappa C
+
+| Punto | Perché è un rischio | Esito |
+| --- | --- | --- |
+| **Il limite della scotta del fiocco (80°) non ha fonte, e adesso ci è appoggiata anche l'aerodinamica.** L'ombra diventa totale a 107° apparenti perché è lì che `maxJib = 80°` fa sparire la posizione giusta. | Si sta tarando quanto il fiocco è coperto su un limite **geometrico non verificato**. Se 80° è sbagliato, è sbagliato anche il punto in cui il fiocco smette di spingere. L'alternativa — aprire di più la scotta perché una posizione giusta esista più in là — contraddirebbe le fonti, che dicono che senza farfalla il fiocco in poppa non lavora. | |
+| **L'unica fonte quantitativa misura con lo spinnaker.** F4 dà il fiocco utile fino a circa 100° apparenti e un ostacolo da circa 120°, ma su una barca che in poppa porta lo spinnaker, il quale copre il fiocco **prima** di quanto faccia la sola randa. | Senza spinnaker il fiocco potrebbe restare utile oltre i 120° apparenti: i nostri 107° potrebbero essere **presto**. Una fonte sola, e per una situazione diversa dalla nostra. | |
+| **Il fiocco coperto dà zero, mai meno di zero.** Il modello riduce l'area, quindi la spinta del fiocco si annulla ma non diventa negativa. | Le fonti lo chiamano «un ostacolo»: una vela che sbatte fa resistenza, e in poppa dovrebbe **togliere** qualcosa, non solo smettere di dare. Da chiedere a una persona esperta: quanto costa davvero un fiocco che sbatte. | |
 
 ### Affermazioni nautiche del prototipo, da verificare
 
@@ -126,8 +134,8 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 | --- | --- | --- |
 | Il fiocco si legge con gli stessi filetti della randa: sopravento agitato = cazza, sottovento agitato = lasca | Sul fiocco i filetti vicino all'inferitura sono la posizione classica; la regola di lettura dovrebbe essere la stessa | |
 | Un fiocco molto coperto dalla randa non è «in stallo»: è sgonfio, e i suoi filetti sbattono | Nel prototipo (tappa B) sopra metà copertura i filetti del fiocco dicono «sbatte» invece di «filetto sottovento agitato». Va verificato che sia la lettura giusta e da che andatura comincia. | |
-| Un fiocco che i filetti mostrano sgonfio continua però a dare il 10–19% della spinta | È un'**incoerenza fra quello che si vede e la forza**: l'ombra toglie al massimo il 70% della pressione, non tutta. Da giudicare con una persona esperta: quanto spinge davvero un fiocco coperto in poppa. | |
-| Entrando in virata il fiocco va tenuto cazzato: tutto lascato la virata riesce peggio | Nel prototipo il fiocco non va mai a collo (è la tappa C); l'effetto misurato viene solo dalla resistenza della vela che sbatte | |
+| ~~Un fiocco che i filetti mostrano sgonfio continua però a dare il 10–19% della spinta~~ | **Tolta nella tappa C:** dove il pannello dice che il fiocco non si regola, ora la sua quota di spinta è 0,0% a ogni angolo da 108° a 180° apparenti. Resta da giudicare con una persona esperta **se zero sia giusto**: vedi le tre righe nuove qui sotto. | |
+| Entrando in virata il fiocco va tenuto cazzato: tutto lascato la virata riesce peggio | Nel prototipo il fiocco non va mai a collo (è il terzo compito della tappa C); l'effetto misurato viene solo dalla resistenza della vela che sbatte | |
 | Con randa e fiocco la barca è sovrainvelata per un solo timoniere: una raffica da 10 a 20 nodi senza reagire fa scuffiare | Atteso, essendo la stessa barca del gioco con il 37% di vela in più; va rivisto quando si passerà a una barca a due | |
 
 ### Messaggi del pannello sul fiocco (prototipo)
@@ -135,7 +143,7 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 | Quando | Testo | Esito |
 | --- | --- | --- |
 | Esiste una posizione con i filetti dritti, larga almeno 10° | «Fiocco regolato.» / «Fiocco: filetto sopravento agitato, cazza.» / «Fiocco: filetto sottovento agitato, lasca.» | |
-| Esiste ma stretta (meno di 10°, cioè da 98° apparenti in su) | «Fiocco: regolazione stretta, fra X° e Y°.» | |
+| Esiste ma stretta (meno di 10°, cioè da 98° apparenti in su) | «Fiocco: regolazione stretta, fra X° e Y°.» | **Da rivedere:** dalla tappa C, fra 100° e 107° apparenti il pannello indica ancora una posizione su un fiocco che dà fra il 20% e lo 0% della spinta. Il consiglio non è falso, ma vale sempre meno. |
 | Non esiste (oltre 107° apparenti): la randa copre, o la scotta è già al massimo | «Fiocco: qui non si regola (coperto dalla randa o scotta al massimo). Nella realtà si porta dal lato opposto: non ancora nel gioco.» | |
 | Angolo morto | «Fiocco: sei nell'angolo morto, sbatte anche lui.» | |
 
@@ -180,5 +188,7 @@ I nomi delle classi di deriva compaiono **solo qui**, mai nel gioco (vedi `PROGE
 - `sailingworld.com/how-to/downwind-under-jib-and-main/`
 - `speedandsmarts.com/toolbox/articles2/smallboat-sailing/sailing-downwind`
 - `morganscloud.com/2015/05/24/downwind-sailing-poling-out/`
+
+**Il fiocco è un ostacolo alle andature molto larghe** (la scotta cade lasca): su una deriva a due olimpica, misurata in galleria del vento e in mare, il fiocco aggiunge spinta fino a circa 100° di vento apparente e da circa 120° è un ostacolo — ma con lo spinnaker issato (F4 in `FONTI-PUBBLICHE.md`).
 
 **Restano senza fonte:** il limite della scotta del fiocco a 80°; da quale andatura serve davvero il fiocco a farfalla e se sulle derive a due si usa l'asta; la soglia vera a cui la randa comincia a coprire il fiocco.

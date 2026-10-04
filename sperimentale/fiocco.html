@@ -384,10 +384,15 @@ const BOAT = {
   // FIOCCO tappa B: la randa copre il fiocco alle andature larghe. SEMPLIFICAZIONE DICHIARATA: quanto lo copre
   // dipende SOLO dall'angolo del vento apparente, non da come sono regolate le due vele. Nella realtà conta anche
   // la regolazione: una randa cazzata a ferro copre meno di una tutta lascata, a parità di andatura.
-  slotA0: 85,         // FIOCCO gradi di vento apparente: sotto questo, fessura piena e fiocco scoperto.
-                      // 85 e non 40: con 40 l'ombra cominciava al traverso, dove le fonti non la mettono
-  slotW: 50,          // FIOCCO ampiezza della transizione: a slotA0 + slotW (135°) il fiocco è coperto del tutto
-  slotShade: 0.70     // FIOCCO quota di pressione che il fiocco perde quando è coperto del tutto
+  slotA0: 95,         // FIOCCO tappa C: gradi di vento apparente sotto cui la fessura è piena e il fiocco è scoperto.
+                      // 95 e non 85: l'unica fonte quantitativa (F4) dà il fiocco ancora utile fino a circa 100°
+                      // apparenti. 85 e non 40 era la taratura della tappa B: con 40 l'ombra cominciava al traverso.
+  slotW: 12,          // FIOCCO tappa C: a slotA0 + slotW (107°) il fiocco è coperto del tutto. 107° non è scelto:
+                      // è l'angolo oltre il quale jibRange() non trova più una posizione con i filetti dritti
+                      // (maxJib 80° più la finestra 8°-27°). Prima era 50, cioè ombra totale solo a 135°, e fra
+                      // 107° e 135° il pannello diceva «qui non si regola» mentre il fiocco dava ancora il 10-19%.
+  slotShade: 1.00     // FIOCCO tappa C: coperto del tutto, il fiocco non prende niente (era 0,70). Una vela che
+                      // sbatte non tira. Semplificazione: non può andare sotto zero, cioè non fa mai resistenza.
 };
 
 function CL(a){ // a: angolo di incidenza (gradi, >=0)
@@ -408,7 +413,11 @@ function ttOf(A, alpha){
 }
 // quanto le due vele collaborano: 1 di bolina, 0 alle andature molto larghe, dove la randa copre il fiocco
 function fessuraDi(A){ return Math.max(0, Math.min(1, (BOAT.slotA0 + BOAT.slotW - A) / BOAT.slotW)); }
-function jibShadedAt(A){ return BOAT.slotShade * (1 - fessuraDi(A)) > BOAT.slotShade / 2; }
+// FIOCCO tappa C: i filetti del fiocco sbattono per copertura esattamente dove non esiste più una posizione
+// giusta, cioè dove il pannello dice «qui non si regola». Prima aveva una soglia propria (metà della pressione
+// perdibile: 110° con la rampa della tappa B) che con la rampa stretta sarebbe scesa a 101°, facendo dire
+// «sbatte» dove il pannello dice «Fiocco regolato». Legandola a jibRange non possono più contraddirsi.
+function jibShadedAt(A){ return jibRange(A) === null; }
 // Esiste una posizione del fiocco con i filetti dritti? Se sì, fra quali angoli di bugna.
 // Filetti dritti = incidenza fra 8° e 27°, cioè angolo fra A-27 e A-8; la bugna sta fra minJib e maxJib.
 // Restituisce null sia quando la randa copre il fiocco sia quando la scotta è già al massimo: per chi gioca

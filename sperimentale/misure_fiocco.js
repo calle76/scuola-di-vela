@@ -153,7 +153,9 @@ const med = v => v.reduce((a, b) => a + b, 0) / v.length;
 console.log("  bolina 45-60°: " + bolina.map((g, i) => `${[45,50,55,60][i]}° ${g.toFixed(1)}%`).join("  ") + `  → media ${med(bolina).toFixed(1)}%`);
 console.log("  larghe 110-150°: " + larghe.map((g, i) => `${[110,120,135,150][i]}° ${g.toFixed(1)}%`).join("  ") + `  → media ${med(larghe).toFixed(1)}%`);
 console.log(`  confronto (deve essere bolina >= larghe): ${med(bolina) >= med(larghe) ? "RISPETTATO" : "NON rispettato"}`);
-console.log(`  fascia attesa (ipotesi nostra): bolina +8…+18%, larghe +2…+8%`);
+// FIOCCO tappa C: la fascia delle larghe scende, perché il fiocco coperto non dà più niente. È indicativa:
+// quello che si richiede è il confronto, non la fascia.
+console.log(`  fascia attesa (ipotesi nostra): bolina +8…+18%, larghe +0…+6% (indicativa, dalla tappa C; in tappa B era +2…+8%)`);
 
 console.log("\n=== B3. VELOCITÀ UTILE CONTROVENTO ===");
 const vmcList = [40, 42, 44, 45, 46, 48, 50, 52, 54, 56].map(a => {
@@ -237,6 +239,114 @@ for (let A = 30; A <= 180; A += 10){
 }
 const ultimo = [...Array(160).keys()].map(i => i + 30).filter(a => P.jibRange(a)).pop();
 const stretta = [...Array(160).keys()].map(i => i + 30).find(a => { const r = P.jibRange(a); return r && r[1] - r[0] < 10; });
-const coperto = [...Array(160).keys()].map(i => i + 30).find(a => P.jibShadedAt(a));
+// FIOCCO tappa C: jibShadedAt è ora «non esiste una posizione giusta», vera anche nell'angolo morto:
+// la ricerca parte sopra l'angolo morto, se no risponderebbe sempre 30°.
+const coperto = [...Array(160).keys()].map(i => i + 30).filter(a => a >= P.BOAT.luffA0 + P.BOAT.luffW * 0.5).find(a => P.jibShadedAt(a));
 console.log(`  ultimo angolo con una posizione giusta: ${ultimo}° apparenti; da ${stretta}° la regolazione è stretta`);
 console.log(`  i filetti del fiocco cominciano a sbattere per copertura a ${coperto}° apparenti`);
+
+// ======================================================================
+// TAPPA C, primo compito — coerenza fra vista e forza del fiocco coperto   // FIOCCO
+// ======================================================================
+console.log("\n=== C1.1 QUOTA DI SPINTA DOVE IL PANNELLO DICE «QUI NON SI REGOLA» ===");
+console.log("  (soglia dichiarata prima: ≤ 3%. La quota non dipende da vento né sbandamento: sono");
+console.log("   fattori comuni alle due vele. Si prende la regolazione del fiocco più favorevole.)");
+{
+  const quotaA = (A, jb) => {
+    const sh = P.BOAT.slotShade * (1 - P.fessuraDi(A));
+    const M = P.sailF(P.BOAT.sailArea, Math.min(P.BOAT.maxBoom, Math.max(P.BOAT.minBoom, A - 17)), A, 5, 1, 1);
+    const J = P.sailF(P.BOAT.jibArea * (1 - sh), P.BOAT.minJib + jb * (P.BOAT.maxJib - P.BOAT.minJib), A, 5, 1, 1);
+    return 100 * J.drive / (M.drive + J.drive);
+  };
+  let peggio = -9, dovePeg = 0, fuori = [];
+  for (let A = 108; A <= 180; A++){
+    let q = -9;
+    for (let jb = 0; jb <= 1.0001; jb += 0.05) q = Math.max(q, quotaA(A, jb));
+    if (q > peggio){ peggio = q; dovePeg = A; }
+    if (q > 3) fuori.push(A + "°=" + q.toFixed(1) + "%");
+  }
+  console.log(`  da 108° a 180° apparenti, a passi di 1°: quota massima ${peggio.toFixed(2)}% (a ${dovePeg}°)`);
+  console.log(`  angoli sopra la soglia del 3%: ${fuori.length ? fuori.join(" ") : "nessuno"}`);
+  console.log("  tabella (regolazione automatica, bugna a A−17):");
+  const riga = as => "   " + as.map(A => `${A}°=${quotaA(A, Math.max(0, Math.min(1, (A - 17 - P.BOAT.minJib) / (P.BOAT.maxJib - P.BOAT.minJib)))).toFixed(1)}%`).join("  ");
+  console.log(riga([70, 85, 90, 95, 100, 103, 105]));
+  console.log(riga([107, 108, 110, 115, 120, 135, 150, 180]));
+}
+
+console.log("\n=== C1.2 NIENTE OMBRA AL TRAVERSO ===");
+{
+  const om = A => P.BOAT.slotShade * (1 - P.fessuraDi(A)) * 100;
+  let primo = null;
+  for (let A = 30; A <= 180; A += 0.5) if (om(A) > 0){ primo = A; break; }
+  console.log(`  ombra a 70° apparenti: ${om(70).toFixed(0)}% — a 85°: ${om(85).toFixed(0)}% — a 90°: ${om(90).toFixed(0)}%`);
+  console.log(`  primo angolo con un po' d'ombra: ${primo}° apparenti (soglia: nessuna ombra fino a 85°)`);
+}
+
+console.log("\n=== C1.7 NIENTE BISTABILITÀ (la rampa è più ripida: due partenze diverse) ===");
+{
+  // stessa ricerca della regolazione migliore, ma partendo da ferma e da lanciata
+  const eq = (twa, u0) => {
+    let best = -9;
+    for (let sh = 0; sh <= 1.0001; sh += 0.05) for (let jb = 0; jb <= 1.0001; jb += 0.05){
+      const S = { x: 0, y: 0, h: 0, u: u0, vl: 0, r: 0 };
+      for (let t = 0; t < 90; t += 0.05){ S.h = 0; P.step(S, { sheet: sh, tiller: 0, jib: jb }, { twd: twa, tws: 10 / KN }, 0.05); }
+      if (Math.abs(S.heel) <= 60) best = Math.max(best, S.u * KN);
+    }
+    return best;
+  };
+  let peggio = 0;
+  for (const twa of [115, 120, 125, 130, 135, 140]){
+    const a = eq(twa, 0.2), b = eq(twa, 4.0), d = Math.abs(a - b);
+    peggio = Math.max(peggio, d);
+    console.log(`  ${twa}° reali: da ferma ${a.toFixed(3)} nodi | lanciata ${b.toFixed(3)} nodi | differenza ${d.toFixed(3)}`);
+  }
+  console.log(`  differenza massima ${peggio.toFixed(3)} nodi (soglia 0,02)`);
+}
+
+console.log("\n=== C1.EXTRA A QUALE VENTO REALE CORRISPONDONO 95° E 107° APPARENTI (10 nodi) ===");
+{
+  const app = twa => {
+    const t = vel(P, twa, 10, "best"); const S = { x: 0, y: 0, h: 0, u: 1, vl: 0, r: 0 }; let inf;
+    for (let k = 0; k < 1800; k++){ S.h = 0; inf = P.step(S, { sheet: t.trim.sheet, tiller: 0, jib: t.trim.jib }, { twd: twa, tws: 10 / KN }, 0.05); }
+    return { A: Math.abs(inf.awa), kn: S.u * KN };
+  };
+  const tab = [];
+  for (let twa = 100; twa <= 160; twa += 2) tab.push({ twa, ...app(twa) });
+  const trova = obiettivo => {
+    for (let i = 1; i < tab.length; i++) if (tab[i].A >= obiettivo && tab[i - 1].A < obiettivo){
+      const f = (obiettivo - tab[i - 1].A) / (tab[i].A - tab[i - 1].A);
+      return (tab[i - 1].twa + f * (tab[i].twa - tab[i - 1].twa));
+    }
+    return null;
+  };
+  console.log("  " + tab.filter(x => x.twa % 10 === 0).map(x => `${x.twa}°→${x.A.toFixed(0)}app`).join("  "));
+  const a95 = trova(95), a107 = trova(107);
+  console.log(`  95° apparenti ≈ ${a95 === null ? "fuori tabella" : a95.toFixed(0) + "° reali"} (qui comincia l'ombra)`);
+  console.log(`  107° apparenti ≈ ${a107 === null ? "fuori tabella" : a107.toFixed(0) + "° reali"} (qui l'ombra è totale e il pannello smette di dare una posizione)`);
+}
+
+console.log("\n=== C1.EXTRA LA RAMPA FA UNO SCALINO? (10 nodi, grado per grado) ===");
+{
+  const v = [];
+  for (let twa = 113; twa <= 142; twa++) v.push({ twa, kn: vel(P, twa, 10, "best", 0.02).kn });
+  console.log("  " + v.filter(x => x.twa >= 115 && x.twa <= 140 && x.twa % 5 === 0).map(x => `${x.twa}°=${x.kn.toFixed(3)}`).join("  "));
+  let peg = 0, dove = 0; const der = [];
+  for (let i = 1; i < v.length; i++){
+    const d = v[i].kn - v[i - 1].kn;
+    if (v[i].twa >= 115 && v[i].twa <= 140){ der.push(d); if (Math.abs(d) > Math.abs(peg)){ peg = d; dove = v[i].twa; } }
+  }
+  const media = der.reduce((a, b) => a + b, 0) / der.length;
+  console.log(`  variazione per grado fra 115° e 140°: media ${media.toFixed(4)} nodi/°, massima ${peg.toFixed(4)} nodi/° (a ${dove}°)`);
+  console.log(`  rapporto fra la variazione massima e la media: ${(peg / media).toFixed(2)} (uno scalino darebbe un rapporto alto)`);
+  console.log("  grado per grado: " + v.filter(x => x.twa >= 115 && x.twa <= 140).map(x => x.kn.toFixed(3)).join(" "));
+  // confronto con la taratura della tappa B, per vedere quanto si è irrigidita la curva
+  const a0 = P.BOAT.slotA0, w0 = P.BOAT.slotW, s0 = P.BOAT.slotShade;
+  P.BOAT.slotA0 = 85; P.BOAT.slotW = 50; P.BOAT.slotShade = 0.70;
+  const vB = [];
+  for (let twa = 113; twa <= 142; twa++) vB.push({ twa, kn: vel(P, twa, 10, "best", 0.02).kn });
+  P.BOAT.slotA0 = a0; P.BOAT.slotW = w0; P.BOAT.slotShade = s0;
+  let pegB = 0; const derB = [];
+  for (let i = 1; i < vB.length; i++){ const d = vB[i].kn - vB[i - 1].kn; if (vB[i].twa >= 115 && vB[i].twa <= 140){ derB.push(d); if (Math.abs(d) > Math.abs(pegB)) pegB = d; } }
+  const mediaB = derB.reduce((a, b) => a + b, 0) / derB.length;
+  console.log(`  per confronto, con la taratura della tappa B (85/50/0,70): media ${mediaB.toFixed(4)} nodi/°, massima ${pegB.toFixed(4)} nodi/°, rapporto ${(pegB / mediaB).toFixed(2)}`);
+}

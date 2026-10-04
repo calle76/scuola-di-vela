@@ -56,6 +56,8 @@ Le regate usano il tempo accelerato, e ogni collaudo dura da pochi secondi a qua
 
 **Caratteri.** Le misure del pannello dipendono dai caratteri. Se Barlow Semi Condensed e Source Serif 4 non sono installati, il browser senza finestra usa caratteri di riserva più larghi e le misure risultano peggiori del vero.
 
+**Un collaudo che non parte passa sempre.** Nel prototipo del fiocco la verifica «senza `#collaudo`» cliccava `text=Navigazione libera`, che nel menu prende l'**intestazione** e non il pulsante: il gioco non partiva, tutte le letture del pannello erano «—», nessuna conteneva la frase cercata e il controllo di coerenza risultava soddisfatto. Un controllo scritto come «nessun caso sbagliato» è vero anche quando i casi sono zero. Ogni prova di questo tipo deve dichiarare **quanti casi ha davvero misurato** e fallire se sono zero.
+
 ## Limiti dei collaudi
 
 - I collaudi guidano la barca con comandi prestabiliti: verificano che le cose **funzionino**, non che siano **chiare o divertenti**. Per quello servono persone che giocano.

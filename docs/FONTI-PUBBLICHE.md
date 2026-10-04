@@ -40,9 +40,9 @@ I forum citano anche, come lettura pratica sulla regolazione delle vele, *Sail P
 | Fiocco e randa come un sistema | Lascando la randa va ritoccata anche la scotta del fiocco; con vento forte la randa «rifiuta» se il fiocco è troppo chiuso vicino all'inferitura (F1). Nel modello la regolazione del fiocco non influisce sulla randa. | Supportata da fonte; non modellata |
 | Regolazioni del fiocco | Quattro leve: altezza della mura, arretramento della penna, tensione della scotta, tensione della controscotta (F2). Con vento forte la scotta del fiocco va tenuta più lenta per aprire la balumina e non chiudere il canale con la randa (F2). La tabella indicativa del manuale dà la scotta del fiocco lenta con poco vento, cazzata con vento medio e forte, appena lascata con vento fortissimo. | Supportata da fonte (indicativa) |
 | Fiocco coperto dalla randa | Alle andature larghe e in poppa il fiocco è coperto dalla randa. Senza spinnaker né gennaker si porta a farfalla su un tangone; con spinnaker o gennaker in poppa non influisce e si fissa (F1, F7). | Supportata da fonte. La farfalla non è nel prototipo. |
-| Soglia dell'ombra | Nel 470, con lo spinnaker, il fiocco dà più spinta che senza fino a circa 100° di vento apparente, mentre da circa 120° in poi è un ostacolo e la scotta cade lasca (F4). Il prototipo usa un'ombra che parte a 85° e diventa totale a 135° apparenti. | Una sola fonte, con spinnaker. Ipotesi nell'ordine giusto. |
+| Soglia dell'ombra | Nel 470, con lo spinnaker, il fiocco dà più spinta che senza fino a circa 100° di vento apparente, mentre da circa 120° in poi è un ostacolo e la scotta cade lasca (F4). Dalla tappa C il prototipo usa un'ombra che parte a **95°** e diventa totale a **107°** apparenti (prima: 85° e 135°, con una perdita massima del 70% invece che del 100%). | Una sola fonte, **e con lo spinnaker**, che copre il fiocco prima di quanto faccia la sola randa: i 107° potrebbero essere presto. Il 107° non è scelto per ragioni aerodinamiche, ma perché è lì che sparisce la posizione giusta del fiocco (vedi la riga sotto). |
 | Boleggio | Il manuale (F2) dice che quella barca boleggia poco, per le linee d'acqua tondeggianti, e che stringere troppo il vento è quasi sempre dannoso: meglio sfruttare la velocità. L'ottimo di bolina del prototipo a 50° (invece dei 48° che ci aspettavamo) è quindi plausibile. | Supportata da fonte |
-| Limite della scotta del fiocco | Nessuna fonte per i 80° del prototipo. | **Da verificare** |
+| Limite della scotta del fiocco | Nessuna fonte per i 80° del prototipo. | **Da verificare**, e ora conta di più: dalla tappa C è questo limite a fissare l'angolo (107° apparenti) in cui il fiocco smette del tutto di spingere. Si sta tarando l'aerodinamica su una geometria non verificata. |
 
 ### Equilibrio, timone, sbandamento (per la tappa C)
 
@@ -86,7 +86,7 @@ I forum citano anche, come lettura pratica sulla regolazione delle vele, *Sail P
 
 ## Calibrazioni future (elencate, non fatte)
 
-1. Coerenza fra vista e forza del fiocco coperto: portare `slotShade` verso 1,0 e rimisurare (tappa C, primo compito).
+1. ~~Coerenza fra vista e forza del fiocco coperto: portare `slotShade` verso 1,0 e rimisurare (tappa C, primo compito).~~ **Fatta** (tappa C, primo compito): `slotShade` 1,00, ombra da 95° a 107° apparenti. `slotShade` da solo non bastava: fra 107° e 135° il pannello diceva «non si regola» e il fiocco dava ancora il 16-10%. Restano da verificare i tre punti nuovi in `CONTENUTI-DA-VERIFICARE.md`.
 2. Momento di imbardata dovuto alle vele, spegnibile: la barca senza fiocco deve restare identica.
 3. Fiocco in virata (controvento, a collo).
 4. Timone: stallo oltre circa 15° contro il massimo del motore (30°).
