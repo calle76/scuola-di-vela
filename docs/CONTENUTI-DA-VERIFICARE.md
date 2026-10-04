@@ -138,6 +138,15 @@ Sono le due affermazioni su cui si regge la decisione di **non** modellare il mo
 | Con randa e fiocco regolati, deriva giù e barca piatta, **la barra sta circa al centro**: la barca non tira né verso il vento né via dal vento. | Viene da una sola fonte e da una sola barca (una deriva a due olimpica, misurata in galleria del vento e in mare). Non sappiamo se valga anche per una deriva da scuola, più tozza e con una deriva diversa. È l'affermazione che giustifica il motore attuale, che gira solo col timone. | |
 | **Una deriva che sbanda tende a orzare**, e tanto più quanto più sbanda, anche senza toccare le vele. | Stessa fonte, stessa barca. Da confermare che valga in generale, e con che forza: quanti gradi di barra servono per tenere la rotta con 20-25° di sbandamento. | |
 
+### Da far giudicare a una persona esperta (tappa C, quarto compito)
+
+Sono i due numeri su cui si regge la decisione di **non** dare al prototipo la massa e la coppia raddrizzante di una barca a due (4 ottobre 2026). Vengono tutti e due da una sola fonte e da una sola barca. Se uno dei due è sbagliato, la decisione va rivista.
+
+| Affermazione | Perché c'è un dubbio | Esito |
+| --- | --- | --- |
+| **La coppia raddrizzante massima di una deriva a due senza trapezio è di circa 60 kgf·m**, a circa 25° di sbandamento (con il trapezio circa 220). | Una fonte, una barca (deriva a due olimpica). Se 60 è giusto, il nostro timoniere singolo sporto a 1 m ne fa già **83,7**, cioè la barca a due sarebbe **meno** stabile di quella del prototipo: è la ragione principale per cui non abbiamo cambiato massa e coppia. Da chiedere: due persone sedute in banda su una deriva da scuola quanto raddrizzano davvero, e a che sbandamento sono al massimo. | |
+| **Il timone va in stallo oltre circa 15°**: più in là non aiuta a girare e dà solo resistenza. | Una fonte, una barca. Nel motore la pala non stalla mai e la barra a fondo (30°) fa girare 1,93 volte più in fretta che a 15°: è sempre la scelta migliore. Da chiedere: su una deriva da scuola, oltre quanti gradi la barra smette di far girare e comincia solo a frenare, e quanto se ne accorge chi guida. | |
+
 ### Affermazioni nautiche del prototipo, da verificare
 
 | Affermazione | Perché c'è un dubbio | Esito |

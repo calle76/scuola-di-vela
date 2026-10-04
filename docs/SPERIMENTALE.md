@@ -23,20 +23,24 @@ Verificare un'idea prima di portarla in `index.html`: se la fisica di una cosa n
 
 ## Tappe del prototipo del fiocco
 
+**Tutte chiuse al 4 ottobre 2026.** Il prototipo non cambia più: lo stato finale, cosa fa e cosa non fa, è riassunto in fondo a `FISICA-E-TARATURE.md`.
+
 | Tappa | Contenuto | Stato |
 | --- | --- | --- |
-| A | Il fiocco come seconda vela con scotta propria e filetti, senza interazione | Fatta e approvata |
-| B | La randa che copre il fiocco alle andature larghe; messaggi del pannello anche per il fiocco | Fatta e approvata dopo il giudizio di chi gioca |
-| C1 | Coerenza fra vista e forza del fiocco coperto: ombra totale da 107° apparenti, cioè dove il pannello dice che il fiocco non si regola | Fatta, da approvare |
-| C2 | Momento di imbardata dovuto alle vele | **Non modellato: semplificazione dichiarata** |
-| C3 | Fiocco in virata (a collo) | **Non modellato: semplificazione dichiarata** |
-| C4 | Massa dello scafo a due: solo confronto | Da fare |
+| A | Il fiocco come seconda vela con scotta propria e filetti, senza interazione | Chiusa e approvata |
+| B | La randa che copre il fiocco alle andature larghe; messaggi del pannello anche per il fiocco | Chiusa e approvata dopo il giudizio di chi gioca |
+| C1 | Coerenza fra vista e forza del fiocco coperto: ombra totale da 107° apparenti, cioè dove il pannello dice che il fiocco non si regola | Chiusa; il giudizio di chi gioca non è ancora arrivato |
+| C2 | Momento di imbardata dovuto alle vele | Chiusa: **non modellato, semplificazione dichiarata** |
+| C3 | Fiocco in virata (a collo) | Chiusa: **non modellato, semplificazione dichiarata** |
+| C4 | Massa e coppia raddrizzante di una barca a due: solo confronto | **Non cambiata: sovrainvelamento dichiarato** |
 
 La manovra a farfalla (fiocco dal lato opposto) non è nel prototipo.
 
 Sul C2: misurato fuori dal motore che il momento del **solo** fiocco farebbe una barca sempre poggiera, il contrario di quello che dicono le fonti, e ingiocabile (circa 3 °/s di scarto con la barra al centro). Il momento di imbardata riguarda tutta la barca e non si aggiunge a metà. Numeri in `misure_tappaC2.txt`, ragioni in `FISICA-E-TARATURE.md`.
 
 Sul C3: deciso di **non** modellare il fiocco a collo. In un motore cinematico sarebbe una taratura (due costanti senza fonte e il verso scritto nel codice), il meccanismo sostituisce l'equipaggio e andrebbe rifatto con il prodiere della barca a due, e il guadagno misurato è modesto: da 75 a 78 virate riuscite su 84. In virata il fiocco conta solo per la resistenza della vela che sbatte. Il modello provato, i criteri e tutti i numeri restano in `PROPOSTA-C3.md`, `banco_tappaC3.js` e `banco_tappaC3.txt` come registro della decisione.
+
+Sul C4: deciso di **non** dare al prototipo la massa e la coppia raddrizzante di una barca a due, e di **dichiarare il sovrainvelamento**. Il banco di confronto non è stato eseguito perché i numeri che già abbiamo bastavano a decidere: (1) la coppia raddrizzante del prototipo vale 83,7 kgf·m al massimo contro i circa 60 che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe meno stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è col trapezio (circa 220 kgf·m), che per il livello 2 sarebbe una seconda novità principale; (2) nel motore la massa non entra nella resistenza dello scafo, quindi una barca più pesante andrebbe più veloce, e per ritarare la resistenza non c'è fonte; (3) il peso dell'equipaggio dovrebbe diventare un'azione del prodiere, non l'automatismo di oggi. Proposta, criteri e conti restano in `PROPOSTA-C4.md`; la decisione e la nota sul timone in `FISICA-E-TARATURE.md`.
 
 ## Tasti del prototipo
 

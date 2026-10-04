@@ -70,6 +70,8 @@ Il primo contatto con il fiocco è da timoniere, con il fiocco regolato dal comp
 
 Attenzione al contenuto: la fessura tra le vele si spiega con il flusso ascendente e discendente tra le due vele (upwash e downwash), **non** con l'accelerazione dell'aria come in un tubo di Venturi, che le fonti indicano come spiegazione sbagliata. Alle andature larghe il fiocco è coperto dalla randa e non si regola con la sola scotta: nella realtà si porta dal lato opposto, a farfalla. Il prototipo ancora non lo fa. Nella lezione 2.3 il **fiocco a collo si insegna come errore di coordinamento** nel registro degli errori (la scotta nuova va cazzata entro un certo tempo dal passaggio del vento), **non come effetto fisico sulla virata**: nel prototipo il fiocco a collo non è modellato (tappa C, terzo compito).
 
+**Il peso dell'equipaggio come azione del prodiere (lezione 2.5).** Oggi, nel gioco e nel prototipo, il peso lo sposta un automatismo: il timoniere si sporge da solo con circa 0,9 s di ritardo, e per questo le raffiche improvvise fanno sbandare. Perché la lezione 2.5 abbia senso, spostare il peso deve diventare un **comando del prodiere**, con il suo tempo e il suo errore. È una modifica al motore e al pannello, non una taratura di costanti, e non è stata fatta nel prototipo del fiocco (tappa C, quarto compito).
+
 ### Livello 3: gennaker **[proposta]**
 
 | Lezione | Ruolo | Novità | Come si completa |
@@ -240,7 +242,8 @@ Con il gioco a due vele cambieranno anche i comandi: nel prototipo la barra usa 
 
 ## 12. Rischi
 
-- **Fisica delle vele.** Il motore non ha un momento di imbardata dovuto alle vele; è la tappa C del prototipo. Se non regge, si ripiega su una semplificazione dichiarata.
+- **Fisica delle vele.** Il motore non ha un momento di imbardata dovuto alle vele: la tappa C del prototipo si è chiusa il 4 ottobre 2026 **ripiegando su semplificazioni dichiarate** (niente momento di imbardata, niente fiocco a collo, niente farfalla).
+- **Vento del livello 2.** Il livello 2 va giocato con vento **da leggero a medio**: il prototipo è sovrainvelato oltre i **12-15 nodi circa** (una raffica da 20 nodi fa scuffiare, a 15 nodi la virata non riesce), perché ha lo scafo e il timoniere del gioco a una vela con il 37% di vela in più. **Il limite esatto va deciso insieme alle lezioni.** Dare al prototipo la massa e la coppia raddrizzante di una barca a due è stato valutato e scartato (tappa C, quarto compito, in `FISICA-E-TARATURE.md`): senza trapezio la barca a due sarebbe meno stabile di questa, e col trapezio sarebbe una seconda novità principale per il livello 2.
 - **Livello 3.** Gennaker e planata richiedono modelli nuovi; è il livello più difficile da fare bene.
 - **Avversari.** La 0.17 ha ridotto ritardi e partenze anticipate (mediana del ritardo al via da circa 9 a 3-6 secondi), ma i tornei richiedono avversari affidabili su più regate e un divario chiaro fra principianti ed esperti: da verificare giocando.
 - **Mole di lavoro.** Con più barche i contenuti da verificare e collaudare crescono molto.
