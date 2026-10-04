@@ -28,11 +28,15 @@ Verificare un'idea prima di portarla in `index.html`: se la fisica di una cosa n
 | A | Il fiocco come seconda vela con scotta propria e filetti, senza interazione | Fatta e approvata |
 | B | La randa che copre il fiocco alle andature larghe; messaggi del pannello anche per il fiocco | Fatta e approvata dopo il giudizio di chi gioca |
 | C1 | Coerenza fra vista e forza del fiocco coperto: ombra totale da 107° apparenti, cioè dove il pannello dice che il fiocco non si regola | Fatta, da approvare |
-| C2 | Momento di imbardata dovuto alle vele | Da fare |
+| C2 | Momento di imbardata dovuto alle vele | **Non modellato: semplificazione dichiarata** |
 | C3 | Fiocco in virata (a collo) | Da fare |
 | C4 | Massa dello scafo a due: solo confronto | Da fare |
 
 La manovra a farfalla (fiocco dal lato opposto) non è nel prototipo.
+
+Sul C2: misurato fuori dal motore che il momento del **solo** fiocco farebbe una barca sempre poggiera, il contrario di quello che dicono le fonti, e ingiocabile (circa 3 °/s di scarto con la barra al centro). Il momento di imbardata riguarda tutta la barca e non si aggiunge a metà. Numeri in `misure_tappaC2.txt`, ragioni in `FISICA-E-TARATURE.md`.
+
+Sul C3: il termine che fa girare la prua col fiocco a collo **starà dentro il C3**, non nel C2, e dovrà funzionare **anche a barca ferma** — che è proprio il caso in cui serve, e in cui il termine proposto per il C2 valeva zero.
 
 ## Tasti del prototipo
 

@@ -1,0 +1,35 @@
+=== C2.B1 — IL MOMENTO DEL SOLO FIOCCO, A REGIME E A ROTTA INCHIODATA ===
+  P = forza laterale del fiocco x 1,1 m (fa POGGIARE).  O = spinta del fiocco x 1,6 m x sen(sbandamento) (fa ORZARE).
+  Il braccio di 1,1 m è un'IPOTESI, usata solo per questo conto: nessuna fonte lo dà. 1,6 m è zJibCE del prototipo.
+
+  nodi  reali   nodi barca  sband.   J.side    J.drive        P        O     P-O    verso    O/P
+     6    45°       2.11    4.7°     20.8N      5.4N     22.8     0.70    22.1  poggia    3.1%
+     6    70°       3.67    4.7°     33.4N     17.0N     36.8     2.23    34.5  poggia    6.1%
+     6    90°       3.85    4.7°     22.6N     18.9N     24.9     2.45    22.5  poggia    9.9%
+     6   110°       3.65    4.6°     10.9N     16.7N     12.0     2.15     9.9  poggia   17.9%
+    10    45°       3.59    4.8°     65.6N     16.5N     72.1     2.21    69.9  poggia    3.1%
+    10    70°       5.57    4.9°     86.2N     47.0N     94.8     6.43    88.4  poggia    6.8%
+    10    90°       5.83    4.8°     57.8N     52.8N     63.5     7.06    56.5  poggia   11.1%
+    10   110°       5.57    4.7°     27.3N     46.6N     30.0     6.08    23.9  poggia   20.2%
+    14    45°       4.92    5.0°    126.5N     36.8N    139.2     5.14   134.0  poggia    3.7%
+    14    70°       6.62    5.3°    120.0N     80.0N    132.0    11.88   120.1  poggia    9.0%
+    14    90°       7.37    5.0°    102.9N    103.4N    113.2    14.34    98.9  poggia   12.7%
+    14   110°       7.11    4.8°     48.0N     92.0N     52.8    12.20    40.6  poggia   23.1%
+
+  casi in cui P-O fa poggiare: 12 su 12  (criterio: modello col solo fiocco SCARTATO se 12 su 12)
+  a 10 nodi, O rispetto a P: da 3.1% a 20.2%  (attesa del revisore: sotto il 15%)
+  esito B1: SCARTATO — il solo fiocco fa sempre poggiare, mai orzare
+
+=== C2.B2 — EMULAZIONE: COSA FAREBBE LA BARCA CON QUEL MOMENTO E LA BARRA LIBERA ===
+  A ogni passo: barra = clamp(0,02 x (P-O), ±30°) nel verso che fa poggiare. Le vele si regolano da sole.
+  step() NON è toccato: la barra è imposta da qui, come farebbe un giocatore che non corregge.
+  10 nodi, barca libera di girare.
+
+  partenza   0 s    10 s    30 s    60 s   | supera 60° dal vento dopo
+     45°     45°     75°    113°    124°   | 5.9 s
+     70°     70°     93°    117°    125°   | 0.0 s
+     90°     90°    104°    119°    125°   | 0.0 s
+
+  da 45°: supera i 60° dal vento dopo 5.9 s  (criterio: SCARTATO se entro 10 s)
+  velocità di scarto media nei primi 10 s partendo da 45°: 2.97 °/s
+  esito B2: SCARTATO — con la barra al centro la barca scappa a poggiare

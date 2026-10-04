@@ -126,7 +126,17 @@ Prototipo sperimentale di una seconda vela, in vista di una futura deriva a due.
 | --- | --- | --- |
 | **Il limite della scotta del fiocco (80°) non ha fonte, e adesso ci è appoggiata anche l'aerodinamica.** L'ombra diventa totale a 107° apparenti perché è lì che `maxJib = 80°` fa sparire la posizione giusta. | Si sta tarando quanto il fiocco è coperto su un limite **geometrico non verificato**. Se 80° è sbagliato, è sbagliato anche il punto in cui il fiocco smette di spingere. L'alternativa — aprire di più la scotta perché una posizione giusta esista più in là — contraddirebbe le fonti, che dicono che senza farfalla il fiocco in poppa non lavora. | |
 | **L'unica fonte quantitativa misura con lo spinnaker.** F4 dà il fiocco utile fino a circa 100° apparenti e un ostacolo da circa 120°, ma su una barca che in poppa porta lo spinnaker, il quale copre il fiocco **prima** di quanto faccia la sola randa. | Senza spinnaker il fiocco potrebbe restare utile oltre i 120° apparenti: i nostri 107° potrebbero essere **presto**. Una fonte sola, e per una situazione diversa dalla nostra. | |
+| **La velocità cala più in fretta fra 126° e 132° di vento reale** (a 10 nodi): in quei sei gradi l'ombra passa da niente a totale, e la barca perde fino a 0,163 nodi per grado contro una media di 0,059 nella fascia 115°-140°. Con la taratura della tappa B erano 0,085 contro 0,048. | La curva resta monotona e senza salti, ma il ginocchio è più marcato di prima. **Da giudicare giocando:** chi poggia lentamente in quella fascia sente la barca rallentare più bruscamente, e va deciso se è un'informazione utile («qui il fiocco smette di lavorare») o un difetto che dà fastidio. | |
 | **Il fiocco coperto dà zero, mai meno di zero.** Il modello riduce l'area, quindi la spinta del fiocco si annulla ma non diventa negativa. | Le fonti lo chiamano «un ostacolo»: una vela che sbatte fa resistenza, e in poppa dovrebbe **togliere** qualcosa, non solo smettere di dare. Da chiedere a una persona esperta: quanto costa davvero un fiocco che sbatte. | |
+
+### Da far giudicare a una persona esperta (tappa C, secondo compito)
+
+Sono le due affermazioni su cui si regge la decisione di **non** modellare il momento di imbardata. Se una delle due è falsa, la decisione va rivista.
+
+| Affermazione | Perché c'è un dubbio | Esito |
+| --- | --- | --- |
+| Con randa e fiocco regolati, deriva giù e barca piatta, **la barra sta circa al centro**: la barca non tira né verso il vento né via dal vento. | Viene da una sola fonte e da una sola barca (una deriva a due olimpica, misurata in galleria del vento e in mare). Non sappiamo se valga anche per una deriva da scuola, più tozza e con una deriva diversa. È l'affermazione che giustifica il motore attuale, che gira solo col timone. | |
+| **Una deriva che sbanda tende a orzare**, e tanto più quanto più sbanda, anche senza toccare le vele. | Stessa fonte, stessa barca. Da confermare che valga in generale, e con che forza: quanti gradi di barra servono per tenere la rotta con 20-25° di sbandamento. | |
 
 ### Affermazioni nautiche del prototipo, da verificare
 
