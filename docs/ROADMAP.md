@@ -1,6 +1,8 @@
 # Roadmap
 
-Aggiornata al 29 settembre 2026.
+Aggiornata al 4 ottobre 2026.
+
+Il disegno dei livelli, dei ruoli, dei meriti e della carriera è in `VISIONE-LIVELLI-E-CARRIERA.md`; le fonti pubbliche consultate in `FONTI-PUBBLICHE.md`. Dove questa roadmap e la visione dicono cose diverse sulle fasi C ed E, vale la visione.
 
 ## Principi che valgono per ogni fase
 
@@ -17,6 +19,7 @@ Aggiornata al 29 settembre 2026.
 3. **Esame a risposte chiuse**: banca di 80–100 domande, 20 estratte a caso, soglia 80%. Due tipi:
    - glossario (come i quiz attuali);
    - situazioni con un piccolo disegno di barca e vento («che andatura è?», «cosa fai se entra una raffica?», «chi ha la precedenza?»).
+   - Se non si supera, in carriera serve un ripasso mirato sulle lezioni sbagliate prima di riprovarlo, senza penalità; nel gioco libero l'esame si ripete subito.
 4. **Brevetto della Scuola di vela**, a livelli (per esempio «Timoniere di deriva», poi «Regatante»), con attestato stampabile. Nessun valore legale, e deve essere scritto.
 
 ### Ordine delle versioni della fase A
@@ -27,6 +30,8 @@ Aggiornata al 29 settembre 2026.
 | 0.16 | Menu principale a riquadri e fasce di tempo; lezione 1 con il solo timone; rosa dell'angolo morto; freccia della velocità; pannello ridotto (fatto) |
 | 0.17 | Esame a risposte chiuse, nel suo riquadro del menu |
 | poi | Brevetto con attestato |
+
+Nota (4 ottobre 2026): il contenuto reale della 0.17, in corso, è descritto nel `CHANGELOG.md` (rotta della lezione 2, partenze di regata, caratteri degli avversari). L'esame a risposte chiuse e il brevetto vengono dopo la 0.17.
 
 Il quiz di ripasso resta subito dopo ogni lezione; l'esame per il brevetto è separato, perché riguarda tutte le lezioni.
 
@@ -46,22 +51,37 @@ Scartato: pulsante «Schermo intero» nel gioco. Sul PC di prova lo schermo inte
 ## Fase B — Tornei e classifiche personali
 
 - Tornei di più regate contro gli avversari del computer, con il sistema a punti delle regate (1 punto al primo, 2 al secondo, e così via; vince chi ne ha meno), eventualmente con uno scarto.
+  - Struttura decisa in via provvisoria (ottobre 2026): 4 regate con uno scarto, ruolo bloccato per tutto il torneo, più tornei per categoria con condizioni diverse (vento leggero, vento teso, raffiche, salti di vento). Dettagli in `VISIONE-LIVELLI-E-CARRIERA.md`. Gli avversari vanno resi affidabili su più regate (la 0.17 ha già ridotto ritardi al via e partenze anticipate, vedi `CHANGELOG.md`).
 - Classifica dei record personali per prova e regata.
 - Avversari «esperti» più forti: virate più rapide, scelta del bordo migliore, uso delle raffiche.
 - **Copertura del vento (cono d'ombra):** una vela toglie vento alle barche sottovento, lungo la direzione del vento apparente; una barca poco sottovento e avanti devia il vento verso chi sta dietro sopravento. Oggi il vento non dipende dalle altre barche. Richiede: vento che dipende anche dalle barche, avversari che sappiano uscire da una copertura (altrimenti rallentano e si ammucchiano), record delle regate da azzerare. Le prove non cambiano. Eventuale disegno del cono sull'acqua come aiuto disattivabile. Valori da verificare prima (vedi `CONTENUTI-DA-VERIFICARE.md`).
-- **Difetto noto degli avversari:** in circa una partenza su cinque un avversario parte in anticipo o con più di un minuto di ritardo (con 1 minuto di preparazione i ritardi sono più frequenti). Le regate si concludono comunque.
+- **Difetto degli avversari, ridotto nella 0.17:** in circa una partenza su cinque un avversario partiva in anticipo o con più di un minuto di ritardo. Con posizioni di partenza casuali e caratteri diversi (prudente, normale, aggressiva) la mediana del ritardo al via è scesa da circa 9 a 3–6 secondi e le partenze anticipate sono 3 su 90 con i principianti e 0 su 90 con gli esperti (misure e limiti nel `CHANGELOG.md`).
 
-## Fase C — Più tipi di barca
+## Fase C — Più tipi di barca: ogni livello è una barca con cose nuove da imparare
 
-Il motore è parametrico: una barca nuova è un nuovo insieme di costanti più un disegno.
+Aggiornata a ottobre 2026; dettagli in `VISIONE-LIVELLI-E-CARRIERA.md`.
 
-| Barca (nomi generici) | Caratteristiche |
-| --- | --- |
-| Deriva scuola | Lenta, stabile, perdona gli errori |
-| Deriva singola da regata | La barca attuale |
-| Catamarano | Molto veloce, vira male, scuffia in modo diverso |
-| Deriva a due vele | Fiocco con la sua scotta: serve un secondo comando |
-| Cabinato | Non scuffia, sbanda, molta inerzia: base per il carteggio |
+Il motore è parametrico: una barca nuova è un nuovo insieme di costanti più un disegno. Ciò che distingue un livello dall'altro non è solo la velocità o l'avversario più forte, ma cose nuove da padroneggiare: vele, equipaggio, tecnologia, informazioni. Una novità principale per livello.
+
+| Livello | Barca (nomi generici) | Ruoli | Novità principale |
+| --- | --- | --- | --- |
+| 1 | Deriva da regata, un solo velista (la barca attuale) | Timoniere | Le basi |
+| 2 | Deriva a due: randa e fiocco | Timoniere, prodiere | Il fiocco e il coordinamento a due |
+| 3 | Deriva a due con gennaker | Timoniere, prodiere | Vela di portanza, planata, strumenti, angoli limite |
+| 4 | Equipaggio da tre | Timoniere, trimmer, tattico | Il tattico elabora le informazioni |
+| 5-6 | Catamarano; cabinato | Da definire | Vento apparente dominante, scuffia diversa; inerzia, mare, correnti |
+
+Si pianifica nel dettaglio fino al livello 3; gli altri sono una direzione, non un impegno. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
+
+**Prototipo del fiocco** (`sperimentale/fiocco.html`, in corso). È il primo passo, perché il rischio maggiore è la fisica delle vele. Non tocca `index.html`.
+
+- Tappa A (il fiocco come seconda vela con scotta propria): fatta e approvata.
+- Tappa B (la randa che copre il fiocco alle andature larghe, con messaggi del pannello per il fiocco): fatta e approvata dopo il giudizio di chi gioca.
+- Tappa C (coerenza fra vista e forza del fiocco coperto, momento di imbardata dovuto alle vele, fiocco in virata, massa dello scafo a due): da fare.
+- La manovra a farfalla (fiocco dal lato opposto) non è nel prototipo; da modellare più avanti.
+- Fisica e criteri nel dettaglio: `FISICA-E-TARATURE.md`. Fonti: `FONTI-PUBBLICHE.md`. Regole di lavoro dei prototipi: `SPERIMENTALE.md`.
+
+Ordine di sviluppo dopo il prototipo: ruolo del prodiere, equipaggio guidato dal computer, tornei con i meriti, menu carriera.
 
 Nelle regate miste: compenso di tempo tra barche diverse, come nelle regate reali.
 
@@ -84,6 +104,14 @@ Percorso facoltativo: brevetto ed esame, regate di circolo, livelli più diffici
 Visione (settembre 2026): **tornei al centro** della schermata di carriera e, ai lati, **scuole da sbloccare** per livello (principiante, intermedio, avanzato) e per tipo di barca, con pochi corsi mirati sulla barca nuova; un **esame per categoria** dà il brevetto per gareggiare con quella barca. Le tendine per livello nel riquadro della Scuola serviranno quando arriverà la seconda barca (fase C): con una barca sola le 11 voci attuali sono tutto il livello principiante.
 
 Idea (settembre 2026): **più brevetti progressivi.** Un primo brevetto facile dà accesso alle regate con le barche di oggi; piazzandosi bene in un campionato si accede al brevetto successivo, più restrittivo (prove a tempo, meno errori ammessi). L'esame si supera o si viene rimandati. I nomi dei brevetti restano generici e con la scritta «nessun valore legale»: niente «patente» o «patentino», che richiamano titoli ufficiali.
+
+Aggiornamento (ottobre 2026, numeri provvisori da tarare giocando; tutto in `VISIONE-LIVELLI-E-CARRIERA.md`):
+
+- **Meriti**: quattro aree (abilità, competizione, conoscenza, esperienza) con punti e un minimo per area. Non servono tutti gli ori. Il totale e i minimi aprono l'esame; l'esame resta obbligatorio e consegna il brevetto.
+- **Ruoli**: si guida un solo ruolo; per il brevetto servono almeno due ruoli.
+- **Libretto**: schermata che mostra i meriti e dice sempre cosa manca; registra, non punisce.
+- **Importazione facoltativa** dei progressi del gioco libero all'inizio della carriera (lezioni, medaglie delle prove, quiz); tornei ed esame restano da fare in carriera.
+- Il livello 1, già giocabile, fa da banco di prova dei punteggi.
 
 ## Fase F — Condivisione tra amici
 
@@ -117,3 +145,9 @@ Classifiche comuni e fantasmi condivisi («sfida il record di un amico»).
 | --- | --- |
 | Regole di regata | Giri di penalità invece dei 15 secondi; penalità per il contatto con la boa. |
 | Licenza | MIT (attuale) o una licenza non commerciale (vedi `LICENSE`). |
+| Aiuti in carriera | Valgono per i meriti o no (tocca il principio 3 di `PROGETTO.md`). |
+| Rosa dei candidati dell'equipaggio | Profili, quanto cambiano, valore del tetto del bonus. |
+| Ordini all'equipaggio | Tasti e presentazione a schermo; preavviso minimo di ogni manovra. |
+| Fiocco a farfalla | Come entra nel gioco (lato opposto, asta) e da quale livello. |
+| Tasti con due vele | Barra ← →, randa A e D, fiocco Q ed E nel prototipo; ripensare A S D W del gioco a una vela. |
+| Livelli 4 e oltre | Ruoli, regole, quali barche entrano davvero. |
