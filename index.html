@@ -518,11 +518,11 @@ function step(S, C, E, dt){
       done: "Barra a dritta, prua verso sinistra. Quando rilasci, la barra torna al centro da sola (si può cambiare nelle impostazioni); con <em>Spazio</em> la centri subito." },
     { title: "Barra sottovento: si orza", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
       text: ["La regola che usano i velisti: <em>barra sottovento, la barca orza</em>; <em>barra sopravento, la barca poggia</em>. Il lato sottovento è quello dove sta il boma.",
-             "Spingi la barra verso il boma e orza fino alla <em>bolina</em>, con il vento tra 45° e 65° dalla prua. Poi centra la barra."],
+             "Spingi la barra verso il boma e orza fino alla <em>bolina</em>, a piccoli colpi e non con una spinta lunga: fermati quando la lancetta della rosetta (in basso) è a metà strada tra il rosso e l'orizzontale. Poi centra la barra."],
       cond: I => I.twa >= 43 && I.twa <= 67 && Math.abs(I.r) < 4, hold: 1,
       done: "Esatto: barra verso il boma, cioè sottovento, e la prua è salita verso il vento." },
     { title: "Barra sopravento: si poggia", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Ora spingi la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, con il vento tra 110° e 145°. Poi centra la barra."],
+      text: ["Ora spingi la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, a piccoli colpi: fermati quando la lancetta è scesa un terzo della strada tra l'orizzontale e il basso. Poi centra la barra."],
       cond: I => I.twa >= 110 && I.twa <= 145 && Math.abs(I.r) < 4, hold: 1,
       done: "Barra sopravento, la barca poggia." },
     { title: "Tenere la rotta", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
@@ -540,20 +540,20 @@ function step(S, C, E, dt){
     { title: "Le andature", ...PAUSE, zoom: 1.2, rose: true,
       text: ["Ogni direzione rispetto al vento ha un nome: si chiama <em>andatura</em>. Il cerchio attorno alla barca le mostra tutte; l'angolo morto è dalla parte da cui arriva il vento, e le andature si ripetono uguali sui due lati.",
              "La linea tratteggiata indica dove punta la prua: ora sei al <em>traverso</em>, con il vento di fianco."] },
-    { title: "Bolina", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
-      text: ["Orza fino alla <em>bolina</em> (settore colorato nel cerchio), con il vento tra circa 45° e 75° dalla prua. La vela si regola da sola: guarda come si chiude il boma."],
+    { title: "Bolina", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [1, 2],
+      text: ["Orza fino alla <em>bolina</em> (il settore con il bordo tratteggiato nel cerchio), con il vento tra circa 45° e 75° dalla prua. La vela si regola da sola: guarda come si chiude il boma."],
       cond: I => I.twa >= 43 && I.twa <= 72 && Math.abs(I.r) < 4, hold: 1,
       done: "Bolina: l'andatura più vicina al vento. <em>Bolina stretta</em> è il massimo che la barca riesce a stringere, <em>bolina larga</em> un po' più aperta. La vela sta molto cazzata." },
-    { title: "Traverso", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
-      text: ["Poggia fino al <em>traverso</em>, con il vento a circa 90°."],
+    { title: "Traverso", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [3],
+      text: ["Poggia fino al <em>traverso</em> (il settore con il bordo tratteggiato), con il vento a circa 90°."],
       cond: I => I.twa >= 80 && I.twa <= 100 && Math.abs(I.r) < 4, hold: 1,
       done: "Al traverso il vento arriva di fianco. È un'andatura veloce, e la vela va aperta circa a metà: il boma a una quarantina di gradi dal centro barca, a metà strada tra tutto cazzato e tutto lascato. Il valore esatto lo leggi sotto il cursore della scotta." },
-    { title: "Lasco e gran lasco", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
-      text: ["Continua a poggiare attraverso il <em>lasco</em> (circa 120°) fino al <em>gran lasco</em> (circa 150°)."],
+    { title: "Lasco e gran lasco", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [5],
+      text: ["Continua a poggiare attraverso il <em>lasco</em> (circa 120°) fino al <em>gran lasco</em> (circa 150°, il settore con il bordo tratteggiato)."],
       cond: I => I.twa >= 138 && I.twa <= 163 && Math.abs(I.r) < 4, hold: 1,
       done: "Nel lasco il vento arriva da dietro il fianco; nel gran lasco quasi da dietro, e la vela è molto aperta." },
-    { title: "Poppa", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail",
-      text: ["Poggia ancora, piano, finché il vento arriva esattamente da dietro: la <em>poppa</em>.", "Attenzione a non superare i 180°. Il vento passerebbe dall'altro lato della vela e il boma attraverserebbe la barca di colpo: è una <em>strambata</em>, e con la vela tutta aperta spesso fa scuffiare. Come farla in sicurezza lo vedrai nella lezione 5."],
+    { title: "Poppa", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [6],
+      text: ["Poggia ancora, piano, finché il vento arriva esattamente da dietro: la <em>poppa</em> (il settore con il bordo tratteggiato).", "Attenzione a non superare i 180°. Il vento passerebbe dall'altro lato della vela e il boma attraverserebbe la barca di colpo: è una <em>strambata</em>, e con la vela tutta aperta spesso fa scuffiare. Come farla in sicurezza lo vedrai nella lezione 5."],
       cond: I => I.twa >= 167, hold: 1,
       done: "In poppa la vela è aperta al massimo e il vento la spinge da dietro. Sembra strano, ma non è l'andatura più veloce: il traverso e il lasco lo sono di più." },
     { title: "Le mure", ...PAUSE, zoom: 2, rose: true, labels: ["sopravento", "boma"],
@@ -624,7 +624,7 @@ function step(S, C, E, dt){
     { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare."],
       cond: (I, S) => (I.twa < 40 && I.kn < 0.4) || S.u < -0.1, hold: 1,
-      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: centra la barra, lascia che la prua scada, poi poggia e riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
+      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: centra la barra e lascia <em>scadere</em> la prua (gira da sola, lentamente, allontanandosi dal vento), poi poggia e riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
     { title: "Risalire il vento", tiller: true, sheet: true, hud: 1, hintKind: "tt", mark: [0, -110],
       text: ["Riparti. La boa è controvento: non puoi puntarla direttamente.",
              "Raggiungila a zig-zag: un tratto di bolina su una mura, una virata, un tratto sull'altra. Si chiama <em>bordeggiare</em>, e ogni tratto è un <em>bordo</em>."],
@@ -770,6 +770,7 @@ function step(S, C, E, dt){
     ["Randa", "La vela principale, fissata all'albero e al boma.", "Lezione 1"],
     ["Rilevamento", "La direzione, in gradi a partire da nord in senso orario, in cui si vede un oggetto dalla barca.", "Prove"],
     ["Sbandamento", "L'inclinazione laterale della barca spinta dal vento.", "Lezione 6"],
+    ["Scadere", "Quando la barca è ferma o va all'indietro con la prua vicina al vento, la prua gira da sola, lentamente, allontanandosi dal vento, anche senza muovere la barra.", "Lezione 5"],
     ["Scarroccio", "Lo scivolamento laterale della barca spinta dal vento, che la deriva riduce ma non annulla.", "Lezione 1"],
     ["Scotta", "La cima con cui si regola la vela.", "Lezione 1"],
     ["Scuffiare", "Rovesciarsi: succede alle derive quando lo sbandamento diventa eccessivo.", "Lezione 6"],
@@ -2024,7 +2025,7 @@ function step(S, C, E, dt){
     marks.forEach((m, i) => { const [sx, sy] = toScreen(v, m.x, m.y); ctx.fillText(m.label + (m.round && mode === "mission" && i === S.markIdx ? " · lasciala a sinistra" : ""), sx + 10, sy - 8); });
     const act = mode === "mission" && !S.finished ? curMarks[S.markIdx] : (mode === "lesson" && S.lessonMark && !S.markReached ? S.lessonMark : null);
     if (act) offscreenArrow(v, act);
-    if (st && st.rose) drawRose(v, st.maneuvers);
+    if (st && st.rose) drawRose(v, st.maneuvers, st.target);
     if (opt.arrows && (!st || st.arrows || st.hud >= 2 || (!st.pause && st.hud))) drawWindArrows(v, mode === "lesson" && lessonIdx < 3); // il vento apparente si spiega nella lezione 4
     if (st && st.labels) drawLabels(v, st.labels);
     drawCompass(v);
@@ -2059,7 +2060,7 @@ function step(S, C, E, dt){
   }
 
   // cerchio delle andature, in coordinate schermo attorno alla barca
-  function drawRose(v, showManeuvers){
+  function drawRose(v, showManeuvers, target){
     const [cx, cy] = toScreen(v, S.x, S.y), R = Math.min(W, H) * 0.3, r0 = R * 0.72, rotDeg = v.rot / D2R;
     const toCanvas = bearing => (bearing + rotDeg - 90) * D2R;
     const sectors = [[0,40],[40,55],[55,75],[75,105],[105,135],[135,165],[165,180]];
@@ -2075,6 +2076,7 @@ function step(S, C, E, dt){
         ctx.globalAlpha = isCur ? 0.5 : (k === 0 ? 0.3 : (k % 2 ? 0.12 : 0.2));
         ctx.fillStyle = isCur ? colors.label : (k === 0 ? "#E0553A" : "#FFFFFF"); ctx.fill();
         ctx.globalAlpha = 0.35; ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.stroke();
+        if (target && target.includes(k) && (side === curSide || k === 0 || k === 6)){ ctx.globalAlpha = 1; ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.stroke(); ctx.setLineDash([]); }
       });
     }
     ctx.globalAlpha = 1;
@@ -2139,7 +2141,7 @@ function step(S, C, E, dt){
       used.push([ex, ey]);
       ctx.strokeStyle = colors.label; ctx.fillStyle = colors.label; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke();
-      ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.stroke();
       ctx.textAlign = Math.cos(a) > 0.3 ? "left" : Math.cos(a) < -0.3 ? "right" : "center";
       const tx = ex + (ctx.textAlign === "left" ? 6 : ctx.textAlign === "right" ? -6 : 0), ty = ey + (ctx.textAlign === "center" ? (Math.sin(a) > 0 ? 12 : -12) : 0);
       const w = ctx.measureText(n).width, bxx = ctx.textAlign === "left" ? tx : ctx.textAlign === "right" ? tx - w : tx - w / 2;
