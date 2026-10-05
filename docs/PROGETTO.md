@@ -53,6 +53,10 @@ Dentro `index.html`, nell'ordine:
 
 Aprendo il gioco con `#collaudo` in fondo all'indirizzo, la pagina espone `window.__sv`, che serve solo ai collaudi automatici: apertura diretta di lezioni e passi, lettura dello stato e del registro degli errori (`reg`), accelerazione del tempo. Con `#collaudo` il riquadro delle istruzioni è saltato (`__sv.skipBrief = false` lo riattiva). Senza `#collaudo` l'aggancio non esiste.
 
+## Che modello è il motore
+
+Il motore è un modello cinematico didattico, non un previsore di prestazioni. Il timone produce direttamente una velocità di rotazione; non ci sono momenti, inerzia d'imbardata, onde né planata; l'equipaggio è un automatismo (il timoniere si sporge da solo). Le conseguenze sono dichiarate nel manuale. Un effetto si aggiunge solo se si sente guidando e ha una fonte; se manca una delle due cose si dichiara come semplificazione e si annota in `docs/DUBBI-E-RICERCHE.md`. Le cose che richiedono un modello dinamico (momento d'imbardata, planata, onde) vogliono un prototipo dedicato prima di costruirci sopra delle lezioni; la decisione si prende dopo il parere di un velista esperto sul livello 1.
+
 ## Come aggiungere contenuti
 
 ### Un passo di lezione

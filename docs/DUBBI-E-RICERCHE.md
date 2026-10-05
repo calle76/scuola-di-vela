@@ -63,6 +63,10 @@ Dalla fonte su una deriva olimpica a due (una sola barca):
 | **Peso dell'equipaggio come comando** | Oggi il timoniere si sporge da solo, con 0,9 s di ritardo; nella realtà è una manovra (lezione 2.5) | *codice*, con il prodiere |
 | **Planata** (livello 3) | Non c'è: sopra gli 8 nodi circa le velocità non possono essere realistiche | *libro*, poi *codice* |
 
+Gennaker e planata richiedono un prototipo dedicato prima di progettare le lezioni 3.x. Le lezioni 2.3 (errore di coordinamento) e 2.5 (peso come comando) non dipendono da fisica che manca: si possono progettare con il motore attuale.
+
+Pagina di domande per un velista (`domande-per-un-velista.pdf`): quando torna compilata, gli esiti vanno in `CONTENUTI-DA-VERIFICARE.md`.
+
 ## 4. Velocità e polari
 
 | Dubbio | Cosa sappiamo | Per chiuderlo |
