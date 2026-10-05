@@ -30,14 +30,14 @@ Quattro assi di progressione:
 
 Regole di disegno:
 
-- Una **novità principale** per livello, al massimo una secondaria. **[deciso]**
+- **Nessun numero fisso di novità per livello.** Ogni livello contiene le cose giuste per quella barca: se sono due difficili, sono quelle; se sono tre facili, sono quelle; se sono una difficile e due facili, sono quelle. Il carico per chi gioca si controlla giocando, lezione per lezione (se una lezione ha troppe cose, si divide), non con una regola che falsa il rapporto con la realtà. **[deciso il 4 ottobre 2026]**
 - Ogni novità ha un vantaggio se usata bene e un costo se usata male: nessuno strumento è «gratis». **[proposta]**
 - Le barche hanno nomi generici (nessuna classe né costruttore). **[deciso]**
 - In carriera non servono tutti gli ori: si accumulano bravura, tempi e medaglie, e si passa di livello per una serie di meriti. **[deciso]**
 
 ## 2. I livelli
 
-| Livello | Barca e vele | Ruoli | Novità principale | Stato |
+| Livello | Barca e vele | Ruoli | Cosa c'è di nuovo | Stato |
 | --- | --- | --- | --- | --- |
 | 1 | Deriva, solo randa | Timoniere | Le basi | **[esiste]** |
 | 2 | Deriva a due, randa + fiocco | Timoniere, prodiere | Il fiocco e il coordinamento a due | prototipo del fiocco in corso |

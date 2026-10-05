@@ -61,9 +61,9 @@ Scartato: pulsante «Schermo intero» nel gioco. Sul PC di prova lo schermo inte
 
 Aggiornata a ottobre 2026; dettagli in `VISIONE-LIVELLI-E-CARRIERA.md`.
 
-Il motore è parametrico: una barca nuova è un nuovo insieme di costanti più un disegno. Ciò che distingue un livello dall'altro non è solo la velocità o l'avversario più forte, ma cose nuove da padroneggiare: vele, equipaggio, tecnologia, informazioni. Una novità principale per livello.
+Il motore è parametrico: una barca nuova è un nuovo insieme di costanti più un disegno. Ciò che distingue un livello dall'altro non è solo la velocità o l'avversario più forte, ma cose nuove da padroneggiare: vele, equipaggio, tecnologia, informazioni. Nessun numero fisso di novità per livello: ogni livello contiene le cose giuste per quella barca (due difficili, tre facili o una difficile e due facili, secondo il caso); il carico per chi gioca si controlla giocando, lezione per lezione.
 
-| Livello | Barca (nomi generici) | Ruoli | Novità principale |
+| Livello | Barca (nomi generici) | Ruoli | Cosa c'è di nuovo |
 | --- | --- | --- | --- |
 | 1 | Deriva da regata, un solo velista (la barca attuale) | Timoniere | Le basi |
 | 2 | Deriva a due: randa e fiocco | Timoniere, prodiere | Il fiocco e il coordinamento a due |
