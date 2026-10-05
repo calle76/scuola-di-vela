@@ -15,7 +15,7 @@ PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clie
 TESTI = {  # caso peggiore del pannello: testo nuovo contro il piu lungo che il gioco mostra gia
     "nuovo": NUOVO,
     "lee attuale": "Si agita il filetto sottovento: lasca, oppure orza.",
-    "piu lungo di oggi": "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia scadere la prua.",
+    "piu lungo di oggi": "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia che la prua poggi da sola.",
 }
 MIS = """(testi)=>{const p=document.querySelector('.panel'), h=document.getElementById('hint');
  if (h.hidden) return null; const vecchio=h.textContent, out={};

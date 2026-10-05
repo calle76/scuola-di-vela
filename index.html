@@ -422,7 +422,7 @@ function step(S, C, E, dt){
   S.heel += S.heelRate / D2R * dt;
   // virata: la barra a dritta porta la pala a sinistra -> la prua gira a sinistra
   let rTarget = -(S.u / BOAT.turnLen) * Math.sin(rud * D2R) / D2R; // gradi/s
-  // barca ferma nel vento: la prua scade
+  // barca ferma nel vento: la prua poggia da sola
   if (A < 36 && Math.abs(S.u) < 0.5) rTarget += (awa >= 0 ? -1 : 1) * 6 * (1 - Math.abs(S.u) / 0.5);
   S.r += (rTarget - S.r) * Math.min(1, dt * 4);
   S.h = norm360(S.h + S.r * dt);
@@ -624,7 +624,7 @@ function step(S, C, E, dt){
     { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare."],
       cond: (I, S) => (I.twa < 40 && I.kn < 0.4) || S.u < -0.1, hold: 1,
-      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: centra la barra e lascia <em>scadere</em> la prua (gira da sola, lentamente, allontanandosi dal vento), poi poggia e riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
+      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: centra la barra e lascia che la prua <em>poggi da sola</em> (gira lentamente, allontanandosi dal vento), poi riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
     { title: "Risalire il vento", tiller: true, sheet: true, hud: 1, hintKind: "tt", mark: [0, -110],
       text: ["Riparti. La boa è controvento: non puoi puntarla direttamente.",
              "Raggiungila a zig-zag: un tratto di bolina su una mura, una virata, un tratto sull'altra. Si chiama <em>bordeggiare</em>, e ogni tratto è un <em>bordo</em>."],
@@ -770,7 +770,6 @@ function step(S, C, E, dt){
     ["Randa", "La vela principale, fissata all'albero e al boma.", "Lezione 1"],
     ["Rilevamento", "La direzione, in gradi a partire da nord in senso orario, in cui si vede un oggetto dalla barca.", "Prove"],
     ["Sbandamento", "L'inclinazione laterale della barca spinta dal vento.", "Lezione 6"],
-    ["Scadere", "Quando la barca è ferma o va all'indietro con la prua vicina al vento, la prua gira da sola, lentamente, allontanandosi dal vento, anche senza muovere la barra.", "Lezione 5"],
     ["Scarroccio", "Lo scivolamento laterale della barca spinta dal vento, che la deriva riduce ma non annulla.", "Lezione 1"],
     ["Scotta", "La cima con cui si regola la vela.", "Lezione 1"],
     ["Scuffiare", "Rovesciarsi: succede alle derive quando lo sbandamento diventa eccessivo.", "Lezione 6"],
@@ -1896,7 +1895,7 @@ function step(S, C, E, dt){
     if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
     else if (S.heel > 25){ cls = "bad"; msg = "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
-    else if (S.u < -0.05){ cls = "bad"; msg = "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia scadere la prua."; }
+    else if (S.u < -0.05){ cls = "bad"; msg = "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia che la prua poggi da sola."; }
     else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = "bad"; msg = "Raffica in arrivo: preparati a lascare."; }
     if (mode === "lesson" && st.course && !S.capsized){
       const off = norm180(S.h - S.course);

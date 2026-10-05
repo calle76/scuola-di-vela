@@ -30,13 +30,17 @@ Lista completa in `CONTENUTI-DA-VERIFICARE.md`. Quelle che hanno un dubbio dichi
 | Il limite oltre cui nel gioco i filetti dritti non esistono più (**112° di vento apparente**, cioè circa **135° di vento reale**) è figlio di una barca lenta: il boma arriva al massimo a 85° (`BOAT.maxBoom`) e oltre quell'angolo l'incidenza supera lo stallo. Su un 470 le fonti danno circa **75° apparenti a 120° reali** (F4), contro i **97,5°** del nostro motore: una barca più veloce tiene il vento apparente molto più avanti e i filetti lavorano più a poppa. Da capire se il confine va spostato, e se per farlo serve una barca più veloce o un limite di scotta diverso | Aperto | *esperto*, poi *codice* |
 | Comandi di manovra («Pronti a virare?», «Viro!»…): varianti tra scuole | Aperto | *esperto* |
 | Orziera: verificare il termine usato nell'esercizio di rotta | Aperto | *esperto* |
-| Definizione di «scadere» da confermare con un velista: nel glossario e nella lezione 5 (0.17) dice che una barca ferma o in retromarcia vicino al vento gira da sola, lentamente, allontanandosi dal vento. Comportamento già dichiarato come semplificazione in `FISICA-E-TARATURE.md`, non risulta una fonte pubblica specifica sul verso o sulla velocità di rotazione | Aperto | *esperto* |
+| Definizione di «scadere» da confermare con un velista: nel glossario e nella lezione 5 (0.17) dice che una barca ferma o in retromarcia vicino al vento gira da sola, lentamente, allontanandosi dal vento. Comportamento già dichiarato come semplificazione in `FISICA-E-TARATURE.md`, non risulta una fonte pubblica specifica sul verso o sulla velocità di rotazione | **Chiuso il 5 ottobre 2026**: due glossari pubblici (marinasveva.com, scuolavelaargentario.com) confermano che «scadere» significa essere spinti sottovento da scarroccio o corrente, non la prua che gira. Il gioco usava il termine nel senso sbagliato: corretto in «poggiare» (0.17.1). Resta aperto solo se la velocità di rotazione modellata sia plausibile | *esperto*, poi *codice* |
 | Confini delle andature (angolo morto circa 40°, testi «circa 45° per lato») | Allineato alle dispense come convenzione didattica | *esperto*, per le derive reali |
 | Procedura di partenza reale (5 minuti; il gioco permette anche 1 e 3) | Da verificare | *web* o *esperto* |
 | Boe lasciate sempre a sinistra: le istruzioni di regata reali lo stabiliscono di volta in volta | Dichiarata | *esperto* |
 | Toccare una boa in regata comporta una penalità: nel gioco non è ancora gestito | Aperto | *codice*, dopo la verifica della regola |
 | Penalità di 15 secondi per un contatto invece dei giri di penalità | Semplificazione dichiarata | *esperto*, poi *codice* |
 | Regole di precedenza da inserire nelle domande dell'esame: il corso federale cita le regole 10, 11, 14 e 18 | Titoli da verificare sul testo ufficiale | *web* |
+| Angolo di scotta del fiocco: nel gioco/prototipo 50°–60°, ma potrebbe essere più vicino a 80° | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
+| Fiocco a collo tenuto un attimo in virata: potrebbe aiutare la prua a girare | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
+| Recupero da una virata fallita: fiocco a collo o barra inversa, invece di «centra la barra» | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
+| Posizione dei filetti principali della randa: potrebbero stare vicino all'albero invece che sulla balumina | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
 
 ## 2. Il fiocco e la barca a due (prototipo, tappe A, B e C)
 
