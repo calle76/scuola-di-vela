@@ -22,6 +22,8 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 | Raddrizzare la barca dopo uno sbandamento forte | R |
 | Pulsanti della lezione 1 | W e S |
 
+Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione.
+
 ## 3. Cosa il gioco fa bene
 
 - **Il vento apparente.** Il vento che senti a bordo è la combinazione del vento reale e del vento dovuto al moto: accelerando si sposta verso prua. Su questo lavora la vela.

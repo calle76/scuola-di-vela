@@ -33,6 +33,7 @@ Dentro `index.html`, nell'ordine:
 | Registro degli errori | `reg`: scuffie, strambate a vela aperta, episodi e secondi da piantato, boe dal lato sbagliato, contatti, partenze anticipate, linea fuori dagli estremi. `regAdd`, `ironsCheck`, `regText`. Si azzera a ogni avvio e si chiude all'arrivo. |
 | Pannello | Strumenti, suggerimento, comandi, stato (tempo, classifica, errori), aggiornati 10 volte al secondo. In prove, regate e navigazione libera l'ordine è fissato con la proprietà CSS `order` (classe `play`); nelle lezioni vale l'ordine dell'HTML. Istruzioni di prove e regate in un riquadro sul mare a gioco fermo (`showBrief`, `hideBrief`); impostazioni in una finestra (`setDlg`). |
 | Disegno | Mare, raffiche, scia, boe, barca, cerchio delle andature, etichette, strumenti a schermo. |
+| Registratore di sessione | Dalla 0.18 (`ses`, `sesTick`): spento a ogni apertura, acceso dalle impostazioni; legge lo stato del gioco a ogni fotogramma, senza scriverlo, e scarica un file di testo con riassunto, legenda, eventi, messaggi, tasti, marcatori (tasto M) e stato una volta al secondo. Si legge con `tests/analizza_sessione.py`. Proposta e decisioni in `PROPOSTA-REGISTRATORE.md`. |
 | Ciclo | `requestAnimationFrame`; un errore imprevisto viene mostrato nel pannello senza bloccare il gioco. |
 
 ### Coordinate e unità
@@ -51,7 +52,7 @@ Dentro `index.html`, nell'ordine:
 
 ### Aggancio per i collaudi
 
-Aprendo il gioco con `#collaudo` in fondo all'indirizzo, la pagina espone `window.__sv`, che serve solo ai collaudi automatici: apertura diretta di lezioni e passi, lettura dello stato e del registro degli errori (`reg`), accelerazione del tempo. Con `#collaudo` il riquadro delle istruzioni è saltato (`__sv.skipBrief = false` lo riattiva). Senza `#collaudo` l'aggancio non esiste.
+Aprendo il gioco con `#collaudo` in fondo all'indirizzo, la pagina espone `window.__sv`, che serve solo ai collaudi automatici: apertura diretta di lezioni e passi, lettura dello stato e del registro degli errori (`reg`), accelerazione del tempo, lettura del registratore di sessione (`__sv.ses`). Con `#collaudo` il riquadro delle istruzioni è saltato (`__sv.skipBrief = false` lo riattiva). Senza `#collaudo` l'aggancio non esiste.
 
 ## Che modello è il motore
 

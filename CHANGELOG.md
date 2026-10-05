@@ -13,6 +13,93 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 0.18 — registratore di sessione
+
+Del 5 ottobre 2026. Proposta, confronto delle tre vie e decisioni: `docs/PROPOSTA-REGISTRATORE.md`.
+
+- **Cosa fa.** Nelle impostazioni (⚙) c'è la casella «Registra la sessione», **spenta a ogni apertura della pagina** (non viene salvata). Da accesa:
+  - il gioco annota eventi, messaggi, tasti e lo stato della barca una volta al secondo;
+  - il tasto **M** mette un marcatore «qui qualcosa non va»;
+  - sul mare compare la spia «● REG» (diventa «● REG · M1» per un attimo dopo M);
+  - «Scarica» crea un file di testo nel browser, senza nessuna connessione;
+  - il campo «Nota» elenca i marcatori presi, così si scrive a quale ci si riferisce;
+  - chiudendo la pagina con una registrazione non scaricata, il browser chiede conferma.
+- **Il file**, testo semplice:
+  - in testa: versione, impostazioni, nota e un riassunto (eventi, tempo per andatura, suggerimenti con quante volte e quanti secondi, tempo per passo di lezione, marcatori), poi una legenda;
+  - poi una riga per ogni cosa: stato, evento, passo di lezione, suggerimento, messaggio a comparsa, regola di regata, errore interno, tasto, marcatore, impostazioni.
+  - **Contenuto:** solo i tasti del gioco (frecce, spazio, W, S; R come evento «raddrizza»; M come marcatore). L'unico testo digitato è la nota; nessun dato personale.
+  - **Il tempo** è quello vero di gioco, pause di lettura comprese; il menu non conta.
+- **Peso misurato:** circa **290 KB per un'ora** (media di 5 sessioni da circa 3 minuti, proiettata). Stima della proposta: 230-330 KB.
+- **Come è fatto.** Un blocco unico prima di «CICLO» (`ses`, `sesTick`), più quattro punti sparsi:
+  - la costante `VERSIONE`;
+  - una chiamata in `tick`;
+  - una in `__sv.run`;
+  - l'HTML e il CSS nelle impostazioni.
+
+  Il registratore **legge soltanto**: confronta a ogni fotogramma contatori, registro degli errori, messaggi, testi del pannello, tasti e impostazioni con quelli del fotogramma prima. Non chiama `Math.random` e non scrive variabili del gioco. Motore, `simulate`, `panel`, `toast`, `regAdd` e l'ascoltatore dei tasti non sono toccati.
+- **Tasto M e campi di testo.** M e la registrazione dei tasti non scattano mai se il focus è in un campo di testo: nota, ricerca del glossario e simili. Lo controlla l'elemento col focus.
+- **Nuovo script** `tests/analizza_sessione.py`. Legge un file e stampa: eventi, tempo per andatura, suggerimenti più visti, passi di lezione, rallentamenti (velocità scesa di oltre metà in 5 s, soglia nostra) e i dieci secondi attorno a ogni marcatore. Poi confronta eventi, suggerimenti e marcatori con il riassunto scritto dal gioco: sono due conti indipendenti. Controllo `--prova` su un file d'esempio, compreso un riassunto sbagliato apposta: superato.
+- **Nuovo collaudo** `tests/collaudo_registratore.py`, quattro parti.
+  - **(a) Pagina vera, senza `#collaudo`: 9 verifiche su 9, ripetuto 5 volte.**
+    - aggancio assente;
+    - interruttore spento all'apertura;
+    - M da spento non mette marcatori;
+    - accesa col clic, il file contiene 1 marcatore, i tasti `→ giù`/`→ su`, la versione e lo stato;
+    - avviso alla chiusura presente con registrazione non scaricata, assente se non si è mai registrato.
+  - **(b) 5 sessioni**, venti 45°, 90°, 135°, 180° e 225°, finestre alternate 1360×650 e 1360×768. Il pilota gioca la prova 3 (finita in 185 s ogni volta), poi la lezione 2. Il collaudo:
+    - preme M due volte e ↑, ← una volta;
+    - digita la nota «m w s r mamma: …» e poi ←, M dentro il campo;
+    - scarica il file e lo legge.
+
+    Esiti in tutte e 5:
+    - 2 marcatori nella posizione in cui sono stati premuti (scarto ≤ 0,05 m, cioè l'arrotondamento a un decimale);
+    - i 4 tasti nell'ordine;
+    - nessun marcatore né tasto in più digitando la nota (che contiene anche ← e M finiti nel campo, come devono);
+    - 7 virate, 1 boa e 1 arrivo come nei contatori del gioco (confronto in parte circolare, perché il registratore legge proprio quei contatori);
+    - passi 2.1-2.4 tutti presenti;
+    - righe di stato con al massimo 1,10 s di distanza (circa 193 righe);
+    - riassunto del gioco uguale a quello ricalcolato dallo script.
+
+    Il tempo per andatura dello script, stimato dalle righe di stato, è più alto di quello del gioco (bolina stretta 173-176 s contro 165), perché l'orologio della registrazione conta anche il tempo vero fra un pezzo e l'altro del pilota: è dichiarato approssimato.
+  - **(c) Fisica identica al bit** (sotto).
+  - **(d) Costo** (sotto).
+- **Tre errori del metro, trovati e corretti prima di accettare i numeri.**
+  - Il primo controllo sui marcatori sommava gli scarti di x e y contro 0,05 m, ma il file scrive ogni coordinata con un decimale. Falliva con scarti di 0,06-0,085 m che erano solo arrotondamento.
+  - Il primo controllo sulla nota cercava il testo digitato intatto, ma il collaudo stesso, premendo ← e M dentro il campo, lo modificava. Ora confronta col valore vero del campo.
+
+  - L'avviso alla chiusura si provava chiudendo la scheda (`page.close(run_before_unload=True)`), e passava **2 volte su 6**. Il gioco era giusto: il gestore blocca l'evento, la pagina è caricata, l'utente ha interagito e `ses.dirty` era vero **9 volte su 9**. È il browser senza finestra che, chiudendo la scheda, non mostra l'avviso in modo affidabile: **3 su 4** anche su una pagina minima con lo stesso gestore. Uscendo dalla pagina con una navigazione, l'avviso compare **4 volte su 4** con una registrazione non scaricata e **0 su 4** senza. Il collaudo ora usa la navigazione: 5 giri su 5 superati.
+
+  In tutti e tre i casi il gioco era giusto.
+- **Fisica identica al bit, registratore acceso e spento.** `Math.random` con seme sostituito dal collaudo, `__sv.run` a passi fissi di 1/60 s, 10 semi per caso. Casi: prove 1, 2 e 3 (200 s) e navigazione libera con raffiche forti a 10 e 15 nodi (150 s, 13 scuffie in tutto a 15 nodi). Confronto su posizione, prua, velocità e sbandamento a ogni passo. **50 corse su 50 identiche.**
+  - **Il metro vede le differenze:** consumando di proposito un numero casuale in più a metà corsa, le traiettorie divergono **20 volte su 20** in navigazione libera, dove si usano circa 255 numeri casuali a corsa.
+  - **Dove il metro non può vedere quella differenza:** nelle prove 1-3 non si usa nessun numero casuale, quindi lì la variante resta identica.
+  - **Difetto del banco, trovato con un controllo:** la prima versione faceva tutte le corse nella stessa pagina e dava **0 su 10** identiche in navigazione libera. Ripetendo due volte la stessa corsa **a registratore spento** il risultato era lo stesso, quindi la colpa era del banco. Causa: con le raffiche la direzione del vento oscilla con `simTime`, che conta dall'apertura della pagina e non si azzera cambiando modalità; ogni corsa partiva con un vento diverso. Ora ogni corsa parte in una pagina nuova, e il controllo «spento ripetuto due volte» resta nel collaudo (50 su 50).
+- **Costo** (navigazione libera, raffiche forti, `__sv.run` da 20 000 passi, 3 ripetizioni, misurato due volte):
+  - spento 3,6-5,2 µs per passo, acceso 9,0-10,4: circa **+5,5 µs per passo**, contro la soglia nostra di 50;
+  - fotogrammi al secondo invariati: **59,7-60,6** acceso e spento.
+
+  Il registratore costa circa il doppio del passo di simulazione da solo, ma in assoluto è un centesimo di fotogramma.
+- **Non-regressione.**
+  - Zona del motore identica riga per riga (91 righe);
+  - uscite di `polare.js` e `raffiche_e_virate.js` **identiche carattere per carattere** a quelle salvate prima della modifica;
+  - `git diff` vuoto su `sperimentale/`;
+  - `collaudo_pannello.py` «nessuno» e tutti `True`, a 1360×650 e a 1360×768;
+  - `collaudo_schermate.py` `errori: []`;
+  - `collaudo_lezioni.py` tutti `OK`, salvo il «primo tratto» di «cazzare», che è un caso di attesa previsto dallo script;
+  - `collaudo_suggerimento.py` nessun caso sbagliato, pannello a 0 px.
+- **La finestra delle impostazioni non ci stava già prima, e col registratore peggiorava.**
+  - **Prima della modifica:** in navigazione libera, dove ha in più le tre scelte del vento, scorreva di **48 px a 1360×650** (difetto preesistente, mai misurato) e di 0 a 1360×768.
+  - **Con le righe del registratore:** **117 px** e **11 px**.
+  - **Perché il collaudo b non lo vedeva:** misurava la finestra solo in lezione, dove quelle tre righe non ci sono. Ora misura anche la navigazione libera.
+  - **Correzione, solo CSS, testi invariati salvo la casella del registratore:**
+    - le tre scelte del vento su una riga;
+    - 6 px fra le righe invece di 10;
+    - 12 px di spazio in fondo invece di 20;
+    - casella del registratore su una riga, con «il file resta sul tuo computer» spostato nel segnaposto della nota;
+    - elenco dei marcatori su una riga, con il testo intero al passaggio del mouse.
+  - **Risultato nel caso peggiore** (navigazione libera, nota e marcatori visibili): **0 px** a 1360×650 (577 px di contenuto su 585 disponibili, 8 px di margine) e a 1360×768.
+  - **Caratteri:** misure fatte senza i caratteri del gioco installati (caratteri di riserva più larghi), quindi pessimistiche.
+
 ## 0.17.1 — correzione di «scadere»
 
 - **Difetto.** Il gioco usava «scadere» per la prua che gira da sola allontanandosi dal vento (lezione 5, suggerimento dal vivo, glossario). **Causa:** due glossari pubblici (marinasveva.com, scuolavelaargentario.com) definiscono «scadere» come essere spinti sottovento da scarroccio o corrente, non la prua che gira: il termine giusto è «poggiare». **Corretto** nei testi di lezione 5 e del suggerimento dal vivo (ora «lascia che la prua poggi da sola»); tolta la voce di glossario «Scadere», introdotta nella 0.17 e ridondante con «Scarroccio» già presente. Nessun cambiamento alla fisica.
