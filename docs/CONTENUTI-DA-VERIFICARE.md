@@ -55,6 +55,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | La poppa non è l'andatura più veloce; lo sono traverso e lasco (per una deriva che non plana). | |
 | Mure a dritta se il vento arriva da destra; il boma sta dal lato opposto alle mure. | |
 | Filetto sopravento agitato: cazza o poggia. Filetto sottovento agitato: lasca o orza. | |
+| In poppa e in gran lasco i filetti non servono: con la scotta tutta lascata non esiste una posizione della randa che li tenga dritti. Dalla 0.17 il pannello lo dice. | ❓ **Da verificare**: oltre quale andatura un velista smette di guardare i filetti della randa, e che cosa guarda invece. Il limite del gioco (112° apparenti, circa 135° reali) è figlio del nostro motore, non di una fonte. |
 | «Orzi e cazzi, poggi e laschi». | |
 | Superando i 180° in poppa con la vela tutta aperta si stramba, e spesso si scuffia. | |
 

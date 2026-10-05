@@ -638,7 +638,7 @@ function step(S, C, E, dt){
       cond: (I, S, B) => S.gybesV > B.gybesV, hold: 0.6,
       done: "Il boma ha attraversato la barca di colpo, la barca ha sbandato e rallentato: <em>strambata violenta</em>. Se capita senza volerlo, navigando in poppa distratti, si chiama <em>strambata involontaria</em>." },
     { title: "Strambata controllata", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
-      text: ["Ora fai bene: in poppa <em>cazza</em> finché il boma è a 45° o meno (guarda il valore sotto il cursore della scotta), <em>poggia</em> finché il vento passa dall'altro lato, poi <em>lasca</em> e regola."],
+      text: ["Ora fai bene: in poppa <em>cazza</em> finché il boma è a 45° o meno (guarda il valore sotto il cursore della scotta), <em>poggia</em> finché il vento passa dall'altro lato, poi <em>lasca</em> e regola: i filetti tornano dritti quando orzi fino al lasco."],
       cond: (I, S, B) => S.gybesC > B.gybesC && I.twa > 115 && I.tt === "ok", hold: 1,
       done: "Strambata controllata: il boma ha fatto un tragitto breve e la barca non si è scomposta. Il comando a bordo: «Pronti a strambare?», «Pronti!», «Strambo!»." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 2, rose: true, hintKind: "tt", final: true,
@@ -1888,6 +1888,9 @@ function step(S, C, E, dt){
     const sailMsg = { flog: ["bad", "La vela sbatte: sei nell'angolo morto."], wind: ["bad", "La vela sbatte: è troppo lascata."],
                       lee: ["bad", "La vela è in stallo: troppo cazzata."], ok: ["good", "Vela gonfia e regolata."] }[I.tt];
     [cls, msg] = kind === "sail" ? sailMsg : ttMsg;
+    // oltre circa 112° di vento apparente nessuna posizione della randa dà i filetti dritti (boma al massimo a BOAT.maxBoom):
+    // a scotta tutta lascata «lasca» e «troppo cazzata» sarebbero consigli sbagliati, e in poppa i filetti non si usano.
+    if (I.tt === "lee" && I.sheet > 0.99){ cls = "good"; msg = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."; }
     const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
     if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
     else if (S.heel > 25){ cls = "bad"; msg = "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }

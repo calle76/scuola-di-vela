@@ -14,6 +14,8 @@ pip install -r requirements.txt
 python -m playwright install chromium
 ```
 
+**La versione di playwright deve corrispondere al browser in cache.** Ogni versione di playwright vuole una revisione precisa di Chromium: se la cartella `~/.cache/ms-playwright` ha già `chromium-1223`, serve `playwright==1.60.0` (la 1.58 vuole la 1208, la 1.63 la 1243). `python -m playwright install --dry-run chromium` stampa la revisione che la versione installata si aspetta; se non corrisponde, o si installa quel browser o si fissa la versione di playwright.
+
 ## Fisica (Node.js)
 
 ```
@@ -41,6 +43,7 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 | `collaudo_fantasma.py` | Avversari esperti e salvataggio del fantasma | Tutti arrivano; fantasma salvato e visibile |
 | `collaudo_registro.py [casi]` | Provoca ogni errore guidando la barca: prova pulita con stella nel menu, boa dal lato sbagliato, barca piantata, strambata a vela aperta, scuffia, partenza anticipata, linea fuori dagli estremi, contatto; nelle lezioni, gli errori richiesti dal passo | `13 su 13 verifiche riuscite` |
 | `collaudo_pannello.py [larghezza altezza]` | Altezza del pannello in ogni passo di lezione, nelle prove, in navigazione libera e in regata; riquadro delle istruzioni (gioco fermo, Invio, riapertura) e riquadro iniziale della regata nel gioco vero, senza `#collaudo` | `pannello che eccede: nessuno` a 1360×650 e 1360×768; sei `True`, `errori: []` |
+| `collaudo_suggerimento.py [larghezza altezza]` | Il suggerimento della vela alle andature portanti: con la scotta tutta lascata (1,00) il pannello dice «Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono.» e non più «lasca» o «troppo cazzata»; con la scotta a 0,90-0,99 il consiglio di prima resta. Più il caso peggiore dell'altezza del pannello, scrivendo i testi più lunghi nel suggerimento in ogni passo e modalità | `casi sbagliati: nessuno`, `eccesso massimo del pannello` tutto a 0 e uscita 0. Dichiara quanti casi ha misurato per ogni lato e **fallisce se sono zero** |
 | `collaudo_fasce.py [ripetizioni] [prove]` | Taratura delle fasce di tempo: un pilota automatico percorre le prove a passi fissi di 1/60 s, con direzioni del vento diverse | Prove 1–4 con tempi identici per ogni vento (circa 87, 136, 185, 327 s); prova 5 intorno a 350 s, con alcuni tentativi non finiti (il pilota si pianta nelle raffiche) |
 | `collaudo_giro_boa.py [casi]` | Un pilota automatico guida con barra e scotta: boa a sinistra, a dritta, sbagliata e corretta (prova 4), triangolo giusto e con la boa 2 a dritta (prova 5), prove 1–3 | Finisce solo quando la boa è girata a sinistra; `giri sbagliati` 1 nei casi sbagliati; prove 1–3 completate |
 

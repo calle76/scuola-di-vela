@@ -1,6 +1,6 @@
 # Dubbi e ricerche
 
-Aggiornato al 4 ottobre 2026. È l'elenco vivo dei piccoli dubbi e delle idee rimandate, da riprendere in sessioni di ricerca dedicate. Non serve risolverli per andare avanti: il progetto procede, e ogni semplificazione è dichiarata (vedi `FISICA-E-TARATURE.md`, sezione «Stato finale del prototipo del fiocco», e `MANUALE-bozza.md`).
+Aggiornato al 5 ottobre 2026. È l'elenco vivo dei piccoli dubbi e delle idee rimandate, da riprendere in sessioni di ricerca dedicate. Non serve risolverli per andare avanti: il progetto procede, e ogni semplificazione è dichiarata (vedi `FISICA-E-TARATURE.md`, sezione «Stato finale del prototipo del fiocco», e `MANUALE-bozza.md`).
 
 Come si usa:
 
@@ -26,6 +26,8 @@ Lista completa in `CONTENUTI-DA-VERIFICARE.md`. Quelle che hanno un dubbio dichi
 | Strambata e abbattuta: sono sinonimi? Alcuni testi chiamano abbattuta la manovra voluta e strambata quella involontaria | Aperto | *esperto* o *libro* |
 | Posizione dei filetti sulla randa: sulla balumina o vicino all'inferitura? La regola di lettura è confermata, la posizione no | Aperto | *esperto* |
 | Colori dei filetti (rosso a sinistra, verde a destra): scelta del gioco | Dichiarata, da confermare | *esperto* |
+| Da quale andatura i filetti della randa non si usano più, e su che cosa si regola la vela al loro posto. Dalla 0.17 il pannello dice «in poppa i filetti non servono» a scotta tutta lascata | Aperto | *esperto* |
+| Il limite oltre cui nel gioco i filetti dritti non esistono più (**112° di vento apparente**, cioè circa **135° di vento reale**) è figlio di una barca lenta: il boma arriva al massimo a 85° (`BOAT.maxBoom`) e oltre quell'angolo l'incidenza supera lo stallo. Su un 470 le fonti danno circa **75° apparenti a 120° reali** (F4), contro i **97,5°** del nostro motore: una barca più veloce tiene il vento apparente molto più avanti e i filetti lavorano più a poppa. Da capire se il confine va spostato, e se per farlo serve una barca più veloce o un limite di scotta diverso | Aperto | *esperto*, poi *codice* |
 | Comandi di manovra («Pronti a virare?», «Viro!»…): varianti tra scuole | Aperto | *esperto* |
 | Orziera: verificare il termine usato nell'esercizio di rotta | Aperto | *esperto* |
 | Confini delle andature (angolo morto circa 40°, testi «circa 45° per lato») | Allineato alle dispense come convenzione didattica | *esperto*, per le derive reali |
