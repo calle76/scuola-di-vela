@@ -15,7 +15,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 0.17 — in corso: «Tenere la rotta» che si vinceva da sé, partenza di regata rifatta
 
-Fatti i punti 1, 2 e 3; i punti da 4 a 8 sono elencati in fondo alla sezione.
+Fatti i punti 1, 2, 3 e 8; i punti da 4 a 7 sono elencati in fondo alla sezione.
 
 ### Lezione 2, «Tenere la rotta»: il passo si completava senza toccare nulla
 
@@ -79,13 +79,20 @@ Fatti i punti 1, 2 e 3; i punti da 4 a 8 sono elencati in fondo alla sezione.
 - **Limite dichiarato.** I 112° apparenti (circa 135° reali) sono figli di una barca lenta: su un 470 le fonti danno circa **75° apparenti a 120° reali** (F4), contro i **97,5°** del nostro motore. Una barca più veloce tiene il vento apparente molto più avanti e i filetti lavorano più a poppa: il confine è nostro, non della vela. Annotato in `docs/DUBBI-E-RICERCHE.md` e in `docs/CONTENUTI-DA-VERIFICARE.md` (lezione 3), da far giudicare a un velista insieme all'affermazione «in poppa i filetti non servono».
 - **Due messaggi del pannello restano da sistemare, e non in questo punto.** «Sbandi troppo: lasca la scotta» chiede l'impossibile quando la scotta è già al massimo, ed è lo stesso difetto appena corretto; vince sul messaggio nuovo perché viene dopo. «Raffica in arrivo: preparati a lascare» va reso condizionale: lascare non è sempre necessario, e chi vuole andare più veloce la raffica la cerca. Nelle 287 letture del gioco vero è il secondo che ha coperto il testo nuovo 31 volte.
 
+### Punto 8: ambiente dei collaudi stabile
+
+- **Problema.** Playwright non era installato in modo permanente per il python3 di sistema, e ogni macchina rischia di scaricare una versione non allineata al Chromium già in cache: `chromium-1223` corrisponde a `playwright==1.60.0` (la 1.58 vuole la 1208, la 1.63 la 1243).
+- **Fatto.** Nuovo script `tests/prepara_ambiente.sh`, con `--dry-run`: crea un venv in `.venv-collaudi/` (aggiunta a `.gitignore`), ci installa `playwright==1.60.0`, controlla che `chromium-1223` sia già nella cache di Playwright e, se manca, stampa il comando per scaricarlo senza eseguirlo, poi apre `index.html` in headless e legge il titolo, stampando `OK` o l'errore. Non tocca `index.html` né `sperimentale/`, non usa `sudo`, non installa nulla fuori dal progetto.
+- **Verificato con `--dry-run`:** stampa le quattro righe attese (`.gitignore`, venv, pip, cache) senza creare né installare nulla; `bash -n` sullo script non trova errori di sintassi.
+- **Non eseguita l'installazione vera** in questa sessione: lo script è apposta per farla lanciare all'utente. Un tentativo di prova nell'ambiente di lavoro di Claude Code ha comunque mostrato che l'installazione vera funziona finché si raggiunge PyPI (bloccato lì dalla sandbox di rete di quell'ambiente, non dallo script).
+- `docs/COLLAUDI.md` aggiornato: come si usa lo script, come si lancia ogni collaudo con il python del venv (`.venv-collaudi/bin/python tests/nome_collaudo.py`), perché 1.60.0, e cosa fare se il browser in cache cambia.
+
 ### Ancora da fare nella 0.17
 
 4. Lezione 2, «Barra sottovento» e «Barra sopravento»: riscrivere il testo con la rosa dell'angolo morto invece dei gradi, che in quei passi il pannello non mostra.
 5. Lezione 3, «Bolina» e gli altri passi che chiedono un'andatura: evidenziare il settore di arrivo con un bordo tratteggiato e adattare il testo.
 6. `drawLabels`: anello vuoto al posto del pallino pieno, che copre l'oggetto indicato.
 7. Lezione 5, «Una virata che non riesce»: spiegare «lascia che la prua scada», aggiungere «scadere» al glossario e rendere coerente il suggerimento.
-8. Ambiente dei collaudi stabile: playwright installato in modo permanente, versione allineata al browser in cache, istruzioni aggiornate in `COLLAUDI.md`.
 
 ## 0.16 — Menu a riquadri, fasce di tempo, lezione 1 con il timone, rosa e freccia della velocità
 - **Decisioni (fase A, 29 settembre):** menu principale a riquadri, tutto visibile senza scorrere; fasce di tempo oro, argento e bronzo per le prove; lezione 1 con le frecce del timone al posto dei pulsanti Orza e Poggia; rosa dell'angolo morto; freccia della velocità; pannello ridotto fuori dalle lezioni. Carteggio e mare aperto escono dal menu: diventeranno un'espansione o un gioco a parte. Nei titoli del gioco si dice «brevetto», non «patente».

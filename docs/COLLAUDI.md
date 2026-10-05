@@ -6,15 +6,26 @@ Regola del progetto: **ogni modifica a fisica, lezioni o avversari si verifica r
 
 ## Installazione (una volta sola)
 
-Servono Node.js (per la fisica) e Python 3 (per il browser).
+Serve Node.js (per la fisica). Per il browser serve un ambiente Python stabile: lo prepara `tests/prepara_ambiente.sh`.
 
 ```
-cd tests
-pip install -r requirements.txt
-python -m playwright install chromium
+tests/prepara_ambiente.sh --dry-run   # stampa cosa farebbe, senza installare nulla
+tests/prepara_ambiente.sh             # prepara davvero l'ambiente
 ```
 
-**La versione di playwright deve corrispondere al browser in cache.** Ogni versione di playwright vuole una revisione precisa di Chromium: se la cartella `~/.cache/ms-playwright` ha già `chromium-1223`, serve `playwright==1.60.0` (la 1.58 vuole la 1208, la 1.63 la 1243). `python -m playwright install --dry-run chromium` stampa la revisione che la versione installata si aspetta; se non corrisponde, o si installa quel browser o si fissa la versione di playwright.
+Lo script non tocca `index.html` né `sperimentale/`, non usa `sudo` e non installa nulla fuori dal progetto: crea un venv in `.venv-collaudi/` (cartella ignorata da git, aggiunta al `.gitignore` se manca), ci installa una versione fissa di playwright e controlla che il browser Chromium corrispondente sia già nella cache di sistema (`~/.cache/ms-playwright`). Se manca, stampa il comando per scaricarlo ma non lo esegue: va lanciato a mano. Alla fine apre `index.html` in headless e legge il titolo, e stampa `OK` oppure l'errore.
+
+**Perché una versione fissa.** Ogni versione di playwright vuole una revisione precisa di Chromium, e scaricarne una nuova ogni volta è lento e può fallire offline. Nella cache di questo progetto c'era già `chromium-1223`, e la versione di playwright che lo vuole è **1.60.0** (la 1.58 vuole la 1208, la 1.63 la 1243): è quella che lo script installa, così non serve scaricare nulla.
+
+**Se il browser in cache cambia** (per esempio su un'altra macchina, o dopo una pulizia della cache): lanciare `tests/prepara_ambiente.sh --dry-run` e leggere la riga `cache:`; se dice che `chromium-1223` non c'è, o si scarica quella revisione con il comando stampato dallo script, o si cambia `CHROMIUM_REV` e `PLAYWRIGHT_VERSION` in testa allo script per farli corrispondere a quello che c'è davvero (`python -m playwright install --dry-run chromium` dentro al venv dice quale revisione la versione installata si aspetta).
+
+**Per lanciare un collaudo** si usa il python del venv, non quello di sistema, dalla cartella principale del progetto:
+
+```
+.venv-collaudi/bin/python tests/collaudo_quiz.py
+```
+
+(i collaudi trovano `index.html` e `tests/output/` da soli, quindi la cartella da cui si lancia il comando non conta; conta solo quale python si usa.)
 
 ## Fisica (Node.js)
 

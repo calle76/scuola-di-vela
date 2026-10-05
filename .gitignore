@@ -20,3 +20,6 @@ RESOCONTO.md
 .mcp.json
 .idea
 .vscode
+
+# ambiente virtuale dei collaudi (punto 8 della 0.17)
+.venv-collaudi/
