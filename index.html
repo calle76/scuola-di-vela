@@ -111,8 +111,10 @@ canvas:focus{outline:none}
 .panel.play .card h2{font-size:1.3rem}
 .card p{font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.5;margin:0 0 8px}
 .card em{font-style:normal;font-weight:600;color:var(--accent)}
-.feedback{border-left:3px solid var(--good);padding:4px 0 4px 12px;margin-top:4px}
+.feedback{border-left:3px solid var(--good);padding:2px 0 2px 12px;margin-top:1px}
 .feedback p{margin:0}
+/* 0.18.1: spazio riservato ma invisibile, cosi' completare un passo non sposta i pulsanti sotto al puntatore */
+.feedback.pending,#lNext.pending{visibility:hidden}
 .row{display:flex;gap:8px;flex-wrap:wrap}
 .row button,.btn{font:inherit;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:7px 16px;border-radius:6px;cursor:pointer}
 .panel .row button,.panel .btn{padding:5px 12px}
@@ -274,7 +276,7 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
       <div class="stepline"><p class="step" id="lStep"></p><p class="errs" id="lErr"></p></div>
       <h2 id="lTitle"></h2>
       <div id="lText"></div>
-      <div class="feedback" id="lFeedback" hidden></div>
+      <div class="feedback pending" id="lFeedback"></div>
       <div class="row" style="margin-top:12px">
         <button id="lBack">Indietro</button>
         <button id="lRetry">Ricomincia</button>
@@ -1114,10 +1116,15 @@ function step(S, C, E, dt){
     $("lStep").textContent = "Passo " + (i + 1) + " di " + steps.length;
     $("lTitle").textContent = st.title;
     $("lText").innerHTML = st.text.map(t => "<p>" + (typeof t === "function" ? t() : t) + "</p>").join("");
-    $("lFeedback").hidden = true;
+    // 0.18.1: solo nei passi con pulsanti Cazza/Lasca lo spazio resta riservato (invisibile, non "hidden"),
+    // cosi' completare il passo non sposta quei pulsanti sotto al puntatore di chi clicca piu' volte di fila.
+    // Altrove si torna al comportamento di prima (spazio zero finche' il passo non e' completato).
+    const semBtns = !!(st.sem && st.sem.length);
+    $("lFeedback").innerHTML = st.done ? "<p>" + st.done + "</p>" : "";
+    $("lFeedback").classList.toggle("pending", semBtns); $("lFeedback").hidden = !semBtns;
     $("lBack").hidden = i === 0;
     $("lRetry").hidden = !!st.pause;
-    $("lNext").hidden = !!st.cond;
+    $("lNext").classList.toggle("pending", semBtns && !!st.cond); $("lNext").hidden = !semBtns && !!st.cond;
     $("lNext").textContent = st.final ? nextLabel() : "Avanti";
     $("lQuiz").hidden = !st.final;
     if (st.final){ progress.done["l" + lessonIdx] = true; saveProgress(); }
@@ -1127,9 +1134,8 @@ function step(S, C, E, dt){
   }
   function completeStep(){
     stepDone = true;
-    const st = curStep();
-    $("lFeedback").innerHTML = "<p>" + st.done + "</p>"; $("lFeedback").hidden = false;
-    $("lNext").hidden = false;
+    $("lFeedback").classList.remove("pending"); $("lFeedback").hidden = false;
+    $("lNext").classList.remove("pending"); $("lNext").hidden = false;
   }
   $("lNext").onclick = () => { const st = curStep(); if (st.final) return goNext(); showStep(Math.min(LESSONS[lessonIdx].steps.length - 1, stepIdx + 1)); };
   $("lBack").onclick = () => showStep(Math.max(0, stepIdx - 1));
