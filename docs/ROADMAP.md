@@ -149,5 +149,5 @@ Classifiche comuni e fantasmi condivisi («sfida il record di un amico»).
 | Rosa dei candidati dell'equipaggio | Profili, quanto cambiano, valore del tetto del bonus. |
 | Ordini all'equipaggio | Tasti e presentazione a schermo; preavviso minimo di ogni manovra. |
 | Fiocco a farfalla | Come entra nel gioco (lato opposto, asta) e da quale livello. |
-| Tasti con due vele | Barra ← →, randa A e D, fiocco Q ed E nel prototipo; ripensare A S D W del gioco a una vela. |
+| Tasti con due vele | Decisa il 6 ottobre 2026: frecce = comando principale del ruolo, A D = il secondo, altri tasti per i successivi; il livello 1 resta com'è. Dettagli in VISIONE-LIVELLI-E-CARRIERA.md. |
 | Livelli 4 e oltre | Ruoli, regole, quali barche entrano davvero. |

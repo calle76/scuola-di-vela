@@ -24,7 +24,11 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 
 Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione.
 
-## 3. Cosa il gioco fa bene
+## 3. I comandi nei livelli successivi
+
+Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) la regola sarà: ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi. Il primo comando di un ruolo usa le frecce, il secondo i tasti A D, un terzo comando altri tasti. Le frecce e A D non sono fissi su una funzione: chi non guida il timone userà le frecce per il suo comando principale (per esempio il prodiere con il fiocco). In ogni coppia di tasti, quello di sinistra lascia e quello di destra cazza. Con due comandi si gioca con due mani, frecce a destra e A D a sinistra.
+
+## 4. Cosa il gioco fa bene
 
 - **Il vento apparente.** Il vento che senti a bordo è la combinazione del vento reale e del vento dovuto al moto: accelerando si sposta verso prua. Su questo lavora la vela.
 - **L'angolo morto.** Con la prua troppo vicina al vento la vela non spinge e la barca si pianta. In questa barca la barca non avanza sotto circa 33° dal vento e arranca fino a circa 40°.
@@ -51,7 +55,7 @@ Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostaz
 
 Nota onesta sulla velocità: confrontando con una tabella trovata in un forum (provenienza non verificabile) per una deriva monoposto standard, a 10 nodi di vento il gioco risulta più lento del 20-40%, soprattutto in poppa, dove una barca vera plana. Non è un difetto accertato: i dati sono incerti e i confronti approssimativi.
 
-## 5. Il fiocco (livello 2, per ora solo prototipo)
+## 6. Il fiocco (livello 2, per ora solo prototipo)
 
 Il fiocco non è ancora nel gioco: vive in un prototipo separato, `sperimentale/fiocco.html`.
 
@@ -75,14 +79,14 @@ Il fiocco non è ancora nel gioco: vive in un prototipo separato, `sperimentale/
 
 **Il prototipo è sovrainvelato.** Con una raffica da 20 nodi si scuffia e a 15 nodi la virata non riesce. Il livello 2 va giocato con vento da leggero a medio (il limite esatto è una stima da misurare).
 
-## 6. Come sono stati verificati i numeri
+## 7. Come sono stati verificati i numeri
 
 - Ogni modifica si collauda guidando davvero la barca con un pilota automatico, con molti tentativi e semi fissi.
 - Le fasce di tempo delle prove (bronzo, argento, oro) sono tarate sul tempo del pilota automatico.
 - Le soglie dei criteri si scrivono prima di misurare e non si cambiano dopo, senza dirlo. I numeri che escono dalla fascia si riportano così come sono.
 - Le affermazioni nautiche sono confrontate con fonti pubbliche (dispense e manuali federali, uno studio scientifico su una deriva olimpica a due). Una sola fonte non basta per dire «verificato». L'elenco di ciò che resta da controllare è in `CONTENUTI-DA-VERIFICARE.md` e in `DUBBI-E-RICERCHE.md`.
 
-## 7. Quanto è realistico: tre gradini
+## 8. Quanto è realistico: tre gradini
 
 | Gradino | Cosa | Stato |
 | --- | --- | --- |
@@ -90,7 +94,7 @@ Il fiocco non è ancora nel gioco: vive in un prototipo separato, `sperimentale/
 | 2 | Pochi pezzi mirati con dati di fonte: la barra «pesante» da barca sbandata, lo stallo del timone | Idea |
 | 3 | Un motore dinamico completo (scafo, deriva, timone e vele che producono forze e momenti), con un simulatore esistente come modello da studiare | Idea |
 
-## 8. Per chi scrive questo manuale
+## 9. Per chi scrive questo manuale
 
 - Si aggiorna a ogni versione chiusa: una voce nuova per ogni novità.
 - Non promette più di quanto il gioco fa: solo ciò che è verificato o dichiarato come semplificazione. Il resto sta in `DUBBI-E-RICERCHE.md`.

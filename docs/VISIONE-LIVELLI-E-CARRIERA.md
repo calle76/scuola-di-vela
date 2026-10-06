@@ -240,7 +240,20 @@ Con il gioco a due vele cambieranno anche i comandi: nel prototipo la barra usa 
 - Il fiocco a farfalla: come entra nel gioco (lato opposto, asta) e da quale livello.
 - Quiz con domande in più, perché il ripasso non coincida con l'esame.
 
-## 12. Rischi
+## 12. Comandi
+
+Regola decisa il 6 ottobre 2026.
+
+- **Il livello 1 resta com'è**: barra con le frecce ← →, randa con ↑ ↓ e con W e S nella lezione 1, Spazio per la barra al centro, R per raddrizzare.
+- **Dal livello 2** un ruolo fa quello che deve fare, senza un limite al numero di comandi. I comandi si assegnano in ordine: il primo alle frecce, il secondo ad A D; un terzo ad altri tasti, scelti quando serve.
+- **I tasti si riusano tra i ruoli.** Se non si guida il timone, le frecce servono per il comando principale del ruolo. I tasti principali (le frecce) sono quelli a cui si assegnano i nuovi comandi. In ogni coppia il tasto di sinistra lascia e quello di destra cazza (come nel prototipo).
+- **Si gioca con due mani** quando si comandano due cose: frecce a destra, A D a sinistra.
+- **Il ruolo si scegli prima di partire** e non cambia durante la prova. La legenda dei tasti nel pannello e il registratore devono scrivere il nome del comando («barra», «randa», «fiocco»), non solo il tasto.
+- **Esempi**, da decidere con le lezioni del livello 2: timoniere = barra con le frecce e randa con A D; prodiere = fiocco con le frecce e, se servirà, il peso dell'equipaggio con A D. Dal livello 2 la randa passa quindi da ↑ ↓ ad A D: è l'unico cambio, e la lezione introduttiva del livello 2 lo dovrà dire.
+- I tasti Q ed E (fiocco) e A D (randa) del prototipo del fiocco non vincolano il gioco.
+- **Ordine dei cursori nel pannello** quando si ridisegna: come sulla barca vista dall'alto con la prua in su, cioè vela di prua in alto, randa nel mezzo, timone in basso.
+
+## 13. Rischi
 
 - **Fisica delle vele.** Il motore non ha un momento di imbardata dovuto alle vele: la tappa C del prototipo si è chiusa il 4 ottobre 2026 **ripiegando su semplificazioni dichiarate** (niente momento di imbardata, niente fiocco a collo, niente farfalla).
 - **Vento del livello 2.** Il livello 2 va giocato con vento **da leggero a medio**: il prototipo è sovrainvelato oltre i **12-15 nodi circa** (una raffica da 20 nodi fa scuffiare, a 15 nodi la virata non riesce), perché ha lo scafo e il timoniere del gioco a una vela con il 37% di vela in più. **Il limite esatto va deciso insieme alle lezioni.** Dare al prototipo la massa e la coppia raddrizzante di una barca a due è stato valutato e scartato (tappa C, quarto compito, in `FISICA-E-TARATURE.md`): senza trapezio la barca a due sarebbe meno stabile di questa, e col trapezio sarebbe una seconda novità principale per il livello 2.
