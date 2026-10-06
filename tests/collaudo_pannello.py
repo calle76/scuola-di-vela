@@ -12,25 +12,37 @@ async def main():
         b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": W, "height": H}); errs = []
         pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)
-        eccede = []
+        # le misure di eccesso qui sotto valgono solo con i caratteri veri del gioco: con i font di sistema
+        # la larghezza e l'altezza del testo sono diverse e la prova non direbbe niente di vero sul margine reale.
+        await pg.evaluate("document.fonts.ready")
+        caratteri = await pg.evaluate("""() => ({
+            "barlow 700": document.fonts.check('700 16px "Barlow Semi Condensed"'),
+            "barlow 600": document.fonts.check('600 16px "Barlow Semi Condensed"'),
+            "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
+        })""")
+        caratteri_ok = all(caratteri.values())
+        print("caratteri del gioco caricati:", caratteri_ok, caratteri)
+        eccede = []; misure = []
         for li, n in enumerate([13, 7, 13, 5, 9, 5]):
             await pg.evaluate(f"__sv.openItem(['l',{li}])")
             for k in range(n):
                 await pg.evaluate(f"__sv.showStep({k})"); await pg.wait_for_timeout(100)
-                d = await pg.evaluate(PH)
+                d = await pg.evaluate(PH); misure.append(d)
                 if d > 0: eccede.append(f"lezione {li+1} passo {k+1}: +{d}")
         for it, nome in [("['m',0]", "prova 1"), ("['m',4]", "prova 5"), ("'free'", "navigazione libera")]:
             await pg.evaluate(f"__sv.openItem({it})"); await pg.wait_for_timeout(400)
-            d = await pg.evaluate(PH)
+            d = await pg.evaluate(PH); misure.append(d)
             if d > 0: eccede.append(f"{nome}: +{d}")
         # regata dopo il via, con la spiegazione di un contatto
         await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#cdSel", "60"])
         await pg.evaluate("__sv.fast(10)"); await pg.wait_for_timeout(7000); await pg.evaluate("__sv.fast(1)")
         await pg.evaluate("__sv.R.lastRule='Contatto con Blu: tu eri mure a sinistra e dovevi lasciare strada a chi era mure a dritta. Penalità di 15 secondi.'")
-        await pg.wait_for_timeout(300); d = await pg.evaluate(PH)
+        await pg.wait_for_timeout(300); d = await pg.evaluate(PH); misure.append(d)
         if d > 0: eccede.append(f"regata dopo il via: +{d}")
         await pg.screenshot(path=str(OUT / f"P_regata_{W}x{H}.png"))
+        print(f"finestra {W}x{H}: eccesso massimo del pannello (pixel): {max(misure)}")
         print(f"finestra {W}x{H}: pannello che eccede:", eccede or "nessuno")
+        if not caratteri_ok: print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, le misure sopra non sono attendibili")
         # riquadro delle istruzioni
         await pg.evaluate("__sv.skipBrief=false"); await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#cdSel", "180"])
         await pg.evaluate("__sv.openItem(['r',0])"); await pg.wait_for_timeout(1000)
@@ -80,4 +92,5 @@ async def main():
             await giro(f"prova {n}", lambda n=n: pg2.locator("#menu button.item", has_text=f"Prova {n}").click(), "#mRetry", False)
         print("errori:", errs + errs2)
         await b.close()
+        if not caratteri_ok: sys.exit(1)
 asyncio.run(main())

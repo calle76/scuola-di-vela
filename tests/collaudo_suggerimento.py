@@ -36,6 +36,16 @@ async def main():
         b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": W, "height": H})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)
+        # i margini del pannello (punto 4 sotto) valgono solo se i caratteri veri del gioco sono caricati:
+        # con i font di sistema le misure di larghezza/altezza del testo sono diverse e la prova non direbbe niente di vero.
+        await pg.evaluate("document.fonts.ready")
+        caratteri = await pg.evaluate("""() => ({
+            "barlow 700": document.fonts.check('700 16px "Barlow Semi Condensed"'),
+            "barlow 600": document.fonts.check('600 16px "Barlow Semi Condensed"'),
+            "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
+        })""")
+        caratteri_ok = all(caratteri.values())
+        print("caratteri del gioco caricati:", caratteri_ok, caratteri)
         # la prova 2 ha vento costante: nessuna raffica che copra il suggerimento
         await pg.evaluate("__sv.startMission(1, 0)"); await pg.wait_for_timeout(300)
 
@@ -97,6 +107,7 @@ async def main():
         print("errori pagina:", errs[:5])
         vuoto = [n for n in (n_lee, n_altro, n_quasi, n_quasi_lee, n_sail, n_pan) if n == 0]
         if vuoto: print("COLLAUDO NON VALIDO: una delle misure non ha nessun caso")
+        if not caratteri_ok: print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, i margini del pannello misurati sopra non sono attendibili")
         await b.close()
-        sys.exit(1 if (sbagliati or errs or vuoto) else 0)
+        sys.exit(1 if (sbagliati or errs or vuoto or not caratteri_ok) else 0)
 asyncio.run(main())

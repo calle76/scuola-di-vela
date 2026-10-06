@@ -76,7 +76,7 @@ canvas:focus{outline:none}
 .focusTip{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(10,24,36,.7);color:#fff;border-radius:16px;padding:5px 14px;font-size:.95rem;pointer-events:none}
 .zoomBox{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
 .zoomBox button{width:40px;height:40px;border-radius:8px;border:none;background:rgba(10,24,36,.65);color:#fff;font-size:1.4rem;cursor:pointer}
-.panel{border-left:1px solid var(--line);overflow-y:auto;padding:10px 16px 10px;display:flex;flex-direction:column;gap:9px}
+.panel{border-left:1px solid var(--line);overflow-y:auto;padding:8px 16px 8px;display:flex;flex-direction:column;gap:7px}
 /* prove, regate, navigazione libera: prima strumenti e comandi, poi stato, istruzioni in fondo */
 .panel.play > .topbar{order:0} .panel.play > #instr{order:1} .panel.play > #hint,.panel.play > #errBox{order:2}
 .panel.play > #sem,.panel.play > #direct{order:3} .panel.play > #status{order:4}
@@ -115,9 +115,9 @@ canvas:focus{outline:none}
 .feedback p{margin:0}
 /* 0.18.1: spazio riservato ma invisibile, cosi' completare un passo non sposta i pulsanti sotto al puntatore */
 .feedback.pending,#lNext.pending{visibility:hidden}
-.row{display:flex;gap:8px;flex-wrap:wrap}
+.row{display:flex;gap:6px;flex-wrap:wrap}
 .row button,.btn{font:inherit;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:7px 16px;border-radius:6px;cursor:pointer}
-.panel .row button,.panel .btn{padding:5px 12px}
+.panel .row button,.panel .btn{padding:4px 10px}
 .row button.primary,.btn.primary{background:var(--ink);color:var(--panel)}
 .done{border:2px solid var(--good);border-radius:8px;padding:12px}
 .done p{margin:0 0 10px;font-size:1.1rem;font-weight:600}
@@ -277,7 +277,7 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
       <h2 id="lTitle"></h2>
       <div id="lText"></div>
       <div class="feedback pending" id="lFeedback"></div>
-      <div class="row" style="margin-top:12px">
+      <div class="row" style="margin-top:8px">
         <button id="lBack">Indietro</button>
         <button id="lRetry">Ricomincia</button>
         <button id="lQuiz" hidden>Fai il ripasso</button>
@@ -590,8 +590,7 @@ function step(S, C, E, dt){
       cond: I => I.twa >= 43 && I.twa <= 72 && I.tt === "ok", hold: 1.5,
       done: "Orzando la vela era troppo aperta: hai dovuto cazzare. Regola da ricordare: <em>orzi e cazzi, poggi e laschi</em>." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 2, rose: true, hintKind: "tt", final: true,
-      text: ["Le andature, dalla più vicina alla più lontana dal vento: <em>bolina</em>, <em>traverso</em>, <em>lasco</em>, <em>gran lasco</em>, <em>poppa</em>. Si naviga <em>mure a dritta</em> o <em>mure a sinistra</em>.",
-             "Ogni andatura vuole la sua regolazione, e i <em>filetti</em> te la indicano. Esercitati, poi passa alle prove 1 e 2, dove il vento non arriva più sempre da nord."] }
+      text: ["Le andature, dalla più vicina alla più lontana dal vento: <em>bolina</em>, <em>traverso</em>, <em>lasco</em>, <em>gran lasco</em>, <em>poppa</em>. Ognuna vuole la sua regolazione, e i <em>filetti</em> te la indicano. Ora passa alle prove: il vento non arriverà più sempre da nord."] }
   ];
 
   const L4 = [
@@ -893,7 +892,7 @@ function step(S, C, E, dt){
   const MEDAL_ON = () => MISSIONS.some(m => m.bands);
   try { const raw = localStorage.getItem(STORE); if (raw) progress = Object.assign(progress, JSON.parse(raw)); } catch(e){}
   const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
-  const itemName = ([t, i]) => t === "l" ? LESSONS[i].name + ": " + LESSONS[i].title : "Prova " + (i + 1) + ": " + MISSIONS[i].title;
+  const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
   const seqPos = () => SEQ.findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
   const nextItem = () => { const p = seqPos(); return p >= 0 && p < SEQ.length - 1 ? SEQ[p + 1] : null; };
   const nextLabel = () => { const n = nextItem(); return n ? "Prosegui: " + itemName(n) : "Torna al menu"; };
