@@ -27,6 +27,24 @@ Lo script non tocca `index.html` né `sperimentale/`, non usa `sudo` e non insta
 
 (i collaudi trovano `index.html` e `tests/output/` da soli, quindi la cartella da cui si lancia il comando non conta; conta solo quale python si usa.)
 
+## Lanciarli tutti insieme
+
+```
+tests/lancia_tutti.sh             # tutti i collaudi
+tests/lancia_tutti.sh --veloce    # salta i collaudi più lunghi (li nomina)
+tests/lancia_tutti.sh --dry-run   # stampa solo l'elenco con i comandi, senza lanciare niente
+```
+
+Funziona da qualunque cartella, non installa niente e controlla da solo che il venv dei collaudi e Node ci siano: se manca il venv salta i collaudi Python e dice di lanciare `tests/prepara_ambiente.sh`; se manca Node salta `polare.js` e `raffiche_e_virate.js`. Per ciascun collaudo stampa una riga con l'esito:
+
+- **OK** o **FALLITO**: solo per i pochi collaudi che escono con un codice chiaro legato al risultato (`collaudo_pulsanti.py`, `collaudo_suggerimento.py`, `collaudo_registratore.py`). Per i falliti, anche le ultime 15 righe.
+- **DA CONTROLLARE**: per tutti gli altri, che stampano numeri o righe da confrontare a mano con l'esito atteso di questa pagina (il codice di uscita, in questi script, non dice se il risultato è giusto, solo se lo script è andato in errore). Lo script indica cosa guardare; il rapporto finale li rielenca tutti insieme così si vede subito quanti ce ne sono.
+- **SALTATO**: per `--veloce` (collaudi lunghi: `collaudo_registro.py`, `collaudo_giro_boa.py`, `collaudo_registratore.py`) o per un ambiente non pronto.
+
+Il codice di uscita è 0 solo se tutti i collaudi lanciati hanno dato OK (nessun fallito, nessuno da controllare, nessuno saltato): è quindi raro finché i collaudi «da controllare» non vengono resi con un esito automatico — è un elenco di candidati a quel lavoro, non un difetto dello script.
+
+**Dura da pochi minuti (`--veloce`) a una ventina di minuti** (la prima volta conviene cronometrarla: la stima si aggiusta da sola leggendo i tempi che la riga di ogni collaudo stampa). **Quando conviene lanciarla:** non serve farla fare a Claude Code a ogni modifica, lo dice anche `CLAUDE.md` («Risparmio di crediti»); Claude Code lancia solo i collaudi legati alla modifica in corso. Conviene lanciarla per intero sul proprio PC: ogni tanto, senza un motivo preciso; e sempre **come verifica indipendente dopo che Claude Code ha finito un lavoro che tocca `index.html`**, incollando poi il riepilogo nella conversazione.
+
 ## Fisica (Node.js)
 
 ```

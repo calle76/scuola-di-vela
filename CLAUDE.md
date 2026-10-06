@@ -29,6 +29,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un uni
 - **Pannello** a 1360x650 senza pixel di eccesso, anche nel caso peggiore.
 - **Ogni versione aggiorna `CHANGELOG.md`.** I prototipi non sono versioni: stanno in `sperimentale/`, non toccano `index.html`, e vanno sotto «Sperimentale».
 - Nei prototipi segna ogni riga cambiata con `// FIOCCO`. A ogni compito chiuso aggiorna i documenti in `docs/`.
+- **Risparmio di crediti.** Lancia solo i collaudi direttamente legati alla modifica; i controlli veloci di non-regressione (`polare.js`, `raffiche_e_virate.js`) restano sempre da lanciare. Non aspettare la suite completa né i collaudi lunghi. A fine lavoro indica il comando `tests/lancia_tutti.sh` (con `--veloce` se basta), che l'utente lancia sul suo PC incollando il riepilogo. Se un collaudo è indispensabile per capire se la modifica funziona, lancialo tu.
 
 ## Git
 

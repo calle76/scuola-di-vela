@@ -184,6 +184,7 @@ Del 5 ottobre 2026. Proposta, confronto delle tre vie e decisioni: `docs/PROPOST
 - **Verificato con `--dry-run`:** stampa le quattro righe attese (`.gitignore`, venv, pip, cache) senza creare né installare nulla; `bash -n` sullo script non trova errori di sintassi.
 - **Non eseguita l'installazione vera** in questa sessione: lo script è apposta per farla lanciare all'utente. Un tentativo di prova nell'ambiente di lavoro di Claude Code ha comunque mostrato che l'installazione vera funziona finché si raggiunge PyPI (bloccato lì dalla sandbox di rete di quell'ambiente, non dallo script).
 - `docs/COLLAUDI.md` aggiornato: come si usa lo script, come si lancia ogni collaudo con il python del venv (`.venv-collaudi/bin/python tests/nome_collaudo.py`), perché 1.60.0, e cosa fare se il browser in cache cambia.
+- Nuovo `tests/lancia_tutti.sh` (con `--veloce` e `--dry-run`): lancia tutti i collaudi e stampa una riga di esito ciascuno; dove lo script non dà un codice di uscita legato al risultato, segna «DA CONTROLLARE» invece di inventare un OK. Pensato per una verifica indipendente sul PC dell'utente, non per ogni modifica di Claude Code (vedi «Risparmio di crediti» in `CLAUDE.md`).
 
 ### Punti 4-7: testi delle lezioni più precisi
 
