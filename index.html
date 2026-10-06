@@ -36,6 +36,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .menu-inner{max-width:1320px;margin:0 auto;padding:18px 24px 14px}
 .menu-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:14px}
 .menu-head h1{font-size:2.5rem;font-weight:700;line-height:.95;margin:0}
+.menu-head .ver{font-size:.8rem;font-weight:600;color:var(--ink-soft);margin-left:8px;vertical-align:middle}
 .menu-head p{font-family:"Source Serif 4",Georgia,serif;font-size:.98rem;line-height:1.4;margin:6px 0 0;color:var(--ink-soft)}
 .pill{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:6px 14px;border-radius:16px;cursor:pointer}
 .tiles{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
@@ -805,7 +806,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.18"; // scritta nel file del registratore di sessione
+  const VERSIONE = "0.18.3"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -924,7 +925,7 @@ function step(S, C, E, dt){
     const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
       return `<button data-q="${i}">${L.name}: ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
-      <header class="menu-head"><div><h1>Scuola di vela</h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
+      <header class="menu-head"><div><h1>Scuola di vela <span class="ver">V. ${VERSIONE}</span></h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
         <button class="pill" id="menuGloss">Glossario</button></header>
       <div class="tiles">
         <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></div></section>
@@ -2040,6 +2041,7 @@ function step(S, C, E, dt){
     if (st && st.labels) drawLabels(v, st.labels);
     drawCompass(v);
     drawWindBox(v);
+    drawVersionTag();
     const heelG = !st || st.hud >= 3;
     if (heelG) drawHeelGauge();
     // rosa dell'angolo morto (0.16): dove c'è lo sbandamento e nei passi pratici delle lezioni, tranne quando c'è già la rosa grande
@@ -2352,6 +2354,12 @@ function step(S, C, E, dt){
   function drawWindBox(v){
     ctx.save(); ctx.font = `600 14px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
     ctx.fillText("Vento reale da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", 16, 26);
+    ctx.restore();
+  }
+  // sotto la bussola (in alto a destra), sopra i pulsanti dello zoom: unico punto libero a tutte le risoluzioni del pannello
+  function drawVersionTag(){
+    ctx.save(); ctx.font = `600 12px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
+    ctx.fillText("V. " + VERSIONE, W - 16, 96);
     ctx.restore();
   }
 

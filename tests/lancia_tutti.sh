@@ -63,6 +63,7 @@ TESTS=(
     "collaudo_partenze.py|py|ambiguo|0||collaudo_partenze.py"
     "collaudo_aggressiva.py|py|ambiguo|0||collaudo_aggressiva.py"
     "collaudo_pulsanti.py|py|chiaro|0||collaudo_pulsanti.py"
+    "collaudo_versione.py|py|chiaro|0||collaudo_versione.py"
     "collaudo_strambata.py (6 nodi)|py|ambiguo|0||collaudo_strambata.py 6 10"
     "collaudo_strambata.py (15 nodi)|py|ambiguo|0||collaudo_strambata.py 15 10"
     "collaudo_suggerimento.py|py|chiaro|0||collaudo_suggerimento.py"
