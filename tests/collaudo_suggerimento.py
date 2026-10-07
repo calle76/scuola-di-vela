@@ -43,6 +43,7 @@ async def main():
             "barlow 700": document.fonts.check('700 16px "Barlow Semi Condensed"'),
             "barlow 600": document.fonts.check('600 16px "Barlow Semi Condensed"'),
             "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
+            "facce Barlow presenti e caricate (check() da solo dà vero anche senza)": [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"),
         })""")
         caratteri_ok = all(caratteri.values())
         print("caratteri del gioco caricati:", caratteri_ok, caratteri)

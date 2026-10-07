@@ -21,12 +21,14 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 | Randa: lascare e cazzare | frecce ↓ ↑ |
 | Raddrizzare la barca dopo uno sbandamento forte | R |
 | Pulsanti della lezione 1 | W e S |
+| Vista del percorso: tenuto premuto, sposta la barca verso il bordo dello schermo opposto all'arrivo o alla boa e, se serve, allontana l'inquadratura finché l'arrivo o la boa si vedono; al rilascio tornano posizione e zoom di prima (solo nelle prove e nelle regate) | Q |
+| Avvicinare e allontanare l'inquadratura | pulsanti + e − sul mare, rotellina del mouse (dalla 0.19.3 si allontana fino a circa 480 m di campo in altezza a 1360×650) |
 
 Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione.
 
 ## 3. I comandi nei livelli successivi
 
-Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) la regola sarà: ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi. Il primo comando di un ruolo usa le frecce, il secondo i tasti A D, un terzo comando altri tasti. Le frecce e A D non sono fissi su una funzione: chi non guida il timone userà le frecce per il suo comando principale (per esempio il prodiere con il fiocco). In ogni coppia di tasti, quello di sinistra lascia e quello di destra cazza. Con due comandi si gioca con due mani, frecce a destra e A D a sinistra.
+Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono.
 
 ## 4. Cosa il gioco fa bene
 

@@ -99,6 +99,8 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | Chi gira una boa dal lato sbagliato può rimediare tornando indietro e rifacendo il giro: il percorso della barca, immaginato come un filo teso, deve passare dal lato giusto di ogni boa (regola del «filo teso» del regolamento di regata). | |
 | Toccare una boa in regata comporta una penalità (nel gioco non è ancora gestito). | |
 | Si arriva quando la barca taglia la linea d'arrivo provenendo dall'ultima boa; nella realtà conta la prima parte dello scafo che la attraversa, nel gioco il centro della barca (prove dalla 0.19; voce «Linea d'arrivo» del glossario: linea fra due boe, in regata spesso fra una boa e la barca giuria). | |
+| Dalla 0.19.2 la linea d'arrivo è disegnata a scacchi bianchi e neri e la scritta «Arrivo» ha una bandierina a scacchi: è un simbolo del gioco per riconoscerla, non una cosa che si vede in mare, dove la linea è solo immaginaria fra le due boe (o fra boa e barca giuria). Da dichiarare, non da verificare; resta da verificare se e quale bandiera segnala l'arrivo in una regata vera prima di scriverne nei testi. | |
+| Le raffiche portano spesso un salto di direzione oltre all'aumento di vento (fonte: nessuna; parere comune). Da far confermare a un velista. Nel gioco ogni raffica ha già un salto di direzione proprio (`sh`). | |
 | Una barca deve evitare il contatto quando è ragionevolmente possibile, anche se ha la precedenza (il registro degli errori conta tutti i contatti, distinguendo quelli con penalità). | |
 
 ## Ipotesi del prototipo del fiocco (`sperimentale/fiocco.html`, non nel gioco)

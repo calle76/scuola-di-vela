@@ -19,6 +19,7 @@ async def main():
             "barlow 700": document.fonts.check('700 16px "Barlow Semi Condensed"'),
             "barlow 600": document.fonts.check('600 16px "Barlow Semi Condensed"'),
             "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
+            "facce Barlow presenti e caricate (check() da solo dà vero anche senza)": [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"),
         })""")
         caratteri_ok = all(caratteri.values())
         print("caratteri del gioco caricati:", caratteri_ok, caratteri)
@@ -33,12 +34,19 @@ async def main():
             await pg.evaluate(f"__sv.openItem({it})"); await pg.wait_for_timeout(400)
             d = await pg.evaluate(PH); misure.append(d)
             if d > 0: eccede.append(f"{nome}: +{d}")
+            # 0.19.2: riga dei tasti mai tagliata; «Q vista» nella riga solo se ci sta, altrimenti sul mare
+            r = await pg.evaluate("(()=>{const k=document.getElementById('kQ'),p=k.parentNode;return [p.scrollWidth-p.clientWidth, !k.hidden]})()")
+            print(f"  {nome}: riga dei tasti eccede di {r[0]} px, «Q vista» nella riga {r[1]}")
+            if r[0] > 0: eccede.append(f"{nome}: riga dei tasti tagliata di {r[0]} px")
         # regata dopo il via, con la spiegazione di un contatto
         await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#cdSel", "60"])
         await pg.evaluate("__sv.fast(10)"); await pg.wait_for_timeout(7000); await pg.evaluate("__sv.fast(1)")
         await pg.evaluate("__sv.R.lastRule='Contatto con Blu: tu eri mure a sinistra e dovevi lasciare strada a chi era mure a dritta. Penalità di 15 secondi.'")
         await pg.wait_for_timeout(300); d = await pg.evaluate(PH); misure.append(d)
         if d > 0: eccede.append(f"regata dopo il via: +{d}")
+        r = await pg.evaluate("(()=>{const k=document.getElementById('kQ'),p=k.parentNode;return [p.scrollWidth-p.clientWidth, !k.hidden]})()")
+        print(f"  regata dopo il via: riga dei tasti eccede di {r[0]} px, «Q vista» nella riga {r[1]}")
+        if r[0] > 0: eccede.append(f"regata: riga dei tasti tagliata di {r[0]} px")
         await pg.screenshot(path=str(OUT / f"P_regata_{W}x{H}.png"))
         print(f"finestra {W}x{H}: eccesso massimo del pannello (pixel): {max(misure)}")
         print(f"finestra {W}x{H}: pannello che eccede:", eccede or "nessuno")

@@ -1,6 +1,8 @@
 # Proposta: linea d'arrivo nelle prove e tasto «vista»
 
-**Parte A approvata come 0.19 con queste decisioni; parte B (tasto vista) rimandata alla 0.19.2.**
+**Parte A approvata come 0.19 con queste decisioni; parte B (tasto vista) approvata e fatta come 0.19.2, sul tasto Q invece di V.**
+
+Decisioni del 7 ottobre 2026 sulla parte B (0.19.2): tasto **Q** tenuto premuto, senza alias (niente V né Maiusc), anche con Bloc Maiusc, mai col focus in un campo di testo; 60% di spostamento, barca fra il 20% e l'80% dello schermo, circa 0,25 s (ipotesi nostre); prove e regate (anche prima del via), non lezioni, niente senza obiettivo; funzione `goal()` unica per freccia, rilevamento e vista; legenda «Q vista» nella riga dei tasti solo se ci sta, altrimenti sul mare sopra + e −; registratore «Q(vista)». Regola dei tasti: comando principale di ogni ruolo su W S, altre coppie verticali (E D, poi altre evitando R) solo se servono, A e Z liberi per funzioni speciali, Q vista. Nella stessa versione: linea d'arrivo a scacchi e scritta «Arrivo» (e «Linea di partenza» in regata) in una pillola a misura fissa. Cosa è cambiato rispetto al testo qui sotto: le increspature non hanno il raggio allargato ma sono centrate sul centro dello schermo (stesse celle con e senza Q, vedi `CHANGELOG.md`); nella navigazione libera il rilevamento resta quello della boa 1.
 
 Decisioni del 7 ottobre 2026 sulla parte A:
 
@@ -86,7 +88,9 @@ Glossario: «Linea d'arrivo». Quiz: nessuna domanda cita l'arrivo. Fonti: la de
 
 Nelle prove la freccia punta alla voce attiva di `marks`, che nell'ultimo lato è il centro della linea: nessun codice in più. (Nelle prove non usa `targetOf`, che è delle regate.)
 
-## Parte B: tasto «vista» (rimandata alla 0.19.2)
+**0.19.3, «vista del percorso»** (7 ottobre sera). Misurato dall'utente: la prova 1 ha l'arrivo a 230 m, la 2 a circa 255 m, ma allo zoom minimo di allora (0,4) si vedevano circa 120 m in altezza e con Q, barca all'80%, circa 95 m davanti: lo spostamento da solo non bastava, contro quanto scritto qui sotto («lo zoom − dà già 2,5 volte il campo»). Ora Q, oltre a spostare la barca, allontana l'inquadratura (circa 0,4 s) finché l'obiettivo entra a 50 px dal bordo, mai sotto lo zoom minimo, che scende da 0,4 a 0,1; al rilascio tornano posizione e zoom. Le increspature sfumano fra zoom 0,5 e 0,35 e sotto non si disegnano; le raffiche restano chiazze scure. Numeri in `CHANGELOG.md`.
+
+## Parte B: tasto «vista» (fatta nella 0.19.2, sul tasto Q; testo della Fermata 1 qui sotto, con V)
 
 - **Tasto V**, tenuto premuto. Livello 1: ← → ↑ ↓ W S Spazio R M; riservati A D e Q E Z C (Q E nel prototipo del fiocco). Restano liberi B F G H I J K L N O P T U X Y e le cifre.
 - **Spostamento:** la barca va dalla parte opposta alla direzione in cui si vede l'obiettivo sullo schermo (vale anche con «prua in alto»), del 60% della mezza larghezza e della mezza altezza (ipotesi), tenuta fra il 20% e l'80% dello schermo; arrivo e ritorno morbidi in circa 0,25 s (ipotesi). Campo verso l'obiettivo a 1360×650: da 485 a 776 px in orizzontale, da 325 a 520 in verticale.

@@ -244,6 +244,8 @@ Con il gioco a due vele cambieranno anche i comandi: nel prototipo la barra usa 
 
 Regola decisa il 6 ottobre 2026.
 
+**Aggiornamento del 7 ottobre 2026 (0.19.2), che sostituisce le parti su frecce e A D qui sotto:** per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. Le righe seguenti restano come registro della regola del 6 ottobre; gli esempi vanno rifatti con la regola nuova quando si scrivono le lezioni del livello 2.
+
 - **Il livello 1 resta com'è**: barra con le frecce ← →, randa con ↑ ↓ e con W e S nella lezione 1, Spazio per la barra al centro, R per raddrizzare.
 - **Dal livello 2** un ruolo fa quello che deve fare, senza un limite al numero di comandi. I comandi si assegnano in ordine: il primo alle frecce, il secondo ad A D; un terzo ad altri tasti, scelti quando serve.
 - **I tasti si riusano tra i ruoli.** Se non si guida il timone, le frecce servono per il comando principale del ruolo. I tasti principali (le frecce) sono quelli a cui si assegnano i nuovi comandi. In ogni coppia il tasto di sinistra lascia e quello di destra cazza (come nel prototipo).

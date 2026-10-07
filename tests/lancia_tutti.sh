@@ -65,6 +65,7 @@ TESTS=(
     "collaudo_pulsanti.py|py|chiaro|0||collaudo_pulsanti.py"
     "collaudo_versione.py|py|chiaro|0||collaudo_versione.py"
     "collaudo_linea.py|py|chiaro|0||collaudo_linea.py"
+    "collaudo_vista.py|py|chiaro|0||collaudo_vista.py"
     "collaudo_strambata.py (6 nodi)|py|ambiguo|0||collaudo_strambata.py 6 10"
     "collaudo_strambata.py (15 nodi)|py|ambiguo|0||collaudo_strambata.py 15 10"
     "collaudo_suggerimento.py|py|chiaro|0||collaudo_suggerimento.py"
@@ -82,7 +83,7 @@ nota() {
     case "$1" in
         "polare.js") echo "confronta a mano con circa 3,4 nodi a 45°, 5,2 a 90°, 3,5 a 180° con 10 nodi" ;;
         "raffiche_e_virate.js") echo "virata riuscita in circa 4s da 3,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire circa 55° (scuffia)" ;;
-        "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota" ;;
+        "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
         "collaudo_quiz.py") echo "sei righe di punteggio e «errori: []» vuota" ;;
         "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA»" ;;
@@ -90,7 +91,7 @@ nota() {
         "collaudo_aggressiva.py") echo "per ogni incontro, almeno una manovra deve evitare il contatto" ;;
         "collaudo_strambata.py (6 nodi)") echo "nessuna scuffia" ;;
         "collaudo_strambata.py (15 nodi)") echo "scuffia sempre" ;;
-        "collaudo_pannello.py (1360x650)"|"collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» e «errori: []»" ;;
+        "collaudo_pannello.py (1360x650)"|"collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
         "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): prove 1-4 a 92,1/142,6/196,4/333,4 s per ogni vento; prova 5 finite 18 su 24, mediana circa 353 s" ;;
         "collaudo_fantasma.py") echo "la prova deve completarsi e il fantasma risultare salvato" ;;
         "collaudo_registro.py") echo "riga finale «ESITO: 13 su 13 verifiche riuscite»" ;;

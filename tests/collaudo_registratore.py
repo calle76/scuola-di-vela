@@ -114,6 +114,7 @@ async def parte_b(p, n_sessioni=5):
             "barlow 700": document.fonts.check('700 16px "Barlow Semi Condensed"'),
             "barlow 600": document.fonts.check('600 16px "Barlow Semi Condensed"'),
             "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
+            "facce Barlow presenti e caricate (check() da solo dà vero anche senza)": [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"),
         })""")
         caratteri_tutti.append(all(caratteri.values()))
         await pg.evaluate("__sv.openItem(['m',2])"); await pg.evaluate(f"__sv.startMission(2, {vento})"); await pg.evaluate("__sv.fast(0)")

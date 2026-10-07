@@ -85,6 +85,8 @@ Ordine di sviluppo dopo il prototipo: ruolo del prodiere, equipaggio guidato dal
 
 Nelle regate miste: compenso di tempo tra barche diverse, come nelle regate reali.
 
+Idea per le raffiche (7 ottobre 2026, osservazione 17): in barca vera si vede solo la chiazza scura; freccia e «+x nodi» (forza e salto di direzione) sono informazione da strumenti. Livello 1 solo chiazza; un aiuto facoltativo, spento di default e senza effetto sui meriti, con freccia e numero (utile nella lezione 6); livello 3 strumenti vicino alla barca; livello 4 carta del tattico.
+
 ## Fase D — Carteggio e mare aperto: espansione o gioco a parte
 
 Deciso a settembre 2026: il carteggio e la navigazione in mare aperto sono quasi un altro gioco (vista a carta nautica, cabinato, tempi lunghi, dati geografici con licenza). Escono dal menu della Scuola di vela e diventeranno un'espansione o un gioco nuovo che riusa il motore fisico. Sarà anche il momento di dividere il file unico in moduli.
@@ -149,5 +151,5 @@ Classifiche comuni e fantasmi condivisi («sfida il record di un amico»).
 | Rosa dei candidati dell'equipaggio | Profili, quanto cambiano, valore del tetto del bonus. |
 | Ordini all'equipaggio | Tasti e presentazione a schermo; preavviso minimo di ogni manovra. |
 | Fiocco a farfalla | Come entra nel gioco (lato opposto, asta) e da quale livello. |
-| Tasti con due vele | Decisa il 6 ottobre 2026: frecce = comando principale del ruolo, A D = il secondo, altri tasti per i successivi; il livello 1 resta com'è. Dettagli in VISIONE-LIVELLI-E-CARRIERA.md. |
+| Tasti con due vele | Decisa il 6 ottobre 2026 e cambiata il 7 ottobre (0.19.2): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. Dettagli in VISIONE-LIVELLI-E-CARRIERA.md. |
 | Livelli 4 e oltre | Ruoli, regole, quali barche entrano davvero. |

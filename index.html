@@ -338,7 +338,7 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
         <input id="sheet" type="range" min="0" max="100" value="40">
         <div class="ends"><span>cazzata</span><span>lascata</span></div>
       </section>
-      <p class="keys"><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>↑</kbd> cazza &nbsp;<kbd>↓</kbd> lasca &nbsp;<kbd>Spazio</kbd> centra la barra</p>
+      <p class="keys"><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>↑</kbd> cazza &nbsp;<kbd>↓</kbd> lasca &nbsp;<kbd>Spazio</kbd> centra la barra<span id="kQ" hidden> &nbsp;<kbd>Q</kbd> vista</span></p>
     </div>
 
     <div class="row" id="mRow" hidden><button id="mRetry">Ricomincia la prova</button><button id="mWind">Cambia vento</button></div>
@@ -809,7 +809,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.19.1"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.19.3"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -1248,6 +1248,7 @@ function step(S, C, E, dt){
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (KEYSEM[k]){ semPress(KEYSEM[k]); if (allowSem.length) e.preventDefault(); return; }
     if (k === "r"){ rightBoat(); return; }
+    if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
       if (e.target.tagName === "SELECT") return;
       e.preventDefault(); keys.add(k);
@@ -1285,8 +1286,10 @@ function step(S, C, E, dt){
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
   $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
   $("zIn").onclick = () => userZoom = Math.min(3, userZoom * 1.25);
-  $("zOut").onclick = () => userZoom = Math.max(0.4, userZoom / 1.25);
-  canvas.addEventListener("wheel", e => { e.preventDefault(); userZoom = clamp(userZoom * (e.deltaY > 0 ? 0.9 : 1.1), 0.4, 3); }, { passive: false });
+  // zoom minimo 0,1 (0.19.3): a 1360x650 un obiettivo a 300 m resta sullo schermo con la barca al margine (vedi CHANGELOG)
+  const ZMIN = 0.1;
+  $("zOut").onclick = () => userZoom = Math.max(ZMIN, userZoom / 1.25);
+  canvas.addEventListener("wheel", e => { e.preventDefault(); userZoom = clamp(userZoom * (e.deltaY > 0 ? 0.9 : 1.1), ZMIN, 3); }, { passive: false });
   canvas.addEventListener("pointerdown", () => canvas.focus());
   const updFocus = () => $("focusTip").hidden = mode === "menu" || document.hasFocus();
   addEventListener("focus", updFocus); addEventListener("blur", updFocus); setInterval(updFocus, 1000);
@@ -1571,6 +1574,13 @@ function step(S, C, E, dt){
   }
 
   const bearingTo = (s, p) => norm360(Math.atan2(p.x - s.x, -(p.y - s.y)) / D2R);
+  // obiettivo attuale della barca: lo usano la freccia fuori schermo, il rilevamento del pannello e il tasto vista
+  function goal(){
+    if (mode === "race") return R && R.boats[0].fin === null ? targetOf(R.boats[0]) : null;
+    if (mode === "mission") return S.finished ? null : curMarks[S.markIdx];
+    if (mode === "lesson") return S.lessonMark && !S.markReached ? S.lessonMark : null;
+    return null; // navigazione libera: nessun obiettivo
+  }
   function targetOf(b){
     if (b.leg === 0 || b.ocs){
       if (b.ocs){ const [x, y] = fromWF(0, 20); return { x, y, kind: "line" }; }
@@ -1810,13 +1820,15 @@ function step(S, C, E, dt){
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
   }
 
-  function drawRaceWorld(){
+  function drawRaceWorld(v){
     if (!R) return;
-    // linea di partenza e arrivo
-    ctx.strokeStyle = R.t < 0 ? "rgba(255,255,255,.55)" : "rgba(255,226,122,.7)"; ctx.lineWidth = 0.18; ctx.setLineDash([1.2, 1.2]);
-    ctx.beginPath(); ctx.moveTo(R.pin.x, R.pin.y); ctx.lineTo(R.cb.x, R.cb.y); ctx.stroke(); ctx.setLineDash([]);
+    // linea di partenza (tratteggio) e, dopo il via, d'arrivo (scacchi)
+    if (R.t < 0){
+      ctx.strokeStyle = "rgba(255,255,255,.55)"; ctx.lineWidth = 0.18; ctx.setLineDash([1.2, 1.2]);
+      ctx.beginPath(); ctx.moveTo(R.pin.x, R.pin.y); ctx.lineTo(R.cb.x, R.cb.y); ctx.stroke(); ctx.setLineDash([]);
+    } else drawChecker(R.pin, R.cb, v.ppm, 1);
     // boa di partenza (arancione) e barca giuria
-    ctx.fillStyle = "#F28C1B"; ctx.beginPath(); ctx.arc(R.pin.x, R.pin.y, 0.8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#F28C1B"; ctx.beginPath(); ctx.arc(R.pin.x, R.pin.y, Math.max(0.8, 3 / v.ppm), 0, Math.PI * 2); ctx.fill();
     ctx.save(); ctx.translate(R.cb.x, R.cb.y); ctx.rotate(env.twd * D2R);
     ctx.fillStyle = "#DADFE2"; ctx.strokeStyle = "#5E6A72"; ctx.lineWidth = 0.08;
     ctx.beginPath(); ctx.moveTo(0, -4); ctx.lineTo(1.6, -1.5); ctx.lineTo(1.5, 4); ctx.lineTo(-1.5, 4); ctx.lineTo(-1.6, -1.5); ctx.closePath(); ctx.fill(); ctx.stroke();
@@ -1824,7 +1836,7 @@ function step(S, C, E, dt){
     ctx.fillStyle = R.t < 0 ? "#F2C14E" : "#2B5DB8"; ctx.fillRect(0.2, -3.2, 1.2, 0.8);
     ctx.restore();
     // boa di bolina
-    ctx.fillStyle = "#F2D43C"; ctx.beginPath(); ctx.arc(R.mark.x, R.mark.y, 0.9, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#F2D43C"; ctx.beginPath(); ctx.arc(R.mark.x, R.mark.y, Math.max(0.9, 3 / v.ppm), 0, Math.PI * 2); ctx.fill();
     drawRoundArrow(R.mark, 7, "rgba(255,226,122,.9)");
     // avversari
     for (const b of R.boats){ if (b.me) continue; drawWakeOf(b.wake, b.S.u); drawOther(b.S, b.info, b.ctl.tiller, 1); }
@@ -1834,7 +1846,6 @@ function step(S, C, E, dt){
     ctx.save(); ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (const b of R.boats){ if (b.me) continue; const [sx, sy] = toScreen(v, b.S.x, b.S.y); ctx.fillStyle = "rgba(10,24,36,.6)"; const w = ctx.measureText(b.name).width + 10; ctx.fillRect(sx - w / 2, sy - 58, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(b.name, sx, sy - 49); }
     const [gx, gy] = toScreen(v, R.mark.x, R.mark.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Boa di bolina · lasciala a sinistra", gx + 10, gy - 10);
-    const [lx, ly] = toScreen(v, R.cb.x, R.cb.y); ctx.fillText(R.t < 0 ? "Linea di partenza" : "Arrivo", lx + 10, ly + 14);
     // orologio e posizione
     const me = R.boats[0], rank = ranking(), pos = rank.indexOf(me) + 1;
     let big, small = "";
@@ -1856,7 +1867,9 @@ function step(S, C, E, dt){
     if (R.t > -10 && R.t < 0){ ctx.font = `700 64px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fillText(String(Math.ceil(-R.t)), W / 2, H * 0.3); }
     if (me.ocs){ ctx.font = `700 16px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "#FFD447"; ctx.fillText(R.t < 0 || R.t < 3 ? "Partenza anticipata: torna dietro la linea" : "Non sei partito: torna dietro la linea e tagliala tra giuria e boa", W / 2, 88); }
     ctx.restore();
-    if (me.fin === null) offscreenArrow(v, targetOf(me));
+    const g = goal(); // dopo l'arrivo niente freccia
+    if (g) offscreenArrow(v, g);
+    linePill(v, R.pin, R.cb, R.t < 0 ? "Linea di partenza" : "Arrivo", g && g.kind !== "mark" ? g : null, 0, 4);
   }
   // freccia curva sulla prua: da che parte sta girando davvero la barca
   function drawTurnHint(){
@@ -1901,8 +1914,11 @@ function step(S, C, E, dt){
     $("iTw").textContent = Math.round(I.twa) + "° · " + (local.tws * KN).toFixed(0) + " kn";
     $("iAw").textContent = Math.round(Math.abs(info.awa)) + "° · " + (info.aws * KN).toFixed(1) + " kn";
     $("iHdg").textContent = deg3(S.h);
-    const mk = mode === "race" && R ? targetOf(R.boats[0]) : curMarks[Math.min(S.markIdx, curMarks.length - 1)];
-    $("iBrg").textContent = mode === "lesson" || !mk || S.finished ? "—" : deg3(Math.atan2(mk.x - S.x, -(mk.y - S.y)) / D2R);
+    const mk = mode === "free" ? curMarks[0] : goal(); // navigazione libera: boa 1, come prima della 0.19.2
+    $("iBrg").textContent = mode === "lesson" || !mk ? "—" : deg3(Math.atan2(mk.x - S.x, -(mk.y - S.y)) / D2R);
+    const kq = $("kQ"); kq.hidden = !viewOn(); // «Q vista» nella legenda solo se la riga non si taglia, altrimenti sul mare
+    if (!kq.hidden && kq.parentNode.scrollWidth > kq.parentNode.clientWidth) kq.hidden = true;
+    qOnSea = viewOn() && kq.hidden;
     $("iHeel").textContent = S.capsized ? "scuffia" : Math.round(Math.abs(S.heel)) + "°";
     $("iLee").textContent = Math.abs(info.leeway || 0).toFixed(0) + "°";
     const t = ctl.tiller;
@@ -1971,10 +1987,38 @@ function step(S, C, E, dt){
   addEventListener("resize", resize);
   const hash = (i, j, k) => { let n = i * 374761393 + j * 668265263 + k * 2147483647; n = (n ^ (n >> 13)) * 1274126177; return ((n ^ (n >> 16)) >>> 0) / 4294967295; };
   let rippleOff = [0, 0], wakeT = 0;
+  // tasto vista (Q tenuto), «vista del percorso»: sposta la barca sullo schermo dalla parte opposta all'obiettivo e, se serve, allontana
+  // l'inquadratura finché barca e obiettivo stanno sullo schermo con un margine (mai sotto ZMIN). Solo disegno: fisica e tempo non lo leggono.
+  // Ipotesi nostre: 60% della mezza larghezza e della mezza altezza, barca fra il 20% e l'80% dello schermo, spostamento in circa 0,25 s,
+  // allontanamento in circa 0,4 s (VIEW_ZK), margine VIEW_M px. Al rilascio tutto torna com'era: userZoom non si tocca.
+  // Una futura vista tattica con pausa (livello 4) sarebbe una condizione in più in «paused» nel ciclo.
+  const VIEW_SHIFT = 0.6, VIEW_K = 12, VIEW_ZK = 7.5, VIEW_M = 50; // VIEW_K, VIEW_ZK: 1/s, al 95% in 0,25 s e in 0,4 s
+  let zoomQ = 1; // fattore di zoom del tasto vista (1 = nessun effetto)
+  const RIP_Z0 = 0.35, RIP_Z1 = 0.5; // dissolvenza delle increspature fra questi due zoom (ipotesi nostra)
+  let viewOff = [0, 0], qOnSea = false, fontsOk = false, rippleCells = 0;
+  Promise.all(["600", "700"].map(w => document.fonts.load(w + ' 14px "Barlow Semi Condensed"'))).catch(() => {}).then(() => fontsOk = true);
+  const viewOn = () => mode === "mission" || mode === "race";
   function view(){
-    const ppm = Math.min(W, H) / 48 * camZoom;
+    const ppm = Math.min(W, H) / 48 * camZoom * zoomQ;
     const rot = opt.view === "prua" ? -S.h * D2R : 0;
-    return { ppm, rot, cx: W / 2, cy: H * (opt.view === "prua" ? 0.6 : 0.5) };
+    return { ppm, rot, cx: W / 2 + viewOff[0], cy: H * (opt.view === "prua" ? 0.6 : 0.5) + viewOff[1] };
+  }
+  function viewUpdate(dt){
+    const v = { ...view(), cx: W / 2, cy: H * (opt.view === "prua" ? 0.6 : 0.5) }, g = viewOn() && keys.has("q") ? goal() : null;
+    let tx = 0, ty = 0, tz = 1;
+    if (g){
+      const [gx, gy] = toScreen(v, g.x, g.y), dx = (gx - v.cx) / zoomQ, dy = (gy - v.cy) / zoomQ, d = Math.hypot(dx, dy); // dx, dy: senza l'effetto del tasto
+      if (d > 1){
+        const bx = clamp(v.cx - dx / d * VIEW_SHIFT * W / 2, 0.2 * W, 0.8 * W), by = clamp(v.cy - dy / d * VIEW_SHIFT * H / 2, 0.2 * H, 0.8 * H);
+        tx = bx - v.cx; ty = by - v.cy;
+        // fattore che porta l'obiettivo dentro lo schermo, a VIEW_M px dal bordo, con la barca nella posizione spostata
+        const lim = (b, q, size) => q > 0 ? (size - VIEW_M - b) / q : q < 0 ? (b - VIEW_M) / -q : Infinity;
+        tz = clamp(Math.min(1, lim(bx, dx, W), lim(by, dy, H)), ZMIN / camZoom, 1);
+      }
+    }
+    const a = 1 - Math.exp(-VIEW_K * dt);
+    viewOff[0] += (tx - viewOff[0]) * a; viewOff[1] += (ty - viewOff[1]) * a;
+    zoomQ += (tz - zoomQ) * (1 - Math.exp(-VIEW_ZK * dt));
   }
   function toScreen(v, x, y){
     const dx = (x - S.x) * v.ppm, dy = (y - S.y) * v.ppm, c = Math.cos(v.rot), s = Math.sin(v.rot);
@@ -1985,6 +2029,7 @@ function step(S, C, E, dt){
   function draw(dt){
     const st = curStep();
     camZoom += ((st && st.zoom ? st.zoom : 1) * userZoom - camZoom) * Math.min(1, dt * 3);
+    viewUpdate(dt);
     const v = view();
     const sh = S.shake > 0 ? S.shake * 14 : 0;
     ctx.setTransform(dpr, 0, 0, dpr, (Math.random() - 0.5) * sh * dpr, (Math.random() - 0.5) * sh * dpr);
@@ -1996,13 +2041,20 @@ function step(S, C, E, dt){
     // increspature
     const to = (env.twd + 180) * D2R, wx = Math.sin(to), wy = -Math.cos(to);
     rippleOff[0] += wx * env.tws * 0.35 * dt; rippleOff[1] += wy * env.tws * 0.35 * dt;
-    const cell = 7, R = Math.hypot(W, H) / v.ppm / 2 + cell;
-    ctx.strokeStyle = colors.ripple; ctx.lineCap = "round"; ctx.lineWidth = Math.max(0.04, 1.1 / v.ppm);
-    const x0 = Math.floor((S.x - R - rippleOff[0]) / cell), x1 = Math.ceil((S.x + R - rippleOff[0]) / cell);
-    const y0 = Math.floor((S.y - R - rippleOff[1]) / cell), y1 = Math.ceil((S.y + R - rippleOff[1]) / cell);
+    // attorno al centro dello schermo (non alla barca): con la barca spostata (prua in alto, tasto vista) le celle restano le stesse
+    const cell = 7, R = Math.hypot(W, H) / v.ppm / 2 + cell, sdx = W / 2 - v.cx, sdy = H / 2 - v.cy, vc = Math.cos(v.rot), vs = Math.sin(v.rot);
+    const mx = S.x + (sdx * vc + sdy * vs) / v.ppm, my = S.y + (-sdx * vs + sdy * vc) / v.ppm;
+    // sotto zoom 0,5 le increspature sfumano e sotto 0,35 non si disegnano (a zoom lontano sono migliaia di tratti illeggibili e rallentano)
+    const ez = camZoom * zoomQ, ripA = clamp((ez - RIP_Z0) / (RIP_Z1 - RIP_Z0), 0, 1);
+    ctx.strokeStyle = colors.ripple; ctx.lineCap = "round"; ctx.lineWidth = Math.max(0.04, 1.1 / v.ppm); ctx.globalAlpha = ripA;
+    const x0 = Math.floor((mx - R - rippleOff[0]) / cell), x1 = Math.ceil((mx + R - rippleOff[0]) / cell);
+    const y0 = Math.floor((my - R - rippleOff[1]) / cell), y1 = Math.ceil((my + R - rippleOff[1]) / cell);
+    rippleCells = ripA > 0 ? (x1 - x0) * (y1 - y0) : 0;
     const px = -wy, py = wx, len = 0.35 + env.tws * 0.07;
-    if ((x1 - x0) * (y1 - y0) < 2500){
-      for (let i = x0; i <= x1; i++) for (let j = y0; j <= y1; j++) for (let k = 0; k < 4; k++){
+    if (ripA > 0 && (x1 - x0) * (y1 - y0) < 2500){
+      // tratti per cella da 4 a 1 allontanando (in proporzione all'area): sullo schermo la densità resta simile, e il costo non cresce
+      const nk = clamp(Math.round(4 * ez * ez), 1, 4);
+      for (let i = x0; i <= x1; i++) for (let j = y0; j <= y1; j++) for (let k = 0; k < nk; k++){
         const rx = (i + hash(i, j, k)) * cell + rippleOff[0], ry = (j + hash(j, i, k + 7)) * cell + rippleOff[1];
         let l = len * (0.5 + hash(i, k, j));
         const gk = gusts.length ? gustAt(rx, ry) : 0;
@@ -2017,7 +2069,8 @@ function step(S, C, E, dt){
         ctx.quadraticCurveTo(rx + wx * l * 0.25, ry + wy * l * 0.25, rx + px * l, ry + py * l); ctx.stroke();
       }
     }
-    // raffiche
+    ctx.globalAlpha = 1;
+    // raffiche: chiazze scure a gradiente, disegnate sempre (non dipendono dalle increspature)
     for (const gg of gusts){
       ctx.save(); ctx.translate(gg.x, gg.y); ctx.rotate(to); ctx.scale(1, 1.4);
       const rg = ctx.createRadialGradient(0, 0, 0, 0, 0, gg.r);
@@ -2043,29 +2096,31 @@ function step(S, C, E, dt){
     marks.forEach((m, i) => {
       const done = mode === "mission" ? i < S.markIdx : (mode === "lesson" && S.markReached);
       const active = mode === "mission" ? i === S.markIdx : !done;
-      if (m.fin){ // linea d'arrivo: tratteggio fra due boe piccole, come la linea delle regate
+      if (m.fin){ // linea d'arrivo: scacchi fra due boe piccole
         const ex = -m.ny * FIN_HALF, ey = m.nx * FIN_HALF;
-        ctx.strokeStyle = active ? "rgba(255,226,122,.8)" : "rgba(255,255,255,.55)"; ctx.lineWidth = 0.18; ctx.setLineDash([1.2, 1.2]);
-        ctx.beginPath(); ctx.moveTo(m.x - ex, m.y - ey); ctx.lineTo(m.x + ex, m.y + ey); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = "#F28C1B"; for (const k of [-1, 1]){ ctx.beginPath(); ctx.arc(m.x + k * ex, m.y + k * ey, 0.7, 0, Math.PI * 2); ctx.fill(); }
+        drawChecker({ x: m.x - ex, y: m.y - ey }, { x: m.x + ex, y: m.y + ey }, v.ppm, active ? 1 : 0.5);
+        ctx.fillStyle = "#F28C1B"; for (const k of [-1, 1]){ ctx.beginPath(); ctx.arc(m.x + k * ex, m.y + k * ey, Math.max(0.7, 3 / v.ppm), 0, Math.PI * 2); ctx.fill(); }
         return;
       }
-      ctx.fillStyle = done ? "#8FA3AF" : "#F28C1B"; ctx.beginPath(); ctx.arc(m.x, m.y, 0.7, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = done ? "#8FA3AF" : "#F28C1B"; ctx.beginPath(); ctx.arc(m.x, m.y, Math.max(0.7, 3 / v.ppm), 0, Math.PI * 2); ctx.fill(); // almeno 3 px di raggio
       if (active && m.round) drawRoundArrow(m, 7, "rgba(255,226,122,.9)");
       else if (active && mode !== "free"){ ctx.strokeStyle = "rgba(255,226,122,.8)"; ctx.lineWidth = 0.15; ctx.setLineDash([0.8, 0.8]); ctx.beginPath(); ctx.arc(m.x, m.y, 12, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
       ctx.strokeStyle = "rgba(255,255,255,.5)"; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.arc(m.x, m.y, 1 + 0.15 * Math.sin(simTime * 2), 0, Math.PI * 2); ctx.stroke();
     });
-    if (mode === "race") drawRaceWorld();
+    if (mode === "race") drawRaceWorld(v);
     drawGhost();
     drawBoat();
     drawTurnHint();
     ctx.restore();
+    if (4.2 * v.ppm < 14) boatMarker(v); // barca sotto 14 px: triangolo orientato come la prua, attorno alla barca
 
     // sopra il mondo, in coordinate schermo
     ctx.font = `600 13px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-    marks.forEach((m, i) => { const [sx, sy] = m.fin ? toScreen(v, m.x - m.ny * FIN_HALF, m.y + m.nx * FIN_HALF) : toScreen(v, m.x, m.y); ctx.fillText(m.label + (m.round && mode === "mission" && i === S.markIdx ? " · lasciala a sinistra" : ""), sx + 10, sy - 8); });
-    const act = mode === "mission" && !S.finished ? curMarks[S.markIdx] : (mode === "lesson" && S.lessonMark && !S.markReached ? S.lessonMark : null);
+    marks.forEach((m, i) => { if (m.fin) return; const [sx, sy] = toScreen(v, m.x, m.y); ctx.fillText(m.label + (m.round && mode === "mission" && i === S.markIdx ? " · lasciala a sinistra" : ""), sx + 10, sy - 8); });
+    const act = mode === "race" ? null : goal(); // in regata la freccia la disegna drawRaceScreen, sopra l'orologio
     if (act) offscreenArrow(v, act);
+    const fm = marks.find(m => m.fin);
+    if (fm) linePill(v, { x: fm.x + fm.ny * FIN_HALF, y: fm.y - fm.nx * FIN_HALF }, { x: fm.x - fm.ny * FIN_HALF, y: fm.y + fm.nx * FIN_HALF }, fm.label, act === fm ? fm : null, 0, 0);
     if (st && st.rose) drawRose(v, st.maneuvers, st.target);
     if (opt.arrows && (!st || st.arrows || st.hud >= 2 || (!st.pause && st.hud))) drawWindArrows(v, mode === "lesson" && lessonIdx < 3); // il vento apparente si spiega nella lezione 4
     if (st && st.labels) drawLabels(v, st.labels);
@@ -2078,18 +2133,75 @@ function step(S, C, E, dt){
     if (opt.dead && !(st && (st.pause || st.rose || !st.hud))) drawDeadRose(heelG ? 196 : 84);
     if (mode === "race") drawRaceScreen(v);
     drawHelmLegend();
+    if (qOnSea && fontsOk){ // ripiego se la riga dei tasti nel pannello si taglierebbe: sopra i pulsanti + e −
+      ctx.save(); ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+      ctx.fillStyle = "rgba(255,255,255,.8)"; ctx.fillText("Q vista", W - 34, H - 108); ctx.restore();
+    }
     if (S.toast) drawToast();
   }
 
-  function offscreenArrow(v, m){
+  // posizione e angolo della freccia fuori schermo verso m; null se m è sullo schermo
+  function arrowAt(v, m){
     const [sx, sy] = toScreen(v, m.x, m.y), pad = 30;
-    if (sx > 0 && sx < W && sy > 0 && sy < H) return;
+    if (sx > 0 && sx < W && sy > 0 && sy < H) return null;
     const ang = Math.atan2(sy - H / 2, sx - W / 2);
     const t = Math.min((W / 2 - pad) / Math.abs(Math.cos(ang) || 1e-6), (H / 2 - pad) / Math.abs(Math.sin(ang) || 1e-6));
     let ax = W / 2 + Math.cos(ang) * t, ay = H / 2 + Math.sin(ang) * t;
     if (mode === "race" && ay < 80 && Math.abs(ax - W / 2) < 170) ay = 80; // non coprire l'orologio della regata
-    ctx.save(); ctx.translate(ax, ay); ctx.rotate(ang); ctx.fillStyle = "#F28C1B";
+    return [ax, ay, ang];
+  }
+  function offscreenArrow(v, m){
+    const a = arrowAt(v, m); if (!a) return;
+    ctx.save(); ctx.translate(a[0], a[1]); ctx.rotate(a[2]); ctx.fillStyle = "#F28C1B";
     ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-8, -9); ctx.lineTo(-8, 9); ctx.closePath(); ctx.fill(); ctx.restore();
+    if (!fontsOk) return;
+    // distanza dalla barca, ai 5 m, verso l'interno dello schermo rispetto alla freccia
+    const txt = Math.round(Math.hypot(m.x - S.x, m.y - S.y) / 5) * 5 + " m";
+    ctx.save(); ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.fillText(txt, a[0] - Math.cos(a[2]) * 30, a[1] - Math.sin(a[2]) * 22); ctx.restore();
+  }
+  function boatMarker(v){
+    const [x, y] = toScreen(v, S.x, S.y);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(S.h * D2R + v.rot);
+    ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 1.5; ctx.lineJoin = "round";
+    ctx.beginPath(); ctx.moveTo(0, -13); ctx.lineTo(8, 9); ctx.lineTo(-8, 9); ctx.closePath(); ctx.stroke(); ctx.restore();
+  }
+  // linea a scacchi bianchi e neri fra a e b (coordinate del mondo): due file di quadretti di 3 px sullo schermo a ogni zoom
+  function drawChecker(a, b, ppm, alpha){
+    const q = 3 / ppm, L = Math.hypot(b.x - a.x, b.y - a.y) || 1, nx = -(b.y - a.y) / L * q / 2, ny = (b.x - a.x) / L * q / 2;
+    ctx.save(); ctx.globalAlpha = alpha; ctx.lineCap = "butt";
+    ctx.strokeStyle = "#16191C"; ctx.lineWidth = 2 * q; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.strokeStyle = "#fff"; ctx.lineWidth = q; ctx.setLineDash([q, q]);
+    for (const s of [1, -1]){ ctx.lineDashOffset = s > 0 ? 0 : q; ctx.beginPath(); ctx.moveTo(a.x + nx * s, a.y + ny * s); ctx.lineTo(b.x + nx * s, b.y + ny * s); ctx.stroke(); }
+    ctx.restore();
+  }
+  // scritta di una linea («Arrivo», «Linea di partenza»): pillola a misura fissa sullo schermo accanto a una delle due boe
+  // (quella verso cui punta la freccia fuori schermo, se punta alla linea, altrimenti la più vicina alla barca), mai sopra la barca o le boe.
+  // aim: punto a cui punta la freccia, o null; padA, padB: ingombro in metri oltre la boa (0,8 m) attorno alle due estremità (la barca giuria)
+  function linePill(v, A, B, text, aim, padA, padB){
+    if (!fontsOk) return; // misure e disegno solo con i caratteri caricati
+    const pa = toScreen(v, A.x, A.y), pb = toScreen(v, B.x, B.y), ar = aim && arrowAt(v, aim), ref = ar || [v.cx, v.cy];
+    const useA = Math.hypot(pa[0] - ref[0], pa[1] - ref[1]) <= Math.hypot(pb[0] - ref[0], pb[1] - ref[1]);
+    const [p, o] = useA ? [pa, pb] : [pb, pa], gap = 10 + (0.8 + (useA ? padA : padB)) * v.ppm, flag = text === "Arrivo";
+    ctx.save(); ctx.font = `700 14px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    const h = 24, w = ctx.measureText(text).width + (flag ? 38 : 22);
+    const dl = Math.hypot(p[0] - o[0], p[1] - o[1]), ux = dl > 1 ? (p[0] - o[0]) / dl : 1, uy = dl > 1 ? (p[1] - o[1]) / dl : 0;
+    const onS = p[0] >= 0 && p[0] <= W && p[1] >= 0 && p[1] <= H; // boa sullo schermo: la pillola resta dentro lo schermo
+    const at = (dx, dy) => { const e = gap + Math.abs(dx) * w / 2 + Math.abs(dy) * h / 2, x = p[0] + dx * e - w / 2, y = p[1] + dy * e - h / 2;
+      return onS ? [clamp(x, 4, W - w - 4), clamp(y, 4, H - h - 4)] : [x, y]; };
+    const hits = (x, y, cx, cy, r) => Math.hypot(clamp(cx, x, x + w) - cx, clamp(cy, y, y + h) - cy) < r;
+    const rb = Math.max(26, 3.5 * v.ppm), cand = [at(ux, uy), at(-uy, ux), at(uy, -ux)];
+    const free = ([x, y]) => !hits(x, y, v.cx, v.cy, rb) && !hits(x, y, p[0], p[1], 4 + (0.8 + (useA ? padA : padB)) * v.ppm) && !hits(x, y, o[0], o[1], 8 + (0.8 + (useA ? padB : padA)) * v.ppm);
+    const seen = ([x, y]) => x >= 0 && y >= 0 && x + w <= W && y + h <= H; // prima le posizioni tutte sullo schermo
+    const [x, y] = cand.find(c => free(c) && seen(c)) || cand.find(free) || cand[0];
+    ctx.fillStyle = "rgba(10,24,36,.72)"; ctx.beginPath(); ctx.roundRect(x, y, w, h, h / 2); ctx.fill();
+    let tx = x + 11;
+    if (flag){ // bandierina a scacchi: asta e 3 x 2 quadretti
+      ctx.fillStyle = "#fff"; ctx.fillRect(tx, y + 5, 1.5, 14); ctx.fillRect(tx + 1.5, y + 5, 10.5, 7);
+      ctx.fillStyle = "#16191C"; for (const [c, r] of [[1, 0], [0, 1], [2, 1]]) ctx.fillRect(tx + 1.5 + c * 3.5, y + 5 + r * 3.5, 3.5, 3.5);
+      tx += 17;
+    }
+    ctx.fillStyle = "#fff"; ctx.fillText(text, tx, y + h / 2 + 0.5); ctx.restore();
   }
 
   function drawToast(){
@@ -2402,7 +2514,7 @@ function step(S, C, E, dt){
   // Tutto per confronto fra un fotogramma e il precedente: contatori, registro, messaggi, testi, tasti, impostazioni.
   // ======================================================================
   const AND_CODE = { "Angolo morto": "AM", "Bolina stretta": "BS", "Bolina larga": "BL", "Traverso": "TR", "Lasco": "LA", "Gran lasco": "GL", "Poppa": "PO" };
-  const SES_KEY = { ArrowLeft: "←", ArrowRight: "→", ArrowUp: "↑", ArrowDown: "↓", " ": "spazio", cazza: "W(cazza)", lasca: "S(lasca)" }; // solo i tasti del gioco
+  const SES_KEY = { ArrowLeft: "←", ArrowRight: "→", ArrowUp: "↑", ArrowDown: "↓", " ": "spazio", cazza: "W(cazza)", lasca: "S(lasca)", q: "Q(vista)" }; // solo i tasti del gioco
   const SES_CNT = [["tacks", "virata"], ["gybesC", "strambata"], ["gybesV", "strambata_vela_aperta"], ["capsizes", "scuffia"], ["markIdx", "boa"]];
   const ses = { on: false, start: null, set0: "", lines: [], t: 0, sim: 0, nextS: 0, dirty: false, flash: 0, marks: [], cnt: {}, andT: {}, msgN: {}, msgT: {}, stepT: {}, stepName: {}, L: null };
   const sesT = () => ses.t.toFixed(1);
@@ -2527,7 +2639,7 @@ function step(S, C, E, dt){
       "#  T t testo   messaggio a comparsa sul mare",
       "#  P t testo   regola della regata nel pannello",
       "#  X t testo   errore interno del gioco",
-      "#  K t tasto giù/su   tasti del gioco (frecce, spazio, W, S)",
+      "#  K t tasto giù/su   tasti del gioco (frecce, spazio, W, S, Q vista)",
       "#  M t n x y   marcatore premuto col tasto M (n = numero; x y = posizione della barca)",
       "#  C t impostazioni   impostazioni o vento cambiati",
       ...ses.lines, ""].join("\n");
@@ -2574,7 +2686,8 @@ function step(S, C, E, dt){
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
   if (location.hash === "#collaudo"){ window.__sv = { openItem, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief,
-    run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce); sesTick è il registratore, solo lettura
+    run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
+    frame: dt => { simulate(dt, curStep()); simTime += dt; draw(dt); }, get viewOff(){ return viewOff; }, get zoomQ(){ return zoomQ; }, get camZoom(){ return camZoom; }, draw: dt => draw(dt), gusts: () => gusts.map(g => [g.x, g.y, g.r, g.k, g.sh, g.ttl]), get rippleCells(){ return rippleCells; }, goal, cam: () => { const v = view(); return { cx: v.cx, cy: v.cy, W, H }; } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce); sesTick è il registratore, solo lettura
     briefSkip = true; // i collaudi guidano subito; __sv.skipBrief = false per collaudare il riquadro
   }
   requestAnimationFrame(frame);
