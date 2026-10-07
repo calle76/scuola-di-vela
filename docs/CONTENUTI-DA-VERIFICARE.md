@@ -19,6 +19,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | Orziera | Barca che tende a salire da sola verso il vento | Usato nell'esercizio di rotta; verificare il termine. | |
 | Cause della barca orziera | Vento e raffiche, onde che spostano la prua, barca molto sbandata, vele troppo cazzate, posizione e peso dell'equipaggio | Descrizione generale (glossario, 0.18.4); fonti solo per vele troppo cazzate (F1) e sbandamento (F4) | ❓ da confermare con un velista |
 | Scadere | corretto il 5 ottobre 2026: scadere = scarroccio; il gioco usa poggiare | Due glossari pubblici (marinasveva.com, scuolavelaargentario.com) definiscono «scadere» come essere spinti sottovento da scarroccio o corrente, non la prua che gira allontanandosi dal vento | ✅ |
+| Sbandamento con la vela già tutta lasca | Con la vela già tutta lasca e troppo sbandamento, orzare un poco (messaggio del pannello dalla 0.19.4) | Da far confermare a un velista | ❓ |
 
 ## Lezione 1: parti della barca e termini base
 

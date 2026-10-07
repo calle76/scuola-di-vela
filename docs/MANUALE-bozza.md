@@ -24,11 +24,11 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 | Vista del percorso: tenuto premuto, sposta la barca verso il bordo dello schermo opposto all'arrivo o alla boa e, se serve, allontana l'inquadratura finché l'arrivo o la boa si vedono; al rilascio tornano posizione e zoom di prima (solo nelle prove e nelle regate) | Q |
 | Avvicinare e allontanare l'inquadratura | pulsanti + e − sul mare, rotellina del mouse (dalla 0.19.3 si allontana fino a circa 480 m di campo in altezza a 1360×650) |
 
-Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione.
+Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione. Una volta accesa, la registrazione resta accesa finché non la spegni tu: non si ferma alla fine di una prova. Se la spegni e la riaccendi, nel file le pause sono scritte in secondi veri.
 
 ## 3. I comandi nei livelli successivi
 
-Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono.
+Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A e Z liberi per funzioni speciali; R raddrizza la barca e non va riusato; il livello 1 resta com'è (tabella sopra).
 
 ## 4. Cosa il gioco fa bene
 
@@ -51,7 +51,7 @@ Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (f
 | **Il peso del timoniere** | Si sporge da solo, con un ritardo | Gestire il peso è una parte importante della conduzione | Medio: diventerà un'azione del prodiere |
 | **Onde e corrente** | Non ci sono, salvo piccoli disturbi nella lezione 2 | Cambiano la guida e la velocità | Basso |
 | **Il raddrizzamento** | Con un pulsante, in 3 secondi | È una manovra fisica che richiede equilibrio e tempo | Basso |
-| **Le raffiche** | Chiazze che viaggiano col vento | Hanno una struttura più complessa sull'acqua | Basso |
+| **Le raffiche** | Chiazze che viaggiano col vento; si vedono fino a circa 115 m sopravento alla barca, e gli avversari lontani non sentono le tue | In barca vera il campo di vento esiste su tutta l'area e si vede da lontano, con una struttura più complessa sull'acqua | Basso per le prove; da rifare per regate e tattico |
 | **Una sola vela** | Solo la randa nel gioco; il fiocco c'è solo nel prototipo | Le derive a due hanno anche il fiocco, e le più veloci un gennaker o uno spinnaker | Per questo ci sono i livelli successivi |
 | **Penalità e regole di regata** | Il contatto costa 15 secondi; toccare una boa non è ancora punito | In regata ci sono i giri di penalità e regole più ricche | Medio |
 

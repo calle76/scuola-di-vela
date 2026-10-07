@@ -32,10 +32,12 @@ def mmss(s): return f"{int(s // 60)}:{int(s % 60):02d}"
 
 def analizza(testo, out=print):
     head, rows = leggi(testo)
-    for h in head[:4]: out(h[2:])
+    for h in head[:5]: out(h[2:])
     ev = Counter(d.split(" ")[0] for k, _, d in rows if k == "E" and not d.startswith("registrazione_"))
     msg = Counter(d for k, _, d in rows if k == "H")
     marc = [(t, d) for k, t, d in rows if k == "M"]
+    # pause: i secondi scritti negli eventi di riaccensione devono dare il totale scritto in testa
+    pause = [int(m[1]) for k, _, d in rows if k == "E" for m in [re.match(r"registrazione_accesa pausa (\d+)s$", d)] if m]
     stato = [(t, d.split(" ")) for k, t, d in rows if k == "S"]
     durata = rows[-1][1] if rows else 0
     out(f"\nRighe {len(rows)} · durata registrata {mmss(durata)} · stato {len(stato)} righe")
@@ -77,15 +79,19 @@ def analizza(testo, out=print):
     diff = []
     if g["eventi"] != ev: diff.append(f"eventi: gioco {dict(g['eventi'])} | righe {dict(ev)}")
     if g["msg"] != msg: diff.append(f"suggerimenti: gioco {dict(g['msg'])} | righe {dict(msg)}")
+    tot = next((h for h in head if h.startswith("# pause della registrazione")), "")
+    m = re.search(r": (\d+) s in totale$", tot)
+    if (int(m[1]) if m else 0) != sum(pause): diff.append(f"pause: gioco {tot!r} | righe {pause}")
     if g["marcatori"] != [f"M{d.split(' ')[0]}" for _, d in marc]: diff.append(f"marcatori: gioco {g['marcatori']} | righe {len(marc)}")
     out("\nConfronto con il riassunto del gioco: " + ("coincide" if not diff else "DIVERSO"))
     for d in diff: out("  " + d)
-    return {"eventi": ev, "msg": msg, "marcatori": marc, "andT": andT, "rallentamenti": n_ral, "diff": diff, "stato": stato}
+    return {"eventi": ev, "msg": msg, "marcatori": marc, "pause": pause, "andT": andT, "rallentamenti": n_ral, "diff": diff, "stato": stato}
 
 ESEMPIO = """# SCUOLA DI VELA - registrazione di sessione, formato 1
 # gioco 0.18 · inizio 2026-10-05 15:00 · durata 0:12 (in simulazione 0:12)
 # impostazioni all'inizio: vento=0° 10kn
 # nota: M1 la barca si ferma
+# pause della registrazione (spenta e riaccesa): 70 s in totale
 #  eventi: apre 1 · virata 1
 #   «Vela gonfia e regolata.» 1× · 5 s
 #  marcatori: M1 a 0:07
@@ -97,6 +103,8 @@ S 1.1 0 -2 45 3.4 8 45 10 30 8 0 30 BS
 S 2.1 0 -4 45 3.0 8 45 10 30 8 0 30 BS
 K 2.5 → giù
 S 3.1 0 -5 20 1.2 0 20 10 15 9 60 30 AM
+E 3.4 registrazione_spenta
+E 3.4 registrazione_accesa pausa 70s
 E 3.5 virata mure_a_sinistra 1.0kn
 S 4.1 0 -5 -20 0.8 0 -20 10 -15 9 60 30 AM
 M 7.0 1 0 -5
@@ -110,7 +118,9 @@ def prova():
     assert len(r["marcatori"]) == 1 and r["marcatori"][0][0] == 7.0
     assert r["rallentamenti"] == 1, r["rallentamenti"]          # da 3,4 a 1,2 nodi fra 1,1 e 3,1 s
     assert abs(r["andT"]["BS"] - 3) < 1e-9 and abs(r["andT"]["AM"] - 2.5) < 1e-9, r["andT"]   # 1+1+1, poi 1 e 1,5 (buco di 4 s tagliato)
+    assert r["pause"] == [70], r["pause"]
     assert not r["diff"], r["diff"]
+    assert analizza(ESEMPIO.replace("70 s in", "60 s in"), righe.append)["diff"], "il totale delle pause sbagliato deve essere visto"
     r = analizza(ESEMPIO.replace("virata 1", "virata 2"), righe.append)
     assert r["diff"], "il confronto deve accorgersi di un riassunto sbagliato"
     print("prova superata: eventi, marcatori, rallentamenti, tempo per andatura e confronto (anche quando è sbagliato)")

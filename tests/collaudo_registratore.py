@@ -85,6 +85,14 @@ async def parte_a(p):
     esito("file scaricato con un marcatore, i tasti e lo stato", sum(r.startswith("M ") for r in righe) == 1 and ks == ["→ giù", "→ su"] and sum(r.startswith("S ") for r in righe) >= 3,
           f"marcatori {sum(r.startswith('M ') for r in righe)}, tasti {ks}, righe di stato {sum(r.startswith('S ') for r in righe)}, {len(testo)} byte")
     esito("versione e navigazione libera nel file", f"# gioco {VERSIONE}" in testo and "apre navigazione libera" in testo)
+    # spegnimento e riaccensione con una pausa nota: il valore scritto deve corrispondere ai secondi veri (entro 1 s)
+    await pg.click("#sesOn"); t0 = asyncio.get_event_loop().time(); await pg.wait_for_timeout(3300); await pg.click("#sesOn")
+    vera = asyncio.get_event_loop().time() - t0
+    testo2 = await scarica(pg); riv = AS.analizza(testo2, lambda *_: None)
+    scritte = [int(m.group(1)) for r in testo2.splitlines() for m in [__import__("re").search(r"registrazione_accesa pausa (\d+)s$", r)] if m]
+    esito("pausa di registrazione scritta in secondi veri (entro 1 s) e totale in testa coincidente",
+          len(scritte) == 1 and abs(scritte[0] - vera) <= 1 and not riv["diff"] and f"# pause della registrazione (spenta e riaccesa): {scritte[0]} s in totale" in testo2,
+          f"scritta {scritte}, vera {vera:.2f} s, diff {riv['diff']}")
     # l'avviso si prova uscendo dalla pagina con una navigazione: page.close(run_before_unload=True) nel browser senza finestra
     # non lo mostra in modo affidabile (0 su 9 nel gioco, 3 su 4 su una pagina minima con lo stesso gestore)
     dialoghi = []; pg.on("dialog", lambda d: (dialoghi.append(d.type), asyncio.ensure_future(d.accept())))

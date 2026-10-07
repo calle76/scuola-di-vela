@@ -809,7 +809,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.19.3"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.19.4"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -1944,10 +1944,10 @@ function step(S, C, E, dt){
     if (I.tt === "lee" && I.sheet > 0.99){ cls = "good"; msg = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."; }
     const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
     if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
-    else if (S.heel > 25){ cls = "bad"; msg = "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
+    else if (S.heel > 25){ cls = "bad"; msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco." : "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
     else if (S.u < -0.05){ cls = "bad"; msg = "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia che la prua poggi da sola."; }
-    else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = "bad"; msg = "Raffica in arrivo: preparati a lascare."; }
+    else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = ""; msg = "Raffica in arrivo: se la barca sbanda troppo, lasca; altrimenti è un'occasione per andare più veloci."; } // cls vuoto: colore normale del testo, non è un allarme
     if (mode === "lesson" && st.course && !S.capsized){
       const off = norm180(S.h - S.course);
       cls = Math.abs(off) < 6 ? "good" : "bad";
@@ -2516,7 +2516,7 @@ function step(S, C, E, dt){
   const AND_CODE = { "Angolo morto": "AM", "Bolina stretta": "BS", "Bolina larga": "BL", "Traverso": "TR", "Lasco": "LA", "Gran lasco": "GL", "Poppa": "PO" };
   const SES_KEY = { ArrowLeft: "←", ArrowRight: "→", ArrowUp: "↑", ArrowDown: "↓", " ": "spazio", cazza: "W(cazza)", lasca: "S(lasca)", q: "Q(vista)" }; // solo i tasti del gioco
   const SES_CNT = [["tacks", "virata"], ["gybesC", "strambata"], ["gybesV", "strambata_vela_aperta"], ["capsizes", "scuffia"], ["markIdx", "boa"]];
-  const ses = { on: false, start: null, set0: "", lines: [], t: 0, sim: 0, nextS: 0, dirty: false, flash: 0, marks: [], cnt: {}, andT: {}, msgN: {}, msgT: {}, stepT: {}, stepName: {}, L: null };
+  const ses = { on: false, offAt: null, pause: 0, start: null, set0: "", lines: [], t: 0, sim: 0, nextS: 0, dirty: false, flash: 0, marks: [], cnt: {}, andT: {}, msgN: {}, msgT: {}, stepT: {}, stepName: {}, L: null };
   const sesT = () => ses.t.toFixed(1);
   const sesLine = s => { ses.lines.push(s); ses.dirty = true; };
   const sesEv = (type, det) => { ses.cnt[type] = (ses.cnt[type] || 0) + 1; sesLine("E " + sesT() + " " + type + (det ? " " + det : "")); };
@@ -2606,7 +2606,11 @@ function step(S, C, E, dt){
   function sesToggle(on){
     if (on && !ses.start){ ses.start = new Date(); ses.set0 = sesSet(); }
     if (on) sesBase();
-    ses.on = on; sesLine("E " + sesT() + " registrazione_" + (on ? "accesa" : "spenta"));
+    // secondi veri di pausa (orologio del computer, non tempo di gioco): scritti alla riaccensione e sommati nel riassunto
+    let det = "";
+    if (on && ses.offAt){ const p = Math.round((Date.now() - ses.offAt) / 1000); ses.pause += p; det = " pausa " + p + "s"; ses.offAt = null; }
+    if (!on && ses.on) ses.offAt = Date.now();
+    ses.on = on; sesLine("E " + sesT() + " registrazione_" + (on ? "accesa" : "spenta") + det);
     $("sesBox").hidden = false;
   }
   function sesText(){
@@ -2621,6 +2625,7 @@ function step(S, C, E, dt){
         " · durata " + sesHms(ses.t) + " (in simulazione " + sesHms(ses.sim) + ")",
       "# impostazioni all'inizio: " + ses.set0,
       "# nota: " + (note || "(nessuna)"),
+      "# pause della registrazione (spenta e riaccesa): " + (ses.pause ? ses.pause + " s in totale" : "nessuna"),
       "# RIASSUNTO (calcolato dal gioco)",
       "#  eventi: " + list(ses.cnt, k => k + " " + ses.cnt[k]),
       "#  tempo per andatura (in simulazione): " + and,
@@ -2633,7 +2638,8 @@ function step(S, C, E, dt){
       "#    tws e aws in nodi; barra −100 a sinistra, +100 a dritta; scotta 0 cazzata, 100 lascata;",
       "#    andatura AM angolo morto, BS bolina stretta, BL bolina larga, TR traverso, LA lasco, GL gran lasco, PO poppa, SC scuffiata",
       "#  E t tipo dettagli   evento (apre, ricomincia, virata, strambata, strambata_vela_aperta, scuffia, raddrizza, raddrizzata, boa, arrivo,",
-      "#                       partito, lato, passo_completato, errore, dialogo, registrazione_accesa/spenta)",
+      "#                       partito, lato, passo_completato, errore, dialogo, registrazione_accesa/spenta;",
+      "#                       alla riaccensione «pausa Ns» = secondi veri passati a registrazione spenta; t non li conta)",
       "#  L t lezione.passo «titolo»   passo di lezione mostrato",
       "#  H t testo   suggerimento del pannello cambiato (rimasto almeno 0,3 s)",
       "#  T t testo   messaggio a comparsa sul mare",

@@ -87,6 +87,8 @@ Nelle regate miste: compenso di tempo tra barche diverse, come nelle regate real
 
 Idea per le raffiche (7 ottobre 2026, osservazione 17): in barca vera si vede solo la chiazza scura; freccia e «+x nodi» (forza e salto di direzione) sono informazione da strumenti. Livello 1 solo chiazza; un aiuto facoltativo, spento di default e senza effetto sui meriti, con freccia e numero (utile nella lezione 6); livello 3 strumenti vicino alla barca; livello 4 carta del tattico.
 
+- Campo di vento esteso (raffiche su tutta l'area) per le regate e per la carta del tattico (livello 4). Vedi osservazioni 18-22 del 7 ottobre sera in `OSSERVAZIONI-GIOCANDO.md`.
+
 ## Fase D — Carteggio e mare aperto: espansione o gioco a parte
 
 Deciso a settembre 2026: il carteggio e la navigazione in mare aperto sono quasi un altro gioco (vista a carta nautica, cabinato, tempi lunghi, dati geografici con licenza). Escono dal menu della Scuola di vela e diventeranno un'espansione o un gioco nuovo che riusa il motore fisico. Sarà anche il momento di dividere il file unico in moduli.

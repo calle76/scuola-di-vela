@@ -227,7 +227,7 @@ Criterio: fisica plausibile prima di tutto il resto. **[deciso]**
 | Tornei e merito | Più tornei per categoria, punti per area, brevetto di categoria | prima sistemare gli avversari |
 | Menu carriera | Bivio, salvataggio proprio, libretto, importazione | per ultimo |
 
-Con il gioco a due vele cambieranno anche i comandi: nel prototipo la barra usa le frecce ← →, la randa A e D (lascare, cazzare), il fiocco Q ed E. L'idea precedente di A S D W sempre attivi, pensata per la barca a una vela, va ripensata quando si toccherà `index.html`. **[aperto]**
+Con il gioco a due vele cambieranno anche i comandi: nel prototipo la barra usa le frecce ← →, la randa A e D (lascare, cazzare), il fiocco Q ed E; nel gioco varrà invece la regola del 7 ottobre 2026 (sotto): comando principale del ruolo su W S, E D per un secondo comando, Q vista, A e Z liberi, R raddrizza. L'idea precedente di A S D W sempre attivi, pensata per la barca a una vela, non vale più. **[deciso]**
 
 ## 11. Decisioni aperte
 
@@ -247,11 +247,11 @@ Regola decisa il 6 ottobre 2026.
 **Aggiornamento del 7 ottobre 2026 (0.19.2), che sostituisce le parti su frecce e A D qui sotto:** per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. Le righe seguenti restano come registro della regola del 6 ottobre; gli esempi vanno rifatti con la regola nuova quando si scrivono le lezioni del livello 2.
 
 - **Il livello 1 resta com'è**: barra con le frecce ← →, randa con ↑ ↓ e con W e S nella lezione 1, Spazio per la barra al centro, R per raddrizzare.
-- **Dal livello 2** un ruolo fa quello che deve fare, senza un limite al numero di comandi. I comandi si assegnano in ordine: il primo alle frecce, il secondo ad A D; un terzo ad altri tasti, scelti quando serve.
-- **I tasti si riusano tra i ruoli.** Se non si guida il timone, le frecce servono per il comando principale del ruolo. I tasti principali (le frecce) sono quelli a cui si assegnano i nuovi comandi. In ogni coppia il tasto di sinistra lascia e quello di destra cazza (come nel prototipo).
-- **Si gioca con due mani** quando si comandano due cose: frecce a destra, A D a sinistra.
+- **Dal livello 2** un ruolo fa quello che deve fare, senza un limite al numero di comandi. I comandi si assegnano in ordine: il principale del ruolo a W S, il secondo a E D; un terzo ad altri tasti, scelti quando serve evitando R (regola del 7 ottobre).
+- **I tasti si riusano tra i ruoli.** Il comando principale del ruolo sta sempre su W S (randa, o fiocco per il prodiere); le frecce restano alla barra. I nuovi comandi si assegnano alle coppie E D e poi ad altre, evitando R. In ogni coppia il tasto di sinistra lascia e quello di destra cazza (come nel prototipo).
+- **Si gioca con due mani** quando si comandano due cose: frecce a destra, W S ed E D a sinistra.
 - **Il ruolo si scegli prima di partire** e non cambia durante la prova. La legenda dei tasti nel pannello e il registratore devono scrivere il nome del comando («barra», «randa», «fiocco»), non solo il tasto.
-- **Esempi**, da decidere con le lezioni del livello 2: timoniere = barra con le frecce e randa con A D; prodiere = fiocco con le frecce e, se servirà, il peso dell'equipaggio con A D. Dal livello 2 la randa passa quindi da ↑ ↓ ad A D: è l'unico cambio, e la lezione introduttiva del livello 2 lo dovrà dire.
+- **Esempi**, da decidere con le lezioni del livello 2: timoniere = barra con le frecce e randa con W S; prodiere = fiocco con W S e, se servirà, il peso dell'equipaggio con E D. Dal livello 2 la randa passa quindi da ↑ ↓ a W S (le frecce restano alla barra): è l'unico cambio, e la lezione introduttiva del livello 2 lo dovrà dire.
 - I tasti Q ed E (fiocco) e A D (randa) del prototipo del fiocco non vincolano il gioco.
 - **Ordine dei cursori nel pannello** quando si ridisegna: come sulla barca vista dall'alto con la prua in su, cioè vela di prua in alto, randa nel mezzo, timone in basso.
 

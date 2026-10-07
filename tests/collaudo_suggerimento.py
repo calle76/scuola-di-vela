@@ -15,6 +15,8 @@ PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clie
 TESTI = {  # caso peggiore del pannello: testo nuovo contro il piu lungo che il gioco mostra gia
     "nuovo": NUOVO,
     "lee attuale": "Si agita il filetto sottovento: lasca, oppure orza.",
+    "raffica": "Raffica in arrivo: se la barca sbanda troppo, lasca; altrimenti è un'occasione per andare più veloci.",
+    "sbandi con vela tutta lasca": "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco.",
     "piu lungo di oggi": "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia che la prua poggi da sola.",
 }
 MIS = """(testi)=>{const p=document.querySelector('.panel'), h=document.getElementById('hint');
@@ -80,6 +82,18 @@ async def main():
             if I["tt"] == "lee":
                 n_sail += 1
                 if msg != NUOVO: sbagliati.append(f"lezione 3 «Poppa» a twa {I['twa']:.0f}: «{msg}»")
+        # 3b) sbandamento oltre 25 gradi: con la scotta tutta lascata il testo nuovo, altrimenti «lasca la scotta»
+        await pg.evaluate("__sv.startMission(1, 0)"); await pg.wait_for_timeout(300)
+        SB = "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco."
+        n_sb = 0
+        for sh, atteso in ((1.0, SB), (0.6, "Sbandi troppo: lasca la scotta")):
+            for twa in (60, 100, 140):
+                await pg.evaluate("([twa,sh])=>{const S=__sv.S; S.h=(__sv.twd+twa)%360; __sv.ctl.sheet=sh; S.heel=40;}", [twa, sh])
+                await pg.wait_for_timeout(120)
+                letto = await pg.evaluate("__sv.S.heel > 25 ? document.getElementById('hint').textContent : null")
+                if letto is None: continue
+                n_sb += 1
+                if not letto.startswith(atteso.rstrip(".")) or (sh < 1 and "già tutta lasca" in letto): sbagliati.append(f"sbandamento, scotta {sh} a twa {twa}: «{letto}»")
         # 4) caso peggiore del pannello, in ogni punto in cui il suggerimento e visibile
         peggio = {k: -1 for k in TESTI}; n_pan = 0
         async def pannello(nome):
@@ -102,11 +116,11 @@ async def main():
         # Un controllo che non misura niente passa sempre: qui i casi vanno dichiarati e devono essere piu di zero.
         print(f"finestra {W}x{H}")
         print(f"casi misurati: scotta 1,00 con «lee» {n_lee}, scotta 1,00 con altri filetti {n_altro}, "
-              f"scotta 0,90-0,99 {n_quasi} (di cui in stallo {n_quasi_lee}), suggerimento semplice {n_sail}, pannello {n_pan}")
+              f"scotta 0,90-0,99 {n_quasi} (di cui in stallo {n_quasi_lee}), suggerimento semplice {n_sail}, sbandamento {n_sb}, pannello {n_pan}")
         print("eccesso massimo del pannello (pixel):", peggio)
         print("casi sbagliati:", sbagliati or "nessuno")
         print("errori pagina:", errs[:5])
-        vuoto = [n for n in (n_lee, n_altro, n_quasi, n_quasi_lee, n_sail, n_pan) if n == 0]
+        vuoto = [n for n in (n_lee, n_altro, n_quasi, n_quasi_lee, n_sail, n_sb, n_pan) if n == 0]
         if vuoto: print("COLLAUDO NON VALIDO: una delle misure non ha nessun caso")
         if not caratteri_ok: print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, i margini del pannello misurati sopra non sono attendibili")
         await b.close()

@@ -16,7 +16,7 @@ Diario delle prove di gioco, con la data. Non sono verifiche nautiche: sono le i
 
 | # | Cosa si è visto | Cosa ne facciamo |
 | --- | --- | --- |
-| 6 | Il messaggio «Raffica in arrivo: preparati a lascare» (riga circa 1896 di `index.html`, mostrato in rosso come avviso, quando la raffica davanti è più forte del 20% del vento locale) non è sempre vero: lascare non è sempre necessario, e se si vuole andare più veloci la raffica si cerca. Va bene per la sicurezza ma a volte è eccessivo; dipende dalla raffica | Rendere il messaggio dipendente dalla situazione, per esempio «Raffica in arrivo: se la barca sbanda troppo, lascia; altrimenti è un'occasione per andare più veloci». Aggiungere la domanda al velista («in una raffica si lascia sempre?»). Da fare in una versione futura del gioco |
+| 6 | (Fatto nella 0.19.4: nuovo testo, colore normale invece del rosso.) Il messaggio «Raffica in arrivo: preparati a lascare» (riga circa 1896 di `index.html`, mostrato in rosso come avviso, quando la raffica davanti è più forte del 20% del vento locale) non è sempre vero: lascare non è sempre necessario, e se si vuole andare più veloci la raffica si cerca. Va bene per la sicurezza ma a volte è eccessivo; dipende dalla raffica | Rendere il messaggio dipendente dalla situazione, per esempio «Raffica in arrivo: se la barca sbanda troppo, lascia; altrimenti è un'occasione per andare più veloci». Aggiungere la domanda al velista («in una raffica si lascia sempre?»). Da fare in una versione futura del gioco |
 
 ## 6 ottobre 2026: gioco vero
 
@@ -38,3 +38,13 @@ Diario delle prove di gioco, con la data. Non sono verifiche nautiche: sono le i
 | 15 | Filetto sopravento e vela che sbatte: controllo (senza modificare il motore) di quanto distano le due soglie. Nel disegno coincidono sempre (stesso stato `ttState()`, differenza 0°). Nella forza, la resistenza aggiunta parte 2° di incidenza dopo (soglia 6° invece di 8°): a bolina larga (65°) questo equivale a 3,76° di boma, al traverso (90°) a 4,34° di boma — sopra i 3° indicati. Al lasco (120°) nessuna delle due soglie si raggiunge mai, nemmeno a scotta tutta lascata (incidenza minima misurata ≈12°) | Nessuna modifica fatta. Proposta minima, da confermare con un velista: nel disegno, slegare la deformazione della vela (randa) dal medesimo stato del filetto e farla iniziare alla soglia della resistenza aggiunta già esistente nel motore (incidenza 6° invece di 8°), così il filetto si agita prima e la vela si vede sbattere qualche grado dopo, invece che insieme |
 | 16 | Dal 7 ottobre sera: la vista spostata non bastava, l'arrivo era a 230 m e si vedevano 95 m; a zoom lontano il gioco rallentava per le increspature | Fatto nella 0.19.3: Q allontana anche l'inquadratura finché l'arrivo o la boa entrano nello schermo; zoom minimo da 0,4 a 0,1; increspature che sfumano e spariscono a zoom lontano (nessun rallentamento); raffiche sempre visibili come chiazze scure; segnalino della barca e distanza accanto alla freccia |
 | 17 | Idea (7 ottobre): mostrare le raffiche come zone scure con una freccia e un numero (forza e salto di direzione). In barca vera si vede solo la chiazza scura; frecce e numeri sono informazione da strumenti | Ordine proposto: livello 1 solo chiazza; aiuto facoltativo (spento di default, non conta per i meriti) con freccia e «+x nodi», utile nella lezione 6; livello 3 strumenti vicino alla barca; livello 4 carta del tattico. Nessun codice per ora |
+
+## 7 ottobre 2026, sera
+
+| # | Cosa si è visto | Cosa ne facciamo |
+| --- | --- | --- |
+| 18 | Le raffiche nascono solo tra 55 e 115 m sopravento alla barca (poi viaggiano con il vento, sfumano in 3 s, durano 40-60 s, al massimo 12), quindi lontano non si vedono | Semplificazione dichiarata; per le prove va bene (riga nel manuale) |
+| 19 | Gli avversari lontani dal giocatore non sentono le sue raffiche: non c'è un campo di vento comune | Da rifare con la 20; dichiarato nel manuale |
+| 20 | Per le regate e per il tattico del livello 4 va rifatto: campo di vento esteso su tutta l'area (almeno 350 m sopravento), popolazione iniziale su tutta l'area, durata più lunga, taratura di quante raffiche arrivano alla barca | In `ROADMAP.md`, idee per i livelli successivi |
+| 21 | Le frecce del vento («reale», «apparente», «velocità») restano grandi a zoom lontano: l'utente le trova giuste così | Nessuna modifica |
+| 22 | La distanza accanto alla freccia arancione è utile | Si tiene |
