@@ -26,6 +26,8 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 
 Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione. Una volta accesa, la registrazione resta accesa finché non la spegni tu: non si ferma alla fine di una prova. Se la spegni e la riaccendi, nel file le pause sono scritte in secondi veri.
 
+Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate con la risposta data, quella giusta e la spiegazione. «Ripassa solo le sbagliate» riporta solo quelle domande e non cambia il punteggio migliore, che si aggiorna soltanto con un ripasso completo.
+
 ## 3. I comandi nei livelli successivi
 
 Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A e Z liberi per funzioni speciali; R raddrizza la barca e non va riusato; il livello 1 resta com'è (tabella sopra).

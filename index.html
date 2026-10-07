@@ -164,8 +164,10 @@ select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6
 
 /* ---- glossario ---- */
 dialog#quiz{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
+dialog#quiz[open]{display:flex;flex-direction:column} /* 0.19.5: riquadro a colonna: intestazione e messaggio fissi, elenco che scorre, pulsanti sempre dentro */
 dialog#quiz::backdrop{background:rgba(13,25,36,.5)}
-.qz{padding:20px 22px 22px}
+.qz{padding:18px 22px 20px;display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow:auto}
+.qz > *{flex:none}
 .qz-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
 .qz-top span{font-size:.9rem;color:var(--ink-soft)}
 .qz h2{margin:0 0 4px;font-size:1.25rem;color:var(--ink-soft);font-weight:600}
@@ -178,8 +180,13 @@ dialog#quiz::backdrop{background:rgba(13,25,36,.5)}
 .qz .opt:disabled{cursor:default}
 .qz .expl{font-family:"Source Serif 4",Georgia,serif;line-height:1.5;margin:14px 0 0;padding-left:12px;border-left:3px solid var(--line)}
 .qz .expl b{font-family:"Barlow Semi Condensed",sans-serif}
-.qz .score{font-size:2.4rem;font-weight:700;margin:6px 0}
-.qz .row{margin-top:16px}
+.qz .score{font-size:1.45rem;font-weight:700;margin:2px 0}
+.qz .row{margin-top:14px;flex-wrap:wrap}
+.qz .wlist{flex:1 1 auto;min-height:0;overflow-y:auto;margin-top:8px;padding-right:6px}
+.qz .wq{margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.qz .wq p{margin:4px 0}
+.qz .wq .wt{font-family:"Source Serif 4",Georgia,serif;font-size:1.05rem;font-weight:600}
+.qz .wq .expl{margin-top:8px}
 .review{display:flex;flex-direction:column;gap:4px}
 .review button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .review button small{color:var(--ink-soft);font-size:.85rem;white-space:nowrap}
@@ -809,7 +816,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.19.4"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.19.5"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -972,14 +979,14 @@ function step(S, C, E, dt){
 
   // ---------- quiz ----------
   let qz = null;
-  function openQuiz(li){
+  function openQuiz(li, only){ // only: indici delle domande da riproporre (giro parziale); senza, ripasso completo
     keys.clear(); semHeld.clear();
-    const qs = QUIZ[li].map(([q, right, wrong, expl]) => {
+    const qs = QUIZ[li].map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n)).map(({ n, q, right, wrong, expl }) => {
       const opts = [right, ...wrong].map(t => ({ t, ok: t === right }));
       for (let i = opts.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [opts[i], opts[j]] = [opts[j], opts[i]]; }
-      return { q, opts, expl };
+      return { n, q, right, opts, expl };
     });
-    qz = { li, qs, i: 0, score: 0, answered: false };
+    qz = { li, qs, i: 0, score: 0, answered: false, partial: !!only, wrong: [] };
     renderQuiz();
     $("quiz").showModal ? $("quiz").showModal() : $("quiz").setAttribute("open", "");
   }
@@ -988,12 +995,14 @@ function step(S, C, E, dt){
   function renderQuiz(){
     const L = LESSONS[qz.li], b = $("qzBody");
     if (qz.i >= qz.qs.length){
-      const n = qz.qs.length, key = "q" + qz.li, prev = progress.quiz?.[key];
-      progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score; saveProgress();
+      const n = qz.qs.length, key = "q" + qz.li, prev = progress.quiz?.[key], nw = qz.wrong.length;
+      if (!qz.partial){ progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score; saveProgress(); } // il giro parziale non tocca il record
       b.innerHTML = `<h2>Ripasso · ${L.name}: ${L.title}</h2><div class="score">${qz.score} su ${n}</div>
-        <p class="q">${qz.score === n ? "Tutto giusto." : qz.score >= n - 1 ? "Quasi tutto giusto: rileggi la spiegazione della domanda sbagliata." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati."}</p>
-        <div class="row"><button class="primary" id="qzAgain">Rifai il ripasso</button><button id="qzClose">Chiudi</button></div>`;
+        <p class="q">${nw === 0 ? "Tutto giusto." : nw === 1 ? "Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati: ecco le domande sbagliate."}</p>
+        ${nw ? `<div class="wlist" id="qzWrong">${qz.wrong.map(w => `<div class="wq"><p class="wt">${w.q}</p><p>Hai risposto: ${w.given}</p><p>Giusta: <b>${w.right}</b></p><p class="expl">${w.expl}</p></div>`).join("")}</div>` : ""}
+        <div class="row"><button class="primary" id="qzAgain">Rifai il ripasso</button>${nw ? `<button id="qzOnly">Ripassa solo le sbagliate</button><button id="qzLesson">Rivedi la lezione</button>` : ""}<button id="qzClose">Chiudi</button></div>`;
       $("qzAgain").onclick = () => openQuiz(qz.li); $("qzClose").onclick = closeQuiz;
+      if (nw){ const ids = qz.wrong.map(w => w.n), li = qz.li; $("qzOnly").onclick = () => openQuiz(li, ids); $("qzLesson").onclick = () => { startLesson(li); closeQuiz(); }; }
       return;
     }
     const Q = qz.qs[qz.i];
@@ -1002,7 +1011,7 @@ function step(S, C, E, dt){
       <div id="qzAfter"></div>`;
     b.querySelectorAll(".opt").forEach(btn => btn.onclick = () => {
       if (qz.answered) return; qz.answered = true;
-      const o = Q.opts[+btn.dataset.k]; if (o.ok) qz.score++;
+      const o = Q.opts[+btn.dataset.k]; if (o.ok) qz.score++; else qz.wrong.push({ n: Q.n, q: Q.q, given: o.t, right: Q.right, expl: Q.expl });
       b.querySelectorAll(".opt").forEach((x, k) => { x.disabled = true; if (Q.opts[k].ok) x.classList.add("right"); });
       if (!o.ok) btn.classList.add("wrong");
       $("qzAfter").innerHTML = `<p class="expl"><b>${o.ok ? "Giusto." : "Non proprio."}</b> ${Q.expl}</p>

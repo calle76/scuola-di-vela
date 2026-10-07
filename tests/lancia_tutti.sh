@@ -57,7 +57,7 @@ TESTS=(
     "raffiche_e_virate.js|node|ambiguo|0||fisica/raffiche_e_virate.js"
     "collaudo_schermate.py|py|ambiguo|0||collaudo_schermate.py"
     "collaudo_lezioni.py|py|ambiguo|0||collaudo_lezioni.py"
-    "collaudo_quiz.py|py|ambiguo|0||collaudo_quiz.py"
+    "collaudo_quiz.py|py|chiaro|0||collaudo_quiz.py"
     "collaudo_regate.py (bastone)|py|ambiguo|0|regate|collaudo_regate.py 6 0"
     "collaudo_regate.py (raffiche)|py|ambiguo|0|regate|collaudo_regate.py 6 1"
     "collaudo_partenze.py|py|ambiguo|0||collaudo_partenze.py"
@@ -85,7 +85,6 @@ nota() {
         "raffiche_e_virate.js") echo "virata riuscita in circa 4s da 3,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire circa 55° (scuffia)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
-        "collaudo_quiz.py") echo "sei righe di punteggio e «errori: []» vuota" ;;
         "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA»" ;;
         "collaudo_partenze.py") echo "con 3 e 5 minuti ritardo mediano entro circa 12s, nessuna partenza anticipata, distanza minima almeno 20 m" ;;
         "collaudo_aggressiva.py") echo "per ogni incontro, almeno una manovra deve evitare il contatto" ;;

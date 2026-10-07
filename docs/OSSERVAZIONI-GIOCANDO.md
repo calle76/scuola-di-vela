@@ -22,8 +22,8 @@ Diario delle prove di gioco, con la data. Non sono verifiche nautiche: sono le i
 
 | # | Cosa si è visto | Cosa ne facciamo |
 | --- | --- | --- |
-| 7 | Nel ripasso, con un solo errore il messaggio dice «Quasi tutto giusto: rileggi la spiegazione della domanda sbagliata», ma non è chiaro dove sia la spiegazione; e «Ripeti il ripasso» rifà tutte le domande | A fine ripasso un elenco delle domande sbagliate con la risposta giusta e la spiegazione, e un pulsante «Ripassa solo le sbagliate», in una versione futura |
-| 8 | Con molti errori il ripasso dice «Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati», senza dire quali | Stessa soluzione della riga sopra: l'elenco delle domande sbagliate dice anche a quali argomenti appartengono |
+| 7 | (Fatto nella 0.19.5.) Nel ripasso, con un solo errore il messaggio dice «Quasi tutto giusto: rileggi la spiegazione della domanda sbagliata», ma non è chiaro dove sia la spiegazione; e «Ripeti il ripasso» rifà tutte le domande | A fine ripasso un elenco delle domande sbagliate con la risposta giusta e la spiegazione, e un pulsante «Ripassa solo le sbagliate», in una versione futura |
+| 8 | (Fatto nella 0.19.5.) Con molti errori il ripasso dice «Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati», senza dire quali | Stessa soluzione della riga sopra: l'elenco delle domande sbagliate dice anche a quali argomenti appartengono |
 | 9 | Lezione 1, pulsanti Cazza e Lasca: la vela tornava al centro e la scritta di passo completato spariva | Risolto nella 0.18.1 |
 | 10 | Pannello fuori da 1360x650 sul PC dell'utente con i caratteri veri | Risolto nella 0.18.2 |
 
