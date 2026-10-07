@@ -26,3 +26,13 @@ Diario delle prove di gioco, con la data. Non sono verifiche nautiche: sono le i
 | 8 | Con molti errori il ripasso dice «Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati», senza dire quali | Stessa soluzione della riga sopra: l'elenco delle domande sbagliate dice anche a quali argomenti appartengono |
 | 9 | Lezione 1, pulsanti Cazza e Lasca: la vela tornava al centro e la scritta di passo completato spariva | Risolto nella 0.18.1 |
 | 10 | Pannello fuori da 1360x650 sul PC dell'utente con i caratteri veri | Risolto nella 0.18.2 |
+
+## 7 ottobre 2026: gioco vero
+
+| # | Cosa si è visto | Cosa ne facciamo |
+| --- | --- | --- |
+| 11 | Prova 2, dalla registrazione dell'utente: strambata violenta non prevista, causata dall'essere finito dal lato sopravento della linea che porta alla boa | Il testo della prova ora dice cosa fare se strambare serve per forza (fatto in 0.18.4) |
+| 12 | Orziera: il testo del pannello attribuiva la tendenza a salire da sola a onde e raffiche come unica causa | Testo del pannello più generico, glossario ampliato con tutte le cause (fatto in 0.18.4) |
+| 13 | Idea: linea d'arrivo tra due boe al posto della boa nelle prove senza giro di boa | Decisione di settembre, ancora da realizzare |
+| 14 | Idea: tasto per spostare la barca verso il margine dello schermo opposto alla boa, tenuto premuto, con ritorno al centro al rilascio; le raffiche restano visibili | Per il livello 4 col tattico valutare anche una vista che mette in pausa il gioco |
+| 15 | Filetto sopravento e vela che sbatte: controllo (senza modificare il motore) di quanto distano le due soglie. Nel disegno coincidono sempre (stesso stato `ttState()`, differenza 0°). Nella forza, la resistenza aggiunta parte 2° di incidenza dopo (soglia 6° invece di 8°): a bolina larga (65°) questo equivale a 3,76° di boma, al traverso (90°) a 4,34° di boma — sopra i 3° indicati. Al lasco (120°) nessuna delle due soglie si raggiunge mai, nemmeno a scotta tutta lascata (incidenza minima misurata ≈12°) | Nessuna modifica fatta. Proposta minima, da confermare con un velista: nel disegno, slegare la deformazione della vela (randa) dal medesimo stato del filetto e farla iniziare alla soglia della resistenza aggiunta già esistente nel motore (incidenza 6° invece di 8°), così il filetto si agita prima e la vela si vede sbattere qualche grado dopo, invece che insieme |

@@ -534,7 +534,7 @@ function step(S, C, E, dt){
       cond: I => I.twa >= 110 && I.twa <= 145 && Math.abs(I.r) < 4, hold: 1,
       done: "Barra sopravento, la barca poggia." },
     { title: "Tenere la rotta", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Ora ci sono piccole onde che spostano la prua, e la barca tende a salire da sola verso il vento: si dice che è <em>orziera</em>. Tieni la rotta indicata nel riquadro sopra i comandi, correggendo con piccoli colpi di barra: resta entro 6° per 8 secondi di fila.",
+      text: ["In certe condizioni, la barca tende a salire da sola verso il vento: si dice che è <em>orziera</em>. Consulta il glossario per avere più informazioni. Tieni la rotta indicata nel riquadro sopra i comandi, correggendo con piccoli colpi di barra: resta entro 6° per 8 secondi di fila.",
              "Timonare bene vuol dire usare poca barra: ogni angolo di barra frena la barca."],
       course: true, yawNoise: true,
       cond: (I, S) => Math.abs(norm180(S.h - S.course)) < 6 && I.kn > 2, hold: 8,
@@ -692,7 +692,7 @@ function step(S, C, E, dt){
       start: { x: 0, y: 0, h: 90, sheet: 0.02 }, bands: [90, 110, 140],
       marks: [{ x: 230, y: 0, label: "Boa" }] },
     { title: "Lasco e poppa", desc: "Raggiungi una boa sottovento.", wind: 45, tws: 10, gusts: 0,
-      text: "La boa è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo.",
+      text: "La boa è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo. Se devi per forza strambare, cazza prima tutta la vela, così la strambata è controllata (la vedrai meglio nella lezione 5).",
       start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [140, 175, 220],
       marks: [{ x: 60, y: 260, label: "Boa" }] },
     { title: "Risalire il vento", desc: "Raggiungi una boa controvento.", wind: 180, tws: 10, gusts: 0,
@@ -768,6 +768,7 @@ function step(S, C, E, dt){
     ["Mure", "Il lato da cui arriva il vento: mure a dritta se arriva da destra, mure a sinistra se arriva da sinistra. Tra due barche a vela con mure diverse, quella mure a sinistra deve lasciare strada.", "Lezione 3"],
     ["Nodo", "Unità di velocità in mare: un miglio nautico all'ora, cioè 1,852 km/h.", "Lezione 1"],
     ["Orzare", "Girare la prua verso il vento.", "Lezione 1"],
+    ["Orziera", "Barca che tende a salire da sola verso il vento. Le cause possono essere diverse e spesso si sommano: il vento e le raffiche, le onde che spostano la prua, la barca molto sbandata, le vele troppo cazzate, la posizione e il peso dell'equipaggio. Si corregge con la barra e, quando si può, con le vele e con il peso.", "Lezione 2"],
     ["Poggiare", "Girare la prua allontanandola dal vento.", "Lezione 1"],
     ["Poppa (andatura)", "Andatura con il vento esattamente da dietro.", "Lezione 3"],
     ["Poppa (parte della barca)", "La parte posteriore della barca.", "Lezione 1"],
@@ -806,7 +807,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.18.3"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.18.4"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);

@@ -17,6 +17,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | Comandi di manovra | «Pronti a virare?», «Pronti!», «Viro!»; «Pronti a strambare?», «Strambo!» | D'uso comune, ma con varianti tra scuole. | |
 | Precedenza tra mure | Tra due barche a vela con mure diverse, quella mure a sinistra lascia strada | Regola del regolamento per prevenire gli abbordi in mare; il gioco tratta anche il caso delle stesse mure (lascia strada la barca sopravento). | |
 | Orziera | Barca che tende a salire da sola verso il vento | Usato nell'esercizio di rotta; verificare il termine. | |
+| Cause della barca orziera | Vento e raffiche, onde che spostano la prua, barca molto sbandata, vele troppo cazzate, posizione e peso dell'equipaggio | Descrizione generale (glossario, 0.18.4); fonti solo per vele troppo cazzate (F1) e sbandamento (F4) | ❓ da confermare con un velista |
 | Scadere | corretto il 5 ottobre 2026: scadere = scarroccio; il gioco usa poggiare | Due glossari pubblici (marinasveva.com, scuolavelaargentario.com) definiscono «scadere» come essere spinti sottovento da scarroccio o corrente, non la prua che gira allontanandosi dal vento | ✅ |
 
 ## Lezione 1: parti della barca e termini base
