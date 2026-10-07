@@ -159,7 +159,7 @@ dialog#setDlg::backdrop{background:rgba(13,25,36,.5)}
 select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .check{display:flex;gap:8px;align-items:center;font-size:.95rem;cursor:pointer}
 .check input{width:18px;height:18px;accent-color:var(--ink)}
-#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:6px} #freeOpts{flex-direction:row;gap:10px} #freeOpts .optrow{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650 */
+#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:4px} #freeOpts{flex-direction:row;gap:10px} #freeOpts .optrow{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza */
 #sesBox{display:flex;gap:8px;align-items:center} #sesBox[hidden]{display:none} #sesNote{flex:1;font:inherit;font-size:.9rem;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);resize:none}
 
 /* ---- glossario ---- */
@@ -322,7 +322,7 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
       <div data-l="2" data-x><span>Vento reale</span><b id="iTw">—</b></div>
       <div data-l="2" data-x><span>Vento apparente</span><b id="iAw">—</b></div>
       <div data-l="3"><span>Prua</span><b id="iHdg">—</b></div>
-      <div data-l="3"><span>Rilevamento boa</span><b id="iBrg">—</b></div>
+      <div data-l="3"><span>Rilevamento</span><b id="iBrg">—</b></div>
       <div data-l="3" data-x><span>Sbandamento</span><b id="iHeel">—</b></div>
       <div data-l="3" data-x><span>Scarroccio</span><b id="iLee">—</b></div>
     </section>
@@ -686,25 +686,26 @@ function step(S, C, E, dt){
   // Prove: geometria descritta con il vento da nord (m), poi ruotata secondo il vento della prova.
   // bands: tempi massimi in secondi per oro, argento e bronzo (0.16), tarati con tests/collaudo_fasce.py:
   // oro = tempo del pilota automatico arrotondato ai 5 s superiori, argento +25%, bronzo +60%.
+  // Dalla 0.19 l'ultima voce di marks è una linea d'arrivo (FIN_HALF m per lato, perpendicolare all'ultimo lato), non una boa da raggiungere.
   const MISSIONS = [
-    { title: "Al traverso", desc: "Raggiungi una boa con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
-      text: "Il vento non arriva più da nord: guarda la freccia. La boa si raggiunge al traverso. La vela parte troppo cazzata: regolala sui filetti e raggiungi la boa.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.02 }, bands: [90, 110, 140],
-      marks: [{ x: 230, y: 0, label: "Boa" }] },
-    { title: "Lasco e poppa", desc: "Raggiungi una boa sottovento.", wind: 45, tws: 10, gusts: 0,
-      text: "La boa è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo. Se devi per forza strambare, cazza prima tutta la vela, così la strambata è controllata (la vedrai meglio nella lezione 5).",
-      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [140, 175, 220],
-      marks: [{ x: 60, y: 260, label: "Boa" }] },
-    { title: "Risalire il vento", desc: "Raggiungi una boa controvento.", wind: 180, tws: 10, gusts: 0,
-      text: "La boa è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [185, 235, 300],
-      marks: [{ x: 0, y: -220, label: "Boa" }] },
+    { title: "Al traverso", desc: "Taglia l'arrivo con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
+      text: "Il vento non arriva più da nord: guarda la freccia. L'arrivo è al traverso. La vela parte troppo cazzata: regolala sui filetti e passa tra le due boe dell'arrivo.",
+      start: { x: 0, y: 0, h: 90, sheet: 0.02 }, bands: [95, 120, 150],
+      marks: [{ x: 230, y: 0, label: "Arrivo" }] },
+    { title: "Lasco e poppa", desc: "Raggiungi l'arrivo sottovento.", wind: 45, tws: 10, gusts: 0,
+      text: "L'arrivo è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo. Se devi per forza strambare, cazza prima tutta la vela, così la strambata è controllata (la vedrai meglio nella lezione 5).",
+      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [145, 180, 230],
+      marks: [{ x: 60, y: 260, label: "Arrivo" }] },
+    { title: "Risalire il vento", desc: "Raggiungi l'arrivo controvento.", wind: 180, tws: 10, gusts: 0,
+      text: "L'arrivo è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
+      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [200, 250, 320],
+      marks: [{ x: 0, y: -220, label: "Arrivo" }] },
     { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
-      text: "Risali di bolina fino alla boa e girala lasciandola a sinistra, poi torna all'arrivo con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [330, 410, 525],
+      text: "Risali di bolina fino alla boa e girala lasciandola a sinistra, poi torna a tagliare la linea da cui sei partito, con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [335, 420, 535],
       marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
-      text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino all'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
+      text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino alla linea d'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
       start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [355, 440, 565],
       marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
@@ -752,6 +753,7 @@ function step(S, C, E, dt){
     ["Angolo morto", "Il settore attorno alla direzione del vento in cui la vela non spinge e non si può navigare: nelle scuole si indica di solito in circa 45° per lato (90° in tutto); le derive riescono a stringere un po' di più.", "Lezione 1"],
     ["Barra", "Il manico del timone. Si spinge dalla parte opposta a quella verso cui si vuole girare: barra sottovento, la barca orza; barra sopravento, la barca poggia.", "Lezione 2"],
     ["Boa", "Galleggiante ancorato al fondo, usato come riferimento o come segnale.", "Prove"],
+    ["Linea d'arrivo", "Linea immaginaria fra due boe (in regata spesso fra una boa e la barca giuria): si arriva quando la si attraversa venendo dal percorso.", "Prove"],
     ["Bolina", "L'andatura più vicina al vento. Bolina stretta: circa 45°, il massimo che la barca riesce a stringere; bolina larga: circa 60-75°.", "Lezione 3"],
     ["Boma", "L'asta orizzontale, fissata all'albero, che tiene il lato basso della randa.", "Lezione 1"],
     ["Bordeggiare", "Risalire il vento a zig-zag, alternando tratti di bolina sulle due mure. Ogni tratto è un bordo.", "Lezione 5"],
@@ -807,7 +809,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.18.4"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.19.1"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -882,8 +884,11 @@ function step(S, C, E, dt){
   // MENU, PROGRESSI, GLOSSARIO
   // ======================================================================
   const STORE = "scuolaVelaSim.v1";
-  // record e fantasmi dei percorsi cambiati nella 0.14 (giro di boa dal lato giusto) usano chiavi nuove; i completamenti restano
-  const KEYV = { m3: "m3.2", m4: "m4.3", r0: "r0.2", r1: "r1.2" };
+  // record e fantasmi dei percorsi cambiati usano chiavi nuove; i completamenti restano.
+  // 0.14: giro di boa dal lato giusto (prove 4 e 5, regate). 0.19: linea d'arrivo in tutte le prove.
+  const KEYV = { m0: "m0.2", m1: "m1.2", m2: "m2.2", m3: "m3.3", m4: "m4.4", r0: "r0.2", r1: "r1.2" };
+  const OLD_M = ["m0", "m1", "m2", "m3", "m4", "m3.2", "m4.3"]; // chiavi delle prove prima della 0.19: si cancellano al primo avvio
+  let wipeNote = false;
   const recK = k => KEYV[k] || k;
   let progress = { done: {}, best: {}, clean: {} };
   const STAR = '<span class="star" title="Completata almeno una volta senza errori">★</span>';
@@ -940,14 +945,14 @@ function step(S, C, E, dt){
           <div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">L'esame su tutte le lezioni, i tornei, altri tipi di barca.</p></div>
         </section>
       </div>
-      <footer class="menu-foot"><span>I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori.${MEDAL_ON() ? " I pallini oro, argento e bronzo indicano la fascia del tuo record." : ""}</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
+      <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori.${MEDAL_ON() ? " I pallini oro, argento e bronzo indicano la fascia del tuo record." : ""}</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
     $("menuGloss").onclick = openGloss;
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));
     $("resetProg").onclick = () => { if (confirm("Azzerare tutti i progressi?")){ progress = { done: {}, best: {}, clean: {} }; saveProgress(); showMenu(); } };
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); wipeNote = false; // il messaggio compare una volta sola
   }
   $("toMenu").onclick = showMenu;
 
@@ -1168,6 +1173,15 @@ function step(S, C, E, dt){
     const ex = mk.x + Math.cos(c1) * r, ey = mk.y + Math.sin(c1) * r, tx = Math.sin(c1), ty = -Math.cos(c1), nx = Math.cos(c1), ny = Math.sin(c1);
     ctx.beginPath(); ctx.moveTo(ex + tx * 1.4, ey + ty * 1.4); ctx.lineTo(ex + nx * 0.8, ey + ny * 0.8); ctx.lineTo(ex - nx * 0.8, ey - ny * 0.8); ctx.closePath(); ctx.fill();
   }
+  // taglio della linea d'arrivo fra due posizioni consecutive: frazione del passo (0-1) in cui avviene, -1 se non c'è,
+  // -2 se la linea è attraversata fuori dagli estremi. Conta solo dal lato del percorso verso l'arrivo; le boe non fanno da ostacolo.
+  const FIN_HALF = 12;
+  function finCross(mk, x0, y0, x1, y1){
+    const d0 = (x0 - mk.x) * mk.nx + (y0 - mk.y) * mk.ny, d1 = (x1 - mk.x) * mk.nx + (y1 - mk.y) * mk.ny;
+    if (!(d0 < 0 && d1 >= 0)) return -1;
+    const f = d0 / (d0 - d1), a = -((x0 + (x1 - x0) * f) - mk.x) * mk.ny + ((y0 + (y1 - y0) * f) - mk.y) * mk.nx;
+    return Math.abs(a) <= FIN_HALF ? f : -2;
+  }
   function roundToast(k, next){
     if (k > 0) toast("Boa girata: ora verso " + next);
     else toast("Boa girata dal lato sbagliato: torna indietro e girala lasciandola a sinistra");
@@ -1183,6 +1197,9 @@ function step(S, C, E, dt){
     curMarks = m.marks.map(mk => { const [x, y] = rot(mk.x, mk.y); return { x, y, label: mk.label }; });
     const [sx, sy] = rot(m.start.x, m.start.y);
     curMarks.forEach((mk, k) => { if (k < curMarks.length - 1){ mk.round = true; mk.out = markOut(k ? curMarks[k - 1] : { x: sx, y: sy }, mk, curMarks[k + 1]); } });
+    // linea d'arrivo: centrata sull'ultima voce, perpendicolare all'ultimo lato; (nx, ny) punta dal lato del percorso verso l'arrivo
+    const fin = curMarks[curMarks.length - 1], pv = curMarks.length > 1 ? curMarks[curMarks.length - 2] : { x: sx, y: sy }, fd = Math.hypot(fin.x - pv.x, fin.y - pv.y);
+    Object.assign(fin, { fin: true, nx: (fin.x - pv.x) / fd, ny: (fin.y - pv.y) / fd });
     freshState(sx, sy, norm360(m.start.h + env.twd), m.start.sheet);
     setGusts(m.gusts);
     recStart(recK("m" + i));
@@ -1314,6 +1331,7 @@ function step(S, C, E, dt){
     S.prevSide = side;
   }
   function simulate(dt, st){
+    const px0 = S.x, py0 = S.y; // posizione prima del passo: serve al taglio della linea d'arrivo
     applyInput(dt);
     if (st && st.autoTrim) ctl.sheet = autoSheet();
     if (st && st.yawNoise && !S.capsized){ // onde: spinte irregolari sulla prua
@@ -1377,10 +1395,13 @@ function step(S, C, E, dt){
         if (S.rnd >= 1){ reached = true; S.rnd = 0; S.rndA = undefined; }
         else if (k < 0) roundToast(-1);
         else if (k > 0) toast("Hai rimediato: ora girala lasciandola a sinistra");
-      } else if (mode === "mission" && Math.hypot(S.x - mk.x, S.y - mk.y) < 12) reached = true;
+      } else if (mode === "mission" && mk.fin){
+        const f = finCross(mk, px0, py0, S.x, S.y);
+        if (f >= 0){ reached = true; S.time -= (1 - f) * dt; } // istante esatto del taglio
+        else if (f === -2) toast("Fuori dalla linea: passa tra le due boe");
+      }
       if (reached){
-        S.markIdx++;
-        if (S.markIdx >= curMarks.length){
+        if (mk.fin){
           S.finished = true;
           const sec = Math.round(S.time), key = "m" + missionIdx, bk = recK(key), prev = progress.best[bk];
           progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); }
@@ -1389,7 +1410,7 @@ function step(S, C, E, dt){
             (MISSIONS[missionIdx].bands ? (medalOf(missionIdx, sec) ? " Fascia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Fuori dalle fasce: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") : "") +
             (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
           $("done").hidden = false; toast("Arrivato!");
-        } else toast("Boa girata: ora verso " + curMarks[S.markIdx].label.toLowerCase());
+        } else { S.markIdx++; toast("Boa girata: ora verso " + (curMarks[S.markIdx].fin ? "l'arrivo" : curMarks[S.markIdx].label.toLowerCase())); }
       }
       if (mode === "mission" && !S.finished) recSample(S.time, dt);
     }
@@ -1403,6 +1424,7 @@ function step(S, C, E, dt){
   let ghosts = {};
   try { ghosts = JSON.parse(localStorage.getItem(GHOST_STORE) || "{}"); } catch(e){ ghosts = {}; }
   const saveGhosts = () => { try { localStorage.setItem(GHOST_STORE, JSON.stringify(ghosts)); } catch(e){} };
+  if (OLD_M.some(k => progress.best[k] || progress.clean[k] || ghosts[k])){ OLD_M.forEach(k => { delete progress.best[k]; delete progress.clean[k]; delete ghosts[k]; }); saveProgress(); saveGhosts(); wipeNote = true; } // 0.19, nessuna migrazione
   // coordinate "del vento": il vento arriva sempre da -y; così il fantasma vale con qualsiasi direzione del vento
   const toWF = (x, y) => { const th = -env.twd * D2R; return [x * Math.cos(th) - y * Math.sin(th), x * Math.sin(th) + y * Math.cos(th)]; };
   const fromWF = (x, y) => { const th = env.twd * D2R; return [x * Math.cos(th) - y * Math.sin(th), x * Math.sin(th) + y * Math.cos(th)]; };
@@ -2021,6 +2043,13 @@ function step(S, C, E, dt){
     marks.forEach((m, i) => {
       const done = mode === "mission" ? i < S.markIdx : (mode === "lesson" && S.markReached);
       const active = mode === "mission" ? i === S.markIdx : !done;
+      if (m.fin){ // linea d'arrivo: tratteggio fra due boe piccole, come la linea delle regate
+        const ex = -m.ny * FIN_HALF, ey = m.nx * FIN_HALF;
+        ctx.strokeStyle = active ? "rgba(255,226,122,.8)" : "rgba(255,255,255,.55)"; ctx.lineWidth = 0.18; ctx.setLineDash([1.2, 1.2]);
+        ctx.beginPath(); ctx.moveTo(m.x - ex, m.y - ey); ctx.lineTo(m.x + ex, m.y + ey); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = "#F28C1B"; for (const k of [-1, 1]){ ctx.beginPath(); ctx.arc(m.x + k * ex, m.y + k * ey, 0.7, 0, Math.PI * 2); ctx.fill(); }
+        return;
+      }
       ctx.fillStyle = done ? "#8FA3AF" : "#F28C1B"; ctx.beginPath(); ctx.arc(m.x, m.y, 0.7, 0, Math.PI * 2); ctx.fill();
       if (active && m.round) drawRoundArrow(m, 7, "rgba(255,226,122,.9)");
       else if (active && mode !== "free"){ ctx.strokeStyle = "rgba(255,226,122,.8)"; ctx.lineWidth = 0.15; ctx.setLineDash([0.8, 0.8]); ctx.beginPath(); ctx.arc(m.x, m.y, 12, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
@@ -2034,7 +2063,7 @@ function step(S, C, E, dt){
 
     // sopra il mondo, in coordinate schermo
     ctx.font = `600 13px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-    marks.forEach((m, i) => { const [sx, sy] = toScreen(v, m.x, m.y); ctx.fillText(m.label + (m.round && mode === "mission" && i === S.markIdx ? " · lasciala a sinistra" : ""), sx + 10, sy - 8); });
+    marks.forEach((m, i) => { const [sx, sy] = m.fin ? toScreen(v, m.x - m.ny * FIN_HALF, m.y + m.nx * FIN_HALF) : toScreen(v, m.x, m.y); ctx.fillText(m.label + (m.round && mode === "mission" && i === S.markIdx ? " · lasciala a sinistra" : ""), sx + 10, sy - 8); });
     const act = mode === "mission" && !S.finished ? curMarks[S.markIdx] : (mode === "lesson" && S.lessonMark && !S.markReached ? S.lessonMark : null);
     if (act) offscreenArrow(v, act);
     if (st && st.rose) drawRose(v, st.maneuvers, st.target);

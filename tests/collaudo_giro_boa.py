@@ -1,6 +1,6 @@
 # Guida la barca con un pilota automatico (barra e scotta, come un giocatore) nelle prove 4 e 5
 # e verifica il giro di boa: dal lato giusto la boa conta, dal lato sbagliato no finché non si rimedia.
-# Uso: python collaudo_giro_boa.py [casi]   (a sinistra, b a dritta, c sbaglia e rimedia, d triangolo; e triangolo con la boa 2 a dritta, f prove 1-3; predefinito abcdef)
+# Uso: python collaudo_giro_boa.py [casi]   (a sinistra, b a dritta, c sbaglia e rimedia, d triangolo; e triangolo con la boa 2 a dritta, f prove 1-3 con la linea d'arrivo; predefinito abcdef)
 import asyncio, pathlib
 from playwright.async_api import async_playwright
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
@@ -63,8 +63,8 @@ async def main():
         if "b" in casi: await prova(pg, 3, [[0, sbagliato]], "boa a dritta (deve NON finire)")
         if "c" in casi: await prova(pg, 3, [[0, rimedio]], "sbaglia e rimedia")
         if "d" in casi: await prova(pg, 4, [[0, giusto], [1, giusto]], "triangolo, boe a sinistra")
-        if "f" in casi:  # prove 1-3: la boa si raggiunge soltanto, come prima
-            for k in range(3): await prova(pg, k, [], "boa da raggiungere")
+        if "f" in casi:  # prove 1-3: nessuna boa da girare, solo la linea d'arrivo (0.19)
+            for k in range(3): await prova(pg, k, [], "linea d'arrivo")
         if "e" in casi: await prova(pg, 4, [[0, giusto], [1, sbagliato]], "triangolo, boa 2 a dritta (deve NON finire)")
         await pg.screenshot(path=str(OUT / "giro_boa.png"))
         print("errori:", errs); await b.close()

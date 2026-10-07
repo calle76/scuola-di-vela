@@ -47,7 +47,7 @@ Dentro `index.html`, nell'ordine:
 
 | Chiave | Contenuto |
 | --- | --- |
-| `scuolaVelaSim.v1` | Voci completate (`done`), record delle prove e delle regate (`best`), prove e regate completate almeno una volta senza errori (`clean`, dalla 0.15), migliori punteggi dei quiz. I record dei percorsi cambiati nella 0.14 (prove 4 e 5, regate) usano chiavi nuove (`m3.2`, `m4.3`, `r0.2`, `r1.2`); vedi `KEYV`. Anche `clean` usa queste chiavi. |
+| `scuolaVelaSim.v1` | Voci completate (`done`), record delle prove e delle regate (`best`), prove e regate completate almeno una volta senza errori (`clean`, dalla 0.15), migliori punteggi dei quiz. I record dei percorsi cambiati nella 0.14 (regate) usano chiavi nuove (`r0.2`, `r1.2`), e quelli delle prove, cambiati con la linea d'arrivo nella 0.19, `m0.2`, `m1.2`, `m2.2`, `m3.3`, `m4.4`; vedi `KEYV`. Anche `clean` e i fantasmi usano queste chiavi. Al primo avvio della 0.19 record, stelle e fantasmi delle chiavi vecchie delle prove (`OLD_M`) si cancellano, senza migrazione, e il menu lo dice una volta sola. |
 | `scuolaVelaGhost.v1` | Fantasmi: un campione ogni 0,2 s (tempo, posizione, rotta e boma rispetto al vento, sbandamento). |
 
 ### Aggancio per i collaudi
@@ -90,7 +90,7 @@ Ogni passo è un oggetto nell'array della lezione. I campi principali:
 
 ### Una prova o una regata
 
-Le prove (`MISSIONS`) e le regate (`RACES`) sono descritte con il vento da nord; all'avvio vengono ruotate secondo il vento scelto. Nelle prove le boe intermedie vanno girate lasciandole a sinistra (`roundCheck`, `markOut`); la boa di arrivo si raggiunge entro 12 m. Nelle regate la boa di bolina va girata a sinistra e l'arrivo è la linea. Un percorso di prova deve girare in senso antiorario, cioè con svolte a sinistra: con svolte a destra, lasciare le boe a sinistra richiederebbe un giro di quasi 360°. Se si cambia un percorso, cambiano i tempi: va aggiornata la sua chiave in `KEYV`.
+Le prove (`MISSIONS`) e le regate (`RACES`) sono descritte con il vento da nord; all'avvio vengono ruotate secondo il vento scelto. Nelle prove le boe intermedie vanno girate lasciandole a sinistra (`roundCheck`, `markOut`). Dalla 0.19 l'ultima voce di `marks` è una **linea d'arrivo** (`finCross`): centrata in quel punto, perpendicolare all'ultimo lato, 12 m per lato (`FIN_HALF`, ipotesi nostra), con due boe piccole agli estremi. Conta solo il taglio dal lato del percorso verso l'arrivo, fra le due boe comprese, del centro della barca (nella realtà conta la prua, circa 2 m prima); il tempo è quello dell'istante esatto del taglio. Passare fuori dagli estremi dà solo un messaggio, le boe non fanno da ostacolo e toccarle non è punito. Nelle prove 4 e 5 la barca nasce sulla linea e il passaggio prima del giro di boa non conta. L'evento «boa» del registratore conta solo le boe girate (`markIdx`), l'arrivo è l'evento «arrivo». Nelle regate la boa di bolina va girata a sinistra e l'arrivo è la linea. Un percorso di prova deve girare in senso antiorario, cioè con svolte a sinistra: con svolte a destra, lasciare le boe a sinistra richiederebbe un giro di quasi 360°. Se si cambia un percorso, cambiano i tempi: va aggiornata la sua chiave in `KEYV`.
 
 ## Avversari
 

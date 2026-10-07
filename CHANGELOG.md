@@ -13,6 +13,61 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 0.19.1 — finestra delle impostazioni in 1360×650, due correzioni di testo
+
+Del 7 ottobre 2026. Il tasto «vista», già previsto per la parte B della proposta della 0.19, diventa la **0.19.2**.
+
+- **Finestra delle impostazioni in navigazione libera, a 1360×650.** Misurato sul PC dell'utente (non nella sandbox, dove dà 0): sforava di 3 px in 3 sessioni su 3. Il `gap` fra le voci dirette di `.set-body > .opts` scende da 6 a 4 px (`index.html`): nel caso peggiore (navigazione libera, «Registra la sessione» attiva, nota e marcatori visibili) ci sono 12 voci e quindi 11 spazi, per **−22 px** di altezza, contro i −18 px calcolati come necessari per un margine di almeno 15 px. Nessun testo, opzione o casella tolta; nessuna grafica cambiata oltre allo spazio fra le righe. A 1360×768 e nelle lezioni l'eccesso era già 0 ed era già confermato il margine su quel caso.
+- **`collaudo_registratore.py` (parte b) e `docs/COLLAUDI.md`:** la misura della finestra delle impostazioni e del pannello ora controlla anche che i caratteri veri del gioco siano caricati (come `collaudo_pannello.py` e `collaudo_suggerimento.py`) e stampa l'eccesso massimo in pixel; se i caratteri mancano lo dice e il collaudo esce con 1.
+- **Descrizione corretta, non il motore:** `tests/lancia_tutti.sh` e `docs/COLLAUDI.md` dicevano «raffica a 20 nodi senza reagire circa 61°», ma `raffiche_e_virate.js` dà 55°. Verificato con `git show a64b3cf:index.html` che l'uscita (27°/41°/55° senza reagire, 16°/23°/31° lascando) è identica a quella attuale: solo la descrizione era sbagliata, ed è l'unica cosa corretta.
+- **Verificato:** `collaudo_registratore.py` (parti b: caratteri e eccesso riportati; non ancora confermato a 1360×650 sul PC dell'utente, che vedeva lo sfondamento), `collaudo_pannello.py` a 1360×650 e 1360×768, `collaudo_lezioni.py`, `collaudo_schermate.py`, `collaudo_versione.py`: tutti OK nella sandbox; `polare.js` e `raffiche_e_virate.js` identici carattere per carattere. Da confermare: `tests/lancia_tutti.sh --solo registratore` sul PC dell'utente.
+
+## 0.19 — linea d'arrivo nelle prove
+
+Del 7 ottobre 2026. Decisione di settembre (osservazione 13). Proposta, banco e decisioni: `docs/PROPOSTA-LINEA-E-VISTA.md`; la parte B (tasto «vista») è rimandata alla 0.19.1.
+
+- **Cosa cambia.** In tutte le prove l'arrivo non è più una boa da raggiungere entro 12 m, ma una **linea fra due boe piccole**: centrata dove prima c'era la boa d'arrivo, perpendicolare all'ultimo lato, larga 24 m (12 per lato, `FIN_HALF`, ipotesi nostra). Il cronometro si ferma all'istante esatto del taglio (interpolato fra due passi). Conta solo il taglio dal lato del percorso verso l'arrivo, fra le due boe comprese; passando fuori dagli estremi compare «Fuori dalla linea: passa tra le due boe», senza errore nel registro. Le boe non fanno da ostacolo e toccarle non è punito, come nelle regate. Conta il centro della barca: nella realtà la prua, circa 2 m prima (dichiarato).
+- **Prove 1-3:** nessuna linea di partenza, il cronometro parte all'avvio come prima. **Prove 4 e 5:** la barca nasce sulla linea, che è partenza e arrivo come in regata; le boe restano da girare a sinistra, e il passaggio sulla linea prima del giro di boa non conta. Lezione 5, navigazione libera e regate invariate.
+- **Testi:** descrizioni e istruzioni delle prove dicono «arrivo» invece di «boa» (nella prova 2 resta la frase della 0.18.4 sulla strambata); «Boa girata: ora verso l'arrivo»; nel pannello «Rilevamento boa» diventa «Rilevamento». Glossario: voce nuova «Linea d'arrivo». Riga nuova in `CONTENUTI-DA-VERIFICARE.md` (si arriva tagliando la linea dall'ultima boa; nella realtà conta la prua).
+- **Registratore:** l'evento «boa» conta solo le boe girate; l'arrivo è solo l'evento «arrivo» (prima, nelle prove 1-3, l'arrivo contava anche come «boa»).
+- **Salvataggi:** chiavi nuove in `KEYV` per le cinque prove (`m0.2`, `m1.2`, `m2.2`, `m3.3`, `m4.4`). Al primo avvio record, stelle e fantasmi delle chiavi vecchie delle prove si cancellano, senza migrazione, e il menu dice una volta sola «Le prove sono cambiate: i tempi salvati sono stati azzerati». Completamenti e regate restano.
+- **Fasce** ricalcolate con la regola della 0.16 sui tempi del pilota di `collaudo_fasce.py` con la linea (8 venti per le prove 1-4, 24 corse a seme fisso per la prova 5):
+
+  | Prova | Pilota prima | Pilota dopo | Fasce prima | Fasce dopo |
+  |---|---|---|---|---|
+  | 1 | 87,3 | 92,1 (+4,8) | 90/110/140 | 95/120/150 |
+  | 2 | 136,2 | 142,6 (+6,4) | 140/175/220 | 145/180/230 |
+  | 3 | 184,7 | 196,4 (+11,7) | 185/235/300 | 200/250/320 |
+  | 4 | 327,0 | 333,4 (+6,4) | 330/410/525 | 335/420/535 |
+  | 5, mediana | 347,6 (18 finite su 24) | 353,2 (18 finite su 24) | 355/440/565 | 355/440/565 |
+
+  Le prove 1-4 danno lo stesso tempo con tutti gli 8 venti e coincidono al decimo con il banco della Fermata 1 (soglia ±0,5 s: è un controllo di riproducibilità, non di validità). La prova 3 sale di più perché gli ultimi 12 m sono di bolina. Prova 5: stessi semi prima e dopo; le corse non finite sono 6 in entrambe, con gli stessi venti tranne uno (prima vento 0, dopo vento 135). Una corsa resta lentissima in entrambe (842,6 e 847,9 s).
+- **`collaudo_fasce.py`:** ogni corsa parte in una pagina nuova con `Math.random` a seme fisso (seme = numero della corsa + 1), così la prova 5 è riproducibile e due versioni si confrontano sugli stessi semi; stampa quante corse sono finite.
+- **Nuovo collaudo `tests/collaudo_linea.py`:**
+  - **Parte 1:** 5 prove × 8 venti, barca messa vicino alla linea che poi naviga con la fisica del gioco; la geometria della linea la ricalcola il collaudo per conto suo. **216 casi, 0 sbagliati:**
+    - 40 tagli giusti: arrivo, tempo uguale all'istante interpolato, scarto massimo 2,2·10⁻¹⁶ s;
+    - 40 tagli al contrario: niente arrivo;
+    - 40 fuori dagli estremi: messaggio, poi rientro e arrivo;
+    - 40 appena dentro un estremo (sopra una boa, da 11,90 a 12,00 m dal centro): arrivo, nessun errore;
+    - 40 appena fuori (fino a 12,24 m): niente arrivo;
+    - 16 nelle prove 4 e 5 prima del giro di boa: niente arrivo.
+  - **Parte 2, pagina senza `#collaudo`: 8 verifiche su 8.** Dati vecchi cancellati con il messaggio una volta sola, regate e completamenti conservati, «Arrivo» disegnato nella prova 1 aperta dal menu.
+  - Fallisce se un tipo di caso ha zero misure. Sulla 0.18.4 fallisce: 96 casi misurati, 160 sbagliati, 3 tipi con zero casi, 5 verifiche su 8.
+  - **Difetto del collaudo, trovato al primo giro e corretto:** nella prova 3 il taglio «giusto» partiva 6 m prima della linea con la rotta a 60° dal vento. La barca si spostava di lato di 12,6 m e tagliava fuori dagli estremi: il gioco diceva giustamente «Fuori dalla linea» e i casi risultavano sbagliati (8 su 40). Ora parte a 3 m.
+- **Altri collaudi adattati:** `collaudo_pannello.py` misura anche il riquadro delle istruzioni di ogni prova e regata nella pagina senza `#collaudo`, con l'oro atteso nell'orologio aggiornato. `collaudo_giro_boa.py`: nome del caso f. `tests/lancia_tutti.sh`: nuovo collaudo (esito chiaro) e nota di `collaudo_fasce.py` coi nuovi tempi. `collaudo_registratore.py` cercava nel file la scritta fissa «# gioco 0.18» e con la 0.19 falliva: ora legge `VERSIONE` da `index.html`.
+- **Verificato:**
+  - `collaudo_linea.py` tutto OK.
+  - `collaudo_fasce.py`: tabella sopra.
+  - `collaudo_giro_boa.py`: prove 1-3 finite in 92, 156 e 197 s col pilota in tempo reale; i casi sbagliati non finiscono, con 1 giro sbagliato.
+  - `collaudo_registratore.py`:
+    - parte b: nelle 5 sessioni della prova 3, file e gioco danno 10 virate, 0 boe e 1 arrivo;
+    - parte c: 50 corse identiche su 50;
+    - parte a rilanciata dopo la correzione: 9 su 9.
+  - `collaudo_pannello.py` a 1360×650 e 1360×768: caratteri veri caricati, eccesso 0 px, riquadro delle istruzioni 0 px in 6 misure.
+  - `collaudo_lezioni.py`, `collaudo_schermate.py`, `collaudo_versione.py`: OK.
+  - `polare.js` e `raffiche_e_virate.js` identici carattere per carattere.
+  - Il layout a 1360×650/768 lo conferma il PC dell'utente.
+
 ## 0.18.4 — giro di testi: strambata, orziera
 
 - Prova 2 «Lasco e poppa»: il testo dice ora anche cosa fare se la strambata è inevitabile («cazza prima tutta la vela, così la strambata è controllata»), dopo che una registrazione ha mostrato una strambata violenta non prevista.

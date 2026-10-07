@@ -71,6 +71,10 @@ async def main():
         async def giro(nome, apri, rifai, regata):
             await apri(); await pg2.wait_for_timeout(2500)
             ok = await riquadro(regata)
+            # 0.19: il riquadro delle istruzioni (testi delle prove cambiati) deve stare nella finestra senza scorrere
+            oltre = await pg2.evaluate("(()=>{const e=document.getElementById('briefOv');return e.scrollHeight-e.clientHeight})()")
+            riquadri.append(oltre)
+            if oltre > 0: errs2.append(f"{nome}: il riquadro delle istruzioni eccede di {oltre} px")
             fermo = regata or await pg2.inner_text("#stClock") == atteso[nome]
             await pg2.keyboard.press("Enter"); await pg2.wait_for_timeout(1500)   # non un clic su #bGo: se il riquadro manca, il clic aspetterebbe invano
             parte = regata or await pg2.inner_text("#stClock") == atteso[nome].replace("0:00", "0:01")
@@ -83,13 +87,16 @@ async def main():
             if not (fermo and parte and da_zero): errs2.append(f"{nome}: il cronometro non parte con Parti")
             await pg2.click("#toMenu"); await pg2.wait_for_timeout(300)
         # le fasce stampate nell'orologio: se cambiassero, il confronto qui sotto lo direbbe
-        atteso = {"prova 1": "Tempo 0:00 \u00b7 oro entro 1:30", "prova 2": "Tempo 0:00 \u00b7 oro entro 2:20",
-                  "prova 3": "Tempo 0:00 \u00b7 oro entro 3:05", "prova 4": "Tempo 0:00 \u00b7 oro entro 5:30",
+        atteso = {"prova 1": "Tempo 0:00 \u00b7 oro entro 1:35", "prova 2": "Tempo 0:00 \u00b7 oro entro 2:25",
+                  "prova 3": "Tempo 0:00 \u00b7 oro entro 3:20", "prova 4": "Tempo 0:00 \u00b7 oro entro 5:35",
                   "prova 5": "Tempo 0:00 \u00b7 oro entro 5:55"}
+        riquadri = []
         print("gioco vero, senza #collaudo:")
         await giro("regata 1", lambda: pg2.click("[data-r='0']"), "#rRestart", True)
         for n in range(1, 6):
             await giro(f"prova {n}", lambda n=n: pg2.locator("#menu button.item", has_text=f"Prova {n}").click(), "#mRetry", False)
+        print(f"riquadro delle istruzioni: misurato {len(riquadri)} volte, eccesso massimo (pixel): {max(riquadri) if riquadri else 'nessuna misura'}")
+        if not riquadri: errs2.append("riquadro delle istruzioni mai misurato")
         print("errori:", errs + errs2)
         await b.close()
         if not caratteri_ok: sys.exit(1)

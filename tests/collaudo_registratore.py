@@ -2,6 +2,7 @@
 #  a  pagina vera, senza #collaudo: interruttore spento di partenza, niente marcatori da spento; acceso col clic, scaricamento, avviso alla chiusura
 #  b  5 sessioni con #collaudo: un pilota gioca la prova 3 (venti diversi), poi la lezione 2; marcatori e tasti premuti dal collaudo,
 #     nota digitata con m e lettere dei comandi; il file viene letto da analizza_sessione.py. Misura anche la finestra delle impostazioni
+#     e il pannello, con i caratteri veri del gioco: se mancano, le misure non sono valide e il collaudo esce con 1
 #  c  fisica identica al bit con registratore acceso e spento (Math.random con seme, passi fissi), più la variante con un numero
 #     casuale consumato di proposito, per mostrare che il metro vede una differenza
 #  d  costo per passo di simulazione e fotogrammi al secondo, acceso contro spento
@@ -11,10 +12,13 @@ from playwright.async_api import async_playwright
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import analizza_sessione as AS
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
+import re
+VERSIONE = re.search(r'const VERSIONE = "([^"]+)"', (pathlib.Path(__file__).resolve().parent.parent / "index.html").read_text()).group(1)  # 0.19: non più scritta a mano
 URL = BASE + "#collaudo"
 OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=True)
 PARTI = sys.argv[1] if len(sys.argv) > 1 else "abcd"
 fallito = []
+non_valido = []
 def esito(nome, ok, det=""):
     print(f"  {'OK ' if ok else 'NO '} {nome}" + (f": {det}" if det else ""), flush=True)
     if not ok: fallito.append(nome)
@@ -80,7 +84,7 @@ async def parte_a(p):
     ks = [r.split(" ", 2)[2] for r in righe if r.startswith("K ")]
     esito("file scaricato con un marcatore, i tasti e lo stato", sum(r.startswith("M ") for r in righe) == 1 and ks == ["→ giù", "→ su"] and sum(r.startswith("S ") for r in righe) >= 3,
           f"marcatori {sum(r.startswith('M ') for r in righe)}, tasti {ks}, righe di stato {sum(r.startswith('S ') for r in righe)}, {len(testo)} byte")
-    esito("versione e navigazione libera nel file", "# gioco 0.18" in testo and "apre navigazione libera" in testo)
+    esito("versione e navigazione libera nel file", f"# gioco {VERSIONE}" in testo and "apre navigazione libera" in testo)
     # l'avviso si prova uscendo dalla pagina con una navigazione: page.close(run_before_unload=True) nel browser senza finestra
     # non lo mostra in modo affidabile (0 su 9 nel gioco, 3 su 4 su una pagina minima con lo stesso gestore)
     dialoghi = []; pg.on("dialog", lambda d: (dialoghi.append(d.type), asyncio.ensure_future(d.accept())))
@@ -97,12 +101,21 @@ async def parte_a(p):
 NOTA = "m w s r mamma: la barca ha virato male (M1), poi ok"
 async def parte_b(p, n_sessioni=5):
     print(f"b) {n_sessioni} sessioni con il pilota", flush=True)
-    b = await p.chromium.launch(); casi = 0; pesi = []
+    b = await p.chromium.launch(); casi = 0; pesi = []; caratteri_tutti = []; ecc_misure = []
     for k in range(n_sessioni):
         vento = (k * 45 + 45) % 360; H = 650 if k % 2 == 0 else 768
         pg = await b.new_page(viewport={"width": 1360, "height": H}); errs = []
         pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(300)
+        # le misure di eccesso qui sotto valgono solo con i caratteri veri del gioco: con i font di sistema
+        # la larghezza e l'altezza del testo sono diverse e la prova non direbbe niente di vero sul margine reale.
+        await pg.evaluate("document.fonts.ready")
+        caratteri = await pg.evaluate("""() => ({
+            "barlow 700": document.fonts.check('700 16px "Barlow Semi Condensed"'),
+            "barlow 600": document.fonts.check('600 16px "Barlow Semi Condensed"'),
+            "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
+        })""")
+        caratteri_tutti.append(all(caratteri.values()))
         await pg.evaluate("__sv.openItem(['m',2])"); await pg.evaluate(f"__sv.startMission(2, {vento})"); await pg.evaluate("__sv.fast(0)")
         await clic(pg, SES_ON); await pg.wait_for_timeout(100)
         pos_m = []; tasti = []; ck = 0
@@ -130,6 +143,7 @@ async def parte_b(p, n_sessioni=5):
         # caso peggiore della finestra: navigazione libera (tre scelte del vento in più), con nota e marcatori visibili
         await pg.click("#setClose"); await pg.evaluate("__sv.openItem('free')"); await pg.click("#openSet")
         ecc_l = await pg.evaluate(ECCESSO); await pg.click("#setClose")
+        ecc_misure += [ecc["dialogo"], ecc["pannello"], ecc_l["dialogo"], ecc_l["pannello"]]
         (OUT / f"sessione_{k + 1}.txt").write_text(testo, encoding="utf-8")
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf): r = AS.analizza(testo)
@@ -162,6 +176,12 @@ async def parte_b(p, n_sessioni=5):
         casi += 1; await pg.close()
     kb_h = statistics.mean(by / t * 3600 / 1000 for by, t in pesi)
     print(f" peso medio: {kb_h:.0f} KB per un'ora di simulazione (stimato dalle sessioni, che contengono anche la lezione)")
+    caratteri_ok = all(caratteri_tutti)
+    print("caratteri del gioco caricati:", caratteri_ok)
+    print(f"finestra delle impostazioni e pannello: eccesso massimo (pixel): {max(ecc_misure)}")
+    if not caratteri_ok:
+        print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, le misure di eccesso sopra non sono attendibili")
+        non_valido.append("parte b: caratteri del gioco non caricati")
     esito("sessioni misurate", casi == n_sessioni, f"{casi}")
     await b.close()
 
@@ -258,5 +278,5 @@ async def main():
         if "c" in PARTI: await parte_c(p)
         if "d" in PARTI: await parte_d(p)
     print("esito:", "tutto OK" if not fallito else f"{len(fallito)} verifiche fallite: {fallito}")
-    sys.exit(1 if fallito else 0)
+    sys.exit(1 if (fallito or non_valido) else 0)
 asyncio.run(main())

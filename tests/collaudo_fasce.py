@@ -3,11 +3,16 @@
 # qui cazza solo quando sta per strambare, non per tutta la poppa)
 # percorre ogni prova più volte con direzioni del vento diverse. La simulazione avanza a passi fissi di 1/60 s con __sv.run,
 # quindi i tempi non dipendono dalla velocità del computer. Il pilota corregge barra e scotta ogni 0,1 s.
+# Dalla 0.19 ogni corsa parte in una pagina nuova con Math.random a seme fisso (seme = numero della corsa + 1):
+# la prova 5 (raffiche) è riproducibile e due versioni si confrontano sugli stessi semi.
 # Uso: python collaudo_fasce.py [ripetizioni] [prove, per esempio 125]
 import asyncio, pathlib, sys, statistics
 from playwright.async_api import async_playwright
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 URL = BASE + "#collaudo"
+SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  window.__seed = v => { s = v; }; })();"""
 GIUSTO = [60, 0, -60]
 PIANI = [[], [], [], [[0, GIUSTO]], [[0, GIUSTO], [1, GIUSTO]]]
 CORSA = """
@@ -43,19 +48,20 @@ CORSA = """
 """
 async def main(n, quali):
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1280, "height": 800})
-        errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
-        await pg.goto(URL); await pg.wait_for_timeout(300)
+        b = await p.chromium.launch(); errs = []
         for idx in quali:
             tempi = []; note = []
             for k in range(n * (3 if idx == 4 else 1)):
                 vento = (k * 45) % 360
+                pg = await b.new_page(viewport={"width": 1280, "height": 800}); pg.on("pageerror", lambda e: errs.append(str(e)))
+                await pg.add_init_script(SEME); await pg.goto(URL); await pg.wait_for_timeout(300)
+                await pg.evaluate(f"__seed({k + 1})")
                 await pg.evaluate(f"__sv.openItem(['m',{idx}])"); await pg.evaluate(f"__sv.startMission({idx}, {vento})")
-                fin, t, reg = await pg.evaluate(CORSA, PIANI[idx])
+                fin, t, reg = await pg.evaluate(CORSA, PIANI[idx]); await pg.close()
                 if fin: tempi.append(t)
                 else: note.append(f"non finita (vento {vento})")
                 e = {a: v for a, v in reg.items() if v}
                 if e: note.append(f"vento {vento}: {e}")
-            print(f"prova {idx+1}: tempi {[round(x,1) for x in tempi]} | mediana {statistics.median(tempi):.1f} | min {min(tempi):.1f} | max {max(tempi):.1f} | {note}", flush=True)
+            print(f"prova {idx+1}: finite {len(tempi)} su {n * (3 if idx == 4 else 1)} | tempi {[round(x,1) for x in tempi]} | mediana {statistics.median(tempi):.1f} | min {min(tempi):.1f} | max {max(tempi):.1f} | {note}", flush=True)
         print("errori:", errs); await b.close()
 asyncio.run(main(int(sys.argv[1]) if len(sys.argv) > 1 else 8, [int(c) - 1 for c in (sys.argv[2] if len(sys.argv) > 2 else "12345")]))
