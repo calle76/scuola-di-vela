@@ -1,6 +1,6 @@
 # Fonti pubbliche consultate
 
-Aggiornato al 4 ottobre 2026. È il registro delle fonti usate per tarare e giustificare la fisica e i contenuti. L'elenco delle affermazioni ancora da controllare resta in `CONTENUTI-DA-VERIFICARE.md`; le semplificazioni del motore in `FISICA-E-TARATURE.md`; il disegno dei livelli in `VISIONE-LIVELLI-E-CARRIERA.md`.
+Aggiornato al 7 ottobre 2026. È il registro delle fonti usate per tarare e giustificare la fisica e i contenuti. L'elenco delle affermazioni ancora da controllare resta in `CONTENUTI-DA-VERIFICARE.md`; le semplificazioni del motore in `FISICA-E-TARATURE.md`; il disegno dei livelli in `VISIONE-LIVELLI-E-CARRIERA.md`.
 
 ## Regole d'uso
 
@@ -26,6 +26,7 @@ Aggiornato al 4 ottobre 2026. È il registro delle fonti usate per tarare e gius
 | F10 | Binns, Bethwaite e Saunders, 2002 (previsione di velocità per una deriva monoposto), citato in https://www.researchgate.net/figure/Polar-plots-for-the-current-simulator-performance_fig8_257246942 | Articolo | Non letto; è la fonte da leggere per calibrare. |
 | F11 | Programma di una scuola vela in 5 livelli: https://www.scuolavela.com/it/scuola-vela/corsi-derive/ | Pagina di una scuola | Solo come confronto. |
 | F12 | C. A. Marchaj, *Sail Performance: Techniques to Maximize Sail Power* (2002-2003, ISBN 9780071413107). | Libro | Non consultato. Dall'indice: incidenza ottimale in funzione di andatura e vento, interazione fra le vele, centro velico. |
+| F13 | By The Lee, simulatore di vela in JavaScript di LeeboardTools, licenza Apache-2.0. Copia locale in `riferimenti/bythelee` (fuori dal repository), ultimo commit `c5ce159` del 4 dicembre 2017. | Codice open source | Utile come **idea di architettura**, non come dato: niente è confrontato con misure. Vedi la sezione «By The Lee» sotto. |
 
 I forum citano anche, come lettura pratica sulla regolazione delle vele, *Sail Power* di Wallace Ross (1975). Sono pareri di forum, non verifiche.
 
@@ -76,6 +77,20 @@ I forum citano anche, come lettura pratica sulla regolazione delle vele, *Sail P
 - **Percorso agonistico reale (F2):** regate zonali (almeno quattro) e nazionali (in genere quattro) alimentano una classifica di merito per selezionare gli equipaggi ai campionati. Le regate durano 40-60 minuti.
 - **Fasce di vento della classe giovanile (F2)**, in m/s e in nodi circa: 1-2 (2-4 nodi, equipaggio in barca), 3-4 (6-8, mezzo trapezio), 5-7 (10-14, trapezio), 8-10 (16-19, sovrapotenziati), oltre 10 (oltre 19). Le dispense F1 danno il vento medio da 7-8 a 14-15 nodi.
 - **Regole di regata:** il corso Intermedio cita le regole 10, 11, 14 e 18. Nel regolamento sono le regole su mure opposte, stessa mura con sovrapposizione, evitare il contatto e spazio alla boa: **da verificare sul testo ufficiale** prima di scrivere le domande.
+
+## By The Lee (F13), studio in sola lettura del 7 ottobre 2026
+
+Letti solo i file che calcolano forze, equilibrio e dati; non il codice grafico. Percorsi relativi a `riferimenti/bythelee/public_html/`.
+
+- **Licenza e stato.** Apache-2.0 (file `LICENSE`, nessun file `NOTICE`; intestazioni «Copyright 2017 albert»). 176 commit dal 3 giugno al 4 dicembre 2017, poi fermo. Dipendenze incluse nel repository: three.js r86dev (3D e anche tutta la matematica dei vettori), cannon.js (motore fisico che integra accelerazioni e rotazioni), RequireJS, Phaser (vecchia versione 2D, non più usata). Circa 10.500 righe nei file di fisica. **Gira ancora:** caricato in Chromium senza finestra, nessun errore in console; i test unitari danno 59 test, 1 fallito (5 verifiche su 1063, tutte in `Resultant-convertToWrench`).
+- **Una sola barca, inventata.** «Tubby» (`data/boats.json`): 5,41 m al galleggiamento, 378 kg, chiglia da 200 kg, **una sola randa** da 11 m², un peso fisso di 75 kg al posto dell'equipaggio. Esiste un comando per la scotta del fiocco (`js/leeboard/sailsim/Vessel.js:1052`), ma nessuna barca ha un fiocco.
+- **Modello: forze applicate in punti, i momenti nascono dalla geometria.** Ogni vela, deriva e timone è una superficie con un punto, un'altezza e una curva di portanza e resistenza (`core/Foils.js:622-744`); il vento (o l'acqua) visto da ciascuna è quello nel suo punto meno la velocità del punto stesso, quindi la rotazione della barca produce da sola uno smorzamento. Le forze si sommano sul corpo rigido e cannon.js le integra in 3D. **Nessun momento d'imbardata scritto a mano:** quando la barca sbanda, il punto di spinta della vela si sposta sottovento e la barca tende a orzare da sola, come dice F4. La vela ruota attorno all'albero spinta dal vento, fermata dalla lunghezza della scotta (`sailsim/Sail.js:370-420`), come il nostro boma.
+- **Curve.** Portanza e resistenza da tabelle (`data/clcdcurves.json`: «Sail», «FlatPlate» per deriva e timone, «NACA0012»), con resistenza indotta CL²/(π·allungamento) (`core/Foils.js:114-117`) e un modello di stallo raccordato (`core/Foils.js:182-253`, `433-519`). **La pala stalla:** la curva «FlatPlate» va in stallo fra 25° e 35°. **Nessuna fonte dichiarata per le curve** (nel codice: «The Cl/Cd curve will be from the books...», `sailsim/Sail.js:50`).
+- **Scafo.** Attrito di tipo ITTC più resistenza residua della serie di Delft, con le pagine di Larsson e Fossati citate nei commenti (`sailsim/Hull.js:222`, `sailsim/Delft.js:27`). La serie di Delft è fatta per **barche a chiglia dislocanti**, e il numero di Froude è bloccato fra 0,1 e 0,6 (`sailsim/Delft.js:64-69`): **niente planata**. Resistenza di forma e d'onda valgono zero.
+- **Sbandamento, inerzia, smorzamento.** Il raddrizzamento nasce dalla spinta di galleggiamento calcolata sul volume immerso di un poliedro (`sailsim/Hull.js:205-215`) contro il peso nel baricentro; nessun timoniere che si sporge. Inerzia dal volume del poliedro (`core/Physics.js:1049-1056`). Smorzamento: un unico coefficiente di cannon.js, 0,3, uguale per rollio, beccheggio e imbardata (`data/boats.json`, `angularDamping`), più lo smorzamento verticale del galleggiamento (0,75). Sono tarature senza fonte.
+- **Validazione.** Nessun confronto con misure o polari. I test controllano matematica e caricamento dei dati; il test della serie di Delft dichiara di differire da Larsson (0,00646 contro 0,00692). Trovati due probabili errori: la pressione dinamica dell'attrito usa la velocità e non il suo quadrato (`sailsim/Hull.js:185`); il parametro di stallo `cd90Deg` legge il campo sbagliato (`core/Foils.js:213`).
+- **Cosa non c'è.** Interazione fra le vele (ogni vela vede il vento libero), fiocco coperto, copertura del vento fra barche diverse (il vento è un campo uniforme con raffiche, `sailsim/Wind.js`), planata, equipaggio mobile.
+- **Uso per il nostro progetto.** Prendibile l'**idea**: forze in punti e momento d'imbardata che nasce dallo sbandamento (spostamento laterale del punto di spinta ≈ altezza × seno dello sbandamento), cosa che si può scrivere anche in 2D senza il motore 3D. Come **codice** non c'è nulla da portare: dipende da three.js e cannon.js, e le parti semplici (portanza, resistenza indotta) le abbiamo già. Se un giorno si copiasse qualcosa: copia della licenza, avvisi di copyright mantenuti, indicazione dei file modificati (Apache-2.0, sezione 4). I **numeri** (curve, inerzia, smorzamento) non hanno fonte e non vanno usati come se l'avessero.
 
 ## Cosa non è stato trovato
 
