@@ -1,6 +1,6 @@
 # Piano generale: livelli, ruoli, bravura, barche
 
-Bozza del 9 ottobre 2026, da approvare. Nasce dalla chiacchierata del 9 ottobre sera e dai documenti `VISIONE-LIVELLI-E-CARRIERA.md`, `ROADMAP.md`, `RICERCA-DATI-IMBARDATA.md`, `RIPARTI-DA-QUI.md`.
+Bozza del 9 ottobre 2026 (sera: aggiunto il §0 con il traguardo 1.0), da approvare. Nasce dalla chiacchierata del 9 ottobre sera e dai documenti `VISIONE-LIVELLI-E-CARRIERA.md`, `ROADMAP.md`, `RICERCA-DATI-IMBARDATA.md`, `RIPARTI-DA-QUI.md`.
 
 Stato dei punti (come nella visione):
 
@@ -15,6 +15,54 @@ Stato dei punti (come nella visione):
 Se questo documento e `VISIONE-LIVELLI-E-CARRIERA.md` o `ROADMAP.md` dicono cose diverse, vale questo, **dopo l'approvazione**; i punti che cambiano sono elencati nel §12 e andranno riportati negli altri due file.
 
 Nota: i principi di `docs/PROGETTO.md` (tutto sempre giocabile, simulatore plausibile, confini legali prudenti, solo computer) sono ripresi dalle istruzioni di lavoro. `PROGETTO.md` non è stato riletto per scrivere questa bozza.
+
+## 0. Traguardo e fuori traguardo
+
+Il resto del documento è una **mappa** di sei livelli. Per arrivare in fondo senza bloccarsi, il traguardo è più piccolo.
+
+**Traguardo [deciso, 9 ottobre 2026]: 1.0 = livello 1 completo.** Esame a risposte chiuse, brevetto con attestato, libretto minimo. Finita la 1.0 si decide se continuare con il livello 2. I livelli 3-6 sono espansioni fuori traguardo: non cancellati, in attesa.
+
+### Dentro la 1.0 (semplificazioni da dichiarare nel manuale) **[proposta]**
+
+- **Bivio gioco libero / carriera** con salvataggio proprio (già deciso nella visione): serve perché il libretto vive nella carriera.
+- **Competizione:** punti dal piazzamento nelle regate singole già esistenti, non un torneo da 4 regate nuovo. La riga «Competizione» della tabella del livello 1 (visione, §6) va ricalcolata di conseguenza, con soglie scritte prima di vedere i risultati.
+- **Esame:** domande solo su contenuti già presenti nelle lezioni, così non c'è nuova verifica da fare. Le domande sulle regole di regata 10, 11, 14, 18 restano fuori finché i titoli non sono verificati sul testo ufficiale. La banca può partire più piccola degli 80-100 previsti e crescere nelle versioni successive; soglia 80% invariata. Quante domande all'inizio: **[aperto]**, si decide scrivendo l'esame.
+- **Brevetto:** uno solo, con attestato stampabile e la scritta «nessun valore legale». Niente brevetti progressivi.
+- **Libretto minimo:** una barra per area con il minimo segnato, una riga «cosa manca», il pulsante dell'esame. Niente diario, niente importazione dal gioco libero.
+
+### Decisioni aperte: quali servono per la 1.0
+
+| Decisione (numero del §13) | Quando serve |
+| --- | --- |
+| 8. Aiuti in carriera: valgono per i meriti? | **Per la 1.0**, quando si fa il libretto |
+| 9. Quiz con più domande, perché il ripasso non coincida con l'esame | **Per la 1.0**, si risolve scrivendo l'esame |
+| 1. Equipaggio al livello 4 | Quando si progetta il livello 4 |
+| 2. Mini tornei (regate, scarto, conteggio) | Quando si costruisce il livello 2 con più ruoli |
+| 3. Tasti del ruolo «chi regola le vele», peso dell'equipaggio | Livello 2 |
+| 4. Valori di scala di bravura, rendimenti decrescenti, penalità per errori gravi | Quando si costruisce la crescita dei personaggi |
+| 5. Esito della ricerca documentale | Quando si sceglie la barca del livello 3 (il livello 2 parte dal prototipo del fiocco) |
+| 6. Licenza dei numeri Portsmouth | Solo se si decide di usarli |
+| 7. Stallo del timone (15° contro 30-35°) | Miglioramento facoltativo, dopo aver chiarito la contraddizione |
+
+### Fuori dalla 1.0 (lista «dopo la 1.0»)
+
+Livelli 2-6; più ruoli e più personaggi; crescita della bravura; mini tornei; istruttore con replay e fantasma; scheda barca; campo di vento esteso, cono d'ombra, VMG e layline; la ricerca documentale (non blocca niente: si fa se c'è voglia); il questionario al velista (parte, senza contarci); il Giornalino per Lucio.
+
+### Se si continua: il livello 2 a fette giocabili **[proposta]**
+
+1. Fiocco giocabile da timoniere, con le vele regolate dal computer (porting dal prototipo, semplificazioni dichiarate).
+2. Il secondo ruolo («chi regola le vele») giocabile.
+3. Lezioni 2.1-2.4.
+4. Peso dell'equipaggio come comando, lezioni 2.5 e 2.6: per ultime, richiedono una modifica al motore.
+
+I compagni partono con una bravura fissa; la crescita si aggiunge dopo, perché è la parte più larga.
+
+### Regole per non bloccarsi **[deciso]**
+
+- Un solo fronte aperto alla volta. Ogni versione è giocabile e chiusa: collaudo guidando la barca e `CHANGELOG.md` aggiornato.
+- Un ostacolo che non cede in **due sessioni** si ripiega su una semplificazione dichiarata (come per la tappa C del fiocco) oppure va in coda.
+- Le idee nuove vanno nella lista «dopo la 1.0», non nel piano attivo.
+- Niente nuovi documenti di progettazione finché la fetta corrente non è giocabile.
 
 ## 1. Principi che restano
 
@@ -169,16 +217,22 @@ Regola già decisa (7 ottobre, 0.19.2): per ogni ruolo il comando principale è 
 
 Regola: due fermate per ogni compito di modellazione (proposta, poi implementazione dopo il via); un passo alla volta.
 
-1. **Salvare** `docs/RICERCA-DATI-IMBARDATA.md` e questo piano (se non fatto), poi ricaricare nelle conoscenze del progetto.
+**Per la 1.0 (§0):**
+
+1. **Salvare** `docs/RICERCA-DATI-IMBARDATA.md` e il piano: fatto il 9 ottobre (commit `2b7ea3c`). Resta da ricaricare i file nelle conoscenze del progetto.
 2. **Registrazioni** delle lezioni: portarle in chat tutte insieme e leggerle.
-3. **Esame e brevetto del livello 1**, con il sistema dei meriti provvisorio: chiude il livello.
-4. **Fiocco nel gioco** (livello 2): porting dal prototipo (commit `e616212`, righe `// FIOCCO`), con le semplificazioni dichiarate. Insieme: definizione dei due ruoli (A), assegnazione dei tasti, riscrittura delle lezioni 2.x.
-5. **Sessione di ricerca a tempo limite** sulla documentazione, per decidere le barche dei livelli 2 e 3 (e 4 se serve).
-6. **Prototipo del livello 3** (gennaker e planata) prima di progettarne le lezioni; poi un prototipo per ogni livello successivo.
-7. **Equipaggio del computer**: bravura, crescita, errori plausibili, registro con «ruolo responsabile».
-8. **Mini tornei, libretto e istruttore.**
-9. **Livello 4**: campo di vento esteso, partenza, precedenze, tattico, cono d'ombra.
-10. **Carriera**: bivio, salvataggio proprio, importazione.
+3. **Esame, brevetto e libretto minimo del livello 1**, con bivio e salvataggio di carriera e con il sistema dei meriti provvisorio (Competizione dalle regate singole): chiude il livello.
+4. **Rilascio 1.0**: collaudo guidando davvero la barca, `CHANGELOG.md` aggiornato.
+
+**Dopo la 1.0, solo se si decide di continuare** (il livello 2 a fette come nel §0):
+
+5. **Fiocco nel gioco** (livello 2): porting dal prototipo (commit `e616212`, righe `// FIOCCO`), con le semplificazioni dichiarate. Insieme: definizione dei due ruoli (A), assegnazione dei tasti, riscrittura delle lezioni 2.x.
+6. **Sessione di ricerca a tempo limite** sulla documentazione, per decidere le barche dei livelli 2 e 3 (e 4 se serve). Facoltativa: non blocca il livello 2.
+7. **Prototipo del livello 3** (gennaker e planata) prima di progettarne le lezioni; poi un prototipo per ogni livello successivo.
+8. **Equipaggio del computer**: bravura, crescita, errori plausibili, registro con «ruolo responsabile».
+9. **Mini tornei e istruttore.**
+10. **Livello 4**: campo di vento esteso, partenza, precedenze, tattico, cono d'ombra.
+11. **Carriera completa**: diario, importazione dal gioco libero, brevetti progressivi.
 
 Il questionario al velista parte quando vuole Ale, senza contarci. Il Giornalino per Lucio resta una cosa simpatica da fare quando c'è tempo.
 
@@ -194,6 +248,7 @@ Da riportare in `VISIONE-LIVELLI-E-CARRIERA.md` e `ROADMAP.md` dopo l'approvazio
 6. Scala di bravura assoluta, con avversari di riferimento per livello.
 7. Livelli 5 e 6 nominati esplicitamente (catamarano, cabinato; ordine non fissato).
 8. Barche per categoria finché la ricerca documentale non decide; il livello 3 su deriva è una proposta, non un impegno.
+9. **Traguardo 1.0 = livello 1 completo** (§0). In `ROADMAP.md` la fase A (esame, brevetto) diventa il traguardo; le fasi successive (livello 2 in poi, tornei, carriera completa) restano in coda come «dopo la 1.0». Nella visione, la tabella del livello 1 va ricalcolata con la Competizione dalle regate singole.
 
 ## 13. Decisioni aperte
 
@@ -209,7 +264,7 @@ Da riportare in `VISIONE-LIVELLI-E-CARRIERA.md` e `ROADMAP.md` dopo l'approvazio
 
 ## 14. Rischi
 
-- **Mole di lavoro:** ruoli, personaggi, tornei e barche insieme sono tanto per un progetto personale. Un livello completo vale più di quattro abbozzati.
+- **Mole di lavoro:** ruoli, personaggi, tornei e barche insieme sono tanto per un progetto personale. Un livello completo vale più di quattro abbozzati. Mitigazione: il traguardo 1.0 e le regole per non bloccarsi (§0). Resta un rischio per il dopo-1.0: non l'ho misurato, perché non ho visto il codice.
 - **«Grind»:** la crescita della bravura può diventare ripetizione per accumulare. Rendimenti decrescenti e soglie scritte prima.
 - **Tarature a mano:** vanno dichiarate nel manuale come regole di gioco ispirate alla fisica.
 - **Livello 3 (gennaker e planata):** il più difficile da modellare, e quello con meno dati.
