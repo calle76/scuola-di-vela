@@ -58,6 +58,7 @@ TESTS=(
     "collaudo_schermate.py|py|ambiguo|0||collaudo_schermate.py"
     "collaudo_lezioni.py|py|ambiguo|0||collaudo_lezioni.py"
     "collaudo_quiz.py|py|chiaro|0||collaudo_quiz.py"
+    "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
     "collaudo_regate.py (bastone)|py|ambiguo|0|regate|collaudo_regate.py 6 0"
     "collaudo_regate.py (raffiche)|py|ambiguo|0|regate|collaudo_regate.py 6 1"
     "collaudo_partenze.py|py|ambiguo|0||collaudo_partenze.py"

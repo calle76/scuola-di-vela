@@ -187,11 +187,13 @@ dialog#quiz::backdrop{background:rgba(13,25,36,.5)}
 .qz .wq p{margin:4px 0}
 .qz .wq .wt{font-family:"Source Serif 4",Georgia,serif;font-size:1.05rem;font-weight:600}
 .qz .wq .expl{margin-top:8px}
+.qz .opt.sel{border-color:var(--ink);font-weight:600} /* 0.20: esame, risposta scelta senza dire se è giusta */
+.qz .wlist h3{margin:0 0 6px;font-size:1rem;color:var(--ink-soft)}
+.qz .wq .from{font-size:.9rem;color:var(--ink-soft)}
 .review{display:flex;flex-direction:column;gap:4px}
 .review button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .review button small{color:var(--ink-soft);font-size:.85rem;white-space:nowrap}
 .review button:hover{border-color:var(--ink)}
-.review button.off{cursor:default;opacity:.55} .review button.off:hover{border-color:var(--line)}
 dialog#gloss{border:none;border-radius:10px;padding:0;width:min(640px,94vw);max-height:86vh;background:var(--panel);color:var(--ink)}
 dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
 .gl-head{position:sticky;top:0;background:var(--panel);padding:18px 20px 12px;border-bottom:1px solid var(--line)}
@@ -753,6 +755,39 @@ function step(S, C, E, dt){
       ["Come si raddrizza una deriva scuffiata?", "Salendo sulla lama di deriva e facendo leva col proprio peso", ["Tirando la scotta da dentro l'acqua", "Aspettando che il vento la raddrizzi", "Spingendo sull'albero"], "Col peso sulla lama la barca ruota e torna dritta; poi si risale a bordo."] ]
   ];
 
+  // Esame del livello 1 (0.20): una domanda per concetto insegnato, col titolo del passo da cui nasce.
+  // ESAME[lezione] = [[passo, domanda, giusta, [sbagliate], spiegazione], …]; ogni esame ne estrae QUOTE[lezione] per lezione.
+  // Ogni lezione deve avere almeno QUOTE + 1 domande (lo controlla tests/collaudo_esame.py).
+  const QUOTE = [4, 3, 4, 3, 3, 3], SOGLIA_ESAME = 16;
+  const ESAME = [
+    [ ["Dritta e sinistra", "La barca punta verso il basso dello schermo. Il lato della barca che vedi a destra sullo schermo si chiama…", "sinistra", ["dritta", "sopravento", "poppa"], "Dritta e sinistra si contano guardando verso prua: se la prua punta in basso, sono invertite rispetto allo schermo."],
+      ["Sopravento e sottovento", "Dove siede il timoniere, rispetto al vento?", "Sopravento, per fare contrappeso", ["Sottovento, per stare vicino al boma", "Al centro, per non far sbandare", "A prua, per vedere il vento"], "La vela e il boma stanno sottovento; il timoniere siede dal lato opposto, sopravento, per fare contrappeso."],
+      ["Poggiare", "Poggiare significa…", "allontanare la prua dal vento", ["avvicinare la prua al vento", "girare la barca sempre verso dritta", "aprire la vela verso l'esterno della barca"], "Poggiare allontana la prua dal vento; orzare la avvicina."],
+      ["Orzare e l'angolo morto", "Che cosa succede se la prua punta troppo vicino al vento?", "La vela sbatte, non spinge e la barca si ferma", ["La vela spinge di più e la barca accelera", "La barca sbanda di colpo e rischia di scuffiare", "Il boma passa di colpo dall'altro lato"], "È l'angolo morto: la vela prende il vento di taglio e nessuna barca a vela può andare dritta contro il vento."],
+      ["La scotta: lascare", "Cazzare la scotta significa…", "tirarla, così la vela si avvicina al centro", ["mollarla, così la vela si apre verso l'esterno", "legarla, così la vela resta ferma dov'è", "tirarla, così la vela si apre verso l'esterno"], "Cazzare è tirare la scotta e chiudere la vela; lascare è mollarla e aprirla."] ],
+    [ ["Come si timona", "Vuoi che la prua giri verso sinistra. Da che parte spingi la barra?", "La spingi verso dritta", ["La spingi verso sinistra", "La tieni ferma al centro", "Dipende da dove sta il boma"], "La barra gira la pala dalla parte opposta, quindi la prua va dalla parte opposta a quella verso cui spingi."],
+      ["Barra sottovento: si orza", "Il boma è sul lato sinistro e spingi la barra verso sinistra. Che cosa fa la barca?", "Orza: la prua sale verso il vento", ["Poggia: la prua si allontana dal vento", "Si ferma con la prua nel vento", "Stramba: il boma passa dall'altro lato"], "Il boma sta sottovento: barra verso il boma, cioè sottovento, e la barca orza."],
+      ["Barra sopravento: si poggia", "Vuoi poggiare. Verso quale lato spingi la barra?", "Verso il lato sopravento, lontano dal boma", ["Verso il lato sottovento, dove sta il boma", "Sempre verso dritta, qualunque sia il vento", "Al centro, e lasci fare al vento"], "Barra sopravento, cioè dalla parte opposta al boma, e la barca poggia."],
+      ["Tenere la rotta", "Un timoniere corregge la rotta con colpi di barra ampi e continui. Che effetto ha?", "La barca rallenta: ogni angolo di barra frena", ["La barca accelera, perché il timone la spinge avanti", "Nessuno: la barra non cambia la velocità", "La barca tiene meglio la rotta e va più dritta"], "Ogni angolo di barra frena la barca: timonare bene vuol dire usarne poca."] ],
+    [ ["Riepilogo", "Quale ordine va dall'andatura più vicina al vento a quella più lontana?", "Bolina, traverso, lasco, gran lasco, poppa", ["Traverso, bolina, lasco, poppa, gran lasco", "Bolina, lasco, traverso, gran lasco, poppa", "Poppa, gran lasco, lasco, traverso, bolina"], "Dalla più vicina alla più lontana dal vento: bolina, traverso, lasco, gran lasco, poppa."],
+      ["Poppa", "La poppa è l'andatura più veloce?", "No: il traverso e il lasco sono più veloci", ["Sì: il vento spinge la vela da dietro", "Sì, ma solo con la vela tutta cazzata", "No: la più veloce è la bolina stretta"], "In poppa il vento spinge da dietro, ma il traverso e il lasco sono andature più veloci."],
+      ["Le mure", "Navighi mure a dritta. Da che parte sta il boma?", "A sinistra", ["A dritta", "Al centro della barca", "Dipende dall'andatura"], "Mure a dritta vuol dire vento sul lato destro, e il boma sta sempre dal lato opposto alle mure."],
+      ["Filetto sottovento", "Il filetto sottovento si agita, quello sopravento è dritto. Come regoli la vela?", "La lasco: è troppo cazzata", ["La cazzo: è troppo lascata", "Non la tocco: è regolata", "La cazzo ancora, fino in fondo"], "Filetto sottovento agitato: la vela è troppo cazzata e va in stallo, quindi si lasca finché i filetti tornano dritti."],
+      ["Poggi e laschi", "Stai poggiando dal traverso verso il lasco. Che cosa fai con la vela?", "La lasco, perché resterebbe troppo chiusa", ["La cazzo, perché resterebbe troppo aperta", "Non la tocco: va bene com'è", "La cazzo tutta, fino al centro"], "Poggiando la vela resta troppo chiusa e va lascata: orzi e cazzi, poggi e laschi."] ],
+    [ ["Il vento che senti a bordo", "Su quale vento lavora la vela?", "Sul vento apparente, quello che si sente a bordo", ["Sul vento reale, quello che soffia sul mare", "Sul vento delle raffiche, che è il più forte di tutti", "Sul vento indicato dalle previsioni del meteo"], "La vela lavora sul vento apparente: il vento reale sommato a quello dovuto al moto della barca."],
+      ["Accelerando", "Il vento reale arriva di fianco e la barca accelera. Rispetto al reale, il vento apparente diventa…", "più forte, e arriva più da prua", ["più debole, e arriva più da poppa", "uguale, in forza e in direzione", "così debole da non spingere la vela"], "Accelerando, al vento reale si somma quello dovuto al moto: l'apparente si sposta verso prua ed è più forte."],
+      ["Da fermi", "La barca è quasi ferma. Come sono il vento apparente e il vento reale?", "Quasi uguali, in direzione e in forza", ["L'apparente è molto più forte del reale", "L'apparente arriva sempre da poppa", "L'apparente sparisce del tutto"], "Senza il vento dovuto al moto della barca, il vento apparente coincide quasi con quello reale."],
+      ["In poppa", "Di bolina, rispetto al vento reale, il vento apparente è…", "più forte", ["più debole", "sempre uguale", "girato verso poppa"], "Di bolina la barca va incontro al vento e l'apparente è più forte; in poppa invece è più debole."] ],
+    [ ["Cambiare mure", "Che cos'è una strambata?", "Cambiare mure con la poppa che attraversa il vento", ["Cambiare mure con la prua che attraversa il vento", "Poggiare fino a portare il vento esattamente da dietro", "Fermarsi con la prua nel vento e poi arretrare"], "Nella strambata è la poppa ad attraversare il vento; nella virata è la prua."],
+      ["Prepararsi a virare", "Che cos'è l'abbrivio?", "La velocità che la barca ha già e conserva", ["La spinta del vento sulla vela cazzata", "La forza che fa sbandare la barca in raffica", "Il tratto di bolina fra una virata e l'altra"], "È la velocità che porta la barca attraverso l'angolo morto, dove la vela non spinge."],
+      ["La strambata", "Perché in poppa la strambata è delicata?", "Il boma attraversa la barca di colpo", ["La prua si pianta nel vento e si ferma", "La vela smette di spingere del tutto", "Il timone comincia a funzionare al contrario"], "Con la vela tutta aperta il boma attraversa la barca con violenza: può far scuffiare o colpire qualcuno."],
+      ["Una virata che non riesce", "La barca si è piantata nel vento e comincia ad arretrare. Come ne esci?", "Centri la barra e lasci che la prua poggi da sola", ["Spingi la barra a fondo e cazzi tutta la vela", "Cazzi tutta la vela e aspetti che la barca riparta", "Orzi ancora, finché il vento passa dall'altra parte"], "Andando all'indietro la barra funziona al contrario: si centra, la prua poggia da sola e poi si riparte."] ],
+    [ ["Raffiche e sbandamento", "Che cos'è lo sbandamento?", "L'inclinazione della barca spinta dal vento sulla vela", ["Lo scivolamento della barca di lato, verso sottovento", "La rotazione della prua verso il vento in raffica", "Il rallentamento improvviso della barca in raffica"], "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo sbandamento."],
+      ["La scuffia", "Quale comportamento in raffica porta più facilmente alla scuffia?", "Tenere la vela tutta cazzata senza lascare", ["Lascare la scotta appena entri nella raffica", "Orzare un poco tenendo la vela regolata", "Sporgersi fuori bordo per fare contrappeso"], "Con la vela tutta cazzata e senza lascare, la forza della raffica fa sbandare la barca fino a rovesciarla."],
+      ["Assorbire una raffica", "La raffica è passata e la barca si raddrizza. Che cosa fai con la vela?", "La cazzi di nuovo fino a regolarla", ["Lasci ancora un po' di scotta", "Non la tocchi più fino alla boa", "La fai sbattere per rallentare"], "In raffica si lasca per ridurre la forza sulla vela; quando la raffica passa si cazza di nuovo."],
+      ["Raddrizzare", "Hai appena raddrizzato la barca scuffiata. Come riparti?", "Con la scotta lascata, e cazzi quando hai velocità", ["Con la vela tutta cazzata, per partire subito", "Con la barra a fondo, per girare verso il vento", "Aspettando una raffica che ti spinga via"], "Si riparte con la vela lascata e la si cazza solo quando la barca ha preso velocità."] ]
+  ];
+
   const GLOSS = [
     ["Abbrivio", "La velocità che la barca conserva per inerzia, per esempio mentre attraversa il vento durante una virata.", "Lezione 5"],
     ["Albero", "Il palo verticale che regge la vela.", "Lezione 1"],
@@ -816,7 +851,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.19.5"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.20"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -948,13 +983,14 @@ function step(S, C, E, dt){
         </section>
         <section class="tile">
           <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
-            <button class="off" disabled aria-disabled="true">Esame su tutte le lezioni<small>in arrivo</small></button></div></div>
-          <div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">L'esame su tutte le lezioni, i tornei, altri tipi di barca.</p></div>
+            <button id="goEsame">Esame su tutte le lezioni<small>${QUOTE.reduce((a, b) => a + b)} domande, ne servono ${SOGLIA_ESAME}</small></button></div></div>
+          <div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>
         </section>
       </div>
       <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori.${MEDAL_ON() ? " I pallini oro, argento e bronzo indicano la fascia del tuo record." : ""}</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
+    $("goEsame").onclick = openEsame;
     $("menuGloss").onclick = openGloss;
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));
@@ -979,42 +1015,60 @@ function step(S, C, E, dt){
 
   // ---------- quiz ----------
   let qz = null;
+  const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }; // Fisher-Yates sul posto
+  const quizOpts = (right, wrong) => mescola([right, ...wrong].map(t => ({ t, ok: t === right })));
+  const showQuiz = () => { renderQuiz(); $("quiz").showModal ? $("quiz").showModal() : $("quiz").setAttribute("open", ""); };
   function openQuiz(li, only){ // only: indici delle domande da riproporre (giro parziale); senza, ripasso completo
     keys.clear(); semHeld.clear();
-    const qs = QUIZ[li].map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n)).map(({ n, q, right, wrong, expl }) => {
-      const opts = [right, ...wrong].map(t => ({ t, ok: t === right }));
-      for (let i = opts.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [opts[i], opts[j]] = [opts[j], opts[i]]; }
-      return { n, q, right, opts, expl };
-    });
+    const qs = QUIZ[li].map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n))
+      .map(({ n, q, right, wrong, expl }) => ({ n, q, right, opts: quizOpts(right, wrong), expl }));
     qz = { li, qs, i: 0, score: 0, answered: false, partial: !!only, wrong: [] };
-    renderQuiz();
-    $("quiz").showModal ? $("quiz").showModal() : $("quiz").setAttribute("open", "");
+    showQuiz();
+  }
+  // esame: QUOTE[li] domande a caso da ogni lezione, poi le 20 in ordine casuale. Nel gioco libero non salva niente.
+  const estraiEsame = () => mescola(ESAME.flatMap((qs, li) => mescola(qs.map(q => [li, ...q])).slice(0, QUOTE[li])));
+  function openEsame(){
+    keys.clear(); semHeld.clear();
+    const qs = estraiEsame().map(([li, passo, q, right, wrong, expl]) => ({ li, passo, q, right, opts: quizOpts(right, wrong), expl }));
+    qz = { exam: true, qs, i: 0, score: 0, answered: false, wrong: [] };
+    showQuiz();
   }
   function closeQuiz(){ $("quiz").close ? $("quiz").close() : $("quiz").removeAttribute("open"); }
   $("quiz").addEventListener("close", () => { if (mode === "menu") showMenu(); }); // aggiorna il punteggio migliore nel menu
+  const wrongItem = w => `<div class="wq"><p class="wt">${w.q}</p><p>Hai risposto: ${w.given}</p><p>Giusta: <b>${w.right}</b></p><p class="expl">${w.expl}</p>${w.passo ? `<p class="from">dal passo «${w.passo}»</p>` : ""}</div>`;
+  function renderEsito(b){
+    const n = qz.qs.length, ok = qz.score >= SOGLIA_ESAME;
+    const groups = LESSONS.map((L, li) => [L, qz.wrong.filter(w => w.li === li)]).filter(([, ws]) => ws.length);
+    b.innerHTML = `<h2>Esame · livello 1</h2><div class="score">${qz.score} su ${n}: ${ok ? "superato" : `non superato (servono ${SOGLIA_ESAME})`}</div>
+      ${groups.length ? `<div class="wlist" id="qzWrong">${groups.map(([L, ws]) => `<h3>${L.name}: ${L.title}</h3>${ws.map(wrongItem).join("")}`).join("")}</div>` : ""}
+      <div class="row"><button class="primary" id="qzAgain">Rifai l'esame</button><button id="qzClose">Chiudi</button></div>`;
+    $("qzAgain").onclick = openEsame; $("qzClose").onclick = closeQuiz;
+  }
   function renderQuiz(){
     const L = LESSONS[qz.li], b = $("qzBody");
     if (qz.i >= qz.qs.length){
+      if (qz.exam) return renderEsito(b);
       const n = qz.qs.length, key = "q" + qz.li, prev = progress.quiz?.[key], nw = qz.wrong.length;
       if (!qz.partial){ progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score; saveProgress(); } // il giro parziale non tocca il record
       b.innerHTML = `<h2>Ripasso · ${L.name}: ${L.title}</h2><div class="score">${qz.score} su ${n}</div>
         <p class="q">${nw === 0 ? "Tutto giusto." : nw === 1 ? "Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati: ecco le domande sbagliate."}</p>
-        ${nw ? `<div class="wlist" id="qzWrong">${qz.wrong.map(w => `<div class="wq"><p class="wt">${w.q}</p><p>Hai risposto: ${w.given}</p><p>Giusta: <b>${w.right}</b></p><p class="expl">${w.expl}</p></div>`).join("")}</div>` : ""}
+        ${nw ? `<div class="wlist" id="qzWrong">${qz.wrong.map(wrongItem).join("")}</div>` : ""}
         <div class="row"><button class="primary" id="qzAgain">Rifai il ripasso</button>${nw ? `<button id="qzOnly">Ripassa solo le sbagliate</button><button id="qzLesson">Rivedi la lezione</button>` : ""}<button id="qzClose">Chiudi</button></div>`;
       $("qzAgain").onclick = () => openQuiz(qz.li); $("qzClose").onclick = closeQuiz;
       if (nw){ const ids = qz.wrong.map(w => w.n), li = qz.li; $("qzOnly").onclick = () => openQuiz(li, ids); $("qzLesson").onclick = () => { startLesson(li); closeQuiz(); }; }
       return;
     }
     const Q = qz.qs[qz.i];
-    b.innerHTML = `<div class="qz-top"><h2>Ripasso · ${L.name}</h2><span>Domanda ${qz.i + 1} di ${qz.qs.length}</span></div>
+    b.innerHTML = `<div class="qz-top"><h2>${qz.exam ? "Esame · livello 1" : "Ripasso · " + L.name}</h2><span>Domanda ${qz.i + 1} di ${qz.qs.length}</span></div>
       <p class="q">${Q.q}</p><div class="opts2">${Q.opts.map((o, k) => `<button class="opt" data-k="${k}">${o.t}</button>`).join("")}</div>
       <div id="qzAfter"></div>`;
     b.querySelectorAll(".opt").forEach(btn => btn.onclick = () => {
       if (qz.answered) return; qz.answered = true;
-      const o = Q.opts[+btn.dataset.k]; if (o.ok) qz.score++; else qz.wrong.push({ n: Q.n, q: Q.q, given: o.t, right: Q.right, expl: Q.expl });
-      b.querySelectorAll(".opt").forEach((x, k) => { x.disabled = true; if (Q.opts[k].ok) x.classList.add("right"); });
-      if (!o.ok) btn.classList.add("wrong");
-      $("qzAfter").innerHTML = `<p class="expl"><b>${o.ok ? "Giusto." : "Non proprio."}</b> ${Q.expl}</p>
+      const o = Q.opts[+btn.dataset.k]; if (o.ok) qz.score++; else qz.wrong.push({ n: Q.n, li: Q.li, passo: Q.passo, q: Q.q, given: o.t, right: Q.right, expl: Q.expl });
+      // esame: nessun colore e nessuna spiegazione fino alla fine (aiuterebbero nelle domande dopo); la risposta non si cambia
+      b.querySelectorAll(".opt").forEach((x, k) => { x.disabled = true; if (!qz.exam && Q.opts[k].ok) x.classList.add("right"); });
+      if (qz.exam) btn.classList.add("sel"); else if (!o.ok) btn.classList.add("wrong");
+      $("qzAfter").innerHTML = `${qz.exam ? "" : `<p class="expl"><b>${o.ok ? "Giusto." : "Non proprio."}</b> ${Q.expl}</p>`}
         <div class="row"><button class="primary" id="qzNext">${qz.i + 1 < qz.qs.length ? "Domanda successiva" : "Vedi il risultato"}</button></div>`;
       $("qzNext").onclick = () => { qz.i++; qz.answered = false; renderQuiz(); };
       $("qzNext").focus();
@@ -2699,7 +2753,7 @@ function step(S, C, E, dt){
   env.twd = 0; freshState(0, 0, 90, 0.4);
   showMenu();
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
-  if (location.hash === "#collaudo"){ window.__sv = { openItem, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
+  if (location.hash === "#collaudo"){ window.__sv = { openItem, estraiEsame, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief,
     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
     frame: dt => { simulate(dt, curStep()); simTime += dt; draw(dt); }, get viewOff(){ return viewOff; }, get zoomQ(){ return zoomQ; }, get camZoom(){ return camZoom; }, draw: dt => draw(dt), gusts: () => gusts.map(g => [g.x, g.y, g.r, g.k, g.sh, g.ttl]), get rippleCells(){ return rippleCells; }, goal, cam: () => { const v = view(); return { cx: v.cx, cy: v.cy, W, H }; } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce); sesTick è il registratore, solo lettura

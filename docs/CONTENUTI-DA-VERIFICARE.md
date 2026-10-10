@@ -89,6 +89,50 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | Il timoniere si sporge fuori bordo, sopravento, contro lo sbandamento. | |
 | Si raddrizza salendo sulla lama di deriva e facendo leva col proprio peso. | |
 
+## Domande dell'esame (0.20)
+
+Le 26 domande della banca minima dell'esame (`ESAME` in `index.html`). Non aggiungono affermazioni nuove: ognuna viene dal passo di lezione indicato, ma «solo contenuti già nelle lezioni» non vuol dire «verificati». Se una lezione si corregge, va corretta anche la domanda che nasce da quel passo.
+
+| # | Lezione e passo (riga della 0.19.5) | Domanda | Risposta giusta | Esito |
+| --- | --- | --- | --- | --- |
+| 1 | L1 «Dritta e sinistra» (476) | La barca punta verso il basso dello schermo. Il lato della barca che vedi a destra sullo schermo si chiama… | sinistra. | |
+| 2 | L1 «Sopravento e sottovento» (488) | Dove siede il timoniere, rispetto al vento? | Sopravento, per fare contrappeso. | |
+| 3 | L1 «Poggiare» (491) | Poggiare significa… | allontanare la prua dal vento. | |
+| 4 | L1 «Orzare e l'angolo morto» (496) | Che cosa succede se la prua punta troppo vicino al vento? | La vela sbatte, non spinge e la barca si ferma. | |
+| 5 | L1 «La scotta: lascare» (504) | Cazzare la scotta significa… | tirarla, così la vela si avvicina al centro. | |
+| 6 | L2 «Come si timona» (523) | Vuoi che la prua giri verso sinistra. Da che parte spingi la barra? | La spingi verso dritta. | |
+| 7 | L2 «Barra sottovento: si orza» (534) | Il boma è sul lato sinistro e spingi la barra verso sinistra. Che cosa fa la barca? | Orza: la prua sale verso il vento. | |
+| 8 | L2 «Barra sopravento: si poggia» (539) | Vuoi poggiare. Verso quale lato spingi la barra? | Verso il lato sopravento, lontano dal boma. | |
+| 9 | L2 «Tenere la rotta» (543) | Un timoniere corregge la rotta con colpi di barra ampi e continui. Che effetto ha? | La barca rallenta: ogni angolo di barra frena. | |
+| 10 | L3 «Riepilogo» (600) | Quale ordine va dall'andatura più vicina al vento a quella più lontana? | Bolina, traverso, lasco, gran lasco, poppa. | |
+| 11 | L3 «Poppa» (570) | La poppa è l'andatura più veloce? | No: il traverso e il lasco sono più veloci. **Da far confermare a un velista:** la poppa non è l'andatura più veloce. | |
+| 12 | L3 «Le mure» (574) | Navighi mure a dritta. Da che parte sta il boma? | A sinistra. | |
+| 13 | L3 «Filetto sottovento» (588) | Il filetto sottovento si agita, quello sopravento è dritto. Come regoli la vela? | La lasco: è troppo cazzata. | |
+| 14 | L3 «Poggi e laschi» (592) | Stai poggiando dal traverso verso il lasco. Che cosa fai con la vela? | La lasco, perché resterebbe troppo chiusa. | |
+| 15 | L4 «Il vento che senti a bordo» (605) | Su quale vento lavora la vela? | Sul vento apparente, quello che si sente a bordo. | |
+| 16 | L4 «Accelerando» (612) | Il vento reale arriva di fianco e la barca accelera. Rispetto al reale, il vento apparente diventa… | più forte, e arriva più da prua. | |
+| 17 | L4 «Da fermi» (608) | La barca è quasi ferma. Come sono il vento apparente e il vento reale? | Quasi uguali, in direzione e in forza. | |
+| 18 | L4 «In poppa» (616) | Di bolina, rispetto al vento reale, il vento apparente è… | più forte. | |
+| 19 | L5 «Cambiare mure» (626) | Che cos'è una strambata? | Cambiare mure con la poppa che attraversa il vento. | |
+| 20 | L5 «Prepararsi a virare» (629) | Che cos'è l'abbrivio? | La velocità che la barca ha già e conserva. | |
+| 21 | L5 «La strambata» (647) | Perché in poppa la strambata è delicata? | Il boma attraversa la barca di colpo. | |
+| 22 | L5 «Una virata che non riesce» (638) | La barca si è piantata nel vento e comincia ad arretrare. Come ne esci? | Centri la barra e lasci che la prua poggi da sola. **Da far confermare a un velista:** per uscire da una virata mancata si centra la barra e la prua poggia da sola. | |
+| 23 | L6 «Raffiche e sbandamento» (664) | Che cos'è lo sbandamento? | L'inclinazione della barca spinta dal vento sulla vela. | |
+| 24 | L6 «La scuffia» (671) | Quale comportamento in raffica porta più facilmente alla scuffia? | Tenere la vela tutta cazzata senza lascare. | |
+| 25 | L6 «Assorbire una raffica» (667) | La raffica è passata e la barca si raddrizza. Che cosa fai con la vela? | La cazzi di nuovo fino a regolarla. | |
+| 26 | L6 «Raddrizzare» (675) | Hai appena raddrizzato la barca scuffiata. Come riparti? | Con la scotta lascata, e cazzi quando hai velocità. | |
+
+Nota alla domanda 5: la definizione di «cazzare» sta nel testo del passo «La scotta: lascare» (504), che definisce lascare e cazzare insieme; il passo «La scotta: cazzare» (509) è solo l'esercizio.
+
+## Da sistemare dopo la 0.20
+
+Due domande del **ripasso** non hanno un passo che le insegni nella loro lezione. Il ripasso non si tocca nella 0.20; due strade possibili per ciascuna: spostare la domanda nel ripasso della lezione che la insegna, oppure cambiarla.
+
+| Domanda del ripasso | Problema | Opzioni |
+| --- | --- | --- |
+| Lezione 2, domanda 4 (riga 734 della 0.19.5): «La barca si è fermata nel vento e comincia ad andare all'indietro. Cosa succede alla barra?» | La lezione 2 non lo insegna; lo insegna la lezione 5, passo «Una virata che non riesce» (638). | Spostarla nel ripasso della lezione 5, oppure cambiarla in una domanda sulla lezione 2. |
+| Lezione 3, domanda 3 (riga 737): «Si agita il filetto sopravento. Cosa fai?», giusta «Cazzo la vela, oppure poggio» | La lezione insegna solo «cazza» (577, 580); «oppure poggia» sta solo nel messaggio del pannello (1946), spento in quei passi. | Togliere «oppure poggio» dalla risposta, oppure aggiungere il poggiare a un passo della lezione 3 (decisione di Ale: i testi delle lezioni del livello 1 sono chiusi). |
+
 ## Regate
 
 | Affermazione | Esito |

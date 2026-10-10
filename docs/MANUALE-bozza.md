@@ -10,7 +10,7 @@ Ogni punto ha due parti: **«Nel gioco»** e **«In barca vera»**. Dove non c'�
 
 Un simulatore didattico per imparare a governare una piccola barca a vela, da giocare sul computer con la tastiera. Si parte da zero. Il gioco **non è una previsione delle prestazioni di una barca reale**: i suoi numeri sono tarati per essere plausibili e far imparare comportamenti corretti.
 
-Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un registro degli errori, quiz di ripasso e un glossario. Gli aiuti si possono disattivare: chi vuole più realismo li spegne.
+Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un registro degli errori, quiz di ripasso, un esame su tutte le lezioni e un glossario. Gli aiuti si possono disattivare: chi vuole più realismo li spegne.
 
 ## 2. I comandi (livello 1)
 
@@ -27,6 +27,11 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione. Una volta accesa, la registrazione resta accesa finché non la spegni tu: non si ferma alla fine di una prova. Se la spegni e la riaccendi, nel file le pause sono scritte in secondi veri.
 
 Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate con la risposta data, quella giusta e la spiegazione. «Ripassa solo le sbagliate» riporta solo quelle domande e non cambia il punteggio migliore, che si aggiorna soltanto con un ripasso completo.
+
+**L'esame** (dalla 0.20; menu, riquadro «Ripasso ed esame»). È una verifica interna al gioco: ogni domanda nasce da un passo delle lezioni, non c'è niente da studiare fuori. Venti domande a scelta multipla, estratte a caso ogni volta in quote fisse per lezione (lezione 1: 4, lezione 2: 3, lezione 3: 4, lezioni 4, 5 e 6: 3 ciascuna); si supera con almeno 16 giuste. Durante l'esame il gioco non dice se una risposta è giusta, non mostra spiegazioni e non lascia cambiare la risposta data: le spiegazioni arrivano tutte alla fine, con le domande sbagliate raggruppate per lezione e, per ciascuna, il passo della lezione da cui viene. Due avvertenze:
+
+- **Nel gioco libero l'esame è una prova e non si salva niente**: né il punteggio né l'esito. Brevetto, attestato e libretto arriveranno con la carriera.
+- **Chiudere il riquadro a metà (tasto Esc) fa perdere l'esame in corso**: si ricomincia da capo, con domande nuove.
 
 ## 3. I comandi nei livelli successivi
 

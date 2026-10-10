@@ -224,6 +224,21 @@ Soglie, da non cambiare dopo aver visto i risultati:
 | 5 · Virata e strambata | virata (prua nel vento) e strambata (poppa nel vento); virata che non riesce per poca velocità; bordeggiare e bordo; strambata violenta con la vela aperta; strambata controllata (cazzare, poggiare, lascare) |
 | 6 · Raffiche e scuffia | riconoscere una raffica (chiazza scura che arriva da sopravento); lascare come prima reazione, orzare un poco di bolina; tenere la barca piatta; cos'è la scuffia; come si raddrizza una deriva nella realtà (sulla lama) |
 
+### Banca della 0.20 e concetti per la 0.20.1 e seguenti **[deciso, 10 ottobre 2026]**
+
+La 0.20 ha la **banca minima**: 26 domande (L1 5, L2 4, L3 5, L4 4, L5 4, L6 4), una per concetto, sui concetti più centrali che il ripasso non chiede già. Testo, passo e riga di ciascuna in `CONTENUTI-DA-VERIFICARE.md`, sezione «Domande dell'esame (0.20)». Il meccanismo funziona con qualunque numero di domande per lezione, purché sia almeno la quota più una (`tests/collaudo_esame.py` lo prova anche con la lezione 2 a 7 domande).
+
+Concetti insegnati e verificabili con risposta chiusa, **ancora senza domanda**: la banca cresce da qui, una lezione alla volta. Valgono le stesse regole (nessuna cifra, parole vietate, niente dubbi specifici né testi solo del pannello o del glossario).
+
+| Lezione | Concetti (passo) |
+| --- | --- |
+| 1 | deriva come barca (La barca); prua e poppa (La barca); albero, boma, randa e scotta (Albero, boma, randa); timone e barra, lama di deriva (Timone e deriva); il vento si nomina da dove arriva (Il vento); definizione di sopravento e sottovento (Sopravento e sottovento); orzare (Orzare e l'angolo morto); orzare e poggiare riferiti al vento, con la prua nel vento si poggia da tutti e due i lati (Ripartire); la vela troppo aperta fileggia (La scotta: lascare); regola pratica della scotta (La scotta: cazzare); la vela troppo cazzata va in stallo (Troppo cazzata) |
+| 2 | piccole correzioni presto invece che grandi tardi (Tenere la rotta) |
+| 3 | definizione di andatura (Le andature); bolina più vicina al vento, bolina stretta e larga (Bolina); traverso (Traverso); lasco e gran lasco (Lasco e gran lasco); oltre la poppa si stramba (Poppa); nome delle mure (Le mure); filetti dritti, filetto sopravento (I filetti); orzi e cazzi (Orzi e cazzi) |
+| 4 | definizione del vento apparente (Il vento che senti a bordo); il segnavento indica l'apparente (Il vento che senti a bordo); accelerando bisogna cazzare (Accelerando); in poppa l'apparente è più debole (In poppa) |
+| 5 | due manovre per cambiare mure, virata, si vira per risalire e si stramba col vento da dietro (Cambiare mure); per virare barra sottovento con decisione, in bolina la vela resta cazzata su tutte e due le mure (Virare); la barca si pianta, all'indietro la barra va al contrario (Una virata che non riesce); bordeggiare e bordo, risalire allunga la strada (Risalire il vento); strambata involontaria (Strambata violenta); strambata controllata (La strambata, Strambata controllata) |
+| 6 | la raffica arriva da sopravento, in raffica il vento gira, il timoniere si sporge (Raffiche e sbandamento); lascare in raffica, di bolina orzare un poco (Assorbire una raffica); scuffiare = rovesciarsi (La scuffia); raddrizzare sulla lama (Raddrizzare) |
+
 ---
 
 ## 6. Decisioni di Ale (9 ottobre 2026)
@@ -328,3 +343,5 @@ Le fette 1 e 2 sono indipendenti e si possono scambiare. La 3 viene prima di 4 e
 - Righe 208-209, «Fuori anche»: niente domande sui dubbi specifici di `CONTENUTI-DA-VERIFICARE.md` e niente numeri del motore.
 - Riga 274, fetta 0.21: livello degli avversari in carriera fisso, oppure salvato nel risultato.
 - Marcature [proposta] di Banca, Estrazione e Salvataggio (§2), pilota sostituto (riga 173) e verifica a mano dell'esame (riga 194): dettagli di realizzazione, da approvare con il via alla fetta 0.20.
+
+**Esito (10 ottobre 2026, avvio della 0.20).** «Fuori anche» confermato e reso controllabile: nessuna cifra nei testi dell'esame; parole vietate «lascia strada», «lasciare strada», «precedenz», «abbattuta», «Viro», «Strambo», «orzier», «scader», «rosso», «verde» («strada» da sola è ammessa); fuori anche i testi che stanno solo nei messaggi del pannello o nel glossario e i tasti del gioco. Lo controlla `tests/collaudo_esame.py`. Il livello degli avversari non tocca la 0.20 e resta da decidere alla 0.21. Banca, estrazione e salvataggio come al §2, con la banca raggruppata per lezione (`ESAME[lezione] = [[passo, domanda, giusta, [sbagliate], spiegazione], …]`) e nessun salvataggio nel gioco libero. Durante l'esame nessun colore e nessuna spiegazione, risposta non modificabile; alla fine, accanto a ogni sbagliata, la riga «dal passo «…»».
