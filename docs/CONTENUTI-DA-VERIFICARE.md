@@ -47,7 +47,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | La prua gira dalla parte opposta a quella in cui si spinge la barra. | |
 | Barra sottovento, la barca orza; barra sopravento, la barca poggia. | |
 | Ogni angolo di barra frena la barca: meglio piccole correzioni fatte presto. | |
-| Andando all'indietro, l'effetto della barra si inverte. | |
+| Andando all'indietro, l'effetto della barra si inverte. | Due fonti lo dicono implicitamente (US Sailing e la guida Sunfish: andando all'indietro la prua gira dalla parte verso cui punta la barra; vedi `DUBBI-E-RICERCHE.md`, sez. 3). Da confermare con un velista esperto o altre fonti |
 
 ## Lezione 3: andature, mure, filetti
 
@@ -76,6 +76,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | --- | --- |
 | Virata: prua attraverso il vento. Strambata: poppa attraverso il vento. | |
 | Si vira con la barca lanciata; senza abbrivio la barca si pianta e poi arretra. | |
+| Se la barca arretra, si spinge la barra verso il boma e la prua si allontana dal vento; quando smette di arretrare si centra la barra, si cazza e si riparte (passo 5.4 e suggerimento, dalla 0.20.1). | **Da confermare con un velista esperto o altre fonti.** Misurato nel gioco; nelle fonti la manovra è con la randa spinta a collo (vedi `MANUALE-bozza.md`, §4) |
 | In bolina, su una deriva a una vela, la randa resta cazzata su entrambe le mure. | |
 | Bordeggiare: risalire il vento a zig-zag; ogni tratto è un bordo. | |
 | Strambata controllata: cazzare fino a circa 45°, poggiare finché il vento passa dall'altro lato, poi lascare. | |
@@ -88,6 +89,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | In raffica si lasca; di bolina si può anche orzare di poco. | |
 | Il timoniere si sporge fuori bordo, sopravento, contro lo sbandamento. | |
 | Si raddrizza salendo sulla lama di deriva e facendo leva col proprio peso. | |
+| Prima di raddrizzare si lasciano libere le scotte (passo «Raddrizzare», dalla 0.20.1). | **Da confermare con un velista esperto o altre fonti.** Due fonti indipendenti ma deboli (blog di un circolo, conferenza di un progettista); nessuna federazione. Per ripartire dopo il raddrizzamento (lascare o cazzare) nessuna fonte trovata: il gioco non dà più nessuna regola |
 
 ## Domande dell'esame (0.20)
 
@@ -116,11 +118,11 @@ Le 26 domande della banca minima dell'esame (`ESAME` in `index.html`). Non aggiu
 | 19 | L5 «Cambiare mure» (626) | Che cos'è una strambata? | Cambiare mure con la poppa che attraversa il vento. | |
 | 20 | L5 «Prepararsi a virare» (629) | Che cos'è l'abbrivio? | La velocità che la barca ha già e conserva. | |
 | 21 | L5 «La strambata» (647) | Perché in poppa la strambata è delicata? | Il boma attraversa la barca di colpo. | |
-| 22 | L5 «Una virata che non riesce» (638) | La barca si è piantata nel vento e comincia ad arretrare. Come ne esci? | Centri la barra e lasci che la prua poggi da sola. **Da far confermare a un velista:** per uscire da una virata mancata si centra la barra e la prua poggia da sola. | |
+| 22 | L5 «Una virata che non riesce» (640) | La barca si è piantata nel vento e comincia ad arretrare. Come ne esci? | Spingi la barra verso il boma e la centri quando riparti (dalla 0.20.1; prima: «Centri la barra e lasci che la prua poggi da sola», che il gioco non faceva). **Da confermare con un velista esperto o altre fonti.** Nel gioco è misurato: con la barra verso il boma mentre la barca arretra si esce in tutti i casi, con la barra lontano dal boma in nessuno (`CHANGELOG.md`, 0.20.1). Le fonti (US Sailing, una guida Sunfish, un'associazione di classe di catamarani) descrivono la randa spinta a collo con la barra dalla stessa parte, che nel gioco non c'è; il caso con il boma lasciato dove lo mette il vento non è stato trovato. Risposta sbagliata «Muovi la barra di continuo da un lato all'altro»: nel gioco non fa uscire (26 partenze su 4.860, tutte con il ritmo più lento (barra che cambia lato ogni secondo); griglia 0-44° dal vento, due mure, da 0 a −2 nodi, vento 6, 10 e 14 nodi, scotta 100 e 50), nella realtà una sola fonte (catamarano). | |
 | 23 | L6 «Raffiche e sbandamento» (664) | Che cos'è lo sbandamento? | L'inclinazione della barca spinta dal vento sulla vela. | |
 | 24 | L6 «La scuffia» (671) | Quale comportamento in raffica porta più facilmente alla scuffia? | Tenere la vela tutta cazzata senza lascare. | |
 | 25 | L6 «Assorbire una raffica» (667) | La raffica è passata e la barca si raddrizza. Che cosa fai con la vela? | La cazzi di nuovo fino a regolarla. | |
-| 26 | L6 «Raddrizzare» (675) | Hai appena raddrizzato la barca scuffiata. Come riparti? | Con la scotta lascata, e cazzi quando hai velocità. | |
+| 26 | L6 «Raffiche e sbandamento» (666) | Vuoi capire se sta arrivando una raffica. Dove guardi? | Sull'acqua sopravento: chiazze più scure e increspate (dalla 0.20.1; prima: «Hai appena raddrizzato la barca scuffiata. Come riparti?», tolta perché la regola per ripartire non è stata trovata nelle fonti). Il passo lo insegna: «Le chiazze più scure e increspate sull'acqua sono raffiche… le vedi arrivare da sopravento». Nessun'altra domanda dell'esame tratta come si vede una raffica; il ripasso della lezione 6 ha una domanda sullo stesso concetto (le due banche sono separate). Scartata, prima del commit, una versione sul contrappeso che si sovrapponeva alle domande 2 e 24. **Da confermare con un velista esperto o altre fonti.** La domanda sulle scotte libere durante il raddrizzamento è in `DUBBI-E-RICERCHE.md`, da riprendere dopo la conferma di un velista esperto o di altre fonti. | |
 
 Nota alla domanda 5: la definizione di «cazzare» sta nel testo del passo «La scotta: lascare» (504), che definisce lascare e cazzare insieme; il passo «La scotta: cazzare» (509) è solo l'esercizio.
 

@@ -74,6 +74,59 @@ Gennaker e planata richiedono un prototipo dedicato prima di progettare le lezio
 
 Pagina di domande per un velista (`domande-per-un-velista.pdf`): quando torna compilata, gli esiti vanno in `CONTENUTI-DA-VERIFICARE.md`.
 
+### Angolo morto, barca che arretra, ripartenza dopo la scuffia (ricerca *web* dell'11 ottobre 2026)
+
+Nasce da due registrazioni (0.19.5 e 0.20): nel gioco, con la barca che arretra e la barra al centro, la prua **non** poggia da sola, mentre lo dicono il passo 5.4, il suggerimento «Stai andando all'indietro…» e la domanda d'esame 22. Nel motore la prua poggia da sola solo con vento apparente sotto 36° **e** velocità sotto 0,5 m/s (`index.html`, riga 443). Ricerca a tempo limitato, in inglese e in italiano. Domande solo per derive. Regola: una sola fonte = «non verificato»; i forum contano poco.
+
+**Come sono state lette le citazioni.** I PDF sono stati letti con `pdftotext`, quindi le loro citazioni sono il testo originale. Le pagine web (US Sailing, Cal Sailing Club, Small Craft Advisor) sono passate da uno strumento di lettura che restituisce le frasi citate: sono da ricontrollare sulla pagina prima di usarle nei testi del gioco.
+
+**Fonti usate**
+
+| Sigla | URL | Chi scrive | Barca |
+| --- | --- | --- | --- |
+| W1 | https://www.ussailing.org/news/getting-in-and-out-of-irons/ | US Sailing (federazione statunitense), 12 ottobre 2016 | non nominata: barca con randa e fiocco, barra |
+| W2 | https://myc.org/wp-content/uploads/2021/02/Sunfish-How-to-get-out-of-Irons.pdf | Ken Zorovich, PDF pubblicato da un circolo (MYC) | Sunfish, deriva monoposto |
+| W3 | https://www.papertigercatamaran.org/ptcia/media/pdf/reverse_logic_-_getting_out_of_irons.pdf | Notiziario dell'associazione di classe Paper Tiger, febbraio 2011; autore non indicato | **catamarano** monoposto, non una deriva |
+| W4 | https://cal-sailing.org/blogfrontpage/recent-blog-posts/entry/a-couple-of-capsize-recovery-tips?format=amp | Michael Sherrell, blog di un circolo (Cal Sailing Club), 2014 | deriva con deriva mobile, classe non nominata |
+| W5 | https://smallcraftadvisor.substack.com/p/on-capsizing-and-recovery | Richard Woods, progettista, trascrizione di una conferenza del 2016 (rivista Small Craft Advisor) | piccole barche, derive comprese |
+
+**1. Barca ferma nel vento dopo una virata mancata: la prua poggia da sola?**
+
+- **Esito: «poggia da sola» non trovato in nessuna fonte.** Due fonti dicono il contrario, cioè che la barca **resta** nell'angolo morto se non si fa qualcosa. Nessuna delle due tratta il caso della barra al centro.
+- W2 (Sunfish, deriva): «there is powerful and EQUAL PRESSURE on both sides of the sail that can prevent the Sunfish from turning.» Il testo lo riferisce al vento sopra i 15 nodi e a un timoniere leggero.
+- W3 (catamarano): «The boat has to be steered out of irons and it won't do this by going forward any time soon.» Descrive anche la barca ferma che non risponde: «sit motionless with the boat refusing to respond to any amount of mainsheet tugging and rudder waggling».
+- W1 non dice né l'una né l'altra cosa; dice solo «you'll find it hard to steer».
+- **Conteggio:** due fonti indipendenti, di cui una sola su una deriva e l'altra su un catamarano. Per il caso «deriva, barra al centro» il risultato è **non verificato**, ma **va contro** i testi attuali del gioco (passo 5.4, suggerimento, domanda 22).
+
+**2. Come si esce dall'angolo morto?**
+
+- **Esito: concordano tre fonti indipendenti** (W1 federazione, W2 circolo su una deriva, W3 associazione di classe su un catamarano). Si spinge il boma fuori, cioè si mette la randa «a collo», e la barra va dalla stessa parte. La barca va all'indietro e la prua si allontana dal vento. Poi si raddrizza la barra, si cazza e si riparte.
+- W1: «If the boat does not have a jib, back the mainsail by pushing the boom on the side you want to turn toward.» «hold the tiller in that same direction as the mainsail, the direction you want to turn toward.» «As you back the sails, your boat will start to move backwards.» «This will cause the bow (the front of the boat) to turn toward the boom, and away from the wind.» Alla fine: «release the backed sail and pull in the sheets».
+- W2: «When stuck in irons, push your tiller and boom in the same direction until you are luffing on a beam reach, straighten your tiller, sheet in and go.» «Your boat will start sailing backwards and will start to turn.»
+- W3: «Release the mainsheet. Push the boom and tiller hard away from you.» «The boat will reverse and the stern will turn to windward. Once the boat is pointing slightly below the angle of the next beat, release the boom, pull the tiller towards you and sheet in gradually as the boat accelerates.»
+- **Da ferma e arretrando.** Le fonti partono dalla barca ferma e la fanno arretrare apposta. Il caso della barca che **già** arretra non è trattato a parte: **non trovato**.
+- In italiano: **non trovato**. Nessuna scuola o federazione italiana descrive la manovra nelle pagine trovate.
+- **Per il gioco.** Il gioco non ha un comando per spingere il boma. *Corretto l'11 ottobre 2026:* il dato «3,4-10,2 s» scritto qui prima era sbagliato. In quella prova la barra stava **lontano dal boma** e la prua attraversava il vento (a 0°) prima di uscire dall'altro lato. La misura giusta: mentre la barca arretra, barra a fondo **verso il boma**, poi al centro. Nel gioco libero, tre casi delle registrazioni, scotta 100 e 50, con e senza raffiche, 10 semi: la prua arriva a 45° dal vento in 60 casi su 60 e non passa mai a meno di 10° dal vento. Con la barra lontano dal boma la prua attraversa il vento in 60 casi su 60 e non esce mai. Griglia e collaudo su tutte e due le mure nel `CHANGELOG.md`, 0.20.1.
+
+**3. Dopo la scuffia e il raddrizzamento: si lasca o si cazza per ripartire?**
+
+- **Prima e durante il raddrizzamento le scotte vanno libere: due fonti indipendenti, nessuna di una federazione.**
+  - W4: «uncleat the gnav/vang (in addition to the mainsheet & jib)», perché questo riduce l'effetto del vento sulla vela quando la barca torna su.
+  - W5: «if it is windy you don't really want the jib sheeted in as you right the boat»; altrimenti la barca «will probably capsize again and certainly start sailing off before you are ready». W5 consiglia anche di tenere la barca con la prua al vento: «This ensures the boat stays head to wind when it comes up and so won't blow over again.»
+- **Per ripartire dopo il raddrizzamento (lascare o cazzare, e se dipende dall'angolo col vento): non trovato.**
+- Non è stato possibile leggere theyachtmarket.com (errore 403). Il materiale della federazione inglese (RYA) e quello di US Sailing sulla scuffia non sono stati trovati.
+
+**Domanda d'esame sulle scotte durante il raddrizzamento: da riprendere dopo la conferma di un velista esperto o di altre fonti.** Scritta l'11 ottobre 2026 come versione (a) della domanda 26 e **non messa nel gioco** (nella 0.20.1 la 26 è quella su come si vede arrivare una raffica). Per usarla bisogna anche rimettere nel passo «Raddrizzare» la frase sulle scotte libere, che dalla 0.20.1 c'è già.
+
+- Passo: L6 «Raddrizzare».
+- Domanda: «Stai per raddrizzare la barca scuffiata. Come lasci le scotte?»
+- Giusta: «Libere, così la vela non spinge mentre la barca torna su».
+- Sbagliate: «Cazzate a ferro, così la barca riparte appena torna dritta»; «Legate al centro, così il boma non si muove»; «Non importa: in acqua le scotte non contano». Controllare la lunghezza: oggi la giusta (56 caratteri) è più corta della prima sbagliata (58).
+- Spiegazione: «Con le scotte libere la vela non prende vento mentre la barca torna dritta: così non riparte da sola e non si rovescia di nuovo prima che tu sia a bordo.»
+- Si regge su W4 e W5 (due fonti deboli). Segnale contrario non verificato: un forum e una dispensa di Yachting New Zealand (non letta) parlano di cazzare un poco in certi raddrizzamenti.
+
+**Cosa resta aperto.** La domanda 1 (prua al vento con barra al centro su una deriva) e la domanda 3 (ripartenza) vanno chieste a un velista esperto o cercate in altre fonti: risposta attesa. Nella 0.20.1 i testi del passo 5.4, del suggerimento e della domanda 22 sono stati cambiati lo stesso: non dicono più che la prua poggia da sola e insegnano solo ciò che il gioco permette (barra verso il boma), misurato. Restano da confermare con un velista esperto o altre fonti.
+
 ## 4. Velocità e polari
 
 | Dubbio | Cosa sappiamo | Per chiuderlo |
@@ -118,3 +171,17 @@ Decisioni ancora aperte (vedi `VISIONE-LIVELLI-E-CARRIERA.md` e `ROADMAP.md`):
 
 - **Un velista esperto**, per `CONTENUTI-DA-VERIFICARE.md` e per giocare il livello 1 e il prototipo. Due domande: dove senti che la barca non risponde come la tua, e quali due differenze ti darebbero più fastidio.
 - **Lucio**, per provare il prototipo con tre domande: dove una posizione giusta del fiocco c'è la trovi? Il messaggio nel pannello ti dice cosa fare? Qualcosa ti confonde?
+
+## 9. Domande per il velista esperto (derive)
+
+Elenco da portare a un velista esperto, solo per derive. Accanto a ogni voce, le fonti che i documenti hanno oggi (sez. 3 di questo file, `CONTENUTI-DA-VERIFICARE.md`, `FONTI-PUBBLICHE.md`).
+
+1. **Virata mancata per poca velocità, barca ferma con la prua nel vento: la prua poggia da sola, anche lentamente, o resta lì finché non si agisce?** Fonte attuale per «poggia da sola»: nessuna. Due fonti dicono che la barca resta nell'angolo morto, ma una sola riguarda una deriva (Sunfish); l'altra un catamarano (sez. 3, W2 e W3).
+2. **Uscita arretrando: barra verso il boma, poi al centro, e si cazza (domanda d'esame 22 dalla 0.20.1). Vale anche con il boma non spinto a mano?** Fonte attuale per la manovra con il boma spinto fuori, la randa «a collo»: tre (US Sailing, guida Sunfish, associazione di classe di un catamarano; sez. 3). Con il boma lasciato dove lo mette il vento: nessuna; è solo misurato nel gioco (`tests/fisica/angolo_morto.js`).
+3. **Dopo la scuffia: scotte libere durante il raddrizzamento? Per ripartire si lascia o si cazza, e dipende dall'angolo col vento?** È la versione (a) della domanda 26, da riprendere dopo la conferma (sez. 3). Fonte attuale per le scotte libere: due, deboli (blog di un circolo, conferenza di un progettista). Per ripartire: nessuna.
+4. **In poppa piena una deriva è meno veloce che al traverso o al lasco? (domanda d'esame 11)** Fonte attuale: una, debole (la tabellina di un forum, F9, provenienza non verificabile, in `FONTI-PUBBLICHE.md`).
+5. **Con la vela già tutta lasca e troppo sbandamento, orzare un poco aiuta?** È il messaggio del pannello dalla 0.19.4. Fonte attuale: nessuna (`CONTENUTI-DA-VERIFICARE.md`, «Dubbi specifici»).
+6. **Cause della barca orziera nel glossario: sono corrette e complete?** Le cause elencate sono vento e raffiche, onde che spostano la prua, barca molto sbandata, vele troppo cazzate, posizione e peso dell'equipaggio. Fonte attuale: una per «vele troppo cazzate» (F1) e una per «sbandamento» (F4); per le altre cause nessuna.
+7. **Lezione 1, «Ripartire»: con la barca quasi ferma, «da entrambi i lati si poggia». Vale?** Nel gioco la prua lì gira per la riga 443 di `index.html`, non per il timone. Fonte attuale: nessuna.
+8. **Regola delle stesse mure (lascia strada chi è sopravento): non è insegnata in nessuna lezione. Si conferma che è giusto così per il livello 1?** Fonte attuale nei documenti: nessuna (`CONTENUTI-DA-VERIFICARE.md`, regate, esito vuoto).
+9. **Il resto:** i «Dubbi specifici» di `CONTENUTI-DA-VERIFICARE.md` e il questionario di 27 domande di `RIPARTI-DA-QUI.md` (negli appunti, fuori dal repository).

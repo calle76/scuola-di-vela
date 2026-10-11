@@ -640,7 +640,7 @@ function step(S, C, E, dt){
     { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare."],
       cond: (I, S) => (I.twa < 40 && I.kn < 0.4) || S.u < -0.1, hold: 1,
-      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: centra la barra e lascia che la prua <em>poggi da sola</em> (gira lentamente, allontanandosi dal vento), poi riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
+      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: spingi la barra <em>verso il boma</em> e la prua si allontana dal vento; quando la barca smette di arretrare, centra la barra, cazza e riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
     { title: "Risalire il vento", tiller: true, sheet: true, hud: 1, hintKind: "tt", mark: [0, -110],
       text: ["Riparti. La boa è controvento: non puoi puntarla direttamente.",
              "Raggiungila a zig-zag: un tratto di bolina su una mura, una virata, un tratto sull'altra. Si chiama <em>bordeggiare</em>, e ogni tratto è un <em>bordo</em>."],
@@ -675,9 +675,9 @@ function step(S, C, E, dt){
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
       done: "Oltre circa 60° di sbandamento la barca si è rovesciata: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
     { title: "Raddrizzare", tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",
-      text: ["Premi <em>Raddrizza</em> (o il tasto R). Nella realtà il timoniere sale sulla lama della deriva e fa leva con il proprio peso finché la barca torna dritta, poi risale a bordo e riparte con la vela lascata."],
+      text: ["Premi <em>Raddrizza</em> (o il tasto R). Nella realtà prima si lasciano libere le scotte, poi il timoniere sale sulla lama della deriva e fa leva con il proprio peso finché la barca torna dritta, e risale a bordo."],
       cond: (I, S) => !S.capsized && S.capsizes > 0, hold: 1,
-      done: "Barca dritta. Riparti con la scotta lascata e cazza solo quando la barca ha preso velocità." },
+      done: "Barca dritta. Regola la vela con i filetti e riparti." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,
       text: ["Guarda le raffiche arrivare, <em>lasca</em> quando entri, <em>cazza</em> quando escono. Oltre circa 60° di sbandamento si <em>scuffia</em>.",
              "Esercitati, poi prova il percorso nelle raffiche."] }
@@ -781,11 +781,11 @@ function step(S, C, E, dt){
     [ ["Cambiare mure", "Che cos'è una strambata?", "Cambiare mure con la poppa che attraversa il vento", ["Cambiare mure con la prua che attraversa il vento", "Poggiare fino a portare il vento esattamente da dietro", "Fermarsi con la prua nel vento e poi arretrare"], "Nella strambata è la poppa ad attraversare il vento; nella virata è la prua."],
       ["Prepararsi a virare", "Che cos'è l'abbrivio?", "La velocità che la barca ha già e conserva", ["La spinta del vento sulla vela cazzata", "La forza che fa sbandare la barca in raffica", "Il tratto di bolina fra una virata e l'altra"], "È la velocità che porta la barca attraverso l'angolo morto, dove la vela non spinge."],
       ["La strambata", "Perché in poppa la strambata è delicata?", "Il boma attraversa la barca di colpo", ["La prua si pianta nel vento e si ferma", "La vela smette di spingere del tutto", "Il timone comincia a funzionare al contrario"], "Con la vela tutta aperta il boma attraversa la barca con violenza: può far scuffiare o colpire qualcuno."],
-      ["Una virata che non riesce", "La barca si è piantata nel vento e comincia ad arretrare. Come ne esci?", "Centri la barra e lasci che la prua poggi da sola", ["Spingi la barra a fondo e cazzi tutta la vela", "Cazzi tutta la vela e aspetti che la barca riparta", "Orzi ancora, finché il vento passa dall'altra parte"], "Andando all'indietro la barra funziona al contrario: si centra, la prua poggia da sola e poi si riparte."] ],
+      ["Una virata che non riesce", "La barca si è piantata nel vento e comincia ad arretrare. Come ne esci?", "Spingi la barra verso il boma e la centri quando riparti", ["Spingi la barra lontano dal boma, come per poggiare andando avanti", "Muovi la barra di continuo da un lato all'altro", "Orzi ancora, finché il vento passa dall'altra parte"], "Andando all'indietro la barra funziona al contrario: verso il boma, la prua si allontana dal vento. Appena la barca va di nuovo avanti, la barra si centra."] ],
     [ ["Raffiche e sbandamento", "Che cos'è lo sbandamento?", "L'inclinazione della barca spinta dal vento sulla vela", ["Lo scivolamento della barca di lato, verso sottovento", "La rotazione della prua verso il vento in raffica", "Il rallentamento improvviso della barca in raffica"], "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo sbandamento."],
       ["La scuffia", "Quale comportamento in raffica porta più facilmente alla scuffia?", "Tenere la vela tutta cazzata senza lascare", ["Lascare la scotta appena entri nella raffica", "Orzare un poco tenendo la vela regolata", "Sporgersi fuori bordo per fare contrappeso"], "Con la vela tutta cazzata e senza lascare, la forza della raffica fa sbandare la barca fino a rovesciarla."],
       ["Assorbire una raffica", "La raffica è passata e la barca si raddrizza. Che cosa fai con la vela?", "La cazzi di nuovo fino a regolarla", ["Lasci ancora un po' di scotta", "Non la tocchi più fino alla boa", "La fai sbattere per rallentare"], "In raffica si lasca per ridurre la forza sulla vela; quando la raffica passa si cazza di nuovo."],
-      ["Raddrizzare", "Hai appena raddrizzato la barca scuffiata. Come riparti?", "Con la scotta lascata, e cazzi quando hai velocità", ["Con la vela tutta cazzata, per partire subito", "Con la barra a fondo, per girare verso il vento", "Aspettando una raffica che ti spinga via"], "Si riparte con la vela lascata e la si cazza solo quando la barca ha preso velocità."] ]
+      ["Raffiche e sbandamento", "Vuoi capire se sta arrivando una raffica. Dove guardi?", "Sull'acqua sopravento: chiazze più scure e increspate", ["Sull'acqua sottovento: onde più alte e più lunghe del solito", "Il filetto sopravento, che si agita prima che arrivi", "La vela, che comincia a sbattere prima che arrivi"], "Dove il vento è più forte l'acqua è più scura e increspata, e la chiazza viaggia col vento: per questo arriva da sopravento."] ]
   ];
 
   const GLOSS = [
@@ -851,7 +851,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.20"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.20.1"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -2009,7 +2009,7 @@ function step(S, C, E, dt){
     if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
     else if (S.heel > 25){ cls = "bad"; msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco." : "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
-    else if (S.u < -0.05){ cls = "bad"; msg = "Stai andando all'indietro: la barra funziona al contrario. Centra la barra e lascia che la prua poggi da sola."; }
+    else if (S.u < -0.05){ cls = "bad"; msg = "Stai andando all'indietro: la barra funziona al contrario. Spingila verso il boma; centrala quando riparti."; }
     else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = ""; msg = "Raffica in arrivo: se la barca sbanda troppo, lasca; altrimenti è un'occasione per andare più veloci."; } // cls vuoto: colore normale del testo, non è un allarme
     if (mode === "lesson" && st.course && !S.capsized){
       const off = norm180(S.h - S.course);
