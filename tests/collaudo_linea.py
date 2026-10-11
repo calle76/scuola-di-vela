@@ -7,6 +7,11 @@
 # d'arrivo deve essere l'istante interpolato del taglio.
 # Parte 2 (pagina vera, senza #collaudo): dati vecchi delle prove cancellati al primo avvio con il messaggio una volta sola;
 # prova 1 aperta dal menu, la scritta «Arrivo» viene disegnata.
+# Parte 3 (0.20.2, #collaudo): lezione 5 passo 5 «Risalire il vento», arrivo a linea 110 m controvento dal punto in cui comincia il passo.
+# Un pilota bordeggia davvero (passi fissi) da 10 punti di partenza (5 spostamenti laterali x 2 mure) verso un punto oltre la linea;
+# il collaudo ricalcola la linea per conto suo (centro 110 m a nord della barca a inizio passo, perpendicolare al vento, 12 m per lato).
+# Casi: dentro (passo completato al taglio, fra gli estremi); fuori (punta 25 m di lato: niente, messaggio, poi rientra e completa);
+# contrario (da oltre la linea verso sud: niente).
 # Uso: python collaudo_linea.py [file html]   (predefinito: index.html del progetto). Esce con 1 se un caso è sbagliato
 # o se un tipo di caso ha zero misure.
 import asyncio, json, pathlib, sys
@@ -85,6 +90,60 @@ async def parte1(b):
     if lati: print(f"  tagli vicino a una boa: da {min(lati):.3f} a {max(lati):.3f} m dal centro (estremo a {HALF} m)")
     return conta, sbagli, errs
 
+CASO5 = """
+([dx, mura, kind, HALF]) => {
+  const sv = __sv, D = Math.PI / 180, n180 = a => ((a + 180) % 360 + 360) % 360 - 180, dt = 1 / 60;
+  sv.openItem(['l', 4]); sv.fast(0);
+  for (let k = 0; k < 9; k++){ sv.showStep(k); if (document.getElementById('lTitle').textContent === "Risalire il vento") break; }
+  const S = sv.S, cx = S.x, cy = S.y - 110;                       // linea ricalcolata dal collaudo, vento da nord nelle lezioni
+  const dOf = (x, y) => cy - y, aOf = x => x - cx;               // d: metri oltre la linea verso nord; a: di lato dal centro
+  S.x = cx + dx; S.y = kind === "contrario" ? cy - 20 : cy + 110;
+  S.h = kind === "contrario" ? 180 : (sv.twd + mura * 55 + 360) % 360; S.u = 2.5; S.r = 0; sv.ctl.tiller = 0; sv.ctl.sheet = sv.autoSheet();
+  let mira = [cx + (kind === "fuori" ? 25 * mura : 0), kind === "contrario" ? cy + 40 : cy - 15], side = mura, x = null, fin2 = null, toast = "", tacks0 = S.tacks;
+  for (let k = 0; k < 600 / dt; k++){
+    const brg = Math.atan2(mira[0] - S.x, -(mira[1] - S.y)) / D, rel = n180(brg - sv.twd);
+    let want = brg;
+    if (Math.abs(rel) < 52){ if (Math.abs(rel) > 12) side = Math.sign(rel); want = sv.twd + side * 52; }
+    const cur = n180(S.h - sv.twd);
+    if (Math.abs(cur) < 48 && S.u < 0.8) want = sv.twd + Math.sign(cur || 1) * 95;
+    sv.ctl.tiller = Math.max(-1, Math.min(1, n180(S.h - want) / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1); sv.ctl.sheet = sv.autoSheet();
+    const x0 = S.x, y0 = S.y; sv.run(dt, 1);
+    if (sv.toast && sv.toast.includes("Fuori dalla linea")) toast = sv.toast;
+    const p = dOf(x0, y0), q = dOf(S.x, S.y);
+    if (!x && ((p < 0 && q >= 0) || (p > 0 && q <= 0))){
+      const f = p / (p - q); x = { verso: p < 0 ? 1 : -1, a: aOf(x0 + (S.x - x0) * f), fin: sv.S.markReached, toast: sv.toast };
+      if (kind === "fuori"){ mira = [cx, cy + 30]; }                // dopo il taglio fuori torna sotto la linea e poi la ritaglia al centro
+      else if (kind !== "contrario"){ for (let j = 0; j < 30; j++) sv.run(dt, 1); break; }
+      else break;
+    }
+    if (kind === "fuori" && x && mira[1] > cy && Math.hypot(S.x - mira[0], S.y - mira[1]) < 8) mira = [cx, cy - 15];
+    if (kind === "fuori" && x && sv.stepDone){ fin2 = true; break; }
+  }
+  return { x, fin: sv.S.markReached, fatto: sv.stepDone, fin2, toast, virate: S.tacks - tacks0 };
+}
+"""
+
+async def parte3(b):
+    pg = await b.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+    await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
+    conta = {"dentro": 0, "fuori": 0, "contrario": 0}; sbagli = []
+    for kind in conta:
+        for dx in ((-60, -30, 0, 30, 60) if kind == "dentro" else (0, 30)):
+            for mura in (1, -1):
+                r = await pg.evaluate(CASO5, [dx, mura, kind, HALF]); x = r["x"]
+                caso = f"lezione 5 passo 5 {kind}, partenza {dx:+d} m mure {'+' if mura > 0 else '-'}"
+                if not x: sbagli.append(caso + ": la barca non ha attraversato la linea (caso non misurato) " + json.dumps(r)); continue
+                a = abs(x["a"])
+                if kind == "dentro": ok = x["verso"] == 1 and a <= HALF and x["fin"] and r["fatto"] and r["virate"] >= 1
+                elif kind == "fuori": ok = x["verso"] == 1 and a > HALF and not x["fin"] and "Fuori dalla linea" in r["toast"] and r["fin2"] is True
+                else: ok = x["verso"] == -1 and not r["fin"] and not r["fatto"]
+                conta[kind] += 1
+                print(f"  {caso}: taglio a {x['a']:+.1f} m dal centro, verso {x['verso']:+d}, virate {r['virate']}, completato {r['fatto']}", flush=True)
+                if not ok: sbagli.append(f"{caso}: {json.dumps(r)}")
+    await pg.close()
+    print("parte 3, casi misurati per tipo:", conta)
+    return conta, sbagli, errs
+
 FILLTEXT = """(() => { window.__testi = []; const f = CanvasRenderingContext2D.prototype.fillText;
   CanvasRenderingContext2D.prototype.fillText = function(t, ...a){ if (window.__testi.length < 5000) window.__testi.push(String(t)); return f.call(this, t, ...a); }; })();"""
 VECCHI = {"done": {"m0": True, "m3": True}, "best": {"m0": 80, "m1": 130, "m3.2": 300, "m4.3": 340, "r0.2": 200}, "clean": {"m0": True, "m4.3": True, "r0.2": True}}
@@ -123,6 +182,8 @@ async def main():
         b = await p.chromium.launch()
         conta, sbagli, e1 = await parte1(b)
         v, e2 = await parte2(b)
+        c3, s3, e3 = await parte3(b)
+        conta.update({"lezione 5 " + k: n for k, n in c3.items()}); sbagli += s3; e2 += e3
         await b.close()
     zero = [k for k, n in conta.items() if n == 0]
     for s in sbagli[:20]: print("  SBAGLIATO:", s)

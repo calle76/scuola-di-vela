@@ -13,6 +13,154 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 0.20.2 — lezione 5: suggerimento quando la barca arretra, passo 5.4 in due fasi, arrivo a linea nel 5.5
+
+Dell'11 ottobre 2026, dalle registrazioni di Ale `sessione-20261011-1041.txt` (lezione 5, 0.20.1) e `sessione-20261011-1259.txt` (lezione 5, prima versione della 0.20.2). **Il motore non cambia**: il blocco di `step()` è identico byte per byte alla 0.20.1, e le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere.
+
+- **Il difetto.** Nella registrazione la barca va all'indietro in quattro episodi, ma il suggerimento «Stai andando all'indietro…» compare una volta sola, a 226,7 s, nel passo 5.5. **Causa:** gli altri tre episodi sono nel passo 5.4, che ha `hintKind: "none"`, e la riga che nasconde il riquadro nei passi a suggerimenti spenti lo nascondeva anche lì. Il testo veniva calcolato ma restava invisibile. **Non era il testo di fine passo**, che sta in un riquadro a parte. L'ordine delle condizioni del suggerimento era giusto.
+- **Correzione:** il suggerimento «all'indietro» compare anche nei passi a suggerimenti spenti, ma solo se il passo dà la barra. Vale per 5.4, 5.7, 5.8 e per «Poggi e laschi» e «Orzi e cazzi» della lezione 3. Non compare nei passi senza barra: «Da fermi» della lezione 4 e i primi tre passi della lezione 3.
+- **Suggerimento «all'indietro» in due tempi**, dopo la seconda registrazione. Lì la barca è rimasta all'indietro per 15 s, fra 178 e 194 s, con la prua a 45° e la scotta a 100. La barra era stata centrata quando la prua era a 44-45°, mentre la barca arretrava ancora. Il suggerimento di allora («Spingila verso il boma; centrala quando riparti») non diceva di cazzare. Ale ha notato: «in bolina stretta sembra non ripartire». Quando invece ha cazzato (a 106,0, 194,0 e 283,4 s), la barca è andata avanti in 2-3 s.
+  - Prua sotto 45° dal vento, barca che arretra: «Stai andando all'indietro: la barra funziona al contrario. Spingila verso il boma.» (82 caratteri)
+  - Prua a 45° o più, barca che arretra: «Stai andando all'indietro, ma la prua è fuori dall'angolo morto: centra la barra e cazza.» (89 caratteri)
+  - La soglia è la stessa della regola d'uscita del 5.4 (45°). Resta valido il limite «solo nei passi che danno la barra».
+  - **Misura sul motore.** Griglia: prua da 0° a 44° ogni 2°, due mure, partenza a 0, −0,5, −1, −1,5 e −2 nodi, vento 6, 10 e 14 nodi, scotta 100 e 50; sono 1.350 partenze per momento, con la regola d'uscita del 5.4. La barra va verso il boma finché la barca arretra, poi al centro. Per cazzare, la scotta va a 30 alla velocità del tasto ↑ (0,27 al secondo).
+
+    | Quando si cazza | Ripartono | Uscita: mediana / massimo | Prima volta avanti: mediana / massimo | Fermi |
+    |---|---|---|---|---|
+    | (a) appena la prua è a 45° | 1.350 su 1.350 | 4,8 / 10,3 s | 3,9 / 9,3 s | 0 |
+    | (b) quando la barca smette di arretrare | 1.350 su 1.350 | 5,8 / 20,0 s | 4,8 / 19,0 s | 0 |
+    | (c) mai | 1.350 su 1.350 | 5,8 / 24,4 s | 4,8 / 23,4 s | 0 |
+    | (a2) due tempi, quello del suggerimento: barra verso il boma sotto 45°, poi al centro e si cazza | 1.350 su 1.350 | 5,7 / 11,7 s | 4,7 / 10,7 s | 0 |
+
+    Il caso della registrazione: prua a 45° e 46°, scotta 100, −0,5 nodi, vento 10 nodi, due mure.
+    - **Barra al centro, non cazza:** resta ferma a −0,7 nodi dopo 60 s.
+    - Barra al centro e cazza subito: esce in 4,4-4,5 s.
+    - Due tempi: esce in 4,4-4,5 s.
+
+    Tenendo la barra verso il boma finché la barca arretra si esce sempre, anche senza cazzare; cazzare però accorcia il caso peggiore da 24,4 a 10,3-11,7 s. Il testo da 104 caratteri «…Spingila verso il boma; poi centrala e cazza.» è stato scartato: nella sandbox occupa 3 righe, i due testi nuovi 2.
+- **Passo 5.4 «Una virata che non riesce» in due fasi.** Prima il passo si completava appena la barca si piantava; nella registrazione è successo con la barca ancora a +0,2 nodi, prima che arretrasse.
+  - Fase 1 è la condizione della 0.20.1: barca piantata, tenuta 1 s.
+  - Fase 2: la prua torna ad almeno 45° dal vento e la barca va avanti, tenuta 1 s.
+  - **L'uscita sull'altra mura conta**: nessuna fonte dice che sia sbagliata. Va confermata con un velista esperto o altre fonti.
+- **Testi del passo 5.4.**
+  - Il testo del passo diventa: «Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare. Se non rallenti abbastanza, orza fino alla bolina, con la vela lasca.»
+  - Nel testo del passo passa anche la parte su come uscire: «Quando la barca si pianta nel vento comincia ad arretrare. Per uscirne: spingi la barra verso il boma e la prua si allontana dal vento; quando la prua è fuori dall'angolo morto, centra la barra e cazza: la barca riparte.» Nella prima versione della 0.20.2 la fine era «quando la barca smette di arretrare, centra la barra, cazza e riparti».
+  - Il testo di fine passo resta come spiegazione: «La barca si è piantata nel vento: senza velocità il timone non fa effetto, e quando la barca arretra la barra funziona al contrario. Per questo si vira sempre con la barca lanciata.»
+  - **Perché la frase nuova:** al traverso, con la vela tutta lascata, la barca non scende mai sotto 1 nodo. È misurato sul motore a 10 nodi di vento, partendo a 4,1 nodi:
+    - 1,58 nodi a 90° dal vento (nella registrazione 1,6);
+    - 1,12 nodi a 75°;
+    - sotto 1 nodo da 70° in giù, dopo 6-19 s.
+
+    Il passo comincia al traverso dopo «Ricomincia» e quando ci si torna da un passo di pausa.
+- **Passo 5.5 «Risalire il vento»: l'arrivo è una linea**, come nelle prove dalla 0.19. **Rivista la decisione della 0.19** («Lezione 5 invariata», `docs/PROPOSTA-LINEA-E-VISTA.md`).
+  - La linea è 110 m controvento dal punto in cui comincia il passo, 12 m per lato (`FIN_HALF`), perpendicolare alla direzione dalla partenza del passo all'arrivo.
+  - Usa la stessa `finCross` delle prove, al posto della distanza di 12 m dalla boa. Passando fuori dagli estremi compare il messaggio «Fuori dalla linea: passa tra le due boe».
+  - Testi: «L'arrivo è controvento: non puoi puntarlo direttamente», «Raggiungilo a zig-zag…», «Arrivo tagliato. La scia…».
+  - Le tre boe della navigazione libera restano.
+- **Collaudi** (nella sandbox; i caratteri del gioco non sono quelli veri).
+  - `collaudo_suggerimento.py`, nuove parti 3d e 3e.
+    - **3d:** una tabella fissa di 10 passi di lezione, con la barca che arretra a 1 nodo. 10 passi misurati su 10, nessuno sbagliato.
+    - **3e:** il pilota delle registrazioni nel passo 5.4. Escono 12 su 12 (tre casi, due mure, scotta 100 e 50).
+    - **Contro-prova sulla 0.20.1:** la 3d fallisce in 5 passi su 5 a suggerimenti spenti con la barra; nella 3e il suggerimento non compare mai, in 12 su 12.
+    - **Difetto del collaudo trovato e corretto:** il pilota leggeva il testo del riquadro anche quando era nascosto, e sulla 0.20.1 «usciva» lo stesso. Ora legge solo il riquadro visibile. Le 120 uscite della parte della 0.20.1 restano 120 su 120.
+  - `collaudo_suggerimento.py` con il suggerimento in due tempi. Il pilota fa quello che legge: barra verso il boma, poi barra al centro e ↑ tenuto finché resta il secondo testo. C'è un caso 4 dalla registrazione 0.20.2 (prua a 45°, scotta 100, −0,5 nodi) e una parte 3f: la barca arretra già sopra 45° (46°, 50° e 55°, due mure, nel gioco libero e nel 5.4) e il primo testo che compare deve essere il secondo.
+    - Tabella dei passi: 10 su 10.
+    - 5.4: 16 uscite su 16.
+    - 3f: 12 casi su 12 giusti.
+    - Passaggio dal primo al secondo testo letto in 120 prove su 120 (casi 1-3).
+    - Pannello: 0 px con i due testi.
+    - **Cambio di criterio fatto DOPO aver visto i risultati, non una soglia invariata.** Con la regola del 5.4 (almeno 45° dal vento e barca che va avanti), nel gioco libero le uscite sono state 158, 159 e 160 su 160 in tre giri. Le prove lente o senza uscita erano quasi tutte del caso 4. Tracciate: la barca ripartiva davvero, 1-3 nodi in avanti, ma navigava di bolina a 41-44° dal vento per le raffiche.
+      - **Criterio nuovo, solo nel gioco libero (parte 3c):** conta come uscita anche «barca che va avanti con la prua fuori dall'angolo morto per 3 s simulati». Il limite dell'angolo morto è `IRONS_A = 40` (`index.html:1127`), lo stesso della rosa (`ANDATURE`, primo settore fino a 40°).
+      - Nel 5.4 (parte 3e) e nel gioco resta la regola dei 45°.
+      - Aggiunto un caso 5 a 46°. Il caso 4 resta a 45°, perché è il caso della registrazione.
+      - **Risultati:** 200 uscite su 200 nel gioco libero, in 1,2-8,5 s; 20 su 20 nel 5.4.
+      - **Contro-prova** con il criterio nuovo, cioè lo stesso pilota con la freccia dalla parte opposta (tre casi su una mura e il caso 3 sull'altra): non esce in 4 su 4.
+    - **Controllo che fallisce ancora, non modificato:** «partenza da 45° in su: si deve vedere solo il secondo testo». Fallisce nel caso 4 (45°) in 26 prove su 40 e nel caso 5 (46°) in 1 su 40. Con le raffiche la prua scende per un attimo sotto 45° mentre la barca arretra ancora, e compare il primo testo. È uno sfarfallio del gioco sulla soglia, annotato come possibile isteresi in `DUBBI-E-RICERCHE.md`; il gioco non è stato toccato. La parte 3f (46°, 50° e 55°, letto il primo testo che compare) passa 12 su 12.
+  - `collaudo_registro.py`, riscritto il caso del 5.4. Il pilota gira a passi fissi dentro la pagina:
+    - fase 1 con la prua nel vento;
+    - fase 2 con la barra verso il boma (4 partenze: 60° e 90° dal vento, due mure): completate 4 su 4, sulla stessa mura;
+    - fase 2 con la barra lontano dal boma (4 partenze): completate 4 su 4, tutte sull'altra mura.
+    - **Durata in più rispetto alla 0.20.1**, contata dal momento in cui la 0.20.1 completava il passo: 6,2 s verso il boma e 8,8-8,9 s lontano dal boma, in tempo simulato. Nella registrazione di Ale era circa 4-10 s.
+    - Le partenze sulle due mure danno tempi identici, perché il motore è simmetrico e senza caso: le partenze diverse sono in pratica 2.
+    - `i`: 7 su 7.
+  - `collaudo_linea.py`, nuova parte 3. Un pilota bordeggia nel passo 5.5 e il collaudo ricalcola la linea per conto suo. Partenze:
+    - dentro: 10 partenze (spostate di 0, ±30 e ±60 m, due mure), tutte completate con taglio fra −4,8 e +4,8 m dal centro e 4-7 virate;
+    - fuori: 4 partenze, taglio a 21,7-28,2 m dal centro; il passo non si completa, compare il messaggio, poi la barca rientra e completa;
+    - contrario: 4 partenze, nessun completamento.
+
+    In tutto: 234 casi misurati, 0 sbagliati, 8 verifiche su 8. Schermata del 5.5: linea a scacchi fra due boe arancioni, scritta «Arrivo» e freccia fuori schermo «110 m».
+  - `collaudo_pannello.py` misura ora ogni passo anche **da completato**, con testo di fine passo e «Avanti» visibili: 32 passi. Il 5.4 completato ha 0 px di eccesso (71 px liberi, nella sandbox). **Misura sul PC di Ale, caratteri veri, 1360×650:** sette passi completati eccedono: lezione 1 passo 7 +12 px, lezione 2 passo 4 +44, lezione 2 passo 6 +20, lezione 3 passo 5 +79, lezione 5 passo 3 +7, lezione 6 passo 2 +37, lezione 6 passo 4 +13. A 1360×768 nessuno. Gli stessi sette valori nei giri delle 14:21 e delle 21:34. Nella sandbox, coi caratteri sbagliati, se ne vedevano solo due (+3 e +7 px): quei numeri non valgono. **Non sono dovuti alla 0.20.2:** erano nascosti perché prima lo stato «completato» non veniva misurato, quindi non c'è un confronto sul PC con la 0.20.1. **Da sistemare**, nessun intervento in questa versione (`docs/CONTENUTI-DA-VERIFICARE.md`, «Da sistemare dopo la 0.20»).
+  - `collaudo_lezioni.py`: 15 su 16, con il caso di attesa noto («L1 cazzare (primo tratto)» in un giro). Un primo giro lanciato insieme a un altro collaudo aveva 5 passi della lezione 1 non completati, con la barca scuffiata: rilanciato da solo è tornato come sulla 0.20.1, perché il collaudo va in tempo reale.
+  - `collaudo_esame.py`: banca valida, giusta più lunga in 3 su 26. Nessuna domanda nomina la boa del 5.5.
+  - `collaudo_versione.py`.
+- **Domanda d'esame 22 allineata al passo 5.4.** Il passo accetta l'uscita sull'altra mura, ma due risposte sbagliate della domanda erano proprio quella uscita: «Spingi la barra lontano dal boma, come per poggiare andando avanti» e «Orzi ancora, finché il vento passa dall'altra parte». Le ho tolte; nessuna fonte dice che quell'uscita sia sbagliata. La giusta diventa «Spingi la barra verso il boma, poi centri e cazzi» (prima «Spingi la barra verso il boma e la centri quando riparti»: non diceva di cazzare, come il suggerimento di allora). Resta anche «Muovi la barra di continuo da un lato all'altro».
+  - Risposte sbagliate nuove: «Cazzi e lasci la scotta di continuo, senza toccare la barra» e «Tieni ferma la prua con la barra, senza farla girare». **Sono sbagliate solo per misura nel gioco: nessuna fonte ne parla.**
+  - Spiegazione: «Andando all'indietro la barra funziona al contrario: spinta verso il boma, la prua si allontana dal vento. Quando la prua è fuori dall'angolo morto si centra la barra e si cazza, e la vela torna a spingere. Finché la prua resta nel vento, la vela non può spingere la barca in avanti.» Non parla dell'altra mura.
+  - **Misura sul motore**, con la griglia delle risposte sbagliate di `angolo_morto.js`: prua da 0° a 44° dal vento, due mure, da 0 a −2 nodi, vento 6, 10 e 14 nodi, scotta 100 e 50, 60 s. La regola di uscita è quella del 5.4: almeno 45° dal vento e barca che va avanti, tenuto 1 s. Ogni risposta è misurata due volte: con la scotta ferma come nella griglia, e con un giocatore che cazza a 30 quando la prua arriva a 45°.
+
+    | Risposta | Scotta ferma | Giocatore che cazza |
+    |---|---|---|
+    | «Cazzi e lasci la scotta di continuo, senza toccare la barra» (ogni secondo, barra al centro) | 0 su 1.620 | 0 su 1.620 |
+    | «Tieni ferma la prua con la barra, senza farla girare» (correzione graduale o barra a fondo) | 0 su 1.620 | 0 su 1.620 |
+    | controllo: «Muovi la barra di continuo», cambio ogni secondo | 26 su 1.620, come nella 0.20.1 | — |
+
+  - **Nota sulla riga di riferimento.** Con la stessa griglia anche «barra a fondo lontano dal boma, tenuta» dà 0 uscite su 1.620, in tutti e due i modi. Eppure nel 5.4 quella uscita riesce: 4 su 4 sull'altra mura in `collaudo_registro.py`, dove il pilota centra la barra dopo che la prua ha attraversato il vento. La griglia tiene la barra lontano dal boma anche dopo l'attraversamento: il boma passa dall'altra parte, la barra con lui, e la prua torna nel vento. **Questa griglia non misura l'uscita sull'altra mura.** Per questo sono state scartate, anche con 0 uscite, «barra a piccoli colpi dalla parte opposta al boma» e «barra a metà dalla parte opposta al boma».
+  - **Altre candidate scartate:**
+    - «Tieni la prua nel vento con la barra finché la barca riparte»: 0 su 1.620, ma quasi uguale alla «Tieni ferma la prua»;
+    - «Tieni la barra al centro finché arretri, poi la spingi verso il boma»: 0 su 1.620, ma ambigua; è la sequenza che nella registrazione di Ale ha funzionato (barra al centro per 14 s, poi verso il boma);
+    - «barra verso il boma tenuta anche dopo», 1.612 su 1.620;
+    - «barra verso il boma finché arretra, poi lontano», 1.620 su 1.620.
+  - La domanda resta «da confermare con un velista esperto o altre fonti».
+  - Corretto il dato della 0.20.1 «barra lontano dal boma: non esce in nessuna delle 60 prove». Quel collaudo contava solo l'uscita sulla stessa mura e fermava la prova dopo circa 12 s; lasciata fare, la barca esce sull'altra mura. Corretto anche in `DUBBI-E-RICERCHE.md`, sez. 3.
+- **Terza registrazione (`sessione-20261011-1432(3).txt`, lezione 3, passi 3.11 e 3.12): soglia unica di 40°, isteresi, testo B.** Decisioni di Ale dopo una proposta con misure. Tutto resta dentro la 0.20.2, senza una 0.20.3 separata. **Questa voce sostituisce** le soglie di 45° e i testi scritti più sopra per il suggerimento e per il 5.4.
+  - **Cosa mostrava la registrazione.**
+    - Nel 3.11 la barca riparte in avanti a 44° e 0,3 nodi (382,7 s) e non compare nessun aiuto. A 384,7 s Ale preme ← a 37° con 0,4 nodi in avanti.
+    - Nel 3.12, a 431,5 s, la barca arretra a −1,1 nodi con il primo testo visibile, e Ale spinge per 0,7 s dalla parte opposta al boma. Quest'ultimo è un errore di lato con l'aiuto già sullo schermo: non è stato affrontato (vedi «dopo la 1.0»).
+  - **Soglia unica di 40°** (`IRONS_A`): rosa, voce Andatura, registro, suggerimento e regola d'uscita del 5.4. Prima il suggerimento e il 5.4 usavano 45°. Scartati i 45° per tutto: il motore naviga fra 40° e 44° (da 1,3 a 4,7 nodi). Tabella dei costi in `FISICA-E-TARATURE.md`, «Da tenere presente»: misura sul solo motore, si esce circa 1 s più tardi, 1.404 su 1.404, nessuna ricaduta.
+  - **Isteresi:** dal secondo testo si torna al primo solo sotto 37°. Lo stato sta in `S.indietro` (0 niente, 1 barra verso il boma, 2 centra e cazza, 3 avanti piano). È aggiornato a ogni passo di simulazione da `backCheck()`, fuori da `step()`, e si azzera con una barca nuova e in scuffia.
+  - **Testi:**
+    - fase 1, «All'indietro la barra funziona al contrario: spingila verso il boma, poi centrala e cazza.» (89 caratteri);
+    - fase 2 invariata;
+    - **B**, «Ora vai avanti piano: barra al centro, cazza e lascia prendere velocità.» (71 caratteri). Compare solo dopo un episodio all'indietro, con la barca che va avanti sotto 1 nodo e la prua ad almeno 37°. Si vede anche nei passi a suggerimenti spenti che danno la barra.
+  - **Passo 5.4:** secondo paragrafo accorciato, per i +18 px misurati da Ale a 1360×650: «Se la barca si pianta nel vento, arretra. Per uscirne spingi la barra verso il boma: la prua si allontana dal vento. Fuori dall'angolo morto centra la barra e cazza: la barca riparte.» La regola d'uscita è ora prua ad almeno 40° e barca che va avanti, tenuta 1 s.
+  - **Motore:** il blocco di `step()` è identico byte per byte; le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere.
+  - **Collaudi**, con i criteri dichiarati nella proposta prima dei risultati. Misure nella sandbox, con caratteri non veri.
+    - `collaudo_suggerimento.py`:
+      - il controllo sul testo «da 40° in su solo il secondo testo», esteso al caso 2 (42°), **passa**: 0 errori su 40 nei casi 2, 4 e 5 (prima 26 su 40 nel caso 4 e 1 su 40 nel caso 5);
+      - ritorni al primo testo con la prua da 37° in su: 0; sotto 37°: 0;
+      - casi 1 e 3: primo testo e poi il secondo in 80 prove su 80;
+      - 5.4: 20 su 20;
+      - 3f: 12 su 12;
+      - caso 6: 40 su 40;
+      - caso 7: B mai, in 40 prove misurate su 40;
+      - pannello: 0 px con i tre testi.
+    - **Controllo che fallisce, non modificato:** nel gioco libero escono **198 prove su 200**. Le due che mancano sono del caso 4 (45°, mure a sinistra): scotta 100 seme 3 e scotta 50 seme 10. La barca esce, ma durante l'uscita la prua scende a 41° e a 38° dal vento: il criterio della 0.20.1 non ammette più di 3° sotto la partenza. Con l'isteresi il secondo testo resta fra 37° e 40°, e il pilota tiene la barra al centro invece di spingerla verso il boma.
+    - `collaudo_registro.py`: 15 su 15. 5.4 verso il boma 4 su 4 sulla stessa mura; lontano dal boma 4 su 4 sull'altra mura; durata in più rispetto alla 0.20.1 da 5,9 a 8,7 s.
+    - `collaudo_pannello.py`, sul PC di Ale (caratteri veri, 1360×650): il passo 5.4 completato è a 0 px (nel giro delle 14:21 era +18, prima dell'accorciamento). Restano i sette eccessi dello stato «completato» (lezione 1 passo 7 +12, lezione 2 passo 4 +44, lezione 2 passo 6 +20, lezione 3 passo 5 +79, lezione 5 passo 3 +7, lezione 6 passo 2 +37, lezione 6 passo 4 +13), non dovuti alla 0.20.2 e da sistemare. A 1360×768 nessuno.
+    - `collaudo_versione.py`: OK.
+    - `tests/fisica/angolo_morto.js`: la parte 1 è passata alla regola dei 40° e dà uscite identiche alla regola dei 45° (2.180 su 2.196). La parte 2 resta con la regola dei 45° con cui è stata misurata la domanda 22.
+- **Testo B anche quando la barca smette di arretrare con la prua sotto 37° (deciso dopo il collaudo a mano, `sessione-20261011-1749(3).txt`, passo 3.11, 457-466 s).**
+  - **Il difetto.** Lo stato del suggerimento si spegneva se la barca smetteva di arretrare con la prua sotto 37°. Nel 3.11 la barca smette di arretrare fra 458,5 s (32°) e 459,5 s (37°). Poi la prua sale a 37°, 41° e 38° con 0,1, 0,7 e 1,1 nodi, ma B non compare: 0 s a schermo invece di circa 1,7 s.
+  - **Correzione:**
+    - lo stato resta armato finché la barca non supera 1 nodo, scuffia, o passano **10 s** dalla fine dell'arretramento (`backCheck(dt)`);
+    - B si mostra solo con la prua ad almeno 37°;
+    - i 10 s sono un'ipotesi nostra: sul solo motore, con un pilota che segue i testi, dalla fine dell'arretramento a 1 nodo passano 1,7 s di mediana e 4,8 s al massimo (1.390 partenze misurate su 1.404; nelle altre 14 la barca non arretra mai);
+    - l'isteresi non cambia; il motore resta identico byte per byte, e `polare.js` e `raffiche_e_virate.js` danno uscite identiche.
+  - **Collaudi**, `collaudo_suggerimento.py`, con i criteri dichiarati prima dei risultati. Misure nella sandbox, con caratteri non veri.
+    - **Caso 8:** la barca arretra con la prua a 30-36°, smette di arretrare sotto 37°, poi il pilota la fa poggiare fino a 37°. **40 riusciti su 40, 0 non misurati.** B compare entro 0,5 s da quando la prua è ad almeno 37° e la barca è sotto 1 nodo, la barca supera 1 nodo entro 30 s, e B sparisce entro 0,5 s da lì.
+    - **Contro-prova:** lo stesso caso 8 sull'`index.html` di prima dà B in **0 prove su 40** misurate, 0 non misurate.
+    - **Tempo massimo:** barca tenuta a +0,3 nodi con la prua a 40°. B sparisce a 10,05, 10,08, 10,07 e 10,05 s (4 su 4 fra 10 e 10,5 s).
+    - Invariati:
+      - caso 6, 40 su 40;
+      - caso 7, B mai in 40 prove misurate;
+      - 5.4, 20 su 20;
+      - 3f, 12 su 12;
+      - casi 1 e 3, 80 su 80;
+      - nessun ritorno al primo testo con la prua da 37° in su;
+      - pannello 0 px.
+    - **Criterio che fallisce ancora, invariato** (`tests/collaudo_suggerimento.py:151`, dalla 0.20.1: la prua non deve scendere più di 3° sotto la partenza). In questo giro le uscite nel gioco libero sono 199 su 200, nel giro precedente 198. La prova che fallisce non è la stessa: caso 4, mure a sinistra, scotta 50, seme 6, prua scesa a 39°. Nel giro prima erano il seme 3 con scotta 100 (41°) e il seme 10 con scotta 50 (38°). I semi fissi non rendono la prova del tutto ripetibile, perché il collaudo gira in tempo reale. In questo giro il tempo per uscire va da 4,2 a 21,4 s simulati (nel giro prima da 4,4 a 9,8 s): non è un criterio e non ne ho cercato la causa.
+- **Documenti:** `FISICA-E-TARATURE.md` (soglia unica e tabella dei costi), `CONTENUTI-DA-VERIFICARE.md` (testo del 5.4, rallentare orzando, uscita sull'altra mura, domanda 22, tutte «da confermare con un velista esperto o altre fonti»), `COLLAUDI.md` e `DUBBI-E-RICERCHE.md`.
+
 ## 0.20.1 — uscire dall'angolo morto: i testi dicono quello che il gioco fa
 
 Dell'11 ottobre 2026. **Il motore non cambia**: il blocco di `step()` è identico byte per byte alla 0.20, e le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere.
@@ -21,7 +169,7 @@ Dell'11 ottobre 2026. **Il motore non cambia**: il blocco di `step()` è identic
 - **Misura del verso della barra, prima di scrivere i testi.** Regola: mentre la barca arretra, barra a fondo **dalla parte del boma**; quando smette, barra al centro. Scotta ferma.
   - Griglia sul motore, prua da 0° a 60° dal vento ogni 2° **su tutte e due le mure**, velocità iniziale 0, −0,25, −0,5, −1, −1,5 e −2 nodi, scotta 100 e 50, vento 6, 10 e 14 nodi: **2.196 partenze** (366 per vento e scotta). Ne escono (prua ad almeno 45° dal vento e barca che va avanti, entro 60 s) **2.180**. A 10 nodi il tempo per uscire ha mediana 6,7 s e massimo 22,4 s con scotta 100; mediana 3,3 s e massimo 6,4 s con scotta 50.
   - Le altre **16** sono 8 configurazioni (vento, scotta, angolo) su tutte e due le mure. Partono tutte **già fuori dall'angolo morto** (50-58° dal vento), da ferme, e restano ferme a 52-58° con la vela lascata e la scotta tenuta ferma. 12 arretrano al massimo di 0,052 nodi e 4 non arretrano mai; il suggerimento, che compare da circa 0,1 nodi all'indietro, non si accende mai. Nessuna partenza dentro l'angolo morto resta bloccata.
-  - Con la barra **lontano dal boma** la prua attraversa il vento e non esce in nessuna delle 60 prove fatte nel gioco libero (tre casi, scotta 100 e 50, 10 semi).
+  - Con la barra **lontano dal boma** la prua attraversa il vento e non esce in nessuna delle 60 prove fatte nel gioco libero (tre casi, scotta 100 e 50, 10 semi). *Corretto nella 0.20.2: quel collaudo contava solo l'uscita sulla stessa mura; lasciata fare, la barca esce sull'altra.*
 - **Passo 5.4 «Una virata che non riesce», testo finale:** «Per uscirne: spingi la barra verso il boma e la prua si allontana dal vento; quando la barca smette di arretrare, centra la barra, cazza e riparti.» La condizione per completare il passo non cambia.
 - **Suggerimento dal vivo:** «Stai andando all'indietro: la barra funziona al contrario. Spingila verso il boma; centrala quando riparti.» (107 caratteri contro 110). Non serve limitarlo all'angolo morto.
 - **Domanda d'esame 22:** giusta «Spingi la barra verso il boma e la centri quando riparti». Sbagliate:

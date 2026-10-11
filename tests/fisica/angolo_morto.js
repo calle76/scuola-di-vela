@@ -1,8 +1,9 @@
-// Uscita dall'angolo morto con la barca che arretra (0.20.1). Uso: node angolo_morto.js   (circa un minuto)
+// Uscita dall'angolo morto con la barca che arretra (0.20.1; soglia d'uscita 40° = IRONS_A dalla 0.20.2, prima 45°). Uso: node angolo_morto.js   (circa un minuto)
 // 1) Regola del passo 5.4 e del suggerimento: finché la barca arretra, barra a fondo dalla parte del boma; poi barra al centro.
 //    Griglia: prua da 0° a 60° dal vento ogni 2°, tutte e due le mure, velocità iniziale da 0 a −2 nodi, vento 6/10/14 nodi,
-//    scotta 100 e 50 (ferma). Esce = prua ad almeno 45° dal vento e barca che va avanti, entro 60 s.
-// 2) Risposta sbagliata della domanda d'esame 22: barra mossa di continuo da un lato all'altro (tre ritmi), da 0° a 44° dal vento.
+//    scotta 100 e 50 (ferma). Esce = prua ad almeno 40° dal vento e barca che va avanti, entro 60 s.
+// 2) Risposta sbagliata della domanda d'esame 22: barra mossa di continuo da un lato all'altro (tre ritmi), da 0° a 44° dal vento;
+//    questa parte resta con la regola di 45° con cui è stata misurata la domanda nella 0.20.2.
 // Solo motore (tests/fisica/motore.js), senza raffiche: il collaudo nel gioco vero è in collaudo_suggerimento.py.
 const { step } = require("./motore.js");
 const KN = 1.944, DT = 1 / 240, T = 60;
@@ -26,7 +27,7 @@ for (const tk of [6, 10, 14]) for (const sh of [1, 0.5]) {
       const indietro = S.u < 0; if (indietro) arretrata = true;
       step(S, { sheet: sh, tiller: indietro ? (S.boomSide || 0) : 0 }, { twd: 0, tws: tk / KN }, DT);
       umin = Math.min(umin, S.u);
-      if (t === null && twaOf(S) >= 45 && S.u > 0.05) t = i * DT;
+      if (t === null && twaOf(S) >= 40 && S.u > 0.05) t = i * DT;
     }
     if (t !== null) { if (arretrata) tempi.push(t); }
     else fuori.push(`${p.lato > 0 ? "dritta" : "sinistra"} ${p.twa}° ${p.kn} kn: finisce a ${twaOf(S).toFixed(0)}° e ${(S.u * KN).toFixed(2)} kn, all'indietro al massimo ${(-umin * KN).toFixed(3)} kn`);

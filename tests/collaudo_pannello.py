@@ -23,13 +23,19 @@ async def main():
         })""")
         caratteri_ok = all(caratteri.values())
         print("caratteri del gioco caricati:", caratteri_ok, caratteri)
-        eccede = []; misure = []
+        eccede = []; misure = []; n_fatti = 0
         for li, n in enumerate([13, 7, 13, 5, 9, 5]):
             await pg.evaluate(f"__sv.openItem(['l',{li}])")
             for k in range(n):
                 await pg.evaluate(f"__sv.showStep({k})"); await pg.wait_for_timeout(100)
                 d = await pg.evaluate(PH); misure.append(d)
                 if d > 0: eccede.append(f"lezione {li+1} passo {k+1}: +{d}")
+                # 0.20.2: anche a passo completato (testo di fine passo e «Avanti» visibili), come fa completeStep() nel gioco
+                fatto = await pg.evaluate("""()=>{const f=document.getElementById('lFeedback'), n=document.getElementById('lNext');
+                  if (!f.textContent.trim()) return false; f.classList.remove('pending'); f.hidden=false; n.classList.remove('pending'); n.hidden=false; return true}""")
+                if fatto:
+                    await pg.wait_for_timeout(50); d = await pg.evaluate(PH); misure.append(d); n_fatti += 1
+                    if d > 0: eccede.append(f"lezione {li+1} passo {k+1} completato: +{d}")
         for it, nome in [("['m',0]", "prova 1"), ("['m',4]", "prova 5"), ("'free'", "navigazione libera")]:
             await pg.evaluate(f"__sv.openItem({it})"); await pg.wait_for_timeout(400)
             d = await pg.evaluate(PH); misure.append(d)
@@ -48,7 +54,8 @@ async def main():
         print(f"  regata dopo il via: riga dei tasti eccede di {r[0]} px, «Q vista» nella riga {r[1]}")
         if r[0] > 0: eccede.append(f"regata: riga dei tasti tagliata di {r[0]} px")
         await pg.screenshot(path=str(OUT / f"P_regata_{W}x{H}.png"))
-        print(f"finestra {W}x{H}: eccesso massimo del pannello (pixel): {max(misure)}")
+        print(f"finestra {W}x{H}: eccesso massimo del pannello (pixel): {max(misure)}; passi misurati anche da completati: {n_fatti}")
+        if n_fatti == 0: eccede.append("nessun passo misurato da completato: misura vuota")
         print(f"finestra {W}x{H}: pannello che eccede:", eccede or "nessuno")
         if not caratteri_ok: print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, le misure sopra non sono attendibili")
         # riquadro delle istruzioni

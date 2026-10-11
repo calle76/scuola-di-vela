@@ -638,14 +638,23 @@ function step(S, C, E, dt){
       cond: (I, S, B) => S.tacks > B.tacks && I.twa >= 40 && I.twa <= 78 && I.kn > 1.2, hold: 0.8,
       done: "Virata riuscita: il boma è passato dall'altra parte e il timoniere ha cambiato lato. A bordo si annuncia così: «Pronti a virare?», «Pronti!», «Viro!»." },
     { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
-      text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare."],
-      cond: (I, S) => (I.twa < 40 && I.kn < 0.4) || S.u < -0.1, hold: 1,
-      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto. Poi comincia ad <em>arretrare</em>, e andando all'indietro la barra funziona al contrario. Per uscirne: spingi la barra <em>verso il boma</em> e la prua si allontana dal vento; quando la barca smette di arretrare, centra la barra, cazza e riparti. Per questo <em>si vira sempre con la barca lanciata</em>." },
+      text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare. Se non rallenti abbastanza, orza fino alla bolina, con la vela lasca.",
+             "Se la barca si pianta nel vento, <em>arretra</em>. Per uscirne spingi la barra <em>verso il boma</em>: la prua si allontana dal vento. Fuori dall'angolo morto centra la barra e cazza: la barca riparte."],
+      // 0.20.2, due fasi. Fase 1: barca piantata (la condizione della 0.20.1, tenuta 1 s). Fase 2: uscita, prua ad almeno IRONS_A (40°) dal vento
+      // e barca che va avanti, tenuta 1 s (hold); vale su tutte e due le mure. Lo stato delle fasi sta in B, che showStep rifà a ogni passo.
+      cond: (I, S, B) => {
+        if (!B.piantata){
+          if ((I.twa < 40 && I.kn < 0.4) || S.u < -0.1){ if (B.t1 === undefined) B.t1 = simTime; if (simTime - B.t1 >= 1) B.piantata = true; } else B.t1 = undefined;
+          return false;
+        }
+        return I.twa >= IRONS_A && S.u > 0.05;
+      }, hold: 1,
+      done: "La barca si è piantata nel vento: senza velocità il timone non fa effetto, e quando la barca arretra la barra funziona al contrario. Per questo <em>si vira sempre con la barca lanciata</em>." },
     { title: "Risalire il vento", tiller: true, sheet: true, hud: 1, hintKind: "tt", mark: [0, -110],
-      text: ["Riparti. La boa è controvento: non puoi puntarla direttamente.",
-             "Raggiungila a zig-zag: un tratto di bolina su una mura, una virata, un tratto sull'altra. Si chiama <em>bordeggiare</em>, e ogni tratto è un <em>bordo</em>."],
+      text: ["Riparti. L'arrivo è controvento: non puoi puntarlo direttamente.",
+             "Raggiungilo a zig-zag: un tratto di bolina su una mura, una virata, un tratto sull'altra. Si chiama <em>bordeggiare</em>, e ogni tratto è un <em>bordo</em>."],
       cond: (I, S, B) => S.markReached && S.tacks > B.tacks,
-      done: "Boa raggiunta. La scia mostra quanto è più lunga la strada rispetto alla distanza in linea d'aria: risalire il vento costa tempo." },
+      done: "Arrivo tagliato. La scia mostra quanto è più lunga la strada rispetto alla distanza in linea d'aria: risalire il vento costa tempo." },
     { title: "La strambata", ...PAUSE, zoom: 1.2, rose: true, maneuvers: true,
       text: ["La strambata è più delicata. In poppa la vela è tutta aperta: quando il vento passa dall'altro lato, il boma attraversa la barca di colpo. Se lo fa con violenza può far scuffiare la barca o colpire qualcuno in testa.",
              "Per questo la si fa <em>controllata</em>: si cazza la vela finché il boma è a circa 45° dal centro barca, si poggia finché il vento passa dall'altro lato, poi subito si lasca."] },
@@ -781,7 +790,7 @@ function step(S, C, E, dt){
     [ ["Cambiare mure", "Che cos'è una strambata?", "Cambiare mure con la poppa che attraversa il vento", ["Cambiare mure con la prua che attraversa il vento", "Poggiare fino a portare il vento esattamente da dietro", "Fermarsi con la prua nel vento e poi arretrare"], "Nella strambata è la poppa ad attraversare il vento; nella virata è la prua."],
       ["Prepararsi a virare", "Che cos'è l'abbrivio?", "La velocità che la barca ha già e conserva", ["La spinta del vento sulla vela cazzata", "La forza che fa sbandare la barca in raffica", "Il tratto di bolina fra una virata e l'altra"], "È la velocità che porta la barca attraverso l'angolo morto, dove la vela non spinge."],
       ["La strambata", "Perché in poppa la strambata è delicata?", "Il boma attraversa la barca di colpo", ["La prua si pianta nel vento e si ferma", "La vela smette di spingere del tutto", "Il timone comincia a funzionare al contrario"], "Con la vela tutta aperta il boma attraversa la barca con violenza: può far scuffiare o colpire qualcuno."],
-      ["Una virata che non riesce", "La barca si è piantata nel vento e comincia ad arretrare. Come ne esci?", "Spingi la barra verso il boma e la centri quando riparti", ["Spingi la barra lontano dal boma, come per poggiare andando avanti", "Muovi la barra di continuo da un lato all'altro", "Orzi ancora, finché il vento passa dall'altra parte"], "Andando all'indietro la barra funziona al contrario: verso il boma, la prua si allontana dal vento. Appena la barca va di nuovo avanti, la barra si centra."] ],
+      ["Una virata che non riesce", "La barca si è piantata nel vento e comincia ad arretrare. Come ne esci?", "Spingi la barra verso il boma, poi centri e cazzi", ["Muovi la barra di continuo da un lato all'altro", "Cazzi e lasci la scotta di continuo, senza toccare la barra", "Tieni ferma la prua con la barra, senza farla girare"], "Andando all'indietro la barra funziona al contrario: spinta verso il boma, la prua si allontana dal vento. Quando la prua è fuori dall'angolo morto si centra la barra e si cazza, e la vela torna a spingere. Finché la prua resta nel vento, la vela non può spingere la barca in avanti."] ],
     [ ["Raffiche e sbandamento", "Che cos'è lo sbandamento?", "L'inclinazione della barca spinta dal vento sulla vela", ["Lo scivolamento della barca di lato, verso sottovento", "La rotazione della prua verso il vento in raffica", "Il rallentamento improvviso della barca in raffica"], "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo sbandamento."],
       ["La scuffia", "Quale comportamento in raffica porta più facilmente alla scuffia?", "Tenere la vela tutta cazzata senza lascare", ["Lascare la scotta appena entri nella raffica", "Orzare un poco tenendo la vela regolata", "Sporgersi fuori bordo per fare contrappeso"], "Con la vela tutta cazzata e senza lascare, la forza della raffica fa sbandare la barca fino a rovesciarla."],
       ["Assorbire una raffica", "La raffica è passata e la barca si raddrizza. Che cosa fai con la vela?", "La cazzi di nuovo fino a regolarla", ["Lasci ancora un po' di scotta", "Non la tocchi più fino alla boa", "La fai sbattere per rallentare"], "In raffica si lasca per ridurre la forza sulla vela; quando la raffica passa si cazza di nuovo."],
@@ -851,14 +860,14 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.20.1"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.20.2"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
     S = { x, y, h, u: 1.5, vl: 0, r: 0, boomSide: twa >= 0 ? -1 : 1, boom: 30, heel: 0, heelRate: 0, hike: 0.3,
           capsized: false, righting: 0, capSide: 1, prevSide: sgn(twa), dispBoom: (twa >= 0 ? -1 : 1) * 30, boomRate: 6,
           tacks: 0, gybesV: 0, gybesC: 0, capsizes: 0, markIdx: 0, time: 0, finished: false,
-          lessonMark: null, markReached: false, shake: 0, toast: null };
+          lessonMark: null, markReached: false, shake: 0, toast: null, indietro: 0 };
     ctl.sheet = sheet; ctl.tiller = 0;
     wake.length = 0;
     Object.assign(local, env);
@@ -1134,6 +1143,16 @@ function step(S, C, E, dt){
     if (ironsT >= IRONS_T && ironsT - dt < IRONS_T){ reg.irons++; reg.ironsSec += IRONS_T; }
     else if (ironsT > IRONS_T) reg.ironsSec += dt;
   }
+  // 0.20.2: fasi del suggerimento «all'indietro» in S.indietro: 0 niente, 1 barra verso il boma, 2 centra e cazza,
+  // 3 barca che ha smesso di arretrare. Isteresi: dalla fase 2 si torna alla 1 solo sotto IRONS_A − 3° (37°),
+  // perché con le raffiche la prua oscilla attorno alla soglia e il testo lampeggiava. La fase 3 resta armata a qualunque angolo
+  // finché la barca è sotto 1 nodo, per al massimo 10 s dalla fine dell'arretramento (ipotesi nostra: sul motore la barca supera
+  // 1 nodo in 4,8 s al massimo); il testo B si mostra solo con la prua ad almeno 37°. Si azzera con una barca nuova (freshState) e in scuffia.
+  function backCheck(dt){
+    const A = Math.abs(norm180(local.twd - S.h));
+    if (S.u < -0.05){ S.indietro = A >= IRONS_A || (S.indietro === 2 && A >= IRONS_A - 3) ? 2 : 1; S.indietroT = 0; }
+    else { S.indietroT = (S.indietroT || 0) + dt; S.indietro = S.indietro && S.u < IRONS_U && S.indietroT <= 10 ? 3 : 0; }
+  }
   const regTotal = () => reg.capsizes + reg.gybesV + reg.irons + reg.wrongMarks + reg.contacts + reg.ocs + reg.outLine;
   function regText(){
     const n = (k, one, many) => k === 1 ? one : k + " " + many, parts = [];
@@ -1180,7 +1199,8 @@ function step(S, C, E, dt){
     else if (!prev || prev.pause) { freshState(0, 0, 90, st.autoTrim ? 0.4 : 0.3); }
     base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes };
     S.markReached = false;
-    S.lessonMark = st.mark ? { x: S.x + st.mark[0], y: S.y + st.mark[1] } : null;
+    // 0.20.2: il punto del passo è una linea d'arrivo (FIN_HALF m per lato), perpendicolare alla direzione dalla partenza del passo all'arrivo
+    S.lessonMark = st.mark ? { x: S.x + st.mark[0], y: S.y + st.mark[1], label: "Arrivo", fin: true, nx: st.mark[0] / Math.hypot(...st.mark), ny: st.mark[1] / Math.hypot(...st.mark) } : null;
     if (st.course) S.course = Math.round(norm360(S.h) / 5) * 5;
     $("lStep").textContent = "Passo " + (i + 1) + " di " + steps.length;
     $("lTitle").textContent = st.title;
@@ -1419,9 +1439,10 @@ function step(S, C, E, dt){
       const n = 4; for (let i = 0; i < n; i++) info = step(S, ctl, local, dt / n);
       detectManeuvers();
       ironsCheck(dt);
+      backCheck(dt);
       if (S.heel > BOAT.capsizeAt || S.heel < -45){
         S.capCause = S.gybeAt !== undefined && simTime - S.gybeAt < 4 ? "gybe" : "heel";
-        S.capsized = true; S.capsizes++; regAdd("capsizes"); S.capSide = S.heel > 0 ? S.boomSide : -S.boomSide; S.u = 0; S.vl = 0; S.r = 0; S.heel = 90 * Math.sign(S.heel); S.heelRate = 0;
+        S.capsized = true; S.indietro = 0; S.capsizes++; regAdd("capsizes"); S.capSide = S.heel > 0 ? S.boomSide : -S.boomSide; S.u = 0; S.vl = 0; S.r = 0; S.heel = 90 * Math.sign(S.heel); S.heelRate = 0;
       }
     } else {
       const to = (local.twd + 180) * D2R;
@@ -1446,7 +1467,10 @@ function step(S, C, E, dt){
       wake.push({ x: S.x - Math.sin(h) * 2.1, y: S.y + Math.cos(h) * 2.1, nx: Math.cos(h), ny: Math.sin(h), t: simTime });
       if (wake.length > 140) wake.shift();
     }
-    if (S.lessonMark && !S.markReached && Math.hypot(S.x - S.lessonMark.x, S.y - S.lessonMark.y) < 12) S.markReached = true;
+    if (S.lessonMark && !S.markReached){
+      const f = finCross(S.lessonMark, px0, py0, S.x, S.y);
+      if (f >= 0) S.markReached = true; else if (f === -2) toast("Fuori dalla linea: passa tra le due boe");
+    }
     // obiettivi
     if (mode === "lesson" && st.cond && !stepDone){
       if (st.cond(readI(), S, base)){ holdT += dt; if (holdT >= (st.hold || 0.3)) completeStep(); } else holdT = 0;
@@ -2006,10 +2030,14 @@ function step(S, C, E, dt){
     // a scotta tutta lascata «lasca» e «troppo cazzata» sarebbero consigli sbagliati, e in poppa i filetti non si usano.
     if (I.tt === "lee" && I.sheet > 0.99){ cls = "good"; msg = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."; }
     const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
+    let back = false; // 0.20.2: «all'indietro» si mostra anche nei passi a suggerimenti spenti, se il passo dà la barra
     if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
     else if (S.heel > 25){ cls = "bad"; msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco." : "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
-    else if (S.u < -0.05){ cls = "bad"; msg = "Stai andando all'indietro: la barra funziona al contrario. Spingila verso il boma; centrala quando riparti."; }
+    // 0.20.2, fasi di backCheck(): sotto IRONS_A (40°) la barra verso il boma, poi barra al centro e cazzare, poi lasciar prendere velocità
+    else if (S.indietro === 1){ back = true; cls = "bad"; msg = "All'indietro la barra funziona al contrario: spingila verso il boma, poi centrala e cazza."; }
+    else if (S.indietro === 2){ back = true; cls = "bad"; msg = "Stai andando all'indietro, ma la prua è fuori dall'angolo morto: centra la barra e cazza."; }
+    else if (S.indietro === 3 && I.twa >= IRONS_A - 3){ back = true; cls = ""; msg = "Ora vai avanti piano: barra al centro, cazza e lascia prendere velocità."; }
     else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = ""; msg = "Raffica in arrivo: se la barca sbanda troppo, lasca; altrimenti è un'occasione per andare più veloci."; } // cls vuoto: colore normale del testo, non è un allarme
     if (mode === "lesson" && st.course && !S.capsized){
       const off = norm180(S.h - S.course);
@@ -2020,7 +2048,7 @@ function step(S, C, E, dt){
       const a = norm180(local.twd - S.h), orza = Math.sign(a) === Math.sign(S.r);
       cls = "good"; msg = orza ? "Stai orzando: la prua va verso il vento." : "Stai poggiando: la prua si allontana dal vento.";
     }
-    if (mode === "lesson" && kind === "none" && !S.capsized) { $("hint").hidden = true; }
+    if (mode === "lesson" && kind === "none" && !S.capsized && !(back && st.tiller)) { $("hint").hidden = true; }
     else if (mode === "lesson" && !st.pause && st.hud) $("hint").hidden = false;
     $("hint").className = "hint " + cls; $("hint").textContent = msg;
     if (mode === "race") racePanel();
@@ -2155,7 +2183,7 @@ function step(S, C, E, dt){
     }
     // traccia (per le prove e il bordeggio)
     // boe
-    const marks = (mode === "lesson" ? (S.lessonMark ? [{ ...S.lessonMark, label: "Boa" }] : []) : curMarks);
+    const marks = (mode === "lesson" ? (S.lessonMark ? [S.lessonMark] : []) : curMarks);
     marks.forEach((m, i) => {
       const done = mode === "mission" ? i < S.markIdx : (mode === "lesson" && S.markReached);
       const active = mode === "mission" ? i === S.markIdx : !done;

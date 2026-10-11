@@ -109,6 +109,25 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 
 - **Unità:** `S.r` in gradi/s, `S.heelRate` in **radianti/s**. Ogni impulso di sbandamento va convertito con `D2R`.
 - Angolo morto: nel gioco il cerchio delle andature lo disegna fino a 40° per lato, i testi citano la convenzione didattica di 45°, il motore lo fa sentire tra 33° e 40°. Se si cambia, vanno allineati motore, cerchio, lezioni 1-3 e 5, glossario e avversari.
+- **Soglia unica dell'angolo morto: 40° (decisione della 0.20.2, dopo la terza registrazione di Ale).** Rosa, voce «Andatura», registro degli errori (`IRONS_A = 40`), suggerimento «all'indietro» e regola d'uscita del passo 5.4 usano tutti 40°. Il suggerimento e il 5.4 prima usavano 45°. È stata scartata la soglia unica a 45°, perché il motore naviga fra 40° e 44°. Velocità di equilibrio con la scotta migliore, stesso metodo di `polare.js`:
+
+  | Vento | 40° | 42° | 44° | 46° | Miglior guadagno controvento |
+  |---|---|---|---|---|---|
+  | 6 nodi | 1,34 | 1,61 | 1,88 | 2,15 | a 49° |
+  | 10 nodi | 2,32 | 2,77 | 3,21 | 3,63 | a 48° |
+  | 15 nodi | 3,53 | 4,16 | 4,74 | 5,12 | a 46° |
+
+  Con 45° la rosa avrebbe detto «angolo morto» con la barca a 4 nodi.
+
+  **Costo della soglia a 40° per il suggerimento: misura sul solo motore, senza raffiche.** Le partenze sono 1.404: prua da 0° a 38° ogni 2°, due mure, da 0 a −2 nodi, vento di 6, 10 e 14 nodi, scotta 100 e 50. Il pilota spinge la barra verso il boma finché la barca arretra sotto la soglia, poi la centra e cazza (0,27 al secondo, fino a 0,3). L'uscita conta con la prua ad almeno 40° e la barca che va avanti per 3 s. La ricaduta conta se la barca torna ad arretrare entro 30 s.
+
+  | Cambio di testo a | Uscite | Ricadute | Tempo d'uscita: mediana | Tempo d'uscita: massimo |
+  |---|---|---|---|---|
+  | 45° | 1.404 su 1.404 | 0 | 8,0 s | 13,7 s |
+  | 42° | 1.404 su 1.404 | 0 | 8,4 s | 14,2 s |
+  | 40° | 1.404 su 1.404 | 0 | 8,9 s | 15,4 s |
+
+  Con 40° si esce circa 1 s più tardi, senza fallimenti. Il suggerimento ha un'isteresi di 3°: dal secondo testo si torna al primo solo sotto 37°. Il motore (`step()`, compresa la riga che fa poggiare da sola la barca lenta sotto 36° di vento apparente) non cambia.
 
 ## Stato finale del prototipo del fiocco
 

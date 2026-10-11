@@ -48,6 +48,10 @@ Il resto del documento è una **mappa** di sei livelli. Per arrivare in fondo se
 
 Livelli 2-6; più ruoli e più personaggi; crescita della bravura; mini tornei; istruttore con replay e fantasma; scheda barca; campo di vento esteso, cono d'ombra, VMG e layline; la ricerca documentale (non blocca niente: si fa se c'è voglia); il questionario al velista (parte, senza contarci); il Giornalino per Lucio.
 
+Dalla 0.20.2, sul suggerimento quando la barca va all'indietro:
+- un aiuto contro l'errore di lato, cioè barra spinta dalla parte opposta al boma con il testo già visibile (registrazione 1432(3), 3.12, 431,5 s);
+- un aiuto «poggia» per la barca che va avanti piano dentro l'angolo morto.
+
 ### Se si continua: il livello 2 a fette giocabili **[proposta]**
 
 1. Fiocco giocabile da timoniere, con le vele regolate dal computer (porting dal prototipo, semplificazioni dichiarate).

@@ -49,6 +49,33 @@ STRAMBA = """
   }, 25);
 }
 """
+# Lezione 5 passo 4 (0.20.2, due fasi): pilota a passi fissi dentro la pagina (tempo simulato esatto, niente dipende dal computer).
+# Fase 1 come «luff»: prua nel vento e vela lascata, finché la condizione della 0.20.1 è vera da 1 s (allora la 0.20.1 completava il passo).
+# Fase 2, verso = "boma": barra dalla parte del boma finché la barca arretra con la prua sotto 40° dal vento (IRONS_A), poi al centro
+# (il suggerimento in due tempi della 0.20.2); verso = "lontano": barra dall'altra parte,
+# fissata all'inizio della fase 2, finché la prua ha attraversato il vento (ad almeno 50° sull'altra mura) o la barca va avanti.
+# In tutti e due i casi, da 40° dal vento in su si cazza con la regolazione automatica (soglia unica IRONS_A della 0.20.2). twa0 con segno: + mure a dritta.
+USCITA = """
+([twa0, verso]) => {
+  const sv = __sv, S = sv.S, dt = 1 / 60, n180 = a => ((a + 180) % 360 + 360) % 360 - 180, lato = () => Math.sign(n180(sv.twd - S.h));
+  S.h = (sv.twd - twa0 + 360) % 360; S.u = 3.3 / 1.944; S.vl = 0; S.r = 0; S.heel = 0; S.heelRate = 0; sv.ctl.sheet = 1; sv.ctl.tiller = 0;
+  const lato0 = lato(); let t = 0, tp = null, t1 = null, s0 = 0, lato1 = 0, indietro = false;
+  while (t < 180 && !sv.stepDone){
+    const I = sv.readI();
+    if (t1 === null){
+      if ((I.twa < 40 && I.kn < 0.4) || S.u < -0.1){ if (tp === null) tp = t; if (t - tp >= 1){ t1 = t; s0 = -(S.boomSide || 0); lato1 = lato(); } } else tp = null;
+      const err = n180(S.h - sv.twd); sv.ctl.tiller = Math.max(-1, Math.min(1, err / 20)) * (S.u < 0 ? -1 : 1); sv.ctl.sheet = 1;
+    } else {
+      if (S.u < 0) indietro = true;
+      const passato = lato() !== lato1 && I.twa >= 50;
+      sv.ctl.tiller = verso === "boma" ? (S.u < 0 && I.twa < 40 ? (S.boomSide || 0) : 0) : (S.u < 0 && !passato ? s0 : 0);
+      sv.ctl.sheet = I.twa >= 40 ? sv.autoSheet() : 1;
+    }
+    sv.run(dt, 1); t += dt;
+  }
+  return { fatto: sv.stepDone, t1, t2: +t.toFixed(2), lato0, lato1, latoFine: lato(), indietro, twa: Math.round(sv.readI().twa), kn: +(S.u * 1.944).toFixed(2) };
+}
+"""
 FERMA = "() => { clearInterval(window.__p2); clearInterval(window.__pil); __sv.ctl.tiller = 0; }"
 SET = "a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}"
 esiti = []
@@ -152,9 +179,16 @@ async def main():
             await pg.keyboard.down("ArrowRight"); ok1 = await attendi(pg, "__sv.stepDone", 30); await pg.wait_for_timeout(1500); await pg.keyboard.up("ArrowRight")
             await pg.evaluate(f"__sv.showStep({k + 1})"); await pg.keyboard.down("ArrowLeft"); await attendi(pg, "__sv.stepDone", 30); await pg.keyboard.up("ArrowLeft")
             r1 = await reg(pg)
-            k = await passo(4, "Una virata che non riesce"); await pg.evaluate(VAI, [[], "luff"]); ok2 = await attendi(pg, "__sv.stepDone", 30)
-            await pg.evaluate(f"__sv.showStep({k + 1})"); await pg.wait_for_timeout(2000); await pg.evaluate(FERMA)   # ancora piantato nel passo dopo: stesso episodio
-            r2 = await reg(pg)
+            # 0.20.2: il passo si completa solo dopo l'uscita, quindi l'episodio è già finito quando si passa al passo dopo
+            u5 = []
+            for verso in ("boma", "lontano"):
+                for twa0 in (60, 90, -60, -90):
+                    k = await passo(4, "Una virata che non riesce"); await pg.evaluate(FERMA)
+                    u = await pg.evaluate(USCITA, [twa0, verso]); u5.append((verso, twa0, u))
+                    print(f"   lezione 5 passo 4, barra {verso} dal boma, partenza a {twa0:+d} gradi: {u}", flush=True)
+                    if verso == "boma" and twa0 == 60: r2 = await reg(pg)
+            ok2 = all(u["fatto"] for v, t, u in u5 if v == "boma")
+            durata = [u["t2"] - u["t1"] for v, t, u in u5 if u["fatto"]]
             k = await passo(4, "Strambata violenta"); await pg.evaluate(STRAMBA); ok3 = await attendi(pg, "window.__p2end", 30); await pg.wait_for_timeout(1500); r3 = await reg(pg)
             await pg.evaluate(f"__sv.showStep({k + 1})")   # «Strambata controllata»: se la fai a vela aperta è un errore
             await pg.evaluate(STRAMBA); await attendi(pg, "window.__p2end", 30); await pg.wait_for_timeout(800); r4 = await reg(pg)
@@ -162,6 +196,13 @@ async def main():
             r5 = await reg(pg); txt = await pg.inner_text("#lErr")
             verifica("lezione 1, piantato quando richiesto", ok1 and r1["irons"] == 0, f"passo completato {ok1} | {r1}")
             verifica("lezione 5, virata fallita richiesta", ok2 and r2["irons"] == 0, f"passo completato {ok2} | {r2}")
+            boma = [u for v, t, u in u5 if v == "boma"]; altra = [u for v, t, u in u5 if v == "lontano"]
+            verifica("lezione 5 passo 4, uscita con la barra verso il boma", len(boma) == 4 and all(u["fatto"] and u["t1"] is not None and u["latoFine"] == u["lato1"] for u in boma),
+                     f"{sum(u['fatto'] for u in boma)} su {len(boma)} completati sulla stessa mura")
+            verifica("lezione 5 passo 4, uscita sull'altra mura (conta)", len(altra) == 4 and all(u["fatto"] and u["t1"] is not None and u["latoFine"] == -u["lato1"] for u in altra),
+                     f"{sum(u['fatto'] for u in altra)} su {len(altra)} completati, mure cambiate in {sum(u['latoFine'] == -u['lato1'] for u in altra)}")
+            print(f"   durata in più rispetto alla 0.20.1 (dal momento in cui la 0.20.1 completava il passo): "
+                  f"{min(durata, default=0):.1f}-{max(durata, default=0):.1f} s su {len(durata)} prove", flush=True)
             verifica("lezione 5, strambata violenta richiesta", ok3 and r3["gybesV"] == 0 and r3["capsizes"] == 0, f"{r3}")
             verifica("lezione 5, strambata a vela aperta nel passo sbagliato", r4["gybesV"] == 1, f"{r4}")
             verifica("lezione 6, scuffia richiesta", ok5 and r5["capsizes"] == 0 and "nessuno" in txt, f"scuffiata {ok5} | {r5} | «{txt}»")
