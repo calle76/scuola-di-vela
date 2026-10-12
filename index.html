@@ -860,7 +860,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.20.3"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.21"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -1880,6 +1880,18 @@ function step(S, C, E, dt){
       if (!prev || tot < prev){ progress.best[bk] = tot; recSave(); }
       progress.done[key] = true; if (regTotal() === 0) progress.clean[bk] = true; saveProgress();
       raceResults(prev, tot);
+      // 0.21: piazzamento per livello degli avversari (solo con avversari); «pulita» si legge adesso, all'arrivo
+      if (opt.aiLevel !== "nessuno") R.pend = { key: bk + ":" + opt.aiLevel, pulita: regTotal() === 0 };
+    }
+    // il piazzamento si salva quando è definitivo: chi taglia la linea da qui in poi ha fin = R.t + pen >= il mio.
+    // Se il giocatore lascia la regata prima (menu, nuova regata, ricomincia), il dato si perde.
+    if (R.pend && (R.boats.every(b => b.fin !== null) || R.t >= me.fin)){
+      const v = { pos: ranking().indexOf(me) + 1, n: R.boats.length, pulita: R.pend.pulita };
+      const pts = r => 5 - r.pos + (r.pulita ? 1 : 0); // 4/3/2/1 più 1 senza errori; ponytail: vale per 4 barche, da rivedere se la flotta cambia
+      progress.race = progress.race || {};
+      const old = progress.race[R.pend.key];
+      if (!old || pts(v) > pts(old)){ progress.race[R.pend.key] = v; saveProgress(); }
+      R.pend = null;
     }
   }
   function ranking(){
@@ -2781,7 +2793,15 @@ function step(S, C, E, dt){
   env.twd = 0; freshState(0, 0, 90, 0.4);
   showMenu();
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
-  if (location.hash === "#collaudo"){ window.__sv = { openItem, estraiEsame, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
+  if (location.hash === "#collaudo"){ window.__sv = {
+    // 0.21, pilota sostituto per collaudo_competizione.py: la guida degli avversari principianti (aiControl) sulla barca del giocatore,
+    // con i campi che le mancano, la lettura istantanea e lo stesso bersaglio degli avversari (me.me falso solo durante la chiamata).
+    // Raddrizza dopo 1 s di scuffia: ipotesi nostra, un giocatore che preme il tasto (gli avversari si raddrizzano da soli dopo 5 s).
+    pilota: dt => { const me = R.boats[0];
+      if (!me.ai) Object.assign(me, { ai: aiParams("principianti"), side: 1, boardT: 0, boardMax: 40, rOff: Math.random() * 6, char: "normale", startX: toWF(S.x, S.y)[0] * 0.5, capW: 0 });
+      if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
+      me.capW = 0; me.info = info; me.me = false; aiControl(me, dt); me.me = true; return ctl.tiller; },
+    openItem, estraiEsame, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
     frame: dt => { simulate(dt, curStep()); simTime += dt; draw(dt); }, get viewOff(){ return viewOff; }, get zoomQ(){ return zoomQ; }, get camZoom(){ return camZoom; }, draw: dt => draw(dt), gusts: () => gusts.map(g => [g.x, g.y, g.r, g.k, g.sh, g.ttl]), get rippleCells(){ return rippleCells; }, goal, cam: () => { const v = view(); return { cx: v.cx, cy: v.cy, W, H }; } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce); sesTick è il registratore, solo lettura

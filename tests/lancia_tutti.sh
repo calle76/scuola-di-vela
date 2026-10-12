@@ -59,6 +59,9 @@ TESTS=(
     "collaudo_lezioni.py|py|ambiguo|0||collaudo_lezioni.py"
     "collaudo_quiz.py|py|chiaro|0||collaudo_quiz.py"
     "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
+    "collaudo_competizione.py (veloce)|py|chiaro|0||collaudo_competizione.py --veloce"
+    "collaudo_competizione.py (misura)|py|chiaro|1||collaudo_competizione.py"
+    "collaudo_competizione.py (tastiera)|py|ambiguo|1||collaudo_competizione.py --tastiera"
     "collaudo_regate.py (bastone)|py|ambiguo|0|regate|collaudo_regate.py 6 0"
     "collaudo_regate.py (raffiche)|py|ambiguo|0|regate|collaudo_regate.py 6 1"
     "collaudo_partenze.py|py|ambiguo|0||collaudo_partenze.py"
@@ -95,6 +98,7 @@ nota() {
         "collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
         "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): valori del PC di Ale: prove 1-4 a 92,1/142,6/196,4/333,3 s per ogni vento, 8 su 8; prova 5 finite 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
         "collaudo_fantasma.py") echo "la prova deve completarsi e il fantasma risultare salvato" ;;
+        "collaudo_competizione.py (tastiera)") echo "riga «ESITO: OK» (piazzamento salvato con avversari, niente con «nessuno»); «ESITO: NON VALIDO» vuol dire che il pilota da tastiera non è arrivato in fondo: non è un errore del gioco, si rilancia" ;;
         "collaudo_registro.py") echo "riga finale «ESITO: 15 su 15 verifiche riuscite»" ;;
         "collaudo_giro_boa.py") echo "finisce solo girando la boa a sinistra; «giri sbagliati» deve essere 1 nei casi sbagliati" ;;
         *) echo "confronta l'uscita con l'esito atteso in docs/COLLAUDI.md" ;;

@@ -47,7 +47,7 @@ Dentro `index.html`, nell'ordine:
 
 | Chiave | Contenuto |
 | --- | --- |
-| `scuolaVelaSim.v1` | Voci completate (`done`), record delle prove e delle regate (`best`), prove e regate completate almeno una volta senza errori (`clean`, dalla 0.15), migliori punteggi dei quiz. I record dei percorsi cambiati nella 0.14 (regate) usano chiavi nuove (`r0.2`, `r1.2`), e quelli delle prove, cambiati con la linea d'arrivo nella 0.19, `m0.2`, `m1.2`, `m2.2`, `m3.3`, `m4.4`; vedi `KEYV`. Anche `clean` e i fantasmi usano queste chiavi. Al primo avvio della 0.19 record, stelle e fantasmi delle chiavi vecchie delle prove (`OLD_M`) si cancellano, senza migrazione, e il menu lo dice una volta sola. |
+| `scuolaVelaSim.v1` | Voci completate (`done`), record delle prove e delle regate (`best`), prove e regate completate almeno una volta senza errori (`clean`, dalla 0.15), migliori punteggi dei quiz. I record dei percorsi cambiati nella 0.14 (regate) usano chiavi nuove (`r0.2`, `r1.2`), e quelli delle prove, cambiati con la linea d'arrivo nella 0.19, `m0.2`, `m1.2`, `m2.2`, `m3.3`, `m4.4`; vedi `KEYV`. Anche `clean` e i fantasmi usano queste chiavi. Al primo avvio della 0.19 record, stelle e fantasmi delle chiavi vecchie delle prove (`OLD_M`) si cancellano, senza migrazione, e il menu lo dice una volta sola. Dalla 0.21 `race`: piazzamento delle regate con avversari, `{ pos, n, pulita }`, chiave `r0.2:principianti` e simili (regata e livello), salvato quando è definitivo; si tiene il migliore per punti. |
 | `scuolaVelaGhost.v1` | Fantasmi: un campione ogni 0,2 s (tempo, posizione, rotta e boma rispetto al vento, sbandamento). |
 
 ### Aggancio per i collaudi

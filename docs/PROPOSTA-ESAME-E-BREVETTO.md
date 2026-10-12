@@ -101,7 +101,7 @@ const ESAME = [
 
 - **Come si separano:** `STORE` diventa una variabile. Il bivio, solo dal menu, salva il `progress` corrente, cambia chiave e ricarica `progress` dalla chiave nuova. Il resto del gioco non cambia.
 - **Piazzamento delle regate:** all'arrivo, accanto al tempo migliore, si salva `progress.race[chiave] = { pos, n, pulita }`, ma solo se ci sono avversari. Si salva anche nel gioco libero, perché il codice è lo stesso e un ramo in più costerebbe di più; lì non si mostra e non conta.
-- **Livello degli avversari nel piazzamento: alternativa non ancora decisa** (vedi l'avvertenza della fetta 0.21). Oggi il livello non è salvato da nessuna parte (controllo 3). Due strade: in carriera il livello degli avversari è fisso, oppure entra nel risultato salvato (per esempio con una chiave come `r0.2:principianti`, `r0.2:esperti`).
+- **Livello degli avversari nel piazzamento: alternativa non ancora decisa** (vedi l'avvertenza della fetta 0.21). Oggi il livello non è salvato da nessuna parte (controllo 3). Due strade: in carriera il livello degli avversari è fisso, oppure entra nel risultato salvato (per esempio con una chiave come `r0.2:principianti`, `r0.2:esperti`). **Decisione di Ale (12 ottobre 2026, avvio della 0.21): strada B minima.** Solo `progress.race` usa la chiave con il livello (`recK("r"+i) + ":" + livello`, per esempio `r0.2:principianti`); record, stelle, fantasmi e `KEYV` restano invariati, quindi non si azzera niente. Il piazzamento si salva quando è definitivo, non all'istante dell'arrivo; per ogni chiave si tiene il migliore per punti.
 - Niente importazione dal gioco libero **[deciso]**: la carriera parte vuota.
 - I meriti **non si salvano**: si ricalcolano ogni volta da `progress` con una funzione pura `meriti(progress) → { aree, totale, livelloSuperato, manca }`. `manca` elenca ciò che manca per superare il livello: soglie dei meriti, esame, ruoli. Un numero solo da tarare, nessun dato da migrare.
 
@@ -293,6 +293,8 @@ Ogni fetta è una versione giocabile e chiusa, con `VERSIONE` e `CHANGELOG.md` a
 | 6 | 1.0 | **Rilascio.** Manuale (sezione meriti ed esame), documenti, `CHANGELOG.md`. | Una carriera da zero **guidata davvero**: le lezioni con `collaudo_lezioni.py`, le prove con il pilota delle fasce, le due regate con il sostituto, i ripassi e l'esame risposti; il libretto deve arrivare al brevetto. È lungo: lo lancia Ale sul PC. Poi una partita a mano di Ale. |
 
 Le fette 1 e 2 sono indipendenti e si possono scambiare. La 3 viene prima di 4 e 5.
+
+**Esito della fetta 2 (0.21, 12 ottobre 2026).** Strada B minima, piazzamento definitivo (salvato quando nessuno può più superarlo), il migliore per punti per ogni chiave. Il sostituto guida davvero la barca del giocatore: C0-C5 tutti dentro le soglie sui semi 1-40 e sui semi di conferma 41-80 (numeri in `CHANGELOG.md`, 0.21). **Avvertenze:** il sostituto non ha mai finito una regata pulita (0 su 320), quindi il «+1 senza errori» non è misurato, C2 e C3 sono stime prudenti senza bonus e C4 non ha misurato niente. Pagina senza `#collaudo`: con avversari il piazzamento si salva; con «nessuno» il pilota da tastiera non è arrivato in fondo (NON VALIDO), quindi quella parte la prova Ale a mano.
 
 ### Dentro e fuori dalla 1.0
 

@@ -13,6 +13,78 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 0.21 — piazzamento salvato e taratura della Competizione
+
+Del 12 ottobre 2026. Fetta 2 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (§7). In `index.html` cambiano tre punti: la costante `VERSIONE`, il salvataggio del piazzamento in fondo a `updateRace` e il pilota sostituto nell'aggancio `__sv`, che esiste solo con `#collaudo`. `step()` è identica byte per byte alla 0.20.3 (3.726 byte); le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere (329 e 364 caratteri). Non toccati: `step`, `BOAT`, `bands`, `MISSIONS`, `aiControl`, `aiParams`, `targetOf`, `startSpots`, `startRace`, `raceLegs`, `contacts`, `ranking`, `QUIZ`, `openQuiz`, il testo di fine regata, record, stelle, fantasmi e `KEYV`.
+
+- **Piazzamento salvato (decisione di Ale: strada B minima).** All'arrivo di una regata con avversari il gioco salva `progress.race[chiave] = { pos, n, pulita }`, con chiave `recK("r"+i) + ":" + livello` (per esempio `r0.2:principianti`, `r1.2:esperti`). Il campo `race` si crea se manca, come `quiz`. Con «nessuno» non si salva niente. Record, stelle e fantasmi restano con la chiave di prima, quindi non si azzera niente; il record dei tempi resta mescolato fra i livelli (annotato in `ROADMAP.md`, «Dopo la 1.0»).
+- **Piazzamento definitivo.** Non si salva all'istante dell'arrivo: lì `ranking()` mette dietro chi non è ancora arrivato, anche se poi arriverà con un tempo netto migliore (`fin = R.t + pen`). Si salva quando tutte le barche sono arrivate, oppure quando `R.t` raggiunge il mio `fin`: da lì in poi chi taglia la linea ha per forza un tempo netto non migliore del mio. Di solito succede subito; con una penalità si aspettano al massimo i secondi della penalità. «Pulita» si legge al mio arrivo (`regTotal() === 0`).
+- **Il migliore per chiave.** Se per quella chiave c'è già un valore, si tiene quello con più punti: 4/3/2/1 per 1°/2°/3°/4°, +1 se pulita; a parità resta quello vecchio. La formula vale per flotte di 4 barche, come oggi.
+- **Limite dichiarato:** se il giocatore lascia la regata prima del salvataggio (menu, «Nuova regata», «Ricomincia», «Cambia vento», chiusura della pagina), il piazzamento si perde. Succede solo nei secondi di penalità dopo l'arrivo.
+- **Il testo di fine regata non cambia.** Il suo «N° su 4» è quello dell'istante dell'arrivo e con le penalità può essere ottimistico (annotato in `ROADMAP.md`, «Dopo la 1.0»). Nel collaudo differisce dal piazzamento finale in 19 regate su 80 (semi 1-40) e in 24 su 80 (semi 41-80), con i principianti.
+- **Pilota sostituto** (`__sv.pilota`, solo con `#collaudo`): la guida degli avversari principianti (`aiControl` con `aiParams("principianti")`) sulla barca del giocatore. Il pilota aggiunge i campi che le mancano (`ai`, `side`, `boardT`, `boardMax`, `rOff`, `char` «normale», `startX` = metà della posizione iniziale), le passa la lettura istantanea (`info`) e, solo durante la chiamata, segna la barca come avversaria, così `targetOf` le dà gli stessi bersagli degli avversari (tre punti per il giro di boa). Dopo 1 s di scuffia raddrizza: **ipotesi nostra**, un giocatore che preme il tasto (gli avversari si raddrizzano da soli dopo 5 s). `aiControl`, `aiParams` e `targetOf` non sono cambiati. Controllato che `applyInput()` non sovrascriva la barra in regata: con le impostazioni normali (`autoCenterComp` spento) non la tocca. Nella prova della prima fermata, 30 regate, l'unico punto che cambiava la barra era il raddrizzamento dopo una scuffia (`ctl.tiller = 0`).
+- **Nuovo `tests/collaudo_competizione.py`.** Criteri scritti prima dei risultati, nella proposta e nel via di Ale, **non cambiati dopo**:
+  - C0: arrivate almeno il 90% delle regate per tipo (bastone, raffiche); sotto, la misura non vale e ci si ferma;
+  - C1: ogni piazzamento 1°-4° fra il 10% e il 40%, contato sulle regate arrivate dei due tipi insieme (questa interpretazione, «i due tipi insieme», è nostra, scritta nel collaudo prima di lanciarlo);
+  - C2: coppia seme k (regata 1 + regata 2), almeno 3 punti in almeno il 60% delle coppie; regata non finita = 0 punti;
+  - C3: finestre scorrenti di 3 semi consecutivi (1-3, 2-4, …), che **si sovrappongono** e quindi non sono indipendenti: il migliore dei 3 per ogni regata, somma almeno 3, in almeno il 90% delle finestre;
+  - C4: 10 punti in al massimo il 10% delle coppie;
+  - C5: regate arrivate e coppie stampate, fallisce se zero; il sostituto deve aver mosso la barra in ogni regata.
+
+  Semi 1-40 per la misura, semi 41-80 per la conferma (mai guardati prima). Poi gli stessi semi con gli esperti, solo riportati. Ogni regata in un contesto nuovo del browser, quindi con il salvataggio vuoto, `Math.random` a seme fisso, `simTime` a zero, `fast(0)`, passi di 1/60 s, 3 minuti di preparazione. Il piazzamento si legge da `localStorage` e si confronta con un calcolo indipendente dai tempi netti: **0 differenze**. Con «nessuno» (sostituto, regata a bastone, seme 1) `progress.race` non esiste.
+- **Risultati, avversari principianti** (nella sandbox; due giri completi identici riga per riga, 6 min 22 s):
+
+  | | Semi 1-40 (misura) | Semi 41-80 (conferma) |
+  | --- | --- | --- |
+  | C0 arrivate, bastone | 40 su 40 (100%) | 40 su 40 (100%) |
+  | C0 arrivate, raffiche | 40 su 40 (100%) | 40 su 40 (100%) |
+  | C1 1° / 2° / 3° / 4° su 80 arrivate | 12 (15%) / 24 (30%) / 24 (30%) / 20 (25%) | 10 (12%) / 18 (22%) / 26 (32%) / 26 (32%) |
+  | C2 coppie con almeno 3 punti | 38 su 40 (95%) | 35 su 40 (88%) |
+  | C3 finestre con almeno 3 punti | 38 su 38 (100%) | 38 su 38 (100%) |
+  | C4 coppie a 10 punti | 0 su 40 (0%) | 0 su 40 (0%) |
+  | C5 regate arrivate, coppie, barra mossa | 80, 40, 80 regate su 80 | 80, 40, 80 regate su 80 |
+
+  Tutti dentro le soglie. **Ma tre avvertenze:**
+  - **il sostituto non ha mai finito una regata pulita: 0 su 320** (principianti ed esperti, tutti i semi). Il «+1 senza errori» **non è misurato**;
+  - per questo **C2 e C3 sono misurati senza il bonus**: è una stima prudente, perché un giocatore che fa regate pulite prende più punti;
+  - **C4 con zero regate pulite è soddisfatto per forza**: 10 punti richiedono due primi posti puliti, quindi **C4 non ha misurato niente**. Il massimo trovato è 8.
+- **Errori del registro del sostituto**, in quante regate compare ciascuno (su 80 per gruppo):
+
+  | Errore | Princ. 1-40 | Princ. 41-80 | Esperti 1-40 | Esperti 41-80 |
+  | --- | --- | --- | --- | --- |
+  | Scuffie | 40 | 39 | 41 | 41 |
+  | Strambate a vela aperta | 80 | 80 | 80 | 80 |
+  | Piantato | 18 | 24 | 23 | 24 |
+  | Boe sbagliate | 0 | 1 | 0 | 1 |
+  | Contatti | 71 | 75 | 75 | 69 |
+  | Partenza anticipata | 0 | 1 | 1 | 1 |
+  | Fuori linea | 16 | 14 | 9 | 16 |
+
+  Le strambate a vela aperta compaiono in tutte le regate: è il modo in cui strambano gli avversari (lo fanno anche loro, ma per loro il registro non conta).
+- **Con gli esperti** (solo riportato): arrivate 80 su 80 e 80 su 80; 1°/2°/3°/4° 13/22/22/23 (semi 1-40) e 8/25/21/26 (41-80); coppie con almeno 3 punti 38 e 36 su 40; finestre 38 su 38 e 38 su 38; coppie a 10 punti 0 e 0. Il piazzamento all'arrivo differisce da quello finale in 15 e 18 regate su 80. Con gli esperti il sostituto fa circa come con i principianti, coerente con «esperti solo poco più forti» (`PROGETTO.md`, limiti noti).
+- **Pagina senza `#collaudo`** (`--tastiera`): un pilota da tastiera legge il pannello (prua, rilevamento, scotta, barra, classifica) e il conto alla rovescia disegnato sul mare, in tempo reale, 1 minuto di preparazione, regata a bastone, le due regate in parallelo. **Scelta dichiarata:** il vento è **fisso da nord** e non si legge dal pannello, perché il pannello scrive l'angolo del vento **senza segno** (`readI`). Il gioco non è stato toccato per farlo passare. Esito:
+  - **con avversari**: arrivato e salvato `r0.2:principianti = { pos: 4, n: 4, pulita: false }` in 3 giri su 3 (una prova di diagnosi più i due tentativi), `window.__sv` indefinito;
+  - **con «nessuno»**: **non arrivato in nessuno dei due tentativi** (12 minuti l'uno). Nel primo è rimasto in «partenza anticipata»; nel secondo è rimasto circa 5 minuti fermo prima del via a 44-48° dal vento andando all'indietro, ed era in poppa verso l'arrivo allo scadere. Esito **NON VALIDO**: **non provato in automatico, lo prova Ale a mano.** Il controllo «con "nessuno" niente» resta coperto solo dalla parte con `#collaudo`.
+- **Modifiche fatte durante il lavoro, tutte al pilota da tastiera e dopo averlo visto fallire** (nessuna ai criteri C0-C5 né al sostituto):
+  1. il segno del vento: prima ricavato dal pannello, sbagliato perché il pannello lo dà senza segno; ora vento fisso da nord;
+  2. la barra si inverte quando la barca va all'indietro, come in `aiControl`;
+  3. da piantato lasca la scotta;
+  4. l'ora del via e la distanza dalla linea si ricordano fra una lettura e l'altra (prima, se il conto non era stato disegnato negli ultimi 80 ms, il pilota partiva subito);
+  5. le due regate in parallelo, per stare nei 12 minuti a tentativo.
+- **Durate** (sandbox): `--veloce` 8 s; misura completa 6 min 22 s; `--tastiera` 12 min.
+- `tests/lancia_tutti.sh`: tre righe nuove: veloce (esito chiaro, sempre), misura (esito chiaro, lunga, saltata con `--veloce`) e tastiera (da controllare, lunga). Controllato con `bash -n`.
+- **Documenti:** `docs/COLLAUDI.md`, `docs/ROADMAP.md` («Dopo la 1.0»: testo «N° su 4» ottimistico con le penalità, record dei tempi mescolato fra i livelli), `docs/PROPOSTA-ESAME-E-BREVETTO.md` (decisione B minima, esito della fetta 2).
+- **Prove a mano di Ale (12 ottobre 2026).** Regata a bastone, preparazione 1 minuto, solo `r0.2:principianti`.
+  - Con «nessuno»: arrivato, in `progress.race` niente. **Superata.**
+  - Principianti, 4° non pulita: salvato `{pos 4, n 4, pulita false}`.
+  - Poi 4° pulita: salvato `{pos 4, n 4, pulita true}` (da 1 a 2 punti). Sostituzione con un risultato migliore: **superata.**
+  - Poi 3° non pulita (2 punti, parità): resta `{4, 4, true}`. A parità resta il vecchio: **superata.**
+  - Poi 4° non pulita in 8 min 11 s (1 punto): resta `{4, 4, true}`. Un risultato peggiore non sostituisce il migliore: **superata.** Questo caso non è coperto da nessun collaudo automatico, perché ogni regata del collaudo parte da un salvataggio vuoto.
+  - Il piazzamento salvato coincide con l'elenco finale (tempi netti, penalità comprese) in tutte le regate. Il caso «N° su 4» all'arrivo diverso dal finale non è stato riprodotto a mano: resta coperto solo dal collaudo.
+  - Provato solo `r0.2:principianti`: non provati `r1.2`, gli esperti, la regata nelle raffiche.
+  - Con questo, la parte «nessuno» senza `#collaudo`, NON VALIDA in automatico, è provata a mano.
+
+
 ## 0.20.3 — collaudo del suggerimento ripetibile
 
 Del 12 ottobre 2026. Solo collaudi: **il gioco non cambia**. In `index.html` cambiano due righe: la costante `VERSIONE` e due voci dell'aggancio `__sv`, che esiste solo con `#collaudo` nell'indirizzo (`panel`, per scrivere il riquadro del suggerimento a comando, e `set simTime`, per far partire ogni prova dallo stesso vento). `step()` è identica byte per byte alla 0.20.2 (3.726 byte); le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere (329 e 364 caratteri); senza `#collaudo` `window.__sv` è indefinito (controllato dal collaudo stesso).
