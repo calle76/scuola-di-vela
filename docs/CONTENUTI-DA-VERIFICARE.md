@@ -162,6 +162,15 @@ La parte non è riproducibile. Il collaudo calcola l'avvicinamento dalle posizio
 
 Prima di dire se è un difetto, e se gli avversari debbano evitarsi fra loro, va misurato con semi fissi come la parte «anticipi allo sparo». Nessuna causa verificata.
 
+## Confronti con i PDF archiviati il 12 ottobre 2026 (fonti informali, una sola fonte ciascuno)
+
+Schede in `SCHEDATURA-FONTI.md`. Parafrasati, mai copiati; non diventano domande di quiz.
+
+| Fonte | Cosa conferma o confronta | Esito |
+| --- | --- | --- |
+| `Dispensa-Scuola-Vela-2019.pdf` | **Angolo morto** di circa 45° per lato (90° in tutto) attorno alla direzione del vento; **bolina** da stretta (circa 40-45°) a larga (circa 60-70°); **regola della scotta**: lascare finché la vela comincia a sbattere vicino all'albero, poi cazzare quanto basta perché smetta | Coerente con le lezioni 1 e 3 (il gioco usa 40° per lato per i messaggi e il registro, e dice «circa 45°» nei testi: vedi «Confini delle andature» sopra). Una fonte informale in più, non una verifica |
+| `Istruzioni-Lupidi-18.pdf` | **Punteggio basso** (appendice A del regolamento di regata, A4; parità con A8); **tutte le boe da lasciare a sinistra**; **penalità con giri** (penalità alternative, dichiarazione dei giri fatti); **segnali di partenza** a 5, 4, 1 e 0 minuti (avviso, preparatorio, ultimo minuto, partenza) | Boe a sinistra: coerente col gioco. Il gioco ha la penalità di 15 s invece dei giri (semplificazione già dichiarata in `PROGETTO.md`) e i segnali a 1 minuto, 30 s e 10 s, non la sequenza 5-4-1-0: da dichiarare come semplificazione. Il punteggio basso riguarda le serie di più prove (tornei, fase B), non la regata singola. **Logo e marchi** del documento da non usare. Refuso sulla data e riferimento al regolamento internazionale con una sigla e un'edizione vecchie: **fonte da non prendere alla lettera** |
+
 ## Regate
 
 | Affermazione | Esito |
