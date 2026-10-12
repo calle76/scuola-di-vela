@@ -144,6 +144,24 @@ Due domande del **ripasso** non hanno un passo che le insegni nella loro lezione
 
 **Testo B («Ora vai avanti piano…») mentre la barca si ferma.** Resta a schermo mentre la barca si ferma e comincia ad arretrare, fino a circa −0,1 nodi (lo stato 3 si spegne sotto −0,05 m/s, `index.html:1153-1154`). Visto nelle tracce del caso 8 della 0.20.3: B per 1,1-1,7 s con la barca da +0,04 a −0,07 nodi. Osservazione, il gioco non è cambiato.
 
+**Gli avversari esperti anticipano allo sparo più dei principianti** (misura di `collaudo_partenze.py --lungo`, parte «anticipi allo sparo», dopo la 0.20.3: semi 1-100, 900 partenze di avversari per livello). Allo sparo sono oltre la linea 230 su 900 con gli esperti (25,6%) contro 184 su 900 con i principianti (20,4%); sui soli semi 1-20, 54 su 180 (30,0%) e 40 su 180 (22,2%). La 0.17 riportava «0 su 90 con gli esperti», ma contava le barche ancora segnate come anticipate a +60 s. Tornano dietro la linea tutte entro 60 s, al più tardi in 30,1 s. Da esaminare se è accettabile; il gioco non è stato toccato.
+
+**Avversari: lo sconfinamento oltre la linea prima dello sparo non ha limite fuori dalla zona del freno** (stessa misura).
+- Gli avversari frenano a 7 m dalla linea solo entro 40 m dal centro (`index.html:1714`).
+- Fuori da quella zona non frenano: Rossa (seme 74, 5 minuti, principianti), a 138,2 m dal centro, era 17,7 m oltre la linea allo sparo; l'aveva passata 80,6 s prima.
+- Il punto a cui mirano quando partono verso la linea è di proposito 10 m oltre la linea (`index.html:1708`).
+- Allo sparo il gioco segna come anticipata ogni barca oltre la linea, anche oltre il suo prolungamento, fuori dagli estremi (`index.html:1869`). **Da verificare con il testo del regolamento di regata**: se la regola vera consideri anche il prolungamento non è stato controllato su una fonte.
+- Il gioco non è stato toccato.
+
+**Avvicinamento minimo fra le barche nella partenza a 5 minuti sotto i 14 m attesi in due giri recenti** (`collaudo_partenze.py`, parte senza seme e in tempo reale, dopo la 0.20.3):
+- 8 m nella sandbox (Tu/Rossa, «a 17 s»);
+- 3,1 m sul PC di Ale (Rossa/Blu, due avversari, «a 18 s»);
+- 14,4 m nella suite veloce della stessa mattina.
+
+La parte non è riproducibile. Il collaudo calcola l'avvicinamento dalle posizioni e dalle velocità subito dopo aver impostato la preparazione, cioè all'inizio del conto alla rovescia. I secondi indicati sono il tempo previsto fino al minimo, entro 25 s da quel momento.
+
+Prima di dire se è un difetto, e se gli avversari debbano evitarsi fra loro, va misurato con semi fissi come la parte «anticipi allo sparo». Nessuna causa verificata.
+
 ## Regate
 
 | Affermazione | Esito |

@@ -87,14 +87,15 @@ nota() {
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
         "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA»" ;;
-        "collaudo_partenze.py") echo "con 3 e 5 minuti ritardo mediano entro circa 12s, nessuna partenza anticipata, distanza minima almeno 20 m" ;;
+        "collaudo_partenze.py") echo "con 3 e 5 minuti ritardo mediano entro circa 12s, distanza minima almeno 20 m, avvicinamento minimo almeno 14 m (parte senza seme: in due giri recenti è uscito 8 m e 3,1 m a 5 minuti; vedi docs/CONTENUTI-DA-VERIFICARE.md); riga «anticipi allo sparo: OK» (ogni barca anticipata di nuovo dietro la linea entro 60 s; metri oltre la linea, frequenza, anticipo e la riga «oltre 10 m» solo stampati)" ;;
         "collaudo_aggressiva.py") echo "per ogni incontro, almeno una manovra deve evitare il contatto" ;;
         "collaudo_strambata.py (6 nodi)") echo "nessuna scuffia" ;;
         "collaudo_strambata.py (15 nodi)") echo "scuffia sempre" ;;
-        "collaudo_pannello.py (1360x650)"|"collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
-        "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): prove 1-4 a 92,1/142,6/196,4/333,4 s per ogni vento; prova 5 finite 18 su 24, mediana circa 353 s" ;;
+        "collaudo_pannello.py (1360x650)") echo "«pannello che eccede:» esattamente i sette passi completati noti (l1p7 +12, l2p4 +44, l2p6 +20, l3p5 +79, l5p3 +7, l6p2 +37, l6p4 +13; docs/CONTENUTI-DA-VERIFICARE.md), qualunque altro è un problema nuovo; riga dei tasti 0 px, «errori: []» e «caratteri del gioco caricati: True»" ;;
+        "collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
+        "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): valori del PC di Ale: prove 1-4 a 92,1/142,6/196,4/333,3 s per ogni vento, 8 su 8; prova 5 finite 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
         "collaudo_fantasma.py") echo "la prova deve completarsi e il fantasma risultare salvato" ;;
-        "collaudo_registro.py") echo "riga finale «ESITO: 13 su 13 verifiche riuscite»" ;;
+        "collaudo_registro.py") echo "riga finale «ESITO: 15 su 15 verifiche riuscite»" ;;
         "collaudo_giro_boa.py") echo "finisce solo girando la boa a sinistra; «giri sbagliati» deve essere 1 nei casi sbagliati" ;;
         *) echo "confronta l'uscita con l'esito atteso in docs/COLLAUDI.md" ;;
     esac

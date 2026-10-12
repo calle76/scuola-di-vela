@@ -184,7 +184,7 @@ Soglie, da non cambiare dopo aver visto i risultati:
 | C4 | Il massimo non è scontato: 10 punti con un tentativo per regata | al massimo il 10% delle coppie |
 | C5 | Il controllo ha misurato davvero | numero di regate concluse e di coppie stampato; fallisce se è zero |
 
-**Abilità: nessuna misura nuova.** Le fasce sono tarate sul pilota: oro = tempo del pilota arrotondato, bronzo = +60% (0.16 e 0.19). Il minimo 8 equivale a bronzo ovunque più 3 prove pulite, oppure argento in 4 prove. Nelle prove 1-4 il pilota di `collaudo_fasce.py` fa oro per costruzione; nella prova 5 finisce 18 corse su 24, con mediana 353,2 s contro l'oro a 355 s. Basta riportarlo.
+**Abilità: nessuna misura nuova.** Le fasce sono tarate sul pilota: oro = tempo del pilota arrotondato, bronzo = +60% (0.16 e 0.19). Il minimo 8 equivale a bronzo ovunque più 3 prove pulite, oppure argento in 4 prove. Nelle prove 1-4 il pilota di `collaudo_fasce.py` fa oro per costruzione; nella prova 5 finisce 19 corse su 24, con mediana 353,6 s contro l'oro a 355 s (valori del PC di Ale; nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6). Basta riportarlo.
 
 **Esame.**
 

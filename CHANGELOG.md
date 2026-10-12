@@ -46,6 +46,47 @@ Del 12 ottobre 2026. Solo collaudi: **il gioco non cambia**. In `index.html` cam
 - `tests/lancia_tutti.sh` non è cambiato: lancia la versione veloce; la lunga si lancia a mano (`docs/COLLAUDI.md`).
 - **Documenti:** `docs/COLLAUDI.md`, `docs/CONTENUTI-DA-VERIFICARE.md` (fase 1 del 5.4 a 46°; testo B mentre la barca si ferma).
 
+**Correzioni ai collaudi dopo la 0.20.3** (documenti, testi di `tests/lancia_tutti.sh` e `tests/collaudo_partenze.py`; gioco, avversari e versione invariati):
+- **Pannello, esito atteso.** A 1360×650 l'atteso diceva «pannello che eccede: nessuno», ma i sette passi completati noti dalla 0.20.2 eccedono. Ora a 1360×650 l'atteso è esattamente quei sette passi, eccesso massimo 79 px, e qualunque altro passo è un problema nuovo; a 1360×768 resta «nessuno». In `lancia_tutti.sh` le due dimensioni hanno ora due note separate. Il codice del collaudo non è cambiato.
+- **Fasce, numeri di riferimento.** I numeri non coincidevano fra documenti, PC e sandbox:
+
+  | | Prova 4 | Prova 5, finite su 24 | Prova 5, mediana |
+  |---|---|---|---|
+  | Documenti | 333,4 s | 18 | 353,2 s |
+  | PC, 6 giri della suite identici | 333,3 s | 19 | 353,6 s |
+  | Sandbox, 5 giri della prova 5 | 333,4 s | 21 / 18 / 20 / 20 / 20 | 354,4 / 354,6 / — / 353,6 / 353,7 s |
+
+  Prove 1-3 uguali dappertutto. Nella sandbox la prova 5 cambia da un giro all'altro nonostante il seme fisso; la causa non è verificata. Scelta di Ale: i valori di riferimento sono quelli del suo PC, con una nota sulla sandbox, in `docs/COLLAUDI.md`, `tests/lancia_tutti.sh` e `docs/PROPOSTA-ESAME-E-BREVETTO.md`.
+- **Partenze anticipate, nuovo criterio (decisione di Ale).** Il vecchio conteggio di `collaudo_partenze.py` contava gli avversari ancora segnati come anticipati circa 60 s dopo il via, in tempo reale e senza seme. A quel punto chi è partito presto è già tornato dietro la linea, quindi non contava le partenze anticipate allo sparo. Il numero «0 su 90 con gli esperti» della 0.17 veniva da lì.
+  - **Etichetta rinominata** in «ancora segnate come anticipate a +60 s», calcolo invariato. Le uscite salvate prima di questa correzione dicono «partenze anticipate» (riepilogo) e «anticipate» (righe delle singole partenze).
+  - **Nuova parte «anticipi allo sparo»**, sempre lanciata, anche con `--veloce`:
+    - semi 1-20, 3 avversari, principianti ed esperti, 1, 3 e 5 minuti;
+    - ogni prova in una pagina nuova, in una sola chiamata: seme fisso, `simTime` a zero, passi fissi di 1/60 s, giocatore fermo.
+  - **Primo criterio, abbandonato:** allo sparo al massimo 10 m oltre la linea, più il ritorno dietro la linea entro 60 s. **I 10 m li aveva scelti Claude dopo aver visto i dati** (massimo 8,8 m nella prima misura, 9,4 m sui semi 1-20 della parte nuova). **Sui semi 21-100 non ha retto**: due casi con i principianti, 10,3 m (Verde, seme 24, 3 minuti) e 17,7 m (Rossa, seme 74, 5 minuti, passata sulla linea 80,6 s prima dello sparo).
+    - Verde ha passato la linea a circa 49 m dal centro, fuori dalla zona del freno; quando lo sparo arriva è rientrata a 30,3 m. I 49 m vengono da una traccia fatta fuori dal repository.
+    - Rossa allo sparo è a 138,2 m dal centro.
+    - La riga «oltre 10 m» stampa la distanza dal centro al momento dello sparo. Il motivo è nel codice: gli avversari frenano a 7 m dalla linea solo entro 40 m dal centro (`index.html:1714`). Fuori da quella zona nessun codice limita lo sconfinamento.
+  - **Criterio attuale (decisione di Ale): boccia solo il ritorno.**
+    - FALLITO se una barca anticipata non torna dietro la linea entro 60 s.
+    - NON VALIDO con meno di 10 anticipate o meno partenze misurate del previsto per livello. Il minimo di 10 è stato scelto prima di rilanciare.
+    - Metri oltre la linea, frequenza e anticipo si stampano ma non bocciano. La riga «oltre 10 m: N su M anticipate» elenca i casi con la distanza dal centro della linea e non boccia.
+    - Il codice di uscita non dipende dal verdetto.
+  - **`--lungo`:** la stessa parte con i semi 1-100, per riprodurre dal repository i numeri dei semi 21-100. Il modo normale, anche con `--veloce`, resta 1-20.
+  - **Numeri dei semi 1-100:** anticipate 184 su 900 con i principianti (20,4%) e 230 su 900 con gli esperti (25,6%); tutte di nuovo dietro la linea, al più tardi in 30,1 s.
+  - **Prima misura a parte**, script fuori dal repository, con un altro generatore casuale, senza `simTime` a zero e con la pagina libera di avanzare fra una chiamata e l'altra: 37 su 180 con i principianti (20,6%), 51 su 180 con gli esperti (28,3%), oltre la linea 0,5-8,8 m.
+  - **Parte nuova**, tre giri identici, circa 135 s nella sandbox:
+
+    | | Principianti | Esperti |
+    |---|---|---|
+    | Anticipate | 40 su 180 (22,2%) | 54 su 180 (30,0%) |
+    | Anticipo, min / mediana / max | 0,25 / 14,02 / 16,38 s | 4,85 / 13,71 / 19,08 s |
+    | Oltre la linea | 0-9,1 m | 1,1-9,4 m |
+    | Ritorno dietro la linea | 2,1-9,8 s | 2,1-13,1 s |
+
+    Esito `OK`, sia con il primo criterio sia con quello attuale. Gli esperti anticipano più dei principianti: annotato in `docs/CONTENUTI-DA-VERIFICARE.md`, gioco non toccato.
+- **Avvicinamento minimo a 5 minuti sotto i 14 m attesi** in due giri recenti della parte senza seme: 8 m nella sandbox e 3,1 m sul PC di Ale (14,4 m nella suite veloce della stessa mattina). Non è riproducibile: annotato in `docs/CONTENUTI-DA-VERIFICARE.md`, da misurare con semi fissi; nessuna causa verificata. Gioco non toccato.
+- **Registro.** `collaudo_registro.py` esegue 15 verifiche: 15 su 15 nella sandbox, lanciato da solo. `tests/lancia_tutti.sh` diceva «13 su 13», ora «15 su 15», come `docs/COLLAUDI.md`. Un primo giro fatto mentre giravano altre misure ha dato 14 su 15: è fallito il contatto, poi riuscito 3 volte su 3 da solo. Quel caso va in tempo accelerato, con `fast`, e dipende dal carico del computer; la causa non è verificata.
+
 ## 0.20.2 — lezione 5: suggerimento quando la barca arretra, passo 5.4 in due fasi, arrivo a linea nel 5.5
 
 Dell'11 ottobre 2026, dalle registrazioni di Ale `sessione-20261011-1041.txt` (lezione 5, 0.20.1) e `sessione-20261011-1259.txt` (lezione 5, prima versione della 0.20.2). **Il motore non cambia**: il blocco di `step()` è identico byte per byte alla 0.20.1, e le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere.
