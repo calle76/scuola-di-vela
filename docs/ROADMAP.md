@@ -125,6 +125,14 @@ Classifiche comuni e fantasmi condivisi («sfida il record di un amico»).
 - Su GitHub Pages serve un servizio esterno per i dati, per esempio un database gratuito ospitato. Va valutato a parte.
 - In entrambi i casi non c'è protezione contro chi bara: va bene tra amici, non per una classifica pubblica.
 
+## Dopo la 1.0
+
+Idee nuove, fuori dal piano attivo. La lista più ampia «dopo la 1.0» sta in `PIANO-GENERALE.md` («Fuori dalla 1.0» e «Dopo la 1.0, solo se si decide di continuare»); qui si aggiungono tre righe nate dalle schede dei video dell'11 ottobre 2026 (fonti informali, mai usate per tarare il motore).
+
+- **Spingere il boma a mano / randa a collo.** Nelle fonti è il metodo preferito per uscire dall'angolo morto; il gioco non ha un comando per farlo (oggi si esce solo con la barra). Richiede un comando nuovo e un momento di imbardata della vela nel motore.
+- **Fiocco a collo (livello 2).** Aiuto per virare e per uscire dall'angolo morto con poca velocità; arriva con il fiocco nel gioco. Nessuna fonte quantitativa (vedi `DUBBI-E-RICERCHE.md`, sez. 3).
+- **Materiale per lezioni ed esame dalla scheda di Lee (uscita dagli angoli morti), da rileggere nell'originale.**
+
 ## In secondo piano (non cancellato)
 
 - Mare aperto e navigazione in solitaria su lunghe distanze, con tempo accelerato.

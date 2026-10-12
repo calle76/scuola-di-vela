@@ -48,3 +48,23 @@ Nota generale: sono tutti **regolamenti di classe** (regole di stazza), non stud
 - Keuning e Hillege, 2017, serie sistematica Deadrise (scafi plananti a motore): **SCARTARE** per ora; da rivedere solo se serve la planata al livello 3.
 - Akolawala e altri, 2023 (cellule e radiazioni): **SCARTARE**. Fuori tema.
 - **Seconda tornata (8 PDF).** Nessuno degli 8 nuovi è un regolamento di classe. Per `3me_keuning_19940914.PDF` il PDF contiene solo immagini: titolo, autore e anno non sono noti. Per `Proceedings_...` (1654 pagine) ho letto frontespizio e una ricerca per parole chiave sul testo, non i singoli articoli: un articolo su derive o yacht potrebbe sfuggire. Nessuno dei sei lavori della sezione «Valutati in chat» è tra i nuovi file (la tesi Bordogna del 2013 è un altro lavoro rispetto all'articolo del 2016), quindi quella sezione resta invariata. Nessun duplicato per md5sum né per titolo.
+
+## Video e fonti informali (11 ottobre 2026)
+
+**Fonti informali: parafrasate, mai copiate, mai usate per tarare il motore.** Un video non è un dato: serve a controllare cosa insegniamo, non a decidere le costanti. La scheda di lavoro originale è `SCHEDE-VIDEO-2026-10-11.md` (negli appunti, fuori dal repository).
+
+**Criteri, scritti DOPO aver letto le trascrizioni** (a differenza della schedatura dei PDF, dove erano scritti prima: il giudizio è quindi prudente):
+- **UTILE**: spiega una manovra o una regola su una barca piccola o a una vela, con una procedura o un dato che si può confrontare con un contenuto del gioco.
+- **FORSE**: barca da crociera o argomento solo in parte applicabile; conferma o integra un contenuto, senza dati misurati.
+- **SCARTARE**: fuori tema.
+
+Metodo: trascrizione automatica di YouTube incollata da Ale (con errori di riconoscimento); non ho visto né sentito i video. I tempi sono quelli della trascrizione. Contenuto parafrasato, mai copiato.
+
+| Video | Autore (canale) | URL | Data | Tipo | Giudizio | Motivo |
+|---|---|---|---|---|---|---|
+| «Lo ZEN e l'arte della VELA - ANDATURE E MANOVRE» | Daniele Bombaci | https://www.youtube.com/watch?v=yVVdVXhTLg4 | 2 gennaio 2025 | lezione parlata, barca da crociera con fiocco | FORSE | Conferma a parole punti delle lezioni 3, 4 e 5 (vedi `CONTENUTI-DA-VERIFICARE.md`). Nessun dato, nessuna deriva. |
+| «CORSO DI VELA ⛵ LA CAPPA LA PANNA - fermare la barca mettendosi in panna o in cappa in barca a vela» | Alfredo Contaldo | https://www.youtube.com/watch?v=RJci9ypE15g | 23 maggio 2023 | lezione parlata con dimostrazione, barca da crociera con genoa | FORSE | Non tratta l'uscita da uno stallo. Descrive un'oscillazione lenta orza-poggia attorno a 0-1 nodo e un'uscita fatta con la vela (fiocco). Utile per il livello 2 e come indizio sul comportamento reale. |
+| «Sail Better How to get out of Irons Sunfish sailing» (titolo originale in inglese, come indicato da Ale; in italiano tradotto automaticamente era «Vela migliore \| Come uscire dai ferri da stiro \| Vela») | Lee (canale probabilmente «Sail Better», da confermare) | https://www.youtube.com/watch?v=S9tdCOD62_o | 2 settembre 2022 | lezione parlata, derive (Sunfish, Laser, Optimist, Flying Scot) e barche con più vele | UTILE | Spiega tre modi di uscire dall'angolo morto, di cui uno solo con la barra, come nel gioco. Barca a una vela, procedura confrontabile. Letta sia nella traduzione italiana sia nella trascrizione inglese originale: sui punti decisivi coincidono (unica correzione: la traduzione automatica dava un vento troppo pesante, l'originale un vento da moderato a forte). Trascrizioni automatiche. |
+| «Getting out of Irons \| Sail YNZ Coaching Resource» | Yachting New Zealand (canale ufficiale) | https://www.youtube.com/watch?v=yQu7M-MsVaQ | 20 settembre 2013 | scheda breve per allenatori, in inglese, sull'uscita dai ferri con la vela | UTILE | Descrive in poche righe la procedura con la vela e dice che la barra funziona al contrario all'indietro e che si cazza solo a prua completamente fuori dal vento. Fonte di una federazione, ma sintetica e senza dati. Trascrizione automatica (senza punteggiatura). |
+
+Limiti: una fonte per video, informale; i primi due su barche con fiocco o genoa; trascrizioni automatiche con errori (la terza l'ho letta sia in traduzione italiana sia nell'originale inglese; la quarta è in inglese, senza punteggiatura). Le date di pubblicazione sono quelle indicate da Ale dalla pagina di YouTube. Il video YNZ del 2013 non è la «dispensa» di Yachting New Zealand citata (e non letta) in `DUBBI-E-RICERCHE.md`, sez. 3: sono due documenti diversi.

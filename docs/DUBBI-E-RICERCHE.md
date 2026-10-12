@@ -133,6 +133,17 @@ Nasce da due registrazioni (0.19.5 e 0.20): nel gioco, con la barca che arretra 
 
 **Cosa resta aperto.** La domanda 1 (prua al vento con barra al centro su una deriva) e la domanda 3 (ripartenza) vanno chieste a un velista esperto o cercate in altre fonti: risposta attesa. Nella 0.20.1 i testi del passo 5.4, del suggerimento e della domanda 22 sono stati cambiati lo stesso: non dicono più che la prua poggia da sola e insegnano solo ciò che il gioco permette (barra verso il boma), misurato. Restano da confermare con un velista esperto o altre fonti.
 
+### Dai video (11 ottobre 2026)
+
+Quattro video informali (trascrizioni automatiche incollate da Ale, non viste né sentite), schedati in `SCHEDATURA-FONTI.md`. Sono fonti informali: parafrasate, **mai usate per tarare il motore**. Servono a controllare cosa insegniamo e a raccogliere indizi per il livello 2.
+
+| Dubbio | Cosa sappiamo | Per chiuderlo |
+| --- | --- | --- |
+| **Oscillazione orza-poggia attorno a 0-1 nodo** | Contaldo (3:00-3:32) descrive in panna un procedere a zig-zag lento: il fiocco a collo fa poggiare, la barca prende velocità, col timone tutto all'orza interviene l'effetto orziero (3:14) e la prua risale, poi la velocità cala e il ciclo riparte; velocità massima circa 1 nodo. Osservazione nostra, non della fonte: coerente con l'effetto del timone che cresce con la velocità. Nel gioco manca il momento della vela (fiocco), che è la forza contraria. Una fonte, barca con genoa | *esperto*; poi *codice* se si modella il momento di imbardata |
+| **Quanto in fretta cambia l'effetto della barra attorno a velocità zero** | Nessuna fonte. La prua «poggia da sola» (fino a 6 °/s) ha costanti senza fonte | domanda per un velista (sez. 9, punto 10) |
+| **Uscita dallo stallo: tre modi e perché si ricade** | Lee (2022): boma e barra dallo stesso lato (preferito); boma fuori e barra verso di sé; solo barra, con vento da moderato a forte, più lenta e da fare con pazienza se c'è poco vento. Ricaduta nei ferri se, cazzando, la barra resta dal lato del boma. Il gioco implementa il terzo modo. Una fonte, trascrizione inglese originale. *Collegamento nostro, non dalla scheda:* la sez. 9, punto 2 parla delle fonti schedate per la manovra con il boma spinto fuori (US Sailing, guida Sunfish, associazione di classe); il terzo modo di Lee è una fonte informale in più per la sola barra. Il punto 2 resta com'è | *esperto* |
+| **Fiocco a collo come aiuto nella virata** | Bombaci (4:56-5:16): con poca velocità si vira con il fiocco a collo, che spinge lateralmente la prua. Contaldo: stesso principio in panna. Nessun numero | già aperto: «Quanto spinge un fiocco a collo»; resta senza fonte quantitativa |
+
 ## 4. Velocità e polari
 
 | Dubbio | Cosa sappiamo | Per chiuderlo |
@@ -191,3 +202,4 @@ Elenco da portare a un velista esperto, solo per derive. Accanto a ogni voce, le
 7. **Lezione 1, «Ripartire»: con la barca quasi ferma, «da entrambi i lati si poggia». Vale?** Nel gioco la prua lì gira per la riga 443 di `index.html`, non per il timone. Fonte attuale: nessuna.
 8. **Regola delle stesse mure (lascia strada chi è sopravento): non è insegnata in nessuna lezione. Si conferma che è giusto così per il livello 1?** Fonte attuale nei documenti: nessuna (`CONTENUTI-DA-VERIFICARE.md`, regate, esito vuoto).
 9. **Il resto:** i «Dubbi specifici» di `CONTENUTI-DA-VERIFICARE.md` e il questionario di 27 domande di `RIPARTI-DA-QUI.md` (negli appunti, fuori dal repository).
+10. **Dopo l'uscita dall'angolo morto, mentre si cazza: la barra va al centro o un po' dal lato opposto al boma?** Il testo B dice «barra al centro». Lee (2022, originale inglese, righe 248-277) dice che cazzando con la barra un po' dal lato del boma la barca orza di nuovo e ricade nei ferri, e consiglia di tirare la barra un po' verso di sé oltre la linea centrale. Una fonte, informale (video, parafrasato, non usato per tarare il motore); nessun'altra. Da far giudicare a un velista prima di cambiare qualcosa. Origine: parte D di `SCHEDE-VIDEO-2026-10-11.md` (negli appunti); le altre due domande della parte D sono già coperte dai punti 1 e 2.
