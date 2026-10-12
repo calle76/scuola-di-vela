@@ -140,6 +140,10 @@ Due domande del **ripasso** non hanno un passo che le insegni nella loro lezione
 
 **Pannello troppo alto in sette passi completati** (misura di `collaudo_pannello.py` sul PC di Ale, caratteri veri, 1360×650; a 1360×768 nessun eccesso): lezione 1 passo 7 +12 px, lezione 2 passo 4 +44, lezione 2 passo 6 +20, lezione 3 passo 5 +79, lezione 5 passo 3 +7, lezione 6 passo 2 +37, lezione 6 passo 4 +13. Stessi valori nei giri delle 14:21 e delle 21:34 dell'11 ottobre 2026. Non sono dovuti alla 0.20.2: erano nascosti perché prima della 0.20.2 il collaudo non misurava lo stato «completato», quindi non c'è un confronto con la 0.20.1. Nessun intervento nella 0.20.2.
 
+**5.4: arrivare a 46° all'indietro senza che la fase 1 scatti** (meno di 1 s sotto −0,1 m/s, `index.html:647`) è possibile, non osservato; dipende dalla scotta. In quel caso il passo non si completa dopo l'uscita e il giocatore ripete il tentativo. Trovato nel collaudo della 0.20.3 (`collaudo_suggerimento.py`, parte 3e: caso 5, scotta 50, partenza forzata dal collaudo; il pilota cazza subito e la fase 1 si ferma a 0,87 s). Misura su `step()` sola a 46°, barra al centro, vento 10 nodi: con la scotta a 50 o 100 la barca arretra e la fase 1 scatta (4,22 s da ferma, 13,48 s da 1 nodo); con la scotta a 25 o 10 la spinta è positiva e non scatta mai, anche partendo da −0,5 nodi (`CHANGELOG.md`, 0.20.3). Quanto spesso succeda giocando: non misurato.
+
+**Testo B («Ora vai avanti piano…») mentre la barca si ferma.** Resta a schermo mentre la barca si ferma e comincia ad arretrare, fino a circa −0,1 nodi (lo stato 3 si spegne sotto −0,05 m/s, `index.html:1153-1154`). Visto nelle tracce del caso 8 della 0.20.3: B per 1,1-1,7 s con la barca da +0,04 a −0,07 nodi. Osservazione, il gioco non è cambiato.
+
 ## Regate
 
 | Affermazione | Esito |
