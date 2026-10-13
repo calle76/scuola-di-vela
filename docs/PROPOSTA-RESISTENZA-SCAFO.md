@@ -123,7 +123,7 @@ Da scrivere prima di toccare il motore:
 
 ### 4.3 Documenti da aggiornare quando si fa
 
-- `docs/FONTI-PUBBLICHE.md`: le due fonti nuove, con numero (proposta: F14 e F15).
+- `docs/FONTI-PUBBLICHE.md`: le due fonti nuove, con numero (proposta: F16 e F17; F14 e F15 sono state usate il 13 ottobre per il richiamo individuale e per il regolamento di regata).
 - `docs/FISICA-E-TARATURE.md`: tabella delle costanti e risultati.
 - `docs/CONTENUTI-DA-VERIFICARE.md`.
 - `CHANGELOG.md`, con `VERSIONE`.

@@ -65,7 +65,7 @@ TESTS=(
     "collaudo_regate.py (bastone)|py|ambiguo|0|regate|collaudo_regate.py 6 0"
     "collaudo_regate.py (raffiche)|py|ambiguo|0|regate|collaudo_regate.py 6 1"
     "collaudo_partenze.py|py|ambiguo|0||collaudo_partenze.py"
-    "collaudo_aggressiva.py|py|ambiguo|0||collaudo_aggressiva.py"
+    "collaudo_aggressiva.py|py|chiaro|0||collaudo_aggressiva.py"
     "collaudo_contatto_senza_colpa.py|py|chiaro|0||collaudo_contatto_senza_colpa.py"
     "collaudo_pulsanti.py|py|chiaro|0||collaudo_pulsanti.py"
     "collaudo_versione.py|py|chiaro|0||collaudo_versione.py"
@@ -90,9 +90,9 @@ nota() {
         "raffiche_e_virate.js") echo "virata riuscita in circa 4s da 3,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire circa 55° (scuffia)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
-        "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA»" ;;
-        "collaudo_partenze.py") echo "con 3 e 5 minuti ritardo mediano entro circa 12s, distanza minima almeno 20 m, avvicinamento minimo almeno 14 m (parte senza seme: in due giri recenti è uscito 8 m e 3,1 m a 5 minuti; vedi docs/CONTENUTI-DA-VERIFICARE.md); riga «anticipi allo sparo: OK» (ogni barca anticipata di nuovo dietro la linea entro 60 s; metri oltre la linea, frequenza, anticipo e la riga «oltre 10 m» solo stampati)" ;;
-        "collaudo_aggressiva.py") echo "per ogni incontro, almeno una manovra deve evitare il contatto" ;;
+        "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA» (semi 1-6, passi fissi: stesso risultato a ogni giro); la riga «riepilogo» dà la mediana d'arrivo, confrontabile fra versioni" ;;
+        "collaudo_partenze.py") echo "con 3 e 5 minuti ritardo mediano entro circa 12s, distanza minima almeno 20 m, avvicinamento minimo almeno 14 m (dal 13 ottobre 2026 a passi fissi con i semi 1-10: stesso risultato a ogni giro); riga «anticipi allo sparo: OK» (ogni barca anticipata di nuovo dietro la linea entro 60 s; metri oltre la linea, frequenza, anticipo e la riga «oltre 10 m» solo stampati)" ;;
+        "collaudo_aggressiva.py") echo "almeno il 90% degli incontri evitabili a ogni distanza (semi fissi)" ;;
         "collaudo_strambata.py (6 nodi)") echo "nessuna scuffia" ;;
         "collaudo_strambata.py (15 nodi)") echo "scuffia sempre" ;;
         "collaudo_pannello.py (1360x650)") echo "«pannello che eccede:» esattamente i sette passi completati noti (l1p7 +12, l2p4 +44, l2p6 +20, l3p5 +79, l5p3 +7, l6p2 +37, l6p4 +13; docs/CONTENUTI-DA-VERIFICARE.md), qualunque altro è un problema nuovo; riga dei tasti 0 px, «errori: []» e «caratteri del gioco caricati: True»" ;;
@@ -187,6 +187,7 @@ collect() {
     name="${NAME[idx]}"; esito="${ESITO[idx]}"
     if [ "$esito" = chiaro ]; then
         if [ "$rc" = 0 ]; then STATUS[idx]=OK; echo "$name: OK ($durata)"
+        elif [ "$rc" = 3 ]; then STATUS[idx]=NON_VALIDO; echo "$name: NON VALIDO (ambiente) ($durata)"   # codice 3: misura non valida per l'ambiente, per esempio caratteri mancanti
         else STATUS[idx]=FALLITO; echo "$name: FALLITO ($durata)"; fi
     else
         if [ "$rc" = 0 ]; then STATUS[idx]=DA_CONTROLLARE; echo "$name: DA CONTROLLARE ($durata) — $(nota "$name")"
@@ -230,13 +231,14 @@ while [ "${#pending[@]}" -gt 0 ] || [ "$RUNNING" -gt 0 ]; do
 done
 T1=$(date +%s)
 
-OK=0; FALLITI=0; DA_CONTROLLARE=0; SALTATI=0
+OK=0; FALLITI=0; DA_CONTROLLARE=0; SALTATI=0; NON_VALIDI=0
 for ((i=0; i<M; i++)); do
     case "${STATUS[i]}" in
         OK) OK=$((OK+1)) ;;
         FALLITO) FALLITI=$((FALLITI+1)) ;;
         DA_CONTROLLARE) DA_CONTROLLARE=$((DA_CONTROLLARE+1)) ;;
         SALTATO) SALTATI=$((SALTATI+1)) ;;
+        NON_VALIDO) NON_VALIDI=$((NON_VALIDI+1)) ;;
     esac
 done
 
@@ -249,6 +251,16 @@ else
         [ "${STATUS[i]}" = FALLITO ] || continue
         echo "  - ${NAME[i]} — ${OUTFILE[i]#$REPO/}"
         tail -n 15 "${OUTFILE[i]}" | sed 's/^/      /'
+    done
+fi
+
+if [ "$NON_VALIDI" -gt 0 ]; then
+    echo
+    echo "NON VALIDI PER L'AMBIENTE (il gioco non è in causa: rilanciare dove l'ambiente è completo):"
+    for ((i=0; i<M; i++)); do
+        [ "${STATUS[i]}" = NON_VALIDO ] || continue
+        echo "  - ${NAME[i]} — ${OUTFILE[i]#$REPO/}"
+        tail -n 3 "${OUTFILE[i]}" | sed 's/^/      /'
     done
 fi
 
@@ -285,7 +297,7 @@ if [ "$SALTATI" -gt 0 ]; then
 fi
 
 echo
-echo "Riepilogo: $OK OK, $FALLITI falliti, $DA_CONTROLLARE da controllare, $SALTATI saltati. Tempo totale: $((T1-T0))s."
+echo "Riepilogo: $OK OK, $FALLITI falliti, $NON_VALIDI non validi per l'ambiente, $DA_CONTROLLARE da controllare, $SALTATI saltati. Tempo totale: $((T1-T0))s."
 echo "Uscita completa di ogni collaudo in: ${OUTDIR#$REPO/}/"
 
 if [ "$FALLITI" = 0 ]; then

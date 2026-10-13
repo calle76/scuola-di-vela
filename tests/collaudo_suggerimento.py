@@ -404,5 +404,7 @@ async def main():
         for x in nonvalido: print("COLLAUDO NON VALIDO:", x)
         if not caratteri_ok: print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, i margini del pannello misurati sopra non sono attendibili")
         await b.close()
-        sys.exit(1 if (sbagliati or errs or vuoto or nonvalido or not caratteri_ok) else 0)
+        # 1: qualcosa non va nel gioco o nel collaudo; 3 (dal 13 ottobre 2026): tutto il resto è a posto ma mancano i caratteri del gioco,
+        # quindi solo le misure del pannello non valgono (succede nella sandbox): lancia_tutti.sh lo mostra come «NON VALIDO (ambiente)»
+        sys.exit(1 if (sbagliati or errs or vuoto or nonvalido) else (3 if not caratteri_ok else 0))
 asyncio.run(main())

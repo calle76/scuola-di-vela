@@ -433,7 +433,7 @@ function step(S, C, E, dt){
   const rmMax = BOAT.sailorMass * 9.81 * BOAT.hikeArm;
   const hikeTarget = Math.max(0, Math.min(1, (mHeel - BOAT.formK * 0.08) / rmMax)); // punta a tenere la barca quasi piatta
   S.hike += (hikeTarget - S.hike) * Math.min(1, dt / 0.9); // il timoniere reagisce con un certo ritardo
-  const mRight = rmMax * S.hike * Math.cos(phi) + BOAT.formK * Math.sin(2 * phi) / 2 * (Math.abs(phi) < Math.PI / 4 ? 1 : 1);
+  const mRight = rmMax * S.hike * Math.cos(phi) + BOAT.formK * Math.sin(2 * phi) / 2;
   const acc = (mHeel - mRight) / BOAT.rollI - BOAT.rollDamp / BOAT.rollI * S.heelRate;
   S.heelRate += acc * dt;
   S.heel += S.heelRate / D2R * dt;
@@ -861,7 +861,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.21.2"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.21.6"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -1404,7 +1404,7 @@ function step(S, C, E, dt){
   // SIMULAZIONE
   // ======================================================================
   let GYBE_KICK = 260; // gradi/s: circa 19° di sbandamento con 6 nodi, 45° con 10, scuffia con 15
-  function toast(text){ S.toast = { text, t: 2.6 }; }
+  function toast(text, t = 2.6){ S.toast = { text, t }; }
   function detectManeuvers(){
     const twa = norm180(local.twd - S.h), side = sgn(twa), A = Math.abs(twa);
     if (side === S.prevSide || A < 1 || A > 179) return;
@@ -1701,6 +1701,12 @@ function step(S, C, E, dt){
     let desired, hold = false;
     const tgt = targetOf(b);
     let dest = tgt;
+    // 0.21.4: dopo l'arrivo si va nella zona di sosta, fuori dalla linea (25 m oltre l'estremità dal proprio lato, 30 m dietro la linea),
+    // e lì si resta quasi fermi con la vela che sbatte, come prima del via: prima l'avversario arrivato girava attorno al punto d'arrivo
+    if (b.fin !== null){
+      const [px, py] = fromWF((b.startX < 0 ? -1 : 1) * (LINE_HALF + 25), 30); dest = { x: px, y: py };
+      if (Math.hypot(s.x - px, s.y - py) < 12) hold = true;
+    }
     // prima della partenza: blocco a sé, senza la logica di bolina generale
     let pre = false;
     if (R.t < 0 && b.leg === 0){
@@ -1777,9 +1783,12 @@ function step(S, C, E, dt){
     // se per arrivare alla rotta voluta bisogna attraversare il vento e manca velocità: prima poggia e prendi abbrivio
     const turn = norm180(desired - s.h), toWind = norm180(twd - s.h);
     // (vale solo prima di iniziare: a virata in corso la velocità cala per forza, e non va interrotta)
-    if (sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) > 44 && s.u < 1.1) desired = twd - side * 95;
+    // 0.21.3: stessa soglia della regola «piantata» qui sotto (era 44° fisso): in partenza, fra 40° e 44°, nessuna delle due agiva e una barca
+    // lenta che voleva virare oscillava per minuti attorno a 40° senza partire (collaudo_regate.py, regata nelle raffiche, seme 17)
+    const ironsA = b.leg === 0 && !b.ocs ? 40 : 44;
+    if (sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) >= ironsA && s.u < 1.1) desired = twd - side * 95;
     // piantata nell'angolo morto: poggia e lascia sbattere la vela finché riparte
-    const irons = A < (b.leg === 0 && !b.ocs ? 40 : 44) && s.u < 0.6; // 44°: tra 40° e 44° una barca ferma restava sospesa senza ripartire; in partenza resta 40° (con 44° poggia troppo presto vicino alla linea), salvo chi torna dietro la linea dopo una partenza anticipata
+    const irons = A < ironsA && s.u < 0.6; // 44°: tra 40° e 44° una barca ferma restava sospesa senza ripartire; in partenza resta 40° (con 44° poggia troppo presto vicino alla linea), salvo chi torna dietro la linea dopo una partenza anticipata
     if (irons) desired = twd - side * 80;
     const err = norm180(s.h - desired);
     const tTarget = clamp(err / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1);
@@ -1873,7 +1882,11 @@ function step(S, C, E, dt){
       R.phase = "race";
       for (const b of R.boats){ const wy = toWF(b.S.x, b.S.y)[1]; if (wy <= 0) b.ocs = true; }
       if (R.boats[0].ocs) regAdd("ocs");
-      toast(R.boats[0].ocs ? "Partenza anticipata! Torna dietro la linea" : "Partenza!");
+      // 0.21.5: richiamo individuale anche per gli avversari (regola 29.1 del regolamento di regata: chi è oltre la linea allo sparo
+      // deve tornare dietro e ripartire, e il ritorno è la penalità). Prima il messaggio parlava solo del giocatore
+      const ant = R.boats.filter(b => !b.me && b.ocs).map(b => b.name), chi = ant.length > 1 ? ant.slice(0, -1).join(", ") + " e " + ant[ant.length - 1] : ant[0];
+      if (R.boats[0].ocs) toast("Partenza anticipata! Torna dietro la linea" + (ant.length ? " (anche " + chi + ")" : ""), ant.length ? 4.5 : 2.6);
+      else toast(ant.length ? "Partenza! Richiamo individuale: " + chi + (ant.length > 1 ? " devono" : " deve") + " tornare dietro la linea" : "Partenza!", ant.length ? 4.5 : 2.6);
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
     contacts();

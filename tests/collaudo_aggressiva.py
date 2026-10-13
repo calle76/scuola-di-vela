@@ -3,19 +3,30 @@
 # rimettendo lo stato della regata, e chiede che almeno una eviti il contatto. Le manovre partono dopo un ritardo di
 # reazione, contato da quando l'aggressiva comincia a puntare il giocatore.
 # A passi fissi con __sv.run, quindi l'esito non dipende dal carico del computer (vedi COLLAUDI.md).
-# Uso: python collaudo_aggressiva.py [incontri per distanza]
+# Dal 13 ottobre 2026 con seme fisso: ogni incontro fissa Math.random e riavvia la regata nella stessa chiamata alla pagina,
+# quindi lo stesso seme dà lo stesso incontro (prima un giro dava 7 su 10 e i quattro dopo 10 su 10 sullo stesso codice).
+# Seme = distanza × 100 + numero dell'incontro (18 m: 1801, 1802, ...).
+# Criterio (decisione di Ale, 13 ottobre 2026, via 1): a ogni distanza, almeno QUOTA degli incontri ha una manovra che evita
+# il contatto. Prima era «tutti»: con il seme non reggeva già sul codice della 0.21.2 (97 su 100 a 18 m, semi 1801-1900).
+# Uso: python collaudo_aggressiva.py [incontri per distanza] [--lungo]
+#   incontri 1..N (10 se manca); con --lungo gli incontri 11-50 (conferma, mai guardati nella scelta della quota)
 import asyncio, sys
 from playwright.async_api import async_playwright
 import pathlib
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=True)
 URL = BASE + "#collaudo"
-RIP = int(sys.argv[1]) if len(sys.argv) > 1 else 10
+LUNGO = "--lungo" in sys.argv; ARG = [a for a in sys.argv[1:] if a != "--lungo"]
+INCONTRI = list(range(11, 51)) if LUNGO else list(range(1, (int(ARG[0]) if ARG else 10) + 1))
+QUOTA = 0.90   # scelta il 13 ottobre 2026 sugli incontri 1-10 (minimo misurato: 9 su 10 a 24 m), confermata sugli 11-50
 CONTATTO = 4.2   # metri: la distanza a cui il gioco conta un contatto
 # manovre provate: nome, barra (negativa = poggia, positiva = orza con vento da sinistra), ritardo in secondi
 MANOVRE = [("poggia subito", -0.6, 0), ("poggia dopo 1 s", -0.6, 1), ("orza dopo 1 s", 0.6, 1), ("non fa niente", 0, None)]
 
-INCONTRO = """([spawn, manovre]) => {
+INCONTRO = """([spawn, manovre, seme]) => {
+  (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
+  __sv.fast(0); __sv.simTime = 0;
+  { const e = document.getElementById("cdSel"); e.value = "180"; e.dispatchEvent(new Event("change")); }   // riavvia con il seme
   const D = Math.PI/180, R = __sv.R;
   const agg = R.boats.find(b => b.char === "aggressiva");
   if (!agg) return { err: "nessuna aggressiva in acqua" };
@@ -80,27 +91,28 @@ INCONTRO = """([spawn, manovre]) => {
   return { nome: agg.name, esiti };
 }""".replace("%CONT%", str(CONTATTO))
 
-async def incontro(b, spawn, foto=None):
+async def incontro(b, spawn, seme, foto=None):
     pg = await b.new_page(viewport={"width":1280,"height":800})
     errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(URL); await pg.wait_for_timeout(300)
     await pg.click("[data-r='0']"); await pg.wait_for_timeout(150)
     await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#aiLevel", "esperti"]); await pg.wait_for_timeout(150)
     await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#cdSel", "180"]); await pg.wait_for_timeout(200)
-    r = await pg.evaluate(INCONTRO, [spawn, [[n, t, rr] for n, t, rr in MANOVRE]])
+    r = await pg.evaluate(INCONTRO, [spawn, [[n, t, rr] for n, t, rr in MANOVRE], seme])
     if foto: await pg.screenshot(path=str(OUT / foto))
     await pg.close()
     return r, errs
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await p.chromium.launch(); esiti_dist = []
+        print(f"incontri {INCONTRI[0]}-{INCONTRI[-1]} per distanza, seme = distanza × 100 + incontro", flush=True)
         for spawn in [18, 24, 30, 38]:
             print(f"--- il giocatore compare a {spawn} m dalla prua dell'aggressiva, mure a sinistra ---", flush=True)
             cont = {n: 0 for n, _, _ in MANOVRE}; dmins = {n: [] for n, _, _ in MANOVRE}; altri = {n: 0 for n, _, _ in MANOVRE}
             salvati = 0; saltati = 0; err = []
-            for i in range(RIP):
-                r, errs = await incontro(b, spawn, f"aggressiva_{spawn}.png" if i == 0 else None); err += errs[:1]
+            for i in INCONTRI:
+                r, errs = await incontro(b, spawn, spawn * 100 + i, f"aggressiva_{spawn}.png" if i == INCONTRI[0] else None); err += errs[:1]
                 if r.get("err"): saltati += 1; print(f"  {i+1}: {r['err']}", flush=True); continue
                 for e in r["esiti"]:
                     if e["contatto"]: cont[e["nome"]] += 1
@@ -112,9 +124,16 @@ async def main():
                 print(f"  {i+1}: {r['nome']} | puntato a {p0['dPunta']} m | " +
                       " | ".join(f"{e['nome']}: min {e['dmin']} m{' CONTATTO' if e['contatto'] else ''}{' (+%d con altre)' % e['altri'] if e['altri'] else ''}" for e in r["esiti"]) +
                       f" | manovre che evitano: {', '.join(scampate) if scampate else 'NESSUNA'}", flush=True)
-            fatti = RIP - saltati
+            fatti = len(INCONTRI) - saltati; esiti_dist.append((spawn, salvati, fatti))
             print(f"{spawn} m: incontri {fatti} (saltati {saltati}); con almeno una manovra che evita il contatto {salvati} su {fatti};" +
                   "".join(f" [{n}: contatti con l'aggressiva {cont[n]}/{fatti}, con altre {altri[n]}, distanza minima {min(dmins[n]) if dmins[n] else '—'} m]" for n, _, _ in MANOVRE) +
                   f"; errori {err[:1]}", flush=True)
         await b.close()
-asyncio.run(main())
+        if QUOTA is None:
+            print("criterio: quota non ancora scelta (solo misura)", flush=True); return None
+        fuori = [f"{d} m: {s} su {f}" for d, s, f in esiti_dist if f == 0 or s < QUOTA * f]
+        vuote = [d for d, s, f in esiti_dist if f == 0]
+        esito = "NON VALIDO" if vuote else ("FALLITO" if fuori else "OK")
+        print(f"criterio (almeno {QUOTA:.0%} degli incontri evitabili a ogni distanza): {esito}" + (f"; fuori quota: {fuori}" if fuori else ""), flush=True)
+        return esito
+sys.exit(0 if asyncio.run(main()) in ("OK", None) else 1)   # esce con 1 se FALLITO o NON VALIDO

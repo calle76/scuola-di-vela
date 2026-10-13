@@ -156,7 +156,7 @@ Due domande del **ripasso** non hanno un passo che le insegni nella loro lezione
 - Gli avversari frenano a 7 m dalla linea solo entro 40 m dal centro (`index.html:1714`).
 - Fuori da quella zona non frenano: Rossa (seme 74, 5 minuti, principianti), a 138,2 m dal centro, era 17,7 m oltre la linea allo sparo; l'aveva passata 80,6 s prima.
 - Il punto a cui mirano quando partono verso la linea è di proposito 10 m oltre la linea (`index.html:1708`).
-- Allo sparo il gioco segna come anticipata ogni barca oltre la linea, anche oltre il suo prolungamento, fuori dagli estremi (`index.html:1869`). **Da verificare con il testo del regolamento di regata**: se la regola vera consideri anche il prolungamento non è stato controllato su una fonte.
+- Allo sparo il gioco segna come anticipata ogni barca oltre la linea, anche oltre il suo prolungamento, fuori dagli estremi (`index.html:1869`). **Da verificare con il testo del regolamento di regata**: se la regola vera consideri anche il prolungamento non è stato controllato su una fonte. *13 ottobre 2026: F14 dice che per tornare basta essere dalla parte di pre-partenza della linea «o di uno dei suoi prolungamenti»; una fonte riportata, non il testo ufficiale.*
 - Il gioco non è stato toccato.
 
 **Avvicinamento minimo fra le barche nella partenza a 5 minuti sotto i 14 m attesi in due giri recenti** (`collaudo_partenze.py`, parte senza seme e in tempo reale, dopo la 0.20.3):
@@ -181,7 +181,8 @@ Schede in `SCHEDATURA-FONTI.md`. Parafrasati, mai copiati; non diventano domande
 
 | Affermazione | Esito |
 | --- | --- |
-| Allo scadere del conto alla rovescia bisogna essere dietro la linea; chi è oltre deve tornare indietro. | |
+| Allo scadere del conto alla rovescia bisogna essere dietro la linea; chi è oltre deve tornare indietro. | ✅ Testo ufficiale (F15, regola 29.1 e definizione di partenza): chi è oltre la linea allo sparo deve tornare dalla parte di pre-partenza e ripartire; chi non lo fa non è partito. |
+| Allo sparo il comitato segnala il richiamo individuale con la bandiera X (0.21.5: il gioco lo dice con un messaggio che nomina le barche anticipate, la bandiera non è disegnata). | ✅ Testo ufficiale (F15, regola 29.1): bandiera X con un suono, esposta al massimo 4 minuti dallo sparo. |
 | Tra barche con le stesse mure, lascia strada quella sopravento. | |
 | La procedura reale di partenza dura 5 minuti (il gioco permette anche 1 e 3). | |
 | Nelle regate il lato da cui lasciare le boe lo stabiliscono le istruzioni di regata; di solito si lasciano a sinistra (il gioco le lascia sempre a sinistra, anche nelle prove). | |

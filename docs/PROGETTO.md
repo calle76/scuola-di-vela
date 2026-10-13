@@ -40,7 +40,7 @@ Dentro `index.html`, nell'ordine:
 
 - Mondo in **metri**, asse x verso est e asse y verso sud (come lo schermo), angoli in **gradi da nord in senso orario**.
 - Velocità della barca in **m/s** (il pannello mostra nodi: 1 m/s = 1,944 nodi).
-- **Attenzione alle unità**: la velocità di rotazione `S.r` è in gradi al secondo, la velocità di sbandamento `S.heelRate` in **radianti al secondo**. Un errore proprio su questo punto rendeva la strambata 57 volte troppo violenta (vedi `CHANGELOG.md`, versione 0.11).
+- **Attenzione alle unità**: la velocità di rotazione `S.r` è in gradi al secondo, la velocità di sbandamento `S.heelRate` in **radianti al secondo**. Un errore proprio su questo punto rendeva la strambata 57 volte troppo violenta (vedi `archivio/CHANGELOG-0.1-0.19.md`, versione 0.11).
 - «Coordinate del vento» (`toWF` e `fromWF`): sistema ruotato in cui il vento arriva sempre da −y. Prove, regate e fantasmi sono descritti così, e quindi funzionano con qualsiasi direzione del vento.
 
 ### Salvataggi (`localStorage`)
@@ -102,10 +102,11 @@ Gli avversari sono guidati da regole scritte, con la stessa fisica del giocatore
 - **Evitare le altre barche** senza mai portare la prua nell'angolo morto.
 - **Giro di boa:** tre punti di passaggio in coordinate del vento: sotto e a destra della boa, poi oltre e a sinistra (lì si attraversa la semiretta e la boa è girata); un terzo, sotto a sinistra, solo per riprovare dopo un giro mancato. Il secondo punto si punta solo da sopra il livello della boa: da più in basso la bolina porta la barca sopra la boa.
 - **Virare da un'andatura larga:** se il bersaglio è sull'altra mura e a proravia del traverso, prima orzano fino alla bolina, poi virano. Virare direttamente dal traverso al traverso opposto fa perdere l'abbrivio a metà.
-- **Barca piantata:** sotto 44° dal vento e sotto 0,6 m/s poggiano per ripartire (40° in partenza, dove 44° le faceva poggiare troppo presto vicino alla linea).
+- **Barca piantata:** sotto 44° dal vento e sotto 0,6 m/s poggiano per ripartire (40° in partenza, dove 44° le faceva poggiare troppo presto vicino alla linea). Dalla 0.21.3 la regola «mai virare da fermi» usa la stessa soglia: prima valeva solo oltre 44°, e in partenza, fra 40° e 44°, una barca lenta che voleva virare oscillava per minuti senza partire.
 - **Posizioni di partenza casuali** (dalla 0.17), giocatore compreso: `startSpots` piazza le barche una alla volta dietro la linea, scartando chi sta a meno di 20 m da un'altra o si avvicinerebbe sotto i 14 m entro 25 secondi; se una non trova posto si riparte da zero. Prima erano fisse, e il giocatore nasceva a 18 m dalla Blu con le prue una contro l'altra. Con un minuto di preparazione la banda è 26–54 m dalla linea invece di 38–74: la distanza iniziale era il motivo dei ritardi al via (correlazione +0,75 con un minuto).
 - **Prima del via gli avversari non superano la linea** se sono a meno di 7 m da essa (era 4 m): con le posizioni casuali qualcuna ci scivolava oltre. Resta qualche partenza anticipata fra i principianti, ed è voluta: è plausibile.
 - **Caratteri** (dalla 0.17), scritti nel riquadro delle istruzioni: *prudente* (evita le altre da 22 m invece di 14, anche quando ha la precedenza), *normale* (il comportamento di sempre), *aggressiva* (prima del via attende dall'altro lato per arrivare alla linea mure a dritta, e punta le barche mure a sinistra vicine per costringerle a manovrare). Una sola aggressiva, solo con gli avversari esperti.
+- **Dopo l'arrivo** (dalla 0.21.4) vanno in una zona di sosta 25 m oltre l'estremità della linea dal proprio lato e 30 m dietro la linea, e lì restano quasi ferme: prima giravano attorno al punto d'arrivo e intralciavano chi arrivava dopo.
 - **L'aggressiva resta evitabile:** sotto 15 m (`AGGRO_OFF`) smette di stringere e sotto 14 m cerca di non urtare, così una manovra per scansarla esiste sempre. È lo spirito delle regole 14 e 16, non la regola 16: la colpa di un contatto la decidono solo mure e sopravento.
 
 ## Pannello: una regola da rispettare

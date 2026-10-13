@@ -72,6 +72,7 @@ Fonti e verifiche (non c'è una persona esperta: valgono fonti scritte e video)
   DUBBI-E-RICERCHE.md              domande aperte e ricerche da fare
   SCHEDATURA-FONTI.md              schede dei PDF e dei video consultati
   RICERCA-DATI-IMBARDATA.md        ricerca sui dati per un motore dinamico
+  REGOLE-DI-REGATA.md              regolamento di regata vero a confronto con il gioco
 
 Dove si va
   ROADMAP.md                       cosa fare dopo, in ordine di priorità

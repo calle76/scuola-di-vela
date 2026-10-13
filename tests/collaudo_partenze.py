@@ -2,9 +2,13 @@
 # Misura: ritardo degli avversari sulla linea con 1, 3 e 5 minuti di preparazione; geometria delle posizioni iniziali
 # (distanza minima fra le barche e coppie in rotta di collisione); caratteri assegnati. Verifica anche la regata in solitaria.
 # Il conteggio «ancora segnate come anticipate a +60 s» (fino alla 0.20.3 «partenze anticipate») guarda le barche ancora segnate
-# alla fine della finestra, in tempo reale e senza seme: non sono le partenze anticipate allo sparo, misurate a parte più sotto.
+# alla fine della finestra: non sono le partenze anticipate allo sparo, misurate a parte più sotto.
+# Dal 13 ottobre 2026 anche la prima parte (ritardi e geometria) gira a passi fissi con seme fisso, tutta in una sola chiamata
+# alla pagina, come gli «anticipi allo sparo»: prima girava in tempo reale accelerato (__sv.fast(20)) e senza seme, e i numeri
+# cambiavano da un giro all'altro. Seme = numero della partenza; la finestra va fino a 60 s dopo lo sparo, come prima.
 # Uso: python collaudo_partenze.py [partenze per tipo] [livello avversari] [--lungo]
-#   --lungo: la parte «anticipi allo sparo» con i semi 1-100 invece di 1-20 (nella sandbox 669 s invece di 135)
+#   prima parte: semi 1..N (N = partenze per tipo, 10 se manca); con --lungo i semi 11-40 (conferma)
+#   --lungo: anche la parte «anticipi allo sparo» con i semi 1-100 invece di 1-20 (nella sandbox 669 s invece di 135)
 import asyncio, sys, statistics
 from playwright.async_api import async_playwright
 import pathlib
@@ -15,7 +19,22 @@ URL = BASE + "#collaudo"
 LUNGO = "--lungo" in sys.argv; ARG = [a for a in sys.argv[1:] if a != "--lungo"]
 RIP = int(ARG[0]) if len(ARG) > 0 else 10
 LIV = ARG[1] if len(ARG) > 1 else "principianti"
-WATCH = """(()=>{ window._st={}; for (const b of __sv.R.boats){ let v=b.leg; Object.defineProperty(b,'leg',{get(){return v}, set(n){ if(v===0&&n===1) window._st[b.name]=+__sv.R.t.toFixed(1); v=n; }}); } })()"""
+SEMI_RIT = list(range(11, 41)) if LUNGO else list(range(1, RIP + 1))
+# una partenza intera in una chiamata: livello, seme, simTime a zero, preparazione (che riavvia la regata), geometria all'avvio,
+# poi passi fissi di 1/60 s fino a 60 s dopo lo sparo; il giocatore resta fermo
+PARTENZA = """([liv, cd, seme]) => {
+  const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
+  sv.fast(0); sel('aiLevel', liv);
+  (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
+  sv.simTime = 0; sel('cdSel', String(cd));
+  const R = sv.R; if (R.t >= 0) return null;
+  sv.run(1/60, 12);                // 0,2 s simulati: come i 200 ms reali che prima passavano fra il riavvio e la misura della geometria
+  const geo = (GEO)();
+  const st = {};
+  for (const b of R.boats){ let v = b.leg; Object.defineProperty(b, 'leg', { get(){ return v; }, set(n){ if (v === 0 && n === 1) st[b.name] = +R.t.toFixed(1); v = n; } }); }
+  while (R.t < 60) sv.run(1/60, 1);
+  return [geo, st, R.boats.filter(b => !b.me && b.ocs).map(b => b.name)];
+}"""
 # geometria della partenza: distanza minima fra le barche e punto di minimo avvicinamento (rotta di collisione)
 GEO = """(() => {
   const D = Math.PI/180, bs = __sv.R.boats.map(b => ({ n: b.name, x: b.S.x, y: b.S.y, h: b.S.h, u: b.S.u, c: b.char || "-" }));
@@ -35,20 +54,15 @@ GEO = """(() => {
            y0: Object.fromEntries(bs.map(b => [b.n, +wy(b.x, b.y).toFixed(1)])) };
 })()"""
 
-async def partenza(b, cd, geo_only=False):
+async def partenza(b, cd, seme):
     pg = await b.new_page(viewport={"width":1280,"height":800})
     errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(URL); await pg.wait_for_timeout(300)
     await pg.click("[data-r='0']"); await pg.wait_for_timeout(150)
-    await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#aiLevel", LIV]); await pg.wait_for_timeout(150)
-    await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#cdSel", cd]); await pg.wait_for_timeout(200)
-    geo = await pg.evaluate(GEO)
-    if geo_only: await pg.close(); return geo, {}, [], errs
-    await pg.evaluate(WATCH); await pg.evaluate("__sv.fast(20)")
-    await pg.wait_for_timeout(int((int(cd)+60)/20*1000)+1500)
-    st = await pg.evaluate("window._st")
-    ocs = await pg.evaluate("__sv.R.boats.filter(b=>!b.me&&b.ocs).map(b=>b.name)")
+    r = await pg.evaluate(PARTENZA.replace("(GEO)", "(" + GEO.strip()[1:-3] + ")"), [LIV, int(cd), seme])
     await pg.close()
+    if not r: return None, {}, [], errs + [f"seme {seme}: regata non partita"]
+    geo, st, ocs = r
     return geo, st, ocs, errs
 
 # Anticipi allo sparo (dopo la 0.20.3): riproducibile come collaudo_suggerimento.py. Tutto dentro una sola chiamata alla pagina:
@@ -120,19 +134,20 @@ async def anticipi_allo_sparo(b):
 async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch()
-        print(f"avversari: {LIV}; {RIP} partenze per tipo")
+        print(f"avversari: {LIV}; semi {SEMI_RIT[0]}-{SEMI_RIT[-1]} per tipo, passi fissi di 1/60 s, giocatore fermo")
         for cd in ["60", "180", "300"]:
             rit = []; anticipi = 0; dmin = []; cpa = []; err = []; coppie = []
-            for i in range(RIP):
-                geo, st, ocs, errs = await partenza(b, cd)
+            for i, seme in enumerate(SEMI_RIT):
+                geo, st, ocs, errs = await partenza(b, cd, seme)
+                if geo is None: err += errs[:1]; continue
                 rit += [v for k, v in st.items() if k != "Tu"]
                 coppie += [(geo["y0"][k], v) for k, v in st.items() if k != "Tu" and k in geo["y0"]]
                 anticipi += len(ocs); dmin.append(geo["dmin"]); err += errs[:1]
                 if geo["cpa"] is not None: cpa.append((geo["cpa"], geo["cpaPair"]))
-                print(f"  preparazione {cd} s, partenza {i+1}: ritardi {st} | ancora segnate come anticipate a +60 s {ocs} | distanza minima {geo['dmin']} m ({geo['dpair']})"
+                print(f"  preparazione {cd} s, seme {seme}: ritardi {st} | ancora segnate come anticipate a +60 s {ocs} | distanza minima {geo['dmin']} m ({geo['dpair']})"
                       + (f" | avvicinamento minimo {geo['cpa']} m ({geo['cpaPair']})" if geo["cpa"] is not None else "")
                       + f" | caratteri {geo['car']}", flush=True)
-            mancanti = RIP * 3 - len(rit) if LIV != "nessuno" else 0
+            mancanti = len(SEMI_RIT) * 3 - len(rit) if LIV != "nessuno" else 0
             print(f"preparazione {cd} s: ritardo medio {statistics.mean(rit):.1f} s, mediana {statistics.median(rit):.1f} s, massimo {max(rit):.1f} s"
                   f" su {len(rit)} partenze di avversari (non partiti: {mancanti}); ancora segnate come anticipate a +60 s {anticipi};"
                   f" distanza minima all'avvio {min(dmin)}-{max(dmin)} m;"

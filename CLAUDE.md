@@ -4,7 +4,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un uni
 
 ## Da leggere prima di lavorare
 
-- Sempre: `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni), `docs/COLLAUDI.md`.
+- Sempre: `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni; la storia fino alla 0.19 è in `docs/archivio/CHANGELOG-0.1-0.19.md`, da aprire solo se serve), `docs/COLLAUDI.md`.
 - Sul prototipo del fiocco: `docs/SPERIMENTALE.md`, `docs/FISICA-E-TARATURE.md`, `docs/FONTI-PUBBLICHE.md`, `docs/CONTENUTI-DA-VERIFICARE.md`.
 - Su livelli, ruoli e carriera: `docs/VISIONE-LIVELLI-E-CARRIERA.md` e `docs/ROADMAP.md`.
 - Lo stato corrente sta nei documenti, non qui: non fidarti di quello che ricordi.
