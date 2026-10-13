@@ -246,7 +246,7 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
         <label class="check"><input type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
         <label class="check"><input type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente e della velocità</label>
         <label class="check"><input type="checkbox" id="showDead" checked> Rosa dell'angolo morto, in basso a sinistra</label>
-        <label class="check"><input type="checkbox" id="allInstr"> Tutti gli strumenti nel pannello anche fuori dalle lezioni (venti, sbandamento, scarroccio)</label>
+        <label class="check"><input type="checkbox" id="allInstr"> Nel pannello, anche fuori dalle lezioni, i numeri di vento reale e apparente, sbandamento e scarroccio</label>
         <label class="check"><input type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
         <label class="check"><input type="checkbox" id="sesOn"> Registra la sessione (il tasto M segna un momento)</label>
         <div id="sesBox" hidden><textarea id="sesNote" rows="1" maxlength="2000" placeholder="Nota facoltativa. Il file resta sul tuo computer." aria-label="Nota per la registrazione"></textarea><button id="sesGet">Scarica</button></div>
@@ -523,23 +523,23 @@ function step(S, C, E, dt){
 
   const L2 = [
     { title: "Come si timona", ...PAUSE, zoom: 3, labels: ["barra", "timone"],
-      text: ["In una deriva non c'è un volante: il timoniere spinge la <em>barra</em>. La barra ruota la pala del timone dalla parte opposta, e l'acqua che scorre sulla pala spinge la poppa.",
-             "Il risultato va imparato bene perché è controintuitivo: <em>la prua gira dalla parte opposta a quella verso cui spingi la barra</em>."] },
+      text: ["In una deriva non c'è un volante: il timoniere sposta la <em>barra</em>. La barra ruota la pala del timone dalla parte opposta, e l'acqua che scorre sulla pala spinge la poppa.",
+             "Il risultato va imparato bene perché è controintuitivo: <em>la prua gira dalla parte opposta a quella verso cui sposti la barra</em>."] },
     { title: "Barra a sinistra", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Spingi la barra verso sinistra con la freccia <em>←</em> (o con il cursore «Barra del timone») e guarda da che parte gira la prua."],
+      text: ["Sposta la barra verso sinistra con la freccia <em>←</em> (o con il cursore «Barra del timone») e guarda da che parte gira la prua."],
       cond: I => I.tiller < -0.3 && I.r > 6, hold: 0.4,
       done: "Barra a sinistra, prua verso dritta." },
     { title: "Barra a dritta", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Ora spingi la barra verso dritta con la freccia <em>→</em>."],
+      text: ["Ora sposta la barra verso dritta con la freccia <em>→</em>."],
       cond: I => I.tiller > 0.3 && I.r < -6, hold: 0.4,
       done: "Barra a dritta, prua verso sinistra. Quando rilasci, la barra torna al centro da sola (si può cambiare nelle impostazioni); con <em>Spazio</em> la centri subito." },
     { title: "Barra sottovento: si orza", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
       text: ["La regola che usano i velisti: <em>barra sottovento, la barca orza</em>; <em>barra sopravento, la barca poggia</em>. Il lato sottovento è quello dove sta il boma.",
-             "Spingi la barra verso il boma e orza fino alla <em>bolina</em>, a piccoli colpi e non con una spinta lunga: fermati quando la lancetta della rosetta (in basso) è a metà strada tra il rosso e l'orizzontale. Poi centra la barra."],
+             "Sposta la barra verso il boma e orza fino alla <em>bolina</em>, a piccoli colpi e non con un colpo lungo: fermati quando la lancetta della rosetta (in basso) è a metà strada tra il rosso e l'orizzontale. Poi centra la barra."],
       cond: I => I.twa >= 43 && I.twa <= 67 && Math.abs(I.r) < 4, hold: 1,
       done: "Esatto: barra verso il boma, cioè sottovento, e la prua è salita verso il vento." },
     { title: "Barra sopravento: si poggia", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Ora spingi la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, a piccoli colpi: fermati quando la lancetta è scesa un terzo della strada tra l'orizzontale e il basso. Poi centra la barra."],
+      text: ["Ora sposta la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, a piccoli colpi: fermati quando la lancetta è scesa un terzo della strada tra l'orizzontale e il basso. Poi centra la barra."],
       cond: I => I.twa >= 110 && I.twa <= 145 && Math.abs(I.r) < 4, hold: 1,
       done: "Barra sopravento, la barca poggia." },
     { title: "Tenere la rotta", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
@@ -633,13 +633,13 @@ function step(S, C, E, dt){
       cond: I => I.twa >= 43 && I.twa <= 72 && I.tt === "ok" && I.kn >= 3.3, hold: 1,
       done: "Pronto. Durante la virata la prua attraversa l'angolo morto, dove la vela non spinge: la barca lo supera grazie all'<em>abbrivio</em>, la velocità che ha già." },
     { title: "Virare", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "tt",
-      text: ["Spingi la barra <em>sottovento</em> (verso il boma) con decisione e tienila finché la prua ha attraversato il vento e sei in bolina sull'altro lato. Poi centra la barra.",
+      text: ["Sposta la barra <em>sottovento</em> (verso il boma) con decisione e tienila finché la prua ha attraversato il vento e sei in bolina sull'altro lato. Poi centra la barra.",
              "In bolina la vela resta cazzata su entrambe le mure: non serve toccarla."],
       cond: (I, S, B) => S.tacks > B.tacks && I.twa >= 40 && I.twa <= 78 && I.kn > 1.2, hold: 0.8,
       done: "Virata riuscita: il boma è passato dall'altra parte e il timoniere ha cambiato lato. A bordo si annuncia così: «Pronti a virare?», «Pronti!», «Viro!»." },
     { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare. Se non rallenti abbastanza, orza fino alla bolina, con la vela lasca.",
-             "Se la barca si pianta nel vento, <em>arretra</em>. Per uscirne spingi la barra <em>verso il boma</em>: la prua si allontana dal vento. Fuori dall'angolo morto centra la barra e cazza: la barca riparte."],
+             "Se la barca si pianta nel vento, <em>arretra</em>. Per uscirne sposta la barra <em>verso il boma</em>: la prua si allontana dal vento. Fuori dall'angolo morto centra la barra e cazza: la barca riparte."],
       // 0.20.2, due fasi. Fase 1: barca piantata (la condizione della 0.20.1, tenuta 1 s). Fase 2: uscita, prua ad almeno IRONS_A (40°) dal vento
       // e barca che va avanti, tenuta 1 s (hold); vale su tutte e due le mure. Lo stato delle fasi sta in B, che showStep rifà a ogni passo.
       cond: (I, S, B) => {
@@ -694,7 +694,7 @@ function step(S, C, E, dt){
 
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
-    { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si spinge dalla parte opposta: barra sottovento orza, sopravento poggia." },
+    { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
     { name: "Lezione 3", title: "Andature e filetti", steps: L3, desc: "Bolina, traverso, lasco, poppa; le mure; regolare la vela leggendo i filetti." },
     { name: "Lezione 4", title: "Vento reale e apparente", steps: L4, desc: "Perché andando veloci il vento sembra arrivare più da prua." },
     { name: "Lezione 5", title: "Virata e strambata", steps: L5, desc: "Cambiare mure, risalire il vento a zig-zag, strambare senza rischi." },
@@ -739,7 +739,7 @@ function step(S, C, E, dt){
       ["Orzare significa…", "girare la prua verso il vento", ["girare la prua lontano dal vento", "tirare la scotta", "girare a sinistra"], "Orzare e poggiare si riferiscono al vento, non a destra o sinistra."],
       ["Da che parte sta il boma?", "Sottovento, dalla parte opposta a quella da cui arriva il vento", ["Sopravento", "Sempre a dritta", "Sempre al centro della barca"], "Il vento spinge la vela e il boma dalla parte opposta; il timoniere siede sopravento per fare contrappeso."],
       ["La vela sbatte perché è troppo lascata. Come si dice?", "Fileggia", ["È in stallo", "Scuffia", "È a segno"], "Troppo lascata la vela fileggia; troppo cazzata va in stallo."] ],
-    [ ["Spingi la barra verso sinistra. Dove va la prua?", "Verso dritta", ["Verso sinistra", "Dritta avanti, la barca rallenta", "Dipende dal vento"], "La barra muove la pala del timone dalla parte opposta: la prua gira dalla parte opposta a dove spingi la barra."],
+    [ ["Sposta la barra verso sinistra. Dove va la prua?", "Verso dritta", ["Verso sinistra", "Dritta avanti, la barca rallenta", "Dipende dal vento"], "La barra muove la pala del timone dalla parte opposta: la prua gira dalla parte opposta a dove sposti la barra."],
       ["Barra sottovento, cioè verso il boma: cosa fa la barca?", "Orza", ["Poggia", "Si ferma", "Stramba"], "La regola: barra sottovento orza, barra sopravento poggia."],
       ["Perché conviene timonare usando poca barra?", "Perché ogni angolo di barra frena la barca", ["Perché la barra si può rompere", "Perché la barca scarroccia di più", "Non conviene: più barra si usa, meglio è"], "La pala angolata oppone resistenza all'acqua: piccole correzioni fatte presto sono meglio di grandi correzioni tardive."],
       ["La barca si è fermata nel vento e comincia ad andare all'indietro. Cosa succede alla barra?", "Funziona al contrario", ["Non ha più nessun effetto", "Funziona come prima", "Si blocca al centro"], "Con l'acqua che scorre sulla pala da dietro, l'effetto del timone si inverte."] ],
@@ -774,9 +774,9 @@ function step(S, C, E, dt){
       ["Poggiare", "Poggiare significa…", "allontanare la prua dal vento", ["avvicinare la prua al vento", "girare la barca sempre verso dritta", "aprire la vela verso l'esterno della barca"], "Poggiare allontana la prua dal vento; orzare la avvicina."],
       ["Orzare e l'angolo morto", "Che cosa succede se la prua punta troppo vicino al vento?", "La vela sbatte, non spinge e la barca si ferma", ["La vela spinge di più e la barca accelera", "La barca sbanda di colpo e rischia di scuffiare", "Il boma passa di colpo dall'altro lato"], "È l'angolo morto: la vela prende il vento di taglio e nessuna barca a vela può andare dritta contro il vento."],
       ["La scotta: lascare", "Cazzare la scotta significa…", "tirarla, così la vela si avvicina al centro", ["mollarla, così la vela si apre verso l'esterno", "legarla, così la vela resta ferma dov'è", "tirarla, così la vela si apre verso l'esterno"], "Cazzare è tirare la scotta e chiudere la vela; lascare è mollarla e aprirla."] ],
-    [ ["Come si timona", "Vuoi che la prua giri verso sinistra. Da che parte spingi la barra?", "La spingi verso dritta", ["La spingi verso sinistra", "La tieni ferma al centro", "Dipende da dove sta il boma"], "La barra gira la pala dalla parte opposta, quindi la prua va dalla parte opposta a quella verso cui spingi."],
-      ["Barra sottovento: si orza", "Il boma è sul lato sinistro e spingi la barra verso sinistra. Che cosa fa la barca?", "Orza: la prua sale verso il vento", ["Poggia: la prua si allontana dal vento", "Si ferma con la prua nel vento", "Stramba: il boma passa dall'altro lato"], "Il boma sta sottovento: barra verso il boma, cioè sottovento, e la barca orza."],
-      ["Barra sopravento: si poggia", "Vuoi poggiare. Verso quale lato spingi la barra?", "Verso il lato sopravento, lontano dal boma", ["Verso il lato sottovento, dove sta il boma", "Sempre verso dritta, qualunque sia il vento", "Al centro, e lasci fare al vento"], "Barra sopravento, cioè dalla parte opposta al boma, e la barca poggia."],
+    [ ["Come si timona", "Vuoi che la prua giri verso sinistra. Da che parte sposti la barra?", "La sposti verso dritta", ["La sposti verso sinistra", "La tieni ferma al centro", "Dipende da dove sta il boma"], "La barra gira la pala dalla parte opposta, quindi la prua va dalla parte opposta a quella verso cui sposti."],
+      ["Barra sottovento: si orza", "Il boma è sul lato sinistro e sposti la barra verso sinistra. Che cosa fa la barca?", "Orza: la prua sale verso il vento", ["Poggia: la prua si allontana dal vento", "Si ferma con la prua nel vento", "Stramba: il boma passa dall'altro lato"], "Il boma sta sottovento: barra verso il boma, cioè sottovento, e la barca orza."],
+      ["Barra sopravento: si poggia", "Vuoi poggiare. Verso quale lato sposti la barra?", "Verso il lato sopravento, lontano dal boma", ["Verso il lato sottovento, dove sta il boma", "Sempre verso dritta, qualunque sia il vento", "Al centro, e lasci fare al vento"], "Barra sopravento, cioè dalla parte opposta al boma, e la barca poggia."],
       ["Tenere la rotta", "Un timoniere corregge la rotta con colpi di barra ampi e continui. Che effetto ha?", "La barca rallenta: ogni angolo di barra frena", ["La barca accelera, perché il timone la spinge avanti", "Nessuno: la barra non cambia la velocità", "La barca tiene meglio la rotta e va più dritta"], "Ogni angolo di barra frena la barca: timonare bene vuol dire usarne poca."] ],
     [ ["Riepilogo", "Quale ordine va dall'andatura più vicina al vento a quella più lontana?", "Bolina, traverso, lasco, gran lasco, poppa", ["Traverso, bolina, lasco, poppa, gran lasco", "Bolina, lasco, traverso, gran lasco, poppa", "Poppa, gran lasco, lasco, traverso, bolina"], "Dalla più vicina alla più lontana dal vento: bolina, traverso, lasco, gran lasco, poppa."],
       ["Poppa", "La poppa è l'andatura più veloce?", "No: il traverso e il lasco sono più veloci", ["Sì: il vento spinge la vela da dietro", "Sì, ma solo con la vela tutta cazzata", "No: la più veloce è la bolina stretta"], "In poppa il vento spinge da dietro, ma il traverso e il lasco sono andature più veloci."],
@@ -790,7 +790,7 @@ function step(S, C, E, dt){
     [ ["Cambiare mure", "Che cos'è una strambata?", "Cambiare mure con la poppa che attraversa il vento", ["Cambiare mure con la prua che attraversa il vento", "Poggiare fino a portare il vento esattamente da dietro", "Fermarsi con la prua nel vento e poi arretrare"], "Nella strambata è la poppa ad attraversare il vento; nella virata è la prua."],
       ["Prepararsi a virare", "Che cos'è l'abbrivio?", "La velocità che la barca ha già e conserva", ["La spinta del vento sulla vela cazzata", "La forza che fa sbandare la barca in raffica", "Il tratto di bolina fra una virata e l'altra"], "È la velocità che porta la barca attraverso l'angolo morto, dove la vela non spinge."],
       ["La strambata", "Perché in poppa la strambata è delicata?", "Il boma attraversa la barca di colpo", ["La prua si pianta nel vento e si ferma", "La vela smette di spingere del tutto", "Il timone comincia a funzionare al contrario"], "Con la vela tutta aperta il boma attraversa la barca con violenza: può far scuffiare o colpire qualcuno."],
-      ["Una virata che non riesce", "La barca si è piantata nel vento e comincia ad arretrare. Come ne esci?", "Spingi la barra verso il boma, poi centri e cazzi", ["Muovi la barra di continuo da un lato all'altro", "Cazzi e lasci la scotta di continuo, senza toccare la barra", "Tieni ferma la prua con la barra, senza farla girare"], "Andando all'indietro la barra funziona al contrario: spinta verso il boma, la prua si allontana dal vento. Quando la prua è fuori dall'angolo morto si centra la barra e si cazza, e la vela torna a spingere. Finché la prua resta nel vento, la vela non può spingere la barca in avanti."] ],
+      ["Una virata che non riesce", "La barca si è piantata nel vento e comincia ad arretrare. Come ne esci?", "Sposta la barra verso il boma, poi centri e cazzi", ["Muovi la barra di continuo da un lato all'altro", "Cazzi e lasci la scotta di continuo, senza toccare la barra", "Tieni ferma la prua con la barra, senza farla girare"], "Andando all'indietro la barra funziona al contrario: spostata verso il boma, la prua si allontana dal vento. Quando la prua è fuori dall'angolo morto si centra la barra e si cazza, e la vela torna a spingere. Finché la prua resta nel vento, la vela non può spingere la barca in avanti."] ],
     [ ["Raffiche e sbandamento", "Che cos'è lo sbandamento?", "L'inclinazione della barca spinta dal vento sulla vela", ["Lo scivolamento della barca di lato, verso sottovento", "La rotazione della prua verso il vento in raffica", "Il rallentamento improvviso della barca in raffica"], "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo sbandamento."],
       ["La scuffia", "Quale comportamento in raffica porta più facilmente alla scuffia?", "Tenere la vela tutta cazzata senza lascare", ["Lascare la scotta appena entri nella raffica", "Orzare un poco tenendo la vela regolata", "Sporgersi fuori bordo per fare contrappeso"], "Con la vela tutta cazzata e senza lascare, la forza della raffica fa sbandare la barca fino a rovesciarla."],
       ["Assorbire una raffica", "La raffica è passata e la barca si raddrizza. Che cosa fai con la vela?", "La cazzi di nuovo fino a regolarla", ["Lasci ancora un po' di scotta", "Non la tocchi più fino alla boa", "La fai sbattere per rallentare"], "In raffica si lasca per ridurre la forza sulla vela; quando la raffica passa si cazza di nuovo."],
@@ -802,7 +802,7 @@ function step(S, C, E, dt){
     ["Albero", "Il palo verticale che regge la vela.", "Lezione 1"],
     ["Andatura", "La direzione della barca rispetto al vento: bolina, traverso, lasco, gran lasco, poppa.", "Lezione 3"],
     ["Angolo morto", "Il settore attorno alla direzione del vento in cui la vela non spinge e non si può navigare: nelle scuole si indica di solito in circa 45° per lato (90° in tutto); le derive riescono a stringere un po' di più.", "Lezione 1"],
-    ["Barra", "Il manico del timone. Si spinge dalla parte opposta a quella verso cui si vuole girare: barra sottovento, la barca orza; barra sopravento, la barca poggia.", "Lezione 2"],
+    ["Barra", "Il manico del timone. Si sposta dalla parte opposta a quella verso cui si vuole girare: barra sottovento, la barca orza; barra sopravento, la barca poggia.", "Lezione 2"],
     ["Boa", "Galleggiante ancorato al fondo, usato come riferimento o come segnale.", "Prove"],
     ["Linea d'arrivo", "Linea immaginaria fra due boe (in regata spesso fra una boa e la barca giuria): si arriva quando la si attraversa venendo dal percorso.", "Prove"],
     ["Bolina", "L'andatura più vicina al vento. Bolina stretta: circa 45°, il massimo che la barca riesce a stringere; bolina larga: circa 60-75°.", "Lezione 3"],
@@ -834,6 +834,7 @@ function step(S, C, E, dt){
     ["Scarroccio", "Lo scivolamento laterale della barca spinta dal vento, che la deriva riduce ma non annulla.", "Lezione 1"],
     ["Scotta", "La cima con cui si regola la vela.", "Lezione 1"],
     ["Scuffiare", "Rovesciarsi: succede alle derive quando lo sbandamento diventa eccessivo.", "Lezione 6"],
+    ["Segnavento", "La piccola freccia gialla in cima all'albero: la punta indica da dove arriva il vento apparente (per questo sembra opposta alla freccia gialla grande «apparente», che arriva dal mare e punta verso la barca).", "Lezione 4"],
     ["Sinistra", "Il lato sinistro della barca, guardando verso prua.", "Lezione 1"],
     ["Sopravento", "Il lato colpito per primo dal vento; in generale, la parte da cui arriva il vento.", "Lezione 1"],
     ["Sottovento", "Il lato riparato, opposto a quello da cui arriva il vento.", "Lezione 1"],
@@ -860,7 +861,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.21"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.21.2"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -1153,17 +1154,18 @@ function step(S, C, E, dt){
     if (S.u < -0.05){ S.indietro = A >= IRONS_A || (S.indietro === 2 && A >= IRONS_A - 3) ? 2 : 1; S.indietroT = 0; }
     else { S.indietroT = (S.indietroT || 0) + dt; S.indietro = S.indietro && S.u < IRONS_U && S.indietroT <= 10 ? 3 : 0; }
   }
-  const regTotal = () => reg.capsizes + reg.gybesV + reg.irons + reg.wrongMarks + reg.contacts + reg.ocs + reg.outLine;
+  const regTotal = () => reg.capsizes + reg.gybesV + reg.irons + reg.wrongMarks + reg.contactsPen + reg.ocs + reg.outLine; // 0.21.1: un contatto senza colpa si scrive ma non conta
   function regText(){
     const n = (k, one, many) => k === 1 ? one : k + " " + many, parts = [];
     if (reg.capsizes) parts.push(n(reg.capsizes, "1 scuffia", "scuffie"));
     if (reg.gybesV) parts.push(n(reg.gybesV, "1 strambata a vela aperta", "strambate a vela aperta"));
     if (reg.irons) parts.push("piantato " + (reg.irons === 1 ? "1 volta" : reg.irons + " volte") + " (" + Math.round(reg.ironsSec) + " s)");
     if (reg.wrongMarks) parts.push(n(reg.wrongMarks, "1 boa dal lato sbagliato", "boe dal lato sbagliato"));
-    if (reg.contacts) parts.push(n(reg.contacts, "1 contatto", "contatti") + (reg.contactsPen ? " (" + (reg.contactsPen === reg.contacts ? (reg.contacts === 1 ? "con penalità" : "tutti con penalità") : reg.contactsPen + " con penalità") + ")" : ""));
+    if (reg.contactsPen) parts.push(n(reg.contactsPen, "1 contatto con penalità", "contatti con penalità"));
     if (reg.ocs) parts.push("partenza anticipata");
     if (reg.outLine) parts.push("linea tagliata fuori dagli estremi" + (reg.outLine > 1 ? " (" + reg.outLine + " volte)" : ""));
-    return parts.length ? "Errori: " + parts.join(", ") : "Errori: nessuno";
+    const free = reg.contacts - reg.contactsPen, note = free ? n(free, "1 contatto senza colpa, non conta", "contatti senza colpa, non contano") : "";
+    return parts.length ? "Errori: " + parts.join(", ") + (note ? " · " + note : "") : "Errori: nessuno" + (note ? " (" + note + ")" : "");
   }
   function regShow(el){ const t = regText(); el.textContent = t; el.title = t; el.classList.toggle("some", regTotal() > 0); }
 
@@ -1841,8 +1843,11 @@ function step(S, C, E, dt){
       R.contacts[key] = simTime;
       const tA = sgn(norm180(local.twd - A.S.h)), tB = sgn(norm180(local.twd - B.S.h));
       let guilty, why;
-      if (tA !== tB){ guilty = tA < 0 ? A : B; why = "era mure a sinistra e doveva lasciare strada a chi era mure a dritta"; }
-      else { const ya = toWF(A.S.x, A.S.y)[1], yb = toWF(B.S.x, B.S.y)[1]; guilty = ya < yb ? A : B; why = "era sopravento con le stesse mure e doveva stare lontano"; }
+      if (tA !== tB) guilty = tA < 0 ? A : B;
+      else { const ya = toWF(A.S.x, A.S.y)[1], yb = toWF(B.S.x, B.S.y)[1]; guilty = ya < yb ? A : B; }
+      const v = (tu, lui) => guilty.me ? tu : lui; // 0.21.2: «tu eri… dovevi» al giocatore, terza persona per l'avversario
+      why = tA !== tB ? v("eri", "era") + " mure a sinistra e " + v("dovevi", "doveva") + " lasciare strada a chi era mure a dritta"
+                      : v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano";
       guilty.pen += 15;
       for (const o of [A, B]){ o.S.u *= 0.6; }
       const dx = (A.S.x - B.S.x) / (d || 1), dy = (A.S.y - B.S.y) / (d || 1);
@@ -1903,7 +1908,7 @@ function step(S, C, E, dt){
     $("rDone").hidden = false;
     if (!quiet) $("rDoneText").textContent = pos + "° su " + rank.length + " in " + fmtTime(tot) +
       (R.boats[0].pen ? " (penalità comprese: " + R.boats[0].pen + " s)" : "") + "." + (!prev ? "" : tot < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
-      (regTotal() === 0 ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
+      (regTotal() === 0 ? (reg.contacts ? " " + regText() + ". ★ senza errori." : " Nessun errore: ★ senza errori.") : " " + regText() + ".");
   }
   function legName(b){
     if (b.fin !== null) return "arrivata · " + fmtTime(Math.round(b.fin));
@@ -2047,7 +2052,7 @@ function step(S, C, E, dt){
     else if (S.heel > 25){ cls = "bad"; msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco." : "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
     // 0.20.2, fasi di backCheck(): sotto IRONS_A (40°) la barra verso il boma, poi barra al centro e cazzare, poi lasciar prendere velocità
-    else if (S.indietro === 1){ back = true; cls = "bad"; msg = "All'indietro la barra funziona al contrario: spingila verso il boma, poi centrala e cazza."; }
+    else if (S.indietro === 1){ back = true; cls = "bad"; msg = "All'indietro la barra funziona al contrario: spostala verso il boma, poi centrala e cazza."; }
     else if (S.indietro === 2){ back = true; cls = "bad"; msg = "Stai andando all'indietro, ma la prua è fuori dall'angolo morto: centra la barra e cazza."; }
     else if (S.indietro === 3 && I.twa >= IRONS_A - 3){ back = true; cls = ""; msg = "Ora vai avanti piano: barra al centro, cazza e lascia prendere velocità."; }
     else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = ""; msg = "Raffica in arrivo: se la barca sbanda troppo, lasca; altrimenti è un'occasione per andare più veloci."; } // cls vuoto: colore normale del testo, non è un allarme
@@ -2643,7 +2648,8 @@ function step(S, C, E, dt){
     const L = ses.L; ses.t += dt;
     // schermata, ricomincia, passo di lezione
     const mk = sesMode(), sk = mode === "lesson" ? (lessonIdx + 1) + "." + (stepIdx + 1) : null;
-    if (mk !== L.mode){ L.mode = mk; sesEv("apre", sesModeName()); }
+    if (mk !== L.mode){ L.mode = mk; sesEv("apre", sesModeName());
+      if (mode === "race" && R && R.t >= 0 && R.boats[0].fin === null) sesEv("regata_in_corso", "lato " + R.boats[0].leg + " t=" + Math.round(R.t) + "s"); } // 0.21.2: registrazione accesa a regata partita: la partenza non c'è nel file
     else if (S !== L.S && mode !== "menu" && sk === L.step) sesEv("ricomincia", sesModeName());
     if (sk !== L.step){ L.step = sk; if (sk){ ses.stepName[sk] = $("lTitle").textContent; sesLine("L " + sesT() + " " + sk + " «" + ses.stepName[sk] + "»"); } }
     if (sk) ses.stepT[sk] = (ses.stepT[sk] || 0) + dt;
@@ -2661,9 +2667,18 @@ function step(S, C, E, dt){
     const leg = mode === "race" && R && R.boats[0] ? R.boats[0].leg : null;
     if (leg !== null && L.leg !== null && leg > L.leg) sesEv(leg === 1 ? "partito" : "lato", String(leg));
     L.leg = leg;
+    // 0.21.2: arrivo in regata = tempo netto (fin, penalità comprese), una volta sola per regata; a registrazione accesa dopo l'arrivo non si scrive
+    const rf = mode === "race" && R && R.boats[0] ? R.boats[0].fin : null;
+    if (R !== L.R){ L.R = R; L.rfin = rf !== null; }
+    else if (rf !== null && !L.rfin){ L.rfin = true; sesEv("arrivo", Math.round(rf) + "s"); }
     // registro degli errori
     if (reg !== L.reg){ L.reg = reg; L.regV = Object.assign({}, reg); }
-    for (const k in reg) if (k !== "ironsSec" && reg[k] > L.regV[k]){ sesEv("errore", k + " +" + (reg[k] - L.regV[k])); L.regV[k] = reg[k]; }
+    for (const k in reg) if (k !== "ironsSec" && reg[k] > L.regV[k]){
+      const d = reg[k] - L.regV[k];
+      if (k === "contacts"){ const p = reg.contactsPen - L.regV.contactsPen; if (d > p) sesEv("contatto_senza_colpa", "+" + (d - p)); } // 0.21.1: «contacts» non è più un errore; la parte con colpa esce come errore contactsPen (reg.contacts viene prima di contactsPen)
+      else sesEv("errore", k + " +" + d);
+      L.regV[k] = reg[k];
+    }
     // testi mostrati
     if (S.toast && S.toast !== L.toast) sesLine("T " + sesT() + " " + S.toast.text);
     L.toast = S.toast;
@@ -2741,7 +2756,10 @@ function step(S, C, E, dt){
       "#    tws e aws in nodi; barra −100 a sinistra, +100 a dritta; scotta 0 cazzata, 100 lascata;",
       "#    andatura AM angolo morto, BS bolina stretta, BL bolina larga, TR traverso, LA lasco, GL gran lasco, PO poppa, SC scuffiata",
       "#  E t tipo dettagli   evento (apre, ricomincia, virata, strambata, strambata_vela_aperta, scuffia, raddrizza, raddrizzata, boa, arrivo,",
-      "#                       partito, lato, passo_completato, errore, dialogo, registrazione_accesa/spenta;",
+      "#                       partito, lato, passo_completato, errore, contatto_senza_colpa, regata_in_corso, dialogo, registrazione_accesa/spenta;",
+      "#                       arrivo Ns: nelle prove i secondi di gioco, nelle regate il tempo netto con le penalità, una volta sola per regata;",
+      "#                       regata_in_corso lato N t=Ns: registrazione accesa a regata già partita (la partenza non è nel file);",
+      "#                       contatto_senza_colpa +N: contatto che non conta negli errori (gli altri compaiono come «errore contactsPen +N»);",
       "#                       alla riaccensione «pausa Ns» = secondi veri passati a registrazione spenta; t non li conta)",
       "#  L t lezione.passo «titolo»   passo di lezione mostrato",
       "#  H t testo   suggerimento del pannello cambiato (rimasto almeno 0,3 s)",

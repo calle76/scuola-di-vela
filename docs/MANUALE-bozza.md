@@ -24,6 +24,22 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 | Vista del percorso: tenuto premuto, sposta la barca verso il bordo dello schermo opposto all'arrivo o alla boa e, se serve, allontana l'inquadratura finché l'arrivo o la boa si vedono; al rilascio tornano posizione e zoom di prima (solo nelle prove e nelle regate) | Q |
 | Avvicinare e allontanare l'inquadratura | pulsanti + e − sul mare, rotellina del mouse (dalla 0.19.3 si allontana fino a circa 480 m di campo in altezza a 1360×650) |
 
+**Cosa si vede sul mare** (scritto il 13 ottobre 2026 leggendo il codice del disegno, `drawBoat`, `drawWindArrows`, `drawSpeedArrow`, `drawTurnHint`; i colori sono quelli del gioco):
+
+- **Freccia bianca «reale»:** il vento reale; arriva dal mare e punta verso la barca.
+- **Freccia gialla «apparente»:** il vento apparente, dallo stesso lato; nelle prime tre lezioni non c'è.
+- **Freccia verde chiaro «velocità»:** parte dal centro della barca e punta dove la barca si muove davvero (scarroccio compreso); più è lunga, più la barca è veloce; sotto 0,3 nodi non si vede.
+- **Piccola freccia gialla in cima all'albero (segnavento):** la punta indica da dove arriva il vento apparente, quindi sembra opposta alla freccia gialla grande.
+- **Freccia gialla curva davanti alla prua:** compare mentre la prua sta girando e indica il lato verso cui gira. Ha lo stesso giallo delle frecce «apparente»; non ha scritte.
+- **Filetti rosso e verde sulla vela:** uno per lato; si agita quello che mostra la vela mal regolata (lezione 3).
+- **Rosa dell'angolo morto, in basso:** l'arco rosso è l'angolo morto; la lancetta diventa rossa quando la prua ci entra.
+- **Freccia arancione al bordo dello schermo:** dove si trova la boa o l'arrivo quando sono fuori schermo; le boe sono arancioni (grigie quando sono già girate); l'arco giallo chiaro con la punta, attorno a una boa, è il verso del giro.
+- **Sbandamento:** il mezzo cerchio in basso a sinistra, con la lancetta bianca e la scritta «sbandamento N°»; le zone colorate vanno dal verde (sbandamento contenuto) al rosso scuro (barca quasi sdraiata).
+- **Scarroccio:** lo scivolamento laterale non ha un indicatore proprio. Si vede dalla freccia verde chiaro «velocità», che non è allineata con la prua: la differenza è lo scarroccio. Il numero in gradi sta nel pannello, alla voce «Scarroccio».
+- **Linea scura corta, traversale, vicino all'albero:** è l'albero inclinato visto dall'alto, verso sottovento. Più è lunga, più la barca sbanda.
+- **Pallino arancione:** è il timoniere. Si sporge sopravvento da solo per contrastare lo sbandamento; il suo peso conta nella fisica ma non si regola con un comando.
+- **Tratti grigio scuro:** boma, albero (si vede come una linea quando la barca sbanda), pala e barra del timone sotto la poppa. Non sono frecce.
+
 Dalla 0.18 il gioco può registrare la sessione per segnalare problemi (impostazioni ⚙, «Registra la sessione»; il tasto M segna un momento): è spenta di norma e il file resta sul computer, senza nessuna connessione. Una volta accesa, la registrazione resta accesa finché non la spegni tu: non si ferma alla fine di una prova. Se la spegni e la riaccendi, nel file le pause sono scritte in secondi veri.
 
 Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate con la risposta data, quella giusta e la spiegazione. «Ripassa solo le sbagliate» riporta solo quelle domande e non cambia il punteggio migliore, che si aggiorna soltanto con un ripasso completo.
@@ -61,7 +77,7 @@ Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (f
 | **Il raddrizzamento** | Con un pulsante, in 3 secondi | È una manovra fisica che richiede equilibrio e tempo | Basso |
 | **Le raffiche** | Chiazze che viaggiano col vento; si vedono fino a circa 115 m sopravento alla barca, e gli avversari lontani non sentono le tue | In barca vera il campo di vento esiste su tutta l'area e si vede da lontano, con una struttura più complessa sull'acqua | Basso per le prove; da rifare per regate e tattico |
 | **Una sola vela** | Solo la randa nel gioco; il fiocco c'è solo nel prototipo | Le derive a due hanno anche il fiocco, e le più veloci un gennaker o uno spinnaker | Per questo ci sono i livelli successivi |
-| **Penalità e regole di regata** | Il contatto costa 15 secondi; toccare una boa non è ancora punito | In regata ci sono i giri di penalità e regole più ricche | Medio |
+| **Penalità e regole di regata** | Il contatto costa 15 secondi a chi ha torto (mure a sinistra contro mure a dritta, o sopravento con le stesse mure); un contatto senza colpa tua resta scritto ma non conta negli errori né toglie la ★; toccare una boa non è ancora punito | In regata ci sono i giri di penalità e regole più ricche | Medio |
 
 Nota onesta sulla velocità: confrontando con una tabella trovata in un forum (provenienza non verificabile) per una deriva monoposto standard, a 10 nodi di vento il gioco risulta più lento del 20-40%, soprattutto in poppa, dove una barca vera plana. Non è un difetto accertato: i dati sono incerti e i confronti approssimativi.
 

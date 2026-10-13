@@ -6,6 +6,8 @@
 #  c  fisica identica al bit con registratore acceso e spento (Math.random con seme, passi fissi), più la variante con un numero
 #     casuale consumato di proposito, per mostrare che il metro vede una differenza
 #  d  costo per passo di simulazione e fotogrammi al secondo, acceso contro spento
+#  e  regate (0.21.2): un solo «arrivo» col tempo netto; registrazione accesa a regata in corso (evento regata_in_corso, niente «partito»);
+#     accesa dopo l'arrivo (niente «arrivo»); stessa regata con registrazione accesa e spenta identica al bit; il file letto da analizza_sessione.py
 # Ogni parte dichiara quanti casi ha misurato e fallisce se sono zero. Esce con 1 se qualcosa non va.
 import asyncio, io, pathlib, sys, contextlib, statistics
 from playwright.async_api import async_playwright
@@ -16,7 +18,7 @@ import re
 VERSIONE = re.search(r'const VERSIONE = "([^"]+)"', (pathlib.Path(__file__).resolve().parent.parent / "index.html").read_text()).group(1)  # 0.19: non più scritta a mano
 URL = BASE + "#collaudo"
 OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=True)
-PARTI = sys.argv[1] if len(sys.argv) > 1 else "abcd"
+PARTI = sys.argv[1] if len(sys.argv) > 1 else "abcde"
 fallito = []
 non_valido = []
 def esito(nome, ok, det=""):
@@ -280,12 +282,77 @@ async def parte_d(p, rip=3):
     esito("meno di 0,05 ms in più per passo (soglia nostra)", extra < 50, f"{extra:+.1f} µs per passo")
     await b.close()
 
+
+# ---------------------------------------------------------------- e
+SEME_E = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
+# quando: "inizio" = registrazione accesa prima di aprire la regata; "corso" = accesa a R.t >= 40; "dopo" = accesa dopo l'arrivo; "mai" = mai
+REGATA_E = """([quando, seme]) => {
+  const sv = __sv, dt = 1 / 60, on = () => { const c = document.getElementById('sesOn'); c.checked = true; c.dispatchEvent(new Event('change')); };
+  if (quando === 'inizio' || quando === 'riavvio') on();
+  sv.fast(0); sv.openItem(['r', 0]); __seed(seme); sv.simTime = 0;
+  const sel = document.getElementById('aiLevel'); sel.value = 'principianti'; sel.dispatchEvent(new Event('change'));
+  __seed(seme);
+  const R = sv.R, me = R.boats[0]; let n = 0;
+  while (me.fin === null && R.t < 900 && n < 60 * 1200) {
+    if (quando === 'corso' && R.t >= 40 && !sv.ses.on) on();
+    sv.pilota(dt); sv.run(dt, 1); n++;
+  }
+  let fin2 = null, ric = 0;
+  if (quando === 'riavvio') {   // «Nuova regata» (stesso pulsante di «Ricomincia»): startRace crea un nuovo R
+    const R1 = sv.R; sv.run(dt, 60); document.getElementById('rAgain').click(); ric = sv.R !== R1 ? 1 : 0;
+    const R2 = sv.R, me2 = R2.boats[0]; n = 0;
+    while (me2.fin === null && R2.t < 900 && n < 60 * 1200) { sv.pilota(dt); sv.run(dt, 1); n++; }
+    fin2 = me2.fin;
+  }
+  if (quando === 'dopo') on();
+  sv.run(dt, 120);
+  const imp = R.boats.map(b => [b.S.x, b.S.y, b.S.h, b.S.u].map(v => v.toFixed(9)).join(',')).join(';');
+  return { fin: me.fin, fin2, ric, imp, righe: sv.ses.lines.filter(l => l[0] === 'E'), n };
+}"""
+
+async def parte_e(p):
+    print("e) regate: arrivo, accensione a regata in corso, bit-identico", flush=True)
+    b = await p.chromium.launch(); res = {}
+    for quando in ["inizio", "corso", "dopo", "mai", "riavvio"]:
+        ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page(); await pg.add_init_script(SEME_E)
+        errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+        await pg.goto(URL); await pg.wait_for_timeout(300)
+        res[quando] = await pg.evaluate(REGATA_E, [quando, 3])
+        if quando == "inizio":
+            await pg.click("#openSet"); testo = await scarica(pg)
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf): r = AS.analizza(testo)
+            esito("e: file letto da analizza_sessione.py, riassunto del gioco uguale a quello ricalcolato", not r["diff"] and "arrivo 1" in buf.getvalue(), f"{r['diff']}")
+            esito("e: la legenda del file descrive arrivo in regata e regata_in_corso", "regata_in_corso lato N" in testo and "tempo netto con le penalità" in testo)
+        esito(f"e/{quando}: nessun errore JS", not errs, f"{errs}"); await ctx.close()
+    for quando, r in res.items():
+        print(f"   {quando}: arrivo a {r['fin'] and round(r['fin'], 1)} s; eventi: " + " | ".join(x[2:] for x in r["righe"] if not x.split(" ")[2].startswith("registrazione_")), flush=True)
+    esito("e: tutte le regate sono arrivate (metro di misura)", all(r["fin"] is not None for r in res.values()), str({k: r["fin"] for k, r in res.items()}))
+    def conta(r, nome): return sum(x.split(" ")[2] == nome for x in r["righe"])
+    ri = res["inizio"]; fin = f"{round(ri['fin'])}s"
+    esito("e/inizio: un solo arrivo, col tempo netto (fin)", conta(ri, "arrivo") == 1 and any(x.endswith(" arrivo " + fin) for x in ri["righe"]), f"{[x for x in ri['righe'] if ' arrivo' in x]} (fin {fin})")
+    esito("e/inizio: partito una volta, niente regata_in_corso", conta(ri, "partito") == 1 and conta(ri, "regata_in_corso") == 0)
+    rc = res["corso"]
+    esito("e/corso: regata_in_corso una volta, lato e tempo", conta(rc, "regata_in_corso") == 1 and any("regata_in_corso lato 1 t=40s" in x for x in rc["righe"]), f"{[x for x in rc['righe'] if 'in_corso' in x]}")
+    esito("e/corso: niente «partito» inventato, un solo arrivo", conta(rc, "partito") == 0 and conta(rc, "arrivo") == 1)
+    rd = res["dopo"]
+    esito("e/dopo: acceso dopo l'arrivo, né arrivo né regata_in_corso", conta(rd, "arrivo") == 0 and conta(rd, "regata_in_corso") == 0)
+    rv = res["riavvio"]; arr = [x for x in rv["righe"] if x.split(" ")[2] == "arrivo"]
+    esito("e/riavvio: «Nuova regata» crea un nuovo R (non riusa lo stesso)", rv["ric"] == 1)
+    esito("e/riavvio: due regate di seguito, due arrivi, ciascuno col proprio tempo netto, nell'ordine",
+          len(arr) == 2 and rv["fin2"] is not None and [x.split(" ")[3] for x in arr] == [f"{round(rv['fin'])}s", f"{round(rv['fin2'])}s"],
+          f"{arr} (fin {rv['fin']}, fin2 {rv['fin2']})")
+    imps = {k: r["imp"] for k, r in res.items() if k != "riavvio"}; fins = {k: r["fin"] for k, r in res.items()}
+    esito("e: stessa regata con registrazione accesa (inizio, corso, dopo) e spenta: arrivo e posizioni identici al bit", len(set(imps.values())) == 1 and len(set(fins.values())) == 1 and len(imps["mai"]) > 50, str(fins))
+
 async def main():
     async with async_playwright() as p:
         if "a" in PARTI: await parte_a(p)
         if "b" in PARTI: await parte_b(p)
         if "c" in PARTI: await parte_c(p)
         if "d" in PARTI: await parte_d(p)
+        if "e" in PARTI: await parte_e(p)
     print("esito:", "tutto OK" if not fallito else f"{len(fallito)} verifiche fallite: {fallito}")
     sys.exit(1 if (fallito or non_valido) else 0)
 asyncio.run(main())

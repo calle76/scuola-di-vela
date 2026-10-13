@@ -7,7 +7,7 @@
 # Dalla 0.20.2 il suggerimento «all'indietro» compare anche nei passi di lezione a suggerimenti spenti, ma solo se il passo dà la barra:
 # tabella fissa dei passi (3d) e lo stesso pilota dentro la lezione 5 passo 4 (3e).
 # Dalla 0.20.2 il suggerimento ha fasi sulla soglia unica IRONS_A = 40° (rosa, registro e regola d'uscita del 5.4): sotto,
-# «spingila verso il boma, poi centrala e cazza»; da 40° in su, «centra la barra e cazza», con isteresi: si torna al primo testo
+# «spostala verso il boma, poi centrala e cazza»; da 40° in su, «centra la barra e cazza», con isteresi: si torna al primo testo
 # solo sotto 37°. Dopo aver arretrato, la barca che va avanti piano (sotto 1 nodo, prua da 37° in su) vede il testo B.
 # 3f: una barca che arretra già fuori dall'angolo morto (46-55°, soglia 40°) vede subito il secondo testo. 3g: casi 6 (avanti piano
 # dopo aver arretrato) e 7 (controllo). 3h: caso 8, la barca smette di arretrare con la prua sotto 37° e poi la prua sale
@@ -30,7 +30,7 @@ W, H = (int(ARGS[0]), int(ARGS[1])) if len(ARGS) > 1 else (1360, 650)
 SEMI = range(1, 21) if LUNGO else range(1, 3)   # semi fissi, decisi prima dei risultati (0.20.3)
 CONTRARIO = False                               # solo per la contro-prova P1: il pilota spinge la barra lontano dal boma
 NUOVO = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."
-INDIETRO = "All'indietro la barra funziona al contrario: spingila verso il boma, poi centrala e cazza."                  # prua sotto 40°
+INDIETRO = "All'indietro la barra funziona al contrario: spostala verso il boma, poi centrala e cazza."                  # prua sotto 40°
 INDIETRO2 = "Stai andando all'indietro, ma la prua è fuori dall'angolo morto: centra la barra e cazza."                   # da 40° in su (isteresi: fino a 37°)
 AVANTI = "Ora vai avanti piano: barra al centro, cazza e lascia prendere velocità."                                    # testo B
 # 3c) barca che arretra: i casi delle registrazioni di Ale (twa, nodi), su tutte e due le mure
@@ -54,7 +54,7 @@ ATTREZZI = """()=>{ const sv=__sv, T={};
   if(dove==="free"){ sv.run(1/60,3600); const S=sv.S; T.capRisc=S.capsized; S.capsized=false; S.righting=0; S.indietro=0; S.indietroT=0; }
   const S=sv.S; S.h=(sv.twd-twa+360)%360; S.u=kn/1.944; S.vl=0; S.r=0; S.heel=0; S.heelRate=0; sv.ctl.sheet=sh; sv.ctl.tiller=0; };
  window.__T=T; }"""
-# Pilota che segue il suggerimento (3c, 3e): finché legge «spingila verso il boma» tiene la freccia dalla parte del boma;
+# Pilota che segue il suggerimento (3c, 3e): finché legge «spostala verso il boma» tiene la freccia dalla parte del boma;
 # con «centra la barra e cazza» o il testo B centra (spazio) e tiene ↑; quando il testo sparisce rilascia.
 # Misura, a ogni passo: primo istante all'indietro, mura (lato del vento con segno), uscita con la regola del 5.4
 # (prua ad almeno 40° e barca che va avanti, tenuta 1 s), primo istante a 1 nodo, passo completato (stepDone).
@@ -72,7 +72,7 @@ SEGUI = """([seme,dove,twa,kn,sh,contrario])=>{ const T=__T, sv=__sv; T.prova(se
   if(t1===null&&S.u*1.944>=1) t1=t;
   if(tDone===null&&sv.stepDone) tDone=t;
   if(n%6) continue;
-  sv.panel(); const h=T.hint(), uno=h.includes("spingila verso il boma"), due=h.includes("centra la barra e cazza"), avanti=h.includes("barra al centro, cazza");
+  sv.panel(); const h=T.hint(), uno=h.includes("spostala verso il boma"), due=h.includes("centra la barra e cazza"), avanti=h.includes("barra al centro, cazza");
   if((uno||due)&&tTesto===null) tTesto=t; if(uno) visto1=true; if(due) visto2=true;
   const fase=uno?1:due?2:0; if(fase&&!primo) primo=fase; if(fase===1&&ultimo===2){ if(aprec>=37&&a>=37) alti++; else bassi++; } if(fase) ultimo=fase; aprec=a;
   if(avanti&&t1!==null&&t-t1>0.5+1e-9) bTardi=true;
@@ -85,7 +85,7 @@ SEGUI = """([seme,dove,twa,kn,sh,contrario])=>{ const T=__T, sv=__sv; T.prova(se
 # 3f) il primo testo «all'indietro» letto (uno qualunque dei tre) entro 3 s simulati
 PRIMO = """([dove,twa])=>{ const T=__T, sv=__sv; T.prova(1,dove,twa,-0.8,1);
  for(let n=1;n<=180;n++){ sv.run(1/60,1); if(n%6) continue; sv.panel(); const h=T.hint();
-  if(h.includes("spingila verso il boma")||h.includes("centra la barra e cazza")||h.includes("barra al centro, cazza")) return h; }
+  if(h.includes("spostala verso il boma")||h.includes("centra la barra e cazza")||h.includes("barra al centro, cazza")) return h; }
  return T.hint(); }"""
 # 3g) caso 6: la barca arretra (0,2 s a −0,3 nodi), poi va avanti piano (0,3 nodi) a 41-44°; caso 7: barca nuova a 43° e 0,5 nodi
 # (0.20.3, cambiato dopo i risultati: se una raffica la fa arretrare nei 5 s la prova è «non misurata», contata e stampata a parte)
@@ -117,7 +117,7 @@ CASO8 = """([seme,twa,sh])=>{ const T=__T, sv=__sv; T.prova(seme,"free",twa,-0.3
   if(!centrato&&(premuto==="ArrowLeft"||premuto==="ArrowRight")){ if(T.ta()>=37){ T.tasto("keyup",premuto); premuto=null; T.tasto("keydown"," "); T.tasto("keyup"," "); centrato=true; } }
   if(tA!==null&&b&&tB===null) tB=t;
   if(t1===null&&kn>=1) t1=t;
-  if(centrato){ const h=T.hint(), uno=h.includes("spingila verso il boma"), due=h.includes("centra la barra e cazza");   // 0.20.3: dopo aver centrato fa quello che legge
+  if(centrato){ const h=T.hint(), uno=h.includes("spostala verso il boma"), due=h.includes("centra la barra e cazza");   // 0.20.3: dopo aver centrato fa quello che legge
    const vuole=uno?(S.boomSide<0?"ArrowLeft":"ArrowRight"):(due||b)?"ArrowUp":null;
    if(vuole!==premuto){ if(premuto) T.tasto("keyup",premuto); if(vuole!=="ArrowLeft"&&vuole!=="ArrowRight"){ T.tasto("keydown"," "); T.tasto("keyup"," "); } if(vuole) T.tasto("keydown",vuole); premuto=vuole; } }
   if(t1!==null&&!b&&tVia===null) tVia=t;

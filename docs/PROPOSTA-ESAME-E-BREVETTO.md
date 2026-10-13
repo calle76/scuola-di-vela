@@ -153,7 +153,7 @@ Regola: niente testo in più a video quando basta il manuale. Le regole dei meri
 
 Perché così:
 
-- **Competizione.** Il minimo 3 si raggiunge arrivando ultimi in entrambe le regate, una delle due senza errori (1 + 2), oppure con un 3° posto e un ultimo. Quindi non serve battere nessuno, serve **finire le regate**, in linea con il piano (§5: «il passaggio non deve mai dipendere dalla forza dell'equipaggio»). Il «senza errori» segue la regola della ★ (`regTotal() === 0`), quindi conta anche un contatto subìto.
+- **Competizione.** Il minimo 3 si raggiunge arrivando ultimi in entrambe le regate, una delle due senza errori (1 + 2), oppure con un 3° posto e un ultimo. Quindi non serve battere nessuno, serve **finire le regate**, in linea con il piano (§5: «il passaggio non deve mai dipendere dalla forza dell'equipaggio»). Il «senza errori» segue la regola della ★ (`regTotal() === 0`). **Dalla 0.21.1 (decisione di Ale, 13 ottobre 2026) un contatto senza colpa del giocatore non conta:** `regTotal()` somma `contactsPen` e non più `contacts`; il contatto resta scritto nel riepilogo («senza colpa, non conta») e nel registratore. Prima della 0.21.1 qui c'era «conta anche un contatto subìto».
 - **Totale.** Il margine sopra la somma dei minimi resta +6, come nella tabella della visione (22 → 28).
 - **Conoscenza, attenzione:** i ripassi delle lezioni 2, 4 e 6 hanno 4 domande. L'80% di 4 è 3,2, quindi servono 4 su 4; con 3 su 4 (75%) si prende 1 punto. Lo stesso vale per il ripasso mirato. È un effetto della soglia sui numeri piccoli, non un errore: lo dichiaro.
 
