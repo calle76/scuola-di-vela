@@ -46,7 +46,7 @@ Il resto del documento è una **mappa** di sei livelli. Per arrivare in fondo se
 
 ### Fuori dalla 1.0 (lista «dopo la 1.0»)
 
-Livelli 2-6; più ruoli e più personaggi; crescita della bravura; mini tornei; istruttore con replay e fantasma; scheda barca; campo di vento esteso, cono d'ombra, VMG e layline; la ricerca documentale (non blocca niente: si fa se c'è voglia); il questionario al velista (parte, senza contarci); il Giornalino per Lucio.
+Livelli 2-6; più ruoli e più personaggi; crescita della bravura; mini tornei; istruttore con replay e fantasma; scheda barca; campo di vento esteso, cono d'ombra, VMG e layline; la ricerca documentale (non blocca niente: si fa se c'è voglia); le domande del vecchio questionario al velista, da chiudere con fonti scritte e video; il Giornalino per Lucio.
 
 Dalla 0.20.2, sul suggerimento quando la barca va all'indietro:
 - un aiuto contro l'errore di lato, cioè barra spinta dalla parte opposta al boma con il testo già visibile (registrazione 1432(3), 3.12, 431,5 s);
@@ -103,7 +103,7 @@ I compagni partono con una bravura fissa; la crescita si aggiunge dopo, perché 
 - **[deciso]** Al livello 1 si possono registrare nel diario errori e tempi separati per barra e randa, ma sono dettagli interni a un solo ruolo.
 - **[aperto]** I livelli 5 e 6: l'ordine tra catamarano e cabinato non è fissato. Sono una direzione, non un impegno.
 - **[aperto]** La barca vera di ogni livello. Qui sono indicate solo per categoria (vedi §9).
-- Il tattico arriva al livello 4: su una barca a due la tattica la fa chi sta al timone. **[da verificare]** con un velista.
+- Il tattico arriva al livello 4: su una barca a due la tattica la fa chi sta al timone. **[da verificare]** su fonti.
 - Altri ruoli possibili, non inseriti: prodiere separato (dal livello 3 se serve), navigatore/stratega, peso dell'equipaggio come ruolo. Uomo d'albero, pitman e grinder solo in un eventuale cabinato da regata. **[proposta]**
 
 ### Equipaggio
@@ -208,7 +208,7 @@ Fattibile senza dati nuovi: VMG, layline, partenza, punteggi, ruoli, sblocchi, e
 - Lucio: su una barca grossa (tipo non ricordato), la barra tutta a fondo di colpo a velocità alta fa prendere un'imbarcata; piccole variazioni sono più efficaci e sicure; i movimenti ampi si fanno in manovra a bassa velocità. Sulla soglia di velocità: «dipende dal tipo di imbarcazione». Una persona, **non una deriva**.
 - Articoli di SVN solovelanet e del Giornale della Vela (2022): una leggera tendenza a orzare da circa 8 nodi di vento è desiderabile; utile fino a circa 15 nodi, oltre diventa un freno; si regola con rake e potenza della randa. Senza fonti, cabinati, probabilmente non indipendenti: **una sola fonte debole**, non «verificato».
 
-**Contraddizione aperta:** stallo del timone a circa 15° (F4) contro 30-35° (CFD). Possibile spiegazione (angolo del timone contro angolo d'incidenza dell'acqua): non risolta. Il timone massimo del gioco è 30°.
+*(Riga tolta il 13 ottobre 2026: nessuna fonte rintracciabile, probabile origine IA.)*
 
 ## 10. Comandi
 
@@ -238,7 +238,7 @@ Regola: due fermate per ogni compito di modellazione (proposta, poi implementazi
 10. **Livello 4**: campo di vento esteso, partenza, precedenze, tattico, cono d'ombra.
 11. **Carriera completa**: diario, importazione dal gioco libero, brevetti progressivi.
 
-Il questionario al velista parte quando vuole Ale, senza contarci. Il Giornalino per Lucio resta una cosa simpatica da fare quando c'è tempo.
+Non ci sarà un velista (13 ottobre 2026): le domande del questionario si chiudono con fonti scritte e video. Il Giornalino per Lucio resta una cosa simpatica da fare quando c'è tempo.
 
 ## 12. Cambiamenti rispetto a visione e roadmap
 

@@ -33,7 +33,7 @@ Dentro `index.html`, nell'ordine:
 | Registro degli errori | `reg`: scuffie, strambate a vela aperta, episodi e secondi da piantato, boe dal lato sbagliato, contatti, partenze anticipate, linea fuori dagli estremi. `regAdd`, `ironsCheck`, `regText`. Si azzera a ogni avvio e si chiude all'arrivo. |
 | Pannello | Strumenti, suggerimento, comandi, stato (tempo, classifica, errori), aggiornati 10 volte al secondo. In prove, regate e navigazione libera l'ordine è fissato con la proprietà CSS `order` (classe `play`); nelle lezioni vale l'ordine dell'HTML. Istruzioni di prove e regate in un riquadro sul mare a gioco fermo (`showBrief`, `hideBrief`); impostazioni in una finestra (`setDlg`). |
 | Disegno | Mare, raffiche, scia, boe, barca, cerchio delle andature, etichette, strumenti a schermo. |
-| Registratore di sessione | Dalla 0.18 (`ses`, `sesTick`): spento a ogni apertura, acceso dalle impostazioni; legge lo stato del gioco a ogni fotogramma, senza scriverlo, e scarica un file di testo con riassunto, legenda, eventi, messaggi, tasti, marcatori (tasto M) e stato una volta al secondo. Si legge con `tests/analizza_sessione.py`. Proposta e decisioni in `PROPOSTA-REGISTRATORE.md`. |
+| Registratore di sessione | Dalla 0.18 (`ses`, `sesTick`): spento a ogni apertura, acceso dalle impostazioni; legge lo stato del gioco a ogni fotogramma, senza scriverlo, e scarica un file di testo con riassunto, legenda, eventi, messaggi, tasti, marcatori (tasto M) e stato una volta al secondo. Si legge con `tests/analizza_sessione.py`. Proposta e decisioni in `archivio/PROPOSTA-REGISTRATORE.md`. |
 | Ciclo | `requestAnimationFrame`; un errore imprevisto viene mostrato nel pannello senza bloccare il gioco. |
 
 ### Coordinate e unità
@@ -56,7 +56,7 @@ Aprendo il gioco con `#collaudo` in fondo all'indirizzo, la pagina espone `windo
 
 ## Che modello è il motore
 
-Il motore è un modello cinematico didattico, non un previsore di prestazioni. Il timone produce direttamente una velocità di rotazione; non ci sono momenti, inerzia d'imbardata, onde né planata; l'equipaggio è un automatismo (il timoniere si sporge da solo). Le conseguenze sono dichiarate nel manuale. Un effetto si aggiunge solo se si sente guidando e ha una fonte; se manca una delle due cose si dichiara come semplificazione e si annota in `docs/DUBBI-E-RICERCHE.md`. Le cose che richiedono un modello dinamico (momento d'imbardata, planata, onde) vogliono un prototipo dedicato prima di costruirci sopra delle lezioni; la decisione si prende dopo il parere di un velista esperto sul livello 1.
+Il motore è un modello cinematico didattico, non un previsore di prestazioni. Il timone produce direttamente una velocità di rotazione; non ci sono momenti, inerzia d'imbardata, onde né planata; l'equipaggio è un automatismo (il timoniere si sporge da solo). Le conseguenze sono dichiarate nel manuale. Un effetto si aggiunge solo se si sente guidando e ha una fonte; se manca una delle due cose si dichiara come semplificazione e si annota in `docs/DUBBI-E-RICERCHE.md`. Le cose che richiedono un modello dinamico (momento d'imbardata, planata, onde) vogliono un prototipo dedicato prima di costruirci sopra delle lezioni; la decisione si prende confrontando il livello 1 con le fonti scritte e con misure prese dai video (non ci sarà un parere esperto).
 
 ## Come aggiungere contenuti
 

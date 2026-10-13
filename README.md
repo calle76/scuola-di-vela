@@ -52,12 +52,39 @@ index.html                         il gioco (file unico: fisica, contenuti, graf
 README.md                          questo file
 CHANGELOG.md                       storia delle versioni e dei difetti corretti
 LICENSE                            licenza
-docs/PROGETTO.md                   architettura del codice e decisioni di progetto
-docs/FISICA-E-TARATURE.md          modello fisico, costanti e risultati delle tarature
-docs/ROADMAP.md                    cosa fare dopo, in ordine di priorità
-docs/CONTENUTI-DA-VERIFICARE.md    affermazioni nautiche da controllare su un manuale
-docs/COLLAUDI.md                   come rilanciare i collaudi automatici
 tests/                             collaudi automatici (browser) e della fisica (Node.js)
+sperimentale/                      prototipi fuori dal gioco (oggi: il fiocco)
+```
+
+Documenti in `docs/`, divisi per uso:
+
+```
+Come è fatto il gioco
+  PROGETTO.md                      principi, architettura del codice, decisioni
+  FISICA-E-TARATURE.md             modello fisico, costanti e risultati delle tarature
+  COLLAUDI.md                      come rilanciare i collaudi automatici
+  SPERIMENTALE.md                  regole per i prototipi in sperimentale/
+  MANUALE-bozza.md                 cosa il gioco insegna, simula bene o semplifica
+
+Fonti e verifiche (non c'è una persona esperta: valgono fonti scritte e video)
+  FONTI-PUBBLICHE.md               fonti usate, con quello che dicono
+  CONTENUTI-DA-VERIFICARE.md       affermazioni nautiche del gioco da confermare
+  DUBBI-E-RICERCHE.md              domande aperte e ricerche da fare
+  SCHEDATURA-FONTI.md              schede dei PDF e dei video consultati
+  RICERCA-DATI-IMBARDATA.md        ricerca sui dati per un motore dinamico
+
+Dove si va
+  ROADMAP.md                       cosa fare dopo, in ordine di priorità
+  PIANO-GENERALE.md                piano dei livelli fino alla 1.0 (bozza)
+  VISIONE-LIVELLI-E-CARRIERA.md    visione di livelli, ruoli e carriera
+  OSSERVAZIONI-GIOCANDO.md         diario delle prove di gioco
+
+Proposte aperte
+  PROPOSTA-RESISTENZA-SCAFO.md     prossimo compito di fisica: resistenza dello scafo
+  PROPOSTA-LABORATORIO.md          pannello nascosto per provare profili della barca
+  PROPOSTA-ESAME-E-BREVETTO.md     esame e brevetto (in parte fatta nella 0.20 e 0.21)
+
+archivio/                          proposte chiuse o prove non adottate, tenute per memoria
 ```
 
 ## Salvataggi

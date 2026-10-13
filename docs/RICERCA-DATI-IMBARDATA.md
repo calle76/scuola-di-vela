@@ -19,8 +19,8 @@ Regola del progetto: le risposte di un'IA non sono fonti. Qui sotto ogni numero 
 
 - Fonte F4 (studio su deriva olimpica a due): il timone lavora bene fino a circa ±15° di angolo. Oltre, la forza laterale smette di crescere e la resistenza continua a salire (stallo).
   - A 6 nodi: circa 5 kgf a 10°, 12 kgf a 15°; resistenza totale circa 19 kgf; momento raddrizzante massimo circa 220 kgf·m a 25° di sbandamento.
-- Un lavoro CFD contraddice: stallo a 30–35°. Probabile differenza tra angolo del timone e angolo d'incidenza dell'acqua (a barca che sbanda o scivola di lato i due non coincidono). NON risolto.
-- Timonata normale in bolina: 2–5°; oltre 8° è troppa (indicazione di manuali di regata).
+- *(Riga tolta il 13 ottobre 2026: nessuna fonte rintracciabile, probabile origine IA.)*
+- *(Riga tolta il 13 ottobre 2026: nessuna fonte rintracciabile, probabile origine IA.)*
 - Il timone massimo del gioco è 30°: plausibile solo se lo stallo vero è 30–35°; se è 15° il gioco lo sopravvaluta.
 
 ## 4. Ricontrollo della fonte F4
@@ -32,11 +32,11 @@ Riletta: i numeri sopra sono confermati come riportati nella scheda F13/F4 di FO
 - Anticipo e inerzia misurati su una deriva a due.
 - Effetto del fiocco (cazzato/lascato) sul centro velico.
 - Stallo del timone misurato, non simulato.
-- Un velista che dica come reagisce davvero la barca a barra lasciata libera e a barra a fondo.
+- Come reagisce davvero la barca a barra lasciata libera e a barra a fondo: da cercare in fonti scritte o da misurare nei video.
 
 ## 6. Che cosa si può fare concretamente
 
-Una sola modifica piccola e con fonte: **effetto stallo del timone**. Oltre ±15° l'effetto di rotazione smette di crescere e la resistenza continua a salire, quindi «barra tutta a fondo» non è più sempre la scelta migliore (oggi lo è). Va prima chiarita la contraddizione al punto 3 (domanda per il velista: da che angolo di barra la barca «non gira di più»?).
+Una sola modifica piccola e con fonte: **effetto stallo del timone**. Oltre ±15° l'effetto di rotazione smette di crescere e la resistenza continua a salire, quindi «barra tutta a fondo» non è più sempre la scelta migliore (oggi lo è). Va prima chiarita la contraddizione al punto 3 (da cercare nelle fonti o nei video: da che angolo di barra la barca «non gira di più»?).
 
 L'imbardata dinamica completa resta rimandata: servono dati del punto 5.
 
@@ -63,7 +63,9 @@ Altra strada: i regolamenti di classe (per esempio 470) danno masse minime, lung
 
 Conclusione: nessun numero nuovo utilizzabile per ora. Passo successivo possibile: ottenere il testo completo dell'articolo Delft 2005 (a cura di Ale, il sandbox non raggiunge quei siti).
 
-## Domande per il questionario al velista
+## Domande da chiudere con fonti scritte o video
+
+*13 ottobre 2026: non ci sarà un velista a cui chiederle.*
 
 1. A barra tutta a fondo la barca gira più in fretta o frena soltanto? Da quale angolo circa?
 2. A barra lasciata libera in bolina la barca tende a orzare o a poggiare? Con e senza fiocco?

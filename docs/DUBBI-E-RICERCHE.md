@@ -4,14 +4,14 @@ Aggiornato al 5 ottobre 2026. È l'elenco vivo dei piccoli dubbi e delle idee ri
 
 Come si usa:
 
-- Ogni voce ha uno **stato** e il **tipo di sessione** che serve per chiuderla: *web* (ricerca online), *libro* (un testo da consultare), *esperto* (una persona che naviga), *codice* (una sessione di Claude Code), *prova* (giocare e guardare).
+- Ogni voce ha uno **stato** e il **tipo di sessione** che serve per chiuderla: *web* (ricerca online), *libro* (un testo da consultare), *video* (guardare o misurare un video: lo fa Ale; non c'è una persona esperta a cui chiedere), *codice* (una sessione di Claude Code), *prova* (giocare e guardare).
 - Quando un dubbio si chiude, non si cancella: si barra e si scrive la data e la fonte.
 - Le affermazioni nautiche del gioco vero stanno in `CONTENUTI-DA-VERIFICARE.md`; qui ci sono quelle che hanno un seguito di lavoro.
 - Una sola fonte non basta per dire «verificato».
 
 ## Da fare per primi (proposta di priorità)
 
-1. **Far leggere `CONTENUTI-DA-VERIFICARE.md` a un velista esperto** (sessione *esperto*): risponde «vero, falso, dipende» a ogni riga. Chiude in una volta molti dubbi delle lezioni.
+1. **Chiudere con fonti le righe aperte di `CONTENUTI-DA-VERIFICARE.md`** (sessioni *web*, *libro*, *video*): ogni riga si chiude con una fonte citata, oppure resta una scelta dichiarata. Non ci sarà una persona esperta che le legga tutte (13 ottobre 2026).
 2. **Controllare la fonte sul momento di imbardata** (sessione *web*): il centro velico a circa 0,2 m a prua del centro scafo, il momento orziero che cresce con lo sbandamento, lo scafo sbandato che orza da solo. Due affermazioni risultano nel testo, la terza solo in parte.
 3. **Leggere l'articolo di Binns, Bethwaite e Saunders del 2002** (sessione *web*): previsione di velocità per una deriva monoposto; serve per calibrare la polare.
 4. **Studiare By The Lee** (sessione *codice*, sola lettura): come un simulatore dinamico organizza equilibrio, centro velico e smorzamento.
@@ -23,24 +23,24 @@ Lista completa in `CONTENUTI-DA-VERIFICARE.md`. Quelle che hanno un dubbio dichi
 
 | Dubbio | Stato | Per chiuderlo |
 | --- | --- | --- |
-| Strambata e abbattuta: sono sinonimi? Alcuni testi chiamano abbattuta la manovra voluta e strambata quella involontaria | Aperto | *esperto* o *libro* |
-| Posizione dei filetti sulla randa: sulla balumina o vicino all'inferitura? La regola di lettura è confermata, la posizione no | Aperto | *esperto* |
-| Colori dei filetti (rosso a sinistra, verde a destra): scelta del gioco | Dichiarata, da confermare | *esperto* |
-| Da quale andatura i filetti della randa non si usano più, e su che cosa si regola la vela al loro posto. Dalla 0.17 il pannello dice «in poppa i filetti non servono» a scotta tutta lascata | Aperto | *esperto* |
-| Il limite oltre cui nel gioco i filetti dritti non esistono più (**112° di vento apparente**, cioè circa **135° di vento reale**) è figlio di una barca lenta: il boma arriva al massimo a 85° (`BOAT.maxBoom`) e oltre quell'angolo l'incidenza supera lo stallo. Su un 470 le fonti danno circa **75° apparenti a 120° reali** (F4), contro i **97,5°** del nostro motore: una barca più veloce tiene il vento apparente molto più avanti e i filetti lavorano più a poppa. Da capire se il confine va spostato, e se per farlo serve una barca più veloce o un limite di scotta diverso | Aperto | *esperto*, poi *codice* |
-| Comandi di manovra («Pronti a virare?», «Viro!»…): varianti tra scuole | Aperto | *esperto* |
-| Orziera: verificare il termine usato nell'esercizio di rotta | Aperto | *esperto* |
-| Definizione di «scadere» da confermare con un velista: nel glossario e nella lezione 5 (0.17) dice che una barca ferma o in retromarcia vicino al vento gira da sola, lentamente, allontanandosi dal vento. Comportamento già dichiarato come semplificazione in `FISICA-E-TARATURE.md`, non risulta una fonte pubblica specifica sul verso o sulla velocità di rotazione | **Chiuso il 5 ottobre 2026**: due glossari pubblici (marinasveva.com, scuolavelaargentario.com) confermano che «scadere» significa essere spinti sottovento da scarroccio o corrente, non la prua che gira. Il gioco usava il termine nel senso sbagliato: corretto in «poggiare» (0.17.1). Resta aperto solo se la velocità di rotazione modellata sia plausibile | *esperto*, poi *codice* |
-| Confini delle andature (angolo morto circa 40°, testi «circa 45° per lato») | Allineato alle dispense come convenzione didattica | *esperto*, per le derive reali |
-| Procedura di partenza reale (5 minuti; il gioco permette anche 1 e 3) | Da verificare | *web* o *esperto* |
-| Boe lasciate sempre a sinistra: le istruzioni di regata reali lo stabiliscono di volta in volta | Dichiarata | *esperto* |
+| Strambata e abbattuta: sono sinonimi? Alcuni testi chiamano abbattuta la manovra voluta e strambata quella involontaria | Aperto | *libro* o *video* |
+| Posizione dei filetti sulla randa: sulla balumina o vicino all'inferitura? La regola di lettura è confermata, la posizione no | Aperto | *libro* o *video* |
+| Colori dei filetti (rosso a sinistra, verde a destra): scelta del gioco | Dichiarata, da confermare | *libro* o *video* |
+| Da quale andatura i filetti della randa non si usano più, e su che cosa si regola la vela al loro posto. Dalla 0.17 il pannello dice «in poppa i filetti non servono» a scotta tutta lascata | Aperto | *libro* o *video* |
+| Il limite oltre cui nel gioco i filetti dritti non esistono più (**112° di vento apparente**, cioè circa **135° di vento reale**) è figlio di una barca lenta: il boma arriva al massimo a 85° (`BOAT.maxBoom`) e oltre quell'angolo l'incidenza supera lo stallo. Su un 470 le fonti danno circa **75° apparenti a 120° reali** (F4), contro i **97,5°** del nostro motore: una barca più veloce tiene il vento apparente molto più avanti e i filetti lavorano più a poppa. Da capire se il confine va spostato, e se per farlo serve una barca più veloce o un limite di scotta diverso | Aperto | *libro* o *video*, poi *codice* |
+| Comandi di manovra («Pronti a virare?», «Viro!»…): varianti tra scuole | Aperto | *libro* o *video* |
+| Orziera: verificare il termine usato nell'esercizio di rotta | Aperto | *libro* o *video* |
+| Definizione di «scadere» da confermare con un velista: nel glossario e nella lezione 5 (0.17) dice che una barca ferma o in retromarcia vicino al vento gira da sola, lentamente, allontanandosi dal vento. Comportamento già dichiarato come semplificazione in `FISICA-E-TARATURE.md`, non risulta una fonte pubblica specifica sul verso o sulla velocità di rotazione | **Chiuso il 5 ottobre 2026**: due glossari pubblici (marinasveva.com, scuolavelaargentario.com) confermano che «scadere» significa essere spinti sottovento da scarroccio o corrente, non la prua che gira. Il gioco usava il termine nel senso sbagliato: corretto in «poggiare» (0.17.1). Resta aperto solo se la velocità di rotazione modellata sia plausibile | *libro* o *video*, poi *codice* |
+| Confini delle andature (angolo morto circa 40°, testi «circa 45° per lato») | Allineato alle dispense come convenzione didattica | *libro* o *video*, per le derive reali |
+| Procedura di partenza reale (5 minuti; il gioco permette anche 1 e 3) | Da verificare | *web* o *video* |
+| Boe lasciate sempre a sinistra: le istruzioni di regata reali lo stabiliscono di volta in volta | Dichiarata | *libro* o *video* |
 | Toccare una boa in regata comporta una penalità: nel gioco non è ancora gestito | Aperto | *codice*, dopo la verifica della regola |
-| Penalità di 15 secondi per un contatto invece dei giri di penalità | Semplificazione dichiarata | *esperto*, poi *codice* |
+| Penalità di 15 secondi per un contatto invece dei giri di penalità | Semplificazione dichiarata | *libro* o *video*, poi *codice* |
 | Regole di precedenza da inserire nelle domande dell'esame: il corso federale cita le regole 10, 11, 14 e 18 | Titoli da verificare sul testo ufficiale | *web* |
-| Angolo di scotta del fiocco: nel gioco/prototipo 50°–60°, ma potrebbe essere più vicino a 80° | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
-| Fiocco a collo tenuto un attimo in virata: potrebbe aiutare la prua a girare | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
-| Recupero da una virata fallita: fiocco a collo o barra inversa, invece di «centra la barra» | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
-| Posizione dei filetti principali della randa: potrebbero stare vicino all'albero invece che sulla balumina | Aperto (fonte: risposte di una IA, non una verifica) | *esperto* |
+| Angolo di scotta del fiocco: nel gioco/prototipo 50°–60°, ma potrebbe essere più vicino a 80° | Aperto (fonte: risposte di una IA, non una verifica) | *libro* o *video* |
+| Fiocco a collo tenuto un attimo in virata: potrebbe aiutare la prua a girare | Aperto (fonte: risposte di una IA, non una verifica) | *libro* o *video* |
+| Recupero da una virata fallita: fiocco a collo o barra inversa, invece di «centra la barra» | Aperto (fonte: risposte di una IA, non una verifica) | *libro* o *video* |
+| Posizione dei filetti principali della randa: potrebbero stare vicino all'albero invece che sulla balumina | Aperto (fonte: risposte di una IA, non una verifica) | *libro* o *video* |
 
 ## 2. Il fiocco e la barca a due (prototipo, tappe A, B e C)
 
@@ -48,12 +48,12 @@ Il prototipo è chiuso con le semplificazioni dichiarate. I dubbi che restano:
 
 | Dubbio | Cosa sappiamo | Per chiuderlo |
 | --- | --- | --- |
-| **Limite di apertura della scotta del fiocco (80° nel prototipo)** | Nessuna fonte; su questo si appoggia tutta la zona in cui il fiocco non si regola (oltre circa 107° apparenti) | *esperto* |
-| **Soglia dell'ombra della randa sul fiocco** (95°-107° apparenti) | Una sola fonte, con spinnaker: il fiocco aiuta fino a circa 100° e da circa 120° è un ostacolo. Senza spinnaker non è noto | *libro* (Marchaj) o *esperto* |
-| **Il fiocco coperto dà zero, non resistenza** | Le fonti lo chiamano «un ostacolo»: una vela che sbatte frena. Il modello azzera la spinta ma non la rende negativa | *esperto* |
-| **Il fiocco a farfalla** (dal lato opposto alla randa) | È la manovra vera in poppa; con spinnaker o gennaker il fiocco si fissa. Da quale andatura serve, e se sulle derive a due si usa l'asta, non risulta | *esperto*; poi *codice* per modellarla |
+| **Limite di apertura della scotta del fiocco (80° nel prototipo)** | Nessuna fonte; su questo si appoggia tutta la zona in cui il fiocco non si regola (oltre circa 107° apparenti) | *libro* o *video* |
+| **Soglia dell'ombra della randa sul fiocco** (95°-107° apparenti) | Una sola fonte, con spinnaker: il fiocco aiuta fino a circa 100° e da circa 120° è un ostacolo. Senza spinnaker non è noto | *libro* (Marchaj) o *video* |
+| **Il fiocco coperto dà zero, non resistenza** | Le fonti lo chiamano «un ostacolo»: una vela che sbatte frena. Il modello azzera la spinta ma non la rende negativa | *libro* o *video* |
+| **Il fiocco a farfalla** (dal lato opposto alla randa) | È la manovra vera in poppa; con spinnaker o gennaker il fiocco si fissa. Da quale andatura serve, e se sulle derive a due si usa l'asta, non risulta | *libro* o *video*; poi *codice* per modellarla |
 | **L'upwash della randa sul fiocco** | Spiega perché il fiocco fa stringere meglio il vento; non modellato, per questo l'ottimo di bolina resta a 50° e non a 48°. La spiegazione «Venturi» è sbagliata | *libro*; poi *codice* |
-| **Quanto spinge un fiocco a collo** | Nessuna fonte, né in gradi al secondo né in newton | *libro* o *esperto* |
+| **Quanto spinge un fiocco a collo** | Nessuna fonte, né in gradi al secondo né in newton | *libro* o *video* |
 | **Il ginocchio nella velocità fra 126° e 132° di vento reale** (fino a 0,16 nodi per grado) | Dovuto alla rampa stretta dell'ombra; da giudicare giocando | *prova* |
 | **Il limite del vento per il livello 2** (stimato in 12-15 nodi) | È una stima: a 20 nodi di raffica si scuffia e a 15 la virata non riesce; il confine non è stato misurato | *codice* (misura), con le lezioni |
 
@@ -64,15 +64,15 @@ Dalla fonte su una deriva olimpica a due (una sola barca):
 | Dubbio | Cosa sappiamo | Per chiuderlo |
 | --- | --- | --- |
 | **Momento d'imbardata dovuto alle vele** (randa che fa orzare, fiocco che fa poggiare, scafo sbandato che orza da solo) | Non modellato: il motore gira solo col timone. Modellare il solo fiocco dà una barca sempre poggiera, contro la fonte | *web* (ricontrollare la fonte), poi *codice* con un motore più dinamico |
-| **Timone in stallo oltre circa 15°** | Nel motore non stalla mai: barra a fondo (30°) gira 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore | *esperto*; cambiarlo tocca tutte le virate e i tempi del gioco |
-| **Coppia raddrizzante di una deriva a due** | Circa 60 kgf·m senza trapezio e circa 220 col trapezio (una barca); il prototipo vale 83,7 kgf·m a 22,6° | *esperto* |
+| **Timone in stallo oltre circa 15°** | Nel motore non stalla mai: barra a fondo (30°) gira 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore | *libro* o *video*; cambiarlo tocca tutte le virate e i tempi del gioco |
+| **Coppia raddrizzante di una deriva a due** | Circa 60 kgf·m senza trapezio e circa 220 col trapezio (una barca); il prototipo vale 83,7 kgf·m a 22,6° | *libro* o *video* |
 | **Massa e resistenza dello scafo** | Nel motore la massa non entra nella resistenza: una barca più pesante andrebbe più veloce. Nessun dato per ritarare | *web* (polari di derive) |
 | **Peso dell'equipaggio come comando** | Oggi il timoniere si sporge da solo, con 0,9 s di ritardo; nella realtà è una manovra (lezione 2.5) | *codice*, con il prodiere |
 | **Planata** (livello 3) | Non c'è: sopra gli 8 nodi circa le velocità non possono essere realistiche | *libro*, poi *codice* |
 
 Gennaker e planata richiedono un prototipo dedicato prima di progettare le lezioni 3.x. Le lezioni 2.3 (errore di coordinamento) e 2.5 (peso come comando) non dipendono da fisica che manca: si possono progettare con il motore attuale.
 
-Pagina di domande per un velista (`domande-per-un-velista.pdf`): quando torna compilata, gli esiti vanno in `CONTENUTI-DA-VERIFICARE.md`.
+~~Pagina di domande per un velista (`domande-per-un-velista.pdf`)~~: non ci sarà un velista (13 ottobre 2026). Le domande restano come ricerche da fare (sez. 9).
 
 ### Angolo morto, barca che arretra, ripartenza dopo la scuffia (ricerca *web* dell'11 ottobre 2026)
 
@@ -122,7 +122,7 @@ Nasce da due registrazioni (0.19.5 e 0.20): nel gioco, con la barca che arretra 
 - **Per ripartire dopo il raddrizzamento (lascare o cazzare, e se dipende dall'angolo col vento): non trovato.**
 - Non è stato possibile leggere theyachtmarket.com (errore 403). Il materiale della federazione inglese (RYA) e quello di US Sailing sulla scuffia non sono stati trovati.
 
-**Domanda d'esame sulle scotte durante il raddrizzamento: da riprendere dopo la conferma di un velista esperto o di altre fonti.** Scritta l'11 ottobre 2026 come versione (a) della domanda 26 e **non messa nel gioco** (nella 0.20.1 la 26 è quella su come si vede arrivare una raffica). Per usarla bisogna anche rimettere nel passo «Raddrizzare» la frase sulle scotte libere, che dalla 0.20.1 c'è già.
+**Domanda d'esame sulle scotte durante il raddrizzamento: da riprendere dopo una conferma da fonti.** Scritta l'11 ottobre 2026 come versione (a) della domanda 26 e **non messa nel gioco** (nella 0.20.1 la 26 è quella su come si vede arrivare una raffica). Per usarla bisogna anche rimettere nel passo «Raddrizzare» la frase sulle scotte libere, che dalla 0.20.1 c'è già.
 
 - Passo: L6 «Raddrizzare».
 - Domanda: «Stai per raddrizzare la barca scuffiata. Come lasci le scotte?»
@@ -131,7 +131,7 @@ Nasce da due registrazioni (0.19.5 e 0.20): nel gioco, con la barca che arretra 
 - Spiegazione: «Con le scotte libere la vela non prende vento mentre la barca torna dritta: così non riparte da sola e non si rovescia di nuovo prima che tu sia a bordo.»
 - Si regge su W4 e W5 (due fonti deboli). Segnale contrario non verificato: un forum e una dispensa di Yachting New Zealand (non letta) parlano di cazzare un poco in certi raddrizzamenti.
 
-**Cosa resta aperto.** La domanda 1 (prua al vento con barra al centro su una deriva) e la domanda 3 (ripartenza) vanno chieste a un velista esperto o cercate in altre fonti: risposta attesa. Nella 0.20.1 i testi del passo 5.4, del suggerimento e della domanda 22 sono stati cambiati lo stesso: non dicono più che la prua poggia da sola e insegnano solo ciò che il gioco permette (barra verso il boma), misurato. Restano da confermare con un velista esperto o altre fonti.
+**Cosa resta aperto.** La domanda 1 (prua al vento con barra al centro su una deriva) e la domanda 3 (ripartenza) vanno cercate nelle fonti scritte o nei video. Nella 0.20.1 i testi del passo 5.4, del suggerimento e della domanda 22 sono stati cambiati lo stesso: non dicono più che la prua poggia da sola e insegnano solo ciò che il gioco permette (barra verso il boma), misurato. Restano da confermare con fonti.
 
 ### Dai video (11 ottobre 2026)
 
@@ -139,9 +139,9 @@ Quattro video informali (trascrizioni automatiche incollate da Ale, non viste n�
 
 | Dubbio | Cosa sappiamo | Per chiuderlo |
 | --- | --- | --- |
-| **Oscillazione orza-poggia attorno a 0-1 nodo** | Contaldo (3:00-3:32) descrive in panna un procedere a zig-zag lento: il fiocco a collo fa poggiare, la barca prende velocità, col timone tutto all'orza interviene l'effetto orziero (3:14) e la prua risale, poi la velocità cala e il ciclo riparte; velocità massima circa 1 nodo. Osservazione nostra, non della fonte: coerente con l'effetto del timone che cresce con la velocità. Nel gioco manca il momento della vela (fiocco), che è la forza contraria. Una fonte, barca con genoa | *esperto*; poi *codice* se si modella il momento di imbardata |
-| **Quanto in fretta cambia l'effetto della barra attorno a velocità zero** | Nessuna fonte. La prua «poggia da sola» (fino a 6 °/s) ha costanti senza fonte | domanda per un velista (sez. 9, punto 10) |
-| **Uscita dallo stallo: tre modi e perché si ricade** | Lee (2022): boma e barra dallo stesso lato (preferito); boma fuori e barra verso di sé; solo barra, con vento da moderato a forte, più lenta e da fare con pazienza se c'è poco vento. Ricaduta nei ferri se, cazzando, la barra resta dal lato del boma. Il gioco implementa il terzo modo. Una fonte, trascrizione inglese originale. *Collegamento nostro, non dalla scheda:* la sez. 9, punto 2 parla delle fonti schedate per la manovra con il boma spinto fuori (US Sailing, guida Sunfish, associazione di classe); il terzo modo di Lee è una fonte informale in più per la sola barra. Il punto 2 resta com'è | *esperto* |
+| **Oscillazione orza-poggia attorno a 0-1 nodo** | Contaldo (3:00-3:32) descrive in panna un procedere a zig-zag lento: il fiocco a collo fa poggiare, la barca prende velocità, col timone tutto all'orza interviene l'effetto orziero (3:14) e la prua risale, poi la velocità cala e il ciclo riparte; velocità massima circa 1 nodo. Osservazione nostra, non della fonte: coerente con l'effetto del timone che cresce con la velocità. Nel gioco manca il momento della vela (fiocco), che è la forza contraria. Una fonte, barca con genoa | *libro* o *video*; poi *codice* se si modella il momento di imbardata |
+| **Quanto in fretta cambia l'effetto della barra attorno a velocità zero** | Nessuna fonte. La prua «poggia da sola» (fino a 6 °/s) ha costanti senza fonte | da cercare nelle fonti (sez. 9, punto 10) |
+| **Uscita dallo stallo: tre modi e perché si ricade** | Lee (2022): boma e barra dallo stesso lato (preferito); boma fuori e barra verso di sé; solo barra, con vento da moderato a forte, più lenta e da fare con pazienza se c'è poco vento. Ricaduta nei ferri se, cazzando, la barra resta dal lato del boma. Il gioco implementa il terzo modo. Una fonte, trascrizione inglese originale. *Collegamento nostro, non dalla scheda:* la sez. 9, punto 2 parla delle fonti schedate per la manovra con il boma spinto fuori (US Sailing, guida Sunfish, associazione di classe); il terzo modo di Lee è una fonte informale in più per la sola barra. Il punto 2 resta com'è | *libro* o *video* |
 | **Fiocco a collo come aiuto nella virata** | Bombaci (4:56-5:16): con poca velocità si vira con il fiocco a collo, che spinge lateralmente la prua. Contaldo: stesso principio in panna. Nessun numero | già aperto: «Quanto spinge un fiocco a collo»; resta senza fonte quantitativa |
 
 ## 4. Velocità e polari
@@ -158,7 +158,7 @@ Quattro video informali (trascrizioni automatiche incollate da Ale, non viste n�
 | --- | --- | --- |
 | **By The Lee** (simulatore di vela in JavaScript, licenza Apache-2.0): riferimento per una dinamica minima nel nostro motore | Ricordata come riferimento; letto solo il README | *codice*, sola lettura: come organizza equilibrio, centro velico, smorzamento |
 | Python-VPP, sailboat-playground, simulatore su atterwind.info | Licenze non verificate | *web*, solo se serve |
-| **Scala del realismo**: gradino 1 motore cinematico dichiarato (oggi); gradino 2 pochi pezzi mirati con dati di fonte (barra «pesante» da sbandata, stallo del timone); gradino 3 motore dinamico completo | Idea | Decidere dopo il parere di un velista sul livello 1 |
+| **Scala del realismo**: gradino 1 motore cinematico dichiarato (oggi); gradino 2 pochi pezzi mirati con dati di fonte (barra «pesante» da sbandata, stallo del timone); gradino 3 motore dinamico completo | Idea | Decidere confrontando il livello 1 con le fonti (vedi `PROPOSTA-RESISTENZA-SCAFO.md`) |
 
 ## 6. Livelli, ruoli e carriera
 
@@ -170,8 +170,8 @@ Decisioni ancora aperte (vedi `VISIONE-LIVELLI-E-CARRIERA.md` e `ROADMAP.md`):
 - Il fiocco a collo come errore di coordinamento nel registro degli errori: tempi e regola (lezione 2.3).
 - Livelli 4 e oltre: ruoli, regole, quali barche entrano davvero. Quanti ruoli servono per il brevetto dal livello 3.
 - Tarature dei numeri dei meriti, durata dei tornei, bonus del primo torneo in un ruolo nuovo, soglie della competizione.
-- Il gennaker asimmetrico come soluzione più diffusa rispetto allo spinnaker con tangone: non verificato (*libro* o *esperto*).
-- Esistenza e funzione del tattico su equipaggi di più persone (*esperto*).
+- Il gennaker asimmetrico come soluzione più diffusa rispetto allo spinnaker con tangone: non verificato (*libro* o *video*).
+- Esistenza e funzione del tattico su equipaggi di più persone (*libro* o *web*).
 - Tasti con due vele: A e D sulla randa nel prototipo; l'idea di A S D W per la barca a una vela va ripensata.
 - Quiz con domande in più, perché il ripasso non coincida con l'esame.
 
@@ -186,12 +186,12 @@ Decisioni ancora aperte (vedi `VISIONE-LIVELLI-E-CARRIERA.md` e `ROADMAP.md`):
 
 ## 8. Persone da coinvolgere
 
-- **Un velista esperto**, per `CONTENUTI-DA-VERIFICARE.md` e per giocare il livello 1 e il prototipo. Due domande: dove senti che la barca non risponde come la tua, e quali due differenze ti darebbero più fastidio.
+- ~~Un velista esperto~~: non ci sarà (13 ottobre 2026). Le sue domande diventano ricerche su fonti scritte e misure dai video.
 - **Lucio**, per provare il prototipo con tre domande: dove una posizione giusta del fiocco c'è la trovi? Il messaggio nel pannello ti dice cosa fare? Qualcosa ti confonde?
 
-## 9. Domande per il velista esperto (derive)
+## 9. Domande da chiudere con fonti scritte o video (derive)
 
-Elenco da portare a un velista esperto, solo per derive. Accanto a ogni voce, le fonti che i documenti hanno oggi (sez. 3 di questo file, `CONTENUTI-DA-VERIFICARE.md`, `FONTI-PUBBLICHE.md`).
+Domande pensate un tempo per un velista esperto, che non ci sarà: ognuna si chiude con fonti scritte o con misure dai video. Solo derive. Accanto a ogni voce, le fonti che i documenti hanno oggi (sez. 3 di questo file, `CONTENUTI-DA-VERIFICARE.md`, `FONTI-PUBBLICHE.md`).
 
 1. **Virata mancata per poca velocità, barca ferma con la prua nel vento: la prua poggia da sola, anche lentamente, o resta lì finché non si agisce?** Fonte attuale per «poggia da sola»: nessuna. *Nel gioco succede, ed è voluto (riga 443 di `index.html`): vento apparente sotto 36° e barca sotto 0,5 m/s (circa 1 nodo). Visto nella registrazione `sessione-20261011-1259.txt` (0.20.2). Fra 237 e 241 s, con la barra al centro e la scotta tutta cazzata (0), la prua passa da 24° a 42° dal vento e la barca riparte: è anche la nota M3 di Ale, «se ho la vela cazzata esce da sola dall'angolo morto». Fra 277,1 e 279,2 s, con la barra a −4%, 0% e 0% e la scotta a 100, la prua passa da 330° a 323° (dal vento da 30° a 37°) con la barca quasi ferma. È un episodio quasi pulito: la barra era appena tornata da −100, due secondi prima. Comportamento senza fonte (annotato l'11 ottobre 2026; corretta la prima versione della nota, che aveva letto la colonna della scotta come barra).* Due fonti dicono che la barca resta nell'angolo morto, ma una sola riguarda una deriva (Sunfish); l'altra un catamarano (sez. 3, W2 e W3).
 2. **Uscita arretrando: barra verso il boma, poi al centro, e si cazza (domanda d'esame 22 dalla 0.20.1). Vale anche con il boma non spinto a mano?** Fonte attuale per la manovra con il boma spinto fuori, la randa «a collo»: tre (US Sailing, guida Sunfish, associazione di classe di un catamarano; sez. 3). Con il boma lasciato dove lo mette il vento: nessuna; è solo misurato nel gioco (`tests/fisica/angolo_morto.js`).
@@ -202,4 +202,4 @@ Elenco da portare a un velista esperto, solo per derive. Accanto a ogni voce, le
 7. **Lezione 1, «Ripartire»: con la barca quasi ferma, «da entrambi i lati si poggia». Vale?** Nel gioco la prua lì gira per la riga 443 di `index.html`, non per il timone. Fonte attuale: nessuna.
 8. **Regola delle stesse mure (lascia strada chi è sopravento): non è insegnata in nessuna lezione. Si conferma che è giusto così per il livello 1?** Fonte attuale nei documenti: nessuna (`CONTENUTI-DA-VERIFICARE.md`, regate, esito vuoto).
 9. **Il resto:** i «Dubbi specifici» di `CONTENUTI-DA-VERIFICARE.md` e il questionario di 27 domande di `RIPARTI-DA-QUI.md` (negli appunti, fuori dal repository).
-10. **Dopo l'uscita dall'angolo morto, mentre si cazza: la barra va al centro o un po' dal lato opposto al boma?** Il testo B dice «barra al centro». Lee (2022, originale inglese, righe 248-277) dice che cazzando con la barra un po' dal lato del boma la barca orza di nuovo e ricade nei ferri, e consiglia di tirare la barra un po' verso di sé oltre la linea centrale. Una fonte, informale (video, parafrasato, non usato per tarare il motore); nessun'altra. Da far giudicare a un velista prima di cambiare qualcosa. Origine: parte D di `SCHEDE-VIDEO-2026-10-11.md` (negli appunti); le altre due domande della parte D sono già coperte dai punti 1 e 2.
+10. **Dopo l'uscita dall'angolo morto, mentre si cazza: la barra va al centro o un po' dal lato opposto al boma?** Il testo B dice «barra al centro». Lee (2022, originale inglese, righe 248-277) dice che cazzando con la barra un po' dal lato del boma la barca orza di nuovo e ricade nei ferri, e consiglia di tirare la barra un po' verso di sé oltre la linea centrale. Una fonte, informale (video, parafrasato, non usato per tarare il motore); nessun'altra. Da confermare con un'altra fonte prima di cambiare qualcosa. Origine: parte D di `SCHEDE-VIDEO-2026-10-11.md` (negli appunti); le altre due domande della parte D sono già coperte dai punti 1 e 2.

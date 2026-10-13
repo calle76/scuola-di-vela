@@ -113,4 +113,4 @@ Letti solo i file che calcolano forze, equilibrio e dati; non il codice grafico.
 
 ## Letture suggerite
 
-Marchaj (F12) per i dati di fisica; Wallace Ross per la pratica; il materiale federale (F1-F3) è gratuito. Per ogni affermazione che entra nelle lezioni vale comunque la regola del progetto: una persona esperta di derive la legge e risponde «vero, falso, dipende».
+Marchaj (F12) per i dati di fisica; Wallace Ross per la pratica; il materiale federale (F1-F3) è gratuito. Per ogni affermazione che entra nelle lezioni vale comunque la regola del progetto: con una fonte sola è una scelta dichiarata; con due o più fonti indipendenti che concordano è «verificata su fonti».

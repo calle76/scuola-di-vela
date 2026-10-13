@@ -1,5 +1,7 @@
 # Proposta: registratore di sessione
 
+> **Archiviato il 13 ottobre 2026.** Fatta nella 0.18: il registratore è nel gioco.
+
 **Esito (5 ottobre 2026): approvata, via (c), un passo solo, con queste decisioni.**
 
 1. Interruttore spento a ogni apertura della pagina (non salvato). Versione 0.18.

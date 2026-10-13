@@ -1,6 +1,6 @@
 # Scuola di vela — istruzioni per Claude Code
 
-Progetto personale e non commerciale: un simulatore didattico di vela, in un unico file HTML (`index.html`), da giocare sul computer con la tastiera. Chi lavora con te non è né un velista né un programmatore di professione: spiega in italiano semplice, riporta i numeri così come escono (anche quelli sgraditi) e non chiedergli di giudicare la plausibilità nautica; la giudicano le fonti (`docs/FONTI-PUBBLICHE.md`) e, in futuro, una persona esperta.
+Progetto personale e non commerciale: un simulatore didattico di vela, in un unico file HTML (`index.html`), da giocare sul computer con la tastiera. Chi lavora con te non è né un velista né un programmatore di professione: spiega in italiano semplice, riporta i numeri così come escono (anche quelli sgraditi) e non chiedergli di giudicare la plausibilità nautica; la giudicano solo le fonti scritte e i video (`docs/FONTI-PUBBLICHE.md`): non ci sarà una persona esperta a cui chiedere.
 
 ## Da leggere prima di lavorare
 
