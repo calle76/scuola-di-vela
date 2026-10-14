@@ -292,7 +292,7 @@ Ogni fetta è una versione giocabile e chiusa, con `VERSIONE` e `CHANGELOG.md` a
 | 3 | 0.22 (fatta) | **Bivio e salvataggio di carriera.** `STORE` variabile, selettore nel menu, «Azzera» solo sulla modalità corrente. | Pagina senza `#collaudo`: in carriera il pilota di `collaudo_fasce.py` completa la prova 1, e la chiave del gioco libero resta **identica byte per byte**; poi il contrario. Ricaricando, la modalità è ricordata. Un ripasso in carriera non tocca il record del libero. Menu a 1360×650 senza eccesso. |
 | 4 | 0.23 (fatta) | **Libretto.** `meriti(progress)`, quattro barre, riga «cosa manca» per superare il livello. Il pulsante dell'esame non dipende dai meriti. | `meriti()` sui giocatori A-D del §4 e sui casi al bordo (minimo esatto, minimo meno 1, «nessuno» escluso), con l'esame superato e non: «livello superato» solo con tutte le condizioni. Nel browser: salvataggi di carriera preparati, poi lettura delle barre e della riga; **pulsante dell'esame acceso anche con meriti a zero**. Menu a 1360×650 e 1360×768 senza eccesso, con i caratteri veri. |
 | 5 | 0.24 (fatta) | **Esame in carriera, ripasso mirato, scena dell'attestato.** | Percorso in pagina senza `#collaudo`. Con una carriera vuota: pulsante acceso, esame superato, **nessuna scena** (mancano i meriti); poi meriti completati, la scena compare. Con una carriera dai meriti a posto: esame sbagliato apposta, pulsante spento, ripassi delle lezioni sbagliate al 100% e, a parte, a 75% (resta spento), pulsante acceso, esame superato, scena dell'attestato con «nessun valore legale» e senza «patente», stampa provata con `emulate_media("print")` e schermata. Nel gioco libero lo stesso esame superato **non** mostra l'attestato e il pulsante non si spegne mai. |
-| 6 | 1.0 | **Rilascio.** Manuale (sezione meriti ed esame), documenti, `CHANGELOG.md`. | Una carriera da zero **guidata davvero**: le lezioni con `collaudo_lezioni.py`, le prove con il pilota delle fasce, le due regate con il sostituto, i ripassi e l'esame risposti; il libretto deve arrivare al brevetto. È lungo: lo lancia Ale sul PC. Poi una partita a mano di Ale. |
+| 6 | 1.0 (fatta) | **Rilascio.** Manuale (sezione meriti ed esame), documenti, `CHANGELOG.md`. | Una carriera da zero **guidata davvero**: le lezioni con `collaudo_lezioni.py`, le prove con il pilota delle fasce, le due regate con il sostituto, i ripassi e l'esame risposti; il libretto deve arrivare al brevetto. È lungo: lo lancia Ale sul PC. Poi una partita a mano di Ale. |
 
 Le fette 1 e 2 sono indipendenti e si possono scambiare. La 3 viene prima di 4 e 5.
 
@@ -592,3 +592,80 @@ Criteri scritti adesso. Pagina **senza `#collaudo`**, solo clic; le risposte giu
 - **Nome sull'attestato:** facoltativo, scritto da chi gioca.
 - **Prova a mano senza giocare ore:** `tests/prova_carriera.py` apre il gioco con una carriera in cui manca solo l'esame.
 - Fatta come scritta. Nel collaudo il controllo «"solo le sbagliate" non basta» non c'è: quel pulsante compare solo alla fine di un ripasso completo, che conta già. E4 scrive il piazzamento nel salvataggio invece di correre una regata (dichiarato nel `CHANGELOG.md`). Numeri in `CHANGELOG.md`, 0.24.
+
+---
+
+## 14. Fetta 6 (1.0): rilascio — proposta di dettaglio
+
+Del 14 ottobre 2026. **Fermata 1: nessun codice.**
+
+### Cosa manca per la 1.0
+
+Il gioco, per il livello 1, è completo: bivio (0.22), libretto (0.23), esame in carriera e attestato (0.24). Restano tre cose.
+
+1. **Documenti.**
+   - `VERSIONE = "1.0"` e la voce del `CHANGELOG.md`, con il riepilogo di cosa è il livello 1.
+   - `ROADMAP.md`: fase A chiusa.
+   - `PIANO-GENERALE.md`: punti 3 e 4 del §11 fatti; le decisioni 8 e 9 chiuse (8: tutti gli aiuti valgono per i meriti, opzione A; 9: banca dell'esame separata dai ripassi, 0.20).
+   - `README.md`: una riga sullo stato.
+   - Nessun cambio al gioco oltre a `VERSIONE`.
+2. **Manuale** (`MANUALE-bozza.md`): le sezioni su carriera, libretto, esame e attestato ci sono già (0.22-0.24). Da aggiungere:
+   - gli aiuti accesi o spenti non cambiano i punti (decisione 8, opzione A);
+   - le semplificazioni della 1.0: Competizione dalle due regate singole e non da un torneo, un brevetto solo, banca dell'esame piccola (26 domande), numeri del libretto provvisori;
+   - i dati restano nel browser e si perdono cancellandoli (già scritto nella 0.22; si controlla che ci sia).
+3. **Collaudo di una carriera intera** e una prova a mano di Ale.
+
+### Il collaudo: nuovo `tests/collaudo_carriera_intera.py` [proposta]
+
+Una sola pagina, salvataggio vuoto, «Carriera» scelta **cliccando il selettore**. Si gioca tutto nella stessa carriera, nell'ordine della Scuola, e alla fine si legge **solo quello che il gioco ha salvato**. Serve l'aggancio `#collaudo`, perché i piloti lo usano.
+
+- **Lezioni:** si percorrono tutte, passo per passo, fino all'ultimo passo (è lì che il gioco segna la lezione come completata). Come dice il §7, si usa `collaudo_lezioni.py`:
+  - i passi pratici che ha già (13 su 33) si guidano davvero, a passi fissi;
+  - **gli altri 20 si saltano con «Avanti» forzato dall'aggancio.** È il limite più grosso del collaudo, ed è dichiarato.
+- **Prove 1-4:** il pilota di `collaudo_fasce.py` (oro per costruzione, quindi 12 punti di Abilità senza la prova 5).
+- **Regate:** il pilota sostituto (`__sv.pilota`), avversari principianti. Ogni regata si rifà con semi diversi finché la somma dei due piazzamenti migliori dà almeno 3 punti, **al massimo 3 tentativi per regata** (C3: con 3 tentativi il minimo si raggiunge nel 100% delle finestre).
+- **Ripassi:** tutti e sei, a clic, risposte giuste.
+- **Esame:** a clic, tutte giuste.
+
+Criteri, scritti adesso:
+
+- **I1:** alla fine il libretto dice «Brevetto ottenuto il …», la scena dell'attestato è comparsa da sola una volta, e `progress` ha `brevetto`, `exam.superato` e voto 20.
+- **I2:** i meriti letti dal salvataggio coincidono con un calcolo fatto dal collaudo sulle regole scritte, area per area.
+- **I3:** la chiave del gioco libero non esiste o è identica byte per byte dall'inizio alla fine.
+- **I4, il metro ha misurato davvero:**
+  - le 6 lezioni risultano completate dal gioco, non scritte dal collaudo;
+  - le 4 prove sono finite con un tempo;
+  - nelle regate il sostituto ha mosso la barra;
+  - si stampano i passi guidati e quelli saltati.
+  - Se una prova o una regata non arriva in fondo, il risultato è NON VALIDO, non FALLITO.
+- Si stampano tempi, piazzamenti, tentativi e meriti finali.
+
+Durata stimata: pochi minuti (tutto a passi fissi). Se resta sotto i 5 minuti entra in `lancia_tutti.sh --veloce`, altrimenti fra i collaudi lunghi.
+
+### Alternativa più completa (non nella 1.0, salvo decisione di Ale)
+
+**Un pilota per tutti i 33 passi pratici delle sei lezioni.** Oggi nessun collaudo dimostra che **ogni** passo pratico si possa completare guidando: lo dimostrano solo le partite a mano. È un compito a sé, con due fermate e probabilmente qualche difetto da trovare. Proposta: farlo **dopo** la 1.0, come primo compito, oppure prima, se Ale preferisce una 1.0 più solida. Costa più tempo dell'intera fetta 6.
+
+### Prova a mano di Ale
+
+Non ore di gioco.
+- Gioco caricato normalmente, in «Carriera», con la carriera di prova azzerata.
+- Una lezione, una prova e una regata, guardando il libretto e il suggerimento che cambiano.
+- Poi `tests/prova_carriera.py` per esame e attestato, già fatto il 14 ottobre: si può saltare.
+
+### Rischi
+
+- **Una 1.0 con 20 passi pratici mai guidati da un collaudo.** Le lezioni sono giocate a mano da Ale da settimane, ma non tutte, e non dopo ogni versione.
+- **Il sostituto non fa regate pulite** (0 su 320): «Regate senza errori» resta 0 nel collaudo. Non toglie punti.
+- **Prova 5 esclusa dal collaudo**, perché il pilota la finisce 19 volte su 24; non serve per il minimo.
+
+### Decisioni per Ale
+
+1. 1.0 con il collaudo come sopra (13 passi guidati, 20 saltati e dichiarati), e il pilota completo delle lezioni dopo la 1.0. Oppure prima il pilota completo, poi la 1.0.
+2. Prova a mano ridotta come sopra.
+
+### Decisione di Ale (14 ottobre 2026)
+
+**«La 1.0 è la versione giocabile.»** La 1.0 esce con la barca di oggi e il collaudo del §14 (13 passi pratici guidati, 20 saltati e dichiarati). Dopo la 1.0, nell'ordine proposto: pilota completo delle lezioni (rete di sicurezza per le modifiche di fisica), resistenza dello scafo con le fasce ritarate, timone e virate, penalità a giri e regole di colpa, disegno della vela; poi le voci piccole.
+
+**Esito della fetta 6 (1.0, 14 ottobre 2026).** Fatta come nel §14, con una correzione dei numeri: i passi pratici sono **32**, non 33, e quelli guidati sono **14**, non 13 (18 saltati). Il collaudo corre le due regate almeno una volta ciascuna, anche quando una sola basterebbe per il minimo. Il seme di ogni regata si fissa nello stesso comando che la apre: senza, in un giro su tre la regata 2 dava un altro piazzamento, perché il disegno consuma numeri casuali fra un comando e l'altro (come nella 0.21.1). Numeri in `CHANGELOG.md`, 1.0.

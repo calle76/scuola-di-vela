@@ -31,6 +31,19 @@ Il disegno dei livelli, dei ruoli, dei meriti e della carriera è in `VISIONE-LI
 | 0.17 | Esame a risposte chiuse, nel suo riquadro del menu |
 | poi | Brevetto con attestato |
 
+**Fase A chiusa con la 1.0 (14 ottobre 2026):** esame (0.20), piazzamento e Competizione (0.21), bivio gioco libero / carriera (0.22), libretto (0.23), esame in carriera e attestato (0.24), rilascio (1.0). Dettagli in `PROPOSTA-ESAME-E-BREVETTO.md` e `CHANGELOG.md`.
+
+### Dopo la 1.0: ordine deciso da Ale (14 ottobre 2026)
+
+«La 1.0 è la versione giocabile.» Poi, nell'ordine:
+
+1. **Pilota completo delle lezioni:** oggi i collaudi guidano 14 dei 32 passi pratici. Serve come rete di sicurezza prima di toccare la fisica.
+2. **Resistenza dello scafo** (`PROPOSTA-RESISTENZA-SCAFO.md`), con le fasce delle prove ritarate e i record azzerati.
+3. **Timone e durata delle virate** (osservazione 40), con misure dai video.
+4. **Regole di regata:** penalità a giri invece dei 15 s (osservazione 39), colpa con le regole 14 e 16, barca che tampona con le stesse mure, forma del contatto (osservazione 33).
+5. **Disegno della vela** (osservazione 41).
+6. Le voci piccole della lista «Dopo la 1.0» qui sotto.
+
 Nota (4 ottobre 2026): il contenuto reale della 0.17, in corso, è descritto nel `CHANGELOG.md` (rotta della lezione 2, partenze di regata, caratteri degli avversari). L'esame a risposte chiuse e il brevetto vengono dopo la 0.17.
 
 Il quiz di ripasso resta subito dopo ogni lezione; l'esame per il brevetto è separato, perché riguarda tutte le lezioni.

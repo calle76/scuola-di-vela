@@ -73,6 +73,8 @@ Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate
 - **Regate senza errori:** il libretto le conta a parte («Regate senza errori: 1 su 2»). Non danno punti e non cambiano il piazzamento: un 3° posto resta un 3° posto.
 - **Errori:** al livello 1 non tolgono punti. Contano solo per la «senza errori» (★) e, nelle prove, per il punto in più.
 - **Navigazione libera** e tutto quello che si gioca in «Gioco libero» non contano per la carriera.
+- **Gli aiuti** (suggerimenti, frecce, rosa dell'angolo morto, barra che torna al centro, frecce che girano la prua…) si possono accendere o spegnere: **non cambiano i punti**. Nessun aiuto guida la barca al posto tuo.
+- **Semplificazioni della 1.0:** la Competizione viene dalle due regate singole, non da un torneo; c'è un brevetto solo (livello 1); la banca dell'esame è piccola (26 domande, quindi due esami di seguito hanno molte domande in comune); i numeri del libretto sono provvisori e si tareranno giocando.
 - I punti del libretto sono **meriti**, non una classifica: la classifica dei tornei, quando arriveranno, userà i punti del regolamento di regata (1 al primo, 2 al secondo…, vince chi ne ha meno).
 
 ## 3. I comandi nei livelli successivi

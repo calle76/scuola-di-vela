@@ -228,6 +228,8 @@ Regola: due fermate per ogni compito di modellazione (proposta, poi implementazi
 3. **Esame, brevetto e libretto minimo del livello 1**, con bivio e salvataggio di carriera e con il sistema dei meriti provvisorio (Competizione dalle regate singole): chiude il livello.
 4. **Rilascio 1.0**: collaudo guidando davvero la barca, `CHANGELOG.md` aggiornato.
 
+**Fatti il 14 ottobre 2026:** punto 3 (versioni 0.20-0.24) e punto 4 (1.0). Decisione 8 chiusa: tutti gli aiuti valgono per i meriti (opzione A). Decisione 9 chiusa: la banca dell'esame è separata dalle 29 domande dei ripassi (0.20). Ordine dei lavori dopo la 1.0 in `ROADMAP.md`.
+
 **Dopo la 1.0, solo se si decide di continuare** (il livello 2 a fette come nel §0):
 
 5. **Fiocco nel gioco** (livello 2): porting dal prototipo (commit `e616212`, righe `// FIOCCO`), con le semplificazioni dichiarate. Insieme: definizione dei due ruoli (A), assegnazione dei tasti, riscrittura delle lezioni 2.x.

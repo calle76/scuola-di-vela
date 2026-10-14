@@ -1,0 +1,139 @@
+# Collaudo della 1.0: una carriera intera, da zero all'attestato, nella stessa pagina e nello stesso salvataggio (criteri I1-I4 di
+# docs/PROPOSTA-ESAME-E-BREVETTO.md, §14, scritti prima del codice). «Carriera» si sceglie cliccando il selettore; alla fine si
+# legge solo quello che il gioco ha salvato. Serve #collaudo, perché i piloti usano l'aggancio __sv.
+#  - Lezioni: tutti i passi, fino all'ultimo (è lì che il gioco segna la lezione completata). I passi pratici che collaudo_lezioni.py
+#    sa guidare (14 su 32) si guidano davvero, con le stesse azioni; gli altri si saltano con l'aggancio (showStep): LIMITE DICHIARATO.
+#  - Prove 1-4: il pilota di collaudo_fasce.py, letto dal suo file. La prova 5 no: il pilota la finisce 19 volte su 24.
+#  - Regate: il pilota sostituto (__sv.pilota) di collaudo_competizione.py, letto dal suo file, avversari principianti;
+#    si ritenta con semi nuovi finché i due piazzamenti migliori danno almeno 3 punti, al massimo 3 tentativi per regata.
+#  - Ripassi ed esame: a clic, risposte giuste lette dalle banche nel testo di index.html.
+# Se una prova o una regata non arriva in fondo, l'esito è NON VALIDO, non FALLITO. Uso: python collaudo_carriera_intera.py
+import asyncio, json, pathlib, re, sys, time
+from playwright.async_api import async_playwright
+QUI = pathlib.Path(__file__).resolve().parent; OUT = QUI / "output"; OUT.mkdir(exist_ok=True)
+INDEX = QUI.parent / "index.html"; SRC = INDEX.read_text(encoding="utf-8"); URL = INDEX.as_uri() + "#collaudo"
+leggi = lambda f: (QUI / f).read_text(encoding="utf-8")
+SEME = re.search(r'SEME = """(.*?)"""', leggi("collaudo_fasce.py"), re.S).group(1)
+CORSA_PROVA = re.search(r'CORSA = """(.*?)"""', leggi("collaudo_fasce.py"), re.S).group(1)
+ATTREZZI = re.search(r'ATTREZZI = """(.*?)"""', leggi("collaudo_lezioni.py"), re.S).group(1)
+CAR, LIB = "scuolaVelaCarriera.v1", "scuolaVelaSim.v1"
+CORSA_REGATA = re.search(r'CORSA = """(.*?)""" % STORE', leggi("collaudo_competizione.py"), re.S).group(1) % CAR
+BANCHE = re.search(r"const ESAME = \[.*?\n  \];", SRC, re.S).group(0) + "\n" + re.search(r"const QUIZ = \[.*?\n  \];", SRC, re.S).group(0)
+BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]
+MK = ["m0.2", "m1.2", "m2.2", "m3.3", "m4.4"]
+GIUSTO = [60, 0, -60]; PIANI = [[], [], [], [[0, GIUSTO]]]   # come in collaudo_fasce.py
+
+# passi pratici guidati, con le azioni di collaudo_lezioni.py: (lezione, passo da 0) -> lista di azioni dentro la pagina
+T = lambda k, m: f"L.tieni('{k}', {m})"; A = lambda m: f"L.aspetta({m})"; P = lambda k, s: f"L.premi('{k}', {s})"
+GUIDATI = {
+    (0, 6): [T("ArrowLeft", 12)], (0, 7): [T("ArrowRight", 25)],
+    (0, 8): ["""(() => { L.semina(); L.tasto("keydown", "ArrowLeft"); L.avanza(25, () => __sv.readI().twa > 80); L.tasto("keyup", "ArrowLeft"); })()""", A(15)],
+    (0, 9): [T("s", 10)], (0, 10): [T("w", 1.4), A(4)], (0, 11): [T("w", 10)],
+    (1, 1): [T("ArrowLeft", 5)], (1, 2): [T("ArrowRight", 5)],
+    (2, 7): [T("ArrowDown", 10)], (2, 9): [T("ArrowUp", 10)],
+    (4, 1): [P("ArrowRight", 0.7), P("ArrowUp", 1.5), A(12)], (4, 2): [T("ArrowRight", 8), A(8)],
+    (5, 2): [P("ArrowRight", 0.6), P("ArrowUp", 3.0), A(60)], (5, 3): ["""(() => { L.tasto("keydown", "r"); L.tasto("keyup", "r"); })()""", A(8)],
+}
+fail = []; nonvalido = []; casi = {}
+def chk(parte, c, m):
+    casi[parte] = casi.get(parte, 0) + 1
+    if not c: fail.append(m); print("FALLITO:", m, flush=True)
+
+async def main():
+    t_inizio = time.time()
+    async with async_playwright() as pw:
+        b = await pw.chromium.launch()
+        pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+        await pg.add_init_script(SEME); await pg.goto(URL); await pg.wait_for_timeout(300)
+        await pg.evaluate("() => localStorage.clear()"); await pg.reload(); await pg.wait_for_timeout(300)
+        await pg.click("#modoSel button[data-v='carriera']")
+        chk("I3", await pg.get_attribute("#modoSel button[aria-pressed='true']", "data-v") == "carriera", "selettore su Carriera")
+        await pg.evaluate("s => { window.__B = new Function(s + ';return { ESAME, QUIZ }')(); }", BANCHE)
+        await pg.evaluate(f"({ATTREZZI})()")
+        NQ = await pg.evaluate("__B.QUIZ.map(q => q.length)")
+
+        # ---- lezioni
+        guidati = completati = saltati = 0
+        for li in range(6):
+            await pg.evaluate(f"__sv.openItem(['l',{li}])")
+            n = int((await pg.inner_text("#lStep")).split(" di ")[1])
+            for k in range(n):
+                await pg.evaluate(f"__sv.showStep({k})")
+                pratico = await pg.evaluate("() => { const x = document.getElementById('lNext'); return x.hidden || x.classList.contains('pending'); }")
+                if not pratico: continue
+                if (li, k) in GUIDATI:
+                    for az in GUIDATI[(li, k)]: await pg.evaluate(f"() => {az}")
+                    ok = await pg.evaluate("__sv.stepDone"); guidati += 1; completati += bool(ok)
+                    print(f"  lezione {li + 1}, passo {k + 1}: guidato, {'completato' if ok else 'NON completato'}", flush=True)
+                else: saltati += 1
+        print(f"lezioni: passi pratici guidati {guidati} (completati {completati}), saltati con l'aggancio {saltati}", flush=True)
+
+        # ---- prove 1-4
+        tempi = []
+        for i in range(4):
+            await pg.evaluate(f"() => {{ __seed(1); __sv.openItem(['m',{i}]); __sv.startMission({i}, 0); }}")
+            fin, t, _ = await pg.evaluate(CORSA_PROVA, PIANI[i]); tempi.append(round(t, 1) if fin else None)
+            if not fin: nonvalido.append(f"prova {i + 1} non finita")
+        print("prove 1-4, tempi:", tempi, flush=True)
+
+        # ---- regate: ognuna una volta, poi si ritenta quella con meno punti finché la somma dei migliori fa almeno 3
+        # (al massimo 3 tentativi per regata)
+        best = [0, 0]; tent = [0, 0]; storia = []
+        while tent[0] == 0 or tent[1] == 0 or sum(best) < 3:
+            r = 0 if tent[0] == 0 else 1 if tent[1] == 0 else (0 if best[0] <= best[1] else 1)
+            if tent[r] >= 3: r = 1 - r
+            if tent[r] >= 3: break
+            tent[r] += 1
+            # il seme si fissa nello stesso evaluate che apre la regata: fra due evaluate il disegno consuma Math.random (0.21.1)
+            x = await pg.evaluate(f"([a, x]) => {{ __seed(x); return ({CORSA_REGATA})(a); }}", [[r, tent[r], "principianti", ["r0.2", "r1.2"][r] + ":principianti"], 100 + 10 * r + tent[r]])
+            if x["moved"] == 0: nonvalido.append(f"regata {r + 1}: il sostituto non ha mosso la barra")
+            pos = x["saved"]["pos"] if x["saved"] else None
+            storia.append((r + 1, tent[r], pos)); best[r] = max(best[r], 5 - pos if pos else 0)
+        print("regate (regata, tentativo, posto):", storia, "| punti migliori:", best, flush=True)
+        if sum(best) < 3: nonvalido.append(f"regate: {sum(best)} punti dopo i tentativi {tent}")
+
+        # ---- ripassi ed esame, dal menu, a clic
+        await pg.evaluate("() => document.getElementById('toMenu').click()"); await pg.wait_for_timeout(200)
+        for li in range(6):
+            await pg.click(f"[data-q='{li}']")
+            while not await pg.locator("#qzAgain").count():
+                q = await pg.inner_text(".qz .q"); g = await pg.evaluate("([li, q]) => __B.QUIZ[li].find(r => r[0] === q)[1]", [li, q])
+                opts = await pg.locator(".opt").all_inner_texts(); await pg.locator(".opt").nth(opts.index(g)).click(); await pg.click("#qzNext")
+            await pg.click("#qzClose"); await pg.wait_for_timeout(150)
+        await pg.click("#goEsame")
+        while not await pg.locator("#qzBody .score").count():
+            q = await pg.inner_text(".qz .q"); g = await pg.evaluate("q => { for (const l of __B.ESAME) for (const r of l) if (r[1] === q) return r[2]; }", q)
+            opts = await pg.locator(".opt").all_inner_texts(); await pg.locator(".opt").nth(opts.index(g)).click(); await pg.click("#qzNext")
+        await pg.click("#qzClose"); await pg.wait_for_timeout(300)
+
+        # ---- I1-I4: solo quello che il gioco ha salvato
+        p = json.loads(await pg.evaluate(f"localStorage.getItem('{CAR}')"))
+        att = await pg.evaluate("document.getElementById('attest').open")
+        chk("I1", att, "I1: la scena dell'attestato è comparsa da sola")
+        await pg.screenshot(path=str(OUT / "I_attestato.png"))
+        if att: await pg.click("#atClose")
+        chk("I1", p.get("exam", {}).get("superato") is True and p["exam"].get("voto") == 20 and "data" in p.get("brevetto", {}), f"I1: esame {p.get('exam')}, brevetto {p.get('brevetto')}")
+        chk("I1", (await pg.inner_text("#libManca")).startswith("Brevetto ottenuto il"), f"I1: libretto «{await pg.inner_text('#libManca')}»")
+        # meriti calcolati qui dalle regole scritte (§12), dal salvataggio
+        fas = lambda i: next((3 - k for k in range(3) if p["best"].get(MK[i]) and p["best"][MK[i]] <= BANDS[i][k]), 0)
+        abil = sum(fas(i) + (1 if p["clean"].get(MK[i]) else 0) for i in range(5))
+        cono = sum(2 if p.get("quiz", {}).get(f"q{i}", -1) / NQ[i] >= 0.8 else 1 if p.get("quiz", {}).get(f"q{i}", -1) / NQ[i] >= 0.6 else 0 for i in range(6))
+        comp = sum(max([5 - v["pos"] for k, v in p.get("race", {}).items() if k.startswith(c + ":") and k.split(":")[1] in ("principianti", "esperti") and v["n"] == 4] or [0]) for c in ("r0.2", "r1.2"))
+        esp = sum(1 for i in range(6) if p["done"].get(f"l{i}"))
+        nel = [await pg.inner_text(f"[data-m='{k}']") for k in ("abil", "cono", "comp", "esp")]
+        chk("I2", nel == [f"{abil} / 20", f"{cono} / 12", f"{comp} / 8", f"{esp} / 6"], f"I2: libretto {nel}, calcolati {abil}, {cono}, {comp}, {esp}")
+        chk("I2", abil >= 8 and cono >= 6 and comp >= 3 and esp == 6 and abil + cono + comp + esp >= 29, f"I2: meriti sotto i minimi {abil}, {cono}, {comp}, {esp}")
+        chk("I3", await pg.evaluate(f"localStorage.getItem('{LIB}')") is None, "I3: il gioco libero non è stato toccato")
+        # I4: il metro ha misurato davvero
+        chk("I4", esp == 6 and all(p["done"].get(f"m{i}") for i in range(4)) and len(p.get("race", {})) >= 1, f"I4: completati dal gioco: lezioni {esp}, prove {[p['done'].get(f'm{i}') for i in range(4)]}, regate {list(p.get('race', {}))}")
+        chk("I4", guidati == len(GUIDATI) and guidati + saltati == 32, f"I4: passi pratici guidati {guidati} su {len(GUIDATI)}, totale {guidati + saltati} (attesi 32)")
+        chk("I4", not errs, f"errori di pagina: {errs[:3]}")
+        print(f"meriti: Abilità {abil}, Conoscenza {cono}, Competizione {comp}, Esperienza {esp}, totale {abil + cono + comp + esp}; "
+              f"regate senza errori {sum(1 for v in p.get('race', {}).values() if v['pulita'])}; durata {time.time() - t_inizio:.0f} s")
+        await b.close()
+    print("casi per parte:", casi)
+    if nonvalido: print("NON VALIDO:", nonvalido); print("ESITO: NON VALIDO"); sys.exit(1)
+    if fail: print("ESITO: FALLITO"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in ("I1", "I2", "I3", "I4")): print("ESITO: NON VALIDO (una parte senza casi)"); sys.exit(1)
+    print("ESITO: OK"); sys.exit(0)
+asyncio.run(main())

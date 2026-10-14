@@ -15,6 +15,46 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.0 — il livello 1 completo
+
+Del 14 ottobre 2026. **La 1.0 è la versione giocabile** (decisione di Ale): il livello 1 si gioca dall'inizio alla fine, dalle lezioni al brevetto. È la stessa barca della 0.21.6: la fisica non cambia. In `index.html` cambia solo la costante `VERSIONE`.
+
+**Cosa contiene il livello 1:**
+- sei lezioni, cinque prove a tempo con fasce, due regate contro tre avversari (principianti o esperti) o il proprio fantasma, navigazione libera;
+- registro degli errori, ripassi (29 domande), esame (banca di 26 domande, 20 estratte, servono 16), glossario;
+- gioco libero e carriera separati;
+- in carriera: libretto dei meriti con suggerimenti, esame con voto definitivo, ripassi dopo un esame non superato, brevetto di livello 1 «Timoniere di deriva» con attestato stampabile **senza valore legale**.
+
+**Il percorso verso la 1.0 (fase A, `PROPOSTA-ESAME-E-BREVETTO.md`):** 0.20 esame; 0.21 piazzamento e Competizione; 0.21.1-0.21.6 correzioni delle regate; 0.22 bivio; 0.23 libretto; 0.24 esame in carriera e attestato.
+
+- **Collaudo nuovo `tests/collaudo_carriera_intera.py`** (criteri I1-I4 scritti prima del codice), aggiunto a `lancia_tutti.sh` (circa 13 s). Fa una carriera intera nella stessa pagina e nello stesso salvataggio:
+  - lezioni percorse fino all'ultimo passo;
+  - prove 1-4 col pilota delle fasce;
+  - le due regate col pilota sostituto;
+  - ripassi ed esame a clic.
+
+  Alla fine legge solo il salvataggio. Nella sandbox, **5 giri identici**: prove 92,1 / 142,6 / 196,4 / 333,3 s (tutte oro), regate 2° e 2° al primo tentativo, meriti Abilità 16, Conoscenza 12, Competizione 6, Esperienza 6 (totale 40), esame 20 su 20, attestato comparso da solo, gioco libero non toccato. ESITO OK.
+- **Limiti del collaudo, dichiarati:**
+  - dei **32 passi pratici** delle lezioni se ne guidano davvero **14**; gli altri 18 si saltano con l'aggancio. Nessun collaudo dimostra ancora che ogni passo si possa completare guidando: è il primo lavoro dopo la 1.0 (`ROADMAP.md`);
+  - prova 5 esclusa (il pilota la finisce 19 volte su 24);
+  - il sostituto non fa regate pulite;
+  - è **una** carriera, cioè un solo percorso con semi fissi, non un campione.
+- **Difetto del collaudo trovato e corretto:** nella prima stesura, in un giro su tre la regata 2 finiva 4ª invece che 2ª. Il seme si fissava in un comando diverso da quello che apriva la regata, e nel frattempo il disegno consumava numeri casuali (lo stesso effetto della 0.21.1). Ora il seme si fissa nello stesso comando.
+- **Documenti:**
+  - `README.md` (stato e contenuti);
+  - `ROADMAP.md` (fase A chiusa, ordine dopo la 1.0 deciso da Ale: pilota completo delle lezioni, resistenza dello scafo, timone e virate, regole di regata, vela, voci piccole);
+  - `PIANO-GENERALE.md` (punti 3 e 4 fatti, decisioni 8 e 9 chiuse);
+  - manuale (gli aiuti non cambiano i punti; semplificazioni della 1.0).
+- **Non-regressione:** `polare.js` e `raffiche_e_virate.js` identici carattere per carattere; `collaudo_versione.py`.
+- **Sul PC di Ale** (`lancia_tutti.sh --veloce`, 14 ottobre 2026, caratteri veri): 14 OK, 0 falliti, 13 da controllare, 5 saltati, 1298 s. I 13 «da controllare» danno i valori di sempre:
+  - polare 3,4 / 5,2 / 3,5 nodi a 10 nodi; raffica a 20 nodi 55°;
+  - lezioni: tutti i passi completati, salvo il caso noto «L1 cazzare (primo tratto)»;
+  - regate: BLOCCATA 0, mediane 245,0 e 208,0 s; partenze: 3,3 / 4,8 / 3,6 s;
+  - fasce: prove 1-4 come sempre, prova 5 finita 19 volte su 24, mediana 353,6 s;
+  - strambate: 0 scuffie su 10 a 6 nodi, 10 su 10 a 15 nodi;
+  - pannello a 1360×650: solo i sette passi noti; fantasma salvato.
+- **Prova a mano di Ale:** carriera azzerata, prove nuove giocate e registrate nel libretto.
+
 ## 0.24 — esame in carriera, ripassi dopo l'esame, attestato
 
 Del 14 ottobre 2026. Fetta 5 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §13). In `index.html` cambiano:
