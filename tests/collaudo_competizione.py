@@ -5,7 +5,8 @@
 # che preme il tasto). Ogni regata in una pagina nuova (contesto nuovo, quindi salvataggio vuoto), Math.random a seme fisso,
 # simTime a zero, fast(0), passi fissi di 1/60 s con __sv.run, 3 minuti di preparazione. Il piazzamento si legge da quello che
 # il gioco ha salvato in localStorage (progress.race), e si confronta con un calcolo indipendente dai tempi d'arrivo.
-# Punti di una regata: 4/3/2/1 per 1°/2°/3°/4°, +1 se senza errori; regata non finita = 0.
+# Punti di una regata: 4/3/2/1 per 1°/2°/3°/4°; regata non finita = 0. Dalla 0.23 senza il «+1 senza errori» (decisione di Ale,
+# 14 ottobre 2026: meriti separati dalla classifica). Fino alla 0.22 c'era il +1, ma il sostituto non ha mai finito una regata pulita.
 #
 # Criteri scritti prima dei risultati (docs/PROPOSTA-ESAME-E-BREVETTO.md §4, decisioni di Ale per la 0.21), da non cambiare dopo:
 #   C0 arrivate almeno il 90% delle regate per tipo (bastone, raffiche); sotto, la misura non vale: ci si ferma e si riporta.
@@ -13,7 +14,7 @@
 #   C2 coppia seme k (regata 1 + regata 2): almeno 3 punti in almeno il 60% delle coppie.
 #   C3 finestre scorrenti di 3 semi consecutivi (1-3, 2-4, ...: si sovrappongono, quindi non sono indipendenti): migliore dei 3
 #      per ogni regata, somma dei due almeno 3, in almeno il 90% delle finestre.
-#   C4 10 punti in al massimo il 10% delle coppie.
+#   C4 punteggio massimo (fino alla 0.22 10 punti, dalla 0.23 8: due primi posti) in al massimo il 10% delle coppie.
 #   C5 regate arrivate e coppie stampate; fallisce se zero; il sostituto deve aver mosso la barra in ogni regata.
 # Semi 1-40: misura. Semi 41-80: conferma con le stesse soglie. Poi gli stessi semi con gli avversari esperti, solo riportati.
 # Sempre: il piazzamento salvato coincide con quello calcolato dai tempi; con «nessuno» non si salva niente.
@@ -65,7 +66,7 @@ REG_NOMI = [("capsizes", "scuffie"), ("gybesV", "strambate a vela aperta"), ("ir
 
 def punti(r):
     if r["fin"] is None or not r["saved"]: return 0
-    return 5 - r["saved"]["pos"] + (1 if r["saved"]["pulita"] else 0)
+    return 5 - r["saved"]["pos"]
 
 errori = []
 def no(msg):
@@ -139,8 +140,8 @@ async def gruppo(b, semi, liv, soglie, nome):
     fin = [semi[i:i + 3] for i in range(len(semi) - 2)]
     ok3 = sum(1 for w in fin if max(P[0][s] for s in w) + max(P[1][s] for s in w) >= 3)
     crit("C3", ok3 / len(fin) >= 0.9, f"finestre scorrenti (sovrapposte) con almeno 3 punti {ok3} su {len(fin)} ({ok3 / len(fin):.0%}, soglia 90%)")
-    c4 = sum(1 for x in somme if x == 10)
-    crit("C4", c4 / len(somme) <= 0.1, f"coppie a 10 punti {c4} su {len(somme)} ({c4 / len(somme):.0%}, soglia al massimo 10%)")
+    c4 = sum(1 for x in somme if x == 8)
+    crit("C4", c4 / len(somme) <= 0.1, f"coppie a 8 punti (due primi posti) {c4} su {len(somme)} ({c4 / len(somme):.0%}, soglia al massimo 10%)")
     return esito, True
 
 async def parte1(veloce):

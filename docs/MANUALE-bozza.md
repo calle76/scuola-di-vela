@@ -49,6 +49,31 @@ Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate
 - **Nel gioco libero l'esame è una prova e non si salva niente**: né il punteggio né l'esito. Brevetto, attestato e libretto arriveranno con la carriera.
 - **Chiudere il riquadro a metà (tasto Esc) fa perdere l'esame in corso**: si ricomincia da capo, con domande nuove.
 
+**Gli avversari nelle regate** (riquadro prima della partenza, menu «Avversari»). Sono sempre tre barche, Rossa, Verde e Blu, e ognuna ha un carattere che il riquadro scrive prima del via.
+
+- **Principianti:** ogni barca è *prudente* (sta alla larga dalle altre) o *normale*, a caso. Possono capitare anche tre caratteri uguali.
+- **Esperti:** di bolina stringono di più il vento (45-48° contro 49-54° dei principianti) e regolano la vela con meno errore. Una sola barca, scelta a caso, è *aggressiva in partenza* (cerca la linea con la precedenza); le altre due sono prudenti o normali. L'aggressiva c'è **solo** con gli esperti.
+- **Nessuno:** sei da solo; dalla seconda regata gareggi contro il fantasma del tuo record.
+- **Cambiare il livello rifà la partenza:** posizioni, caratteri e conto alla rovescia ricominciano da capo, con lo stesso vento.
+
+**Gioco libero e carriera** (dalla 0.22; selettore in alto nel menu). Sono due salvataggi separati, nello stesso browser, ognuno con i suoi tempi, i suoi ripassi e i suoi fantasmi. Quello che fai in uno non conta nell'altro. «Azzera i progressi» cancella solo la modalità in uso, fantasmi compresi. Se si cancellano i dati del sito nel browser, si perdono tutti e due.
+
+**La carriera: cosa serve per superare il livello 1** (dalla 0.23 il libretto; numeri provvisori, da tarare giocando). Nel menu, in carriera, il **libretto** mostra quattro punteggi, ognuno con quanti punti servono (in rosso finché non li hai, poi in verde). Sotto, una riga dice **tutto quello che manca**, e un'altra suggerisce **cosa potresti fare adesso**: il suggerimento cambia ogni volta che torni al menu, così si alternano lezioni, prove, ripassi e regate. Si può fare tutto in qualsiasi ordine, e prove, regate e ripassi si possono rifare quante volte si vuole: **conta sempre il risultato migliore**.
+
+| Punteggio | Come si guadagna | Massimo | Serve almeno |
+| --- | --- | --- | --- |
+| Abilità | Prove a tempo: bronzo 1, argento 2, oro 3, e 1 in più se la prova è stata completata almeno una volta senza errori | 20 | 8 |
+| Conoscenza | Ripassi: 2 punti con almeno l'80% di risposte giuste, 1 con almeno il 60% | 12 | 6 |
+| Competizione | Le due regate, con gli avversari (principianti o esperti): 1° 4 punti, 2° 3, 3° 2, 4° 1 | 8 | 3 |
+| Esperienza | 1 punto per ogni lezione completata | 6 | 6 (tutte) |
+| Totale | La somma | 46 | 29 |
+
+- In più serve **l'esame scritto superato** (16 risposte giuste su 20). L'esame salvato in carriera arriva in una prossima versione: per ora la riga del libretto finisce con «Manca l'esame».
+- **Regate senza errori:** il libretto le conta a parte («Regate senza errori: 1 su 2»). Non danno punti e non cambiano il piazzamento: un 3° posto resta un 3° posto.
+- **Errori:** al livello 1 non tolgono punti. Contano solo per la «senza errori» (★) e, nelle prove, per il punto in più.
+- **Navigazione libera** e tutto quello che si gioca in «Gioco libero» non contano per la carriera.
+- I punti del libretto sono **meriti**, non una classifica: la classifica dei tornei, quando arriveranno, userà i punti del regolamento di regata (1 al primo, 2 al secondo…, vince chi ne ha meno).
+
 ## 3. I comandi nei livelli successivi
 
 Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A e Z liberi per funzioni speciali; R raddrizza la barca e non va riusato; il livello 1 resta com'è (tabella sopra).

@@ -15,6 +15,49 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 0.23 — libretto dei meriti
+
+Del 14 ottobre 2026. Fetta 4 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §12). In `index.html` cambiano la costante `VERSIONE`, otto righe di stile, la tabella `MERITI` con le funzioni `meriti()` e `librettoHtml()`, una riga del menu e l'aggancio `__sv`, che ora espone `meriti`. Nel salvataggio non si scrive niente di nuovo. `step()`, lezioni, prove, regate, avversari ed esame non si toccano.
+
+- **Libretto, solo in carriera,** nel terzo riquadro del menu, al posto di «In arrivo» (che resta nel gioco libero):
+  - quattro barre (Abilità, Conoscenza, Competizione, Esperienza), con una tacca al minimo e il numero «punti / massimo»;
+  - il totale nel titolo, la riga «Regate senza errori: N su 2», una riga con tutto quello che manca e il suggerimento «Cosa potresti fare adesso».
+- **I punti si ricalcolano ogni volta** da quello che il gioco salva già: tempi, stelle, ripassi, piazzamenti, lezioni. La tabella è provvisoria, da tarare giocando (§12).
+- **Decisioni di Ale (14 ottobre 2026):**
+  - i punti della classifica e i meriti sono due registri separati;
+  - in Competizione conta **solo il piazzamento** (1° 4, 2° 3, 3° 2, 4° 1; massimo 8, minimo 3; totale massimo 46, minimo 29). Il «+1 senza errori» è tolto, perché un 3° posto pulito sembrava un 2° a pari merito (osservazione 31);
+  - le regate senza errori si contano a parte, senza punti;
+  - gli errori non tolgono punti: il livello 1 non deve essere troppo punitivo;
+  - in carriera l'esame superato sarà definitivo (fetta 5).
+- **Prima stesura rivista dopo la prova di Ale** (stesso giorno, prima del commit). Carriera con una sola prova fatta: la riga diceva «Mancano 6 punti in Conoscenza…», mentre mancava quasi tutto. Inoltre la tacca rossa del minimo sembrava un indicatore di avanzamento: in Esperienza stava in fondo, con 0 / 6. Ora:
+  - niente tacca: accanto al numero c'è «servono N», in rosso finché non si raggiunge, poi in verde;
+  - **una riga con tutto quello che manca**: «Ti mancano punti in Abilità, Conoscenza, Competizione ed Esperienza; poi l'esame.» Se le aree sono a posto: «Ti mancano N punti al totale», poi «Ti manca l'esame.»;
+  - **«Cosa potresti fare adesso: …»**, un suggerimento concreto che cambia a ogni ritorno al menu, girando fra le aree che mancano: la prossima lezione, una prova senza fascia o non in oro, un ripasso sotto l'80%, la regata con meno punti; alla fine l'esame. Il giro non si salva.
+  - Confermato l'ordine libero (Decisione 4 del 9 ottobre): niente sblocchi, si può gareggiare anche prima dell'esame.
+- **L'esame non si salva ancora** (fetta 5): nella 0.23 l'ultima riga possibile è «Ti manca l'esame.».
+- **Spazio a 1360×650:** è stato il punto più stretto.
+  - La prima stesura sforava di 15 px. Correzione: riga più corta, libretto più compatto.
+  - La versione rivista, con due righe, sforava di 12 px nel caso della Competizione. Correzione: il suggerimento dice «la Regata a bastone (con avversari)» e le righe sono un po' più strette.
+  - Nella sandbox, con i caratteri di riserva e ognuna delle sette situazioni possibili, il piede del menu arriva al massimo a 636 px, **proprio al limite** (oltre, la pagina scorrerebbe). **Sul PC di Ale, con i caratteri veri** (`lancia_tutti.sh --solo libretto`, 14 ottobre 2026): `collaudo_libretto.py` ESITO OK. Nel caso peggiore il piede del menu arriva a **610 px su 650**, con 0 px di eccesso in tutte e sette le situazioni. Il giro dei suggerimenti mostra le quattro aree.
+- **Collaudo nuovo `tests/collaudo_libretto.py`** (criteri L1-L4 scritti prima del codice), aggiunto a `lancia_tutti.sh`. Nella sandbox L1-L3 passano tutti:
+  - L1: i giocatori A-D danno 12/8/4/6 = 30, 20/12/0/6 = 38, 14/10/6/3 = 33 e 6/6/2/6 = 20, con le righe e i suggerimenti attesi;
+  - L2: 56 casi al bordo, compresi tutti i punteggi possibili dei sei ripassi;
+  - L3: 17 controlli letti dal menu, in una pagina senza `#collaudo`, compreso il giro del suggerimento (quattro ritorni al menu, quattro suggerimenti diversi);
+  - L4 esce NON VALIDA solo per i caratteri.
+- **`collaudo_competizione.py` aggiornato**: punti senza il +1; C4 ora conta le coppie a 8 punti, cioè due primi posti, con la soglia di prima (al massimo il 10%). Esiti nella sandbox, 320 regate:
+
+  | | C1, 1° / 2° / 3° / 4° | C2 | C3 | C4 |
+  | --- | --- | --- | --- | --- |
+  | Principianti, semi 1-40 (misura) | 8 (10%) / 24 / 24 / 24 | 38 su 40 (95%) | 38 su 38 | 0 su 40 |
+  | Principianti, semi 41-80 (conferma) | 15 / 15 / 20 / 30 (38%) | 35 su 40 (88%) | 38 su 38 | 0 su 40 |
+
+  Esito OK. C2 e C3 sono uguali a quelli della 0.21, come previsto: il sostituto ha finito 0 regate pulite su 320, quindi il +1 non entrava nei conti.
+  - **Da notare:** C1 non è uguale a quello della 0.21 (allora 12 / 24 / 24 / 20 sui semi 1-40). La causa sono le correzioni agli avversari della 0.21.3 e 0.21.4, non questa versione. Il 1° posto sui semi 1-40 sta proprio sul bordo della fascia (10%).
+  - Con gli esperti, solo riportato: 4° posto al 41% sui semi 1-40 (riga C1 «NO», come nella 0.21.3); coppie a 8 punti 0 e 2 su 40.
+- **Giro completo sul PC di Ale** (`lancia_tutti.sh --veloce`, sulla prima stesura del libretto, stesso giorno): nessun fallito, i «da controllare» con i valori di sempre; `collaudo_esame.py` e `collaudo_quiz.py` OK con i caratteri veri; il pannello eccede solo nei sette passi noti. Dopo, è cambiato solo il libretto.
+- **Non-regressione:** `polare.js` e `raffiche_e_virate.js` identici carattere per carattere; `collaudo_carriera.py` OK (57 controlli; il menu del gioco libero ha ancora gli stessi riquadri della 0.21.6); `collaudo_esame.py` OK nella sandbox salvo la misura con i caratteri veri.
+- **Manuale:** nuove sezioni «Gioco libero e carriera» e «La carriera: cosa serve per superare il livello 1», con la tabella dei punti.
+
 ## 0.22 — bivio gioco libero / carriera
 
 Del 14 ottobre 2026. Fetta 3 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (§7; proposta di dettaglio e decisioni nel §11). In `index.html` cambiano la costante `VERSIONE`, due righe di stile, il caricamento di progressi e fantasmi, l'intestazione del menu, «Azzera i progressi» e la funzione nuova `setModo`. `step()`, lezioni, prove, regate, avversari ed esame non si toccano.

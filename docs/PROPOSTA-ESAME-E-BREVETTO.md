@@ -143,6 +143,8 @@ Regola: niente testo in più a video quando basta il manuale. Le regole dei meri
 
 ### Tabella del livello 1 ricalcolata **[provvisorio]**, scritta prima di qualsiasi misura
 
+> **Superata il 14 ottobre 2026** per la Competizione: niente «+1 senza errori», massimo 8, totale massimo 46. Tabella in vigore nel §12, «Tabella dei meriti dalla 0.23».
+
 | Area | Punti | Massimo | Minimo |
 | --- | --- | --- | --- |
 | Abilità | 5 prove: bronzo 1, argento 2, oro 3, +1 se completata almeno una volta senza errori | 20 | 8 |
@@ -288,7 +290,7 @@ Ogni fetta è una versione giocabile e chiusa, con `VERSIONE` e `CHANGELOG.md` a
 | 1 | 0.20 | **Esame nel gioco libero, come prova.** Banca `ESAME`, estrazione per quote, pulsante del menu acceso, spiegazioni solo alla fine con le sbagliate per lezione, «Rifai l'esame», nessun salvataggio. | Nuovo `collaudo_esame.py`. **Banca:** ogni domanda ha la lezione e un passo che esiste, ogni lezione ha almeno quota + 1 domande (fallisce sotto), 3 sbagliate diverse dalla giusta, nessun testo uguale al `QUIZ`, giusta più lunga al massimo nel 30%. **Nessuna spiegazione prima della fine. Nessuna scrittura nel salvataggio** (`localStorage` identico prima e dopo). **Estrazione:** 500 estrazioni a seme fisso, sempre 20 domande diverse con le quote giuste, ogni domanda della banca estratta almeno una volta. **Soglia:** 15 giuste = non superato, 16 = superato, 20 e 0 agli estremi. **Dialogo:** 20 sbagliate a 1360×650 e 1360×768 con i caratteri veri (sul PC). **Pagina senza `#collaudo`:** il pulsante è acceso e apre l'esame. Più `collaudo_quiz.py`, perché `openQuiz` cambia. Non c'è barca da guidare: lo dico invece di inventare un collaudo finto. |
 | 2 | 0.21 | **Piazzamento salvato e taratura della Competizione.** `progress.race`; pilota sostituto esposto in `__sv`. **Avvertenza:** oggi il livello degli avversari (principianti / esperti / nessuno) non viene salvato nei risultati, e il record della regata ha la stessa chiave per tutti e tre (controllo 3). Prima di usare il piazzamento per i meriti, in carriera il livello degli avversari deve essere fisso **oppure** entrare nel risultato salvato. Quale delle due è da decidere. | Nuovo `collaudo_competizione.py`: le 160 regate del §4 con le soglie C0-C5, **guidando davvero la barca del giocatore**. Pagina senza `#collaudo`: una regata finita con avversari salva il piazzamento, con «nessuno» no. Se C0 fallisce, la fetta si ferma qui e si riporta. |
 | 3 | 0.22 (fatta) | **Bivio e salvataggio di carriera.** `STORE` variabile, selettore nel menu, «Azzera» solo sulla modalità corrente. | Pagina senza `#collaudo`: in carriera il pilota di `collaudo_fasce.py` completa la prova 1, e la chiave del gioco libero resta **identica byte per byte**; poi il contrario. Ricaricando, la modalità è ricordata. Un ripasso in carriera non tocca il record del libero. Menu a 1360×650 senza eccesso. |
-| 4 | 0.23 | **Libretto.** `meriti(progress)`, quattro barre, riga «cosa manca» per superare il livello. Il pulsante dell'esame non dipende dai meriti. | `meriti()` sui giocatori A-D del §4 e sui casi al bordo (minimo esatto, minimo meno 1, «nessuno» escluso), con l'esame superato e non: «livello superato» solo con tutte le condizioni. Nel browser: salvataggi di carriera preparati, poi lettura delle barre e della riga; **pulsante dell'esame acceso anche con meriti a zero**. Menu a 1360×650 e 1360×768 senza eccesso, con i caratteri veri. |
+| 4 | 0.23 (fatta) | **Libretto.** `meriti(progress)`, quattro barre, riga «cosa manca» per superare il livello. Il pulsante dell'esame non dipende dai meriti. | `meriti()` sui giocatori A-D del §4 e sui casi al bordo (minimo esatto, minimo meno 1, «nessuno» escluso), con l'esame superato e non: «livello superato» solo con tutte le condizioni. Nel browser: salvataggi di carriera preparati, poi lettura delle barre e della riga; **pulsante dell'esame acceso anche con meriti a zero**. Menu a 1360×650 e 1360×768 senza eccesso, con i caratteri veri. |
 | 5 | 0.24 | **Esame in carriera, ripasso mirato, scena dell'attestato.** | Percorso in pagina senza `#collaudo`. Con una carriera vuota: pulsante acceso, esame superato, **nessuna scena** (mancano i meriti); poi meriti completati, la scena compare. Con una carriera dai meriti a posto: esame sbagliato apposta, pulsante spento, ripassi delle lezioni sbagliate al 100% e, a parte, a 75% (resta spento), pulsante acceso, esame superato, scena dell'attestato con «nessun valore legale» e senza «patente», stampa provata con `emulate_media("print")` e schermata. Nel gioco libero lo stesso esame superato **non** mostra l'attestato e il pulsante non si spegne mai. |
 | 6 | 1.0 | **Rilascio.** Manuale (sezione meriti ed esame), documenti, `CHANGELOG.md`. | Una carriera da zero **guidata davvero**: le lezioni con `collaudo_lezioni.py`, le prove con il pilota delle fasce, le due regate con il sostituto, i ripassi e l'esame risposti; il libretto deve arrivare al brevetto. È lungo: lo lancia Ale sul PC. Poi una partita a mano di Ale. |
 
@@ -399,3 +401,123 @@ Criteri scritti adesso, prima del codice. Ogni corsa in un contesto nuovo del br
 3. **K1 con `#collaudo`** invece che senza, per il motivo detto sopra. **Approvato da Ale (14 ottobre 2026).**
 
 **Esito (0.22, 14 ottobre 2026).** Fatto come proposto, con «Azzera» che cancella anche i fantasmi della modalità in uso. Un cambio rispetto al punto 3: al cambio di modalità **non** si chiama `saveProgress()`, perché ogni risultato è già salvato quando nasce; il collaudo ha mostrato che quella scrittura riscriveva la modalità lasciata (stesso contenuto, byte diversi). `collaudo_carriera.py`: 57 controlli, 0 falliti, 6 corse K1 valide su 6. Numeri e limiti in `CHANGELOG.md`, 0.22.
+
+---
+
+## 12. Fetta 4 (0.23): libretto — proposta di dettaglio
+
+Del 14 ottobre 2026. **Fermata 1: nessun codice.** Righe di `index.html` della 0.22.
+
+### Da dove si leggono i meriti [codice]
+
+Tutto c'è già in `progress`; la fetta **non scrive niente di nuovo** nel salvataggio.
+
+| Area | Dato | Righe |
+| --- | --- | --- |
+| Abilità | `progress.best[recK("m"+i)]` → fascia con `medalOf(i, sec)` (oro 3, argento 2, bronzo 1); `progress.clean[recK("m"+i)]` → +1 | 950-951, 1514 |
+| Conoscenza | `progress.quiz["q"+i]` (migliore ripasso completo) su `QUIZ[i].length` | 1062 |
+| Competizione | `progress.race[recK("r"+i)+":principianti"]` e `…":esperti"` = `{ pos, n, pulita }`; per regata il migliore dei due | 1911-1917 |
+| Esperienza | `progress.done["l"+i]` | 1236 |
+| Esame | `progress.exam?.superato`: **nessuno lo scrive fino alla fetta 5**, quindi nella 0.23 l'ultima riga è sempre «Manca l'esame» | — |
+
+### Il modello più semplice
+
+1. **`meriti(progress)`, funzione pura**, con la tabella del §4 [provvisorio, scritta il 9 ottobre prima di ogni misura] come unica costante `MERITI`:
+   - Abilità: per ogni prova `medalOf` + 1 se pulita; massimo 20, minimo 8.
+   - Conoscenza: per ogni ripasso 2 punti se `punti·5 ≥ domande·4` (80%), 1 se `punti·5 ≥ domande·3` (60%); conti interi per non sbagliare sui decimali; massimo 12, minimo 6.
+   - Competizione: per ogni regata il migliore fra principianti ed esperti, `5 − pos` (+1 se pulita), solo con `n = 4`; le chiavi con «nessuno» non esistono, e comunque si leggono solo le due chiavi con il livello; massimo 10, minimo 3.
+   - Esperienza: lezioni completate; massimo 6, minimo 6.
+   - Totale: massimo 48, minimo 29.
+   - Restituisce `{ aree, totale, superato, manca }`.
+2. **Riga «cosa manca»**, una sola, in quest'ordine: l'area sotto il minimo con **più punti mancanti** (a parità, l'ordine della tabella: scelta nostra, il §3 diceva «più lontana» senza definirla), poi il totale, poi l'esame. Testi:
+   - Abilità: «Manca N punto/i in Abilità: migliora i tempi delle prove o completane una senza errori.»
+   - Conoscenza: «… in Conoscenza: porta un ripasso almeno all'80%.»
+   - Competizione: «… in Competizione: arriva in fondo a una regata con gli avversari.»
+   - Esperienza: «… in Esperienza: completa le lezioni che mancano (Lezione 3, Lezione 5).»
+   - Totale: «Mancano N punti al totale: migliora una qualsiasi area.»
+   - Esame: «Manca l'esame.»
+   - Tutto fatto: «Livello 1 superato.» (la scena dell'attestato è della fetta 5).
+3. **Libretto nel menu, solo in carriera:** nel terzo riquadro, al posto di «In arrivo» (che resta nel gioco libero). Quattro righe compatte «Abilità ▬▬▬│▬▬ 12 / 20» con una tacca al minimo e il minimo nel `title`, poi «Totale 31 / 48 (minimo 29)», poi la riga «cosa manca». Niente spiegazioni delle regole a video: vanno nel manuale (§3).
+4. **Il pulsante dell'esame non cambia**: acceso sempre, anche con meriti a zero.
+
+Costanti nuove: la tabella `MERITI` (punti, massimi, minimi del §4), **ipotesi provvisorie**, da tarare giocando. Nessun'altra.
+
+### Spazio a 1360×650 [misura, sandbox, caratteri di riserva]
+
+Oggi: riquadro Scuola 454 px (il più alto), terzo riquadro 367 px, piede del menu che finisce a 582 px su 650. Il libretto può crescere di circa 87 px senza superare il riquadro Scuola, e di altri 68 px prima del bordo. Togliendo «In arrivo» si recuperano circa 50 px. Il libretto stimato è circa 150 px: **ci sta, ma di poco**. Con i caratteri veri il riquadro Scuola è 464,5 px: la misura valida è sul PC di Ale.
+
+### Collaudo: nuovo `tests/collaudo_libretto.py` [proposta]
+
+Criteri scritti adesso, prima del codice.
+
+- **L1, giocatori del §4.** Per A, B, C e D si prepara un `progress` costruito **dalle regole scritte, non dal codice**: i tempi presi dalle fasce lette nel testo di `index.html` (per esempio argento = il tempo massimo dell'argento), i ripassi con punteggi scelti, i piazzamenti con `{ pos, n: 4, pulita }`. Atteso: i numeri della tabella degli esempi (A 12/8/5/6 = 31, B 20/12/0/6 = 38, C 14/10/6/3 = 33, D 6/6/3/6 = 21) e la riga «cosa manca» prevista: A «Manca l'esame»; B Competizione; C Esperienza, con le tre lezioni nominate; D Abilità.
+- **L2, casi al bordo:** ogni area al minimo esatto e al minimo meno 1; totale a 29 e a 28 con tutte le aree a posto; ripasso di 4 domande a 3 su 4 (1 punto) e a 4 su 4 (2 punti); ripasso di 5 o 6 domande al 60% e all'80% esatti; una regata solo con «esperti» e una con tutti e due i livelli (conta il migliore); una chiave «nessuno» preparata a mano, che non deve contare; `progress` vuoto (tutto a zero, riga = l'area con più punti mancanti, cioè Abilità: 8). Con l'esame superato e senza: «Livello 1 superato» **solo** con tutte le condizioni.
+- **Controllo del metro:** il collaudo stampa quanti casi ha verificato per ogni parte e fallisce se una parte ne ha zero; almeno un caso per area deve dare un numero **diverso da zero** e uno **diverso dal massimo**.
+- **L3, nel browser senza `#collaudo`:** salvataggi di carriera preparati in `localStorage` (A e D), menu caricato come un giocatore: si leggono dal DOM i numeri delle quattro barre, il totale e la riga, e devono coincidere con L1. Nel gioco libero il libretto **non** c'è e «In arrivo» sì. Il pulsante dell'esame è acceso anche con la carriera vuota.
+- **L4, spazio:** menu in carriera con il libretto a 1360×650 e 1360×768, **0 px di eccesso** e il piede del menu dentro la finestra; nel caso peggiore (riga «cosa manca» più lunga, quella di Esperienza con sei lezioni). Valida solo con i caratteri veri (PC di Ale).
+- **Non-regressione:** `polare.js`, `raffiche_e_virate.js` identici carattere per carattere; `collaudo_carriera.py`, `collaudo_esame.py`, `collaudo_versione.py`.
+
+`meriti()` si raggiunge dal collaudo tramite `__sv` (solo con `#collaudo`) per L1 e L2; L3 non usa l'aggancio.
+
+### Rischi
+
+- **Spazio:** se non ci sta a 1360×650, si toglie prima il totale come riga a sé (va nel titolo del libretto), poi si accorciano le etichette. Non si toccano gli altri riquadri.
+- **I numeri del §4 sono provvisori:** scritti prima di qualsiasi partita in carriera. La Competizione è misurata (0.21), le altre aree no. Si tarano giocando, dichiarando ogni cambio.
+- **Prova 5:** il pilota delle fasce la finisce 19 volte su 24 (PC di Ale); l'oro lì è di misura. Riportato, non è un difetto del libretto.
+- **Il libretto riconosce le prove dalle chiavi di oggi** (`m0.2` … `m4.4`). Se un giorno cambia un percorso e la sua chiave, quella prova torna a zero anche in carriera: è la regola già in uso per i record.
+
+### Decisioni per Ale
+
+1. Libretto **al posto di «In arrivo»** in carriera (consiglio: sì, per lo spazio).
+2. Riga «cosa manca»: a parità di punti mancanti, l'ordine della tabella (Abilità, Conoscenza, Competizione, Esperienza). Consiglio: sì.
+3. Testi delle righe «cosa manca» come sopra: si possono cambiare adesso, prima del codice.
+
+### Risposte di Ale (14 ottobre 2026)
+
+1. Libretto al posto di «In arrivo» in carriera: **sì**.
+2. Ordine a parità di punti mancanti: Ale non ha preferenze; resta l'ordine della tabella (scelta nostra).
+3. Testi della riga «cosa manca»: da rivedere quando Ale li vede nel gioco.
+4. **Nuova richiesta, che ferma la fetta 4 finché non è decisa: due registri separati.**
+   - **Classifica** delle regate e dei tornei: solo i punti del regolamento (sistema del punteggio minimo, Appendice A: 1 punto al primo, 2 al secondo e così via; vince chi ne ha meno). Nessun bonus.
+   - **Meriti** (libretto): un registro a parte. Il «+1 senza errori» non deve mai cambiare un piazzamento: oggi, nei meriti, un 3° posto senza errori vale quanto un 2° con errori (osservazione 31), e Ale lo legge come un 2° posto a pari merito.
+   - Da decidere quali punti si danno in ogni fase (lezioni, prove, ripassi, esame, regate, tornei, errori) e se le regate e le prove giocate in carriera contano tutte. Riepilogo dello stato e domande nel rapporto del 14 ottobre; le decisioni si scrivono qui.
+
+### Decisioni di Ale sui punti (14 ottobre 2026)
+
+- **Classifica e meriti separati.** La classifica usa solo i punti del regolamento (punteggio minimo, Appendice A: 1 al primo, 2 al secondo…, vince chi ne ha meno); oggi la classifica a punti non c'è, perché le regate sono singole: entra con i tornei, dopo la 1.0.
+- **Competizione nei meriti: solo il piazzamento.** Il «+1 senza errori» si toglie.
+- **«Senza errori» nelle regate:** resta la ★; nel libretto un conteggio a parte, «Regate senza errori: N su 2», **senza punti**.
+- **Errori in generale:** per ora contano solo per la «senza errori» (★ e +1 nelle prove). Il livello 1 non deve essere troppo punitivo.
+
+### Tabella dei meriti dalla 0.23 [provvisoria, da tarare giocando]
+
+| Area | Punti | Massimo | Minimo |
+| --- | --- | --- | --- |
+| Abilità | 5 prove: bronzo 1, argento 2, oro 3, +1 se completata almeno una volta senza errori | 20 | 8 |
+| Conoscenza | 6 ripassi: 2 punti se il migliore è almeno l'80%, 1 se almeno il 60% | 12 | 6 |
+| Competizione | 2 regate, solo con avversari; per ogni regata il piazzamento migliore: 1° = 4, 2° = 3, 3° = 2, 4° = 1 | **8** | 3 |
+| Esperienza | 1 punto per lezione completata | 6 | 6 |
+| Totale | somma dei minimi 23 | **46** | 29 |
+
+- **Minimo di Competizione invariato (3):** un 3° e un 4° posto, oppure un 2° posto e l'altra regata non finita. Due ultimi posti fanno 2: non bastano. Le misure C2 e C3 della 0.21 restano valide così come sono, perché il sostituto non ha mai finito una regata pulita: il bonus non era mai entrato nei conti.
+- **C4 cambia significato:** il massimo è ora 8 (due primi posti). La soglia resta quella scritta allora (al massimo il 10% delle coppie); va rimisurata con `collaudo_competizione.py` aggiornato, nella fetta 4.
+- **Esempi ricalcolati:** A (due 3° posti) 12 + 8 + 4 + 6 = 30, meriti a posto, manca l'esame. B 20 + 12 + 0 + 6 = 38, manca Competizione. C (un 1° e un 3° posto) 14 + 10 + 6 + 3 = 33, manca Esperienza. D (due ultimi posti) 6 + 6 + 2 + 6 = 20: mancano Abilità (2 punti), Competizione (1 punto) e totale; la riga dice Abilità. L1 del collaudo usa questi numeri.
+
+### Esame in carriera: un voto solo (Ale, 14 ottobre 2026, per la fetta 5)
+
+«Il test scritto non è realistico poterlo rifare: quando ti promuovono hai un voto e finisce lì.» Quindi, in carriera, **un esame superato è definitivo**: il voto resta quello e l'esame non si rifà per migliorarlo. Cambia il §3 («Rifai l'esame» resta solo nel gioco libero). Da confermare all'avvio della fetta 5: dopo un esame **non** superato resta la strada del §3 (ripasso mirato delle lezioni sbagliate, poi si riprova).
+
+**Esito della fetta 4 (0.23, 14 ottobre 2026).** Fatta come nel §12, con la tabella dei meriti dalla 0.23. Una correzione per lo spazio: la riga di Esperienza dice «completa le lezioni 1, 2… e 6» invece dei nomi «Lezione N». Numeri in `CHANGELOG.md`, 0.23.
+
+### Revisione del libretto dopo la prova di Ale (14 ottobre 2026) [fatta nella 0.23]
+
+Prova di Ale, carriera con una sola prova fatta: la riga diceva «Mancano 6 punti in Conoscenza…» quando mancava quasi tutto, e la tacca rossa del minimo sembrava un indicatore di avanzamento (in Esperienza stava in fondo, con 0 / 6).
+
+- **Ordine libero confermato** (Decisione 4 del 9 ottobre): niente sblocchi. Ale: le regate servono anche da allenamento mentre si impara, per non annoiarsi.
+- **Barre:** via la tacca; accanto al numero «servono N», in rosso finché non si raggiunge, poi in verde. La barra a riempimento resta (Ale: «più bella e comprensibile»).
+- **Due righe al posto di una:**
+  1. cosa manca, tutto insieme: «Ti mancano punti in Abilità, Conoscenza, Competizione ed Esperienza; poi l'esame.» (solo le aree sotto il minimo; poi il totale; poi l'esame);
+  2. **«Cosa potresti fare adesso: …»**, un suggerimento concreto che **cambia a ogni ritorno al menu**, girando fra le aree che mancano. Per ogni area una voce precisa: Esperienza → la prima lezione non completata nell'ordine della Scuola; Abilità → la prima prova senza fascia, altrimenti la prima non in oro; Conoscenza → il primo ripasso sotto l'80%; Competizione → la regata con meno punti. Con tutte le aree a posto e il totale sotto 29, si gira fra le aree non al massimo; poi l'esame. Il giro si conta in memoria, non si salva: alla riapertura del gioco riparte dalla prima area che manca, nell'ordine della tabella.
+- Collaudo: L1-L3 si aggiornano con i testi nuovi; il giro del suggerimento si prova aprendo il menu più volte (ogni area che manca deve comparire almeno una volta in tanti giri quante sono le aree); L4 si rimisura con le due righe.
+
+**Esito della revisione.** Fatta come scritta. Due cambi per lo spazio a 1360×650: il suggerimento delle regate è «la Regata a bastone (con avversari).» e le righe del libretto sono un po' più strette. «Ti manca 1 punto» al singolare. Nella sandbox il caso peggiore (Competizione) lascia il piede del menu proprio al limite: la misura valida è sul PC di Ale.

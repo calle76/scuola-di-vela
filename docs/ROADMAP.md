@@ -146,6 +146,7 @@ Idee nuove, fuori dal piano attivo. La lista più ampia «dopo la 1.0» sta in `
 - **Rendere deterministico il caso h di collaudo_registro.py (passi fissi e seme, come gli altri collaudi).**
 - **Forma del contatto fra le barche (osservazione 33, 12 ottobre 2026).** Oggi è un cerchio di 4,2 m fra i centri: in fila le barche si toccano davvero, fianco a fianco restano circa 2,8 m di mare. Da decidere se usare la forma dello scafo (per esempio due cerchi lungo la barca o un'ellisse), sapendo che cambiano contatti, penalità e i collaudi delle regate e dell'aggressiva, le cui distanze (14, 15, 22 m) sono state tarate con il cerchio.
 - **Record dei tempi delle regate mescolato fra i livelli (0.21).** Dalla 0.21 il piazzamento si salva per livello degli avversari (`r0.2:principianti`, `r0.2:esperti`), ma tempo migliore, stella e fantasma hanno ancora una sola chiave per regata (`r0.2`, `r1.2`): un record fatto da soli («nessuno») vale come uno fatto contro gli esperti. Separarli azzererebbe record, stelle e fantasmi delle regate (come le prove nella 0.19).
+- **Vela disegnata con la parte alta lunga quanto il boma (osservazione 41, 14 ottobre 2026).** Vista dall'alto la randa dovrebbe restringersi verso la penna, con la balumina che torna dalla fine del boma verso l'albero; oggi il disegno è un cuneo chiuso da un tratto dritto. Solo disegno. Ale: proposta in coda, dopo il programma della 1.0, con schermate prima e dopo.
 
 ## In secondo piano (non cancellato)
 

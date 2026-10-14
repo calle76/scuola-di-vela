@@ -61,6 +61,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .item.free{background:var(--ink);color:var(--panel);border-color:var(--ink);padding:10px 12px}
 .item.free .kind{color:var(--label)} .item.free .desc,.item.free .num{color:inherit;opacity:.8}
 .item.off{cursor:default;opacity:.55} .item.off:hover{border-color:var(--line)}
+.lib{display:flex;flex-direction:column;gap:1px;font-size:.88rem;line-height:1.2}
+.lrow{display:grid;grid-template-columns:7.5em 1fr auto;align-items:center;gap:8px}
+.lrow .num{text-align:right;color:var(--ink-soft);white-space:nowrap}
+.lrow .no{color:var(--warn)} .lrow .ok{color:var(--good)}
+.lbar{position:relative;height:8px;border-radius:4px;background:var(--line)}
+.lbar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--ink)}
+.lib p{margin:1px 0 0}
+.lib .manca{font-weight:600}
 .soon{margin:0;font-size:.95rem;line-height:1.35;color:var(--ink-soft)}
 .medal{display:inline-block;width:.8em;height:.8em;border-radius:50%;margin-left:5px;vertical-align:-.05em;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
 .medal.m1{background:#D4A017} .medal.m2{background:#A9B3BC} .medal.m3{background:#B87333}
@@ -863,7 +871,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.22"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.23"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -957,6 +965,49 @@ function step(S, C, E, dt){
   const medalOf = (i, sec) => { const b = MISSIONS[i].bands; if (!b || !sec) return 0; for (let k = 0; k < 3; k++) if (sec <= b[k]) return k + 1; return 0; };
   const medalTag = (i, sec) => { const m = medalOf(i, sec); return m ? `<span class="medal m${m}" title="Fascia: ${MEDALS[m - 1]}"></span>` : ""; };
   const MEDAL_ON = () => MISSIONS.some(m => m.bands);
+  // 0.23, meriti del libretto (solo carriera): tabella provvisoria di docs/PROPOSTA-ESAME-E-BREVETTO.md §12, da tarare giocando.
+  // Si ricalcolano ogni volta da progress: niente si salva. Competizione: solo il piazzamento, senza il +1 «senza errori».
+  const MERITI = [["abil", "Abilità", 20, 8], ["cono", "Conoscenza", 12, 6], ["comp", "Competizione", 8, 3], ["esp", "Esperienza", 6, 6]];
+  const TOT_MIN = 29;
+  function meriti(p){
+    const pt = {
+      abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
+      cono: QUIZ.reduce((a, q, i) => { const s = p.quiz?.["q" + i]; return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
+      comp: RACES.reduce((a, rc, i) => a + Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; })), 0),
+      esp: LESSONS.filter((L, i) => p.done["l" + i]).length };
+    const pulite = RACES.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
+    const totale = MERITI.reduce((a, [k]) => a + pt[k], 0), esame = !!p.exam?.superato;
+    // 0.23, dopo la prova di Ale: una riga con tutto quello che manca, e un suggerimento concreto per ogni area che manca
+    const sotto = MERITI.filter(([k, , , min]) => pt[k] < min);
+    const elenco = a => a.length > 1 ? a.slice(0, -1).join(", ") + (/^E/.test(a[a.length - 1]) ? " ed " : " e ") + a[a.length - 1] : a[0];
+    const poi = esame ? "." : "; poi l'esame.";
+    const manca = sotto.length ? "Ti mancano punti in " + elenco(sotto.map(r => r[1])) + poi
+      : totale < TOT_MIN ? (TOT_MIN - totale === 1 ? "Ti manca 1 punto" : "Ti mancano " + (TOT_MIN - totale) + " punti") + " al totale" + poi
+      : !esame ? "Ti manca l'esame." : null;
+    const voce = k => {
+      if (k === "esp"){ const i = LESSONS.findIndex((L, j) => !p.done["l" + j]); return i < 0 ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
+      if (k === "abil"){
+        const fas = i => medalOf(i, p.best[recK("m" + i)]), tit = i => "Prova " + (i + 1) + ", " + MISSIONS[i].title;
+        let i = MISSIONS.findIndex((m, j) => !fas(j)); if (i >= 0) return tit(i) + ".";
+        i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
+        i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
+      if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : "il ripasso della " + LESSONS[i].name + "."; }
+      const rp = RACES.map((rc, i) => Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; })));
+      const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES[i].title + " (con avversari).";
+    };
+    const aree = sotto.length ? sotto : totale < TOT_MIN ? MERITI.filter(([k, , max]) => pt[k] < max) : [];
+    const sugg = aree.map(([k]) => voce(k)).filter(Boolean);
+    if (!sugg.length && !esame) sugg.push("l'esame su tutte le lezioni.");
+    return { pt, pulite, totale, esame, superato: !manca, manca, sugg };
+  }
+  let giroSug = 0; // il suggerimento cambia a ogni ritorno al menu; il giro non si salva
+  function librettoHtml(){
+    const m = meriti(progress), pc = (v, max) => Math.round(100 * v / max);
+    const rows = MERITI.map(([k, nome, max, min]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-m="${k}">${m.pt[k]} / ${max}</span> · <span class="${m.pt[k] >= min ? "ok" : "no"}">servono ${min}</span></span></div>`).join("");
+    const sug = m.sugg.length ? m.sugg[giroSug++ % m.sugg.length] : null;
+    return `<div><div class="part-head"><h2>Libretto</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
+      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES.length}</p><p class="manca" id="libManca">${m.superato ? "Livello 1 superato." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}</div></div>`;
+  }
   loadProgress();
   const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
@@ -1003,7 +1054,7 @@ function step(S, C, E, dt){
         <section class="tile">
           <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
             <button id="goEsame">Esame su tutte le lezioni<small>${QUOTE.reduce((a, b) => a + b)} domande, ne servono ${SOGLIA_ESAME}</small></button></div></div>
-          <div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>
+          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>`}
         </section>
       </div>
       <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori.${MEDAL_ON() ? " I pallini oro, argento e bronzo indicano la fascia del tuo record." : ""}</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
@@ -2847,7 +2898,7 @@ function step(S, C, E, dt){
       if (!me.ai) Object.assign(me, { ai: aiParams("principianti"), side: 1, boardT: 0, boardMax: 40, rOff: Math.random() * 6, char: "normale", startX: toWF(S.x, S.y)[0] * 0.5, capW: 0 });
       if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
       me.capW = 0; me.info = info; me.me = false; aiControl(me, dt); me.me = true; return ctl.tiller; },
-    openItem, estraiEsame, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
+    openItem, estraiEsame, meriti, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
     frame: dt => { simulate(dt, curStep()); simTime += dt; draw(dt); }, get viewOff(){ return viewOff; }, get zoomQ(){ return zoomQ; }, get camZoom(){ return camZoom; }, draw: dt => draw(dt), gusts: () => gusts.map(g => [g.x, g.y, g.r, g.k, g.sh, g.ttl]), get rippleCells(){ return rippleCells; }, goal, cam: () => { const v = view(); return { cx: v.cx, cy: v.cy, W, H }; } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce); sesTick è il registratore, solo lettura
