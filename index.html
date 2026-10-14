@@ -204,8 +204,32 @@ dialog#quiz::backdrop{background:rgba(13,25,36,.5)}
 .review button{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .review button small{color:var(--ink-soft);font-size:.85rem;white-space:nowrap}
 .review button:hover{border-color:var(--ink)}
+.review button:disabled{cursor:default;color:var(--ink-soft);border-style:dashed}
+.review button:disabled:hover{border-color:var(--line)}
 dialog#gloss{border:none;border-radius:10px;padding:0;width:min(640px,94vw);max-height:86vh;background:var(--panel);color:var(--ink)}
 dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
+dialog#attest{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:92vh;background:var(--panel);color:var(--ink)}
+dialog#attest::backdrop{background:rgba(13,25,36,.5)}
+.att{padding:26px 34px 22px;text-align:center;border:3px double var(--line);margin:10px;border-radius:6px}
+.att .sc{margin:0;font-size:1rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.att h2{margin:6px 0 0;font-size:2rem}
+.att .ruolo{margin:2px 0 14px;font-size:1.3rem;font-weight:600;color:var(--accent)}
+.att label{display:block;font-size:.95rem;color:var(--ink-soft)}
+.att input{display:block;margin:4px auto 12px;width:80%;font:inherit;font-size:1.3rem;text-align:center;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--ink)}
+.att p{margin:6px 0;font-family:"Source Serif 4",Georgia,serif}
+.att ul{list-style:none;padding:0;margin:8px 0;display:grid;grid-template-columns:1fr 1fr;gap:2px 16px}
+.att input:focus{outline:none;border-bottom-color:var(--accent)}
+.att .legal{margin-top:14px;font-family:inherit;font-weight:700}
+.att .row{justify-content:center;margin-top:16px}
+@media print{
+  body{background:#fff !important}
+  body > *:not(#attest){display:none !important}
+  dialog#attest{position:static;display:block;max-height:none;width:auto;color:#000;background:#fff}
+  dialog#attest::backdrop{display:none}
+  .att .row{display:none}
+  .att input{border:none;outline:none}
+  .att label{display:none}
+}
 .gl-head{position:sticky;top:0;background:var(--panel);padding:18px 20px 12px;border-bottom:1px solid var(--line)}
 .gl-head div{display:flex;justify-content:space-between;align-items:center}
 .gl-head h2{margin:0;font-size:1.7rem}
@@ -226,6 +250,8 @@ dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
 <div id="menu"></div>
 
 <dialog id="quiz" aria-labelledby="qzTitle"><div class="qz" id="qzBody"></div></dialog>
+
+<dialog id="attest" aria-labelledby="atTitle"><div class="att" id="atBody"></div></dialog>
 
 <dialog id="gloss" aria-labelledby="glTitle">
   <div class="gl-head">
@@ -871,7 +897,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.23"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.24"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -997,7 +1023,7 @@ function step(S, C, E, dt){
     };
     const aree = sotto.length ? sotto : totale < TOT_MIN ? MERITI.filter(([k, , max]) => pt[k] < max) : [];
     const sugg = aree.map(([k]) => voce(k)).filter(Boolean);
-    if (!sugg.length && !esame) sugg.push("l'esame su tutte le lezioni.");
+    if (!sugg.length && !esame) p.exam?.ripasso?.length ? p.exam.ripasso.forEach(i => sugg.push("il ripasso della " + LESSONS[i].name + " (dopo l'esame).")) : sugg.push("l'esame su tutte le lezioni.");
     return { pt, pulite, totale, esame, superato: !manca, manca, sugg };
   }
   let giroSug = 0; // il suggerimento cambia a ogni ritorno al menu; il giro non si salva
@@ -1006,7 +1032,8 @@ function step(S, C, E, dt){
     const rows = MERITI.map(([k, nome, max, min]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-m="${k}">${m.pt[k]} / ${max}</span> · <span class="${m.pt[k] >= min ? "ok" : "no"}">servono ${min}</span></span></div>`).join("");
     const sug = m.sugg.length ? m.sugg[giroSug++ % m.sugg.length] : null;
     return `<div><div class="part-head"><h2>Libretto</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
-      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES.length}</p><p class="manca" id="libManca">${m.superato ? "Livello 1 superato." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}</div></div>`;
+      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Brevetto ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Attestato</button></p>`
+        : `<p class="manca" id="libManca">${m.superato ? "Livello 1 superato." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
   loadProgress();
   const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
@@ -1022,8 +1049,33 @@ function step(S, C, E, dt){
     if (it === "free") startFree(); else if (it[0] === "r") startRace(it[1]); else it[0] === "l" ? startLesson(it[1]) : startMission(it[1]);
     window.scrollTo(0, 0); canvas.focus();
   }
+  const oggi = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  const fmtData = d => new Date(d + "T12:00").toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+  const lezElenco = a => (a.length > 1 ? "lezioni " + a.slice(0, -1).join(", ") + " e " + a[a.length - 1] : "lezione " + a[0]);
+  function esameBtn(){
+    const ex = modo === "carriera" ? progress.exam : null, tot = QUOTE.reduce((a, b) => a + b);
+    if (ex?.superato) return `<button id="goEsame" disabled>Esame superato<small>${ex.voto} su ${tot}</small></button>`;
+    if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${lezElenco(ex.ripasso.map(i => i + 1))}</small></button>`;
+    return `<button id="goEsame">Esame su tutte le lezioni<small>${tot} domande, ne servono ${SOGLIA_ESAME}</small></button>`;
+  }
+  // 0.24, attestato (solo carriera): compare da solo la prima volta che si torna al menu con il livello superato, poi dal libretto
+  function openAttest(){
+    const B = progress.brevetto, m = meriti(progress), q = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    $("atBody").innerHTML = `<p class="sc">Scuola di vela</p><h2 id="atTitle">Brevetto di livello 1</h2><p class="ruolo">Timoniere di deriva</p>
+      <label for="atName">Nome (facoltativo)</label><input id="atName" maxlength="60" autocomplete="off" value="${q(B.nome || "")}">
+      <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${QUOTE.reduce((a, b) => a + b)}.</p>
+      <ul>${MERITI.map(([k, nome, max]) => `<li>${nome}: ${m.pt[k]} / ${max}</li>`).join("")}</ul>
+      <p class="legal">Nessun valore legale: non sostituisce un corso di vela né la patente nautica.</p>
+      <div class="row"><button class="primary" id="atPrint">Stampa</button><button id="atClose">Chiudi</button></div>`;
+    $("atName").oninput = e => { B.nome = e.target.value.trim(); saveProgress(); };
+    $("atPrint").onclick = () => window.print();
+    $("atClose").onclick = () => $("attest").close();
+    $("attest").showModal();
+  }
   function showMenu(){
     mode = "menu"; setControls([], false, false);
+    let nuovo = false;
+    if (modo === "carriera" && !progress.brevetto && meriti(progress).superato){ progress.brevetto = { data: oggi() }; saveProgress(); nuovo = true; }
     $("game").hidden = true; $("menu").hidden = false;
     const doneCount = SEQ.filter(([t, i]) => progress.done[t + i]).length;
     const esc = t => t.replace(/"/g, "&quot;");
@@ -1053,7 +1105,7 @@ function step(S, C, E, dt){
         </section>
         <section class="tile">
           <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
-            <button id="goEsame">Esame su tutte le lezioni<small>${QUOTE.reduce((a, b) => a + b)} domande, ne servono ${SOGLIA_ESAME}</small></button></div></div>
+            ${esameBtn()}</div></div>
           ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>`}
         </section>
       </div>
@@ -1061,6 +1113,8 @@ function step(S, C, E, dt){
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
     $("goEsame").onclick = openEsame;
+    if ($("goAttest")) $("goAttest").onclick = openAttest;
+    if (nuovo) openAttest();
     $("menuGloss").onclick = openGloss;
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));
@@ -1115,17 +1169,27 @@ function step(S, C, E, dt){
   function renderEsito(b){
     const n = qz.qs.length, ok = qz.score >= SOGLIA_ESAME;
     const groups = LESSONS.map((L, li) => [L, qz.wrong.filter(w => w.li === li)]).filter(([, ws]) => ws.length);
+    // 0.24, carriera: un esame superato è definitivo (voto unico); non superato, prima il ripasso completo delle lezioni sbagliate
+    const car = modo === "carriera", rip = groups.map(([L]) => LESSONS.indexOf(L));
+    if (car){ progress.exam = ok ? { superato: true, voto: qz.score, data: oggi() } : { superato: false, voto: qz.score, data: oggi(), ripasso: rip }; saveProgress(); }
+    const btns = !car ? `<button class="primary" id="qzAgain">Rifai l'esame</button>`
+      : ok ? "" : rip.map(li => `<button data-rq="${li}">Ripasso: ${LESSONS[li].name}</button>`).join("");
     b.innerHTML = `<h2>Esame · livello 1</h2><div class="score">${qz.score} su ${n}: ${ok ? "superato" : `non superato (servono ${SOGLIA_ESAME})`}</div>
+      ${car ? `<p class="q">${ok ? "Il voto è definitivo." : "Ripassa le lezioni in cui hai sbagliato, poi potrai rifare l'esame."}</p>` : ""}
       ${groups.length ? `<div class="wlist" id="qzWrong">${groups.map(([L, ws]) => `<h3>${L.name}: ${L.title}</h3>${ws.map(wrongItem).join("")}`).join("")}</div>` : ""}
-      <div class="row"><button class="primary" id="qzAgain">Rifai l'esame</button><button id="qzClose">Chiudi</button></div>`;
-    $("qzAgain").onclick = openEsame; $("qzClose").onclick = closeQuiz;
+      <div class="row">${btns}<button id="qzClose">Chiudi</button></div>`;
+    if (!car) $("qzAgain").onclick = openEsame;
+    b.querySelectorAll("[data-rq]").forEach(x => x.onclick = () => openQuiz(+x.dataset.rq));
+    $("qzClose").onclick = closeQuiz;
   }
   function renderQuiz(){
     const L = LESSONS[qz.li], b = $("qzBody");
     if (qz.i >= qz.qs.length){
       if (qz.exam) return renderEsito(b);
       const n = qz.qs.length, key = "q" + qz.li, prev = progress.quiz?.[key], nw = qz.wrong.length;
-      if (!qz.partial){ progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score; saveProgress(); } // il giro parziale non tocca il record
+      if (!qz.partial){ progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score;
+        const ex = modo === "carriera" ? progress.exam : null; if (ex?.ripasso) ex.ripasso = ex.ripasso.filter(x => x !== qz.li); // 0.24: ripasso completo dopo l'esame, con qualsiasi punteggio
+        saveProgress(); } // il giro parziale non tocca il record
       b.innerHTML = `<h2>Ripasso · ${L.name}: ${L.title}</h2><div class="score">${qz.score} su ${n}</div>
         <p class="q">${nw === 0 ? "Tutto giusto." : nw === 1 ? "Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati: ecco le domande sbagliate."}</p>
         ${nw ? `<div class="wlist" id="qzWrong">${qz.wrong.map(wrongItem).join("")}</div>` : ""}

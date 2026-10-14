@@ -61,6 +61,7 @@ TESTS=(
     "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
     "collaudo_carriera.py|py|chiaro|0||collaudo_carriera.py"
     "collaudo_libretto.py|py|chiaro|0||collaudo_libretto.py"
+    "collaudo_carriera_esame.py|py|chiaro|0||collaudo_carriera_esame.py"
     "collaudo_competizione.py (veloce)|py|chiaro|0||collaudo_competizione.py --veloce"
     "collaudo_competizione.py (misura)|py|chiaro|1||collaudo_competizione.py"
     "collaudo_competizione.py (tastiera)|py|ambiguo|1||collaudo_competizione.py --tastiera"

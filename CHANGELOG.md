@@ -15,6 +15,46 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 0.24 — esame in carriera, ripassi dopo l'esame, attestato
+
+Del 14 ottobre 2026. Fetta 5 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §13). In `index.html` cambiano:
+- la costante `VERSIONE` e gli stili (pulsante spento, attestato, `@media print`);
+- un riquadro nuovo `#attest`;
+- `renderEsito()`, la fine del ripasso e la scelta del suggerimento in `meriti()`;
+- il libretto, con il brevetto e il pulsante «Attestato»;
+- il pulsante dell'esame nel menu;
+- le funzioni nuove `oggi`, `fmtData`, `lezElenco`, `esameBtn`, `openAttest`.
+
+`step()`, lezioni, prove, regate e avversari non si toccano. **Nel gioco libero non cambia niente:** l'esame resta una prova, si può rifare e non si salva.
+
+- **Esame superato in carriera: voto definitivo** (decisione di Ale). Si salva `progress.exam = { superato, voto, data }`. Nell'esito non c'è «Rifai l'esame» ma la frase «Il voto è definitivo.». Nel menu il pulsante diventa «Esame superato · 17 su 20», spento.
+- **Esame non superato:**
+  - si salva l'elenco delle lezioni con almeno un errore (`progress.exam.ripasso`);
+  - l'esito mostra «Ripassa le lezioni in cui hai sbagliato, poi potrai rifare l'esame.» e un pulsante «Ripasso: Lezione N» per ognuna;
+  - il pulsante del menu è spento e dice «Esame: prima i ripassi · lezioni 1 e 3»;
+  - **un ripasso completo, con qualsiasi punteggio, toglie la lezione dall'elenco.** Decisione di Ale: «ripassa le lezioni di cui hai sbagliato le risposte e torna a fare il test». La soglia dell'80% proposta nel §3 è tolta. Un ripasso lasciato a metà non conta;
+  - svuotato l'elenco, l'esame si riapre. Nel libretto il suggerimento propone quei ripassi.
+- **Esame lasciato a metà** (Esc): non conta e non si salva. Durante l'esame non si vede se le risposte sono giuste.
+- **Attestato:**
+  - compare da solo la prima volta che si torna al menu con tutte le condizioni raggiunte (meriti, totale, esame), qualunque sia stata l'ultima. Si salva `progress.brevetto = { data }`;
+  - dopo si riapre dal libretto, che dice «Brevetto ottenuto il 14 ottobre 2026. Attestato»;
+  - contenuto: «Scuola di vela · Brevetto di livello 1 · Timoniere di deriva», nome facoltativo (scritto da chi gioca, salvato solo nel browser), data, voto, i quattro meriti e in evidenza «Nessun valore legale: non sostituisce un corso di vela né la patente nautica.»;
+  - «Stampa» usa `window.print()`: si stampa solo l'attestato, senza pulsanti né l'etichetta del nome.
+- **Collaudo nuovo `tests/collaudo_carriera_esame.py`** (criteri E1-E6 scritti prima del codice, tutto a clic, in una pagina senza `#collaudo`), aggiunto a `lancia_tutti.sh`. Nella sandbox E1-E6 passano tutti (34 controlli):
+  - E1: carriera vuota, esame superato senza attestato;
+  - E2: esame a 12 su 20, ripassi, poi esame a 17 su 20 e attestato;
+  - E3: nome, stampa, ricarica;
+  - E4: l'ultima condizione è una regata, e la scena compare una volta sola;
+  - E5: gioco libero, niente salvato;
+  - E6: esame lasciato a metà.
+
+  La misura dello spazio esce NON VALIDA per i caratteri. Nella sandbox l'attestato sta fra 126 e 524 px su 650; il menu con il brevetto finisce a 582 px. Schermate: `tests/output/C_attestato.png` e `C_attestato_stampa.png`.
+- **Limite di E4:** il piazzamento che mancava è scritto direttamente nel salvataggio, seguito da una ricarica della pagina; la regata non è stata corsa. La scena che compare al ritorno al menu dopo una regata vera passa dallo stesso punto (`showMenu`), ma non è provata con una regata.
+- **Sul PC di Ale, con i caratteri veri** (`lancia_tutti.sh --solo carriera` e `--solo libretto`, 14 ottobre 2026): `collaudo_carriera.py`, `collaudo_carriera_esame.py` e `collaudo_libretto.py` ESITO OK. L'attestato sta fra 115 e 535 px su 650; il menu con il brevetto finisce a 593 px.
+- **Prova a mano di Ale** con `prova_carriera.py`: esame non superato, il gioco elenca le lezioni da ripassare e l'esame resta chiuso finché non si fanno; poi esame superato. L'attestato si legge; nome scritto e chiuso. **La stampa non è stata provata a mano** (solo l'emulazione del collaudo).
+- **Prova a mano senza giocare ore:** `tests/prova_carriera.py` apre il gioco in una finestra vera, con un profilo del browser a parte e una carriera in cui manca solo l'esame. Non è un collaudo.
+- **Non-regressione:** `polare.js` e `raffiche_e_virate.js` identici carattere per carattere; `collaudo_carriera.py` OK; `collaudo_esame.py`, `collaudo_quiz.py`, `collaudo_libretto.py` senza fallimenti nella sandbox (NON VALIDA solo per i caratteri); `collaudo_versione.py`.
+
 ## 0.23 — libretto dei meriti
 
 Del 14 ottobre 2026. Fetta 4 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §12). In `index.html` cambiano la costante `VERSIONE`, otto righe di stile, la tabella `MERITI` con le funzioni `meriti()` e `librettoHtml()`, una riga del menu e l'aggancio `__sv`, che ora espone `meriti`. Nel salvataggio non si scrive niente di nuovo. `step()`, lezioni, prove, regate, avversari ed esame non si toccano.

@@ -68,7 +68,8 @@ Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate
 | Esperienza | 1 punto per ogni lezione completata | 6 | 6 (tutte) |
 | Totale | La somma | 46 | 29 |
 
-- In più serve **l'esame scritto superato** (16 risposte giuste su 20). L'esame salvato in carriera arriva in una prossima versione: per ora la riga del libretto finisce con «Manca l'esame».
+- In più serve **l'esame scritto superato** (16 risposte giuste su 20). In carriera **il voto dell'esame superato è definitivo**: non si rifà per migliorarlo. Se non lo superi, il gioco ti dice in quali lezioni hai sbagliato: fai il ripasso di ognuna fino in fondo (con qualsiasi punteggio) e l'esame si riapre. Un esame lasciato a metà non conta.
+- **L'attestato** compare da solo la prima volta che torni al menu con tutto fatto, in qualsiasi ordine. Puoi scriverci il tuo nome (facoltativo) e stamparlo; poi lo riapri dal libretto. **Non ha nessun valore legale.**
 - **Regate senza errori:** il libretto le conta a parte («Regate senza errori: 1 su 2»). Non danno punti e non cambiano il piazzamento: un 3° posto resta un 3° posto.
 - **Errori:** al livello 1 non tolgono punti. Contano solo per la «senza errori» (★) e, nelle prove, per il punto in più.
 - **Navigazione libera** e tutto quello che si gioca in «Gioco libero» non contano per la carriera.

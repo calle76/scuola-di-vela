@@ -291,7 +291,7 @@ Ogni fetta è una versione giocabile e chiusa, con `VERSIONE` e `CHANGELOG.md` a
 | 2 | 0.21 | **Piazzamento salvato e taratura della Competizione.** `progress.race`; pilota sostituto esposto in `__sv`. **Avvertenza:** oggi il livello degli avversari (principianti / esperti / nessuno) non viene salvato nei risultati, e il record della regata ha la stessa chiave per tutti e tre (controllo 3). Prima di usare il piazzamento per i meriti, in carriera il livello degli avversari deve essere fisso **oppure** entrare nel risultato salvato. Quale delle due è da decidere. | Nuovo `collaudo_competizione.py`: le 160 regate del §4 con le soglie C0-C5, **guidando davvero la barca del giocatore**. Pagina senza `#collaudo`: una regata finita con avversari salva il piazzamento, con «nessuno» no. Se C0 fallisce, la fetta si ferma qui e si riporta. |
 | 3 | 0.22 (fatta) | **Bivio e salvataggio di carriera.** `STORE` variabile, selettore nel menu, «Azzera» solo sulla modalità corrente. | Pagina senza `#collaudo`: in carriera il pilota di `collaudo_fasce.py` completa la prova 1, e la chiave del gioco libero resta **identica byte per byte**; poi il contrario. Ricaricando, la modalità è ricordata. Un ripasso in carriera non tocca il record del libero. Menu a 1360×650 senza eccesso. |
 | 4 | 0.23 (fatta) | **Libretto.** `meriti(progress)`, quattro barre, riga «cosa manca» per superare il livello. Il pulsante dell'esame non dipende dai meriti. | `meriti()` sui giocatori A-D del §4 e sui casi al bordo (minimo esatto, minimo meno 1, «nessuno» escluso), con l'esame superato e non: «livello superato» solo con tutte le condizioni. Nel browser: salvataggi di carriera preparati, poi lettura delle barre e della riga; **pulsante dell'esame acceso anche con meriti a zero**. Menu a 1360×650 e 1360×768 senza eccesso, con i caratteri veri. |
-| 5 | 0.24 | **Esame in carriera, ripasso mirato, scena dell'attestato.** | Percorso in pagina senza `#collaudo`. Con una carriera vuota: pulsante acceso, esame superato, **nessuna scena** (mancano i meriti); poi meriti completati, la scena compare. Con una carriera dai meriti a posto: esame sbagliato apposta, pulsante spento, ripassi delle lezioni sbagliate al 100% e, a parte, a 75% (resta spento), pulsante acceso, esame superato, scena dell'attestato con «nessun valore legale» e senza «patente», stampa provata con `emulate_media("print")` e schermata. Nel gioco libero lo stesso esame superato **non** mostra l'attestato e il pulsante non si spegne mai. |
+| 5 | 0.24 (fatta) | **Esame in carriera, ripasso mirato, scena dell'attestato.** | Percorso in pagina senza `#collaudo`. Con una carriera vuota: pulsante acceso, esame superato, **nessuna scena** (mancano i meriti); poi meriti completati, la scena compare. Con una carriera dai meriti a posto: esame sbagliato apposta, pulsante spento, ripassi delle lezioni sbagliate al 100% e, a parte, a 75% (resta spento), pulsante acceso, esame superato, scena dell'attestato con «nessun valore legale» e senza «patente», stampa provata con `emulate_media("print")` e schermata. Nel gioco libero lo stesso esame superato **non** mostra l'attestato e il pulsante non si spegne mai. |
 | 6 | 1.0 | **Rilascio.** Manuale (sezione meriti ed esame), documenti, `CHANGELOG.md`. | Una carriera da zero **guidata davvero**: le lezioni con `collaudo_lezioni.py`, le prove con il pilota delle fasce, le due regate con il sostituto, i ripassi e l'esame risposti; il libretto deve arrivare al brevetto. È lungo: lo lancia Ale sul PC. Poi una partita a mano di Ale. |
 
 Le fette 1 e 2 sono indipendenti e si possono scambiare. La 3 viene prima di 4 e 5.
@@ -521,3 +521,74 @@ Prova di Ale, carriera con una sola prova fatta: la riga diceva «Mancano 6 punt
 - Collaudo: L1-L3 si aggiornano con i testi nuovi; il giro del suggerimento si prova aprendo il menu più volte (ogni area che manca deve comparire almeno una volta in tanti giri quante sono le aree); L4 si rimisura con le due righe.
 
 **Esito della revisione.** Fatta come scritta. Due cambi per lo spazio a 1360×650: il suggerimento delle regate è «la Regata a bastone (con avversari).» e le righe del libretto sono un po' più strette. «Ti manca 1 punto» al singolare. Nella sandbox il caso peggiore (Competizione) lascia il piede del menu proprio al limite: la misura valida è sul PC di Ale.
+
+---
+
+## 13. Fetta 5 (0.24): esame in carriera, ripasso mirato, attestato — proposta di dettaglio
+
+Del 14 ottobre 2026. **Fermata 1: nessun codice.** Righe di `index.html` della 0.23.
+
+### Cosa c'è oggi [codice]
+
+- `openEsame()` estrae 20 domande; `renderQuiz()` non mostra né colori né spiegazioni durante l'esame (chi lo fa non sa come sta andando); `renderEsito()` mostra il voto, le sbagliate per lezione, «Rifai l'esame» e «Chiudi». Nessuna scrittura nel salvataggio.
+- Il ripasso completo scrive il migliore in `progress.quiz["q"+i]`; «Ripassa solo le sbagliate» (giro parziale) non scrive niente.
+- `meriti()` legge già `progress.exam?.superato`, che nessuno scrive.
+- Non c'è nessun `@media print`.
+
+### Il modello più semplice
+
+**Gioco libero: non cambia niente.** L'esame resta una prova, «Rifai l'esame» resta, niente si salva, niente attestato.
+
+**Carriera:**
+
+1. **Esame superato (16 o più): voto definitivo** (decisione di Ale del 14 ottobre). Si salva `progress.exam = { superato: true, voto, data }`. Nella schermata finale niente «Rifai l'esame». Nel menu il pulsante diventa «Esame superato: 17 su 20» e non si apre più.
+2. **Esame non superato:** si salva `progress.exam = { superato: false, voto, data, ripasso: [lezioni con almeno un errore] }`. La schermata finale mostra, al posto di «Rifai l'esame», un pulsante per ogni lezione da ripassare («Ripasso: Lezione 3»), che apre il ripasso che esiste già. Il pulsante dell'esame nel menu è spento e dice «Esame: prima i ripassi delle lezioni 3 e 5».
+3. **Una lezione esce dall'elenco** quando se ne fa un ripasso **completo** con almeno l'80%. Il giro «solo le sbagliate» non basta. Il ripasso conta solo se fatto dopo l'esame, ed è automatico: l'elenco nasce con l'esame. Svuotato l'elenco, il pulsante si riaccende. Nessuna attesa, nessuna penalità, i meriti restano.
+4. **Esame lasciato a metà** (Esc o «Chiudi»): non conta e non si salva, come oggi. Durante l'esame non si vede se le risposte sono giuste, quindi abbandonarlo non permette di scegliere il risultato.
+5. **Libretto:** la riga «Ti manca l'esame.» resta finché l'esame non è superato. Con i ripassi da fare, il suggerimento dice «il ripasso della Lezione 3 (dopo l'esame)». Con il livello superato, al posto delle due righe: «Brevetto ottenuto il 14 ottobre 2026» e il pulsante «Attestato».
+6. **Attestato:** una scena sopra il menu (lo stesso tipo di riquadro del glossario). Compare **da sola la prima volta che si torna al menu con tutte le condizioni raggiunte**, qualunque sia stata l'ultima (esame, una regata, una prova…). Si salva `progress.brevetto = { data }`, poi si riapre dal libretto.
+   - Testo: «Scuola di vela · Brevetto di livello 1 · Timoniere di deriva», il nome, la data, il voto dell'esame, i quattro meriti. In evidenza: «Nessun valore legale: non sostituisce un corso di vela né la patente nautica.» Niente loghi, niente sigle.
+   - **Nome:** un campo facoltativo nell'attestato, salvato in `progress.brevetto.nome`, solo nel browser.
+   - **«Stampa»** con `window.print()` e un `@media print` che stampa solo l'attestato; **«Chiudi»**.
+7. **«Azzera»** in carriera cancella anche esame e brevetto (fanno parte di `progress`): già così, nessuna riga in più.
+
+Costanti nuove: nessuna. Il campo `prove` previsto nel §2 per `exam` non serve: non lo legge niente, quindi si toglie.
+
+### Collaudo: nuovo `tests/collaudo_carriera_esame.py` [proposta]
+
+Criteri scritti adesso. Pagina **senza `#collaudo`**, solo clic; le risposte giuste si riconoscono leggendo la banca `ESAME` dal testo di `index.html`, come fa `collaudo_esame.py`.
+
+- **E1, carriera vuota:** pulsante dell'esame acceso; esame fatto tutto giusto, 20 su 20: «superato», **nessun «Rifai l'esame»**, `progress.exam.superato` vero con voto 20; **nessuna scena** dell'attestato (mancano i meriti); pulsante del menu «Esame superato: 20 su 20» e spento; libretto senza la riga «Ti manca l'esame».
+- **E2, esame non superato:** carriera con i meriti a posto; esame con errori apposta in due lezioni, voto sotto 16. Atteso:
+  - `progress.exam.superato` falso e `ripasso` uguale alle due lezioni sbagliate, calcolate dal collaudo dalle risposte date;
+  - pulsante del menu spento;
+  - un ripasso della prima lezione al 75% (dove le domande sono 4) o comunque sotto l'80%: resta spento;
+  - lo stesso ripasso al 100%: quella lezione esce dall'elenco, il pulsante resta spento;
+  - «solo le sbagliate» sulla seconda: resta spento;
+  - ripasso completo della seconda al 100%: pulsante acceso.
+  - Poi esame superato: compare la **scena dell'attestato**, con «Nessun valore legale» e **senza** «patente» né «patentino» nel titolo.
+- **E3, attestato:** nome scritto, chiuso e riaperto dal libretto: il nome resta. Stampa provata con `emulate_media("print")`: si vede solo l'attestato (menu nascosto). Schermata salvata a 1360×650.
+- **E4, l'ultima condizione non è l'esame:** carriera con esame superato e un punto mancante in Competizione (preparata in `localStorage`); si scrive il piazzamento che manca e si torna al menu: la scena compare **una volta sola** (al secondo ritorno al menu non ricompare).
+- **E5, gioco libero:** lo stesso esame superato non salva niente (`localStorage` identico byte per byte), «Rifai l'esame» c'è, nessun attestato, pulsante sempre acceso.
+- **E6, esame lasciato a metà in carriera:** niente si salva.
+- **Spazio:** riquadro dell'attestato e menu con «Brevetto ottenuto…» a 1360×650 senza eccesso, con i caratteri veri (PC di Ale).
+- **Non-regressione:** `polare.js`, `raffiche_e_virate.js`; `collaudo_esame.py`, `collaudo_quiz.py`, `collaudo_libretto.py`, `collaudo_carriera.py`, `collaudo_versione.py`.
+
+### Rischi
+
+- **Un voto solo è severo** se l'esame va male per distrazione: ma vale solo per chi lo **supera** (il voto non si migliora). Chi non lo supera lo rifà dopo i ripassi.
+- **Un ripasso «dopo l'esame» si può fare subito**, anche senza aver studiato: basta farlo all'80%. È il ripasso mirato del §3, non un blocco: chi gioca vede le spiegazioni delle sbagliate.
+- **La scena dell'attestato compare al menu**, non nell'istante esatto: se l'ultima condizione è una regata, prima si vede il riepilogo della regata, poi tornando al menu la scena.
+- **Stampa:** l'aspetto cambia da un browser all'altro; si collauda solo l'emulazione, l'aspetto lo giudica Ale.
+
+### Decisioni per Ale
+
+1. **Esame non superato:** ripasso mirato delle lezioni sbagliate (almeno 80%), poi si riprova, come nel §3. Va bene? Oppure preferisci un'altra regola (per esempio un numero massimo di tentativi)?
+2. **Nome sull'attestato:** campo facoltativo, scritto da chi gioca. Va bene?
+
+### Risposte di Ale ed esito (0.24, 14 ottobre 2026)
+
+- **Esame non superato:** «ripassa le lezioni di cui hai sbagliato le risposte e torna a fare il test». Il ripasso completo di ogni lezione segnalata basta, **con qualsiasi punteggio**: la soglia dell'80% (§3 e punto 3 qui sopra) è tolta. «Una regola vale l'altra»: si vedrà giocando.
+- **Nome sull'attestato:** facoltativo, scritto da chi gioca.
+- **Prova a mano senza giocare ore:** `tests/prova_carriera.py` apre il gioco con una carriera in cui manca solo l'esame.
+- Fatta come scritta. Nel collaudo il controllo «"solo le sbagliate" non basta» non c'è: quel pulsante compare solo alla fine di un ripasso completo, che conta già. E4 scrive il piazzamento nel salvataggio invece di correre una regata (dichiarato nel `CHANGELOG.md`). Numeri in `CHANGELOG.md`, 0.24.
