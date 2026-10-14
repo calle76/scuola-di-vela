@@ -97,7 +97,7 @@ const ESAME = [
 | `scuolaVelaSim.v1` | Gioco libero, come oggi, più il campo `race` (piazzamento). **L'esame non salva niente** **[deciso]**. |
 | `scuolaVelaCarriera.v1` (nuova) | Stessa forma di `progress`, più `exam: { prove, migliore, superato, data, nome, ripasso: [lezioni] }`. |
 | `scuolaVelaModo` (nuova) | `"libero"` o `"carriera"`: l'ultima scelta, ricordata all'apertura. |
-| `scuolaVelaGhost.v1` | Fantasmi: **in comune** fra le due modalità. Non sono meriti. |
+| `scuolaVelaGhost.v1` | Fantasmi del gioco libero. ~~In comune fra le due modalità~~: **separati dalla 0.22** (§11, decisione di Ale del 14 ottobre 2026); in carriera `scuolaVelaGhostCarriera.v1`. Non sono meriti. |
 
 - **Come si separano:** `STORE` diventa una variabile. Il bivio, solo dal menu, salva il `progress` corrente, cambia chiave e ricarica `progress` dalla chiave nuova. Il resto del gioco non cambia.
 - **Piazzamento delle regate:** all'arrivo, accanto al tempo migliore, si salva `progress.race[chiave] = { pos, n, pulita }`, ma solo se ci sono avversari. Si salva anche nel gioco libero, perché il codice è lo stesso e un ramo in più costerebbe di più; lì non si mostra e non conta.
@@ -287,7 +287,7 @@ Ogni fetta è una versione giocabile e chiusa, con `VERSIONE` e `CHANGELOG.md` a
 | --- | --- | --- | --- |
 | 1 | 0.20 | **Esame nel gioco libero, come prova.** Banca `ESAME`, estrazione per quote, pulsante del menu acceso, spiegazioni solo alla fine con le sbagliate per lezione, «Rifai l'esame», nessun salvataggio. | Nuovo `collaudo_esame.py`. **Banca:** ogni domanda ha la lezione e un passo che esiste, ogni lezione ha almeno quota + 1 domande (fallisce sotto), 3 sbagliate diverse dalla giusta, nessun testo uguale al `QUIZ`, giusta più lunga al massimo nel 30%. **Nessuna spiegazione prima della fine. Nessuna scrittura nel salvataggio** (`localStorage` identico prima e dopo). **Estrazione:** 500 estrazioni a seme fisso, sempre 20 domande diverse con le quote giuste, ogni domanda della banca estratta almeno una volta. **Soglia:** 15 giuste = non superato, 16 = superato, 20 e 0 agli estremi. **Dialogo:** 20 sbagliate a 1360×650 e 1360×768 con i caratteri veri (sul PC). **Pagina senza `#collaudo`:** il pulsante è acceso e apre l'esame. Più `collaudo_quiz.py`, perché `openQuiz` cambia. Non c'è barca da guidare: lo dico invece di inventare un collaudo finto. |
 | 2 | 0.21 | **Piazzamento salvato e taratura della Competizione.** `progress.race`; pilota sostituto esposto in `__sv`. **Avvertenza:** oggi il livello degli avversari (principianti / esperti / nessuno) non viene salvato nei risultati, e il record della regata ha la stessa chiave per tutti e tre (controllo 3). Prima di usare il piazzamento per i meriti, in carriera il livello degli avversari deve essere fisso **oppure** entrare nel risultato salvato. Quale delle due è da decidere. | Nuovo `collaudo_competizione.py`: le 160 regate del §4 con le soglie C0-C5, **guidando davvero la barca del giocatore**. Pagina senza `#collaudo`: una regata finita con avversari salva il piazzamento, con «nessuno» no. Se C0 fallisce, la fetta si ferma qui e si riporta. |
-| 3 | 0.22 | **Bivio e salvataggio di carriera.** `STORE` variabile, selettore nel menu, «Azzera» solo sulla modalità corrente. | Pagina senza `#collaudo`: in carriera il pilota di `collaudo_fasce.py` completa la prova 1, e la chiave del gioco libero resta **identica byte per byte**; poi il contrario. Ricaricando, la modalità è ricordata. Un ripasso in carriera non tocca il record del libero. Menu a 1360×650 senza eccesso. |
+| 3 | 0.22 (fatta) | **Bivio e salvataggio di carriera.** `STORE` variabile, selettore nel menu, «Azzera» solo sulla modalità corrente. | Pagina senza `#collaudo`: in carriera il pilota di `collaudo_fasce.py` completa la prova 1, e la chiave del gioco libero resta **identica byte per byte**; poi il contrario. Ricaricando, la modalità è ricordata. Un ripasso in carriera non tocca il record del libero. Menu a 1360×650 senza eccesso. |
 | 4 | 0.23 | **Libretto.** `meriti(progress)`, quattro barre, riga «cosa manca» per superare il livello. Il pulsante dell'esame non dipende dai meriti. | `meriti()` sui giocatori A-D del §4 e sui casi al bordo (minimo esatto, minimo meno 1, «nessuno» escluso), con l'esame superato e non: «livello superato» solo con tutte le condizioni. Nel browser: salvataggi di carriera preparati, poi lettura delle barre e della riga; **pulsante dell'esame acceso anche con meriti a zero**. Menu a 1360×650 e 1360×768 senza eccesso, con i caratteri veri. |
 | 5 | 0.24 | **Esame in carriera, ripasso mirato, scena dell'attestato.** | Percorso in pagina senza `#collaudo`. Con una carriera vuota: pulsante acceso, esame superato, **nessuna scena** (mancano i meriti); poi meriti completati, la scena compare. Con una carriera dai meriti a posto: esame sbagliato apposta, pulsante spento, ripassi delle lezioni sbagliate al 100% e, a parte, a 75% (resta spento), pulsante acceso, esame superato, scena dell'attestato con «nessun valore legale» e senza «patente», stampa provata con `emulate_media("print")` e schermata. Nel gioco libero lo stesso esame superato **non** mostra l'attestato e il pulsante non si spegne mai. |
 | 6 | 1.0 | **Rilascio.** Manuale (sezione meriti ed esame), documenti, `CHANGELOG.md`. | Una carriera da zero **guidata davvero**: le lezioni con `collaudo_lezioni.py`, le prove con il pilota delle fasce, le due regate con il sostituto, i ripassi e l'esame risposti; il libretto deve arrivare al brevetto. È lungo: lo lancia Ale sul PC. Poi una partita a mano di Ale. |
@@ -347,3 +347,55 @@ Le fette 1 e 2 sono indipendenti e si possono scambiare. La 3 viene prima di 4 e
 - Marcature [proposta] di Banca, Estrazione e Salvataggio (§2), pilota sostituto (riga 173) e verifica a mano dell'esame (riga 194): dettagli di realizzazione, da approvare con il via alla fetta 0.20.
 
 **Esito (10 ottobre 2026, avvio della 0.20).** «Fuori anche» confermato e reso controllabile: nessuna cifra nei testi dell'esame; parole vietate «lascia strada», «lasciare strada», «precedenz», «abbattuta», «Viro», «Strambo», «orzier», «scader», «rosso», «verde» («strada» da sola è ammessa); fuori anche i testi che stanno solo nei messaggi del pannello o nel glossario e i tasti del gioco. Lo controlla `tests/collaudo_esame.py`. Il livello degli avversari non tocca la 0.20 e resta da decidere alla 0.21. Banca, estrazione e salvataggio come al §2, con la banca raggruppata per lezione (`ESAME[lezione] = [[passo, domanda, giusta, [sbagliate], spiegazione], …]`) e nessun salvataggio nel gioco libero. Durante l'esame nessun colore e nessuna spiegazione, risposta non modificabile; alla fine, accanto a ogni sbagliata, la riga «dal passo «…»».
+
+---
+
+## 11. Fetta 3 (0.22): bivio e salvataggio di carriera — proposta di dettaglio
+
+Del 14 ottobre 2026. **Fermata 1: nessun codice.** Righe di `index.html` lette oggi (0.21.6).
+
+### Cosa c'è oggi [codice]
+
+- `STORE = "scuolaVelaSim.v1"` è una costante (938); `progress` si carica una volta all'avvio (952) e `saveProgress()` lo scrive sempre lì (953). Lezioni (1221), prove (1499-1500), ripassi (1062), regate (1898-1911) scrivono solo in `progress`.
+- I fantasmi stanno in `GHOST_STORE = "scuolaVelaGhost.v1"` (1515-1518). `recSave()` (1532) scrive il fantasma **solo quando il tempo batte il record di `progress.best`** (1499, 1898).
+- «Azzera i progressi» (1007) svuota `progress` e lo salva; **i fantasmi non si toccano** (comportamento di oggi).
+- Le impostazioni (`opt`) non si salvano: non riguardano questa fetta.
+
+### Il modello più semplice
+
+1. `STORE` diventa `let`: `"scuolaVelaSim.v1"` in gioco libero, `"scuolaVelaCarriera.v1"` in carriera. La modalità sta in `scuolaVelaModo` (`"libero"` / `"carriera"`); se manca o il browser non salva, si parte in gioco libero.
+2. **Selettore** nell'intestazione del menu, accanto a «Glossario», con lo stile `.seg` che esiste già: **Gioco libero | Carriera**. Esiste solo nel menu, quindi non si cambia modalità a metà di una prova.
+3. **Al cambio:** `saveProgress()`, poi si cambia chiave, si ricarica `progress` dalla chiave nuova (vuoto se non c'è), si ricaricano i fantasmi della modalità (punto 5), si scrive `scuolaVelaModo`, si ridisegna il menu. Nessun'altra riga del gioco cambia.
+4. **«Azzera i progressi»** svuota solo la modalità in uso, e lo dice: «Azzerare i progressi della carriera? Il gioco libero non cambia.» (e il contrario). I fantasmi restano come oggi.
+5. **Fantasmi separati per modalità** — cambia una riga [proposta] del §2, che li voleva in comune. Motivo [codice]: il fantasma si scrive a ogni record della modalità in uso, quindi la prima regata in carriera (record vuoto) sovrascriverebbe il fantasma del gioco libero anche se più lento del record libero. In carriera si usa `scuolaVelaGhostCarriera.v1`; il gioco libero resta su `scuolaVelaGhost.v1`.
+6. La pulizia delle chiavi vecchie della 0.19 (1519) resta com'è: gira sulla modalità caricata all'avvio. Chi ha dati di prima della 0.19 non ha ancora `scuolaVelaModo`, quindi parte in gioco libero e la pulizia avviene dove serve.
+7. In carriera il menu è identico a quello del gioco libero (§3): niente libretto, niente esame salvato, niente attestato. Arrivano nelle fette 4 e 5.
+
+Costanti nuove: nessuna. Chiavi nuove: tre (`scuolaVelaCarriera.v1`, `scuolaVelaModo`, `scuolaVelaGhostCarriera.v1`).
+
+### Collaudo: nuovo `tests/collaudo_carriera.py` [proposta]
+
+Criteri scritti adesso, prima del codice. Ogni corsa in un contesto nuovo del browser (salvataggio vuoto), passi fissi e seme fisso dove c'è la barca. La modalità si cambia **sempre cliccando il selettore**, mai dall'aggancio.
+
+- **K1, prova 1 in carriera** (pagina con `#collaudo`, perché il pilota di `collaudo_fasce.py` usa `__sv.run`; il §7 diceva «senza `#collaudo`», ma quel pilota lì non può girare): si prepara un gioco libero con un record della prova 1 e un fantasma; si passa in carriera e il pilota completa la prova 1. Atteso: `scuolaVelaSim.v1` e `scuolaVelaGhost.v1` **identici byte per byte** a prima; `scuolaVelaCarriera.v1` contiene `done.m0` e `best["m0.2"]`; `scuolaVelaGhostCarriera.v1` contiene il fantasma. Poi il contrario (record in carriera, prova in gioco libero). Semi 1-3 per ognuno dei due versi: 6 corse.
+- **Controllo del metro:** l'identità byte per byte vale solo se nella stessa corsa la chiave della modalità in uso **è cambiata davvero**. Se il pilota non arriva, la corsa è NON VALIDA, non OK.
+- **K2, ripasso in carriera** (pagina **senza** `#collaudo`, come la carica un giocatore, solo clic): gioco libero con il ripasso della lezione 1 a un punteggio noto; in carriera si fa il ripasso della lezione 1. Atteso: `quiz.q0` del gioco libero invariato, quello della carriera scritto.
+- **K3, ricaricando la modalità resta** (senza `#collaudo`): in carriera, ricarica, selettore su «Carriera» e menu con i dati della carriera; idem in gioco libero.
+- **K4, «Azzera»** (senza `#collaudo`): in carriera con dati in tutte e due le chiavi, «Azzera» con conferma accettata: la carriera è vuota e il gioco libero è identico byte per byte; poi il contrario. Il testo della conferma nomina la modalità.
+- **K5, primo avvio:** senza nessuna chiave si parte in gioco libero e il menu è uguale a quello della 0.21.6 tolto il selettore (stessi riquadri e stesse voci).
+- **Menu a 1360×650 senza pixel di eccesso**, con il selettore: si misura con la parte del menu di `collaudo_esame.py`. Nella sandbox mancano i caratteri veri, quindi la misura valida è quella sul PC di Ale.
+- **Non-regressione:** `polare.js` e `raffiche_e_virate.js` identici carattere per carattere (la fetta non tocca `step()`); `collaudo_versione.py`.
+
+### Rischi
+
+- **Due fantasmi:** un giocatore che ha già fantasmi nel gioco libero non li ritrova in carriera. È voluto (la carriera parte vuota, §2).
+- **Dimenticare un punto che scrive** nel salvataggio: oggi passano tutti da `progress`/`saveProgress()` e `ghosts`/`saveGhosts()` (verificato con `grep localStorage`: 4 righe, tutte in questi due punti). Una scrittura nuova scritta fuori da lì sfuggirebbe al bivio; K1 e K2 lo coprono solo per prove e ripassi, non per regate e lezioni (coperte dal codice comune, non da una corsa).
+- **Spazio nell'intestazione del menu:** il selettore può far andare a capo il sottotitolo. Si vede solo con i caratteri veri.
+
+### Decisioni per Ale
+
+1. **Fantasmi separati** (punto 5) invece che in comune come diceva il §2. **Deciso da Ale (14 ottobre 2026): separati.**
+2. **«Azzera» lascia i fantasmi**, come oggi. Consiglio: lasciarlo così in questa fetta; se si vuole che li cancelli, cambia anche il gioco libero e va detto nel `CHANGELOG.md`. **Ale (14 ottobre 2026): cancellare non è un problema, siamo in fase di prova.** Scelta fatta: «Azzera» cancella anche i fantasmi della modalità in uso (vale anche per il gioco libero).
+3. **K1 con `#collaudo`** invece che senza, per il motivo detto sopra. **Approvato da Ale (14 ottobre 2026).**
+
+**Esito (0.22, 14 ottobre 2026).** Fatto come proposto, con «Azzera» che cancella anche i fantasmi della modalità in uso. Un cambio rispetto al punto 3: al cambio di modalità **non** si chiama `saveProgress()`, perché ogni risultato è già salvato quando nasce; il collaudo ha mostrato che quella scrittura riscriveva la modalità lasciata (stesso contenuto, byte diversi). `collaudo_carriera.py`: 57 controlli, 0 falliti, 6 corse K1 valide su 6. Numeri e limiti in `CHANGELOG.md`, 0.22.

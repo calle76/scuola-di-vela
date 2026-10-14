@@ -38,6 +38,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .menu-head h1{font-size:2.5rem;font-weight:700;line-height:.95;margin:0}
 .menu-head .ver{font-size:.8rem;font-weight:600;color:var(--ink-soft);margin-left:8px;vertical-align:middle}
 .menu-head p{font-family:"Source Serif 4",Georgia,serif;font-size:.98rem;line-height:1.4;margin:6px 0 0;color:var(--ink-soft)}
+.head-r{display:flex;gap:10px;align-items:center}
+.head-r .seg button{white-space:nowrap;padding:6px 12px}
 .pill{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:6px 14px;border-radius:16px;cursor:pointer}
 .tiles{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
 .tile{display:flex;flex-direction:column;gap:14px;min-width:0}
@@ -861,7 +863,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "0.21.6"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "0.22"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -935,21 +937,27 @@ function step(S, C, E, dt){
   // ======================================================================
   // MENU, PROGRESSI, GLOSSARIO
   // ======================================================================
-  const STORE = "scuolaVelaSim.v1";
+  // 0.22: gioco libero e carriera hanno salvataggio e fantasmi separati; la modalità si cambia solo dal menu
+  const MODO = "scuolaVelaModo";
+  const KEYS = m => m === "carriera" ? ["scuolaVelaCarriera.v1", "scuolaVelaGhostCarriera.v1"] : ["scuolaVelaSim.v1", "scuolaVelaGhost.v1"];
+  let modo = "libero";
+  try { if (localStorage.getItem(MODO) === "carriera") modo = "carriera"; } catch(e){}
+  let [STORE, GHOST_STORE] = KEYS(modo);
   // record e fantasmi dei percorsi cambiati usano chiavi nuove; i completamenti restano.
   // 0.14: giro di boa dal lato giusto (prove 4 e 5, regate). 0.19: linea d'arrivo in tutte le prove.
   const KEYV = { m0: "m0.2", m1: "m1.2", m2: "m2.2", m3: "m3.3", m4: "m4.4", r0: "r0.2", r1: "r1.2" };
   const OLD_M = ["m0", "m1", "m2", "m3", "m4", "m3.2", "m4.3"]; // chiavi delle prove prima della 0.19: si cancellano al primo avvio
   let wipeNote = false;
   const recK = k => KEYV[k] || k;
-  let progress = { done: {}, best: {}, clean: {} };
+  let progress;
+  const loadProgress = () => { progress = { done: {}, best: {}, clean: {} }; try { const raw = localStorage.getItem(STORE); if (raw) progress = Object.assign(progress, JSON.parse(raw)); } catch(e){} };
   const STAR = '<span class="star" title="Completata almeno una volta senza errori">★</span>';
   // fasce di tempo delle prove: bands = [oro, argento, bronzo] in secondi (tempo massimo per ciascuna)
   const MEDALS = ["oro", "argento", "bronzo"];
   const medalOf = (i, sec) => { const b = MISSIONS[i].bands; if (!b || !sec) return 0; for (let k = 0; k < 3; k++) if (sec <= b[k]) return k + 1; return 0; };
   const medalTag = (i, sec) => { const m = medalOf(i, sec); return m ? `<span class="medal m${m}" title="Fascia: ${MEDALS[m - 1]}"></span>` : ""; };
   const MEDAL_ON = () => MISSIONS.some(m => m.bands);
-  try { const raw = localStorage.getItem(STORE); if (raw) progress = Object.assign(progress, JSON.parse(raw)); } catch(e){}
+  loadProgress();
   const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
   const seqPos = () => SEQ.findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
@@ -984,7 +992,8 @@ function step(S, C, E, dt){
       return `<button data-q="${i}">${L.name}: ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
       <header class="menu-head"><div><h1>Scuola di vela <span class="ver">V. ${VERSIONE}</span></h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
-        <button class="pill" id="menuGloss">Glossario</button></header>
+        <div class="head-r"><div class="seg" id="modoSel"><button data-v="libero" aria-pressed="${modo === "libero"}">Gioco libero</button><button data-v="carriera" aria-pressed="${modo === "carriera"}">Carriera</button></div>
+        <button class="pill" id="menuGloss">Glossario</button></div></header>
       <div class="tiles">
         <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></div></section>
         <section class="tile">
@@ -1004,10 +1013,16 @@ function step(S, C, E, dt){
     $("menuGloss").onclick = openGloss;
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));
-    $("resetProg").onclick = () => { if (confirm("Azzerare tutti i progressi?")){ progress = { done: {}, best: {}, clean: {} }; saveProgress(); showMenu(); } };
+    $("modoSel").onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.v !== modo) setModo(b.dataset.v); };
+    $("resetProg").onclick = () => { if (confirm(modo === "carriera" ? "Azzerare i progressi della carriera, fantasmi compresi? Il gioco libero non cambia." : "Azzerare i progressi del gioco libero, fantasmi compresi? La carriera non cambia.")){ progress = { done: {}, best: {}, clean: {} }; ghosts = {}; saveProgress(); saveGhosts(); showMenu(); } };
     window.scrollTo(0, 0); wipeNote = false; // il messaggio compare una volta sola
   }
   $("toMenu").onclick = showMenu;
+  function setModo(m){
+    modo = m; [STORE, GHOST_STORE] = KEYS(m); loadProgress(); loadGhosts();
+    try { localStorage.setItem(MODO, m); } catch(e){}
+    showMenu();
+  }
 
   function renderGloss(q = ""){
     const n = q.trim().toLowerCase();
@@ -1512,9 +1527,9 @@ function step(S, C, E, dt){
   // ======================================================================
   // FANTASMA E REGATE
   // ======================================================================
-  const GHOST_STORE = "scuolaVelaGhost.v1";
-  let ghosts = {};
-  try { ghosts = JSON.parse(localStorage.getItem(GHOST_STORE) || "{}"); } catch(e){ ghosts = {}; }
+  let ghosts;
+  const loadGhosts = () => { try { ghosts = JSON.parse(localStorage.getItem(GHOST_STORE) || "{}"); } catch(e){ ghosts = {}; } };
+  loadGhosts();
   const saveGhosts = () => { try { localStorage.setItem(GHOST_STORE, JSON.stringify(ghosts)); } catch(e){} };
   if (OLD_M.some(k => progress.best[k] || progress.clean[k] || ghosts[k])){ OLD_M.forEach(k => { delete progress.best[k]; delete progress.clean[k]; delete ghosts[k]; }); saveProgress(); saveGhosts(); wipeNote = true; } // 0.19, nessuna migrazione
   // coordinate "del vento": il vento arriva sempre da -y; così il fantasma vale con qualsiasi direzione del vento
