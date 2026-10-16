@@ -54,9 +54,11 @@ COSTRUITO = """([tipo, finisci, seme]) => {
     let n = 0;
     while (me.fin === null && R.t < 900){
       for (const k in sv.reg) if (k !== "contacts" && k !== "contactsPen") sv.reg[k] = 0;   // COSTRUITO: via gli altri errori del sostituto
-      sv.pilota(dt); sv.run(dt, 1); n++;
+      if (tipo === "avv") sv.reg.contactsPen = r1.contactsPen;   // 1.0.11: anche i contatti con colpa presi DOPO quello costruito sono «altri errori»
+      sv.pilota(dt); sv.run(dt, 1); n++;                        // (con la barca nuova capitavano in 6 regate su 6; cambio deciso dopo aver visto il risultato)
     }
     for (const k in sv.reg) if (k !== "contacts" && k !== "contactsPen") sv.reg[k] = 0;
+    if (tipo === "avv") sv.reg.contactsPen = r1.contactsPen;
     let k = 0; while (k < 60 * 400 && !R.boats.every(b => b.fin !== null)){ sv.run(dt, 1); k++; }   // il piazzamento si salva quando è definitivo
     const P = JSON.parse(localStorage.getItem("@S") || "{}");
     fine = { fin: me.fin, clean: !!(P.clean && P.clean["@C"]), race: (P.race || {})["@C:principianti"] || null,
