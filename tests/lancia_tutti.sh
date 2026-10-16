@@ -63,6 +63,9 @@ TESTS=(
     "collaudo_libretto.py|py|chiaro|0||collaudo_libretto.py"
     "collaudo_carriera_esame.py|py|chiaro|0||collaudo_carriera_esame.py"
     "collaudo_carriera_intera.py|py|chiaro|0||collaudo_carriera_intera.py"
+    "collaudo_pilota_lezioni.py (veloce)|py|ambiguo|0||collaudo_pilota_lezioni.py --veloce"
+    "collaudo_pilota_lezioni.py (semi 1-100)|py|ambiguo|1||collaudo_pilota_lezioni.py --semi 1-100"
+    "collaudo_pilota_lezioni.py (senza #collaudo)|py|chiaro|0||collaudo_pilota_lezioni.py --reale"
     "collaudo_competizione.py (veloce)|py|chiaro|0||collaudo_competizione.py --veloce"
     "collaudo_competizione.py (misura)|py|chiaro|1||collaudo_competizione.py"
     "collaudo_competizione.py (tastiera)|py|ambiguo|1||collaudo_competizione.py --tastiera"
@@ -93,6 +96,9 @@ nota() {
         "polare.js") echo "confronta a mano con circa 3,4 nodi a 45°, 5,2 a 90°, 3,5 a 180° con 10 nodi" ;;
         "raffiche_e_virate.js") echo "virata riuscita in circa 4s da 3,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire circa 55° (scuffia)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
+        "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.9 Ripartire e 2.4 Barra sottovento dopo un colpo lungo, 6.2 Assorbire una raffica a mani ferme e dopo un colpo lungo; esito in docs/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
+        "collaudo_pilota_lezioni.py (semi 1-100)") echo "«guidando» non completato al più 1 volta su 100 per passo; «da guardare» con i casi noti dell'esito in docs/PROPOSTA-PILOTA-LEZIONI.md (1.9, 1.11, 1.12, 2.4, 2.5, 5.8, 6.2, 6.3): numeri molto diversi o passi nuovi sono un problema" ;;
+        "collaudo_pilota_lezioni.py (senza #collaudo)") echo "«3 tentativi su 3 con entrambi i passi completati»" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
         "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA» (semi 1-6, passi fissi: stesso risultato a ogni giro); la riga «riepilogo» dà la mediana d'arrivo, confrontabile fra versioni" ;;
         "collaudo_partenze.py") echo "con 3 e 5 minuti ritardo mediano entro circa 12s, distanza minima almeno 20 m, avvicinamento minimo almeno 14 m (dal 13 ottobre 2026 a passi fissi con i semi 1-10: stesso risultato a ogni giro); riga «anticipi allo sparo: OK» (ogni barca anticipata di nuovo dietro la linea entro 60 s; metri oltre la linea, frequenza, anticipo e la riga «oltre 10 m» solo stampati)" ;;
