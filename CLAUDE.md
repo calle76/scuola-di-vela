@@ -1,13 +1,13 @@
 # Scuola di vela — istruzioni per Claude Code
 
-Progetto personale e non commerciale: un simulatore didattico di vela, in un unico file HTML (`index.html`), da giocare sul computer con la tastiera. Chi lavora con te non è né un velista né un programmatore di professione: spiega in italiano semplice, riporta i numeri così come escono (anche quelli sgraditi) e non chiedergli di giudicare la plausibilità nautica; la giudicano solo le fonti scritte e i video (`docs/FONTI-PUBBLICHE.md`): non ci sarà una persona esperta a cui chiedere.
+Progetto personale e non commerciale: un simulatore didattico di vela, in un'unica pagina (`index.html` più i file di `js/`, dalla 1.0.3), da giocare sul computer con la tastiera. Chi lavora con te non è né un velista né un programmatore di professione: spiega in italiano semplice, riporta i numeri così come escono (anche quelli sgraditi) e non chiedergli di giudicare la plausibilità nautica; la giudicano solo le fonti scritte e i video (`docs/FONTI-PUBBLICHE.md`): non ci sarà una persona esperta a cui chiedere.
 
 ## Da leggere prima di lavorare
 
 - Sempre: `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni; la storia fino alla 0.24 è in `docs/archivio/`, da aprire solo se serve), `docs/COLLAUDI.md` **senza** la tabella «Browser»: di quella si legge solo la riga del collaudo che serve (`grep -n "collaudo_nome" docs/COLLAUDI.md`).
-- **`index.html` non si legge mai intero.** Prima la mappa delle sezioni con le righe di oggi, poi solo la parte che serve:
-  `grep -nE "^  // ([A-ZÀ-Ú]{4,}|-{3,})|^// Motore fisico" index.html`
-  Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna.
+- **Il codice non si legge mai tutto.** Dalla 1.0.3 è diviso: `index.html` (stile e struttura) e `js/` (`motore.js`, `base.js`, `contenuti.js`, `gioco.js`, `regate.js`, `disegno.js`, `registratore.js`, `avvio.js`, caricati in quest'ordine; la prima riga di ogni file dice cosa contiene). Si apre solo il file che serve, e dentro si legge prima la mappa:
+  `grep -nE "^  // ([A-ZÀ-Ú]{4,}|-{3,})" js/nome.js`
+  Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna. Una riga eseguita al caricamento di un file non vede le funzioni dei file caricati dopo: il codice nuovo che deve partire all'avvio va in `avvio.js`.
 - Sul prototipo del fiocco: `docs/SPERIMENTALE.md`, `docs/FISICA-E-TARATURE.md`, `docs/FONTI-PUBBLICHE.md`, `docs/CONTENUTI-DA-VERIFICARE.md`.
 - Su livelli, ruoli e carriera: `docs/VISIONE-LIVELLI-E-CARRIERA.md` e `docs/ROADMAP.md`.
 - Lo stato corrente sta nei documenti, non qui: non fidarti di quello che ricordi.
@@ -30,8 +30,8 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un uni
 - **Collauda guidando davvero la barca** (pilota automatico, aggancio `#collaudo`) e anche in una pagina caricata come la carica un giocatore, senza `#collaudo`.
 - **Non-regressione.** La barca senza fiocco deve restare identica a quella del gioco (30 casi di `polare.js`, uscite di `polare.js` e `raffiche_e_virate.js` carattere per carattere, prove 1-3).
 - **Pannello** a 1360x650 senza pixel di eccesso, anche nel caso peggiore.
-- **A ogni versione del gioco aggiorna la costante `VERSIONE` in `index.html` e la voce del `CHANGELOG.md`**; `tests/collaudo_versione.py` controlla che coincidano.
-- **Ogni versione aggiorna `CHANGELOG.md`.** I prototipi non sono versioni: stanno in `sperimentale/`, non toccano `index.html`, e vanno sotto «Sperimentale».
+- **A ogni versione del gioco aggiorna la costante `VERSIONE` (in `js/gioco.js`) e la voce del `CHANGELOG.md`**; `tests/collaudo_versione.py` controlla che coincidano.
+- **Ogni versione aggiorna `CHANGELOG.md`.** I prototipi non sono versioni: stanno in `sperimentale/`, non toccano `index.html` né `js/`, e vanno sotto «Sperimentale».
 - Nei prototipi segna ogni riga cambiata con `// FIOCCO`. A ogni compito chiuso aggiorna i documenti in `docs/`.
 - **Risparmio di crediti.** Lancia solo i collaudi direttamente legati alla modifica; i controlli veloci di non-regressione (`polare.js`, `raffiche_e_virate.js`) restano sempre da lanciare. Non aspettare la suite completa né i collaudi lunghi. A fine lavoro indica il comando `tests/lancia_tutti.sh` (con `--veloce` se basta), che l'utente lancia sul suo PC incollando il riepilogo. Se un collaudo è indispensabile per capire se la modifica funziona, lancialo tu.
 
@@ -39,7 +39,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un uni
 
 - **Non fare commit né push**: li fa l'utente. A fine compito indica i comandi `git add` con i percorsi uno per uno.
 - **Mai `git add -A` né `git add .`**: i file `.gitmodules`, `.bashrc` e `.mcp.json` e la cartella `.codex/` li monta l'ambiente e vanno lasciati fuori.
-- Prima di chiudere, controlla che `index.html` non risulti modificato nelle sessioni sul prototipo.
+- Prima di chiudere, controlla che `index.html` e `js/` non risultino modificati nelle sessioni sul prototipo.
 
 ## Stile
 

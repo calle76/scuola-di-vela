@@ -13,9 +13,9 @@ La Scuola di vela è un simulatore didattico per imparare la vela su una deriva.
 
 ## Architettura
 
-Il gioco è un unico file HTML, senza dipendenze da installare. Le sole risorse esterne sono i caratteri tipografici di Google Fonts. Se non sono disponibili, il testo usa caratteri di riserva.
+Il gioco è una pagina sola, senza dipendenze da installare: `index.html` (stile e struttura) e, dalla 1.0.3, il codice nella cartella `js/`, in file caricati in ordine come script classici (si apre con un doppio clic, senza server; niente moduli, che da disco il browser blocca; le variabili sono condivise fra i file). Fino alla 1.0.2 era un file unico; decisione e criteri in `PROPOSTA-DIVISIONE-CODICE.md`. Le sole risorse esterne sono i caratteri tipografici di Google Fonts. Se non sono disponibili, il testo usa caratteri di riserva.
 
-Dentro `index.html`, nell'ordine:
+Le parti, nell'ordine di caricamento (`index.html` contiene CSS e HTML; dalla 1.0.3 le parti di codice sono in `js/motore.js`, `base.js`, `contenuti.js`, `gioco.js` (stato, menu, modalità, input, simulazione), `regate.js` (fantasma e regate), `disegno.js` (pannello e disegno), `registratore.js`, `avvio.js` (ciclo e aggancio)):
 
 | Parte | Cosa contiene |
 | --- | --- |
@@ -115,7 +115,7 @@ Su uno schermo 1360×768 con le barre del browser (finestra di circa 1360×650) 
 
 ## Limiti noti
 
-- File unico di circa 3000 righe (242 KB nella 1.0.1): comodo da distribuire. Per lavorarci si legge a pezzi, con la mappa delle intestazioni `// ====` e `// ---- … ----` (comando in `CLAUDE.md`). Dividerlo in moduli resta possibile (i contenuti sono la parte più grossa, 53 KB); deciso il 16 ottobre 2026 di non farlo per ora.
+- Diviso in file dalla 1.0.3 (16 ottobre 2026): per distribuire il gioco serve la cartella (`index.html` più `js/`), non più un file solo. Per lavorarci si apre solo il file che serve, con la mappa delle intestazioni (comando in `CLAUDE.md`).
 - Gli avversari «esperti» sono solo poco più forti dei «principianti».
 - Regole di regata semplificate: la boa va girata dal lato giusto (dalla 0.14), ma la penalità per un contatto è di 15 secondi invece dei giri di penalità, e toccare la boa non è punito.
 - Le semplificazioni della fisica sono elencate in `FISICA-E-TARATURE.md`.

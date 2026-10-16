@@ -11,7 +11,7 @@
 import asyncio, json, pathlib, re, sys, time
 from playwright.async_api import async_playwright
 QUI = pathlib.Path(__file__).resolve().parent; OUT = QUI / "output"; OUT.mkdir(exist_ok=True)
-INDEX = QUI.parent / "index.html"; SRC = INDEX.read_text(encoding="utf-8"); URL = INDEX.as_uri() + "#collaudo"
+INDEX = QUI.parent / "index.html"; import sorgente; SRC = sorgente.testo(); URL = INDEX.as_uri() + "#collaudo"   # SRC: dalla 1.0.3 index.html più js/
 leggi = lambda f: (QUI / f).read_text(encoding="utf-8")
 SEME = re.search(r'SEME = """(.*?)"""', leggi("collaudo_fasce.py"), re.S).group(1)
 CORSA_PROVA = re.search(r'CORSA = """(.*?)"""', leggi("collaudo_fasce.py"), re.S).group(1)

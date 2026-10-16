@@ -6,7 +6,8 @@
 # Uso: .venv-collaudi/bin/python tests/prova_carriera.py
 import asyncio, json, pathlib, re
 from playwright.async_api import async_playwright
-INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; SRC = INDEX.read_text(encoding="utf-8")
+import sorgente
+INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]
 MK = ["m0.2", "m1.2", "m2.2", "m3.3", "m4.4"]
 

@@ -15,6 +15,32 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.0.3 — il codice diviso in file
+
+Del 16 ottobre 2026. **Il gioco non cambia:** stesso comportamento, stessi testi, stesse immagini, misurato al bit. Proposta, criteri e decisione in `docs/PROPOSTA-DIVISIONE-CODICE.md`: manutenzione decisa da Claude Code, prima del laboratorio e delle correzioni della barca.
+
+- **Com'è fatto adesso.** `index.html` contiene stile e struttura della pagina (30 KB, era 244). Il codice è in `js/`, otto file caricati in ordine come script classici: `motore.js` 6 KB, `base.js` 1, `contenuti.js` 55, `gioco.js` 57, `regate.js` 35, `disegno.js` 45, `registratore.js` 15, `avvio.js` 4. Il gioco si apre ancora con un doppio clic, senza server. Il codice è **spostato, non riscritto**: i file uniti, nell'ordine, danno esattamente il testo che stava dentro il blocco unico, che è stato tolto. L'unica aggiunta sono due righe di intestazione per file. **Uno scostamento dalla proposta:** il pannello sta in `disegno.js` e non in `gioco.js`, perché nel file stava fra le regate e il disegno, e così l'ordine resta quello di prima.
+- **Nomi globali:** 292 nomi diventano globali; nessuno coincide con un nome che il browser usa già (controllato su una pagina vuota di Chromium).
+- **Misure:**
+  - **impronta identica al bit**, 63 scene su 63, con nessun errore della pagina; riferimento preso dalla 1.0.2 a file unico, appena prima;
+  - `polare.js` e `raffiche_e_virate.js` identici carattere per carattere;
+  - pilota delle lezioni (veloce) identico riga per riga;
+  - nessun errore al caricamento, né con `#collaudo` né senza.
+
+  Collaudi lanciati qui:
+  - OK: `collaudo_carriera.py` (57 controlli, 0 falliti), `collaudo_pulsanti.py`, `collaudo_versione.py`;
+  - NON VALIDI solo per i caratteri mancanti nella sandbox, il resto OK: `collaudo_esame.py`, `collaudo_quiz.py`, `collaudo_libretto.py`, `collaudo_carriera_esame.py`;
+  - `collaudo_carriera_intera.py`.
+- **Contro-prova sull'ordine dei file.**
+  - Scambiare `contenuti.js` e `gioco.js` non cambia niente: al caricamento nessuno dei due usa l'altro, quindi l'ordine fra loro è indifferente.
+  - Caricare `avvio.js` prima di `regate.js` invece rompe la pagina, e l'impronta ora lo dice: «NON VALIDO (la pagina non si avvia: errori ['RACES is not defined'])», con uscita 2. Prima si interrompeva con un errore tecnico.
+- **Collaudi adattati:**
+  - `tests/fisica/motore.js` legge `js/motore.js`;
+  - aiuto comune nuovo `tests/sorgente.py`: `testo()` dà tutto il codice come un testo, `copia()` fa una copia della pagina con modifiche, per le contro-prove;
+  - lo usano `collaudo_versione.py`, `collaudo_impronta.py`, `collaudo_esame.py`, `collaudo_registratore.py`, `collaudo_quiz.py`, `collaudo_libretto.py`, `collaudo_carriera.py`, `collaudo_carriera_esame.py`, `collaudo_carriera_intera.py` e `prova_carriera.py`.
+- **Documenti:** `CLAUDE.md` (la mappa ora è per file, e il codice nuovo che parte all'avvio va in `avvio.js`), `PROGETTO.md`, `README.md`, `COLLAUDI.md`.
+- **Conoscenze del progetto su claude.ai:** al posto di `index.html` si caricano `index.html` (ora piccolo) e i file di `js/`.
+
 ## Dopo la 1.0.2 (lavori che non cambiano il gioco)
 
 - **Pilota completo delle lezioni** (16 ottobre 2026; proposta, revisione in chat ed esito in `docs/PROPOSTA-PILOTA-LEZIONI.md`). Collaudo nuovo `tests/collaudo_pilota_lezioni.py`: tutti i 32 passi pratici, percorsi dall'inizio come un giocatore, con tre misure («a mani ferme», «guidando», «dopo un colpo lungo»). `index.html` non è cambiato. Messa a punto sui semi 1-20 (solo il pilota: sette correzioni dichiarate), conferma sui semi 21-100 senza toccarlo: «guidando» completa 2.558 corse su 2.560. Trovati, e **non corretti** (ogni caso diventerà una proposta):

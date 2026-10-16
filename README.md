@@ -2,13 +2,13 @@
 
 Un simulatore didattico per imparare a governare una piccola barca a vela (una deriva). Il carteggio e la navigazione in mare aperto sono previsti come espansione a parte. È un progetto personale e non commerciale, nato per studiare la vela partendo da zero.
 
-Il gioco è un unico file, `index.html`: si apre in un browser recente senza installare nulla.
+Il gioco è una pagina sola, `index.html`, con il codice nella cartella `js/`: si apre in un browser recente senza installare nulla.
 
 > **Attenzione.** Il «Brevetto della Scuola di vela» e tutti i contenuti del gioco non hanno alcun valore legale e non sostituiscono un corso di vela né la patente nautica. I contenuti tecnici sono in fase di verifica: vedi [`docs/CONTENUTI-DA-VERIFICARE.md`](docs/CONTENUTI-DA-VERIFICARE.md).
 
 ## Come si gioca
 
-- **In locale:** scarica il repository e apri `index.html` con il browser (doppio clic).
+- **In locale:** scarica il repository (servono `index.html` e la cartella `js/`) e apri `index.html` con il browser (doppio clic).
 - **Online:** se il repository ha GitHub Pages attivo, il gioco è all'indirizzo `https://<utente>.github.io/<nome-repository>/`.
 
 Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
@@ -29,7 +29,7 @@ Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
 
 Tutto è sempre accessibile: nessuna lezione o regata va sbloccata, nemmeno in carriera.
 
-**Stato:** versione 1.0.2 (16 ottobre 2026), la 1.0 con correzioni e manutenzione: il livello 1 giocabile dall'inizio alla fine, ancora da rifinire (vedi `docs/ROADMAP.md`). Il livello 2 sarà dedicato alle regole di regata e di precedenza, sulla stessa barca. Le correzioni della barca (resistenza dello scafo, timone), delle regole di regata e del disegno vengono nelle versioni 1.x: vedi `docs/ROADMAP.md`.
+**Stato:** versione 1.0.3 (16 ottobre 2026), la 1.0 con correzioni e manutenzione: il livello 1 giocabile dall'inizio alla fine, ancora da rifinire (vedi `docs/ROADMAP.md`). Il livello 2 sarà dedicato alle regole di regata e di precedenza, sulla stessa barca. Le correzioni della barca (resistenza dello scafo, timone), delle regole di regata e del disegno vengono nelle versioni 1.x: vedi `docs/ROADMAP.md`.
 
 ### Comandi
 
@@ -52,7 +52,8 @@ La barra funziona come nella realtà: si spinge dalla parte opposta a quella in 
 ## Struttura del repository
 
 ```
-index.html                         il gioco (file unico: fisica, contenuti, grafica)
+index.html                         la pagina del gioco (stile e struttura)
+js/                                il codice: motore fisico, contenuti, gioco, regate, disegno, registratore, avvio
 README.md                          questo file
 CHANGELOG.md                       storia delle versioni e dei difetti corretti
 LICENSE                            licenza

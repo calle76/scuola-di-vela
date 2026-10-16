@@ -19,7 +19,8 @@ def chk(parte, c, m):
     casi[parte] = casi.get(parte, 0) + 1
     if not c: fail.append(f"{parte}: {m}"); print("FALLITO:", parte, "-", m)
 
-src = HTML.read_text(encoding="utf-8")
+import sorgente
+src = sorgente.testo()   # dalla 1.0.3: index.html più i file di js/
 blocco = lambda nome: re.search(r"const %s = \[.*?\n  \];" % nome, src, re.S).group(0)
 DATI_JS = "s=>{const f=new Function(s+';return {ESAME,QUOTE,QUIZ,SOGLIA_ESAME}');Object.assign(window,{__E:f()})}"
 DATI_SRC = re.search(r"const QUOTE = .*?;\n", src).group(0) + blocco("ESAME") + "\n" + blocco("QUIZ")
@@ -118,7 +119,7 @@ async def main():
         # stesso meccanismo con una lezione più ricca (lezione 2 da 4 a 7 domande): deve funzionare con qualunque numero
         extra = "\n  ESAME[1].push(" + ",".join(f'["Come si timona", "prova {c}", "giusta {c}", ["a {c}", "b {c}", "c {c}"], "spiegazione"]' for c in "xyz") + ");"
         var = src.replace(blocco("ESAME"), blocco("ESAME") + extra, 1)
-        tmp = pathlib.Path(tempfile.mkdtemp()) / "index.html"; tmp.write_text(var, encoding="utf-8")
+        tmp = sorgente.copia(tempfile.mkdtemp(), [(blocco("ESAME"), blocco("ESAME") + extra)])   # copia della pagina con le domande in più
         await pg.goto(tmp.as_uri() + "#collaudo"); await pg.wait_for_timeout(300)
         D2 = dict(D); D2["ESAME"] = [list(l) for l in D["ESAME"]]
         D2["ESAME"][1] = D2["ESAME"][1] + [["Come si timona", f"prova {c}", f"giusta {c}", [f"a {c}", f"b {c}", f"c {c}"], "spiegazione"] for c in "xyz"]

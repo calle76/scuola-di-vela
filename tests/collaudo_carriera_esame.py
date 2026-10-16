@@ -7,7 +7,7 @@
 import asyncio, json, pathlib, re, sys
 from playwright.async_api import async_playwright
 QUI = pathlib.Path(__file__).resolve().parent; OUT = QUI / "output"; OUT.mkdir(exist_ok=True)
-INDEX = QUI.parent / "index.html"; BASE = INDEX.as_uri(); SRC = INDEX.read_text(encoding="utf-8")
+INDEX = QUI.parent / "index.html"; BASE = INDEX.as_uri(); import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]
 BANCHE = re.search(r"const ESAME = \[.*?\n  \];", SRC, re.S).group(0) + "\n" + re.search(r"const QUIZ = \[.*?\n  \];", SRC, re.S).group(0)
 CAR, LIB, MODO = "scuolaVelaCarriera.v1", "scuolaVelaSim.v1", "scuolaVelaModo"

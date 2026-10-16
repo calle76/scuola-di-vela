@@ -15,7 +15,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import analizza_sessione as AS
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 import re
-VERSIONE = re.search(r'const VERSIONE = "([^"]+)"', (pathlib.Path(__file__).resolve().parent.parent / "index.html").read_text()).group(1)  # 0.19: non più scritta a mano
+import sorgente
+VERSIONE = re.search(r'const VERSIONE = "([^"]+)"', sorgente.testo()).group(1)  # 0.19: non più scritta a mano
 URL = BASE + "#collaudo"
 OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=True)
 PARTI = sys.argv[1] if len(sys.argv) > 1 else "abcde"

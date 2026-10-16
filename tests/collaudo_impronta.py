@@ -108,10 +108,10 @@ def h(x): return hashlib.sha1(json.dumps(x, sort_keys=True, ensure_ascii=False).
 
 async def impronta(pagina, nome):
     # la costante VERSIONE si scrive nel menu e sul mare: cambia a ogni versione per scelta, quindi si carica una copia con un valore fisso
-    testo, n = re.subn(r'const VERSIONE = "[^"]*"', 'const VERSIONE = "impronta"', pathlib.Path(pagina).read_text(encoding="utf-8"))
-    if n != 1: raise RuntimeError("costante VERSIONE non trovata nella pagina")
-    OUT.mkdir(parents=True, exist_ok=True); copia = OUT / f"pagina-{nome}.html"; copia.write_text(testo, encoding="utf-8")
-    url = copia.as_uri() + "#collaudo"
+    import sorgente   # dalla 1.0.3 la pagina è index.html più js/: si copia tutta, con VERSIONE fissa
+    m = re.search(r'const VERSIONE = "[^"]*"', sorgente.testo(pagina))
+    if not m: raise RuntimeError("costante VERSIONE non trovata nella pagina")
+    url = sorgente.copia(OUT / f"pagina-{nome}", [(m.group(0), 'const VERSIONE = "impronta"')], pagina).as_uri() + "#collaudo"
     imp, errs = {}, []
     async with async_playwright() as p:
         b = await p.chromium.launch()
@@ -119,6 +119,8 @@ async def impronta(pagina, nome):
             ctx = await b.new_context(viewport={"width": 1360, "height": 650})
             pg = await ctx.new_page(); pg.on("pageerror", lambda e: errs.append(str(e)))
             await pg.add_init_script(SEME); await pg.goto(url); await pg.wait_for_timeout(300)
+            if await pg.evaluate("typeof window.__sv") != "object":   # la pagina non è partita (per esempio un file caricato nell'ordine sbagliato)
+                raise RuntimeError(f"la pagina non si avvia: errori {errs[:3]}")
             await pg.evaluate("document.fonts.ready.then(() => 0)"); await pg.evaluate(COMUNE)
             return pg
         pg = await nuova()
@@ -155,7 +157,8 @@ async def main():
     nome = args[0] if args else "dopo"
     pagina = sys.argv[sys.argv.index("--pagina") + 1] if "--pagina" in sys.argv else str(ROOT / "index.html")
     if "--pagina" in sys.argv: args = [a for a in args if a != pagina]; nome = args[0] if args else "dopo"
-    imp, passi = await impronta(pagina, nome)
+    try: imp, passi = await impronta(pagina, nome)
+    except RuntimeError as e: print(f"ESITO: NON VALIDO ({e})"); sys.exit(2)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / f"{nome}.json").write_text(json.dumps(imp, ensure_ascii=False, sort_keys=True, indent=0))
     print(f"impronta {nome}: {h(imp)}  ({pagina}, salvata in tests/output/impronta/{nome}.json)", flush=True)

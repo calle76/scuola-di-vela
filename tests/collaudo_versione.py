@@ -24,8 +24,9 @@ def esito(nome, ok, det=""):
     if not ok: sbagliati.append(nome)
 
 def versione_in_index():
-    m = re.search(r'const VERSIONE = "([^"]+)"', (ROOT / "index.html").read_text(encoding="utf-8"))
-    if not m: raise RuntimeError("costante VERSIONE non trovata in index.html")
+    import sorgente   # dalla 1.0.3 il codice è in js/: si cerca in tutti i file che la pagina carica
+    m = re.search(r'const VERSIONE = "([^"]+)"', sorgente.testo())
+    if not m: raise RuntimeError("costante VERSIONE non trovata nel codice del gioco")
     return m.group(1)
 
 def versione_massima_changelog():
@@ -51,7 +52,7 @@ CATTURA_FILLTEXT = """
 async def main():
     attesa = versione_in_index()
     massima, tutte = versione_massima_changelog()
-    print(f"VERSIONE in index.html: {attesa}")
+    print(f"VERSIONE nel codice del gioco: {attesa}")
     print(f"versione piu' alta in CHANGELOG.md: {massima} (fra {len(tutte)} titoli di versione)")
     esito("VERSIONE coincide con la versione piu' alta di CHANGELOG.md", attesa == massima, f"{attesa} / {massima}")
 

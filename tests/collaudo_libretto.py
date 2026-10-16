@@ -8,7 +8,7 @@
 import asyncio, json, pathlib, re, sys
 from playwright.async_api import async_playwright
 INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; BASE = INDEX.as_uri()
-SRC = INDEX.read_text(encoding="utf-8")
+import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]   # [oro, argento, bronzo] per prova
 assert len(BANDS) == 5, BANDS
 QUIZ_JS = re.search(r"const QUIZ = \[.*?\n  \];", SRC, re.S).group(0)

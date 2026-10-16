@@ -5,6 +5,7 @@
 # K2-K5 (senza #collaudo, come la carica un giocatore): ripasso, modalità ricordata, «Azzera», primo avvio.
 # Fallisce se misura zero casi. Uso: python collaudo_carriera.py
 import asyncio, json, pathlib, re, subprocess, sys, tempfile
+import sorgente   # dalla 1.0.3 il codice è in index.html più js/
 from playwright.async_api import async_playwright
 QUI = pathlib.Path(__file__).resolve().parent
 INDEX = QUI.parent / "index.html"; BASE = INDEX.as_uri()
@@ -120,7 +121,7 @@ async def k5(b):
 
 async def main():
     global QUIZ_JS
-    QUIZ_JS = re.search(r"const QUIZ = \[.*?\n  \];", INDEX.read_text(encoding="utf-8"), re.S).group(0)
+    QUIZ_JS = re.search(r"const QUIZ = \[.*?\n  \];", sorgente.testo(), re.S).group(0)
     async with async_playwright() as p:
         b = await p.chromium.launch()
         await k1(b); await k2_k4(b); await k5(b)

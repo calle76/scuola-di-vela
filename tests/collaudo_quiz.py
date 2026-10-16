@@ -31,7 +31,7 @@ async def main():
         await pg.goto(BASE); await pg.wait_for_timeout(400)
         # QUIZ è privato nel gioco: lo si ricostruisce dal testo di index.html senza toccare il gioco
         import re
-        src = pathlib.Path(BASE[7:]).read_text(encoding="utf-8")
+        import sorgente; src = sorgente.testo()   # dalla 1.0.3: index.html più js/
         m = re.search(r"const QUIZ = \[.*?\n  \];", src, re.S); assert m, "QUIZ non trovato"
         await pg.evaluate("s=>{window.QUIZ=new Function(s+';return QUIZ')()}", m.group(0))
         li = 2

@@ -1,0 +1,92 @@
+// Scuola di vela, motore.js — Motore fisico: BOAT, CL, CD, step(). Puro: non tocca la pagina (lo leggono anche i collaudi della fisica, tests/fisica/motore.js).
+// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
+// Motore fisico di una deriva singola da circa 4,2 m. Unità SI, angoli in gradi dove indicato.
+const D2R = Math.PI / 180;
+const norm180 = a => ((a + 180) % 360 + 360) % 360 - 180;
+const norm360 = a => ((a % 360) + 360) % 360;
+
+const BOAT = {
+  mass: 135,          // kg, barca + timoniere
+  sailArea: 7.0,      // m²
+  rho: 1.225,
+  hullK2: 12,         // resistenza ~ k2·u²
+  hullK4: 0.9,        // + k4·u⁴ (limita la velocità)
+  rudderDragK: 45,
+  foilK: 520,         // resistenza laterale della deriva
+  maxBoom: 85,
+  minBoom: 14,
+  luffA0: 27,         // gradi di vento apparente sotto cui l'inferitura comincia a sgonfiarsi
+  luffW: 7,           // ampiezza della transizione: sopra luffA0+luffW la vela porta del tutto
+  turnLen: 1.05,       // m, lunghezza efficace per la virata
+  maxRudder: 30,
+  zCE: 2.0,           // m, altezza del centro velico
+  sailorMass: 75,     // kg
+  hikeArm: 1.0,       // m, braccio massimo del timoniere sporto fuori
+  formK: 400,         // Nm, stabilità di forma dello scafo
+  rollI: 260,         // kg·m², inerzia di rollio
+  rollDamp: 520,      // smorzamento
+  capsizeAt: 60       // gradi
+};
+
+function CL(a){ // a: angolo di incidenza (gradi, >=0)
+  if (a <= 0) return 0;
+  if (a < 20) return 1.35 * a / 20;
+  return Math.max(0.55, 1.35 - (a - 20) * 0.022);
+}
+function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.06 + 1.15 * s * s + 0.12 * cl * cl; }
+
+// state: {x,y,h,u,r,boomSide,boom}  controls: {sheet 0..1, tiller -1..1 (+ = barra a dritta)}  env: {twd (da), tws m/s}
+function step(S, C, E, dt){
+  const h = S.h * D2R;
+  const fwd = [Math.sin(h), -Math.cos(h)], stbd = [Math.cos(h), Math.sin(h)];
+  // vento reale (vettore verso cui soffia)
+  const tdir = (E.twd + 180) * D2R, tw = [Math.sin(tdir) * E.tws, -Math.cos(tdir) * E.tws];
+  // velocità barca: avanti + scarroccio
+  const bv = [fwd[0] * S.u + stbd[0] * S.vl, fwd[1] * S.u + stbd[1] * S.vl];
+  const aw = [tw[0] - bv[0], tw[1] - bv[1]];
+  const aws = Math.hypot(aw[0], aw[1]);
+  const awFrom = norm360(Math.atan2(-aw[0], aw[1]) / D2R); // direzione DA cui arriva
+  const awa = norm180(awFrom - S.h);                         // + = vento da dritta
+  const A = Math.abs(awa);
+  // boma: limitato dalla scotta, il vento lo spinge sottovento
+  const sheetMax = BOAT.minBoom + C.sheet * (BOAT.maxBoom - BOAT.minBoom); // anche cazzata a ferro la randa non sta a 0°
+  const boom = Math.min(sheetMax, Math.max(0, A - 2));
+  const alpha = A - boom;
+  const ch = Math.cos((S.heel || 0) * D2R);
+  const q = 0.5 * BOAT.rho * BOAT.sailArea * aws * aws * ch; // la vela inclinata prende meno vento
+  const lf = Math.max(0, Math.min(1, (A - BOAT.luffA0) / BOAT.luffW)); // vento apparente troppo stretto: la vela si sgonfia (angolo morto)
+  const L = q * CL(alpha) * lf, Dg = q * (CD(alpha) + (alpha < 6 ? 0.2 * (1 - alpha / 6) : 0)); // vela che sbatte: più resistenza
+  const drive = L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
+  const side = L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento
+  const rud = C.tiller * BOAT.maxRudder;
+  const res = 4 * S.u + BOAT.hullK2 * S.u * Math.abs(S.u) + BOAT.hullK4 * S.u ** 3 * Math.sign(S.u) * Math.abs(S.u) +
+              BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
+  const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
+  S.u += (drive - res * heelDrag) / BOAT.mass * dt;
+  S.u = Math.max(-1.2, S.u);
+  // scarroccio: la deriva resiste molto, meno a bassa velocità
+  const leewardSign = awa >= 0 ? -1 : 1; // vento da dritta -> scarroccia verso sinistra
+  const latTarget = leewardSign * side / (BOAT.foilK * (S.u * S.u + 0.4) + 60);
+  S.vl += (Math.max(-0.8, Math.min(0.8, latTarget)) - S.vl) * Math.min(1, dt * 2);
+  // sbandamento: momento sbandante della vela contro timoniere sporto fuori e forma dello scafo
+  S.heel = S.heel || 0; S.heelRate = S.heelRate || 0; S.hike = S.hike === undefined ? 0.2 : S.hike;
+  const phi = S.heel * D2R;
+  const mHeel = side * BOAT.zCE * Math.cos(phi);
+  const rmMax = BOAT.sailorMass * 9.81 * BOAT.hikeArm;
+  const hikeTarget = Math.max(0, Math.min(1, (mHeel - BOAT.formK * 0.08) / rmMax)); // punta a tenere la barca quasi piatta
+  S.hike += (hikeTarget - S.hike) * Math.min(1, dt / 0.9); // il timoniere reagisce con un certo ritardo
+  const mRight = rmMax * S.hike * Math.cos(phi) + BOAT.formK * Math.sin(2 * phi) / 2;
+  const acc = (mHeel - mRight) / BOAT.rollI - BOAT.rollDamp / BOAT.rollI * S.heelRate;
+  S.heelRate += acc * dt;
+  S.heel += S.heelRate / D2R * dt;
+  // virata: la barra a dritta porta la pala a sinistra -> la prua gira a sinistra
+  let rTarget = -(S.u / BOAT.turnLen) * Math.sin(rud * D2R) / D2R; // gradi/s
+  // barca ferma nel vento: la prua poggia da sola
+  if (A < 36 && Math.abs(S.u) < 0.5) rTarget += (awa >= 0 ? -1 : 1) * 6 * (1 - Math.abs(S.u) / 0.5);
+  S.r += (rTarget - S.r) * Math.min(1, dt * 4);
+  S.h = norm360(S.h + S.r * dt);
+  S.x += bv[0] * dt; S.y += bv[1] * dt;
+  S.boomSide = awa >= 0 ? -1 : 1; // -1: boma a sinistra
+  S.boom = boom;
+  return { heel: S.heel, hike: S.hike, awa, aws, alpha, awFrom, drive, side, twa: norm180(E.twd - S.h), leeway: Math.atan2(S.vl, Math.max(0.3, Math.abs(S.u))) / D2R };
+}
