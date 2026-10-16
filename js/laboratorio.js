@@ -5,7 +5,7 @@
   // PROFILI DEL LABORATORIO
   // ======================================================================
   // Un profilo: { id: "breve_senza_spazi", nome: "…", versione: "1.0.4", nota: "cosa si vuole provare",
-  //   valori: { hullK2: { v: 8, fonte: "documento e riga, o «scelta di progetto»", stato: "misura" | "ipotesi" | "non verificato" } } }
+  //   valori: { hullScale: { v: 0.8, fonte: "documento e riga, o «scelta di progetto»", stato: "misura" | "ipotesi" | "non verificato" } } }
   // Solo i valori diversi da BOAT. Un profilo senza fonte non entra. La versione è un campo, mai «const VERSIONE =» (collaudo_versione.py).
   const LAB_PROFILI = [
   ];
@@ -14,13 +14,12 @@
   // ======================================================================
   // LIMITI DEI CURSORI
   // ======================================================================
-  // [min, max, passo, avvertenza]: scelte nostre di prudenza, misurate il 16 ottobre 2026 sul motore della 1.0.4 (PROPOSTA-LABORATORIO.md §5)
+  // [min, max, passo, avvertenza]: scelte nostre di prudenza, misurate il 16 ottobre 2026 sul motore della 1.0.4 (PROPOSTA-LABORATORIO.md §5); hullScale e appDA dalla 1.0.6 (PROPOSTA-VELOCITA.md)
   const LAB_LIM = {
     mass: [90, 250, 5, "kg, barca e timoniere: cambia l'accelerazione, non la velocità di regime"],
     sailArea: [4, 10, 0.1, "m² di vela"],
-    hullK1: [0, 12, 0.5, "resistenza dello scafo che cresce come la velocità (pesa a velocità bassa)"],
-    hullK2: [4, 30, 0.5, "resistenza che cresce col quadrato della velocità"],
-    hullK4: [0, 3, 0.05, "resistenza che cresce con la quarta potenza (limita la velocità massima)"],
+    hullScale: [0.5, 2.5, 0.05, "moltiplica la resistenza dello scafo misurata in vasca (1 = la vasca; 2 = circa la barca fino alla 1.0.5)"],
+    appDA: [0, 0.01, 0.0001, "m², attrito di deriva e timone (0,0049 dalla fonte): conta di più a velocità bassa"],
     rudderDragK: [0, 120, 5, "freno del timone girato"],
     turnLen: [0.5, 2, 0.05, "m: più è corta, più la barca gira in fretta; vale anche all'indietro"],
     maxRudder: [15, 45, 1, "gradi della pala a barra tutta; vale anche all'indietro e cambia il disegno della barra"],

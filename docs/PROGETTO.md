@@ -8,7 +8,7 @@ La Scuola di vela è un simulatore didattico per imparare la vela su una deriva.
 2. **Tutto sempre giocabile.** Nessuna lezione, prova o regata va sbloccata: deve essere sempre possibile provare al volo una cosa specifica. Un'eventuale modalità carriera, con progressione e barche da conquistare, sarà una modalità separata con un salvataggio suo.
 3. **Aiuti disattivabili al posto della semplificazione.** Chi parte da zero ha suggerimenti, barra che torna al centro, comando «gira la prua» e timoniere che si sporge da solo; chi vuole più realismo li spegne.
 4. **Onestà sui contenuti.** Ogni affermazione nautica deve essere verificabile (vedi `CONTENUTI-DA-VERIFICARE.md`). Le semplificazioni del simulatore sono dichiarate, non nascoste.
-5. **Progetto personale e non commerciale**, entro confini legali prudenti: nessun marchio di classi o costruttori, nessun titolo che sembri ufficiale, dati esterni solo con licenze libere e citazione.
+5. **Progetto personale e non commerciale**, entro confini legali prudenti: nessun marchio di classi o costruttori, nessun titolo che sembri ufficiale, dati esterni solo con licenze libere e citazione. I valori numerici misurati, letti da pubblicazioni scientifiche e citati, si possono usare nel motore; testi, tabelle impaginate, figure e insiemi di dati distribuiti con licenza restano soggetti alla regola della licenza libera (decisione di Ale, 16 ottobre 2026: il gioco resta per uso personale).
 6. **Computer con tastiera.** Il telefono non è un obiettivo.
 
 ## Architettura
@@ -56,7 +56,7 @@ Aprendo il gioco con `#collaudo` in fondo all'indirizzo, la pagina espone `windo
 
 ## Che modello è il motore
 
-Il motore è un modello cinematico didattico, non un previsore di prestazioni. Il timone produce direttamente una velocità di rotazione; non ci sono momenti, inerzia d'imbardata, onde né planata; l'equipaggio è un automatismo (il timoniere si sporge da solo). Le conseguenze sono dichiarate nel manuale. Un effetto si aggiunge solo se si sente guidando e ha una fonte; se manca una delle due cose si dichiara come semplificazione e si annota in `docs/DUBBI-E-RICERCHE.md`. Le cose che richiedono un modello dinamico (momento d'imbardata, planata, onde) vogliono un prototipo dedicato prima di costruirci sopra delle lezioni; la decisione si prende confrontando il livello 1 con le fonti scritte e con misure prese dai video (non ci sarà un parere esperto).
+Il motore è un modello cinematico didattico, non un previsore di prestazioni. Il timone produce direttamente una velocità di rotazione; non ci sono momenti, inerzia d'imbardata, onde né planata (dalla 1.0.6 la resistenza dello scafo viene da una vasca e cala oltre i 6,5 nodi come in una barca che plana, ma il resto della planata non c'è); l'equipaggio è un automatismo (il timoniere si sporge da solo). Le conseguenze sono dichiarate nel manuale. Un effetto si aggiunge solo se si sente guidando e ha una fonte; se manca una delle due cose si dichiara come semplificazione e si annota in `docs/DUBBI-E-RICERCHE.md`. Le cose che richiedono un modello dinamico (momento d'imbardata, planata, onde) vogliono un prototipo dedicato prima di costruirci sopra delle lezioni; la decisione si prende confrontando il livello 1 con le fonti scritte e con misure prese dai video (non ci sarà un parere esperto).
 
 ## Come aggiungere contenuti
 

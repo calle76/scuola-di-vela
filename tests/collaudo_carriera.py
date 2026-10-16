@@ -23,10 +23,10 @@ async def scrivi(pg, d): await pg.evaluate("d => { localStorage.clear(); for (co
 async def modo(pg): return await pg.get_attribute("#modoSel button[aria-pressed='true']", "data-v")
 async def scegli(pg, m): await pg.click(f"#modoSel button[data-v='{m}']"); await pg.wait_for_timeout(100)
 def finto(best, quiz=None):   # salvataggio preparato, scritto come lo scriverebbe il gioco
-    p = {"done": {"m0": True}, "best": {"m0.2": best}, "clean": {}}
+    p = {"done": {"m0": True}, "best": {"m0.3": best}, "clean": {}}
     if quiz is not None: p["quiz"] = {"q0": quiz}
     return json.dumps(p)
-FANT = json.dumps({"m0.2": [[0, 1, 2, 3]] * 8})
+FANT = json.dumps({"m0.3": [[0, 1, 2, 3]] * 8})
 
 async def k1(b):
     for verso, (attiva, altra) in (("carriera", (CAR, LIB)), ("libero", (LIB, CAR))):
@@ -50,10 +50,10 @@ async def k1(b):
             p = json.loads(dopo[attiva]); g = json.loads(dopo.get(ga, "{}"))
             ok_altra = dopo.get(altra) == prima.get(altra) and dopo.get(go) == prima.get(go)
             chk(ok_altra, f"K1 {verso} seme {seme}: l'altra modalità (salvataggio e fantasmi) identica byte per byte")
-            chk(p["done"].get("m0") is True and isinstance(p["best"].get("m0.2"), (int, float)), f"K1 {verso} seme {seme}: record della prova 1 nella modalità in uso")
-            chk("m0.2" in g and g["m0.2"] != json.loads(FANT)["m0.2"], f"K1 {verso} seme {seme}: fantasma nuovo nella modalità in uso")
+            chk(p["done"].get("m0") is True and isinstance(p["best"].get("m0.3"), (int, float)), f"K1 {verso} seme {seme}: record della prova 1 nella modalità in uso")
+            chk("m0.3" in g and g["m0.3"] != json.loads(FANT)["m0.3"], f"K1 {verso} seme {seme}: fantasma nuovo nella modalità in uso")
             chk(not errs, f"K1 {verso} seme {seme}: errori nella pagina {errs[:1]}")
-            print(f"K1 {verso} seme {seme}: prova 1 in {t:.1f} s, record {p['best'].get('m0.2')}, altra identica {ok_altra}", flush=True)
+            print(f"K1 {verso} seme {seme}: prova 1 in {t:.1f} s, record {p['best'].get('m0.3')}, altra identica {ok_altra}", flush=True)
 
 QUIZ_JS = None
 async def ripasso_tutto_giusto(pg):

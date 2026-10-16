@@ -99,7 +99,7 @@ Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (f
 | **La barca che gira da sola per effetto delle vele** | Con la barra al centro la barca va dritta (salvo il disturbo apposta nella lezione 2) | Secondo le fonti consultate, cazzando la randa la barca tende a orzare, e sbandando orza ancora di più: si sente la barra «pesante» | Alto: è una sensazione che un velista riconosce subito |
 | **La barra a fondo** | È sempre la scelta migliore | Oltre circa 15° il timone frena senza girare di più (una sola fonte) | Medio: si può imparare un'abitudine sbagliata |
 | **Uscire dall'angolo morto** | Si esce solo col timone: mentre la barca arretra, barra verso il boma, poi barra al centro e si cazza. Il boma non si può spingere a mano; con la barra al centro la barca può restare a lungo all'indietro | Tre fonti descrivono la randa «a collo»: si spinge il boma fuori e la barra dalla stessa parte, la barca arretra e la prua si allontana dal vento, poi si centra, si cazza e si riparte (US Sailing; guida Sunfish di un circolo; associazione di classe di un catamarano; vedi `DUBBI-E-RICERCHE.md`, sez. 3). Da ricontrollare sulle pagine originali | Medio |
-| **La planata** | Non c'è: con vento fresco la barca è più lenta di una deriva vera | Sopra circa 8 nodi di velocità una deriva a due olimpica passa a un regime di alta velocità (una fonte) | Medio: conta di più dal livello 3 |
+| **La planata** | C'è solo nella resistenza dello scafo (dalla 1.0.6, misurata in vasca fino a 9 nodi): niente assetto né onde | Sopra circa 8 nodi di velocità una deriva a due olimpica passa a un regime di alta velocità (una fonte) | Medio: conta di più dal livello 3 |
 | **Il peso del timoniere** | Si sporge da solo, con un ritardo | Gestire il peso è una parte importante della conduzione | Medio: diventerà un'azione del prodiere |
 | **Onde e corrente** | Non ci sono, salvo piccoli disturbi nella lezione 2 | Cambiano la guida e la velocità | Basso |
 | **Il raddrizzamento** | Con un pulsante, in 3 secondi | È una manovra fisica che richiede equilibrio e tempo | Basso |
@@ -129,7 +129,7 @@ Il fiocco non è ancora nel gioco: vive in un prototipo separato, `sperimentale/
 | Il momento d'imbardata dovuto alle vele | Il motore gira solo col timone. Modellare il solo fiocco dava una barca sempre poggiera, contro la fonte | La randa fa orzare, il fiocco fa poggiare |
 | Una barca a due con più massa | Una deriva a due senza trapezio sarebbe meno stabile del prototipo; il trapezio sarebbe una seconda novità per il livello 2 | Una deriva a due ha più massa e un equipaggio di due |
 | L'upwash della randa sul fiocco | Non modellato: il fiocco non migliora la bolina | Il flusso della randa fa lavorare meglio il fiocco. La spiegazione «accelerazione come in un tubo» è sbagliata |
-| Lo stallo del timone, la planata | Non nel motore | Vedi sopra |
+| Lo stallo del timone; la planata (salvo la resistenza) | Non nel motore | Vedi sopra |
 
 **Il prototipo è sovrainvelato.** Con una raffica da 20 nodi si scuffia e a 15 nodi la virata non riesce. Il livello 2 va giocato con vento da leggero a medio (il limite esatto è una stima da misurare).
 

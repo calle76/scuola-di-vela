@@ -1,6 +1,6 @@
 # Laboratorio: a cosa serve ogni valore
 
-Guida per chi usa il laboratorio (versione 1.0.4, 16 ottobre 2026). La proposta tecnica, i limiti e i collaudi sono in `PROPOSTA-LABORATORIO.md`.
+Guida per chi usa il laboratorio (versione 1.0.4, aggiornata alla 1.0.6 il 16 ottobre 2026: esempi rimisurati con la resistenza della vasca). La proposta tecnica, i limiti e i collaudi sono in `PROPOSTA-LABORATORIO.md`.
 
 ## Come si apre
 
@@ -23,68 +23,65 @@ Si apre il gioco con `#lab` in fondo all'indirizzo, poi si ricarica la pagina. I
 
 ## I valori, uno per uno
 
-**Come si leggono gli esempi.** I numeri di ogni scheda sono stati misurati il 16 ottobre portando quel valore al minimo e poi al massimo, con tutti gli altri come oggi. Il vento è sempre di 10 nodi. Le prove sono queste:
+**Come si leggono gli esempi.** I numeri di ogni scheda sono stati misurati il 16 ottobre, sulla barca della 1.0.6, portando quel valore al minimo e poi al massimo, con tutti gli altri come oggi. Il vento è sempre di 10 nodi. Le prove sono queste:
 - **velocità:** quanto va la barca con la vela regolata al meglio, in tre andature: di bolina, al traverso e in poppa;
 - **virata:** quanto tempo serve per virare partendo a circa 4 nodi;
 - **marcia indietro:** si parte da fermi con la prua quasi controvento (10°), la barra al centro e la vela a metà; si misura dopo quanti secondi la barca va all'indietro a più di mezzo nodo.
 
-Oggi la barca fa: velocità 3,4 nodi di bolina, 5,2 al traverso, 3,5 in poppa; virata in 4,0 secondi; marcia indietro dopo 1,8 secondi, fino a 1,8 nodi.
+Oggi la barca fa: velocità 3,8 nodi di bolina, 6,0 al traverso, 4,1 in poppa; virata in 3,4 secondi; marcia indietro dopo 1,7 secondi, fino a 2,3 nodi.
 
 ### Peso e vela
 
 **`mass`: peso di barca e timoniere** (oggi 135 kg; da 90 a 250)
 - **Cos'è:** quanto pesa tutto insieme.
 - **Cosa cambia:** quanto in fretta la barca accelera e rallenta. **Non cambia la velocità massima**, perché nel gioco il peso non entra nella resistenza dell'acqua.
-- **Esempio:** con 90 kg la virata dura 6,6 s, perché la barca leggera perde velocità in fretta e arriva in fondo stentando; con 250 kg dura 2,9 s. Più pesante vuol dire anche che va indietro più tardi (3,3 s invece di 1,8).
+- **Esempio:** con 90 kg la virata dura 4,9 s, perché la barca leggera perde velocità in fretta e arriva in fondo stentando; con 250 kg dura 2,7 s. Più pesante vuol dire anche che va indietro più tardi (3,2 s invece di 1,7).
 
 **`sailArea`: superficie della vela** (oggi 7,0 m²; da 4 a 10)
 - **Cos'è:** quanti metri quadrati di vela.
 - **Cosa cambia:** quanta spinta dà il vento, ma anche quanto fa sbandare la barca.
-- **Esempio:** con 10 m² al traverso va a 5,9 nodi invece di 5,2, ma una raffica a 18 nodi la sbanda fino a 62°, cioè la fa scuffiare. Con 4 m² va a 4,0 nodi al traverso.
+- **Esempio:** con 10 m² al traverso va a 7,1 nodi invece di 6,0, ma una raffica a 18 nodi la sbanda fino a 62°, cioè la fa scuffiare. Con 4 m² va a 4,8 nodi al traverso.
 
 ### Resistenza dell'acqua (la velocità)
 
-Lo scafo frena in tre modi, e ognuno pesa di più a una velocità diversa. Sono i tre valori da toccare per la velocità, che secondo le fonti è troppo bassa con vento leggero e medio (`RICERCA-VELOCITA-VIRATA-RIPARTENZA.md`).
+Dalla 1.0.6 la resistenza dello scafo non è più una formula con tre numeri da tarare: è una **tabella misurata in vasca** su uno scafo vero (`PROPOSTA-VELOCITA.md`). I due cursori servono a provare uno scafo più o meno frenato di quello misurato.
 
-**`hullK1`: freno che conta soprattutto quando la barca va piano** (oggi 4; da 0 a 12)
-- **Cosa cambia:** la velocità con vento leggero, la ripartenza e la marcia indietro.
-- **Esempio:** con 0 al traverso va a 5,3 nodi invece di 5,2; con 12 va a 4,8. All'indietro arriva a 2,1 nodi con 0 e a 1,4 con 12.
+**`hullScale`: quanto frena lo scafo, rispetto alla vasca** (oggi 1; da 0,5 a 2,5)
+- **Cos'è:** un moltiplicatore. 1 è lo scafo misurato; 2 è più o meno la barca fino alla 1.0.5, che frenava circa il doppio.
+- **Cosa cambia:** la velocità in tutte le andature, la virata e la frenata.
+- **Esempio:** con 0,5 la velocità è 4,1 / 8,1 / 4,6 nodi (bolina / traverso / poppa); con 2,5 è 3,3 / 4,5 / 3,3, e la virata dura 4,3 s.
 
-**`hullK2`: freno principale, che cresce in fretta con la velocità** (oggi 12; da 4 a 30)
-- **Cosa cambia:** è il valore che pesa di più sulla velocità in tutte le andature.
-- **Esempio:** con 4 la velocità è 3,9 / 6,1 / 4,2 nodi (bolina / traverso / poppa); con 30 è 2,7 / 3,8 / 2,7.
-
-**`hullK4`: freno delle alte velocità** (oggi 0,9; da 0 a 3)
-- **Cos'è:** il «muro» oltre il quale la barca non accelera più.
-- **Cosa cambia:** soprattutto il traverso, che è l'andatura più veloce.
-- **Esempio:** con 0 il traverso sale a 6,2 nodi; con 3 scende a 4,3. La bolina cambia poco.
+**`appDA`: attrito di deriva e timone** (oggi 0,0049 m²; da 0 a 0,01)
+- **Cos'è:** il freno dell'acqua che scorre sulla deriva e sul timone, misurato come «area di resistenza» (dalla fonte).
+- **Cosa cambia:** pesa di più quando la barca va piano.
+- **Esempio:** con 0 la velocità è 4,0 / 6,4 / 4,3 nodi; con 0,01 è 3,6 / 5,5 / 3,9.
 
 ### Timone e virata
 
 **`rudderDragK`: freno del timone girato** (oggi 45; da 0 a 120)
 - **Cos'è:** quanto rallenta la barca quando la pala del timone è di traverso.
 - **Cosa cambia:** quanto si perde in virata. La velocità in linea retta non cambia.
-- **Esempio:** virata in 3,4 s con 0, in 5,3 s con 120.
+- **Esempio:** virata in 2,9 s con 0, in 4,5 s con 120.
 
 **`turnLen`: quanto stretta gira la barca** (oggi 1,05 m; da 0,5 a 2)
 - **Cos'è:** una lunghezza di calcolo: più è corta, più la barca gira in fretta con la stessa barra.
 - **Cosa cambia:** tutte le curve e le virate, **anche all'indietro**.
-- **Esempio:** virata in 1,4 s con 0,5; con 2 la virata non riesce.
+- **Esempio:** virata in 1,4 s con 0,5; con 2 dura 10,3 s.
 
 **`maxRudder`: quanto gira la pala a barra tutta** (oggi 30°; da 15 a 45)
 - **Cosa cambia:** quanto si può curvare al massimo. Vale anche all'indietro e cambia il disegno della barra.
-- **Esempio:** con 15° la virata non riesce; con 45° dura 2,5 s.
+- **Esempio:** con 15° la virata dura 9,5 s; con 45° dura 2,3 s.
 
 **`yawK`: prontezza della barca alla barra** (oggi 4; da 1 a 10)
 - **Cos'è:** quanto in fretta la barca comincia a girare dopo che si è mossa la barra. Basso = barca «pigra», che risponde in ritardo.
-- **Esempio:** virata in 4,6 s con 1, in 3,9 s con 10. Oltre il valore di oggi cambia poco.
+- **Esempio:** virata in 4,0 s con 1, in 3,3 s con 10. Oltre il valore di oggi cambia poco.
 
 ### Marcia indietro e angolo morto
 
 **`backMax`: velocità massima all'indietro** (oggi 1,2 m/s, cioè 2,3 nodi; da 0 a 2)
 - **Cos'è:** un tetto: la barca non va all'indietro più veloce di così.
 - **Cosa cambia:** quanto forte può andare indietro, **non quando comincia**.
-- **Esempio:** con 0 la barca non va mai all'indietro. Nella prova di oggi arriva al massimo a 1,8 nodi, cioè sotto il tetto: abbassarlo un po' non cambia niente, bisogna scendere sotto 0,9 m/s perché si veda. Per la marcia indietro che parte troppo presto contano di più `mass`, `sailArea`, `hullK1`, `ironsU` e `ironsYaw`.
+- **Esempio:** con 0 la barca non va mai all'indietro. Dalla 1.0.6, nella prova di oggi, la barca **arriva al tetto** (2,3 nodi): abbassarlo rallenta subito la marcia indietro. Per la marcia indietro che parte troppo presto contano di più `mass`, `sailArea`, `ironsU` e `ironsYaw`.
 
 Gli ultimi tre valori di questo gruppo lavorano insieme. Quando la barca è quasi ferma e la prua è vicina al vento, il gioco la fa girare da sola verso fuori, come fa una barca vera che il vento spinge di prua.
 
@@ -94,11 +91,11 @@ Gli ultimi tre valori di questo gruppo lavorano insieme. Quando la barca è quas
 
 **`ironsU`: sotto quale velocità** (oggi 0,5 m/s, circa 1 nodo; da 0,1 a 1)
 - **Cos'è:** la prua gira da sola solo se la barca va più piano di così.
-- **Esempio:** con 0,1, dopo 10 s la prua è a 12° dal vento; con 1, a 33°.
+- **Esempio:** con 0,1, dopo 10 s la prua è a 12° dal vento; con 1, a 33° (e all'indietro arriva solo a 1,6 nodi).
 
 **`ironsYaw`: con quanta forza gira** (oggi 6 gradi al secondo; da 0 a 15)
 - **Cos'è:** la velocità con cui la prua gira da sola, al massimo.
-- **Esempio:** con 0, dopo 10 s la prua è a 10° dal vento (resta piantata); con 15, a 36°.
+- **Esempio:** con 0, dopo 10 s la prua è a 10° dal vento (resta piantata); con 15, a 36° (e all'indietro arriva solo a 1,5 nodi).
 
 ### Quando la vela si sgonfia
 
@@ -106,11 +103,11 @@ Questi due valori cambiano anche i filetti, i messaggi dell'angolo morto e quind
 
 **`luffA0`: quanto vicino al vento la vela smette di portare** (oggi 27°; da 15 a 33)
 - **Cos'è:** con il vento che arriva da meno di questi gradi rispetto alla prua, la vela comincia a sgonfiarsi.
-- **Esempio:** con 15 la barca stringe di più e di bolina va a 3,8 nodi; con 33 va solo a 2,1, e la virata dura 4,9 s.
+- **Esempio:** con 15 la barca stringe di più e di bolina va a 4,5 nodi; con 33 va solo a 2,3, e la virata dura 3,9 s.
 
 **`luffW`: in quanti gradi la vela passa da sgonfia a piena** (oggi 7°; da 2 a 15)
 - **Cos'è:** con un valore piccolo il passaggio è netto; con uno grande è graduale.
-- **Esempio:** con 2, bolina a 3,8 nodi; con 15, a 2,3.
+- **Esempio:** con 2, bolina a 4,5 nodi; con 15, a 2,7.
 
 ## Cosa non c'è nel laboratorio
 

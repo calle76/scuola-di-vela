@@ -22,19 +22,19 @@ CORSA = """
   for (const [k, angs] of plan) { const m = sv.marks[k];
     for (const a of angs) { const b = (m.out + a) * D; pts.push({ x: m.x + Math.sin(b) * 13, y: m.y - Math.cos(b) * 13 }); } }
   const last = sv.marks[sv.marks.length - 1]; pts.push({ x: last.x, y: last.y });
-  let i = 0, side = 1, n = 0;
+  let i = 0, side = 1, n = 0, tieni = false;
   sv.fast(0);
   while (!sv.S.finished && n < 60 * 900) {
     const S = sv.S;
     if (n % 6 === 0 && i < pts.length) {
-      const p = pts[i]; if (Math.hypot(p.x - S.x, p.y - S.y) < 7) i++;
+      const p = pts[i]; if (Math.hypot(p.x - S.x, p.y - S.y) < 7 && i < pts.length - 1) i++;   // 1.0.6: arrivato all ultimo punto continua a puntarlo (prima smetteva di guidare e la barca, più veloce, girava in tondo)
       const q = pts[Math.min(i, pts.length - 1)];
       const brg = Math.atan2(q.x - S.x, -(q.y - S.y)) / D, rel = n180(brg - sv.twd);
       let want = brg;
-      if (Math.abs(rel) < 52) { if (Math.abs(rel) > 12) side = Math.sign(rel); want = sv.twd + side * 52; }
+      if (Math.abs(rel) < 52) { if (S.u > 1.7) tieni = false; if (Math.abs(rel) > 12 && !tieni) side = Math.sign(rel); want = sv.twd + side * 52; }
       const cur = n180(S.h - sv.twd);
       if (Math.abs(rel) > 168 && Math.abs(cur) > 90) want = sv.twd + Math.sign(cur || 1) * 168;   // in poppa resta sulle sue mure: niente strambate inutili
-      if (Math.abs(cur) < 48 && S.u < 0.8) want = sv.twd + Math.sign(cur || 1) * 95;
+      if (Math.abs(cur) < 48 && S.u < 0.8) { want = sv.twd + Math.sign(cur || 1) * 95; side = Math.sign(cur || 1); tieni = true; }   // 1.0.6: uscito dall'angolo morto tiene quella mura finché non ha 3,3 nodi (1,7 m/s), la velocità con cui la lezione 5 insegna a prepararsi a virare; prima tornava subito sull'altra e si ripiantava
       const err = n180(S.h - want);
       sv.ctl.tiller = Math.max(-1, Math.min(1, err / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1);
       const gybe = (Math.abs(cur) > 150 && Math.sign(n180(want - sv.twd)) !== Math.sign(cur)) || Math.abs(cur) > 174;   // sta per strambare, o è così in poppa che può strambare per sbaglio

@@ -94,8 +94,8 @@ TESTS=(
 # Cosa guardare per i collaudi "ambiguo" (una riga ciascuno, dal rapporto atteso in docs/COLLAUDI.md).
 nota() {
     case "$1" in
-        "polare.js") echo "confronta a mano con circa 3,4 nodi a 45°, 5,2 a 90°, 3,5 a 180° con 10 nodi" ;;
-        "raffiche_e_virate.js") echo "virata riuscita in circa 4s da 3,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire circa 55° (scuffia)" ;;
+        "polare.js") echo "confronta a mano con circa 3,8 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.6; fino alla 1.0.5 3,4 / 5,2 / 3,5)" ;;
+        "raffiche_e_virate.js") echo "virata riuscita in circa 3,3 s da 3,9 nodi e in circa 7,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire circa 55° (dalla 1.0.6)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
         "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.9 Ripartire e 2.4 Barra sottovento dopo un colpo lungo, 6.2 Assorbire una raffica a mani ferme e dopo un colpo lungo; esito in docs/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
         "collaudo_pilota_lezioni.py (semi 1-100)") echo "«guidando» non completato al più 1 volta su 100 per passo; «da guardare» con i casi noti dell'esito in docs/PROPOSTA-PILOTA-LEZIONI.md (1.9, 1.11, 1.12, 2.4, 2.5, 5.8, 6.2, 6.3): numeri molto diversi o passi nuovi sono un problema" ;;
@@ -108,7 +108,7 @@ nota() {
         "collaudo_strambata.py (15 nodi)") echo "scuffia sempre" ;;
         "collaudo_pannello.py (1360x650)") echo "«pannello che eccede: nessuno» e «eccesso massimo del pannello (pixel): 0» (dalla 1.0.2 nessun passo sfora; qualunque eccesso è un problema nuovo); riga dei tasti 0 px, «errori: []» e «caratteri del gioco caricati: True»" ;;
         "collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
-        "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): valori del PC di Ale: prove 1-4 a 92,1/142,6/196,4/333,3 s per ogni vento, 8 su 8; prova 5 finite 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
+        "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): dalla 1.0.6 (barca nuova e pilota corretto), valori della sandbox: prove 1-4 a 79,6/124,2/161,8/285,1 s per ogni vento, 8 su 8; prova 5 finite 23 su 24, mediana 304,6 s, con circa 7 corse lunghe (556-897 s) da capire; fino alla 1.0.5, sul PC di Ale: 92,1/142,6/196,4/333,3, prova 5 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
         "collaudo_fantasma.py") echo "la prova deve completarsi e il fantasma risultare salvato" ;;
         "collaudo_competizione.py (tastiera)") echo "riga «ESITO: OK» (piazzamento salvato con avversari, niente con «nessuno»); «ESITO: NON VALIDO» vuol dire che il pilota da tastiera non è arrivato in fondo: non è un errore del gioco, si rilancia" ;;
         "collaudo_registro.py") echo "riga finale «ESITO: 15 su 15 verifiche riuscite»" ;;

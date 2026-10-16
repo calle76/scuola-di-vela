@@ -9,9 +9,9 @@ const BOAT = {
   mass: 135,          // kg, barca + timoniere
   sailArea: 7.0,      // m²
   rho: 1.225,
-  hullK1: 4,          // resistenza lineare ~ k1·u (1.0.4: era scritto nella formula)
-  hullK2: 12,         // resistenza ~ k2·u²
-  hullK4: 0.9,        // + k4·u⁴ (limita la velocità)
+  hullScale: 1,       // 1.0.6: moltiplica l'area di resistenza dello scafo misurata in vasca (HULL_DA); 1 = la vasca, solo per il laboratorio
+  appDA: 0.0049,      // m², attrito di deriva e timone come area di resistenza (Day 2017, fig. 11, bolina)
+  rhoW: 1025,         // kg/m³, acqua di mare
   rudderDragK: 45,
   foilK: 520,         // resistenza laterale della deriva
   maxBoom: 85,
@@ -33,6 +33,19 @@ const BOAT = {
   ironsU: 0.5,        //   e sotto questa velocità (m/s) la prua poggia da sola
   ironsYaw: 6         //   fino a questi gradi al secondo
 };
+
+// 1.0.6: resistenza dello scafo dritto da una tabella misurata in vasca, al posto di k1·u + k2·u² + k4·u⁴ (docs/PROPOSTA-VELOCITA.md).
+// Area di resistenza (resistenza / ½ρv², m²) di uno scafo da 4,2 m di circa 160 kg, senza deriva né timone, letta a occhio da
+// A. H. Day, «Performance prediction for sailing dinghies», Ocean Engineering 136, 2017, fig. 2 (= Day e Nixon 2014, fig. 4, curva 80 kg).
+// Sotto i 2 nodi e sopra i 9 l'area resta quella dell'estremo: lì non ci sono misure.
+const HULL_DA = [[2, 0.0125], [2.5, 0.01262], [3, 0.0132], [3.5, 0.01443], [4, 0.01567], [4.5, 0.01775], [5, 0.0207], [5.5, 0.0229],
+  [6, 0.02405], [6.5, 0.02455], [7, 0.02432], [7.5, 0.02325], [8, 0.02205], [8.5, 0.02122], [9, 0.0206]]; // [nodi, m²]
+function hullDrag(u){ // N, con il segno di u (all'indietro si usa la stessa tabella)
+  const kn = Math.abs(u) * 1.943844, T = HULL_DA;
+  let a = T[kn <= T[0][0] ? 0 : T.length - 1][1];
+  for (let i = 1; i < T.length; i++) if (kn > T[i - 1][0] && kn <= T[i][0]){ a = T[i - 1][1] + (T[i][1] - T[i - 1][1]) * (kn - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); break; }
+  return (a * BOAT.hullScale + BOAT.appDA) * 0.5 * BOAT.rhoW * u * Math.abs(u);
+}
 
 function CL(a){ // a: angolo di incidenza (gradi, >=0)
   if (a <= 0) return 0;
@@ -65,7 +78,7 @@ function step(S, C, E, dt){
   const drive = L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
   const side = L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento
   const rud = C.tiller * BOAT.maxRudder;
-  const res = BOAT.hullK1 * S.u + BOAT.hullK2 * S.u * Math.abs(S.u) + BOAT.hullK4 * S.u ** 3 * Math.sign(S.u) * Math.abs(S.u) +
+  const res = hullDrag(S.u) +
               BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   S.u += (drive - res * heelDrag) / BOAT.mass * dt;

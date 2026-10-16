@@ -18,7 +18,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 2. Tutto sempre giocabile in modalità libera.
 3. Gli aiuti si possono disattivare.
 4. Onestà sui contenuti: ogni affermazione nautica va verificata e le semplificazioni si dichiarano.
-5. Nessun marchio di classi o costruttori nel gioco, nessun titolo che sembri ufficiale (il logo e il nome «Scuola Vela FIV» sono marchi registrati). Dati esterni solo con licenza libera e citazione. Si parafrasa, non si copiano testi o tabelle delle fonti. «Brevetto», mai «patente»; sempre «nessun valore legale».
+5. Nessun marchio di classi o costruttori nel gioco, nessun titolo che sembri ufficiale (il logo e il nome «Scuola Vela FIV» sono marchi registrati). Dati esterni solo con licenza libera e citazione (eccezione dal 16 ottobre 2026: valori numerici misurati, letti da pubblicazioni scientifiche e citati, si possono usare nel motore). Si parafrasa, non si copiano testi o tabelle delle fonti. «Brevetto», mai «patente»; sempre «nessun valore legale».
 6. Solo computer con tastiera.
 
 ## Come si lavora

@@ -32,7 +32,7 @@ from playwright.async_api import async_playwright
 
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 STORE = "scuolaVelaSim.v1"
-CHIAVI = ["r0.2", "r1.2"]   # recK("r0"), recK("r1"): KEYV in index.html
+CHIAVI = ["r0.3", "r1.3"]   # recK("r0"), recK("r1"): KEYV in index.html
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
@@ -266,8 +266,8 @@ async def parte2():
                 if race: no(f"«nessuno» senza #collaudo: progress.race non doveva esserci, trovato {race}")
                 else: print("  OK  nessun piazzamento salvato", flush=True)
             else:
-                v = (race or {}).get("r0.2:principianti")
-                if not v or set(v) != {"pos", "n", "pulita"} or v["n"] != 4: no(f"principianti senza #collaudo: piazzamento atteso in r0.2:principianti, trovato {race}")
+                v = (race or {}).get("r0.3:principianti")
+                if not v or set(v) != {"pos", "n", "pulita"} or v["n"] != 4: no(f"principianti senza #collaudo: piazzamento atteso in r0.3:principianti, trovato {race}")
                 else: print(f"  OK  piazzamento salvato: {v}", flush=True)
         await b.close()
     print("ESITO: " + ("FALLITO" if errori else "OK" if validi else "NON VALIDO"), flush=True)

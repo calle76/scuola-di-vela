@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0.5"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.6"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -96,8 +96,8 @@
   let [STORE, GHOST_STORE] = KEYS(modo);
   // record e fantasmi dei percorsi cambiati usano chiavi nuove; i completamenti restano.
   // 0.14: giro di boa dal lato giusto (prove 4 e 5, regate). 0.19: linea d'arrivo in tutte le prove.
-  const KEYV = { m0: "m0.2", m1: "m1.2", m2: "m2.2", m3: "m3.3", m4: "m4.4", r0: "r0.2", r1: "r1.2" };
-  const OLD_M = ["m0", "m1", "m2", "m3", "m4", "m3.2", "m4.3"]; // chiavi delle prove prima della 0.19: si cancellano al primo avvio
+  const KEYV = { m0: "m0.3", m1: "m1.3", m2: "m2.3", m3: "m3.4", m4: "m4.5", r0: "r0.3", r1: "r1.3" }; // 1.0.6: barca nuova (resistenza dalla vasca), i tempi di prima non sono confrontabili
+  const OLD_M = ["m0", "m1", "m2", "m3", "m4", "m3.2", "m4.3", "m0.2", "m1.2", "m2.2", "m3.3", "m4.4", "r0.2", "r1.2"]; // chiavi di prima della 0.19 e (1.0.6) della barca vecchia: si cancellano al primo avvio
   let wipeNote = false;
   const recK = k => KEYV[k] || k;
   let progress;
@@ -232,7 +232,7 @@
           ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>`}
         </section>
       </div>
-      <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
+      <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
     $("goEsame").onclick = openEsame;

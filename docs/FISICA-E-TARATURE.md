@@ -21,7 +21,7 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | --- | --- | --- |
 | `mass` | 135 kg | Barca più timoniere |
 | `sailArea` | 7,0 m² | Superficie della randa |
-| `hullK1`, `hullK2`, `hullK4` | 4, 12, 0,9 | Resistenza dello scafo (lineare, quadratica, quarta potenza; `hullK1` era scritto nella formula fino alla 1.0.3) |
+| `HULL_DA` (tabella in `motore.js`), `hullScale`, `appDA`, `rhoW` | vasca, 1, 0,0049 m², 1025 kg/m³ | **Dalla 1.0.6** resistenza dello scafo = (area di resistenza della vasca × `hullScale` + `appDA`) × ½ ρ v·\|v\|. Tabella misurata su uno scafo Laser da circa 160 kg, da 2 a 9 nodi (F16, F17 fig. 2), costante fuori da quell'intervallo; `appDA` = attrito di deriva e timone (F17 fig. 11, bolina). Fino alla 1.0.5: `hullK1`·u + `hullK2`·u² + `hullK4`·u⁴ con 4, 12, 0,9, cioè da 1,45 a 2,5 volte la vasca. Proposta e misure in `PROPOSTA-VELOCITA.md` |
 | `rudderDragK` | 45 | Resistenza della barra angolata |
 | `foilK` | 520 | Resistenza laterale della deriva |
 | `minBoom`, `maxBoom` | 14°, 85° | Escursione del boma |
@@ -45,13 +45,16 @@ Misurati con i collaudi in `tests/`.
 
 **Velocità con vento di 10 nodi** (vela regolata al meglio):
 
-| Angolo dal vento | 30° | 35° | 40° | 45° | 48° | 60° | 90° | 110° | 135° | 150° | 180° |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Nodi | 0 | 1,1 | 2,3 | 3,4 | 4,0 | 4,6 | 5,2 | 5,0 | 4,2 | 3,8 | 3,5 |
+| Angolo dal vento | 30° | 35° | 40° | 45° | 48° | 50° | 60° | 90° | 110° | 135° | 150° | 180° |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Nodi (dalla 1.0.6) | 0 | 1,3 | 2,6 | 3,8 | 4,4 | 4,8 | 5,4 | 6,0 | 5,7 | 5,0 | 4,4 | 4,1 |
+| Nodi (fino alla 1.0.5) | 0 | 1,1 | 2,3 | 3,4 | 4,0 | — | 4,6 | 5,2 | 5,0 | 4,2 | 3,8 | 3,5 |
 
-Sotto circa 33° la barca non avanza, tra 33° e 40° arranca: l'angolo morto effettivo di questa deriva è di circa 35–40° per lato, coerente con le dispense di vela (circa 35° per lato per le derive, 45° come convenzione didattica). La velocità utile controvento è massima intorno a 45–48°.
+Sotto circa 33° la barca non avanza, tra 33° e 40° arranca: l'angolo morto effettivo di questa deriva è di circa 35–40° per lato, coerente con le dispense di vela (circa 35° per lato per le derive, 45° come convenzione didattica). La velocità utile controvento è massima intorno a 50° (45–48° fino alla 1.0.5).
 
-**Virata** (partendo di bolina): a 3,9 nodi riesce in circa 4 secondi; a 1,9 nodi fallisce vicino alla prua al vento; quasi ferma, fallisce e la barca arretra.
+**Confronto con le fonti (1.0.6, rapporti, non soglie):** VMG contro le previsioni di Day 2017 (F17 fig. 8, stessa vasca): di poppa dall'8 al 10% sotto con 6, 10 e 15 nodi; di bolina −22% con 6 nodi, −14% con 10, +5% con 15. Contro le misure di Binns (F10, da F17): con 12 nodi −4% a 60° e −6% al traverso, −27% a 42°, dal −21 al −32% sottovento (misure con del surf). Le cause probabili (vela che non stringe con poco vento, resistenza indotta assente, timoniere che raddrizza troppo bene) sono in `PROPOSTA-VELOCITA.md` §4.
+
+**Virata** (partendo di bolina, dalla 1.0.6): a 3,9 nodi riesce in 3,3 secondi; a 1,9 nodi riesce in 7,6 secondi; quasi ferma, fallisce e la barca arretra. Fino alla 1.0.5: 4,0 secondi, e a 1,9 nodi falliva.
 
 **Raffica improvvisa** da 10 nodi, di bolina con vela regolata:
 
@@ -99,7 +102,9 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 
 ## Semplificazioni dichiarate
 
-- Nessuna planata: con vento fresco la barca è più lenta di una deriva vera.
+- Planata solo nella resistenza (dalla 1.0.6): oltre i 6,5 nodi l'area di resistenza misurata in vasca cala, come in una barca che comincia a planare; sopra i 9 nodi resta costante (nessuna misura). Non ci sono assetto, onde né cambio di comportamento.
+- Nessuna resistenza indotta: la spinta laterale produce solo scarroccio, mai freno (con 10 nodi di bolina vale circa il 14% della resistenza, F17). Di bolina con vento forte la barca va un poco troppo forte.
+- La deriva resta sempre tutta giù, anche in poppa.
 - Una sola vela, niente fiocco.
 - Timoniere automatico: nella realtà gestire il peso è una parte importante della conduzione.
 - Niente onde né corrente (salvo i piccoli disturbi di rotta nell'esercizio della lezione 2).
@@ -154,4 +159,5 @@ Riassunto in parole semplici, al 4 ottobre 2026, con le tappe A, B e C chiuse. I
 | **Il peso dell'equipaggio come comando** | Oggi il timoniere si sporge da solo con 0,9 s di ritardo. Nella realtà gestire il peso è una parte importante della conduzione, ed è il contenuto della lezione 2.5 | Tocca motore e pannello, non le costanti: si farà con la barca a due |
 | **L'upwash della randa sul fiocco** (il flusso ascendente che fa rendere di più il fiocco di bolina) | Non modellato. Di conseguenza il fiocco non migliora la bolina: l'ottimo resta a 50° invece dei 48° della barca a una vela | Fonte F5. Attenzione: la spiegazione corretta è l'upwash, **non** l'accelerazione «Venturi» nella fessura, che le fonti dicono sbagliata |
 | **Lo stallo del timone** | La pala del motore non stalla mai: barra a fondo (30°) fa girare 1,93 volte più in fretta che a 15°, ed è sempre la scelta migliore. La fonte mette lo stallo oltre circa 15° | Una fonte, una barca. Cambiarlo tocca tutte le virate e tutti i tempi del gioco: non è una modifica al prototipo |
-| **La planata** | Non c'è nel motore: sopra gli 8 nodi circa le velocità non possono essere realistiche | Fonte F4. Sta al livello 3 |
+| **La planata** | Dalla 1.0.6 c'è solo nella resistenza (tabella della vasca fino a 9 nodi, poi costante); niente assetto né onde | Fonti F4, F16, F17. Il resto sta al livello 3 |
+| **La resistenza indotta** | Non c'è: la spinta laterale non frena | F17 (§3.4, fig. 11). Compito successivo alla resistenza dello scafo |

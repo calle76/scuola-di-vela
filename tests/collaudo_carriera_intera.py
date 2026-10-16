@@ -20,7 +20,7 @@ CAR, LIB = "scuolaVelaCarriera.v1", "scuolaVelaSim.v1"
 CORSA_REGATA = re.search(r'CORSA = """(.*?)""" % STORE', leggi("collaudo_competizione.py"), re.S).group(1) % CAR
 BANCHE = re.search(r"const ESAME = \[.*?\n  \];", SRC, re.S).group(0) + "\n" + re.search(r"const QUIZ = \[.*?\n  \];", SRC, re.S).group(0)
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]
-MK = ["m0.2", "m1.2", "m2.2", "m3.3", "m4.4"]
+MK = ["m0.3", "m1.3", "m2.3", "m3.4", "m4.5"]
 GIUSTO = [60, 0, -60]; PIANI = [[], [], [], [[0, GIUSTO]]]   # come in collaudo_fasce.py
 
 # passi pratici guidati, con le azioni di collaudo_lezioni.py: (lezione, passo da 0) -> lista di azioni dentro la pagina
@@ -85,7 +85,7 @@ async def main():
             if tent[r] >= 3: break
             tent[r] += 1
             # il seme si fissa nello stesso evaluate che apre la regata: fra due evaluate il disegno consuma Math.random (0.21.1)
-            x = await pg.evaluate(f"([a, x]) => {{ __seed(x); return ({CORSA_REGATA})(a); }}", [[r, tent[r], "principianti", ["r0.2", "r1.2"][r] + ":principianti"], 100 + 10 * r + tent[r]])
+            x = await pg.evaluate(f"([a, x]) => {{ __seed(x); return ({CORSA_REGATA})(a); }}", [[r, tent[r], "principianti", ["r0.3", "r1.3"][r] + ":principianti"], 100 + 10 * r + tent[r]])
             if x["moved"] == 0: nonvalido.append(f"regata {r + 1}: il sostituto non ha mosso la barra")
             pos = x["saved"]["pos"] if x["saved"] else None
             storia.append((r + 1, tent[r], pos)); best[r] = max(best[r], 5 - pos if pos else 0)
@@ -118,7 +118,7 @@ async def main():
         fas = lambda i: next((3 - k for k in range(3) if p["best"].get(MK[i]) and p["best"][MK[i]] <= BANDS[i][k]), 0)
         abil = sum(fas(i) + (1 if p["clean"].get(MK[i]) else 0) for i in range(5))
         cono = sum(2 if p.get("quiz", {}).get(f"q{i}", -1) / NQ[i] >= 0.8 else 1 if p.get("quiz", {}).get(f"q{i}", -1) / NQ[i] >= 0.6 else 0 for i in range(6))
-        comp = sum(max([5 - v["pos"] for k, v in p.get("race", {}).items() if k.startswith(c + ":") and k.split(":")[1] in ("principianti", "esperti") and v["n"] == 4] or [0]) for c in ("r0.2", "r1.2"))
+        comp = sum(max([5 - v["pos"] for k, v in p.get("race", {}).items() if k.startswith(c + ":") and k.split(":")[1] in ("principianti", "esperti") and v["n"] == 4] or [0]) for c in ("r0.3", "r1.3"))
         esp = sum(1 for i in range(6) if p["done"].get(f"l{i}"))
         nel = [await pg.inner_text(f"[data-m='{k}']") for k in ("abil", "cono", "comp", "esp")]
         chk("I2", nel == [f"{abil} / 20", f"{cono} / 12", f"{comp} / 8", f"{esp} / 6"], f"I2: libretto {nel}, calcolati {abil}, {cono}, {comp}, {esp}")

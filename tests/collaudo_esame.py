@@ -131,7 +131,7 @@ async def main():
         await pg.add_init_script(SEED_JS % SEME)
         await pg.goto(BASE); await pg.wait_for_timeout(300)
         # progressi già presenti, per vedere che l'esame non li tocca
-        await pg.evaluate("""() => localStorage.setItem('scuolaVelaSim.v1', JSON.stringify({done: {l0: true, m0: true}, best: {'m0.2': 90}, clean: {}, quiz: {q0: 5, q2: 4}}))""")
+        await pg.evaluate("""() => localStorage.setItem('scuolaVelaSim.v1', JSON.stringify({done: {l0: true, m0: true}, best: {'m0.3': 90}, clean: {}, quiz: {q0: 5, q2: 4}}))""")
         await pg.reload(); await pg.wait_for_timeout(300)
         await pg.evaluate(DATI_JS, DATI_SRC)
         prima = await pg.evaluate("JSON.stringify(Object.fromEntries(Object.keys(localStorage).sort().map(k => [k, localStorage.getItem(k)])))")

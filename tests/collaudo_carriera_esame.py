@@ -11,14 +11,14 @@ INDEX = QUI.parent / "index.html"; BASE = INDEX.as_uri(); import sorgente; SRC =
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]
 BANCHE = re.search(r"const ESAME = \[.*?\n  \];", SRC, re.S).group(0) + "\n" + re.search(r"const QUIZ = \[.*?\n  \];", SRC, re.S).group(0)
 CAR, LIB, MODO = "scuolaVelaCarriera.v1", "scuolaVelaSim.v1", "scuolaVelaModo"
-MK = ["m0.2", "m1.2", "m2.2", "m3.3", "m4.4"]
+MK = ["m0.3", "m1.3", "m2.3", "m3.4", "m4.5"]
 NQ = []   # domande per ripasso, lette dalla banca QUIZ nella pagina (main)
 fail = []; casi = {}
 def chk(parte, c, m):
     casi[parte] = casi.get(parte, 0) + 1
     if not c: fail.append(m); print("FALLITO:", m, flush=True)
 
-def carriera(regate=(("r0.2", 3), ("r1.2", 3)), esame=None):
+def carriera(regate=(("r0.3", 3), ("r1.3", 3)), esame=None):
     """meriti a posto come il giocatore A del §12 (12/8/4/6 = 30), salvo cambiare le regate"""
     p = {"done": {f"l{i}": True for i in range(6)}, "best": {MK[i]: BANDS[i][1] for i in range(5)}, "clean": {MK[0]: True, MK[1]: True},
          "quiz": {f"q{i}": NQ[i] for i in range(4)}}   # quattro ripassi tutti giusti: 8 punti
@@ -125,10 +125,10 @@ async def main():
         chk("E2", not errs, f"E2-E3: errori {errs}"); await ctx.close()
 
         # ---- E4: l'ultima condizione è una regata (esame già superato); la scena compare una volta sola
-        p = carriera(regate=(("r0.2", 3),), esame={"superato": True, "voto": 18, "data": "2026-10-14"})
+        p = carriera(regate=(("r0.3", 3),), esame={"superato": True, "voto": 18, "data": "2026-10-14"})
         ctx, pg, errs = await pagina(b, p)
         chk("E4", not await aperto(pg, "attest") and "Competizione" in await pg.inner_text("#libManca"), "E4: manca Competizione, niente attestato")
-        p["race"]["r1.2:principianti"] = {"pos": 2, "n": 4, "pulita": False}   # il piazzamento che mancava, come lo scrive il gioco
+        p["race"]["r1.3:principianti"] = {"pos": 2, "n": 4, "pulita": False}   # il piazzamento che mancava, come lo scrive il gioco
         await pg.evaluate("d => localStorage.setItem('scuolaVelaCarriera.v1', d)", json.dumps(p)); await pg.reload(); await pg.wait_for_timeout(300)
         chk("E4", await aperto(pg, "attest") and "18 su 20" in await pg.inner_text("#atBody"), "E4: la scena compare con l'ultimo merito")
         await pg.click("#atClose")

@@ -37,6 +37,8 @@ Verificare un'idea prima di portarla in `index.html`: se la fisica di una cosa n
 
 La manovra a farfalla (fiocco dal lato opposto) non è nel prototipo.
 
+**Dalla 1.0.6 il prototipo non è più allineato al gioco:** ha una copia sua del motore, con la resistenza dello scafo della 1.0.5 (`hullK2`·u² + `hullK4`·u⁴ + 4·u), mentre il gioco usa la tabella della vasca (`PROPOSTA-VELOCITA.md`). La regola «la barca senza fiocco è identica al gioco» vale per il motore fino alla 1.0.5; il prototipo si allinea quando si riprende il fiocco.
+
 Sul C2: misurato fuori dal motore che il momento del **solo** fiocco farebbe una barca sempre poggiera, il contrario di quello che dicono le fonti, e ingiocabile (circa 3 °/s di scarto con la barra al centro). Il momento di imbardata riguarda tutta la barca e non si aggiunge a metà. Numeri in `misure_tappaC2.txt`, ragioni in `FISICA-E-TARATURE.md`.
 
 Sul C3: deciso di **non** modellare il fiocco a collo. In un motore cinematico sarebbe una taratura (due costanti senza fonte e il verso scritto nel codice), il meccanismo sostituisce l'equipaggio e andrebbe rifatto con il prodiere della barca a due, e il guadagno misurato è modesto: da 75 a 78 virate riuscite su 84. In virata il fiocco conta solo per la resistenza della vela che sbatte. Il modello provato, i criteri e tutti i numeri restano in `PROPOSTA-C3.md`, `banco_tappaC3.js` e `banco_tappaC3.txt` come registro della decisione.

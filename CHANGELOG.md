@@ -15,6 +15,51 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.0.6 — la resistenza dello scafo misurata in vasca
+
+Del 16 ottobre 2026. **La barca cambia:** è più veloce e vira meglio. Proposta (due stesure, due revisioni in chat), criteri ed esito in `docs/PROPOSTA-VELOCITA.md`. Scelta di Ale: si tara la barca **condotta bene**.
+
+- **Cosa cambia nel motore.** La resistenza dello scafo non è più `hullK1`·u + `hullK2`·u² + `hullK4`·u⁴ (4, 12, 0,9), che frenava da 1,45 a 2,5 volte il vero. Ora è una **tabella misurata in vasca** su uno scafo da 4,2 m (F16, F17 fig. 2, letta a occhio), da 2 a 9 nodi, più l'attrito di deriva e timone (`appDA` 0,0049 m², F17 fig. 11). Sotto i 2 nodi e sopra i 9 l'area resta quella dell'estremo (nessuna misura). `hullK1`, `hullK2`, `hullK4` non esistono più; nel laboratorio ci sono `hullScale` (1 = la vasca) e `appDA`.
+- **Errore trovato dalla chat nella prima stesura:** il «+20% per deriva e timone» era una lettura sbagliata di Day 2017. Quel 20% vale solo di bolina, e per il 14% è resistenza indotta, che nel motore non c'è.
+- **Regola sui dati (Ale):** in `PROGETTO.md`, `FONTI-PUBBLICHE.md` e `CLAUDE.md`, i valori numerici misurati, letti da pubblicazioni scientifiche e citati, si possono usare nel motore. Senza questa eccezione la tabella non poteva entrare: una fonte non dichiara licenza, l'altra è CC BY-NC-ND.
+- **Misure** (vento 10 nodi salvo dove detto):
+  - polare 3,8 / 6,0 / 4,1 nodi a 45° / 90° / 180° (era 3,4 / 5,2 / 3,5); con 15 nodi al traverso 9,5 nodi, oltre la tabella;
+  - virata da 3,9 nodi in 3,3 s (era 4,0); da 1,9 nodi riesce in 7,6 s (prima falliva);
+  - raffiche quasi uguali (28°, 42°, 55° con 16, 18, 20 nodi);
+  - retromarcia fino a 2,3 nodi (era 1,8), che arriva al tetto `backMax`: da guardare nel compito sulla retromarcia;
+  - **controlli di esecuzione OK:** resistenza uguale alla tabella (scarto 0,000%), polare e VMG uguali alla proposta;
+  - nessun conto in errore con i cursori agli estremi.
+- **Rapporti, non soglie:**
+  - VMG contro Day 2017 (stessa vasca, quindi non prova lo scafo): di poppa −10 / −8 / −9% con 6 / 10 / 15 nodi; di bolina −22 / −14 / **+5%**;
+  - contro le misure di Binns con 12 nodi: −4% a 60°, −6% al traverso, −27% a 42°, dal −21 al −32% sottovento (misure con del surf);
+  - con 6 nodi, contro le medie GPS di Caraballo: −36% di bolina, −16% a 120°, −23% in poppa;
+  - con la curva della vasca da 70 kg invece che da 80, la barca andrebbe dallo 0,4 al 3% più forte.
+
+  Cause probabili degli scarti di bolina (vela che non stringe con poco vento, resistenza indotta assente, timoniere che raddrizza troppo bene): compiti separati.
+- **Prove:**
+  - fasce delle medaglie ritarate con la regola di sempre: 1 [80, 100, 130], 2 [125, 155, 200], 3 [165, 205, 265], 4 [290, 365, 465], 5 [305, 380, 490];
+  - tempi del pilota 79,6 / 124,2 / 161,8 / 285,1 s; prova 5 finita 23 volte su 24, mediana 304,6 s. 7 corse su 24 sono lunghe (556-897 s): il pilota a tratti si pianta, da capire.
+- **Record azzerati** (Ale: «tutti i miei salvataggi possono sempre essere cancellati»). Chiavi `KEYV` nuove; le chiavi vecchie si cancellano al primo avvio, con il messaggio «La barca o le prove sono cambiate». I piazzamenti delle regate restano salvati ma non si leggono più.
+- **Lezione 4, passo «Da fermi»:** soglia da 2 a **2,5 nodi** (testo e condizione), scelta di Ale. Con la resistenza giusta, vela tutta lascata al traverso, la barca si assesta a 2,1 nodi, e il passo era diventato impossibile (0 corse su 20).
+- **Pilota delle lezioni, semi 21-100** (tra parentesi stamattina):
+  - **migliora** «Accelerando», uno dei sei passi da correggere: nessuna ripresa (80) e 6,4 s (13,7);
+  - «Ripartire» resta già fatto dopo un colpo lungo 29 volte (27);
+  - «Assorbire una raffica» si completa a mani ferme 46 volte (56), ma guidando 25 su 34 (24 su 24);
+  - **peggiorano:**
+    - «Orzare e l'angolo morto», guidando 74 su 80 (80) e 16,3 s (5,7): la barca scivola più a lungo e a volte passa il vento;
+    - «La scuffia» a mani ferme 28 volte (18);
+    - «Strambata controllata» 76 su 80 (79);
+    - «Troppo cazzata» dopo un colpo lungo 7 (4);
+    - «Barra sopravento» dopo un colpo lungo 5 (2).
+
+  Tutto da riportare nelle correzioni dei passi.
+- **Collaudi corretti:**
+  - pilota di `collaudo_fasce.py` (e copia in `collaudo_impronta.py`): arrivato all'ultimo punto continua a puntarlo; uscito dall'angolo morto tiene la mura finché non ha 3,3 nodi, invece che per un tempo fisso (osservazione di Ale: chi naviga guarda la velocità, non conta i secondi). Sulla barca della 1.0.5 ridà i tempi di prima entro 2,2 s;
+  - chiavi dei record e tempi dell'oro scritti a mano aggiornati in `collaudo_carriera.py`, `collaudo_carriera_esame.py`, `collaudo_carriera_intera.py`, `collaudo_competizione.py`, `collaudo_contatto_senza_colpa.py`, `collaudo_esame.py`, `collaudo_libretto.py`, `collaudo_linea.py` (che ora controlla anche la cancellazione delle chiavi della 1.0.5), `collaudo_pannello.py`, `prova_carriera.py`;
+  - `collaudo_laboratorio.py` usa `hullScale` al posto di `hullK2`.
+- **Collaudi lanciati qui, OK:** regate (bastone e raffiche, semi 1-6: 18 arrivi su 18, nessuna BLOCCATA), partenze, fasce, laboratorio, pannello 1360×650 e 1360×768 (eccesso 0, caratteri veri), lezioni, carriera, carriera intera, carriera con esame, competizione veloce, linea, libretto, esame, contatto senza colpa, fantasma, suggerimento, strambata 6 e 15 nodi (come prima: scuffia a 15 nodi 10 su 10), pilota senza `#collaudo` 3 su 3.
+- **Prototipo del fiocco:** resta con la resistenza della 1.0.5 (`SPERIMENTALE.md`).
+
 ## 1.0.5 — i caratteri dentro il progetto
 
 Del 16 ottobre 2026. **Il gioco appare identico al pixel**, ma non chiede più niente a Google. Su consiglio della chat del progetto: chi gioca non manda più il proprio indirizzo a Google (tema GDPR, se il gioco viene pubblicato) e il gioco funziona anche senza rete.

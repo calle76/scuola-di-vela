@@ -149,8 +149,8 @@
       text: ["Quando vai in bicicletta senti vento in faccia anche in una giornata calma: è il vento creato dal tuo movimento. In barca succede lo stesso.",
              "Il vento che senti a bordo, e su cui lavora la vela, è il <em>vento apparente</em>: la somma del <em>vento reale</em> e del vento dovuto al moto della barca. Freccia bianca: reale. Freccia gialla, e segnavento in cima all'albero: apparente."] },
     { title: "Da fermi", sheet: true, hud: 2, arrows: true, hintKind: "none",
-      text: ["Lasca tutta la vela (freccia ↓) e aspetta che la barca rallenti sotto i 2 nodi. Guarda le due frecce e i numeri nel pannello."],
-      cond: I => I.kn < 2, hold: 1.5,
+      text: ["Lasca tutta la vela (freccia ↓) e aspetta che la barca rallenti sotto i 2,5 nodi. Guarda le due frecce e i numeri nel pannello."],
+      cond: I => I.kn < 2.5, hold: 1.5, // 1.0.6: era 2 nodi; con la resistenza della vasca, vela tutta lascata al traverso, la barca si assesta a 2,1 nodi
       done: "Con la barca quasi ferma, vento apparente e vento reale quasi coincidono: direzione e forza simili. Da ferma sarebbero identici." },
     { title: "Accelerando", sheet: true, hud: 2, arrows: true, hintKind: "tt",
       text: ["Ora cazza finché la vela è regolata e lascia accelerare la barca oltre i 4 nodi. Guarda la freccia gialla."],
@@ -246,27 +246,28 @@
   // Prove: geometria descritta con il vento da nord (m), poi ruotata secondo il vento della prova.
   // bands: tempi massimi in secondi per oro, argento e bronzo (0.16), tarati con tests/collaudo_fasce.py:
   // oro = tempo del pilota automatico arrotondato ai 5 s superiori, argento +25%, bronzo +60%.
+  // 1.0.6: ritarate per la barca nuova (resistenza dalla vasca) e il pilota corretto: argento e bronzo arrotondati ai 5 s più vicini.
   // Dalla 0.19 l'ultima voce di marks è una linea d'arrivo (FIN_HALF m per lato, perpendicolare all'ultimo lato), non una boa da raggiungere.
   const MISSIONS = [
     { title: "Al traverso", desc: "Taglia l'arrivo con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
       text: "Il vento non arriva più da nord: guarda la freccia. L'arrivo è al traverso. La vela parte troppo cazzata: regolala sui filetti e passa tra le due boe dell'arrivo.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.02 }, bands: [95, 120, 150],
+      start: { x: 0, y: 0, h: 90, sheet: 0.02 }, bands: [80, 100, 130],
       marks: [{ x: 230, y: 0, label: "Arrivo" }] },
     { title: "Lasco e poppa", desc: "Raggiungi l'arrivo sottovento.", wind: 45, tws: 10, gusts: 0,
       text: "L'arrivo è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo. Se devi per forza strambare, cazza prima tutta la vela, così la strambata è controllata (la vedrai meglio nella lezione 5).",
-      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [145, 180, 230],
+      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [125, 155, 200],
       marks: [{ x: 60, y: 260, label: "Arrivo" }] },
     { title: "Risalire il vento", desc: "Raggiungi l'arrivo controvento.", wind: 180, tws: 10, gusts: 0,
       text: "L'arrivo è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [200, 250, 320],
+      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [165, 205, 265],
       marks: [{ x: 0, y: -220, label: "Arrivo" }] },
     { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
       text: "Risali di bolina fino alla boa e girala lasciandola a sinistra, poi torna a tagliare la linea da cui sei partito, con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [335, 420, 535],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [290, 365, 465],
       marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
       text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino alla linea d'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [355, 440, 565],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [305, 380, 490],
       marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 

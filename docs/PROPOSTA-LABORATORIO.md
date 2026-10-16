@@ -85,6 +85,8 @@ Rispetto al 13 ottobre è più semplice e più sicuro: lì si proponeva di blocc
 
 ## 5. Limiti dei cursori
 
+**Dalla 1.0.6** i cursori `hullK1`, `hullK2`, `hullK4` non ci sono più: la resistenza dello scafo è una tabella della vasca, e il laboratorio ha `hullScale` (da 0,5 a 2,5) e `appDA` (da 0 a 0,01 m²). Limiti rimisurati sulla barca nuova: nessun conto in errore (`PROPOSTA-VELOCITA.md`, criterio 7); esempi aggiornati in `LABORATORIO-GUIDA-AI-VALORI.md`.
+
 I limiti sono **scelte nostre di prudenza**: servono a non rompere i conti, non dicono cosa è plausibile. Quelli della stesura del 13 ottobre erano misurati sul ramo con la saturazione: **alla fermata 2, prima di scrivere la finestra, si rimisurano tutti su `main`** con lo stesso metodo (ogni valore al minimo e al massimo, gli altri come oggi, passo 1/240 s e 0,0125 s: polare a 10 nodi a 45°, 90° e 180°, virata col pilota a 10 nodi, raffica da 10 a 18 nodi, conti andati in errore), e la tabella va nel rapporto.
 
 | Valore | Oggi | Min | Max | Vincolo del codice |

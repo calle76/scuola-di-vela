@@ -1,6 +1,6 @@
 # Proposta: velocità della barca (resistenza dello scafo)
 
-**Seconda stesura, 16 ottobre 2026. Proposta, fermata 1: il motore non è stato toccato.** La prima stesura (stesso giorno, nella storia di git) è stata rivista dalla chat del progetto, che ha trovato un errore di lettura della fonte (§1). Questa stesura lo corregge e cambia il modello: una **tabella** al posto dei tre numeri. Le misure sono state fatte con una copia del motore modificata solo in memoria, con script fuori dal repository.
+**Seconda stesura, 16 ottobre 2026, con le correzioni della seconda revisione in chat (§8). Proposta, fermata 1: il motore non è stato toccato.** La prima stesura (stesso giorno, nella storia di git) è stata rivista dalla chat del progetto, che ha trovato un errore di lettura della fonte (§1). Questa stesura lo corregge e cambia il modello: una **tabella** al posto dei tre numeri. Le misure sono state fatte con una copia del motore modificata solo in memoria, con script fuori dal repository.
 
 Tipi delle affermazioni:
 - **[fonte]** = letto in una fonte, con dove;
@@ -26,9 +26,9 @@ Tipi delle affermazioni:
   - virata da 4,0 a 3,3 s;
   - la virata da 1,9 nodi, oggi fallita, riesce;
   - raffiche uguali (+1°).
-- **Prova indipendente** (velocità utile verso il vento e sottovento, contro le previsioni di Day, che usano la stessa vasca ma una vela diversa dalla nostra):
-  - **sottovento lo scafo è giusto:** il gioco sta dall'8 al 10% sotto Day, con ogni vento;
-  - **di bolina no:** −22% con 6 nodi, +5% con 15. Questo indica due difetti che non riguardano lo scafo (§4) e restano compiti separati.
+- **Confronto con le previsioni di Day** (velocità utile verso il vento e sottovento). Day usa la stessa vasca, quindi il confronto **non** prova lo scafo: mette alla prova tutto il resto del gioco (vela, deriva, sbandamento).
+  - Sottovento il gioco sta dall'8 al 10% sotto Day, con ogni vento.
+  - Di bolina va da −22% con 6 nodi a +5% con 15. Le cause possibili sono più d'una (§4) e restano compiti separati.
 - **Versione 1.0.6.** I record delle prove e delle regate si azzerano (§7).
 
 ---
@@ -64,7 +64,7 @@ La prima stesura lo aggiungeva come +20% a tutte le velocità e andature. **Corr
 - **[fonte] §6.1:** Day sospetta un errore di scala nei dati di Clark (2014) e li **scarta**. Non li uso.
 - **[fonte] §6.2:** di bolina il Laser naviga con vento apparente fra circa 27° (5 nodi di vento) e 33° (15 nodi).
 
-**Uso dei dati [giudizio, da confermare].** La tabella contiene numeri letti da un grafico e scritti nel codice, con la fonte nel commento. Sono misure, non testo né figure dell'autore: la licenza NC è compatibile con un progetto non commerciale, e ND riguarda la ridistribuzione dell'opera, che non facciamo. Il principio 5 («non si copiano tabelle delle fonti») va letto come «non si copiano testi e tabelle redatte», non come «non si usano i numeri misurati»: lo segnalo perché decida Ale.
+**Uso dei dati:** la prima lettura della regola era sbagliata; la questione è nel §8, e decide Ale.
 
 ---
 
@@ -123,13 +123,18 @@ Con 10 nodi:
 | 10 nodi | 2,70 → **3,09** contro 3,6 (−14%) | 3,63 → **4,18** contro 4,55 (−8%) |
 | 15 nodi | 3,56 → **3,99** contro 3,8 (**+5%**) | 5,16 → **5,72** contro 6,3 (−9%) |
 
-**Cosa si vede [stima]:**
-- **Sottovento lo scarto è quasi costante** (dall'8 al 10%): lo scafo nuovo è giusto. Il resto può venire dalla vela in poppa, o dalle tecniche dei velisti che il gioco non ha (il pompaggio, il surf sulle onde).
-- **Di bolina lo scarto cambia col vento**, da −22% a +5%. Non è lo scafo, che è lo stesso in tutte e due le andature. Due cause probabili, già indicate dalla chat:
+**Cosa si vede [stima].** Il programma di Day usa la stessa vasca, quindi sullo scafo i due modelli coincidono per costruzione: questo confronto **non dice se lo scafo è giusto**, dice quanto il resto del gioco si allontana da Day.
+- **Sottovento lo scarto è quasi costante** (dall'8 al 10%). Spiegazioni possibili, nessuna verificata:
+  - nel gioco la deriva resta tutta giù anche in poppa, mentre Day la alza a metà: il gioco paga circa metà dell'attrito della deriva in più;
+  - con poco vento Day fa sbandare la barca sopravento (circa 20°, figura 9), e il gioco non lo sa fare;
+  - la vela del gioco in poppa;
+  - in poppa Day stesso sta sotto le misure di Binns.
+- **Di bolina lo scarto cambia col vento**, da −22% a +5%. Ipotesi, nessuna verificata:
   1. **con poco vento la vela del gioco non stringe abbastanza:** porta del tutto solo sopra i 34° di vento apparente (`luffA0` + `luffW`), mentre Day dà per il Laser 27-33°;
-  2. **con molto vento manca la resistenza indotta** (il 14% della resistenza di bolina con 10 nodi, secondo Day, e cresce col vento): la barca va un po' troppo forte.
+  2. **con molto vento manca la resistenza indotta** (il 14% della resistenza di bolina con 10 nodi, secondo Day, e cresce col vento);
+  3. **con molto vento il gioco raddrizza la barca meglio di un velista vero:** il timoniere si sporge da solo con un braccio fisso di 1,0 m, mentre Day impone i limiti di un velista vero e di quanto si può depotenziare la vela.
 
-  Sono due compiti separati, uno per volta.
+  Sono compiti separati, uno per volta.
 - Rispetto alla misura GPS di bolina con 15 nodi (5,4 nodi), la proposta dà **5,4**: non è più sopra.
 
 ---
@@ -141,7 +146,7 @@ Con 10 nodi:
 3. **Oltre i 9 nodi** la resistenza è un'ipotesi; la barca ci arriva al traverso con 15 nodi e nelle raffiche.
 4. **Peso:** resistenza da una barca di 160 kg, inerzia da una di 135 (§3).
 5. **La rotazione cresce con la velocità** (la virata dipende da u / `turnLen`): a 8-9 nodi lo sterzo diventa più nervoso, anche per gli avversari e per il pilota dei collaudi.
-6. **La retromarcia diventa più forte** (fino a 2,3 nodi contro 1,8): arriva al tetto `backMax`. È il compito «retromarcia», da provare in laboratorio.
+6. **La retromarcia diventa più forte** (fino a 2,3 nodi contro 1,8): arriva al tetto `backMax`. In più la tabella è misurata con la prua avanti, ma il motore la usa uguale all'indietro, mentre uno scafo che va di poppa, timone compreso, frena di più. È il compito «retromarcia», da provare in laboratorio; qui non si corregge.
 7. **La virata migliora senza toccare il timone:** il compito «timone e virata» va fatto sulla barca nuova, con i video.
 8. **Tutto ciò che è tarato sulla velocità:**
    - fasce delle prove;
@@ -150,7 +155,9 @@ Con 10 nodi:
    - **testi di lezioni e manuale che citano velocità in nodi** (`CONTENUTI-DA-VERIFICARE.md`).
 9. **Record:** un tempo fatto con la barca vecchia non è confrontabile (§7).
 10. **Il prototipo del fiocco** ha una copia sua del motore e resterebbe con la resistenza vecchia: va dichiarato in `SPERIMENTALE.md` e allineato quando si riprende il fiocco.
-11. **Sotto i 2 nodi non ci sono dati:** abbrivio, virata lenta e frenata cambiano dove non ci sono misure.
+11. **Sotto i 2 nodi non ci sono dati:** abbrivio, virata lenta e frenata cambiano dove non ci sono misure. Secondo la chat l'area vera a 1 nodo sarebbe forse del 5-10% più alta: la barca scivola un poco di più.
+12. **La deriva resta tutta giù in tutte le andature** (semplificazione del gioco, già oggi). Con l'attrito delle appendici ora misurato, in poppa il gioco frena un poco più del vero.
+13. **La planata entra nella resistenza.** Oltre i 6,5 nodi l'area misurata cala, come in una barca che comincia a planare. `PROGETTO.md`, `FISICA-E-TARATURE.md` e la bozza del manuale dicono oggi «nel motore non c'è planata»: da aggiornare (principio 4). Resta vero che non c'è il resto (assetto, onde, cambio di comportamento).
 
 ---
 
@@ -163,7 +170,7 @@ Con 10 nodi:
 
 **Rapporti** (si riportano, senza una soglia che li faccia passare o fallire):
 4. VMG contro Day, come nel §4;
-5. polare contro le misure in mare (Binns con 9 nodi; tracce GPS di Caraballo con 6 nodi, che sono **medie** di regata e non punte);
+5. polare contro le misure in mare: Binns con 9 nodi (bolina) e con **12 nodi** (tutte le andature, Day 2017 figura 3; Day segnala del surf in quelle misure), per il 9,5 al traverso con 15 nodi che oggi non ha confronti; tracce GPS di Caraballo con 6 nodi, che sono **medie** di regata e non punte;
 6. sensibilità al peso: con la curva da 70 kg al posto di quella da 80, quanto cambiano VMG e polare.
 
 **Prove del gioco** (soglie dichiarate adesso):
@@ -187,6 +194,36 @@ Si riporta l'impressione, non un voto: il giudizio nautico lo danno le fonti, ma
 
 - **Record [deciso, 16 ottobre]:** si azzerano cambiando le chiavi `KEYV`, come proposto in prima stesura e confermato dalla chat. La chat suggeriva di tenere i meriti di carriera già guadagnati, ma [codice] i meriti **non sono salvati a parte**: `meriti()` li ricalcola ogni volta dai record. Separarli vorrebbe dire una novità nel salvataggio; non la propongo.
 - **Il +2% della prima stesura** non c'è più: con la tabella la bolina con 15 nodi dà 5,4 nodi, uguale alla misura GPS. Lo sbilanciamento di bolina con vento forte (+5% su Day) resta come **problema noto**, legato alla resistenza indotta (§5, rischio 1).
-- **Per Ale:**
-  1. il via alla fermata 2;
-  2. la lettura del principio 5 sui numeri misurati (§2, ultimo paragrafo).
+- **Per Ale:** la regola sui dati (§8), poi il via alla fermata 2.
+
+---
+
+## 8. Seconda revisione in chat e regola sui dati
+
+La chat ha rifatto a mano la tabella del §3 e dà il via con quattro condizioni:
+- (b), (c) e (d) sono fatte in questa stesura: §0, §4, rischi 6, 11, 12 e 13, rapporto 5;
+- (a) è una decisione di Ale.
+
+**(a) La regola sui dati.** La lettura del §2 citava la regola sbagliata.
+- **[fonte]** `PROGETTO.md`, principio 5: «dati esterni solo con licenze libere e citazione».
+- **[fonte]** `FONTI-PUBBLICHE.md`: «dati con licenza poco chiara non entrano nel gioco».
+- Presa alla lettera, la regola **esclude** la tabella:
+  - F-A non dichiara una licenza;
+  - CC BY-NC-ND non è una licenza libera, perché NC e ND sono proprio le clausole che la rendono non libera.
+- Parere della chat [giudizio, non di un avvocato]: quindici numeri misurati, letti da un grafico e citati, sono fatti, non espressione dell'autore; il rischio legale è basso, ancora di più in un progetto non commerciale. Ma la regola va **riscritta** da chi decide, non reinterpretata da chi implementa.
+- **Testo proposto**, per `PROGETTO.md` e `FONTI-PUBBLICHE.md`: «I valori numerici misurati, letti da pubblicazioni scientifiche e citati, si possono usare nel motore; testi, tabelle impaginate, figure e insiemi di dati distribuiti con licenza restano soggetti alla regola della licenza libera.»
+- **Se Ale non cambia la regola,** la tabella non entra, e la fermata 2 si ferma qui: senza la vasca non c'è una resistenza misurata da usare.
+
+---
+
+## 9. Esito della fermata 2 (16 ottobre 2026, versione 1.0.6)
+
+Via di Ale dopo la regola sui dati («il gioco rimane in casa mia»). Misure e collaudi nella voce 1.0.6 di `CHANGELOG.md`. In breve:
+- **criteri 1-3** (esecuzione): OK, il motore cambiato è quello misurato qui;
+- **rapporti 4-6:** come nel §4, più Binns con 12 nodi (−4% a 60°, −6% al traverso, da −21 a −32% sottovento) e la sensibilità al peso (+0,4…3%);
+- **criteri 7-11:** OK;
+- **due cose emerse e corrette strada facendo:**
+  - il pilota del collaudo delle fasce (girava in tondo all'arrivo e si ripiantava nell'angolo morto: ora tiene la mura fino a 3,3 nodi, idea di Ale);
+  - il passo 4.2 «Da fermi», diventato impossibile: soglia da 2 a 2,5 nodi, scelta di Ale;
+- **passi delle lezioni peggiorati** (1.8, 5.8, 6.3, 1.12, 2.5) e migliorati (4.3): nel CHANGELOG, da portare nelle correzioni dei passi;
+- **prova guidando di Ale:** da fare (§6).

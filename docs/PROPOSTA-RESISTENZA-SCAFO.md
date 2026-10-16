@@ -1,5 +1,7 @@
 # Proposta: prima la resistenza dello scafo, poi il timone
 
+**Superata il 16 ottobre 2026 da `PROPOSTA-VELOCITA.md`** (resistenza da tabella della vasca, versione 1.0.6). Il «circa il doppio» qui sotto, ricontrollato, è da 1,45 a 2,5 volte; il «+20% per deriva e timone» del §2 era una lettura sbagliata di Day 2017 (vedi `PROPOSTA-VELOCITA.md` §1).
+
 Del 13 ottobre 2026. **Proposta, fermata 1: nessun codice.** Nasce dalla prova della saturazione del timone (`archivio/PROPOSTA-SATURAZIONE-TIMONE.md`, `archivio/RAPPORTO-PROVA-SATURAZIONE.md`) e dalla prima ricerca web sulle fonti.
 
 Tipi delle affermazioni:
