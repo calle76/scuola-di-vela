@@ -115,7 +115,7 @@ Su uno schermo 1360×768 con le barre del browser (finestra di circa 1360×650) 
 
 ## Limiti noti
 
-- File unico di circa 2000 righe: comodo da distribuire, ma andrà diviso in moduli se il progetto cresce (fisica, contenuti, disegno, avversari).
+- File unico di circa 3000 righe (242 KB nella 1.0.1): comodo da distribuire. Per lavorarci si legge a pezzi, con la mappa delle intestazioni `// ====` e `// ---- … ----` (comando in `CLAUDE.md`). Dividerlo in moduli resta possibile (i contenuti sono la parte più grossa, 53 KB); deciso il 16 ottobre 2026 di non farlo per ora.
 - Gli avversari «esperti» sono solo poco più forti dei «principianti».
 - Regole di regata semplificate: la boa va girata dal lato giusto (dalla 0.14), ma la penalità per un contatto è di 15 secondi invece dei giri di penalità, e toccare la boa non è punito.
 - Le semplificazioni della fisica sono elencate in `FISICA-E-TARATURE.md`.

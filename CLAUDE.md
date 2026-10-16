@@ -4,7 +4,10 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un uni
 
 ## Da leggere prima di lavorare
 
-- Sempre: `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni; la storia fino alla 0.19 è in `docs/archivio/CHANGELOG-0.1-0.19.md`, da aprire solo se serve), `docs/COLLAUDI.md`.
+- Sempre: `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni; la storia fino alla 0.24 è in `docs/archivio/`, da aprire solo se serve), `docs/COLLAUDI.md` **senza** la tabella «Browser»: di quella si legge solo la riga del collaudo che serve (`grep -n "collaudo_nome" docs/COLLAUDI.md`).
+- **`index.html` non si legge mai intero.** Prima la mappa delle sezioni con le righe di oggi, poi solo la parte che serve:
+  `grep -nE "^  // ([A-ZÀ-Ú]{4,}|-{3,})|^// Motore fisico" index.html`
+  Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna.
 - Sul prototipo del fiocco: `docs/SPERIMENTALE.md`, `docs/FISICA-E-TARATURE.md`, `docs/FONTI-PUBBLICHE.md`, `docs/CONTENUTI-DA-VERIFICARE.md`.
 - Su livelli, ruoli e carriera: `docs/VISIONE-LIVELLI-E-CARRIERA.md` e `docs/ROADMAP.md`.
 - Lo stato corrente sta nei documenti, non qui: non fidarti di quello che ricordi.

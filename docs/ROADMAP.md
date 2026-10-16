@@ -1,6 +1,6 @@
 # Roadmap
 
-Aggiornata al 4 ottobre 2026.
+Aggiornata al 4 ottobre 2026; ordine dopo la 1.0 e livelli rivisti il 16 ottobre 2026.
 
 Il disegno dei livelli, dei ruoli, dei meriti e della carriera è in `VISIONE-LIVELLI-E-CARRIERA.md`; le fonti pubbliche consultate in `FONTI-PUBBLICHE.md`. Dove questa roadmap e la visione dicono cose diverse sulle fasi C ed E, vale la visione.
 
@@ -33,14 +33,27 @@ Il disegno dei livelli, dei ruoli, dei meriti e della carriera è in `VISIONE-LI
 
 **Fase A chiusa con la 1.0 (14 ottobre 2026):** esame (0.20), piazzamento e Competizione (0.21), bivio gioco libero / carriera (0.22), libretto (0.23), esame in carriera e attestato (0.24), rilascio (1.0). Dettagli in `PROPOSTA-ESAME-E-BREVETTO.md` e `CHANGELOG.md`.
 
-### Dopo la 1.0: ordine deciso da Ale (14 ottobre 2026)
+### Dopo la 1.0.1: ordine del 16 ottobre 2026, sostituisce quello del 14 ottobre qui sotto
+
+Ale ha deciso la direzione (livello 2 su regole e avversari) e ha lasciato a Claude Code l'ordine dei lavori tecnici. Le sue osservazioni sulla 1.0 non sono un passo da aspettare: si scrivono in `OSSERVAZIONI-GIOCANDO.md` quando arrivano, i difetti piccoli si correggono in versioni minori, e il resto entra nella proposta del livello 2.
+
+0. **1.0.2, correzioni piccole dalle osservazioni sulla 1.0** (`OSSERVAZIONI-GIOCANDO.md`, 44, 46, 49 testo, 50, 53, 54): voci del ripasso, «medaglie» al posto di «fasce del record», «a piccoli colpi» in evidenza, scuffia e raddrizzamento nella lezione 6, pulsanti doppi all'arrivo, attestato più curato senza timbro né firma. Prima della divisione, perché si sentono giocando e sono piccole.
+1. **Divisione del codice in più file**, garantita da `collaudo_impronta.py` (impronta identica a quella del file unico). Prima di tutto, perché il livello 2 farà crescere soprattutto regate e avversari, e dividere costa meno adesso. Vincolo: il gioco deve aprirsi ancora con un doppio clic, quindi script classici, non moduli.
+2. **Pilota completo delle lezioni**, costruito in modo che serva anche alle lezioni del livello 2. Indispensabile prima di toccare la fisica (scafo, timone).
+3. **Livello 2: regole di regata e avversari** sulla stessa barca (`VISIONE-LIVELLI-E-CARRIERA.md`, §2-3): ricerca sulle fonti, proposta rivista in chat, poi lezioni, colpa nei contatti, penalità, avversari.
+4. Il resto della lista del 14 ottobre: resistenza dello scafo, timone e virate, disegno della vela, voci piccole. Il fiocco è ora il **livello 3**.
+
+La manutenzione la propone Claude Code quando serve, senza scadenze fisse.
+
+### Dopo la 1.0: ordine deciso da Ale (14 ottobre 2026), superato
 
 «La 1.0 è la versione giocabile.» Poi, nell'ordine:
 
+0. ~~**Giro di manutenzione del codice**~~: fatto nella 1.0.1 (16 ottobre 2026), vedi `CHANGELOG.md`. Il prossimo dopo la fase successiva, o circa ogni 5 versioni; da guardare allora anche i collaudi Python (circa 4.200 righe, non rivisti).
 1. **Pilota completo delle lezioni:** oggi i collaudi guidano 14 dei 32 passi pratici. Serve come rete di sicurezza prima di toccare la fisica.
 2. **Resistenza dello scafo** (`PROPOSTA-RESISTENZA-SCAFO.md`), con le fasce delle prove ritarate e i record azzerati.
 3. **Timone e durata delle virate** (osservazione 40), con misure dai video.
-4. **Regole di regata:** penalità a giri invece dei 15 s (osservazione 39), colpa con le regole 14 e 16, barca che tampona con le stesse mure, forma del contatto (osservazione 33).
+4. **Regole di regata:** penalità a giri invece dei 15 s (osservazione 39), colpa con le regole 14 e 16, barca che tampona con le stesse mure, forma del contatto (osservazione 33); avversari e contatti che giudicano le mure col vento del giocatore invece che col proprio (trovato nella 1.0.1).
 5. **Disegno della vela** (osservazione 41).
 6. Le voci piccole della lista «Dopo la 1.0» qui sotto.
 
@@ -79,12 +92,13 @@ Il motore è parametrico: una barca nuova è un nuovo insieme di costanti più u
 | Livello | Barca (nomi generici) | Ruoli | Cosa c'è di nuovo |
 | --- | --- | --- | --- |
 | 1 | Deriva da regata, un solo velista (la barca attuale) | Timoniere | Le basi |
-| 2 | Deriva a due: randa e fiocco | Timoniere, prodiere | Il fiocco e il coordinamento a due |
-| 3 | Deriva a due con gennaker | Timoniere, prodiere | Vela di portanza, planata, strumenti, angoli limite |
-| 4 | Equipaggio da tre | Timoniere, trimmer, tattico | Il tattico elabora le informazioni |
-| 5-6 | Catamarano; cabinato | Da definire | Vento apparente dominante, scuffia diversa; inerzia, mare, correnti |
+| 2 | La stessa deriva | Timoniere | Regole di regata e di precedenza, avversari migliori (dal 16 ottobre 2026) |
+| 3 | Deriva a due: randa e fiocco | Timoniere, prodiere, un ruolo alla volta | Il fiocco e il coordinamento a due |
+| 4 | Deriva a due con gennaker | Timoniere, prodiere | Vela di portanza, planata, strumenti, angoli limite |
+| 5 | Equipaggio da tre | Timoniere, trimmer, tattico | Il tattico elabora le informazioni |
+| 6-7 | Catamarano; cabinato | Da definire | Vento apparente dominante, scuffia diversa; inerzia, mare, correnti |
 
-Si pianifica nel dettaglio fino al livello 3; gli altri sono una direzione, non un impegno. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
+Si pianifica nel dettaglio fino al livello 4; gli altri sono una direzione, non un impegno. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
 
 **Prototipo del fiocco** (`sperimentale/fiocco.html`, in corso). È il primo passo, perché il rischio maggiore è la fisica delle vele. Non tocca `index.html`.
 
@@ -143,7 +157,7 @@ Classifiche comuni e fantasmi condivisi («sfida il record di un amico»).
 Idee nuove, fuori dal piano attivo. La lista più ampia «dopo la 1.0» sta in `PIANO-GENERALE.md` («Fuori dalla 1.0» e «Dopo la 1.0, solo se si decide di continuare»); qui si aggiungono tre righe nate dalle schede dei video dell'11 ottobre 2026 (fonti informali, mai usate per tarare il motore).
 
 - **Spingere il boma a mano / randa a collo.** Nelle fonti è il metodo preferito per uscire dall'angolo morto; il gioco non ha un comando per farlo (oggi si esce solo con la barra). Richiede un comando nuovo e un momento di imbardata della vela nel motore.
-- **Fiocco a collo (livello 2).** Aiuto per virare e per uscire dall'angolo morto con poca velocità; arriva con il fiocco nel gioco. Nessuna fonte quantitativa (vedi `DUBBI-E-RICERCHE.md`, sez. 3).
+- **Fiocco a collo (livello 3, il fiocco).** Aiuto per virare e per uscire dall'angolo morto con poca velocità; arriva con il fiocco nel gioco. Nessuna fonte quantitativa (vedi `DUBBI-E-RICERCHE.md`, sez. 3).
 - **Materiale per lezioni ed esame dalla scheda di Lee (uscita dagli angoli morti), da rileggere nell'originale.**
 - **Testo di fine regata «N° su 4» con le penalità (0.21).** È scritto all'istante dell'arrivo, quando chi non è ancora arrivato sta per forza dietro: con una penalità può essere ottimistico, perché un avversario che taglia la linea poco dopo può avere un tempo netto migliore. Il piazzamento salvato invece è quello definitivo. Nel collaudo della 0.21 i due numeri differiscono spesso (vedi `CHANGELOG.md`, 0.21). Il testo non si è toccato per la 1.0.
 - **Tempo alla linea prima del via (osservazione 24, 12 ottobre 2026).** «T s alla velocità attuale» divide la distanza dalla retta della linea per la sola componente della velocità verso il vento: di lato e quasi paralleli alla linea dà numeri alti, poi crolla appena si orza. Da decidere: calcolarlo verso il punto della linea fra le boe più vicino, oppure nasconderlo quando la barca non va verso la linea.

@@ -1,6 +1,6 @@
 # Visione: livelli, squadra e carriera
 
-Aggiornato al 4 ottobre 2026. Questo documento descrive dove vuole arrivare la Scuola di vela oltre il livello 1. **Nel gioco esiste solo il livello 1**; tutto il resto è disegno. Dove questo documento e `ROADMAP.md` dicono cose diverse sulle fasi C ed E, vale questo.
+Aggiornato al 4 ottobre 2026; livelli rinumerati il 16 ottobre 2026 (vedi sotto). Questo documento descrive dove vuole arrivare la Scuola di vela oltre il livello 1. **Nel gioco esiste solo il livello 1**; tutto il resto è disegno. Dove questo documento e `ROADMAP.md` dicono cose diverse sulle fasi C ed E, vale questo.
 
 Ogni punto porta il suo stato:
 
@@ -12,6 +12,8 @@ Ogni punto porta il suo stato:
 | **[provvisorio]** | Numero o regola da tarare giocando. |
 | **[aperto]** | Da decidere. |
 | **[da verificare]** | Affermazione nautica da controllare su una fonte (vedi `CONTENUTI-DA-VERIFICARE.md` e `FONTI-PUBBLICHE.md`). |
+
+**Nuova numerazione dei livelli (decisione di Ale, 16 ottobre 2026).** Il **livello 2 resta sulla stessa barca del livello 1** ed è dedicato alle **regole di regata e di precedenza**: lezioni sulle regole e avversari che le rispettano e guidano meglio. Così il livello con il fiocco e la seconda persona a bordo, che diventa il **livello 3**, non deve insegnare insieme anche le regole: i primi due livelli tolgono tutto quello che lo appesantirebbe. Al livello 3 si gioca **un ruolo alla volta**, con lezioni dedicate e regole nuove. Ogni livello successivo scala di uno (gennaker 4, equipaggio da tre 5, catamarano e cabinato 6-7). **[deciso]** In questo documento le tabelle e i titoli usano già la numerazione nuova; **nel resto del testo e negli altri documenti scritti prima del 16 ottobre** (`FISICA-E-TARATURE.md`, `SPERIMENTALE.md`, le proposte del prototipo, `CHANGELOG.md`) «livello 2» riferito al fiocco o al prodiere vuol dire il livello 3 di oggi, e «lezioni 2.x» del fiocco le lezioni del livello 3.
 
 Regola di lavoro: le decisioni si prendono quando servono. Prima si verifica che la fisica regga, poi si costruisce sopra.
 
@@ -40,22 +42,34 @@ Regole di disegno:
 | Livello | Barca e vele | Ruoli | Cosa c'è di nuovo | Stato |
 | --- | --- | --- | --- | --- |
 | 1 | Deriva, solo randa | Timoniere | Le basi | **[esiste]** |
-| 2 | Deriva a due, randa + fiocco | Timoniere, prodiere | Il fiocco e il coordinamento a due | prototipo del fiocco in corso |
-| 3 | Deriva a due con gennaker (vela di portanza asimmetrica) | Timoniere, prodiere (gestisce anche il gennaker) | Vela di portanza, planata, strumenti e angoli limite | **[proposta]** |
-| 4 | Equipaggio da tre | Timoniere, trimmer, tattico | Elaborare le informazioni mentre un altro guida | **[aperto]** |
-| 5-6 | Catamarano; cabinato | Da definire | Vento apparente dominante, scuffia diversa, VMG; inerzia, mare, correnti | **[aperto]** |
+| 2 | La stessa deriva, solo randa | Timoniere | Regole di regata e di precedenza; avversari che le rispettano | **[deciso]** il 16 ottobre 2026, contenuti da proporre |
+| 3 | Deriva a due, randa + fiocco | Timoniere, prodiere (un ruolo alla volta) | Il fiocco e il coordinamento a due | prototipo del fiocco (tappe A-C chiuse) |
+| 4 | Deriva a due con gennaker (vela di portanza asimmetrica) | Timoniere, prodiere (gestisce anche il gennaker) | Vela di portanza, planata, strumenti e angoli limite | **[proposta]** |
+| 5 | Equipaggio da tre | Timoniere, trimmer, tattico | Elaborare le informazioni mentre un altro guida | **[aperto]** |
+| 6-7 | Catamarano; cabinato | Da definire | Vento apparente dominante, scuffia diversa, VMG; inerzia, mare, correnti | **[aperto]** |
 
-La tabella è una mappa, non un impegno: si pianifica nel dettaglio fino al livello 3, gli altri restano una direzione. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
+La tabella è una mappa, non un impegno: si pianifica nel dettaglio fino al livello 4, gli altri restano una direzione. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
 
 Il gennaker asimmetrico è stato scelto perché è più semplice da modellare e fa emergere le decisioni sugli angoli in poppa. Che sia la soluzione più diffusa non è verificato. **[da verificare]**
 
-Il tattico arriva al livello 4: su una deriva a due il timoniere decide da solo e il prodiere ha già abbastanza da fare. **[da verificare]** (esistenza e funzione del tattico su equipaggi di più persone).
+Il tattico arriva al livello 5: su una deriva a due il timoniere decide da solo e il prodiere ha già abbastanza da fare. **[da verificare]** (esistenza e funzione del tattico su equipaggi di più persone).
 
-## 3. Cosa si impara nei livelli 2 e 3
+## 3. Cosa si impara nei livelli 2, 3 e 4
+
+### Livello 2: regole di regata e avversari **[deciso, contenuti da proporre]**
+
+Stessa barca, stessa fisica del livello 1: le novità sono le regole e chi le applica. Il lavoro parte da una ricerca sulle fonti (il regolamento di regata si parafrasa, non si copia; punto di partenza `REGOLE-DI-REGATA.md`) e dalle osservazioni di Ale sulla 1.0. Temi già emersi, da ordinare nella proposta:
+
+- precedenze: mure diverse; stesse mure, affiancate o no; durante la virata; evitare il contatto; spazio alla boa;
+- penalità a giri al posto dei 15 secondi; colpa nei contatti decisa dalle regole, non solo da mure e posizione (osservazioni 33 e 39, `ROADMAP.md`);
+- avversari che rispettano le regole e guidano meglio (partenze, giri di boa, comportamento dopo l'arrivo; osservazioni 25-28);
+- la **protesta**, idea di Ale del 16 ottobre 2026 **[aperto]**: se ne parla con le osservazioni sulla 1.0.
 
 I corsi dipendono dalla fisica del prototipo: se non regge, cambiano. Ogni lezione chiede un solo ruolo alla volta. Nelle lezioni gli ordini all'equipaggio sono sempre espliciti.
 
-### Livello 2: randa e fiocco **[proposta]**
+### Livello 3: randa e fiocco **[proposta]**
+
+Le lezioni qui sotto hanno ancora i numeri 2.x scritti prima della rinumerazione: sono le lezioni del livello 3.
 
 Il primo contatto con il fiocco è da timoniere, con il fiocco regolato dal computer: si vede l'effetto prima di imparare a regolarlo.
 
@@ -72,7 +86,9 @@ Attenzione al contenuto: la fessura tra le vele si spiega con il flusso ascenden
 
 **Il peso dell'equipaggio come azione del prodiere (lezione 2.5).** Oggi, nel gioco e nel prototipo, il peso lo sposta un automatismo: il timoniere si sporge da solo con circa 0,9 s di ritardo, e per questo le raffiche improvvise fanno sbandare. Perché la lezione 2.5 abbia senso, spostare il peso deve diventare un **comando del prodiere**, con il suo tempo e il suo errore. È una modifica al motore e al pannello, non una taratura di costanti, e non è stata fatta nel prototipo del fiocco (tappa C, quarto compito).
 
-### Livello 3: gennaker **[proposta]**
+### Livello 4: gennaker **[proposta]**
+
+Numeri 3.x scritti prima della rinumerazione: sono le lezioni del livello 4.
 
 | Lezione | Ruolo | Novità | Come si completa |
 | --- | --- | --- | --- |

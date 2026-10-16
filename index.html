@@ -16,14 +16,10 @@
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
+  :root{
     --sea-a:#16435A; --sea-b:#113749; --ripple:rgba(255,255,255,.10); --foam:rgba(255,255,255,.4);
     --ink:#D8E3EE; --ink-soft:#91A2B5; --panel:#12202D; --page:#0D1924; --line:#243647; --btn:#1B2C3C; --good:#5CC393; --warn:#E8935A; --accent:#E06CB6;
   }
-}
-:root[data-theme="dark"]{
-  --sea-a:#16435A; --sea-b:#113749; --ripple:rgba(255,255,255,.10); --foam:rgba(255,255,255,.4);
-  --ink:#D8E3EE; --ink-soft:#91A2B5; --panel:#12202D; --page:#0D1924; --line:#243647; --btn:#1B2C3C; --good:#5CC393; --warn:#E8935A; --accent:#E06CB6;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -501,6 +497,7 @@ function step(S, C, E, dt){
   // Nelle lezioni il vento arriva da nord. Condizioni: I = lettura istantanea (vedi readI).
   // ======================================================================
   const PAUSE = { pause: true };
+  // ---- lezioni ----
   // Lezione 1 (0.16): orzare e poggiare con le frecce del timone. Il testo dice quale freccia premere,
   // secondo il lato da cui arriva il vento in quel momento e secondo l'impostazione delle frecce (barra o prua).
   const windLeft = () => norm180(local.twd - S.h) < 0;
@@ -737,6 +734,7 @@ function step(S, C, E, dt){
     { name: "Lezione 6", title: "Raffiche e scuffia", steps: L6, desc: "Riconoscere le raffiche, tenere la barca piatta, scuffiare e raddrizzare." }
   ];
 
+  // ---- prove ----
   // Prove: geometria descritta con il vento da nord (m), poi ruotata secondo il vento della prova.
   // bands: tempi massimi in secondi per oro, argento e bronzo (0.16), tarati con tests/collaudo_fasce.py:
   // oro = tempo del pilota automatico arrotondato ai 5 s superiori, argento +25%, bronzo +60%.
@@ -767,6 +765,7 @@ function step(S, C, E, dt){
   const SEQ = [["l",0],["l",1],["l",2],["m",0],["m",1],["l",3],["l",4],["m",2],["m",3],["l",5],["m",4]];
 
 
+  // ---- ripasso ed esame ----
   // Quiz di ripasso: [domanda, risposta giusta, [sbagliate], spiegazione]
   const QUIZ = [
     [ ["Guardando verso prua, come si chiama il lato destro della barca?", "Dritta", ["Sinistra", "Poppa", "Sottovento"], "Dritta e sinistra si riferiscono sempre alla barca guardando verso prua, non allo schermo né al vento."],
@@ -833,6 +832,7 @@ function step(S, C, E, dt){
       ["Raffiche e sbandamento", "Vuoi capire se sta arrivando una raffica. Dove guardi?", "Sull'acqua sopravento: chiazze più scure e increspate", ["Sull'acqua sottovento: onde più alte e più lunghe del solito", "Il filetto sopravento, che si agita prima che arrivi", "La vela, che comincia a sbattere prima che arrivi"], "Dove il vento è più forte l'acqua è più scura e increspata, e la chiazza viaggia col vento: per questo arriva da sopravento."] ]
   ];
 
+  // ---- glossario ----
   const GLOSS = [
     ["Abbrivio", "La velocità che la barca conserva per inerzia, per esempio mentre attraversa il vento durante una virata.", "Lezione 5"],
     ["Albero", "Il palo verticale che regge la vela.", "Lezione 1"],
@@ -897,7 +897,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.1"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -971,6 +971,7 @@ function step(S, C, E, dt){
   // ======================================================================
   // MENU, PROGRESSI, GLOSSARIO
   // ======================================================================
+  // ---- salvataggi, fasce e meriti ----
   // 0.22: gioco libero e carriera hanno salvataggio e fantasmi separati; la modalità si cambia solo dal menu
   const MODO = "scuolaVelaModo";
   const KEYS = m => m === "carriera" ? ["scuolaVelaCarriera.v1", "scuolaVelaGhostCarriera.v1"] : ["scuolaVelaSim.v1", "scuolaVelaGhost.v1"];
@@ -988,18 +989,18 @@ function step(S, C, E, dt){
   const STAR = '<span class="star" title="Completata almeno una volta senza errori">★</span>';
   // fasce di tempo delle prove: bands = [oro, argento, bronzo] in secondi (tempo massimo per ciascuna)
   const MEDALS = ["oro", "argento", "bronzo"];
-  const medalOf = (i, sec) => { const b = MISSIONS[i].bands; if (!b || !sec) return 0; for (let k = 0; k < 3; k++) if (sec <= b[k]) return k + 1; return 0; };
+  const medalOf = (i, sec) => { const b = MISSIONS[i].bands; if (!sec) return 0; for (let k = 0; k < 3; k++) if (sec <= b[k]) return k + 1; return 0; };
   const medalTag = (i, sec) => { const m = medalOf(i, sec); return m ? `<span class="medal m${m}" title="Fascia: ${MEDALS[m - 1]}"></span>` : ""; };
-  const MEDAL_ON = () => MISSIONS.some(m => m.bands);
   // 0.23, meriti del libretto (solo carriera): tabella provvisoria di docs/PROPOSTA-ESAME-E-BREVETTO.md §12, da tarare giocando.
   // Si ricalcolano ogni volta da progress: niente si salva. Competizione: solo il piazzamento, senza il +1 «senza errori».
   const MERITI = [["abil", "Abilità", 20, 8], ["cono", "Conoscenza", 12, 6], ["comp", "Competizione", 8, 3], ["esp", "Esperienza", 6, 6]];
   const TOT_MIN = 29;
   function meriti(p){
+    const racePt = i => Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; }));
     const pt = {
       abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
       cono: QUIZ.reduce((a, q, i) => { const s = p.quiz?.["q" + i]; return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
-      comp: RACES.reduce((a, rc, i) => a + Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; })), 0),
+      comp: RACES.reduce((a, rc, i) => a + racePt(i), 0),
       esp: LESSONS.filter((L, i) => p.done["l" + i]).length };
     const pulite = RACES.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
     const totale = MERITI.reduce((a, [k]) => a + pt[k], 0), esame = !!p.exam?.superato;
@@ -1018,7 +1019,7 @@ function step(S, C, E, dt){
         i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
         i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
       if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : "il ripasso della " + LESSONS[i].name + "."; }
-      const rp = RACES.map((rc, i) => Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; })));
+      const rp = RACES.map((rc, i) => racePt(i));
       const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES[i].title + " (con avversari).";
     };
     const aree = sotto.length ? sotto : totale < TOT_MIN ? MERITI.filter(([k, , max]) => pt[k] < max) : [];
@@ -1037,11 +1038,14 @@ function step(S, C, E, dt){
   }
   loadProgress();
   const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
+  // ---- menu principale e attestato ----
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
   const seqPos = () => SEQ.findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
   const nextItem = () => { const p = seqPos(); return p >= 0 && p < SEQ.length - 1 ? SEQ[p + 1] : null; };
   const nextLabel = () => { const n = nextItem(); return n ? "Prosegui: " + itemName(n) : "Torna al menu"; };
   const goNext = () => { const n = nextItem(); n ? openItem(n) : showMenu(); };
+  const p2 = n => String(n).padStart(2, "0");
+  const fmtClock = sec => { const s = Math.floor(sec); return Math.floor(s / 60) + ":" + p2(s % 60); }; // 3:07
   const fmtTime = sec => { const m = Math.floor(sec / 60), s2 = sec % 60; return m ? m + " min " + s2 + " s" : s2 + " s"; };
 
   function openItem(it){
@@ -1049,7 +1053,7 @@ function step(S, C, E, dt){
     if (it === "free") startFree(); else if (it[0] === "r") startRace(it[1]); else it[0] === "l" ? startLesson(it[1]) : startMission(it[1]);
     window.scrollTo(0, 0); canvas.focus();
   }
-  const oggi = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  const oggi = () => { const d = new Date(); return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); };
   const fmtData = d => new Date(d + "T12:00").toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
   const lezElenco = a => (a.length > 1 ? "lezioni " + a.slice(0, -1).join(", ") + " e " + a[a.length - 1] : "lezione " + a[0]);
   function esameBtn(){
@@ -1109,7 +1113,7 @@ function step(S, C, E, dt){
           ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>`}
         </section>
       </div>
-      <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori.${MEDAL_ON() ? " I pallini oro, argento e bronzo indicano la fascia del tuo record." : ""}</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
+      <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. I pallini oro, argento e bronzo indicano la fascia del tuo record.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
     $("goEsame").onclick = openEsame;
@@ -1129,17 +1133,18 @@ function step(S, C, E, dt){
     showMenu();
   }
 
+  // ---- glossario e impostazioni ----
   function renderGloss(q = ""){
     const n = q.trim().toLowerCase();
     const list = GLOSS.filter(([t, d]) => !n || t.toLowerCase().includes(n) || d.toLowerCase().includes(n));
     $("glList").innerHTML = list.length ? list.map(([t, d, w]) => `<dt>${t}<small>${w}</small></dt><dd>${d}</dd>`).join("")
       : `<p class="gl-empty">Nessun termine trovato. Prova con una parola più breve.</p>`;
   }
-  function openGloss(){ keys.clear(); semHeld.clear(); $("glSearch").value = ""; renderGloss(); $("gloss").showModal ? $("gloss").showModal() : $("gloss").setAttribute("open", ""); }
+  function openGloss(){ releaseKeys(); $("glSearch").value = ""; renderGloss(); $("gloss").showModal(); }
   $("openGloss").onclick = openGloss;
-  $("openSet").onclick = () => { keys.clear(); semHeld.clear(); $("setDlg").showModal ? $("setDlg").showModal() : $("setDlg").setAttribute("open", ""); };
-  $("setClose").onclick = () => $("setDlg").close ? $("setDlg").close() : $("setDlg").removeAttribute("open");
-  $("glClose").onclick = () => $("gloss").close ? $("gloss").close() : $("gloss").removeAttribute("open");
+  $("openSet").onclick = () => { releaseKeys(); $("setDlg").showModal(); };
+  $("setClose").onclick = () => $("setDlg").close();
+  $("glClose").onclick = () => $("gloss").close();
   $("glSearch").addEventListener("input", e => renderGloss(e.target.value));
 
 
@@ -1147,9 +1152,9 @@ function step(S, C, E, dt){
   let qz = null;
   const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }; // Fisher-Yates sul posto
   const quizOpts = (right, wrong) => mescola([right, ...wrong].map(t => ({ t, ok: t === right })));
-  const showQuiz = () => { renderQuiz(); $("quiz").showModal ? $("quiz").showModal() : $("quiz").setAttribute("open", ""); };
+  const showQuiz = () => { renderQuiz(); $("quiz").showModal(); };
   function openQuiz(li, only){ // only: indici delle domande da riproporre (giro parziale); senza, ripasso completo
-    keys.clear(); semHeld.clear();
+    releaseKeys();
     const qs = QUIZ[li].map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n))
       .map(({ n, q, right, wrong, expl }) => ({ n, q, right, opts: quizOpts(right, wrong), expl }));
     qz = { li, qs, i: 0, score: 0, answered: false, partial: !!only, wrong: [] };
@@ -1158,12 +1163,12 @@ function step(S, C, E, dt){
   // esame: QUOTE[li] domande a caso da ogni lezione, poi le 20 in ordine casuale. Nel gioco libero non salva niente.
   const estraiEsame = () => mescola(ESAME.flatMap((qs, li) => mescola(qs.map(q => [li, ...q])).slice(0, QUOTE[li])));
   function openEsame(){
-    keys.clear(); semHeld.clear();
+    releaseKeys();
     const qs = estraiEsame().map(([li, passo, q, right, wrong, expl]) => ({ li, passo, q, right, opts: quizOpts(right, wrong), expl }));
     qz = { exam: true, qs, i: 0, score: 0, answered: false, wrong: [] };
     showQuiz();
   }
-  function closeQuiz(){ $("quiz").close ? $("quiz").close() : $("quiz").removeAttribute("open"); }
+  function closeQuiz(){ $("quiz").close(); }
   $("quiz").addEventListener("close", () => { if (mode === "menu") showMenu(); }); // aggiorna il punteggio migliore nel menu
   const wrongItem = w => `<div class="wq"><p class="wt">${w.q}</p><p>Hai risposto: ${w.given}</p><p>Giusta: <b>${w.right}</b></p><p class="expl">${w.expl}</p>${w.passo ? `<p class="from">dal passo «${w.passo}»</p>` : ""}</div>`;
   function renderEsito(b){
@@ -1218,6 +1223,7 @@ function step(S, C, E, dt){
   // ======================================================================
   // MODALITÀ
   // ======================================================================
+  // ---- schede del pannello, comandi, strumenti ----
   // la barra che torna al centro ha due impostazioni: lezioni e navigazione libera (attiva), prove e regate (spenta: un regatante tiene la barra ferma)
   const centerKey = () => mode === "mission" || mode === "race" ? "autoCenterComp" : "autoCenter";
   const centerNote = () => opt.autoCenterComp ? "" : " La barra resta dove la lasci: la riporta al centro la barra spaziatrice (si può cambiare nelle impostazioni, pulsante ⚙).";
@@ -1239,7 +1245,7 @@ function step(S, C, E, dt){
     $("ctlTiller").classList.toggle("off", !tiller); $("tiller").disabled = !tiller;
     $("ctlSheet").classList.toggle("off", !sheet); $("sheet").disabled = !sheet;
     $("ctlSheet").hidden = !sheet && !!hideSheetOff; // lezione 1: il cursore spento della scotta non serve e ruberebbe spazio
-    keys.clear(); semHeld.clear();
+    releaseKeys();
   }
   let hudLevel = 0;
   function setHud(level){
@@ -1299,6 +1305,7 @@ function step(S, C, E, dt){
   }
   function regShow(el){ const t = regText(); el.textContent = t; el.title = t; el.classList.toggle("some", regTotal() > 0); }
 
+  // ---- riquadro delle istruzioni ----
   // istruzioni di prove e regate: riquadro sul mare a gioco fermo; il tempo parte con «Parti»
   let briefing = false, briefSkip = false; // briefSkip: solo per i collaudi automatici
   function showBrief(title, text, first){
@@ -1306,7 +1313,7 @@ function step(S, C, E, dt){
     $("bRaceOpts").hidden = mode !== "race" || !first;
     $("bNote").textContent = !first ? "Il gioco è fermo finché non riprendi." : mode === "race" ? "Il conto alla rovescia parte quando premi Parti (o Invio)." : "Il cronometro parte quando premi Parti (o Invio).";
     $("bGo").textContent = first ? "Parti" : "Riprendi";
-    keys.clear(); semHeld.clear();
+    releaseKeys();
     briefing = true; $("briefOv").hidden = false;
     if (first && briefSkip) return hideBrief();
     setTimeout(() => $("bGo").focus(), 0);
@@ -1367,7 +1374,7 @@ function step(S, C, E, dt){
   // La boa è girata quando la barca attraversa la semiretta che parte dalla boa verso l'esterno della curva del percorso,
   // girando in senso antiorario (visto dall'alto, con il nord in alto). Attraversarla in senso orario vuol dire girarla dal lato
   // sbagliato, e va "disfatto" tornando indietro: come la regola del filo teso delle regate (il conto netto deve arrivare a 1).
-  const brgFrom = (a, b) => norm360(Math.atan2(b.x - a.x, -(b.y - a.y)) / D2R);
+  const bearingTo = (a, b) => norm360(Math.atan2(b.x - a.x, -(b.y - a.y)) / D2R); // direzione di b vista da a, da nord in senso orario
   function markOut(prev, mk, next){ // direzione esterna della curva: opposta alla bisettrice tra "da dove arrivo" e "dove vado"
     const u = p => { const dx = p.x - mk.x, dy = p.y - mk.y, d = Math.hypot(dx, dy) || 1; return [dx / d, dy / d]; };
     const [ax, ay] = u(prev), [bx, by] = u(next);
@@ -1376,7 +1383,7 @@ function step(S, C, E, dt){
   function roundCheck(o, x, y, mk){ // +1 giro giusto, -1 giro dal lato sbagliato, 0 niente
     const d = Math.hypot(x - mk.x, y - mk.y);
     if (d < 1.5) return 0; // sopra la boa: direzione indefinita
-    const a = norm180(brgFrom(mk, { x, y }) - mk.out), pa = o.rndA; o.rndA = a;
+    const a = norm180(bearingTo(mk, { x, y }) - mk.out), pa = o.rndA; o.rndA = a;
     if (pa === undefined || Math.abs(a) > 90 || Math.abs(pa) > 90 || (pa >= 0) === (a >= 0)) return 0;
     const k = pa >= 0 ? 1 : -1; o.rnd = (o.rnd || 0) + k; return k;
   }
@@ -1408,9 +1415,8 @@ function step(S, C, E, dt){
     const m = MISSIONS[i];
     setWhere("Prova " + (i + 1) + ": " + m.title);
     env.twd = wind === undefined ? m.wind : wind; env.tws = m.tws / KN;
-    const th = env.twd * D2R, rot = (x, y) => [x * Math.cos(th) - y * Math.sin(th), x * Math.sin(th) + y * Math.cos(th)];
-    curMarks = m.marks.map(mk => { const [x, y] = rot(mk.x, mk.y); return { x, y, label: mk.label }; });
-    const [sx, sy] = rot(m.start.x, m.start.y);
+    curMarks = m.marks.map(mk => { const [x, y] = fromWF(mk.x, mk.y); return { x, y, label: mk.label }; });
+    const [sx, sy] = fromWF(m.start.x, m.start.y);
     curMarks.forEach((mk, k) => { if (k < curMarks.length - 1){ mk.round = true; mk.out = markOut(k ? curMarks[k - 1] : { x: sx, y: sy }, mk, curMarks[k + 1]); } });
     // linea d'arrivo: centrata sull'ultima voce, perpendicolare all'ultimo lato; (nx, ny) punta dal lato del percorso verso l'arrivo
     const fin = curMarks[curMarks.length - 1], pv = curMarks.length > 1 ? curMarks[curMarks.length - 2] : { x: sx, y: sy }, fd = Math.hypot(fin.x - pv.x, fin.y - pv.y);
@@ -1424,12 +1430,11 @@ function step(S, C, E, dt){
     showBrief($("mTitle").textContent, missionText(), true);
   }
   const bandText = b => "Fasce di tempo: oro entro " + fmtTime(b[0]) + ", argento entro " + fmtTime(b[1]) + ", bronzo entro " + fmtTime(b[2]) + ".";
-  const missionText = () => { const m = MISSIONS[missionIdx]; return m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote() + (m.bands ? " " + bandText(m.bands) : ""); };
+  const missionText = () => { const m = MISSIONS[missionIdx]; return m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote() + " " + bandText(m.bands); };
   $("mBrief").onclick = () => showBrief($("mTitle").textContent, missionText(), false);
   $("bGo").onclick = hideBrief;
-  const changeWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); startMission(missionIdx, w); };
   $("mRetry").onclick = $("mRetry2").onclick = () => startMission(missionIdx, env.twd);
-  $("mWind").onclick = $("mWind2").onclick = changeWind;
+  $("mWind").onclick = $("mWind2").onclick = () => startMission(missionIdx, otherWind());
   $("mNext").onclick = goNext;
 
   // ---- navigazione libera ----
@@ -1449,6 +1454,7 @@ function step(S, C, E, dt){
   // INPUT
   // ======================================================================
   const keys = new Set(), semHeld = new Set();
+  const releaseKeys = () => { keys.clear(); semHeld.clear(); }; // all'apertura di finestre e riquadri: niente tasti rimasti «premuti»
   let dragTiller = false;
   const KEYSEM = { w: "cazza", s: "lasca" };
   function semPress(a){
@@ -1629,7 +1635,7 @@ function step(S, C, E, dt){
           progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); }
           const clean = regTotal() === 0; if (clean) progress.clean[bk] = true; saveProgress();
           $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
-            (MISSIONS[missionIdx].bands ? (medalOf(missionIdx, sec) ? " Fascia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Fuori dalle fasce: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") : "") +
+            (medalOf(missionIdx, sec) ? " Fascia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Fuori dalle fasce: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") +
             (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
           $("done").hidden = false; toast("Arrivato!");
         } else { S.markIdx++; toast("Boa girata: ora verso " + (curMarks[S.markIdx].fin ? "l'arrivo" : curMarks[S.markIdx].label.toLowerCase())); }
@@ -1642,6 +1648,7 @@ function step(S, C, E, dt){
   // ======================================================================
   // FANTASMA E REGATE
   // ======================================================================
+  // ---- fantasma ----
   let ghosts;
   const loadGhosts = () => { try { ghosts = JSON.parse(localStorage.getItem(GHOST_STORE) || "{}"); } catch(e){ ghosts = {}; } };
   loadGhosts();
@@ -1670,6 +1677,7 @@ function step(S, C, E, dt){
     return { x, y, h: norm360(La(a[3], b[3]) + env.twd), heel: L(a[5], b[5]), hike: 0.5, boomSide: sgn(boom), dispBoom: boom, boom: Math.abs(boom), capsized: false };
   }
 
+  // ---- altre barche: disegno e scia ----
   // disegna un'altra barca riusando drawBoat (scambia per un attimo lo stato globale)
   function drawOther(bs, inf, tiller, alpha){
     const s0 = S, i0 = info, t0 = ctl.tiller, g0 = geo;
@@ -1677,16 +1685,16 @@ function step(S, C, E, dt){
     ctx.save(); ctx.globalAlpha = alpha;
     try { drawBoat(); } finally { ctx.restore(); S = s0; info = i0; ctl.tiller = t0; geo = g0; }
   }
-  function drawWakeOf(wk, u){
+  function drawWakeOf(wk, u, maxAge = 6, alpha = 0.6){ // la barca del giocatore: 8 s, più marcata
     ctx.lineWidth = 0.12;
     for (const side of [-1, 1]){
       ctx.beginPath(); let started = false;
       for (let i = wk.length - 1; i >= 0; i--){
-        const w = wk[i], age = simTime - w.t; if (age > 6) break;
+        const w = wk[i], age = simTime - w.t; if (age > maxAge) break;
         const sp = 0.35 + age * 0.35, x = w.x + w.nx * sp * side, y = w.y + w.ny * sp * side;
         started ? ctx.lineTo(x, y) : ctx.moveTo(x, y); started = true;
       }
-      ctx.strokeStyle = colors.foam; ctx.globalAlpha = Math.min(1, Math.abs(u) / 2) * 0.6; ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = colors.foam; ctx.globalAlpha = Math.min(1, Math.abs(u) / 2) * alpha; ctx.stroke(); ctx.globalAlpha = 1;
     }
   }
 
@@ -1792,7 +1800,6 @@ function step(S, C, E, dt){
     showBrief(rc.title, R.brief, true);
   }
 
-  const bearingTo = (s, p) => norm360(Math.atan2(p.x - s.x, -(p.y - s.y)) / D2R);
   // obiettivo attuale della barca: lo usano la freccia fuori schermo, il rilevamento del pannello e il tasto vista
   function goal(){
     if (mode === "race") return R && R.boats[0].fin === null ? targetOf(R.boats[0]) : null;
@@ -1800,6 +1807,8 @@ function step(S, C, E, dt){
     if (mode === "lesson") return S.lessonMark && !S.markReached ? S.lessonMark : null;
     return null; // navigazione libera: nessun obiettivo
   }
+  // Cambia b.rp (punto di passaggio alla boa) e la chiamano anche classifica e disegno: i cambi dipendono solo dalla posizione,
+  // quindi chiamarla più volte nello stesso istante non cambia la regata (misurato nella 1.0.1: 160 regate, stessi arrivi al bit).
   function targetOf(b){
     if (b.leg === 0 || b.ocs){
       if (b.ocs){ const [x, y] = fromWF(0, 20); return { x, y, kind: "line" }; }
@@ -1825,6 +1834,7 @@ function step(S, C, E, dt){
     return { ...R.center, kind: "finish" };
   }
 
+  // ---- guida degli avversari ----
   function aiControl(b, dt){
     const s = b.S, w = windAt(s.x, s.y), twd = w.twd, twa = norm180(twd - s.h), side = sgn(twa), A = Math.abs(twa);
     const ai = b.ai;
@@ -1949,6 +1959,7 @@ function step(S, C, E, dt){
     if (b.wakeT > 0.1){ b.wakeT = 0; const h = s.h * D2R; b.wake.push({ x: s.x - Math.sin(h) * 2.1, y: s.y + Math.cos(h) * 2.1, nx: Math.cos(h), ny: Math.sin(h), t: simTime }); if (b.wake.length > 70) b.wake.shift(); }
   }
 
+  // ---- svolgimento: lati, contatti, arrivo, classifica ----
   function raceLegs(b){
     const s = b.S, [wx, wy] = toWF(s.x, s.y), prev = b.prevWY; b.prevWY = wy;
     const onLine = Math.abs(wx) <= LINE_HALF;
@@ -2046,10 +2057,10 @@ function step(S, C, E, dt){
     const score = b => b.fin !== null ? 1e7 - b.fin : (b.ocs ? -1e6 : b.leg * 1e4 - Math.hypot(b.S.x - targetOf(b).x, b.S.y - targetOf(b).y));
     return [...R.boats].sort((a, b) => score(b) - score(a));
   }
-  function raceResults(prev, tot, quiet){
+  function raceResults(prev, tot){
     const rank = ranking(), pos = rank.indexOf(R.boats[0]) + 1;
     $("rDone").hidden = false;
-    if (!quiet) $("rDoneText").textContent = pos + "° su " + rank.length + " in " + fmtTime(tot) +
+    $("rDoneText").textContent = pos + "° su " + rank.length + " in " + fmtTime(tot) +
       (R.boats[0].pen ? " (penalità comprese: " + R.boats[0].pen + " s)" : "") + "." + (!prev ? "" : tot < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
       (regTotal() === 0 ? (reg.contacts ? " " + regText() + ". ★ senza errori." : " Nessun errore: ★ senza errori.") : " " + regText() + ".");
   }
@@ -2067,6 +2078,7 @@ function step(S, C, E, dt){
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
   }
 
+  // ---- disegno della regata e aiuti a schermo ----
   function drawRaceWorld(v){
     if (!R) return;
     // linea di partenza (tratteggio) e, dopo il via, d'arrivo (scacchi)
@@ -2090,29 +2102,29 @@ function step(S, C, E, dt){
   }
   function drawRaceScreen(v){
     if (!R) return;
-    ctx.save(); ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (const b of R.boats){ if (b.me) continue; const [sx, sy] = toScreen(v, b.S.x, b.S.y); ctx.fillStyle = "rgba(10,24,36,.6)"; const w = ctx.measureText(b.name).width + 10; ctx.fillRect(sx - w / 2, sy - 58, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(b.name, sx, sy - 49); }
     const [gx, gy] = toScreen(v, R.mark.x, R.mark.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Boa di bolina · lasciala a sinistra", gx + 10, gy - 10);
     // orologio e posizione
     const me = R.boats[0], rank = ranking(), pos = rank.indexOf(me) + 1;
     let big, small = "";
     if (R.t < 0){
-      const s = Math.ceil(-R.t); big = "Partenza tra " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+      big = "Partenza tra " + fmtClock(Math.ceil(-R.t));
       const [wx, wy] = toWF(S.x, S.y), dLine = Math.max(0, wy);
       const h = (S.h - env.twd) * D2R, vUp = S.u * Math.cos(h); // velocità verso la linea (verso il vento)
       const tLine = vUp > 0.2 ? Math.round(dLine / vUp) : null;
       small = "Alla linea: " + Math.round(dLine) + " m" + (tLine !== null ? " · " + tLine + " s alla velocità attuale" : "") + (Math.abs(wx) > LINE_HALF ? " (fuori dagli estremi)" : "");
     }
-    else { const s = Math.floor(me.fin !== null ? me.fin : R.t); big = Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); small = pos + "° su " + rank.length; }
-    ctx.textAlign = "center"; ctx.font = `700 26px "Barlow Semi Condensed", sans-serif`;
+    else { big = fmtClock(me.fin !== null ? me.fin : R.t); small = pos + "° su " + rank.length; }
+    ctx.textAlign = "center"; ctx.font = font(700, 26);
     const w = Math.max(ctx.measureText(big).width, 90) + 30;
-    ctx.font = `600 15px "Barlow Semi Condensed", sans-serif`; const w2 = small ? ctx.measureText(small).width + 30 : 0; ctx.font = `700 26px "Barlow Semi Condensed", sans-serif`;
+    ctx.font = font(600, 15); const w2 = small ? ctx.measureText(small).width + 30 : 0; ctx.font = font(700, 26);
     const bw = Math.max(w, w2);
     ctx.fillStyle = me.ocs ? "rgba(160,40,30,.85)" : "rgba(10,24,36,.7)"; ctx.fillRect(W / 2 - bw / 2, 10, bw, small ? 58 : 40);
     ctx.fillStyle = "#fff"; ctx.fillText(big, W / 2, 30);
-    if (small){ ctx.font = `600 15px "Barlow Semi Condensed", sans-serif`; ctx.fillText(small, W / 2, 55); }
-    if (R.t > -10 && R.t < 0){ ctx.font = `700 64px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fillText(String(Math.ceil(-R.t)), W / 2, H * 0.3); }
-    if (me.ocs){ ctx.font = `700 16px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "#FFD447"; ctx.fillText(R.t < 0 || R.t < 3 ? "Partenza anticipata: torna dietro la linea" : "Non sei partito: torna dietro la linea e tagliala tra giuria e boa", W / 2, 88); }
+    if (small){ ctx.font = font(600, 15); ctx.fillText(small, W / 2, 55); }
+    if (R.t > -10 && R.t < 0){ ctx.font = font(700, 64); ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fillText(String(Math.ceil(-R.t)), W / 2, H * 0.3); }
+    if (me.ocs){ ctx.font = font(700, 16); ctx.fillStyle = "#FFD447"; ctx.fillText(R.t < 0 || R.t < 3 ? "Partenza anticipata: torna dietro la linea" : "Non sei partito: torna dietro la linea e tagliala tra giuria e boa", W / 2, 88); }
     ctx.restore();
     const g = goal(); // dopo l'arrivo niente freccia
     if (g) offscreenArrow(v, g);
@@ -2137,7 +2149,7 @@ function step(S, C, E, dt){
     const tl = ctl.tiller < 0 ? "a sinistra" : "a dritta";
     const turn = S.u < -0.05 ? (ctl.tiller < 0 ? "sinistra" : "dritta") : (ctl.tiller < 0 ? "dritta" : "sinistra");
     const txt = "Barra " + tl + " → la prua gira a " + turn + (S.u < -0.05 ? " (stai andando all'indietro)" : "");
-    ctx.save(); ctx.font = `600 15px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.save(); ctx.font = font(600, 15); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const w = ctx.measureText(txt).width + 24, y = H - 70;
     ctx.fillStyle = "rgba(10,24,36,.7)"; ctx.fillRect(W / 2 - w / 2, y - 14, w, 28);
     ctx.fillStyle = "#FFD447"; ctx.fillText(txt, W / 2, y); ctx.restore();
@@ -2162,7 +2174,7 @@ function step(S, C, E, dt){
     $("iAw").textContent = Math.round(Math.abs(info.awa)) + "° · " + (info.aws * KN).toFixed(1) + " kn";
     $("iHdg").textContent = deg3(S.h);
     const mk = mode === "free" ? curMarks[0] : goal(); // navigazione libera: boa 1, come prima della 0.19.2
-    $("iBrg").textContent = mode === "lesson" || !mk ? "—" : deg3(Math.atan2(mk.x - S.x, -(mk.y - S.y)) / D2R);
+    $("iBrg").textContent = mode === "lesson" || !mk ? "—" : deg3(bearingTo(S, mk));
     const kq = $("kQ"); kq.hidden = !viewOn(); // «Q vista» nella legenda solo se la riga non si taglia, altrimenti sul mare
     if (!kq.hidden && kq.parentNode.scrollWidth > kq.parentNode.clientWidth) kq.hidden = true;
     qOnSea = viewOn() && kq.hidden;
@@ -2216,12 +2228,11 @@ function step(S, C, E, dt){
     if (mode === "lesson"){ $("lErr").hidden = !!st.pause; regShow($("lErr")); }
     if (mode === "mission"){
       const prev = progress.best[recK("m" + missionIdx)];
-      const bd = MISSIONS[missionIdx].bands, k = bd ? bd.findIndex(v => S.time <= v) : -1;
+      const bd = MISSIONS[missionIdx].bands, k = bd.findIndex(v => S.time <= v);
       $("stClock").innerHTML = "Tempo " + fmtClock(S.time) + (prev ? " <span>· record " + fmtClock(prev) + "</span>" : "") +
         (k >= 0 && !S.finished ? " <span>· " + MEDALS[k] + " entro " + fmtClock(bd[k]) + "</span>" : "");
     }
   }
-  const fmtClock = sec => { const s = Math.floor(sec); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
 
   // ======================================================================
   // DISEGNO
@@ -2238,6 +2249,7 @@ function step(S, C, E, dt){
   addEventListener("resize", resize);
   const hash = (i, j, k) => { let n = i * 374761393 + j * 668265263 + k * 2147483647; n = (n ^ (n >> 13)) * 1274126177; return ((n ^ (n >> 16)) >>> 0) / 4294967295; };
   let rippleOff = [0, 0], wakeT = 0;
+  // ---- vista e telecamera ----
   // tasto vista (Q tenuto), «vista del percorso»: sposta la barca sullo schermo dalla parte opposta all'obiettivo e, se serve, allontana
   // l'inquadratura finché barca e obiettivo stanno sullo schermo con un margine (mai sotto ZMIN). Solo disegno: fisica e tempo non lo leggono.
   // Ipotesi nostre: 60% della mezza larghezza e della mezza altezza, barca fra il 20% e l'80% dello schermo, spostamento in circa 0,25 s,
@@ -2248,6 +2260,7 @@ function step(S, C, E, dt){
   const RIP_Z0 = 0.35, RIP_Z1 = 0.5; // dissolvenza delle increspature fra questi due zoom (ipotesi nostra)
   let viewOff = [0, 0], qOnSea = false, fontsOk = false, rippleCells = 0;
   Promise.all(["600", "700"].map(w => document.fonts.load(w + ' 14px "Barlow Semi Condensed"'))).catch(() => {}).then(() => fontsOk = true);
+  const font = (w, px) => `${w} ${px}px "Barlow Semi Condensed", sans-serif`; // caratteri del disegno sul mare
   const viewOn = () => mode === "mission" || mode === "race";
   function view(){
     const ppm = Math.min(W, H) / 48 * camZoom * zoomQ;
@@ -2277,6 +2290,7 @@ function step(S, C, E, dt){
   }
   function localToWorld(lx, ly){ const h = S.h * D2R, c = Math.cos(h), s = Math.sin(h); return [S.x + lx * c - ly * s, S.y + lx * s + ly * c]; }
 
+  // ---- quadro principale ----
   function draw(dt){
     const st = curStep();
     camZoom += ((st && st.zoom ? st.zoom : 1) * userZoom - camZoom) * Math.min(1, dt * 3);
@@ -2330,17 +2344,7 @@ function step(S, C, E, dt){
       ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(0, 0, gg.r, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     }
-    // scia
-    ctx.lineWidth = 0.12;
-    for (const side of [-1, 1]){
-      ctx.beginPath(); let started = false;
-      for (let i = wake.length - 1; i >= 0; i--){
-        const w = wake[i], age = simTime - w.t; if (age > 8) break;
-        const spread = 0.35 + age * 0.35, x = w.x + w.nx * spread * side, y = w.y + w.ny * spread * side;
-        started ? ctx.lineTo(x, y) : ctx.moveTo(x, y); started = true;
-      }
-      ctx.strokeStyle = colors.foam; ctx.globalAlpha = Math.min(1, Math.abs(S.u) / 2) * 0.8; ctx.stroke(); ctx.globalAlpha = 1;
-    }
+    drawWakeOf(wake, S.u, 8, 0.8); // scia
     // traccia (per le prove e il bordeggio)
     // boe
     const marks = (mode === "lesson" ? (S.lessonMark ? [S.lessonMark] : []) : curMarks);
@@ -2366,7 +2370,7 @@ function step(S, C, E, dt){
     if (4.2 * v.ppm < 14) boatMarker(v); // barca sotto 14 px: triangolo orientato come la prua, attorno alla barca
 
     // sopra il mondo, in coordinate schermo
-    ctx.font = `600 13px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    ctx.font = font(600, 13); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
     marks.forEach((m, i) => { if (m.fin) return; const [sx, sy] = toScreen(v, m.x, m.y); ctx.fillText(m.label + (m.round && mode === "mission" && i === S.markIdx ? " · lasciala a sinistra" : ""), sx + 10, sy - 8); });
     const act = mode === "race" ? null : goal(); // in regata la freccia la disegna drawRaceScreen, sopra l'orologio
     if (act) offscreenArrow(v, act);
@@ -2385,12 +2389,13 @@ function step(S, C, E, dt){
     if (mode === "race") drawRaceScreen(v);
     drawHelmLegend();
     if (qOnSea && fontsOk){ // ripiego se la riga dei tasti nel pannello si taglierebbe: sopra i pulsanti + e −
-      ctx.save(); ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+      ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
       ctx.fillStyle = "rgba(255,255,255,.8)"; ctx.fillText("Q vista", W - 34, H - 108); ctx.restore();
     }
     if (S.toast) drawToast();
   }
 
+  // ---- frecce fuori schermo, linee e scritte ----
   // posizione e angolo della freccia fuori schermo verso m; null se m è sullo schermo
   function arrowAt(v, m){
     const [sx, sy] = toScreen(v, m.x, m.y), pad = 30;
@@ -2408,7 +2413,7 @@ function step(S, C, E, dt){
     if (!fontsOk) return;
     // distanza dalla barca, ai 5 m, verso l'interno dello schermo rispetto alla freccia
     const txt = Math.round(Math.hypot(m.x - S.x, m.y - S.y) / 5) * 5 + " m";
-    ctx.save(); ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.fillText(txt, a[0] - Math.cos(a[2]) * 30, a[1] - Math.sin(a[2]) * 22); ctx.restore();
   }
   function boatMarker(v){
@@ -2434,7 +2439,7 @@ function step(S, C, E, dt){
     const pa = toScreen(v, A.x, A.y), pb = toScreen(v, B.x, B.y), ar = aim && arrowAt(v, aim), ref = ar || [v.cx, v.cy];
     const useA = Math.hypot(pa[0] - ref[0], pa[1] - ref[1]) <= Math.hypot(pb[0] - ref[0], pb[1] - ref[1]);
     const [p, o] = useA ? [pa, pb] : [pb, pa], gap = 10 + (0.8 + (useA ? padA : padB)) * v.ppm, flag = text === "Arrivo";
-    ctx.save(); ctx.font = `700 14px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.save(); ctx.font = font(700, 14); ctx.textAlign = "left"; ctx.textBaseline = "middle";
     const h = 24, w = ctx.measureText(text).width + (flag ? 38 : 22);
     const dl = Math.hypot(p[0] - o[0], p[1] - o[1]), ux = dl > 1 ? (p[0] - o[0]) / dl : 1, uy = dl > 1 ? (p[1] - o[1]) / dl : 0;
     const onS = p[0] >= 0 && p[0] <= W && p[1] >= 0 && p[1] <= H; // boa sullo schermo: la pillola resta dentro lo schermo
@@ -2457,13 +2462,14 @@ function step(S, C, E, dt){
 
   function drawToast(){
     const a = Math.min(1, S.toast.t / 0.4);
-    ctx.save(); ctx.globalAlpha = a; ctx.font = `700 20px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.save(); ctx.globalAlpha = a; ctx.font = font(700, 20); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const w = ctx.measureText(S.toast.text).width + 28;
     const ty = mode === "race" ? 100 : 58;
     ctx.fillStyle = "rgba(10,24,36,.75)"; ctx.fillRect(W / 2 - w / 2, ty, w, 36);
     ctx.fillStyle = "#fff"; ctx.fillText(S.toast.text, W / 2, ty + 19); ctx.restore();
   }
 
+  // ---- rosa delle andature ed etichette ----
   // cerchio delle andature, in coordinate schermo attorno alla barca
   function drawRose(v, showManeuvers, target){
     const [cx, cy] = toScreen(v, S.x, S.y), R = Math.min(W, H) * 0.3, r0 = R * 0.72, rotDeg = v.rot / D2R;
@@ -2485,7 +2491,7 @@ function step(S, C, E, dt){
       });
     }
     ctx.globalAlpha = 1;
-    ctx.font = `600 ${Math.round(clamp(R * 0.075, 12, 16))}px "Barlow Semi Condensed", sans-serif`; ctx.textBaseline = "middle";
+    ctx.font = font(600, Math.round(clamp(R * 0.075, 12, 16))); ctx.textBaseline = "middle";
     const put = (bearing, text, cur) => {
       const a = toCanvas(bearing), x = cx + Math.cos(a) * (R + 8), y = cy + Math.sin(a) * (R + 8);
       ctx.textAlign = Math.cos(a) > 0.2 ? "left" : Math.cos(a) < -0.2 ? "right" : "center";
@@ -2510,7 +2516,7 @@ function step(S, C, E, dt){
           ctx.beginPath(); ctx.moveTo(x + tx * 10, y + ty * 10); ctx.lineTo(x - ty * 7, y + tx * 7); ctx.lineTo(x + ty * 7, y - tx * 7); ctx.closePath(); ctx.fill();
         }
         const am = toCanvas((b1 + b2) / 2);
-        ctx.textAlign = "center"; ctx.font = `700 15px "Barlow Semi Condensed", sans-serif`;
+        ctx.textAlign = "center"; ctx.font = font(700, 15);
         ctx.fillText(label, cx + Math.cos(am) * (r0 - 16), cy + Math.sin(am) * (r0 - 16));
       };
       arc(env.twd - 30, env.twd + 30, "virata");
@@ -2533,7 +2539,7 @@ function step(S, C, E, dt){
     };
     const [bx, by] = toScreen(v, S.x, S.y);
     const used = [];
-    ctx.save(); ctx.font = `700 16px "Barlow Semi Condensed", sans-serif`; ctx.textBaseline = "middle";
+    ctx.save(); ctx.font = font(700, 16); ctx.textBaseline = "middle";
     for (const n of names){
       const [x, y] = P[n];
       let a = Math.atan2(y - by, x - bx);
@@ -2556,6 +2562,7 @@ function step(S, C, E, dt){
     ctx.restore();
   }
 
+  // ---- barca ----
   function drawBoat(){
     const t = simTime;
     ctx.save(); ctx.translate(S.x, S.y); ctx.rotate(S.h * D2R);
@@ -2665,13 +2672,17 @@ function step(S, C, E, dt){
     ctx.closePath();
   }
 
+  // ---- frecce del vento e strumenti a schermo ----
+  function shaftHead(sx, sy, x, y, dx, dy){ // asta da (sx, sy) e punta in (x, y), direzione (dx, dy); colori e spessore già scelti
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(x - dx * 10, y - dy * 10); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - dx * 14 - dy * 7, y - dy * 14 + dx * 7); ctx.lineTo(x - dx * 14 + dy * 7, y - dy * 14 - dx * 7); ctx.closePath(); ctx.fill();
+  }
   function arrow(x, y, ang, len, col, label){
     const dx = Math.sin(ang), dy = -Math.cos(ang);
     const sx = x - dx * len, sy = y - dy * len;
     ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(x - dx * 10, y - dy * 10); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - dx * 14 - dy * 7, y - dy * 14 + dx * 7); ctx.lineTo(x - dx * 14 + dy * 7, y - dy * 14 - dx * 7); ctx.closePath(); ctx.fill();
-    ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center";
+    shaftHead(sx, sy, x, y, dx, dy);
+    ctx.font = font(700, 13); ctx.textAlign = "center";
     ctx.fillText(label, sx - dx * 12, sy - dy * 12 + 4);
   }
   // frecce che puntano verso la barca, dalla direzione da cui arriva ciascun vento
@@ -2693,13 +2704,12 @@ function step(S, C, E, dt){
     const ang = (Math.atan2(vx, -vy) / D2R + v.rot / D2R) * D2R, dx = Math.sin(ang), dy = -Math.cos(ang);
     const len = rr + 22 * sp, tx = bx + dx * len, ty = by + dy * len;
     ctx.save(); ctx.strokeStyle = ctx.fillStyle = colors.moto; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(tx - dx * 10, ty - dy * 10); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx - dx * 14 - dy * 7, ty - dy * 14 + dx * 7); ctx.lineTo(tx - dx * 14 + dy * 7, ty - dy * 14 - dx * 7); ctx.closePath(); ctx.fill();
+    shaftHead(bx, by, tx, ty, dx, dy);
     // scritta di fianco alla punta, dal lato opposto a quello da cui arriva il vento: così non si sovrappone alle frecce del vento
     const wf = (local.twd + v.rot / D2R) * D2R; let nx = -dy, ny = dx;
     if (nx * Math.sin(wf) - ny * Math.cos(wf) > 0){ nx = -nx; ny = -ny; }
     const lx = tx - dx * 8 + nx * 10, ly = ty - dy * 8 + ny * 10;
-    ctx.font = `700 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = nx >= 0 ? "left" : "right"; ctx.textBaseline = "middle";
+    ctx.font = font(700, 13); ctx.textAlign = nx >= 0 ? "left" : "right"; ctx.textBaseline = "middle";
     ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.fillText("velocità", lx + 1, ly + 1);
     ctx.fillStyle = colors.moto; ctx.fillText("velocità", lx, ly);
     ctx.restore();
@@ -2711,8 +2721,8 @@ function step(S, C, E, dt){
     ctx.rotate(a); ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.fillStyle = "#fff"; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, -r + 5); ctx.lineTo(-5, 0); ctx.lineTo(5, 0); ctx.closePath(); ctx.fill();
-    ctx.font = `700 12px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText("N", Math.sin(0) * 0, -r - 9);
+    ctx.font = font(700, 12); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("N", 0, -r - 9);
     ctx.restore();
   }
   function drawHeelGauge(){
@@ -2724,7 +2734,7 @@ function step(S, C, E, dt){
     zone(-60, -15, "#E8935A"); zone(-15, 20, "#5CC393"); zone(20, 35, "#F2C14E"); zone(35, 60, "#E0553A"); zone(60, 90, "#8E1F14");
     const a = -Math.PI / 2 + heel * D2R;
     ctx.strokeStyle = "#fff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * (r - 4), Math.sin(a) * (r - 4)); ctx.stroke();
-    ctx.fillStyle = "#fff"; ctx.font = `600 12px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center";
+    ctx.fillStyle = "#fff"; ctx.font = font(600, 12); ctx.textAlign = "center";
     ctx.fillText("sbandamento " + (S.capsized ? "— scuffia" : Math.round(Math.abs(S.heel)) + "°"), 0, -r - 12);
     ctx.restore();
   }
@@ -2740,18 +2750,18 @@ function step(S, C, E, dt){
     const a = -Math.PI / 2 + rel * D2R;
     ctx.strokeStyle = inDead ? "#E0553A" : "#fff"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(a) * (r - 4), Math.sin(a) * (r - 4)); ctx.stroke();
     ctx.fillStyle = inDead ? "#E0553A" : "#fff"; ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#fff"; ctx.font = `600 12px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = "#fff"; ctx.font = font(600, 12); ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
     ctx.fillText(inDead ? "nell'angolo morto" : "prua e vento", 0, -r - 12);
     ctx.restore();
   }
   function drawWindBox(v){
-    ctx.save(); ctx.font = `600 14px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
     ctx.fillText("Vento reale da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", 16, 26);
     ctx.restore();
   }
   // sotto la bussola (in alto a destra), sopra i pulsanti dello zoom: unico punto libero a tutte le risoluzioni del pannello
   function drawVersionTag(){
-    ctx.save(); ctx.font = `600 12px "Barlow Semi Condensed", sans-serif`; ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
+    ctx.save(); ctx.font = font(600, 12); ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
     ctx.fillText("V. " + VERSIONE, W - 16, 96);
     ctx.restore();
   }
@@ -2859,11 +2869,10 @@ function step(S, C, E, dt){
     // spia sullo schermo (sul mare, non nel pannello)
     if (!noDraw && mode !== "menu"){
       ses.flash = Math.max(0, ses.flash - dt);
-      ctx.save(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = `600 13px "Barlow Semi Condensed", sans-serif`; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+      ctx.save(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = font(600, 13); ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
       ctx.fillStyle = "rgba(255,120,110,.95)"; ctx.fillText("● REG" + (ses.flash > 0 ? " · M" + ses.marks.length : ""), 16, 46); ctx.restore();
     }
   }
-  const sesHms = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
   function sesToggle(on){
     if (on && !ses.start){ ses.start = new Date(); ses.set0 = sesSet(); }
     if (on) sesBase();
@@ -2875,15 +2884,15 @@ function step(S, C, E, dt){
     $("sesBox").hidden = false;
   }
   function sesText(){
-    const p2 = n => String(n).padStart(2, "0"), d = ses.start;
+    const d = ses.start;
     const note = $("sesNote").value.replace(/\s+/g, " ").trim().slice(0, 2000);
     const list = (o, f) => Object.keys(o).map(f).join(" · ") || "nessuno";
-    const and = ["AM", "BS", "BL", "TR", "LA", "GL", "PO", "SC"].filter(k => ses.andT[k]).map(k => k + " " + sesHms(ses.andT[k])).join(" · ") || "nessuna";
+    const and = ["AM", "BS", "BL", "TR", "LA", "GL", "PO", "SC"].filter(k => ses.andT[k]).map(k => k + " " + fmtClock(ses.andT[k])).join(" · ") || "nessuna";
     const msgs = Object.keys(ses.msgT).sort((a, b) => ses.msgT[b] - ses.msgT[a]).map(m => "#   «" + m + "» " + (ses.msgN[m] || 0) + "× · " + Math.round(ses.msgT[m]) + " s");
     return [
       "# SCUOLA DI VELA - registrazione di sessione, formato 1",
       "# gioco " + VERSIONE + " · inizio " + d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()) + " " + p2(d.getHours()) + ":" + p2(d.getMinutes()) +
-        " · durata " + sesHms(ses.t) + " (in simulazione " + sesHms(ses.sim) + ")",
+        " · durata " + fmtClock(ses.t) + " (in simulazione " + fmtClock(ses.sim) + ")",
       "# impostazioni all'inizio: " + ses.set0,
       "# nota: " + (note || "(nessuna)"),
       "# pause della registrazione (spenta e riaccesa): " + (ses.pause ? ses.pause + " s in totale" : "nessuna"),
@@ -2891,8 +2900,8 @@ function step(S, C, E, dt){
       "#  eventi: " + list(ses.cnt, k => k + " " + ses.cnt[k]),
       "#  tempo per andatura (in simulazione): " + and,
       "#  suggerimenti mostrati (volte nel file · secondi a schermo, anche i passaggi sotto 0,3 s):", ...(msgs.length ? msgs : ["#   nessuno"]),
-      "#  passi di lezione (tempo, pause di lettura comprese): " + list(ses.stepT, k => k + " «" + ses.stepName[k] + "» " + sesHms(ses.stepT[k])),
-      "#  marcatori: " + (ses.marks.map(m => "M" + m.n + " a " + sesHms(m.t)).join(" · ") || "nessuno"),
+      "#  passi di lezione (tempo, pause di lettura comprese): " + list(ses.stepT, k => k + " «" + ses.stepName[k] + "» " + fmtClock(ses.stepT[k])),
+      "#  marcatori: " + (ses.marks.map(m => "M" + m.n + " a " + fmtClock(m.t)).join(" · ") || "nessuno"),
       "# LEGENDA (t = secondi dall'inizio della registrazione, tempo vero di gioco; il menu non conta)",
       "#  S t x y prua nodi sbandamento twa tws awa aws barra% scotta% andatura   stato, una riga al secondo mentre la barca naviga",
       "#    x verso est e y verso sud, in metri; prua in gradi da nord; twa e awa con segno (+ mure a dritta, − mure a sinistra);",
@@ -2915,7 +2924,7 @@ function step(S, C, E, dt){
       ...ses.lines, ""].join("\n");
   }
   function sesDownload(){
-    const d = ses.start || new Date(), p2 = n => String(n).padStart(2, "0");
+    const d = ses.start || new Date();
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([sesText()], { type: "text/plain;charset=utf-8" }));
     a.download = "sessione-" + d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + "-" + p2(d.getHours()) + p2(d.getMinutes()) + ".txt";
@@ -2928,7 +2937,7 @@ function step(S, C, E, dt){
     if (!ses.on || e.repeat || e.key.toLowerCase() !== "m" || sesTyping()) return;
     const n = ses.marks.length + 1; ses.marks.push({ n, t: ses.t }); ses.flash = 1.5;
     sesLine("M " + sesT() + " " + n + (S ? " " + S.x.toFixed(1) + " " + S.y.toFixed(1) : ""));
-    $("sesMarks").hidden = false; $("sesMarks").title = $("sesMarks").textContent = "Marcatori: " + ses.marks.map(m => "M" + m.n + " a " + sesHms(m.t)).join(", ") + ". Scrivi nella nota a quale ti riferisci.";
+    $("sesMarks").hidden = false; $("sesMarks").title = $("sesMarks").textContent = "Marcatori: " + ses.marks.map(m => "M" + m.n + " a " + fmtClock(m.t)).join(", ") + ". Scrivi nella nota a quale ti riferisci.";
   });
   addEventListener("beforeunload", e => { if (ses.dirty){ e.preventDefault(); e.returnValue = ""; } }); // registrazione non scaricata
 
