@@ -176,7 +176,8 @@ async def main():
                 raise Exception("passo non trovato: " + titolo)
             await pg.evaluate("__sv.fast(3)")
             k = await passo(0, "Orzare e l'angolo morto"); await pg.click("#c")
-            await pg.keyboard.down("ArrowRight"); ok1 = await attendi(pg, "__sv.stepDone", 30); await pg.wait_for_timeout(1500); await pg.keyboard.up("ArrowRight")
+            await pg.keyboard.down("ArrowRight"); await attendi(pg, "Math.abs(((__sv.twd - __sv.S.h) % 360 + 540) % 360 - 180) < 40", 30); await pg.keyboard.up("ArrowRight")  # 1.0.12: rilascia nel rosso, come dice il testo
+            ok1 = await attendi(pg, "__sv.stepDone", 30); await pg.wait_for_timeout(1500)
             await pg.evaluate(f"__sv.showStep({k + 1})"); await pg.keyboard.down("ArrowLeft"); await attendi(pg, "__sv.stepDone", 30); await pg.keyboard.up("ArrowLeft")
             r1 = await reg(pg)
             # 0.20.2: il passo si completa solo dopo l'uscita, quindi l'episodio è già finito quando si passa al passo dopo

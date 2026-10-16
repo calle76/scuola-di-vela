@@ -27,7 +27,7 @@ window.requestAnimationFrame = () => 0;"""
 PASSI = r"""
 const PASSI = {
   "1:Poggiare":                      { lim: 40,  f: C => tieni(C, poggiaK(), () => twaV(C) >= 150) },               // «rilascia quando il vento arriva quasi da dietro»
-  "1:Orzare e l'angolo morto":       { lim: 60,  f: C => tieni(C, orzaK(), () => kn() < 1.0) },                      // «finché la barca non si ferma quasi del tutto»
+  "1:Orzare e l'angolo morto":       { lim: 60,  f: C => tieni(C, orzaK(), () => twaV(C) < 40) },                    // 1.0.12: «quando la lancetta della rosa entra nel rosso, rilascia»
   "1:Ripartire":                     { lim: 40,  f: C => poi(tieni(C, poggiaK(), () => twaV(C) >= 90), guida(C, { twa: 90, resta: true })) }, // «finché il vento arriva di fianco e la barca riparte. Se giri troppo, correggi con l'altra freccia» (messa a punto, semi 1-3)
   "1:La scotta: lascare":            { lim: 30,  f: C => tieni(C, lascaK(), () => sh() >= 0.995) },                  // «apri la vela del tutto»
   "1:La scotta: cazzare":            { lim: 40,  f: C => colpiScotta(C, "ok") },                                     // «poco alla volta, finché smette di sbattere»
