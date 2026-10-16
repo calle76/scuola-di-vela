@@ -59,3 +59,33 @@ Nessuna affermazione nautica nuova: «la vela sbatte, non spinge e la barca si f
 ### Esito (fermata 2, 16 ottobre 2026): fatto nella 1.0.12
 
 Ale ha scelto il testo **con** la frase facoltativa, l'ha provato giocando («funziona») e ha deciso di non fare la conferma sui semi 101-200: i criteri 1, 3, 5 e 7 **non sono stati misurati**. Misurati: pannello eccesso 0 px (32 passi, criterio 4) e non-regressione identica (criterio 6). Pilota e `collaudo_registro.py` aggiornati al testo nuovo, da verificare nel prossimo giro completo.
+
+## 2. Passo 1.9 «Ripartire» (fermata 1, 16 ottobre 2026)
+
+### Cosa succede oggi (gioco 1.0.12, pilota semi 1-20, 40 corse)
+
+- **Guidando** come dice il testo (poggiare fino al traverso): **20 su 20**, mediana 4,2 s.
+- **A mani ferme** (30 s senza tasti): il passo **non si completa mai** (0 su 40), ma la barca esce da sola dall'angolo morto **40 volte su 40** e finisce in bolina (32-57° dal vento, 1,6-5,2 nodi, filetti dritti). È l'osservazione 45.
+- La causa è una regola del motore **senza fonte**: barca quasi ferma (sotto 0,5 m/s) con vento apparente sotto 36°, la prua poggia da sola fino a 6 °/s (`ironsA`, `ironsU`, `ironsYaw`). In `DUBBI-E-RICERCHE.md` (domanda 1) due fonti dicono il contrario: la barca **resta** nell'angolo morto se non si fa qualcosa (una sola delle due riguarda una deriva).
+
+### Misura su una copia con `ironsYaw` = 0 (fuori dal progetto, `js/` non toccato)
+
+- 1.9 a mani ferme: la barca **resta nel vento e arretra a circa 2 nodi** (prua a 2-20° dal vento).
+- 1.9 guidando come dice il testo: **0 su 20**. Andando all'indietro la barra funziona al contrario: premendo «poggia» la barca si ferma a 24-30° dal vento, a 0 nodi.
+- 5.4 «Una virata che non riesce» (uscita con la barra verso il boma): 20 su 20, mediana 34,8 s, uguale al gioco di oggi (34,7 s).
+- Si rompe a catena anche 1.12 «Troppo cazzata» (0 su 20), perché arriva dal 1.9 saltato.
+
+Quindi togliere la regola senza fonte rende la lezione 1 impossibile da fare con quello che insegna: le fonti, per i principianti, insegnano a uscire spingendo il boma insieme alla barra, e il gioco non ha quel comando.
+
+### Due strade
+
+- **A. Non cambiare niente ora** (consigliata). Il passo funziona: guidando 100%, da solo 0%. La regola senza fonte resta, già dichiarata come semplificazione in `FISICA-E-TARATURE.md` punto 7; aggiungo i numeri di oggi in `DUBBI-E-RICERCHE.md` e chiudo l'osservazione 45 come «semplificazione dichiarata». Il problema vero passa al compito della barca piantata (retromarcia che «parte troppo presto», 2 nodi all'indietro, comando «spingi il boma» nel livello 2).
+- **B. Correggere la fisica adesso:** togliere o ridurre la prua che poggia da sola, rivedere la retromarcia e riscrivere la lezione 1 su come si esce dall'angolo morto. È un compito grosso di fisica: proposta a parte con revisione in chat, e tocca le lezioni 1 e 5, gli avversari, le prove e le fasce.
+
+### Decisione di Ale ed esito (16 ottobre 2026, versione 1.0.13)
+
+**Ale:** «A, e rallentiamo un po' la retromarcia, tutto qui, senza fare mille test».
+
+- **1.9:** nessun cambio; osservazione 45 chiusa come semplificazione dichiarata, numeri in `DUBBI-E-RICERCHE.md` (domanda 1).
+- **Retromarcia:** nuova costante `backDrag` = 1,5 (ipotesi, nessuna fonte): all'indietro lo scafo frena una volta e mezza. Banco `retromarcia.js`, massimo all'indietro con la prua al vento: 0,95 / 2,33 / 3,40 / 4,30 → **0,81 / 1,99 / 2,96 / 3,79 nodi** con 6 / 10 / 15 / 20 nodi; regime con la prua tenuta nel vento 1,57 / 2,60 / 3,73 / 4,66 → 1,34 / 2,24 / 3,26 / 4,15. Tempo per arrivare a −0,5 nodi **invariato** (con 10 nodi 1,6 s da ferma): «parte troppo presto» resta aperto.
+- **Controlli:** `polare.js` e `raffiche_e_virate.js` identici; `angolo_morto.js` stesse uscite (364 su 366 per caso), tempi di uscita da 0,1 a 0,3 s più lunghi; pilota veloce (semi 1-3) lezioni 1 e 5 tutto completato, 5.4 in 35,0 s (prima 34,7 s sui semi 1-20).

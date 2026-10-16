@@ -35,6 +35,7 @@
     ironsA: [25, 45, 1, "barca ferma nel vento: sotto questi gradi di vento apparente la prua poggia da sola (sopra luffA0+luffW anche con la vela che porta)"],
     ironsU: [0.1, 1, 0.05, "m/s: sotto questa velocità la prua poggia da sola"],
     ironsYaw: [0, 15, 0.5, "gradi al secondo con cui la prua poggia da sola"],
+    backDrag: [1, 4, 0.1, "moltiplica la resistenza dello scafo all'indietro (1,5 dalla 1.0.13; 1 = come in avanti): più è alta, più lenta la retromarcia"],
     luffA0: [15, 33, 1, "gradi di vento apparente sotto cui la vela si sgonfia: cambia anche filetti e angolo morto"],
     luffW: [2, 15, 1, "ampiezza della transizione: cambia anche filetti e angolo morto"],
     minBoom: [5, 20, 1, "gradi del boma cazzato a ferro (9; era 14): la vela porta del tutto da minBoom + 20 di vento apparente; cambia anche suggerimento della scotta, avversari e disegno"],

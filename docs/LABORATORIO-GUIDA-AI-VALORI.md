@@ -94,6 +94,10 @@ Gli ultimi tre valori di questo gruppo lavorano insieme. Quando la barca è quas
 - **Cos'è:** la velocità con cui la prua gira da sola, al massimo.
 - **Esempio:** con 0, dopo 10 s la prua è a 10° dal vento (resta piantata); con 15, a 36° (e all'indietro arriva solo a 1,5 nodi).
 
+**`backDrag`: quanto frena l'acqua all'indietro** (oggi 1,5, dalla 1.0.13; da 1 a 4)
+- **Cos'è:** moltiplica la resistenza dello scafo quando la barca va all'indietro; 1 = come in avanti (la barca fino alla 1.0.12).
+- **Esempio:** con 10 nodi, prua al vento e barra al centro, al massimo 2,33 nodi all'indietro con 1, 1,99 con 1,5, 1,77 con 2. Il tempo per arrivare a −0,5 nodi resta 1,6 s: non fa partire la retromarcia più tardi.
+
 ### Quando la vela si sgonfia
 
 Questi due valori cambiano anche i filetti, i messaggi dell'angolo morto e quindi alcune lezioni. La loro somma non può superare 40°, che sono i 40° dell'angolo morto insegnati nelle lezioni: se si supera, il cursore non si muove e la finestra lo dice.

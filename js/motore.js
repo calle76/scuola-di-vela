@@ -31,6 +31,7 @@ const BOAT = {
   ironsA: 36,         // barca ferma nel vento: sotto questi gradi di vento apparente
   ironsU: 0.5,        //   e sotto questa velocità (m/s) la prua poggia da sola
   ironsYaw: 6,        //   fino a questi gradi al secondo
+  backDrag: 1.5,      // 1.0.13: all'indietro lo scafo frena di più (specchio di poppa e pala al contrario); ipotesi, nessuna fonte; 1 = la vasca come in avanti
   sailCL2: 0.08,      // 1.0.11: peso di CL² nella resistenza della vela (era 0,12): CD 0,34 di bolina, galleria del vento più timoniere (Day 2017, §2.1 e §2.5)
   TE: 0.80            // m, 1.0.11: profondità efficace di scafo e deriva per la resistenza indotta (ipotesi: dà il 14% di Day 2017 §3.4 con 10 nodi); 0 = senza
 };
@@ -79,7 +80,7 @@ function step(S, C, E, dt){
   const drive = L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
   const side = L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento
   const rud = C.tiller * BOAT.maxRudder;
-  const res = hullDrag(S.u) +
+  const res = hullDrag(S.u) * (S.u < 0 ? BOAT.backDrag : 1) +
               BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   // 1.0.11: resistenza indotta, Delft (Day 2017, eq. 15) Ri = Fh² / (π·½ρ·V²·TE²), con u² + 0,4 come nello scarroccio: a bassa velocità la deriva non regge
