@@ -32,6 +32,8 @@ Aggiornato al 7 ottobre 2026. È il registro delle fonti usate per tarare e gius
 
 I forum citano anche, come lettura pratica sulla regolazione delle vele, *Sail Power* di Wallace Ross (1975). Sono pareri di forum, non verifiche.
 
+**16 ottobre 2026:** velocità, virata, retromarcia e ripartenza della deriva di riferimento, con fonti, affidabilità e confronto con il gioco: `RICERCA-VELOCITA-VIRATA-RIPARTENZA.md` (ricerca della chat del progetto).
+
 ## Cosa dicono le fonti
 
 ### Il fiocco e la randa
