@@ -490,8 +490,10 @@
     const awRel = info.awa * D2R; // da dove arriva, rispetto alla prua (+ dritta)
     const vx = Math.sin(awRel), vy = -Math.cos(awRel);
     ctx.strokeStyle = colors.app; ctx.fillStyle = colors.app; ctx.lineWidth = 0.06;
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.7, mastY + vy * 0.7); ctx.lineTo(hx - vx * 0.3, mastY - vy * 0.3); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.7, mastY + vy * 0.7); ctx.lineTo(hx + vx * 0.45 - vy * 0.12, mastY + vy * 0.45 + vx * 0.12); ctx.lineTo(hx + vx * 0.45 + vy * 0.12, mastY + vy * 0.45 - vx * 0.12); ctx.closePath(); ctx.fill();
+    // 1.0.10: perno vicino alla punta, come una banderuola: la coda, più lunga, sta sottovento (docs/PROPOSTA-DISEGNO-VELA.md)
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, mastY + vy * 0.3); ctx.lineTo(hx - vx * 0.7, mastY - vy * 0.7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, mastY + vy * 0.3); ctx.lineTo(hx + vx * 0.05 - vy * 0.12, mastY + vy * 0.05 + vx * 0.12); ctx.lineTo(hx + vx * 0.05 + vy * 0.12, mastY + vy * 0.05 - vx * 0.12); ctx.closePath(); ctx.fill();
+    if (Math.abs(sinH) > 0.05){ ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(hx, mastY, 0.07, 0, Math.PI * 2); ctx.fill(); } // perno del segnavento in testa d'albero
     ctx.restore();
     geo = { mastY, ex, ey, rx: (hx + ex + lx) / 3, ry: (mastY + ey + ly) / 3, qx, qy, tau };
   }

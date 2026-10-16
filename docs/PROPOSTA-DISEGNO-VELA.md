@@ -72,3 +72,21 @@ Sullo sbandamento: Ale nota che fra 15° e 30° il disegno cambia poco. Con la v
 2. `polare.js` e `raffiche_e_virate.js` identici carattere per carattere alla versione precedente; pannello a 1360×650 eccesso 0 px, errori nessuno.
 3. Giudizio a occhio: di Ale. Schermate in `tests/output/vela/v107/` (12 situazioni, compresa la barca sbandata sopravento, dove la penna va sopravento con l'albero e la vela diventa una striscia sottile).
 4. Versione 1.0.7, voce nel `CHANGELOG.md`.
+
+## Proposta: il perno del segnavento (fermata 1, 16 ottobre 2026)
+
+**Ale:** la freccia del segnavento ha un errore dalla prima versione: alla cima dell'albero dev'essere attaccata la punta, non la coda, altrimenti non si spiega come funziona.
+
+**[codice]** In `drawBoat` (`js/disegno.js`) il segnavento va da 0,7 sopravento (punta) a 0,3 sottovento (coda), con il perno in testa d'albero: il perno sta più vicino alla coda.
+
+**[fisica, banderuola]** Un segnavento gira libero sul perno; il vento spinge la parte con più superficie (la coda con l'aletta) finché questa sta sottovento, e la punta resta rivolta da dove arriva il vento. Perché funzioni, la superficie dietro il perno deve essere più grande di quella davanti: il perno sta verso la punta. Fonti: Wikipedia, «Weather vane» (CC BY-SA); descrizioni commerciali di un segnavento da testa d'albero (Davis Windex, boats.com e Practical Sailor: vane leggera con aletta grande in coda). Nessuna fonte dà il punto esatto del perno: il rapporto 30/70 è una scelta di disegno.
+
+**Proposta:** invertire le due lunghezze: punta 0,3 sopravento, coda 0,7 sottovento; stessa lunghezza totale, stessa direzione. Una riga.
+
+**Testi:** non cambiano. Lezione 4 e glossario dicono che la punta indica da dove arriva il vento apparente: resta vero.
+
+**Criteri della fermata 2:** impronta con riferimento preso subito prima, diverse solo le immagini del mare; `polare.js` e `raffiche_e_virate.js` identici; schermate di bolina, traverso e poppa per Ale; versione 1.0.10 e voce nel `CHANGELOG.md`.
+
+**Rischio:** con il perno vicino alla punta, la coda sottovento finisce più spesso disegnata sopra la vela, cosa che Ale aveva già trovato poco leggibile (decisione del 16 ottobre: se disturba, si rende più leggibile o si toglie).
+
+**Fermata 2 (16 ottobre 2026, versione 1.0.10, via di Ale):** fatto come proposto. Impronta con riferimento preso subito prima: diverse solo le immagini del mare, 20 scene su 21 (uguale la 6.5, barca scuffiata). `polare.js` e `raffiche_e_virate.js` identici; pagina da giocatore senza errori. Schermate in `tests/output/vela/v110/`: al traverso la coda finisce sopra la vela, come previsto nel rischio. Giudizio a occhio: di Ale, giocando.
