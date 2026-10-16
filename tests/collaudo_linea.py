@@ -146,7 +146,7 @@ async def parte3(b):
 
 FILLTEXT = """(() => { window.__testi = []; const f = CanvasRenderingContext2D.prototype.fillText;
   CanvasRenderingContext2D.prototype.fillText = function(t, ...a){ if (window.__testi.length < 5000) window.__testi.push(String(t)); return f.call(this, t, ...a); }; })();"""
-VECCHI = {"done": {"m0": True, "m3": True}, "best": {"m0": 80, "m1": 130, "m3.2": 300, "m4.3": 340, "m0.2": 90, "r0.3": 200}, "clean": {"m0": True, "m4.3": True, "r0.3": True}}
+VECCHI = {"done": {"m0": True, "m3": True}, "best": {"m0": 80, "m1": 130, "m3.2": 300, "m4.3": 340, "m0.2": 90, "m3.4": 310, "r0.3": 210, "r0.4": 200}, "clean": {"m0": True, "m4.3": True, "r0.4": True}}
 
 async def parte2(b):
     pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
@@ -160,8 +160,8 @@ async def parte2(b):
     v["aggancio assente"] = await pg.evaluate("typeof window.__sv === 'undefined'")
     v["messaggio al primo avvio"] = MSG in await pg.inner_text("#menu")
     p = json.loads(await pg.evaluate("localStorage.getItem('scuolaVelaSim.v1')")); g = json.loads(await pg.evaluate("localStorage.getItem('scuolaVelaGhost.v1')"))
-    v["record, stelle e fantasmi vecchi delle prove cancellati"] = not any(k in p["best"] or k in p["clean"] or k in g for k in ["m0", "m1", "m3.2", "m4.3", "m0.2"])   # 1.0.6: anche le chiavi della barca vecchia
-    v["regate e completamenti conservati"] = p["best"].get("r0.3") == 200 and p["clean"].get("r0.3") is True and "r0.2b" in g and p["done"].get("m0") is True
+    v["record, stelle e fantasmi vecchi delle prove cancellati"] = not any(k in p["best"] or k in p["clean"] or k in g for k in ["m0", "m1", "m3.2", "m4.3", "m0.2", "m3.4", "r0.3"])   # 1.0.6 e 1.0.11: anche le chiavi delle barche vecchie
+    v["regate e completamenti conservati"] = p["best"].get("r0.4") == 200 and p["clean"].get("r0.4") is True and "r0.2b" in g and p["done"].get("m0") is True
     await pg.click("button.item[data-k='3']"); await pg.wait_for_timeout(500)   # Prova 1 nella sequenza della Scuola
     v["riquadro delle istruzioni aperto"] = await pg.is_visible("#bGo")
     await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)

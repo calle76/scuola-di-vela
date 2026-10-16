@@ -42,7 +42,11 @@ Del 16 ottobre 2026. **La barca cambia di bolina.** Proposta (due stesure, revis
   - peggiora «Assorbire una raffica» a mani ferme: 54 su 80 (prima 46);
   - il resto entro 1-2 casi.
 - **Collaudi aggiornati:** chiavi dei record in 9 collaudi; tempi dell'oro in `collaudo_pannello.py`; in `collaudo_linea.py` anche le chiavi della 1.0.10 fra quelle da cancellare; in `collaudo_suggerimento.py` l'elenco delle prove «non misurate» della lezione 5 passo 4 comprende ora anche il caso 4 con la scotta a metà, che con la vela nuova riparte senza piantarsi (**cambio fatto dopo aver visto il risultato**; tutti i 20 casi riusciti).
-- **Collaudi lanciati qui, OK:** laboratorio, linea, libretto, carriera, carriera con esame, esame, pannello (eccesso 0 px), suggerimento (2 giri su 3 dopo la correzione; in 1 giro la parte «raffica in arrivo» non ha misurato nessun caso: da tenere d'occhio), regate, partenze, fasce, pilota delle lezioni.
+- **Collaudi sistemati dopo la prima consegna (richiesta di Ale):**
+  - `raffiche_e_virate.js` stampa anche tre righe «boma a 21°» (26° / 39° / 53°), così il confronto con le versioni di prima torna alla pari; le prime sei righe restano identiche;
+  - `collaudo_suggerimento.py`, parte «raffica in arrivo»: apriva la prova 5 senza seme e aspettava 300 ms veri, e in 1 giro su 4 non trovava nessuna raffica adatta (0 casi misurati). Ora usa Math.random a seme fisso (il primo seme con una raffica adatta, oggi 1, stampato) e legge i 6 casi in una sola chiamata, con un passo di simulazione prima di leggere. Tre giri su tre: 6 casi su 6, nessuno sbagliato. **Contro-prova:** su una copia del gioco con il testo della raffica cambiato il collaudo fallisce e indica i 6 casi;
+  - `lancia_tutti.sh`: note «cosa guardare» aggiornate ai numeri della 1.0.11 (polare, raffiche, e il passo 1.8 nel pilota veloce).
+- **Collaudi lanciati qui, OK:** laboratorio, linea, libretto, carriera, carriera con esame, esame, pannello (eccesso 0 px), suggerimento, regate, partenze, fasce, pilota delle lezioni.
 - **Testi da ricontrollare (Ale):** nel glossario «Bolina stretta: circa 45°, il massimo che la barca riesce a stringere»: ora la barca stringe fino a circa 30°, lentamente; la VMG migliore resta intorno a 45°.
 - **Prototipo del fiocco:** resta col motore suo.
 

@@ -231,22 +231,27 @@ async def main():
                     if letto != SBT[(twa < 75, sh)]: sbagliati.append(f"sbandamento, scotta {sh} a twa {lato * twa}: «{letto}»")
         if n_sb != 12: sbagliati.append(f"sbandamento: misurati {n_sb} casi su 12")
         # 3b2) raffica in arrivo (1.0.9): barca 22 m sottovento a una raffica vera della prova 5, piccola (non copre la barca) e forte (oltre +20%)
-        await pg.evaluate("__sv.startMission(4, 0)"); await pg.wait_for_timeout(300)
         RAF = {"bolina": "Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, lasca o orza un poco.",
                "traverso e lasco": "Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, poggia e lasca un poco.",
                "gran lasco e poppa": "Raffica in arrivo: sfruttala per accelerare. Se poggi troppo rischi la strambata."}
+        # 1.0.11: tutto in una sola chiamata, con Math.random a seme fisso: prima la prova si apriva senza seme e si aspettavano
+        # 300 ms veri, e in 1 giro su 4 non c'era nessuna raffica adatta (0 casi misurati). Si prende il primo seme da 1 in su che ha
+        # una raffica adatta all'apertura della prova, e lo si stampa. Un passo di 1/60 s prima di leggere: il pannello legge lo stato dell'ultimo passo.
+        CASI_RAF = [(fascia, lato * twa) for fascia, twa in (("bolina", 60), ("traverso e lasco", 100), ("gran lasco e poppa", 150)) for lato in (1, -1)]
+        seme_raf, letti_raf = await pg.evaluate("""(casi) => { const sv = __sv, vero = Math.random;
+          const adatte = () => sv.gusts().filter(g => g[3] > 0.25 && g[2] * 1.4 < 21).sort((a, b) => b[3] - a[3]);
+          let seme = 0, G = [];
+          while (!G.length && seme < 50){ seme++; let x = seme; Math.random = () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; };
+            sv.startMission(4, 0); G = adatte(); }
+          Math.random = vero; if (!G.length) return [null, []];
+          const g = G[0], to = (sv.twd + 180) * Math.PI / 180, S = sv.S;   // la barca dopo startMission: è un oggetto nuovo
+          return [seme, casi.map(([f, twa]) => { S.x = g[0] + Math.sin(to) * 22; S.y = g[1] - Math.cos(to) * 22; S.h = (sv.twd + twa + 360) % 360;
+            S.heel = 0; S.heelRate = 0; S.u = 2; S.indietro = 0; sv.ctl.sheet = 0.5; sv.run(1 / 60, 1); sv.panel(); return document.getElementById('hint').textContent; })]; }""", CASI_RAF)
+        print(f"raffica in arrivo: seme della prova 5 {seme_raf}", flush=True)
         n_raf = 0
-        for fascia, twa in (("bolina", 60), ("traverso e lasco", 100), ("gran lasco e poppa", 150)):
-            for lato in (1, -1):
-                letto = await pg.evaluate("""([twa]) => { const sv = __sv, S = sv.S;
-                  const G = sv.gusts().filter(g => g[3] > 0.25 && g[2] * 1.4 < 21).sort((a, b) => b[3] - a[3]); if (!G.length) return null;
-                  const g = G[0], to = (sv.twd + 180) * Math.PI / 180;
-                  S.x = g[0] + Math.sin(to) * 22; S.y = g[1] - Math.cos(to) * 22; S.h = (sv.twd + twa + 360) % 360;
-                  S.heel = 0; S.heelRate = 0; S.u = 2; S.indietro = 0; sv.ctl.sheet = 0.5; sv.panel();
-                  return document.getElementById('hint').textContent; }""", [lato * twa])
-                if letto is None: continue
-                n_raf += 1
-                if letto != RAF[fascia]: sbagliati.append(f"raffica in arrivo, {fascia} a twa {lato * twa}: «{letto}»")
+        for (fascia, twa), letto in zip(CASI_RAF, letti_raf):
+            n_raf += 1
+            if letto != RAF[fascia]: sbagliati.append(f"raffica in arrivo, {fascia} a twa {twa}: «{letto}»")
         if n_raf != 6: sbagliati.append(f"raffica in arrivo: misurati {n_raf} casi su 6")
         # 3c) barca che arretra, gioco libero con le raffiche: il pilota segue il suggerimento. Criteri (0.20.3, scritti prima dei risultati):
         # K1 un testo «all'indietro» entro 0,5 s simulati dal primo istante all'indietro; K2 partenza da 40° in su: solo il secondo testo,
@@ -310,7 +315,7 @@ async def main():
         # 3e) lezione 5 passo 4 (suggerimenti spenti, niente raffiche, seme 1): K1, K3, K6 come nella 3c, e il passo completato
         # davvero (stepDone, la regola del gioco) entro 30 s simulati. Cambio di criterio della 0.20.3, deciso DOPO aver visto 2 prove
         # su 20 fallire: «passo completato» conta solo se la fase 1 del passo scatta (barca piantata per 1 s, index.html:647);
-        # le altre sono «non misurate». Attese non misurate: solo caso 5, scotta 50, due mure (fase 1 a 0,87 s contro 1 s).
+        # le altre sono «non misurate». Attese non misurate: caso 5, scotta 50, due mure (fase 1 a 0,87 s contro 1 s); dalla 1.0.11 anche il caso 4, scotta 50.
         n_l5 = n_l5_ok = 0; K5e = {k: 0 for k in ("K1", "K3", "K6", "passo", "fase 1 incoerente")}; l5_nonmis = []
         for nome, twa, kn in ARRETRA:
             for mure, segno in (("dritta", 1), ("sinistra", -1)):
@@ -329,8 +334,10 @@ async def main():
                     else: n_l5_ok += 1
         print(f"lezione 5 passo 4: {n_l5_ok} riuscite su {n_l5}, di cui «passo completato» misurato in {n_l5 - len(l5_nonmis)}; "
               f"non misurate (fase 1 mai scattata) {len(l5_nonmis)}: {l5_nonmis}; errori per criterio {K5e}")
-        if sorted(l5_nonmis) != sorted([("caso 5", "dritta", 0.5), ("caso 5", "sinistra", 0.5)]):
-            nonvalido.append(f"3e: non misurate diverse da quelle attese (caso 5, scotta 50, due mure): {l5_nonmis}")
+        # 1.0.11 (bolina nuova, vela che porta da 29° di apparente): anche il caso 4 con la scotta a metà riparte avanti senza piantarsi.
+        # Cambio deciso DOPO aver visto il risultato, dichiarato nel CHANGELOG.
+        if sorted(l5_nonmis) != sorted([(c, m, 0.5) for c in ("caso 4 (registrazione 0.20.2)", "caso 5") for m in ("dritta", "sinistra")]):
+            nonvalido.append(f"3e: non misurate diverse da quelle attese (casi 4 e 5, scotta 50, due mure): {l5_nonmis}")
         # 3f) barca che arretra già fuori dall'angolo morto (46-55°, soglia 40°): il primo testo «all'indietro» letto deve essere il secondo
         n_sopra = 0
         for luogo, dove in (("navigazione libera", "free"), ("lezione 5 passo 4", "l54")):

@@ -9,7 +9,7 @@ from playwright.async_api import async_playwright
 import sorgente
 INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]
-MK = ["m0.3", "m1.3", "m2.3", "m3.4", "m4.5"]
+MK = ["m0.4", "m1.4", "m2.4", "m3.5", "m4.6"]
 
 async def main():
     async with async_playwright() as pw:
@@ -20,7 +20,7 @@ async def main():
         p = {"done": {f"l{i}": True for i in range(6)} | {f"m{i}": True for i in range(5)},
              "best": {MK[i]: BANDS[i][1] for i in range(5)}, "clean": {MK[0]: True, MK[1]: True},
              "quiz": {f"q{i}": nq[i] for i in range(4)},
-             "race": {"r0.3:principianti": {"pos": 3, "n": 4, "pulita": False}, "r1.3:principianti": {"pos": 3, "n": 4, "pulita": False}}}
+             "race": {"r0.4:principianti": {"pos": 3, "n": 4, "pulita": False}, "r1.4:principianti": {"pos": 3, "n": 4, "pulita": False}}}
         await pg.evaluate("d => { localStorage.clear(); localStorage.setItem('scuolaVelaModo', 'carriera'); localStorage.setItem('scuolaVelaCarriera.v1', d); }", json.dumps(p))
         await pg.reload()
         print("Carriera pronta: manca solo l'esame (pulsante nel riquadro «Ripasso ed esame»). Chiudi la finestra per finire.", flush=True)

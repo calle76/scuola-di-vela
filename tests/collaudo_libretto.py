@@ -12,7 +12,7 @@ import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]   # [oro, argento, bronzo] per prova
 assert len(BANDS) == 5, BANDS
 QUIZ_JS = re.search(r"const QUIZ = \[.*?\n  \];", SRC, re.S).group(0)
-MK = ["m0.3", "m1.3", "m2.3", "m3.4", "m4.5"]   # chiavi delle prove (KEYV), come le scrive il gioco
+MK = ["m0.4", "m1.4", "m2.4", "m3.5", "m4.6"]   # chiavi delle prove (KEYV), come le scrive il gioco
 fail = []; casi = {}; visti = {}
 def chk(parte, c, m):
     casi[parte] = casi.get(parte, 0) + 1
@@ -45,12 +45,12 @@ async def main():
 
         # ---- L1: giocatori del §12
         GIOC = {
-            "A": (prog([1] * 5, [0, 1], {i: NQ[i] for i in range(4)}, {"r0.3:principianti": (3, False), "r1.3:principianti": (3, True)}, range(6)),
+            "A": (prog([1] * 5, [0, 1], {i: NQ[i] for i in range(4)}, {"r0.4:principianti": (3, False), "r1.4:principianti": (3, True)}, range(6)),
                   (12, 8, 4, 6, 30), "Ti manca l'esame.", ["l'esame su tutte le lezioni."]),
             "B": (prog([0] * 5, range(5), piene, None, range(6)), (20, 12, 0, 6, 38), "Ti mancano punti in Competizione; poi l'esame.", ["la Regata a bastone (con avversari)."]),
-            "C": (prog([0, 0, 0, 0, 1], (), {i: NQ[i] for i in range(5)}, {"r0.3:esperti": (1, False), "r1.3:principianti": (3, False)}, range(3)),
+            "C": (prog([0, 0, 0, 0, 1], (), {i: NQ[i] for i in range(5)}, {"r0.4:esperti": (1, False), "r1.4:principianti": (3, False)}, range(3)),
                   (14, 10, 6, 3, 33), "Ti mancano punti in Esperienza; poi l'esame.", ["Lezione 4, Vento reale e apparente."]),
-            "D": (prog([2] * 5, [3], {i: NQ[i] for i in range(3)}, {"r0.3:principianti": (4, True), "r1.3:principianti": (4, False)}, range(6)),
+            "D": (prog([2] * 5, [3], {i: NQ[i] for i in range(3)}, {"r0.4:principianti": (4, True), "r1.4:principianti": (4, False)}, range(6)),
                   (6, 6, 2, 6, 20), "Ti mancano punti in Abilità e Competizione; poi l'esame.", ["Prova 1, Al traverso: prova a migliorare il tempo.", "la Regata a bastone (con avversari)."]),
         }
         for g, (p, att, riga, sugg) in GIOC.items():
@@ -62,12 +62,12 @@ async def main():
             print(f"L1 {g}: {got} | {m['manca']} | {m['sugg']}")
 
         # ---- L2: casi al bordo
-        base = dict(prove=[1, 1, 1, 1, None], ripassi={0: NQ[0], 1: NQ[1], 2: NQ[2]}, regate={"r0.3:principianti": (2, False)}, lezioni=range(6))  # 8, 6, 3, 6 = 23
+        base = dict(prove=[1, 1, 1, 1, None], ripassi={0: NQ[0], 1: NQ[1], 2: NQ[2]}, regate={"r0.4:principianti": (2, False)}, lezioni=range(6))  # 8, 6, 3, 6 = 23
         m = await M(prog(**base)); area(m)
         chk("L2", (m["pt"]["abil"], m["pt"]["cono"], m["pt"]["comp"], m["pt"]["esp"], m["totale"]) == (8, 6, 3, 6, 23), f"L2 tutti al minimo: {m['pt']} {m['totale']}")
         chk("L2", m["manca"] == "Ti mancano 6 punti al totale; poi l'esame." and len(m["sugg"]) == 3, f"L2 tutti al minimo: «{m['manca']}» {m['sugg']}")
         for nome, mod, k, att, voce in (("Abilità", dict(prove=[1, 1, 1, 2, None]), "abil", 7, "Prova 5, "), ("Conoscenza", dict(ripassi={0: NQ[0], 1: NQ[1]}), "cono", 4, "Ripasso 3, Andature e filetti."),
-                                  ("Competizione", dict(regate={"r0.3:principianti": (3, False)}), "comp", 2, "la Regata nelle raffiche (con avversari)."), ("Esperienza", dict(lezioni=range(5)), "esp", 5, "Lezione 6, ")):
+                                  ("Competizione", dict(regate={"r0.4:principianti": (3, False)}), "comp", 2, "la Regata nelle raffiche (con avversari)."), ("Esperienza", dict(lezioni=range(5)), "esp", 5, "Lezione 6, ")):
             m = await M(prog(**{**base, **mod})); area(m)
             chk("L2", m["pt"][k] == att and m["manca"] == f"Ti mancano punti in {nome}; poi l'esame." and len(m["sugg"]) == 1 and m["sugg"][0].startswith(voce),
                 f"L2 {nome} sotto il minimo: {m['pt'][k]} «{m['manca']}» {m['sugg']}")
@@ -91,17 +91,17 @@ async def main():
         print("L2 ripassi: lunghezze", sorted(set(NQ)), "| con 4 domande 3 su 4 = 1 punto, 4 su 4 = 2:",
               any(n == 4 for n in NQ), "| 60% e 80% esatti provati:", any(n % 5 == 0 for n in NQ))
         # regate: il migliore dei due livelli, «nessuno» e n diverso da 4 non contano; pulite contate a parte, senza punti
-        m = await M(prog(regate={"r0.3:principianti": (4, False), "r0.3:esperti": (2, True)})); area(m)
+        m = await M(prog(regate={"r0.4:principianti": (4, False), "r0.4:esperti": (2, True)})); area(m)
         chk("L2 regate", m["pt"]["comp"] == 3 and m["pulite"] == 1, f"L2 regata con due livelli: {m['pt']['comp']} punti, pulite {m['pulite']}")
-        m = await M(prog(regate={"r0.3:esperti": (1, True), "r1.3:esperti": (1, True)})); area(m)
+        m = await M(prog(regate={"r0.4:esperti": (1, True), "r1.4:esperti": (1, True)})); area(m)
         chk("L2 regate", m["pt"]["comp"] == 8 and m["pulite"] == 2, f"L2 due primi posti puliti: {m['pt']['comp']} (massimo 8, niente +1), pulite {m['pulite']}")
-        p = prog(regate={"r0.3:nessuno": (1, True)}); m = await M(p)
+        p = prog(regate={"r0.4:nessuno": (1, True)}); m = await M(p)
         chk("L2 regate", m["pt"]["comp"] == 0 and m["pulite"] == 0, f"L2 chiave «nessuno»: {m['pt']['comp']} punti, pulite {m['pulite']}")
-        p = prog(); p["race"] = {"r0.3:principianti": {"pos": 1, "n": 3, "pulita": False}}; m = await M(p)
+        p = prog(); p["race"] = {"r0.4:principianti": {"pos": 1, "n": 3, "pulita": False}}; m = await M(p)
         chk("L2 regate", m["pt"]["comp"] == 0, f"L2 flotta di 3: {m['pt']['comp']} punti")
         m = await M(prog()); area(m)
         chk("L2", m["totale"] == 0 and m["manca"] == "Ti mancano punti in Abilità, Conoscenza, Competizione ed Esperienza; poi l'esame." and len(m["sugg"]) == 4, f"L2 vuoto: «{m['manca']}» {m['sugg']}")
-        m = await M(prog([0] * 5, range(5), piene, {"r0.3:esperti": (1, True), "r1.3:esperti": (1, True)}, range(6), True)); area(m)
+        m = await M(prog([0] * 5, range(5), piene, {"r0.4:esperti": (1, True), "r1.4:esperti": (1, True)}, range(6), True)); area(m)
         chk("L2", m["totale"] == 46 and m["superato"], f"L2 tutto al massimo: {m['totale']} superato {m['superato']}")
         # controllo del metro: ogni area vista almeno una volta diversa da zero e diversa dal massimo
         for k, mx in (("abil", 20), ("cono", 12), ("comp", 8), ("esp", 6)):
@@ -141,7 +141,7 @@ async def main():
         await ctx.close()
         # L4: spazio con ogni tipo di riga «cosa manca» (la più lunga è il caso peggiore): carriera vuota (Abilità), Conoscenza,
         # Competizione, Esperienza con sei lezioni da fare, totale, esame, superato
-        tutto = dict(prove=[0] * 5, pulite=range(5), ripassi=piene, regate={"r0.3:esperti": (1, False), "r1.3:esperti": (1, False)}, lezioni=range(6))
+        tutto = dict(prove=[0] * 5, pulite=range(5), ripassi=piene, regate={"r0.4:esperti": (1, False), "r1.4:esperti": (1, False)}, lezioni=range(6))
         righe = [None, prog(**{**tutto, "ripassi": None}), prog(**{**tutto, "regate": None}), prog(**{**tutto, "lezioni": ()}),
                  prog(**{**base, "prove": [0, 0, 0, 0, 2]}), prog(**tutto), prog(**tutto, esame=True)]
         veri = True

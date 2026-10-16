@@ -94,10 +94,10 @@ TESTS=(
 # Cosa guardare per i collaudi "ambiguo" (una riga ciascuno, dal rapporto atteso in docs/COLLAUDI.md).
 nota() {
     case "$1" in
-        "polare.js") echo "confronta a mano con circa 3,8 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.6; fino alla 1.0.5 3,4 / 5,2 / 3,5)" ;;
-        "raffiche_e_virate.js") echo "virata riuscita in circa 3,3 s da 3,9 nodi e in circa 7,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire circa 55° (dalla 1.0.6)" ;;
+        "polare.js") echo "confronta a mano con circa 4,7 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.11; 1.0.6-1.0.10 3,8 / 6,0 / 4,1)" ;;
+        "raffiche_e_virate.js") echo "virata riuscita in circa 3,0 s da 3,9 nodi e in circa 6,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 67° (scuffia) con la scotta fissa e circa 53° col boma a 21° (dalla 1.0.11)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
-        "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.9 Ripartire e 2.4 Barra sottovento dopo un colpo lungo, 6.2 Assorbire una raffica a mani ferme e dopo un colpo lungo; esito in docs/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
+        "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (dalla 1.0.11: 1.8 Orzare e l'angolo morto guidando non completato 3 su 3, perché il pilota tiene il tasto di continuo e la barca vira; 2.4 Barra sottovento dopo un colpo lungo, 6.2 Assorbire una raffica a mani ferme e dopo un colpo lungo; esito in docs/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
         "collaudo_pilota_lezioni.py (semi 1-100)") echo "«guidando» non completato al più 1 volta su 100 per passo; «da guardare» con i casi noti dell'esito in docs/PROPOSTA-PILOTA-LEZIONI.md (1.9, 1.11, 1.12, 2.4, 2.5, 5.8, 6.2, 6.3): numeri molto diversi o passi nuovi sono un problema" ;;
         "collaudo_pilota_lezioni.py (senza #collaudo)") echo "«3 tentativi su 3 con entrambi i passi completati»" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
