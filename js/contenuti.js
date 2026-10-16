@@ -217,9 +217,9 @@
     { title: "Raffiche e sbandamento", ...PAUSE, zoom: 0.8, env: { tws: 12, gusts: 1 }, hud: 3,
       text: ["Il vento non è mai costante. Le chiazze più scure e increspate sull'acqua sono <em>raffiche</em>: lì il vento è più forte e spesso gira di qualche grado. Viaggiano col vento, quindi le vedi arrivare da sopravento.",
              "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo <em>sbandamento</em>, che vedi sull'indicatore in basso a sinistra. Il timoniere si sporge fuori bordo per contrastarlo, ma con un attimo di ritardo. Al traverso e al lasco, in raffica <em>poggia</em> anche un poco: orzare ti farebbe sbandare di più."] },
-    { title: "Assorbire una raffica", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt",
+    { title: "Assorbire una raffica", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", bigGust: 0.45,
       text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco (e di bolina puoi anche <em>orzare</em> leggermente) per tenere lo sbandamento sotto i 20°. Passata la raffica, cazza di nuovo."],
-      cond: I => I.inGust && I.heel < 20 && I.kn > 2, hold: 3,
+      cond: I => I.gustK > 0.3 && I.twa <= 75 && I.heel < 20 && I.kn > 2, hold: 3, // 1.0.15: nel cuore della raffica (+30%) e di bolina; prima bastava il bordo (+12%) e si completava da solo
       done: "Ben fatto. Lascare riduce la forza sulla vela; orzare di poco la scarica. È la tecnica principale per navigare con vento rafficato." },
     { title: "La scuffia", allow: ["capsizes"], noRight: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
       text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: vela tutta cazzata, e in raffica non lascare."],

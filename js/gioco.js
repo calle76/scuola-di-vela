@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0.14"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.15"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -77,7 +77,7 @@
   }
   function readI(){
     return { twa: Math.abs(norm180(local.twd - S.h)), kn: S.u * KN, tt: ttState(), heel: S.heel, r: S.r,
-             sheet: ctl.sheet, tiller: ctl.tiller, inGust: local.tws > env.tws * 1.12 };
+             sheet: ctl.sheet, tiller: ctl.tiller, inGust: local.tws > env.tws * 1.12, gustK: local.tws / env.tws - 1 };
   }
   function autoSheet(){
     const A = Math.abs(info.awa), target = Math.max(BOAT.minBoom, A - 17);
@@ -690,7 +690,12 @@
       // se non c'è una raffica forte in arrivo vicino alla barca, ne crea una
       const to = (env.twd + 180) * D2R, ux = S.x - Math.sin(to) * 20, uy = S.y + Math.cos(to) * 20;
       if (gustAt(ux, uy) < 0.3 && gustAt(S.x, S.y) < 0.3 && !gusts.some(g => g.big && g.age < 12)){
-        spawnGust(45, 0, true); const g = gusts[gusts.length - 1]; g.k = 0.8; g.r = 18; g.sh = 0; g.big = true;
+        let lat = 0;
+        if (st.bigGust !== true){ // raffica media: nasce dove la barca arriverà, non dritta sopravento (la barca di bolina si sposta di lato)
+          const vx = S.u * Math.sin(S.h * D2R), vy = -S.u * Math.cos(S.h * D2R), ax = Math.sin(to), ay = -Math.cos(to);
+          lat = (vx * -ay + vy * ax) * 45 / (env.tws * 0.8 + Math.max(0, -(vx * ax + vy * ay)));
+        }
+        spawnGust(45, lat, true); const g = gusts[gusts.length - 1]; g.k = st.bigGust === true ? 0.8 : st.bigGust; g.r = 18; g.sh = 0; g.big = true;
       }
     }
     updateGusts(dt);

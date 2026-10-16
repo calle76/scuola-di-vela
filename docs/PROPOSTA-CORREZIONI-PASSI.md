@@ -116,3 +116,38 @@ Pannello a 1360×650 eccesso 0 px; `polare.js` e `raffiche_e_virate.js` identici
 ### Esito (16 ottobre 2026, versione 1.0.14)
 
 Ale: «si». Testo cambiato; misure quelle della tabella sopra (pilota aggiornato a 57°).
+
+## 4. Passo 4.3 «Accelerando» (16 ottobre 2026): niente da correggere
+
+Nel pilota del 16 ottobre (1.0.5) fermandosi ai primi filetti dritti la barca restava a 3,7 nodi e il passo, che ne chiede più di 4, si completava solo cazzando ancora (una ripresa in 80 corse su 80). **Sul gioco 1.0.14 il difetto non c'è più:** pilota normale 20 su 20 e 80 su 80, **0 riprese**, mediana 7,0 s; con le riprese tolte dal pilota (si ferma ai primi filetti dritti e basta) 20 su 20, a 4,6 nodi. L'hanno corretto la resistenza della vasca (1.0.6) e la vela che stringe (1.0.11). Il testo di fine passo («apparente tra 60° e 70°») resta vero: con 10 nodi al traverso, fra 4 e 5,5 nodi di barca, l'apparente è fra 61° e 68° (triangolo dei venti, senza scarroccio). Nessun cambio, nessuna versione.
+
+## 5. Passo 6.2 «Assorbire una raffica» (fermata 1, 16 ottobre 2026)
+
+### Il difetto
+
+Oggi (1.0.14, semi 1-20) il passo si completa **a mani ferme 16 volte su 20**: la condizione chiede «in raffica» (vento almeno +12%), sbandamento sotto 20° e più di 2 nodi per 3 s, e già al bordo di una raffica moderata la barca resta sotto i 20° da sola. Il passo non insegna il gesto che chiede.
+
+### Proposta (provata su una copia, `js/` non toccato)
+
+1. **Una raffica media garantita**, come quella forte del passo 6.3 (`bigGust`), ma del +45% (12 → circa 17 nodi). Nasce 45 m sopravento **dove la barca arriverà** (spostata di lato quanto la barca si muove nel tempo che la raffica impiega ad arrivare): nata dritta sopravento, la barca di bolina se ne allontanava di lato e la raffica non la prendeva quasi mai. La raffica forte del 6.3 resta com'è.
+2. **Condizione nel cuore della raffica e di bolina:** vento almeno +30% (non +12%), prua entro 75° dal vento (il confine «bolina» del pannello), sbandamento sotto 20°, più di 2 nodi, per 3 s. Il testo non cambia.
+
+Costanti nuove (ipotesi nostre, nessuna fonte): +45% della raffica, soglia +30%.
+
+### Misure (pilota, semi 1-20 per scegliere e 21-100 per confermare)
+
+| | Oggi | Proposta |
+| --- | --- | --- |
+| guidando (di bolina, lasca sopra 15°) | 4 su 4 corse guidate (le altre già fatte da sole), 38 s | **20 su 20 e 80 su 80**, mediana 11,3 s |
+| a mani ferme | **16 su 20** | **0 su 20 e 0 su 80** |
+| contro-prova: di bolina, senza mai lascare | — | **1 su 20** (gli altri sbandano fino a 21-43°, uno scuffia) |
+
+**Controllo del metro:** con la raffica nata dritta sopravento il passo a mani ferme dava 0 su 100, ma solo perché la raffica non arrivava. Con la raffica sulla strada della barca e senza la condizione di bolina dava 98 su 100: a mani ferme la barca resta al traverso (87°, 8 nodi) con la vela troppo cazzata e non sbanda. Con la condizione di bolina, 0 su 100 con la raffica che arriva davvero.
+
+## 6. Passo 6.3 «La scuffia»: proposta di non cambiarlo
+
+Si completa a mani ferme in una parte delle corse (oggi 4 su 20; con la proposta del §5, 15 su 20 e 47 su 80, perché si arriva dal 6.2 con la vela regolata). Il passo chiede «vela tutta cazzata e in raffica non lascare»: chi non fa niente **non lascia**, e la raffica forte (+80%) lo fa scuffiare comunque. È quello che il passo vuole mostrare: non reagire a una raffica forte fa scuffiare. Guidando 20 su 20 (oggi) e 33 su 33 (proposta).
+
+### Esito (16 ottobre 2026, versione 1.0.15)
+
+Ale: «si». Il codice provato sulla copia è stato portato nel gioco senza differenze (più un commento); 6.3 invariato.

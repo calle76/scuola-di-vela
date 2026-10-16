@@ -79,7 +79,7 @@ Ogni passo è un oggetto nell'array della lezione. I campi principali:
 | `mark` | Boa relativa alla posizione di partenza del passo, in metri. |
 | `env` | Vento del passo: `{ tws: nodi, gusts: 0/1/2 }`. |
 | `course`, `yawNoise` | Rotta da tenere e disturbi delle onde. |
-| `bigGust` | Garantisce una raffica forte (usato per la scuffia volontaria). |
+| `bigGust` | Garantisce una raffica: `true` forte (+80%, la scuffia volontaria), un numero media di quella forza (dalla 1.0.15, 0,45 in «Assorbire una raffica»), che nasce sulla strada della barca. |
 | `cond`, `hold`, `done` | Condizione di completamento `(I, S, B) => …`, secondi in cui deve restare vera, testo mostrato al completamento. |
 | `final` | Ultimo passo: segna la lezione come completata. |
 | `allow` | Errori che il passo chiede apposta e che quindi non entrano nel registro: `capsizes`, `gybesV`, `irons`. |
