@@ -151,3 +151,9 @@ Si completa a mani ferme in una parte delle corse (oggi 4 su 20; con la proposta
 ### Esito (16 ottobre 2026, versione 1.0.15)
 
 Ale: «si». Il codice provato sulla copia è stato portato nel gioco senza differenze (più un commento); 6.3 invariato.
+
+## 7. Casi minori 1.11, 1.12, 2.5: non si cambiano (Ale, 16 ottobre 2026)
+
+«Già fatto dopo un colpo lungo» (semi 21-100): 1.11 «La scotta: cazzare» 4 su 80, 1.12 «Troppo cazzata» 2 su 80, 2.5 «Barra sopravento: si poggia» 5 su 80; anche 2.4 3 su 80 (osservazione 49). Chi tiene troppo il comando nel passo **prima** porta già vela o prua dove chiede il passo dopo: succede anche in barca. Per evitarlo bisognerebbe bloccare i comandi fra un passo e l'altro, e il gioco sarebbe meno vero. **Semplificazione dichiarata.** «A piccoli colpi» è già in evidenza nei testi dei passi 2.4 e 2.5 dalla 1.0.2 (osservazione 49), e i passi 1.11 e 3.2 dicono «poco alla volta». Il colpo lungo nasce però nel passo prima (per esempio 2.3 «Barra a dritta», che chiede solo di spostare la barra): l'avvertenza c'è dove si deve dosare, non dove si fa l'errore.
+
+Con questo le correzioni dei passi trovati dal pilota (`PROPOSTA-PILOTA-LEZIONI.md` §10) sono chiuse.
