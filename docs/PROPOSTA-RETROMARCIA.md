@@ -68,3 +68,5 @@ Il via alla fermata 2, oppure una correzione. In particolare: va bene **nessun f
 6. Impronta: **0 scene diverse su 63** (attesa nostra «poche»: nessuna). Vuol dire che lezioni, prove e regate dell'impronta non portano mai la barca all'indietro oltre 2,3 nodi; non dice niente sul gioco libero con vento forte, che è il caso che cambia.
 7. Pagina caricata senza `#collaudo`: nessun errore.
 8. Giudizio giocando: di Ale, soprattutto con 15-20 nodi.
+
+**Ale giocando la 1.0.8 (16 ottobre 2026):** la retromarcia, secondo lui, si innesca velocemente; con 15 nodi non sa dire se il comportamento sia giusto. I 20 nodi non si possono impostare nel gioco: ci si arriva solo con una raffica. Resta aperta la voce «parte troppo presto», da confrontare con i video.
