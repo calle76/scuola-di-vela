@@ -215,7 +215,7 @@
   const L6 = [
     { title: "Raffiche e sbandamento", ...PAUSE, zoom: 0.8, env: { tws: 12, gusts: 1 }, hud: 3,
       text: ["Il vento non è mai costante. Le chiazze più scure e increspate sull'acqua sono <em>raffiche</em>: lì il vento è più forte e spesso gira di qualche grado. Viaggiano col vento, quindi le vedi arrivare da sopravento.",
-             "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo <em>sbandamento</em>, che vedi sull'indicatore in basso a sinistra. Il timoniere si sporge fuori bordo per contrastarlo, ma con un attimo di ritardo."] },
+             "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo <em>sbandamento</em>, che vedi sull'indicatore in basso a sinistra. Il timoniere si sporge fuori bordo per contrastarlo, ma con un attimo di ritardo. Al traverso e al lasco, in raffica <em>poggia</em> anche un poco: orzare ti farebbe sbandare di più."] },
     { title: "Assorbire una raffica", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt",
       text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco (e di bolina puoi anche <em>orzare</em> leggermente) per tenere lo sbandamento sotto i 20°. Passata la raffica, cazza di nuovo."],
       cond: I => I.inGust && I.heel < 20 && I.kn > 2, hold: 3,

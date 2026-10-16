@@ -139,7 +139,7 @@ PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clie
 TESTI = {  # caso peggiore del pannello: testo nuovo contro il piu lungo che il gioco mostra gia
     "nuovo": NUOVO,
     "lee attuale": "Si agita il filetto sottovento: lasca, oppure orza.",
-    "raffica": "Raffica in arrivo: se la barca sbanda troppo, lasca; altrimenti è un'occasione per andare più veloci.",
+    "raffica (1.0.9, il più lungo dei tre)": "Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, poggia e lasca un poco.",
     "sbandi con vela tutta lasca": "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco.",
     "all'indietro, primo testo (0.20.2)": INDIETRO,
     "all'indietro, secondo testo (0.20.2)": INDIETRO2,
@@ -214,18 +214,40 @@ async def main():
             if I["tt"] == "lee":
                 n_sail += 1
                 if msg != NUOVO: sbagliati.append(f"lezione 3 «Poppa» a twa {I['twa']:.0f}: «{msg}»")
-        # 3b) sbandamento oltre 25 gradi: con la scotta tutta lascata il testo nuovo, altrimenti «lasca la scotta»
-        await pg.evaluate("__sv.startMission(1, 0)"); await pg.wait_for_timeout(300)
-        SB = "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco."
+        # 3b) sbandamento oltre 25 gradi (1.0.9, docs/PROPOSTA-RAFFICHE-PORTANTI.md): di bolina (sotto 75°) lascare o orzare,
+        # dal traverso in giù lascare e poggiare; con la scotta tutta lascata solo orzare (bolina) o poggiare. Tre fasce, due mure.
+        SBT = {(True, 1.0): "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco.", (True, 0.6): "Sbandi troppo: lasca la scotta, oppure orza di poco.",
+               (False, 1.0): "Sbandi troppo e la vela è già tutta lasca: poggia un poco.", (False, 0.6): "Sbandi troppo: lasca la scotta e poggia un poco."}
         n_sb = 0
-        for sh, atteso in ((1.0, SB), (0.6, "Sbandi troppo: lasca la scotta")):
-            for twa in (60, 100, 140):
-                await pg.evaluate("([twa,sh])=>{const S=__sv.S; S.h=(__sv.twd+twa)%360; __sv.ctl.sheet=sh; S.heel=40;}", [twa, sh])
-                await pg.wait_for_timeout(120)
-                letto = await pg.evaluate("__sv.S.heel > 25 ? document.getElementById('hint').textContent : null")
+        for sh in (1.0, 0.6):
+            for twa in (60, 100, 150):
+                for lato in (1, -1):   # prova ripartita a ogni caso: girando da una mura all'altra la barca strambava e scuffiava
+                    await pg.evaluate("__sv.startMission(1, 0)"); await pg.wait_for_timeout(150)
+                    await pg.evaluate("([twa,sh])=>{const S=__sv.S; S.h=(__sv.twd+twa+360)%360; __sv.ctl.sheet=sh; S.heel=40;}", [lato * twa, sh])
+                    await pg.wait_for_timeout(120)
+                    letto = await pg.evaluate("__sv.S.heel > 25 ? document.getElementById('hint').textContent : null")
+                    if letto is None: continue
+                    n_sb += 1
+                    if letto != SBT[(twa < 75, sh)]: sbagliati.append(f"sbandamento, scotta {sh} a twa {lato * twa}: «{letto}»")
+        if n_sb != 12: sbagliati.append(f"sbandamento: misurati {n_sb} casi su 12")
+        # 3b2) raffica in arrivo (1.0.9): barca 22 m sottovento a una raffica vera della prova 5, piccola (non copre la barca) e forte (oltre +20%)
+        await pg.evaluate("__sv.startMission(4, 0)"); await pg.wait_for_timeout(300)
+        RAF = {"bolina": "Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, lasca o orza un poco.",
+               "traverso e lasco": "Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, poggia e lasca un poco.",
+               "gran lasco e poppa": "Raffica in arrivo: sfruttala per accelerare. Se poggi troppo rischi la strambata."}
+        n_raf = 0
+        for fascia, twa in (("bolina", 60), ("traverso e lasco", 100), ("gran lasco e poppa", 150)):
+            for lato in (1, -1):
+                letto = await pg.evaluate("""([twa]) => { const sv = __sv, S = sv.S;
+                  const G = sv.gusts().filter(g => g[3] > 0.25 && g[2] * 1.4 < 21).sort((a, b) => b[3] - a[3]); if (!G.length) return null;
+                  const g = G[0], to = (sv.twd + 180) * Math.PI / 180;
+                  S.x = g[0] + Math.sin(to) * 22; S.y = g[1] - Math.cos(to) * 22; S.h = (sv.twd + twa + 360) % 360;
+                  S.heel = 0; S.heelRate = 0; S.u = 2; S.indietro = 0; sv.ctl.sheet = 0.5; sv.panel();
+                  return document.getElementById('hint').textContent; }""", [lato * twa])
                 if letto is None: continue
-                n_sb += 1
-                if not letto.startswith(atteso.rstrip(".")) or (sh < 1 and "già tutta lasca" in letto): sbagliati.append(f"sbandamento, scotta {sh} a twa {twa}: «{letto}»")
+                n_raf += 1
+                if letto != RAF[fascia]: sbagliati.append(f"raffica in arrivo, {fascia} a twa {lato * twa}: «{letto}»")
+        if n_raf != 6: sbagliati.append(f"raffica in arrivo: misurati {n_raf} casi su 6")
         # 3c) barca che arretra, gioco libero con le raffiche: il pilota segue il suggerimento. Criteri (0.20.3, scritti prima dei risultati):
         # K1 un testo «all'indietro» entro 0,5 s simulati dal primo istante all'indietro; K2 partenza da 40° in su: solo il secondo testo,
         # sotto 40°: prima il primo e poi il secondo; K3 nessun ritorno al primo testo con la prua da 37° in su; K4 uscita con la regola
@@ -395,11 +417,11 @@ async def main():
         # Un controllo che non misura niente passa sempre: qui i casi vanno dichiarati e devono essere quelli previsti.
         print(f"finestra {W}x{H}")
         print(f"casi misurati: scotta 1,00 con «lee» {n_lee}, scotta 1,00 con altri filetti {n_altro}, "
-              f"scotta 0,90-0,99 {n_quasi} (di cui in stallo {n_quasi_lee}), suggerimento semplice {n_sail}, sbandamento {n_sb}, pannello {n_pan}")
+              f"scotta 0,90-0,99 {n_quasi} (di cui in stallo {n_quasi_lee}), suggerimento semplice {n_sail}, sbandamento {n_sb}, raffica in arrivo {n_raf}, pannello {n_pan}")
         print("eccesso massimo del pannello (pixel):", peggio)
         print("casi sbagliati:", sbagliati or "nessuno")
         print("errori pagina:", errs[:5])
-        vuoto = [n for n in (n_lee, n_altro, n_quasi, n_quasi_lee, n_sail, n_sb, n_passi, n_pan) if n == 0]
+        vuoto = [n for n in (n_lee, n_altro, n_quasi, n_quasi_lee, n_sail, n_sb, n_raf, n_passi, n_pan) if n == 0]
         if vuoto: print("COLLAUDO NON VALIDO: una delle misure non ha nessun caso")
         for x in nonvalido: print("COLLAUDO NON VALIDO:", x)
         if not caratteri_ok: print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, i margini del pannello misurati sopra non sono attendibili")

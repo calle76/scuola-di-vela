@@ -43,13 +43,15 @@
     let back = false; // 0.20.2: «all'indietro» si mostra anche nei passi a suggerimenti spenti, se il passo dà la barra
     if (S.capsized && noRight){ cls = "good"; msg = "Hai scuffiato: la barca resta rovesciata. Premi Avanti: nel passo dopo la raddrizzi."; }
     else if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
-    else if (S.heel > 25){ cls = "bad"; msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco." : "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
+    // 1.0.9: dal traverso in giù (oltre 75°, confine fra bolina larga e traverso) in raffica si poggia, non si orza (docs/PROPOSTA-RAFFICHE-PORTANTI.md)
+    else if (S.heel > 25){ cls = "bad"; const bol = I.twa < 75;
+      msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: " + (bol ? "prova a orzare un poco." : "poggia un poco.") : "Sbandi troppo: lasca la scotta" + (bol ? ", oppure orza di poco." : " e poggia un poco."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
     // 0.20.2, fasi di backCheck(): sotto IRONS_A (40°) la barra verso il boma, poi barra al centro e cazzare, poi lasciar prendere velocità
     else if (S.indietro === 1){ back = true; cls = "bad"; msg = "All'indietro la barra funziona al contrario: spostala verso il boma, poi centrala e cazza."; }
     else if (S.indietro === 2){ back = true; cls = "bad"; msg = "Stai andando all'indietro, ma la prua è fuori dall'angolo morto: centra la barra e cazza."; }
     else if (S.indietro === 3 && I.twa >= IRONS_A - 3){ back = true; cls = ""; msg = "Ora vai avanti piano: barra al centro, cazza e lascia prendere velocità."; }
-    else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = ""; msg = "Raffica in arrivo: se la barca sbanda troppo, lasca; altrimenti è un'occasione per andare più veloci."; } // cls vuoto: colore normale del testo, non è un allarme
+    else if (gustLevel && ahead.tws > local.tws * 1.2){ cls = ""; msg = "Raffica in arrivo: sfruttala per accelerare. " + (I.twa < 75 ? "Se sbandi troppo, lasca o orza un poco." : I.twa < 135 ? "Se sbandi troppo, poggia e lasca un poco." : "Se poggi troppo rischi la strambata."); } // cls vuoto: colore normale del testo, non è un allarme
     if (mode === "lesson" && st.course && !S.capsized){
       const off = norm180(S.h - S.course);
       cls = Math.abs(off) < 6 ? "good" : "bad";

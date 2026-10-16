@@ -96,6 +96,9 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | --- | --- |
 | Le raffiche si vedono arrivare da sopravento come acqua più scura e increspata. | |
 | In raffica si lasca; di bolina si può anche orzare di poco. | |
+| Al traverso e al lasco, in raffica si poggia un poco e si lasca: la barca resta piatta e la raffica diventa velocità; orzare fa sbandare di più (1.0.9). | ✅ F7 (Dellenbaugh), F18 e F19 (due classi di derive), F20, F21; il motore lo conferma (`tests/fisica/raffiche_portanti.js`). **Disaccordo dichiarato:** una voce di forum e la pratica di crociera dicono di orzare (F22). |
+| Al gran lasco e in poppa, poggiando troppo si rischia la strambata involontaria (1.0.9). | ✅ F7 (Dellenbaugh: col vento dal lato sbagliato della vela, strambata inattesa), F22 |
+| La raffica è un'occasione per accelerare: in regata si cerca e si sfrutta, e si manovra quando arriva il pericolo (1.0.9, indicazione di Ale). | ❓ parere di Ale; F18 e F21 (la raffica diventa velocità) lo sostengono in parte |
 | Il timoniere si sporge fuori bordo, sopravento, contro lo sbandamento. | |
 | Si raddrizza salendo sulla lama di deriva e facendo leva col proprio peso. | |
 | Prima di raddrizzare si lasciano libere le scotte (passo «Raddrizzare», dalla 0.20.1). | **Da confermare con altre fonti (scritte o video).** Due fonti indipendenti ma deboli (blog di un circolo, conferenza di un progettista); nessuna federazione. Per ripartire dopo il raddrizzamento (lascare o cazzare) nessuna fonte trovata: il gioco non dà più nessuna regola |

@@ -98,3 +98,28 @@ Sono contenuti, quindi decide Ale:
 1. **I cinque testi nuovi** della tabella (gli altri restano come oggi): vanno bene così o vanno cambiate delle parole?
 2. **La frase della lezione 6.**
 3. Il via alla fermata 2.
+
+## Decisioni di Ale ed esito (fermata 2, 16 ottobre 2026, versione 1.0.9)
+
+**Testi.** Ale ha approvato la proposta, poi l'ha corretta durante la fermata 2:
+- la prudenza vale per le lezioni, ma in regata le raffiche si cercano per andare più veloci, e si manovra quando arriva il pericolo: il consiglio di manovrare vale solo «se sbandi troppo»;
+- per il gran lasco e la poppa: «Se poggi troppo rischi la strambata.»;
+- i testi vanno resi più efficaci e forse più corti: li riguarda giocando.
+
+Testi in gioco nella 1.0.9:
+
+| Situazione | Bolina (fino a 75°) | Traverso e lasco (75°-135°) | Gran lasco e poppa |
+|---|---|---|---|
+| Raffica in arrivo | «Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, lasca o orza un poco.» | «Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, poggia e lasca un poco.» | «Raffica in arrivo: sfruttala per accelerare. Se poggi troppo rischi la strambata.» |
+| Sbandi oltre 25° | «Sbandi troppo: lasca la scotta, oppure orza di poco.» | «Sbandi troppo: lasca la scotta e poggia un poco.» | come traverso e lasco |
+| Sbandi oltre 25°, vela tutta lasca | «Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco.» | «Sbandi troppo e la vela è già tutta lasca: poggia un poco.» | come traverso e lasco |
+
+**Lezione 6:** la frase è nel passo «Raffiche e sbandamento»: nel «Riepilogo» il pannello sforava di 31 px.
+
+**Criterio 1, il motore (tre regole, tutte cambiate dopo aver visto i numeri, ognuna con il via di Ale e confermata su un gruppo nuovo):**
+1. Prima regola («poggia» almeno 2° meno di «niente», «orza» non meno di «niente − 1°»), scelta sul gruppo di esplorazione: sul primo gruppo di conferma (14 e 18 nodi; 80°, 100°, 125°) **6 casi su 12**. Fuori: a 80° con 14 nodi orzare toglie 1,4°; a 125° poggiare toglie solo 0,9°.
+2. Seconda regola («poggia» mai più di «niente»): sul secondo gruppo (15, 17, 19 nodi; 75°, 85°, 95°, 115°, 130°) **24 casi su 30**. Fuori tutti i casi a 130°: poggiare aggiunge circa 1° (da 5,1° a 5,9° con 15 nodi), dove la barca sbanda pochissimo.
+3. Terza regola (la seconda, giudicata solo dove senza reagire si sbanda oltre 15°, perché il pannello dice di poggiare solo se si sbanda troppo): sul terzo gruppo (14,5, 16,5, 18,5 nodi; 78°, 88°, 98°, 108°, 120°, 132°) **18 casi giudicati su 18**; gli altri 18 non giudicati (sbandamento sotto 15°).
+Le due mure danno sempre numeri identici.
+
+**Criteri 2-5:** `collaudo_suggerimento.py` 12 casi di sbandamento e 6 di raffica in arrivo, tutti col testo atteso (zero casi = fallito); trovato e corretto un difetto del collaudo stesso (girando la barca da una mura all'altra a 150° strambava e scuffiava: ora la prova riparte a ogni caso). Pannello a 1360×650: 0 px. `polare.js`, `raffiche_e_virate.js` e `collaudo_lezioni.py` identici. Impronta: diversi solo 3 testi (lezione 6.1, 6.3, regata 2 esperti). Pagina da giocatore senza errori.
