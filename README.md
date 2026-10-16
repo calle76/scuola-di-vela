@@ -99,7 +99,7 @@ Progressi, record, punteggi dei quiz e «fantasmi» sono salvati nel browser (`l
 
 ## Crediti
 
-- Caratteri tipografici: Barlow Semi Condensed e Source Serif 4, da Google Fonts (licenza SIL Open Font License).
+- Caratteri tipografici: Barlow Semi Condensed (© 2017 The Barlow Project Authors) e Source Serif 4 (© 2014 The Source Serif 4 Project Authors), licenza SIL Open Font License 1.1. Dalla 1.0.5 i file stanno nella cartella `fonts/`, con il testo delle licenze; sono quelli distribuiti da Google Fonts, non modificati.
 - Progetto sviluppato con l'aiuto di Claude (Anthropic).
 
 ## Licenza

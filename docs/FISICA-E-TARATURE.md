@@ -21,7 +21,7 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | --- | --- | --- |
 | `mass` | 135 kg | Barca più timoniere |
 | `sailArea` | 7,0 m² | Superficie della randa |
-| `hullK2`, `hullK4` | 12, 0,9 | Resistenza dello scafo |
+| `hullK1`, `hullK2`, `hullK4` | 4, 12, 0,9 | Resistenza dello scafo (lineare, quadratica, quarta potenza; `hullK1` era scritto nella formula fino alla 1.0.3) |
 | `rudderDragK` | 45 | Resistenza della barra angolata |
 | `foilK` | 520 | Resistenza laterale della deriva |
 | `minBoom`, `maxBoom` | 14°, 85° | Escursione del boma |
@@ -33,6 +33,9 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `formK` | 400 Nm | Stabilità di forma |
 | `rollI`, `rollDamp` | 260, 520 | Inerzia e smorzamento del rollio |
 | `capsizeAt` | 60° | Soglia di scuffia |
+| `yawK` | 4 /s | Quanto in fretta la rotazione segue la barra (dalla 1.0.4 in `BOAT`, prima scritto nella formula) |
+| `backMax` | 1,2 m/s | Velocità massima all'indietro (come sopra) |
+| `ironsA`, `ironsU`, `ironsYaw` | 36°, 0,5 m/s, 6 °/s | Barca ferma nel vento: sotto quel vento apparente e quella velocità la prua poggia da sola, fino a quella rotazione (come sopra) |
 
 Altre costanti nel codice di gioco: colpo della strambata con vela aperta `GYBE_KICK = 260 °/s`, scalato con (vento / 15 nodi)^1,6 e con una variazione casuale tra −15% e +25%; soglia della strambata «violenta»: boma aperto oltre 45°.
 

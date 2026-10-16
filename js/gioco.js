@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0.3"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.5"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -153,7 +153,7 @@
         : `<p class="manca" id="libManca">${m.superato ? "Livello 1 superato." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
   loadProgress();
-  const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
+  const saveProgress = () => { if (LAB) return; try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   // ---- menu principale e attestato ----
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
   const seqPos = () => SEQ.findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
@@ -587,7 +587,7 @@
   function semRelease(a){ semHeld.delete(a); const b = $("sem").querySelector(`[data-a="${a}"]`); b && b.classList.remove("held"); }
   addEventListener("keydown", e => {
     if (briefing && !$("gloss").open && !$("setDlg").open && e.key === "Enter"){ e.preventDefault(); hideBrief(); return; }
-    if (mode === "menu" || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || e.target.tagName === "INPUT" && e.target.type === "search") return;
+    if (mode === "menu" || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || e.target.tagName === "INPUT" && e.target.type === "search" || e.target.closest?.("#lab")) return; // 1.0.4: i tasti dentro il laboratorio non guidano la barca
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (KEYSEM[k]){ semPress(KEYSEM[k]); if (allowSem.length) e.preventDefault(); return; }
     if (k === "r"){ rightBoat(); return; }

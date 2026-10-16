@@ -3,7 +3,7 @@
 # Ogni parte dichiara quanti casi ha misurato e fallisce se sono zero.
 # Le misure del riquadro valgono solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).
 # Uso: python collaudo_esame.py
-import asyncio, sys, pathlib, re, subprocess, tempfile
+import asyncio, sys, pathlib, re, shutil, subprocess, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 HTML = ROOT / "index.html"; BASE = HTML.as_uri()
@@ -156,7 +156,10 @@ async def main():
         # --- 3) menu: altezza confrontata con la 0.19.5, nello stesso browser ---
         vecchio = subprocess.run(["git", "-C", str(ROOT), "show", f"{RIF_0195}:index.html"], capture_output=True, text=True).stdout
         chk("menu", "0.19.5" in vecchio, f"index.html della 0.19.5 non trovato ({RIF_0195})")
-        tmp2 = pathlib.Path(tempfile.mkdtemp()) / "index.html"; tmp2.write_text(vecchio, encoding="utf-8")
+        # 1.0.5: la 0.19.5 prendeva i caratteri da Google; le si danno gli stessi caratteri locali di oggi, così il confronto non dipende dalla rete
+        oggi = (ROOT / "index.html").read_text(encoding="utf-8"); stile = oggi[oggi.index("<style>/* 1.0.5"):oggi.index("</style>") + len("</style>")]
+        vecchio = re.sub(r'<link[^>]*fonts\.(googleapis|gstatic)\.com[^>]*>\n?', "", vecchio).replace("<style>", stile + "\n<style>", 1)
+        tmp2 = pathlib.Path(tempfile.mkdtemp()) / "index.html"; tmp2.write_text(vecchio, encoding="utf-8"); shutil.copytree(ROOT / "fonts", tmp2.parent / "fonts")
         alt = {}
         for nome, url in (("0.19.5", tmp2.as_uri()), ("ora", BASE)):
             q = await b.new_page(viewport={"width": 1360, "height": 650}); await q.goto(url); await q.wait_for_timeout(300)

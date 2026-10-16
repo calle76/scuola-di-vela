@@ -5,7 +5,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 ## Da leggere prima di lavorare
 
 - Sempre: `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni; la storia fino alla 0.24 è in `docs/archivio/`, da aprire solo se serve), `docs/COLLAUDI.md` **senza** la tabella «Browser»: di quella si legge solo la riga del collaudo che serve (`grep -n "collaudo_nome" docs/COLLAUDI.md`).
-- **Il codice non si legge mai tutto.** Dalla 1.0.3 è diviso: `index.html` (stile e struttura) e `js/` (`motore.js`, `base.js`, `contenuti.js`, `gioco.js`, `regate.js`, `disegno.js`, `registratore.js`, `avvio.js`, caricati in quest'ordine; la prima riga di ogni file dice cosa contiene). Si apre solo il file che serve, e dentro si legge prima la mappa:
+- **Il codice non si legge mai tutto.** Dalla 1.0.3 è diviso: `index.html` (stile e struttura) e `js/` (`motore.js`, `base.js`, `contenuti.js`, `gioco.js`, `regate.js`, `disegno.js`, `registratore.js`, `avvio.js`, `laboratorio.js`, caricati in quest'ordine; la prima riga di ogni file dice cosa contiene). Si apre solo il file che serve, e dentro si legge prima la mappa:
   `grep -nE "^  // ([A-ZÀ-Ú]{4,}|-{3,})" js/nome.js`
   Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna. Una riga eseguita al caricamento di un file non vede le funzioni dei file caricati dopo: il codice nuovo che deve partire all'avvio va in `avvio.js`.
 - Sul prototipo del fiocco: `docs/SPERIMENTALE.md`, `docs/FISICA-E-TARATURE.md`, `docs/FONTI-PUBBLICHE.md`, `docs/CONTENUTI-DA-VERIFICARE.md`.

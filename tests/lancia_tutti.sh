@@ -88,6 +88,7 @@ TESTS=(
     "collaudo_registro.py|py|ambiguo|1||collaudo_registro.py"
     "collaudo_giro_boa.py|py|ambiguo|1||collaudo_giro_boa.py"
     "collaudo_registratore.py|py|chiaro|1||collaudo_registratore.py"
+    "collaudo_laboratorio.py|py|chiaro|0||collaudo_laboratorio.py"
 )
 
 # Cosa guardare per i collaudi "ambiguo" (una riga ciascuno, dal rapporto atteso in docs/COLLAUDI.md).

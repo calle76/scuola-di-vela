@@ -9,6 +9,7 @@ const BOAT = {
   mass: 135,          // kg, barca + timoniere
   sailArea: 7.0,      // m²
   rho: 1.225,
+  hullK1: 4,          // resistenza lineare ~ k1·u (1.0.4: era scritto nella formula)
   hullK2: 12,         // resistenza ~ k2·u²
   hullK4: 0.9,        // + k4·u⁴ (limita la velocità)
   rudderDragK: 45,
@@ -18,6 +19,7 @@ const BOAT = {
   luffA0: 27,         // gradi di vento apparente sotto cui l'inferitura comincia a sgonfiarsi
   luffW: 7,           // ampiezza della transizione: sopra luffA0+luffW la vela porta del tutto
   turnLen: 1.05,       // m, lunghezza efficace per la virata
+  yawK: 4,            // 1/s, quanto in fretta la rotazione segue la barra (1.0.4: era nella formula)
   maxRudder: 30,
   zCE: 2.0,           // m, altezza del centro velico
   sailorMass: 75,     // kg
@@ -25,7 +27,11 @@ const BOAT = {
   formK: 400,         // Nm, stabilità di forma dello scafo
   rollI: 260,         // kg·m², inerzia di rollio
   rollDamp: 520,      // smorzamento
-  capsizeAt: 60       // gradi
+  capsizeAt: 60,      // gradi
+  backMax: 1.2,       // m/s, velocità massima all'indietro (1.0.4: era nella formula)
+  ironsA: 36,         // barca ferma nel vento: sotto questi gradi di vento apparente
+  ironsU: 0.5,        //   e sotto questa velocità (m/s) la prua poggia da sola
+  ironsYaw: 6         //   fino a questi gradi al secondo
 };
 
 function CL(a){ // a: angolo di incidenza (gradi, >=0)
@@ -59,11 +65,11 @@ function step(S, C, E, dt){
   const drive = L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
   const side = L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento
   const rud = C.tiller * BOAT.maxRudder;
-  const res = 4 * S.u + BOAT.hullK2 * S.u * Math.abs(S.u) + BOAT.hullK4 * S.u ** 3 * Math.sign(S.u) * Math.abs(S.u) +
+  const res = BOAT.hullK1 * S.u + BOAT.hullK2 * S.u * Math.abs(S.u) + BOAT.hullK4 * S.u ** 3 * Math.sign(S.u) * Math.abs(S.u) +
               BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   S.u += (drive - res * heelDrag) / BOAT.mass * dt;
-  S.u = Math.max(-1.2, S.u);
+  S.u = Math.max(-BOAT.backMax, S.u);
   // scarroccio: la deriva resiste molto, meno a bassa velocità
   const leewardSign = awa >= 0 ? -1 : 1; // vento da dritta -> scarroccia verso sinistra
   const latTarget = leewardSign * side / (BOAT.foilK * (S.u * S.u + 0.4) + 60);
@@ -82,8 +88,8 @@ function step(S, C, E, dt){
   // virata: la barra a dritta porta la pala a sinistra -> la prua gira a sinistra
   let rTarget = -(S.u / BOAT.turnLen) * Math.sin(rud * D2R) / D2R; // gradi/s
   // barca ferma nel vento: la prua poggia da sola
-  if (A < 36 && Math.abs(S.u) < 0.5) rTarget += (awa >= 0 ? -1 : 1) * 6 * (1 - Math.abs(S.u) / 0.5);
-  S.r += (rTarget - S.r) * Math.min(1, dt * 4);
+  if (A < BOAT.ironsA && Math.abs(S.u) < BOAT.ironsU) rTarget += (awa >= 0 ? -1 : 1) * BOAT.ironsYaw * (1 - Math.abs(S.u) / BOAT.ironsU);
+  S.r += (rTarget - S.r) * Math.min(1, dt * BOAT.yawK);
   S.h = norm360(S.h + S.r * dt);
   S.x += bv[0] * dt; S.y += bv[1] * dt;
   S.boomSide = awa >= 0 ? -1 : 1; // -1: boma a sinistra

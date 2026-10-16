@@ -1,6 +1,7 @@
 // Scuola di vela, base.js — Strumenti comuni a tutto il gioco: $, KN, canvas, clamp, rotte e andature.
 // Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
   const $ = id => document.getElementById(id);
+  const LAB = location.hash === "#lab" || location.hash === "#collaudo-lab"; // 1.0.4: laboratorio della barca (laboratorio.js); con LAB il gioco non salva niente
   const KN = 1.943844;
   const canvas = $("c"), ctx = canvas.getContext("2d");
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));

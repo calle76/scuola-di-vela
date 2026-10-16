@@ -174,4 +174,4 @@ async def main():
     for k in diverse[:20]: print(f"  DIVERSA: {k}", flush=True)
     print("ESITO: OK (identica al riferimento)" if not diverse else "ESITO: FALLITO"); sys.exit(1 if diverse else 0)
 
-asyncio.run(main())
+if __name__ == "__main__": asyncio.run(main())   # 1.0.4: importabile (collaudo_laboratorio.py ne usa i piloti)

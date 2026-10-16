@@ -1,324 +1,196 @@
-# Proposta: pannello «laboratorio» a profili con nome (Scuola di vela)
+# Proposta: laboratorio della barca (Scuola di vela)
 
-Del 13 ottobre 2026. **Proposta, fermata 1: nessun codice scritto.** Scritta in sola lettura: nessun file del repository modificato. Le righe citate sono di `index.html` sul ramo `prova-saturazione`, che ha in più la saturazione del timone (`rudderSat`, non committata): dopo la riga 379 i numeri sono +5 rispetto a `main`.
+**Seconda stesura, 16 ottobre 2026. Proposta, fermata 1: nessun codice scritto.** Sostituisce quella del 13 ottobre, che citava le righe di `index.html` sul ramo `prova-saturazione` (resta nella storia di git). Le righe citate qui sono di `main` alla 1.0.3, con il codice diviso in `js/`.
 
 Tipi delle affermazioni:
 - **[codice]** = letto nel codice, con file e riga;
-- **[misura]** = verificato facendo girare il motore (copia in memoria, cartella temporanea);
-- **[stima]** = ragionamento senza misura.
+- **[stima]** = ragionamento senza misura;
+- **[ipotesi]** = scelta nostra, da decidere.
 
 ---
 
 ## 0. In breve
 
-- **Cos'è.** Una finestra nascosta, attiva solo con `#lab` nell'indirizzo, per provare a mano valori diversi della barca **senza modificare il codice**.
-- **Non cursori liberi, ma profili con nome.** Ogni profilo ha valori, fonte e stato. I cursori servono solo a ispezionare un valore e non salvano niente.
-- **Con un profilo diverso dal predefinito:**
-  - un avviso visibile;
-  - nessun salvataggio di record, medaglie, fantasmi, «senza errori» e piazzamenti;
-  - nome del profilo e valori nella testata del registratore.
-- **Fattibile senza toccare il motore:** tutti i valori di `BOAT` si leggono a ogni passo.
-- **Dimensione stimata:** circa 135-180 righe in `index.html`, più un collaudo nuovo di circa 80-120 righe.
+- **Cos'è.** Una finestra con cursori sui valori della barca, attiva solo aprendo la pagina con `#lab` in fondo all'indirizzo. Serve a provare a mano valori diversi **senza modificare il codice**, a confronto con i video, prima dei compiti sulla barca (velocità, virata, retromarcia, ripartenza: `RICERCA-VELOCITA-VIRATA-RIPARTENZA.md`).
+- **Con `#lab` il gioco non salva mai niente**, nemmeno con i valori di oggi: né record, né medaglie, né fantasmi, né lezioni, quiz, esame o carriera. Si chiude in due righe, nelle due sole funzioni che scrivono i progressi (§3), così non c'è un punto di salvataggio che si possa dimenticare.
+- **Senza `#lab` il gioco è identico al bit** (lo misura `collaudo_impronta.py`).
+- **Novità rispetto al 13 ottobre:** cinque numeri che oggi sono scritti dentro `step()` diventano voci di `BOAT`, **con gli stessi valori**, perché sono proprio quelli che decidono retromarcia e ripartenza (§1). È l'unico tocco al motore, e non deve cambiare niente: `polare.js` e `raffiche_e_virate.js` identici carattere per carattere.
+- **Dove:** un file nuovo, `js/laboratorio.js`, caricato per ultimo. Dimensione stimata: circa 100-130 righe, più circa 5 righe negli altri file e un collaudo nuovo di circa 80-100 righe.
+- **È una versione del gioco (1.0.4)**, perché tocca `index.html` e `js/`.
 
 ---
 
-## 1. Dove il motore legge i valori
+## 1. I valori da provare, e quelli che oggi non si possono toccare
 
-- **[codice]** `BOAT` è dichiarato con `const` (righe 366-388), ma le sue proprietà si possono cambiare. Nessun punto le copia altrove all'avvio: ogni uso rilegge `BOAT.x` quando gira.
-- **[codice]** `BOAT` sta dentro la funzione che contiene tutto il gioco (`(() => {`, riga 360), quindi dalla pagina non si raggiunge. Il laboratorio deve stare nello stesso file e nella stessa funzione.
+**[codice]** `BOAT` (`js/motore.js:8-29`) è dichiarato con `const`, ma le sue proprietà si possono cambiare, e `step()` le rilegge a ogni passo. Quindi un cursore che cambia `BOAT.hullK2` cambia subito la barca, senza toccare il motore. Vale anche per gli avversari, che usano lo stesso `step()` (`js/regate.js:293-311`): **in regata un valore cambiato cambia tutte le barche** (detto nella finestra).
 
-| Dove si legge | Righe [codice] | Valori | Quando |
+**[codice] Numeri scritti dentro `step()`, che nessun cursore raggiungerebbe:**
+
+| Riga | Cosa fa | Valore | Serve per |
 |---|---|---|---|
-| `step()` | 411-446 | tutti quelli della tabella del §7, più `rho` | A ogni passo: 4 per fotogramma per il giocatore (riga 1446), 3 per gli avversari (riga 1810) |
-| Filetti (`readI`) | 926 | `luffA0`, `luffW` | A ogni fotogramma |
-| `autoSheet` | 936-937 | `minBoom`, `maxBoom` | A ogni fotogramma |
-| Strambata violenta | 1419 | `minBoom`, `maxBoom` | A ogni fotogramma |
-| Scuffia del giocatore | 1450 | `capsizeAt` | A ogni fotogramma |
-| Scuffia degli avversari | 1812 | `capsizeAt` | A ogni fotogramma |
-| Scotta degli avversari | 1794-1795 | `minBoom`, `maxBoom` | A ogni fotogramma |
-| Disegno della barra | 2437 | `maxRudder` | A ogni disegno |
+| `motore.js:62` | Termine lineare della resistenza, `4·u` | 4 | Velocità a vento leggero (`PROPOSTA-RESISTENZA-SCAFO.md` §4 lo indica già come candidato) |
+| `motore.js:66` | Velocità massima all'indietro | 1,2 m/s (2,3 nodi) | Retromarcia |
+| `motore.js:85` | Barca ferma nel vento: la prua poggia da sola, sotto 36° di vento apparente e sotto 0,5 m/s, fino a 6 °/s | 36°, 0,5 m/s, 6 °/s | Ripartenza dall'angolo morto («Ripartire»: la barca esce da sola in 80 corse su 80, `PROPOSTA-PILOTA-LEZIONI.md` §10) |
+| `motore.js:86` | Quanto in fretta la rotazione segue la barra | 4 /s | Virata |
 
-- **[codice]** Un valore cambiato ha effetto al passo successivo.
-- **[stima]** Per una misura pulita conviene ripartire, perché un tempo fatto con due fisiche non vale niente. Proposta: un pulsante «applica e ricomincia».
-- **[codice] Numeri scritti nelle formule, che un profilo non può cambiare:**
-  - in `step()`:
-    - resistenza `4·u` (riga 421);
-    - aumento della resistenza con lo sbandamento, 30° e 0,6 (riga 423);
-    - marcia indietro massima −1,2 m/s (riga 425);
-    - scarroccio, 0,4 e 60 (riga 428);
-    - ritardo del timoniere, 0,9 s (riga 436);
-    - prua che poggia da sola, 36°, 0,5 m/s e 6 °/s (riga 448);
-    - inseguimento della rotazione `dt*4` (riga 449);
-    - curve `CL` e `CD` (righe 390-395);
-  - fuori da `step()`:
-    - `IRONS_A` (riga 1133);
-    - orziera e onde (riga 1429);
-    - strambata violenta a 45° (riga 1419);
-    - `GYBE_KICK`: è una variabile, ma si cambia solo con `__sv.kick`, cioè solo con `#collaudo` (riga 2827).
-- **[codice]** Il passo di tempo per fotogramma arriva al massimo a 0,05 s (riga 2807). Quindi 0,0125 s per ogni passo del motore del giocatore e 0,0167 s per gli avversari. Serve per i limiti di stabilità del §7.
+**Proposta:** spostarli in `BOAT` con nomi propri e **gli stessi valori** (`hullK1: 4`, `backMax: 1.2`, `ironsA: 36`, `ironsU: 0.5`, `ironsYaw: 6`, `yawK: 4`), lasciando la formula com'è. Sono sei voci; quella dei 36° e quella dei 0,5 m/s vanno insieme ai 6 °/s, perché da soli non si capiscono. **[stima]** Il risultato in virgola mobile non cambia (stesse operazioni sugli stessi numeri); lo conferma la non-regressione (§6, criterio 1).
+
+**Non si spostano** [ipotesi]: lo sbandamento che frena (`motore.js:64`), i limiti dello scarroccio (`:70`), il ritardo del timoniere (`:77`), il lato opposto della scuffia a −45° (`gioco.js:703`, `regate.js:311`). Nessuno dei prossimi compiti li riguarda; si aggiungono quando servono, con la stessa regola.
+
+**Valori che il laboratorio mostra** (tutti gli altri restano come sono): `hullK1`, `hullK2`, `hullK4`, `rudderDragK`, `turnLen`, `maxRudder`, `yawK`, `backMax`, `ironsA`, `ironsU`, `ironsYaw`, `luffA0`, `luffW`, `mass`, `sailArea`. Sono quelli di velocità, virata, retromarcia e ripartenza. Gli altri valori di `BOAT` (sbandamento, scuffia, scotta) **non entrano** [ipotesi]: non servono ai prossimi compiti, e meno cursori vuol dire meno modi di rompere la barca senza accorgersene.
 
 ---
 
-## 2. Struttura dei profili
+## 2. Profili
 
-**Cosa contiene un profilo** (proposta nostra):
+**Un profilo** è un elenco di valori diversi da `BOAT`, con un nome, la versione del gioco su cui è stato scritto e, **per ogni valore**, la fonte e lo stato («misura», «ipotesi», «non verificato»). Lo stato del profilo è il più debole fra i suoi valori, calcolato e non scritto a mano.
 
-| Campo | Contenuto |
+- **Il predefinito è `BOAT` stesso**, chiamato «come oggi (versione N)», con N letto da `VERSIONE` (`gioco.js:16`). Non può essere diverso dal gioco.
+- **All'inizio c'è solo il predefinito.** I profili di saturazione del 13 ottobre non servono più (la saturazione è rimasta sul ramo `prova-saturazione`). Ogni profilo nuovo nascerà da un compito sulla barca, con le sue fonti: un profilo senza fonte non entra.
+- **Dove:** in testa a `js/laboratorio.js`, fra due segni «PROFILI DEL LABORATORIO» e «FINE PROFILI». Un profilo nuovo si aggiunge incollando un blocco.
+- **Controlli al caricamento:** una chiave che non esiste in `BOAT`, o un valore fuori dai limiti del §5, e il profilo non si carica (la finestra dice quale).
+- **La versione si scrive come campo** (`versione: "1.0.4"`), mai come `const VERSIONE =`, perché `collaudo_versione.py` cerca la prima occorrenza di quella scritta in tutto il codice.
+
+**Esportazione.** Un pulsante «esporta» scrive in un riquadro già selezionato (si copia con Ctrl+C) un profilo nel formato del file: versione, data e ora, valori diversi da `BOAT`. Ogni valore toccato a mano esce con fonte «prova a mano» e stato «non verificato»: così un numero provato col cursore non diventa mai un profilo con una fonte che non ha. Se il registratore è acceso, il testo esportato finisce anche nel file della sessione.
+
+**Tolti dalla stesura del 13 ottobre** (si aggiungono se servono): l'avviso di versione diversa (con un solo profilo non serve; la versione si vede accanto al nome), i valori derivati sul raggio di virata (erano per la saturazione), il caricamento di un profilo incollato nella pagina (si incolla nel file).
+
+---
+
+## 3. Niente salvataggi con `#lab`
+
+**[codice]** Tutto quello che il gioco salva passa da tre punti:
+- `saveProgress()` (`gioco.js:156`): lezioni, prove, regate, piazzamenti, quiz, esame, brevetto, nome dell'attestato;
+- `saveGhosts()` (`regate.js:10`): fantasmi;
+- la scelta fra gioco libero e carriera (`gioco.js:251`), che non dipende dalla barca.
+
+**Proposta:** con `#lab`, `saveProgress()` e `saveGhosts()` escono subito (una condizione per riga). I progressi si **leggono** come sempre, così il menu e i lucchetti della carriera restano quelli del giocatore; quello che si fa durante la sessione resta in memoria e sparisce ricaricando la pagina.
+
+Rispetto al 13 ottobre è più semplice e più sicuro: lì si proponeva di bloccare sei punti uno per uno, e il predefinito salvava. **Prezzo:** con `#lab` nemmeno un giro con la barca di oggi lascia un record. Per giocare «davvero» si toglie `#lab`.
+
+**Avviso** sopra il mare, in HTML e non sul canvas: «LABORATORIO · *profilo* · niente salvataggi». Si vede anche nel menu.
+
+---
+
+## 4. Finestra, tasti e registratore
+
+- **Finestra** creata da `laboratorio.js` solo con `#lab`, assente dall'HTML del gioco. **Non modale**, fissa sopra il mare, così si vede la barca reagire mentre si sposta un cursore; il gioco **non si ferma** [ipotesi]. Si apre e si chiude con il tasto **L**: [codice] il gestore dei tasti (`gioco.js:588-600`) usa W, S, R, Q, le frecce e lo spazio; il registratore usa M (`registratore.js:168`). L è libero.
+- **Frecce.** [codice] Il gestore dei tasti per le frecce esclude solo i `SELECT` (`gioco.js:596`): un cursore con il fuoco si muoverebbe **e** girerebbe la barra. Si aggiunge una condizione alla riga 590: tasti ignorati quando il fuoco è dentro la finestra del laboratorio.
+- **Pannello e menu non cambiano**, quindi nemmeno la misura a 1360×650.
+- **Registratore.** [codice] La testata scrive le impostazioni da `sesSet()` (`registratore.js:17` e `:128`) e ogni cambio diventa una riga `C` con il tempo (`:81-82`). Con `#lab`, `sesSet()` aggiunge `profilo=<nome>` (o `<nome>+modificato`) e i valori diversi da `BOAT`; senza `#lab` la stringa resta identica. Così ogni registrazione dice con quale barca è stata fatta, e ogni cursore mosso lascia una riga col tempo.
+- **Collaudi.** [codice] L'aggancio dei collaudi si attiva con `location.hash === "#collaudo"` (`avvio.js:25`). Per poter guidare la barca nel laboratorio serve un indirizzo che accenda tutti e due: si propone `#collaudo-lab`, accettato sia dall'aggancio sia dal laboratorio. Le pagine con `#collaudo` o senza niente restano come oggi.
+- **Ordine dei file.** `laboratorio.js` va dopo `avvio.js`, così vede tutto (`BOAT`, `VERSIONE`, `opt`, il registratore). Senza `#lab` non fa niente. Le due righe in `saveProgress()` e `saveGhosts()` leggono l'indirizzo direttamente, non una variabile del laboratorio, così funzionano anche se il file mancasse.
+
+---
+
+## 5. Limiti dei cursori
+
+I limiti sono **scelte nostre di prudenza**: servono a non rompere i conti, non dicono cosa è plausibile. Quelli della stesura del 13 ottobre erano misurati sul ramo con la saturazione: **alla fermata 2, prima di scrivere la finestra, si rimisurano tutti su `main`** con lo stesso metodo (ogni valore al minimo e al massimo, gli altri come oggi, passo 1/240 s e 0,0125 s: polare a 10 nodi a 45°, 90° e 180°, virata col pilota a 10 nodi, raffica da 10 a 18 nodi, conti andati in errore), e la tabella va nel rapporto.
+
+| Valore | Oggi | Min | Max | Vincolo del codice |
+|---|---|---|---|---|
+| `mass` | 135 kg | 90 | 250 | più di 0 (divisione, `motore.js:65`) |
+| `sailArea` | 7,0 m² | 4 | 10 | 0 o più |
+| `hullK1` | 4 | 0 | 12 | 0 o più |
+| `hullK2` | 12 | 4 | 30 | 0 o più |
+| `hullK4` | 0,9 | 0 | 3 | 0 o più |
+| `rudderDragK` | 45 | 0 | 120 | 0 o più |
+| `turnLen` | 1,05 m | 0,5 | 2,0 | più di 0 (divisione, `:83`) |
+| `maxRudder` | 30° | 15 | 45 | più di 0; cambia anche il disegno della barra (`disegno.js:424`) |
+| `yawK` | 4 /s | 1 | 10 | più di 0; con `yawK × passo` oltre 1 la formula è già limitata dal `min(1, …)` |
+| `backMax` | 1,2 m/s | 0 | 2,0 | 0 o più |
+| `ironsA` | 36° | 25 | 45 | — |
+| `ironsU` | 0,5 m/s | 0,1 | 1,0 | più di 0 (divisione, `:85`) |
+| `ironsYaw` | 6 °/s | 0 | 15 | 0 o più |
+| `luffA0` | 27° | 15 | 33 | `luffA0 + luffW` al massimo 40, cioè `IRONS_A` (`gioco.js:383`) e i 40° delle lezioni |
+| `luffW` | 7° | 2 | 15 | più di 0 (divisione, `:57`) |
+
+**Avvertenze nella finestra, accanto al cursore:** `turnLen` e `maxRudder` cambiano anche la marcia indietro; `luffA0` e `luffW` cambiano quando la vela si sgonfia, quindi anche i filetti e i messaggi dell'angolo morto; `ironsA` sopra `luffA0 + luffW` vuol dire che la prua poggia da sola anche con la vela che porta.
+
+---
+
+## 6. Criteri della fermata 2
+
+Soglie dichiarate adesso, come attese nostre.
+
+1. **Non-regressione del motore:** `polare.js` e `raffiche_e_virate.js` identici carattere per carattere dopo lo spostamento dei sei numeri in `BOAT`.
+2. **Gioco identico senza `#lab`:** `collaudo_impronta.py` identico al bit, 63 scene su 63, riferimento preso dalla 1.0.3 appena prima.
+3. **Niente salvataggi con `#lab`:** con `#collaudo-lab`, prova 1 completata col pilota e regata 1 finita, semi 1-5 ciascuna (10 corse): `localStorage` uguale byte per byte prima e dopo. **Contro-prova** con `#collaudo`, stesse corse: `localStorage` cambiato in tutte e 10 (altrimenti il criterio non ha misurato niente). Il collaudo dichiara quante corse ha finito davvero.
+4. **Un cursore cambia la barca:** con `#collaudo-lab`, `hullK2` da 12 a 6, la velocità al traverso con 10 nodi dopo 30 s cresce di almeno il 5%; con il cursore riportato a 12 torna uguale entro 0,01 nodi.
+5. **Frecce:** con il fuoco su un cursore, 10 pressioni di ← lasciano la barra a 0 **e** spostano il cursore (contro-prova che i tasti sono arrivati).
+6. **Profili sbagliati:** una chiave inesistente e un valore fuori limite non si caricano (2 casi su 2).
+7. **Esportazione:** il testo esportato, riletto come profilo, ridà gli stessi valori (3 profili con 1, 3 e 15 valori cambiati).
+8. **Registratore:** con `#lab` la testata contiene `profilo=`; senza, `collaudo_registratore.py` passa invariato.
+9. **Pagina vera:** aperta come la apre un giocatore, prima senza niente e poi con `#lab` (senza `#collaudo`): nessun errore della pagina; la finestra c'è solo con `#lab`.
+
+Collaudo nuovo: `tests/collaudo_laboratorio.py` (criteri 3-9), con una voce in `lancia_tutti.sh` e in `COLLAUDI.md`.
+
+---
+
+## 7. Rischi
+
+1. **Un valore cambiato a metà prova** rende il tempo senza senso. Non si salva comunque, e la riga `C` del registratore dice quando è successo.
+2. **Un cursore che tocca più cose di quelle che dice il nome** (`turnLen`, `maxRudder`, `luffA0`): chi prova a mano attribuisce l'effetto alla cosa sbagliata. Lo coprono le avvertenze del §5.
+3. **In regata il valore cambia anche gli avversari** (§1). Per le prove sulla barca conviene la navigazione libera.
+4. **Un numero trovato a mano sembra una taratura.** Esce sempre «non verificato», e diventa un valore del gioco solo con un compito sulla barca, una fonte e le due fermate.
+5. **Principio 5:** il laboratorio non compare nel menu e non sembra una funzione del gioco.
+
+---
+
+## 8. Decisioni che restano ad Ale
+
+- Se con `#lab` non si salva **niente**, nemmeno con la barca di oggi (proposta), o se il predefinito deve salvare come nella stesura del 13 ottobre.
+- Se il gioco continua mentre la finestra è aperta (proposta) o si ferma.
+- Quando passare alla fermata 2.
+
+---
+
+## 9. Esito della fermata 2 (16 ottobre 2026, versione 1.0.4)
+
+Via di Ale con le due proposte del §8: con `#lab` non si salva niente, e il gioco continua a finestra aperta.
+
+**Scostamenti dalla proposta, dichiarati:**
+- la condizione `LAB` sta in `base.js` (legge l'indirizzo, carica prima di tutto), non ripetuta nelle due funzioni di salvataggio: funziona anche senza `laboratorio.js`, come chiedeva il §4;
+- `collaudo_impronta.py` ora si può importare (una riga), per riusarne i piloti di prova e regata nel collaudo nuovo.
+
+**Criteri del §6:**
+
+| Criterio | Esito |
 |---|---|
-| `id` | Nome breve senza spazi, per esempio `sat24`. Va nella testata del registratore |
-| `nome` | Nome leggibile, per esempio «Saturazione 24°» |
-| `barca` | Per ora una sola: «deriva singola da scuola», quella di `BOAT` |
-| `versione` | La versione del gioco su cui il profilo è stato scritto, per esempio 0.21.2 |
-| `valori` | **Solo le differenze** dalla barca di base |
-| Per ogni valore: `fonte` | Documento e riga, oppure «scelta di progetto», oppure «senza fonte» |
-| Per ogni valore: `stato` | «misura»: c'è un dato misurato e citato. «ipotesi»: scelta nostra dichiarata. «non verificato»: nessuno l'ha controllato |
-| `nota` | Una frase: cosa si vuole provare |
+| 1. Fisica identica | `polare.js`, `raffiche_e_virate.js` e anche `angolo_morto.js` identici carattere per carattere |
+| 2. Gioco identico senza `#lab` | impronta `6d04cc5bd6d4` prima e dopo, 63 scene su 63, 0 diverse |
+| 3. Niente salvataggi | 10 corse finite su 10, `localStorage` cambiato in 0; contro-prova 10 su 10, cambiato in 10 |
+| 4. Il cursore cambia la barca | `hullK2` 12 → 6: da 4,88 a 5,59 nodi (+14%); di nuovo 12: 4,885 contro 4,885 |
+| 5. Frecce | col fuoco sul cursore: barra 0, cursore da 1,05 a 0,5; contro-prova sul mare: barra −0,67 |
+| 6. Profili sbagliati | 3 su 3 rifiutati; uno giusto caricato |
+| 7. Esportazione | 1, 3 e 15 valori riletti uguali; valore a mano «prova a mano», «non verificato» |
+| 8. Registratore | `profilo=oggi+modificato hullK2=7` col laboratorio, niente senza; `collaudo_registratore.py` OK |
+| 9. Pagina vera | senza niente e con `#lab`: 0 errori; finestra solo con `#lab`; il tasto L la nasconde |
 
-- **Fonte e stato vanno per ogni valore**, perché un profilo mescola valori con fonti diverse. Lo stato del profilo intero è il **più debole** fra i suoi valori, calcolato e non scritto a mano.
-- **Il predefinito non è scritto da nessuna parte: è `BOAT` stesso.** Il pannello lo chiama «come oggi (versione N)», leggendo `VERSIONE` (riga 869). Così non può essere diverso da quello che usa il gioco.
-- **Sul ramo** «come oggi» ha `rudderSat` 15, quindi **non è** la 0.21.2. Per confrontare serve il profilo «come 0.21.2, senza saturazione» (§9).
-- **Controlli quando si carica un profilo:**
-  - una chiave che non esiste in `BOAT` → il profilo non si carica e il pannello dice quale riga è sbagliata;
-  - valori fuori dai limiti del §7 → non si carica;
-  - `rudderSat` più grande di `maxRudder` → non si carica.
+**Difetto nel collaudo, trovato e corretto:** il primo giro dava il criterio 6 fallito, perché il caso «`luffA0` 33» con `luffW` 7 fa esattamente 40, che è permesso. Il controllo era giusto, il caso no: ora è 33 + 8.
 
-**Dove scriverli.** Consiglio **una sezione propria in `index.html`**, con segni di inizio e fine («PROFILI DEL LABORATORIO» … «FINE PROFILI»), **fuori dal blocco del motore** (righe 361-455).
+**Limiti dei cursori, misurati sul motore della 1.0.4** (script fuori dal repository; ogni valore agli estremi, gli altri come oggi; vento 10 nodi). Polare a 45°/90°/180° con la scotta migliore; virata da 3,9 nodi con barra 0,8; sbandamento massimo con una raffica da 10 a 18 nodi senza reagire; angolo morto: barca ferma con la prua a 10° dal vento, scotta a metà, barra al centro (secondi prima di andare indietro oltre 0,5 nodi, velocità più bassa, prua dopo 10 s). «—» = non succede (virata non riuscita in 12 s, o mai all'indietro). Nessun conto in errore. I passi di 1/240 e 0,0125 s danno risultati uguali entro 0,1 s e 1°.
 
-| Possibilità | Pro | Contro |
-|---|---|---|
-| **Sezione in `index.html`** (consigliata) | Resta un file solo (`PROGETTO.md`). Un profilo nuovo si aggiunge incollando un blocco di testo. Fuori dal blocco del motore, i collaudi della fisica non lo vedono | Il file cresce di qualche riga per profilo |
-| File a parte, `profili.js`, caricato con `<script>` | Si cambiano i profili senza aprire `index.html` | Due file da distribuire. **[stima]** Un JSON caricato con `fetch` non funzionerebbe aprendo la pagina da disco (`file://`); uno script invece sì |
-
-In futuro i collaudi in Node potrebbero leggere i profili come leggono il motore: `tests/fisica/motore.js` taglia il testo fra due segni. Per questo i segni servono già adesso.
-
-**Un profilo per ogni barca, in futuro.** Il campo `barca` raggruppa i profili per barca. **Limite:** un profilo cambia solo i numeri che il motore già usa. Una barca diversa ha bisogno prima di un motore e di un disegno che la reggano:
-- con il fiocco: `sperimentale/fiocco.html`;
-- con due persone: un altro modello del timoniere;
-- con un'altra lunghezza: un altro disegno (`hullPath`, righe 2516-2522, fisso a 4,2 m).
-
----
-
-## 3. localStorage: dove si scrive e cosa bloccare
-
-| Riga [codice] | Cosa scrive | Dipende dalla fisica? |
-|---|---|---|
-| 958 | `saveProgress()`, la funzione che salva tutto | — |
-| 1503-1505 | Record della prova, «senza errori», fantasma | Sì |
-| 1537 (`recSave`), 1523 (`saveGhosts`) | Fantasma | Sì |
-| 1889-1891 | Record della regata, «pulita», fantasma | Sì |
-| 1903 | Piazzamento della regata | Sì |
-| 1226 | Lezione completata | **[stima]** In parte |
-| 1067 | Record del quiz | No |
-| 1012 | Azzeramento a mano | No |
-| 1524 | Cancellazione delle chiavi della 0.19 | No |
-
-- **[codice]** Il registro degli errori (`reg`, `regAdd` alla riga 1141) non va mai in localStorage da solo: entra solo come «senza errori» e «pulita» (righe 1505, 1891, 1903).
-- **[codice]** Le impostazioni (`opt`, riga 860) non si salvano.
-- **Proposta:** una condizione unica, «profilo diverso dal predefinito, o predefinito modificato con un cursore». Quando è vera si saltano le righe 1503-1505, 1537, 1889-1891 e 1903 **prima** di toccare `progress` in memoria. Bloccare solo `saveProgress` lascerebbe il record in memoria per tutta la sessione, e il menu lo mostrerebbe.
-- Profili e valori del laboratorio non si salvano: ricaricando la pagina si torna al predefinito.
-
----
-
-## 4. Avviso e registratore
-
-**Avviso visibile:**
-- un'etichetta fissa sopra il mare, fuori dal pannello e fuori dal canvas, per esempio «LABORATORIO · *nome* · niente record»;
-- si vede anche nel menu;
-- a fine prova o regata il testo aggiunge «(laboratorio: non salvato)».
-
-**Il registro degli errori** continua a contare e a mostrarsi, perché serve a capire la prova; non si salva per costruzione (§3).
-
-**Registratore** [codice]:
-- la testata scrive «impostazioni all'inizio» da `ses.set0` (righe 2730 e 2749), che viene da `sesSet()` (righe 2637-2639);
-- quando `sesSet()` cambia, il registratore scrive una riga `C` con il tempo (righe 2701-2702).
-
-**Proposta:**
-- con `#lab`, `sesSet()` aggiunge `profilo=<id>` (oppure `<id>+modificato`) e i valori diversi dalla base;
-- così finiscono nella testata, e ogni cambio di profilo o di cursore diventa una riga `C`;
-- senza `#lab` la stringa resta identica a oggi;
-- `analizza_sessione.py` non legge il contenuto delle righe `C` [codice, righe 36-56].
-
----
-
-## 5. Posizione, tasto L e filtro delle frecce
-
-- **[codice]** Il pannello normale è l'`<aside class="panel">` della riga 277 (stile alle righe 80 e 211). Le impostazioni sono il `<dialog id="setDlg">` della riga 228.
-- **Proposta:**
-  - una finestra **creata da JavaScript solo con `#lab`**, assente dall'HTML del gioco normale;
-  - **non modale**, in posizione fissa sopra il mare, così si vede la barca reagire;
-  - l'avviso del §4 come elemento a parte.
-- **[codice]** Il gestore dei tasti (righe 1335-1346) usa `KEYSEM`, R, Q, le frecce e lo spazio; L non compare. **[stima]** Il tasto M del registratore sta altrove: va controllato che L sia davvero libero.
-- **[codice] Problema delle frecce.** Il gestore si ferma solo con le finestre del gioco aperte o con il fuoco in un campo di ricerca (riga 1337). Per le frecce esclude solo i `SELECT` (riga 1343). Quindi un cursore con il fuoco, premendo ← o →, si muove **e** muove la barra. Il gestore deve ignorare i tasti quando il fuoco è dentro il laboratorio.
-- **[stima]** Così non cambiano né l'altezza del pannello a 1360×650 né il menu.
-
----
-
-## 6. Cursori di ispezione ed esportazione
-
-- I cursori partono dai valori del profilo. Muovendone uno, il profilo diventa «*nome* + modificato» e la barca usa subito il valore nuovo.
-- **Non si salva niente.**
-- **Pulsante «esporta come testo»:** produce un blocco già nel formato dei profili scritti, da incollare in una conversazione o nella sezione dei profili. Contiene:
-  - `versione` (letta da `VERSIONE`), data e ora;
-  - profilo di partenza;
-  - i valori, con fonte e stato copiati dal profilo di partenza;
-  - per ogni valore toccato a mano: fonte «ispezione a mano», stato «non verificato».
-
-  Così un valore provato a mano non diventa mai un profilo con una fonte che non ha.
-- Il testo esce in un riquadro già selezionato, da copiare con Ctrl+C. **[stima]** Non sono sicuro che la copia automatica negli appunti funzioni aprendo la pagina da disco.
-- Se il registratore è acceso, il testo esportato finisce anche nel file della sessione.
-
----
-
-## 7. Limiti dei cursori
-
-**Come ho verificato [misura].** Ogni valore al minimo e al massimo, con tutti gli altri come oggi, a passo 1/240 s e al passo più lungo possibile (0,0125 s; alcuni anche 1/60). Ho misurato:
-- la polare a 10 nodi a 45°, 90° e 180° dal vento;
-- la virata col pilota a 10 nodi;
-- una raffica improvvisa da 10 a 18 nodi di bolina, senza reagire (oggi 41°);
-- la comparsa di NaN, cioè conti andati in errore.
-
-Valori di oggi sul ramo: polare 3,4 / 5,2 / 3,5 nodi; virata 3,6 s; raffica 41°.
-
-Nella colonna «Tipo»: «motore» vuol dire che oltre quel valore il codice si rompe o dà numeri senza senso; «prudenza» vuol dire che è una scelta nostra.
-
-| Valore | Oggi | Min | Max | Passo | Tipo e motivo | Verifica |
+| Valore | Polare (nodi) | Virata | Raffica | Indietro dopo | Minimo | Prua a 10 s |
 |---|---|---|---|---|---|---|
-| `mass` | 135 kg | 90 | 250 | 5 | **Motore:** più di 0, a 0 NaN (riga 424). **Prudenza:** la massa entra solo nell'accelerazione, non nella resistenza né nel rollio. La polare non cambia; la virata sì (5,4 s a 90, 2,9 s a 250) | Motore girato |
-| `sailArea` | 7,0 m² | 4 | 10 | 0,1 | **Motore:** 0 o più (a 0 la barca sta ferma, riga 415). **Prudenza:** a 10 la raffica fa scuffiare (62°) | Codice e motore girato |
-| `hullK2` | 12 | 4 | 30 | 1 | **Motore:** 0 o più (riga 421). **Prudenza:** traverso a 6,1 nodi con 4, 3,8 con 30 | Motore girato |
-| `hullK4` | 0,9 | 0 | 3 | 0,1 | **Motore:** 0 o più; a 0 limita `hullK2` (traverso a 6,2 nodi). **Prudenza:** a 3, traverso a 4,3 nodi | Motore girato |
-| `rudderDragK` | 45 | 0 | 120 | 5 | **Motore:** 0 o più. **Prudenza:** virata 3,1 s con 0, 4,8 s con 120 | Motore girato |
-| `foilK` | 520 | 150 | 1200 | 10 | **Motore:** 0 o più, il denominatore ha +60 (riga 428). **Prudenza:** con 150 la bolina scende a 3,0 nodi | Codice e motore girato |
-| `minBoom` | 14° | 0 | 30 | 1 | **Motore:** deve restare **sotto** `maxBoom`, altrimenti divisione per zero in `autoSheet` (riga 937) e nella scotta degli avversari (riga 1795): NaN con 14 e 14. **Prudenza:** almeno 10° di differenza; con 30 la bolina scende a 2,4 nodi | Motore girato |
-| `maxBoom` | 85° | 60 | 90 | 1 | **Motore:** sopra `minBoom`. **Prudenza:** il commento del suggerimento in poppa (riga 2051) dà per scontato 85°; con 60 poppa a 3,3 nodi; oltre 90° senza senso fisico | Motore girato (60 e 90); oltre 90 stima |
-| `luffA0` | 27° | 15 | 33 | 1 | **Prudenza:** `luffA0 + luffW` al massimo 40, cioè `IRONS_A` (riga 1133) e i 40° scritti nelle lezioni. Con 33: bolina 2,1 nodi, virata 10,1 s. Con 40 e 10: bolina 0,4 nodi, virata fallita | Codice e motore girato |
-| `luffW` | 7° | 2 | 15 | 1 | **Motore:** più di 0 (divisione alla riga 416): con 0 NaN quando il vento apparente vale esattamente `luffA0`, mai capitato nelle prove. **Prudenza:** con 15, bolina 2,3 nodi e virata 6,7 s | Codice (NaN non osservato) e motore girato |
-| `turnLen` | 1,05 m | 0,5 | 2,0 | 0,05 | **Motore:** più di 0, a 0 NaN (riga 446). **Vale anche all'indietro:** cambia l'uscita dall'angolo morto. **Prudenza:** virata 1,8 s con 0,5, 9,6 s con 2,0 | Motore girato |
-| `maxRudder` | 30° | 15 | 45 | 1 | **Motore:** più di 0. **Vincolo:** `rudderSat` non sopra `maxRudder`. **Prudenza:** virata 8,8 s con 15, 2,5 s con 45; cambia anche il disegno della barra (riga 2437) | Motore girato |
-| `rudderSat` | 15° | 5 | `maxRudder` | 1 | **Motore:** più di 0, a 0 NaN (riga 444). Non sopra `maxRudder`: con 30 e `maxRudder` 20 la virata passa da 3,6 a 9,8 s. **Prudenza:** con 5, virata 3,3 s | Motore girato |
-| `zCE` | 2,0 m | 1,2 | 3,0 | 0,1 | **Motore:** nessun limite (riga 433). **Prudenza:** con 3,0 la raffica fa scuffiare (65°); con 1,2, 24° | Motore girato |
-| `sailorMass` | 75 kg | 40 | 120 | 5 | **Motore:** più di 0, divisione per `rmMax` alla riga 435 (NaN possibile, non osservato a 0). **Prudenza:** con 40 la raffica arriva a 54° | Codice e motore girato |
-| `hikeArm` | 1,0 m | 0,3 | 1,5 | 0,05 | Come `sailorMass`. **Prudenza:** con 0,3 la raffica fa scuffiare (62°) | Codice e motore girato |
-| `formK` | 400 Nm | 300 | 1000 | 20 | **Motore:** a 0 nessun errore ma risultato senza senso: in poppa 0 nodi, scuffia anche senza raffica. **Prudenza:** raffica a 72° con 100, 60° con 200, 46° con 300 | Motore girato |
-| `rollI` | 260 | 80 | 600 | 10 | **Motore:** più di 0, a 0 NaN (riga 438). Stabilità del passo: `rollDamp / rollI × passo` sotto 2, quindi `rollDamp` sotto circa 120 volte `rollI` (stima dalla formula). Un punto provato: 9000 e 80 a passo 1/60, stabile | Motore girato e stima |
-| `rollDamp` | 520 | 300 | 1500 | 20 | **Motore:** 0 o più, più il vincolo di stabilità sopra. **Prudenza:** raffica a 80° con 100, 62° con 200, 52° con 300, 46° con 400; con 1500, 25° | Motore girato |
-| `capsizeAt` | 60° | 30 | 80 | 1 | **Motore:** oltre 90° senza senso, perché il momento raddrizzante usa sin 2φ (riga 437); a 95 nessun errore nelle prove. Il lato opposto resta −45°, scritto nel codice (righe 1450 e 1812). **Prudenza:** con 30 la raffica fa scuffiare | Codice e motore girato |
+| **oggi** | 3,4 / 5,2 / 3,5 | 4,0 s | 41° | 1,8 s | −1,8 | 21° |
+| `mass` 90 / 250 | uguale / uguale | 6,6 / 2,9 s | 41° / 41° | 1,2 / 3,3 s | −1,9 / −1,2 | 17° / 33° |
+| `sailArea` 4 / 10 | 3,0/4,0/3,0 · 3,6/5,9/3,9 | 3,5 / 4,7 s | 23° / 62° | 3,3 / 1,2 s | −0,9 / −2,2 | 34° / 17° |
+| `hullK1` 0 / 12 | 3,5/5,3/3,7 · 3,2/4,8/3,3 | 3,7 / 4,7 s | 41° / 40° | 1,7 / 1,9 s | −2,1 / −1,4 | 20° / 22° |
+| `hullK2` 4 / 30 | 3,9/6,1/4,2 · 2,7/3,8/2,7 | 3,3 / 5,9 s | 42° / 40° | 1,7 / 1,8 s | −2,3 / −1,3 | 21° / 22° |
+| `hullK4` 0 / 3 | 3,6/6,2/3,8 · 3,2/4,3/3,2 | 3,8 / 4,5 s | 41° / 40° | 1,8 s | −1,8 / −2,0 | 21° |
+| `rudderDragK` 0 / 120 | uguale | 3,4 / 5,3 s | 41° | 1,8 s | −1,8 | 21° |
+| `turnLen` 0,5 / 2 | uguale | 1,4 s / — | 41° | 1,8 s | −1,8 | 21° |
+| `maxRudder` 15 / 45 | uguale | — / 2,5 s | 41° | 1,8 s | −1,8 | 21° |
+| `yawK` 1 / 10 | uguale | 4,6 / 3,9 s | 41° | 1,7 / 1,8 s | −1,8 | 21° |
+| `backMax` 0 / 2 | uguale | 4,0 s | 41° | — / 1,8 s | 0,0 / −1,8 | 38° / 21° |
+| `ironsA` 25 / 45 | uguale | 4,0 s | 41° | 1,8 s | −1,8 | 21° / 21° |
+| `ironsU` 0,1 / 1 | uguale | 4,0 / 3,8 s | 41° | 1,7 / 1,8 s | −1,9 / −1,2 | 12° / 33° |
+| `ironsYaw` 0 / 15 | uguale | 4,0 s | 41° | 1,7 / 1,8 s | −1,9 / −1,1 | 10° / 36° |
+| `luffA0` 15 / 33 | 3,8/5,2/3,5 · 2,1/5,2/3,5 | 3,3 / 4,9 s | 41° / 31° | 1,8 s | −1,5 / −1,8 | 22° / 21° |
+| `luffW` 2 / 15 | 3,8/5,2/3,5 · 2,3/5,2/3,5 | 3,7 / 4,4 s | 41° / 30° | 1,8 s | −1,8 | 21° |
 
-Nei limiti proposti, i due passi di tempo (1/240 e 0,0125 s) danno risultati uguali entro 0,1 s e 1° [misura]: nessuna instabilità numerica. Minimi, massimi e passi sono **proposte nostre**.
-
----
-
-## 8. Valori derivati e avviso di versione
-
-**Valori derivati, in sola lettura accanto ai cursori.** Fattibile.
-
-- **Guadagno a barra piccola** = sin(`maxRudder`) / sin(`rudderSat`). Non sin 30° / sin(`rudderSat`): coincidono solo con `maxRudder` a 30 [codice, riga 444].
-- **Raggio minimo in avanti** = `turnLen` / sin(`maxRudder`).
-  - Con la saturazione **non dipende da `rudderSat`**, perché a barra tutta la rotazione è quella di `maxRudder`. Oggi vale 2,1 m con tutti i profili del §9.
-  - Più utile: il **raggio a metà barra** = `turnLen` / (sin(min(`maxRudder`/2, `rudderSat`)) × guadagno).
-- **Righe** [stima]: circa 8-12.
-- **Collaudi:** nessun rischio se i numeri stanno nella finestra del laboratorio, e non nel pannello o sul canvas.
-
-**Avviso se la versione del profilo è diversa da `VERSIONE`** (riga 869). Fattibile.
-
-- **Righe** [stima]: circa 4-6.
-- **[codice] Avvertenza:** `collaudo_versione.py` cerca la **prima** occorrenza di `const VERSIONE = "…"` (riga 27 del collaudo). I profili devono scrivere la versione come campo (`versione: "0.21.2"`), **mai** come `const VERSIONE =`.
-- **[codice]** Lo stesso collaudo controlla «V. » + versione nel menu (`.ver`, riga 991) e sul mare: l'avviso non deve stare né lì né sul canvas.
-
----
-
-## 9. Profili iniziali
-
-Ogni profilo scrive solo le differenze; tutti gli altri valori sono quelli di `BOAT`.
-
-**Fonte comune dei valori di `BOAT`:** `docs/FISICA-E-TARATURE.md:3` («tarati per essere plausibili, non ricavati da misure») e la tabella alle righe 22-35. **Stato: ipotesi (taratura).**
-
-| Profilo | Valori diversi da `BOAT` | Fonte | Stato |
-|---|---|---|---|
-| «Come oggi» (predefinito; il nome legge `VERSIONE`) | Nessuno. Sul ramo vuol dire `rudderSat` 15, su main la barca della 0.21.2 | `rudderSat` 15: F4, un solo 470 (`docs/FONTI-PUBBLICHE.md:20` e `:54`), più scelta di progetto. Gli altri: tabella di `FISICA-E-TARATURE.md` | Ipotesi |
-| «Come 0.21.2, senza saturazione» | `rudderSat` 30 | Scelta di progetto: equivale alla formula della 0.21.2 | Misura: `polare.js`, `raffiche_e_virate.js` e `angolo_morto.js` **identici a main carattere per carattere** |
-| «Saturazione 20°» | `rudderSat` 20 | F4 (un solo 470) più scelta di progetto | Ipotesi |
-| «Saturazione 24°» | `rudderSat` 24 | F4 (un solo 470) più scelta di progetto | Ipotesi |
-
-**Il 20° ha senso? Solo come punto intermedio per la prova a mano** [misura, sweep del 13 ottobre]. In ogni misura sta fra il 18° e il 24°, senza un comportamento suo:
-
-| Misura | main | 15° | 18° | 20° | 24° |
-|---|---|---|---|---|---|
-| Prua minima con il colpo fisso da 0,7 s (il passo 5.2 chiede almeno 43°) | 51,9° | 32,6° | 37,2° | 39,9° | 45,0° |
-| Collaudo della lezione 5 | OK | ✘ | ✘ | ✘ | OK |
-| Cambi di barra nella rotta (mediana) | 2 | 12 | 8 | 7 | 4 |
-| Griglia di 84 virate a 10 nodi, miglior barra | 66 | 71 | 71 | 70 | 70 |
-| Aggressiva | — | nel rumore | nel rumore | nel rumore | nel rumore |
-
-- Il passaggio della lezione 5 sta **fra 20° e 24°**; un valore come 22° non l'ho misurato.
-- Se a mano 24° sembra giusto e 15° troppo nervoso, il 20° aiuta a capire dove sta il limite. Altrimenti si può togliere.
-- Costa 4-5 righe.
-
----
-
-## 10. Collaudi
-
-**[codice]** L'aggancio dei collaudi controlla l'indirizzo con un'uguaglianza esatta, `location.hash === "#collaudo"` (riga 2819). Nessun collaudo legge `BOAT` (cercato in `tests/*.py`: zero risultati). Se il laboratorio esiste solo con `#lab`, i collaudi non lo vedono. I rischi:
-
-| Rischio | Collaudi che lo scoprirebbero [codice] | Come evitarlo |
-|---|---|---|
-| Codice del laboratorio dentro il blocco del motore (righe 361-455) | `polare.js`, `raffiche_e_virate.js`, `angolo_morto.js`: `tests/fisica/motore.js` estrae proprio quel blocco | Laboratorio e profili fuori dal blocco |
-| Condizione «niente salvataggi» vera anche senza `#lab` | `collaudo_registro.py`, `collaudo_linea.py`, `collaudo_competizione.py`, `collaudo_fantasma.py` | Falsa per costruzione senza `#lab` |
-| `sesSet()` diverso senza `#lab` | `collaudo_registratore.py` | Campo aggiunto solo con `#lab` |
-| Testo disegnato sul mare | `collaudo_versione.py`, `collaudo_vista.py` | Avviso in HTML, non sul canvas |
-| Pannello più alto | `collaudo_pannello.py` | Finestra separata |
-| Versione scritta come `const VERSIONE =` in un profilo | `collaudo_versione.py` | Versione come campo del profilo |
-
-**Collaudo nuovo** [stima], con la pagina aperta su `#lab`. Deve verificare:
-1. con un profilo diverso dal predefinito, la prova 1 completata non scrive in localStorage (il collaudo dichiara quante prove ha misurato);
-2. con il predefinito il record si salva;
-3. senza `#lab` la finestra non esiste;
-4. le frecce su un cursore non muovono la barra;
-5. un profilo scritto male non si carica;
-6. un profilo esportato e reincollato ridà gli stessi valori;
-7. la testata del registratore contiene il nome del profilo;
-8. un profilo con una versione diversa mostra l'avviso.
-
----
-
-## 11. Dimensione e rischi
-
-**Dimensione** [stima]: circa 135-180 righe in `index.html`.
-- finestra e cursori: circa 40;
-- stile: circa 10;
-- condizione e punti di salvataggio: circa 10;
-- `sesSet()`: circa 2;
-- tasto e filtro delle frecce: circa 5;
-- pulsanti: circa 10;
-- profili: circa 15-25;
-- lettura e controlli dei profili: circa 20;
-- esportazione: circa 15;
-- avviso: circa 5;
-- valori derivati: circa 8-12;
-- avviso di versione: circa 4-6.
-
-A questo si aggiungono il collaudo nuovo (circa 80-120 righe) e le voci in `COLLAUDI.md` e `CHANGELOG.md`.
-
-**Rischi:**
-1. **Un punto di salvataggio dimenticato:** un record fatto con una fisica diversa resta per sempre. Lo copre il collaudo del §10.
-2. **Frecce che muovono barra e cursore insieme:** un difetto silenzioso. Lo coprono il filtro e il collaudo.
-3. **Misure mescolate:** un valore cambiato a metà prova rende il tempo senza senso. Lo coprono «applica e ricomincia» e la riga `C` del registratore.
-4. **`turnLen` e `maxRudder` toccano anche l'indietro e il disegno:** chi prova a mano può attribuire alla saturazione un effetto che viene da altro. Il pannello lo dice accanto al cursore.
-5. **Un profilo con una fonte sbagliata sembra autorevole.** Per questo fonte e stato vanno per valore, e i valori toccati a mano escono sempre «non verificato».
-6. **Il predefinito sul ramo è diverso dalla 0.21.2:** «come oggi» vuol dire «come questo `index.html`».
-7. **Principio 5 del progetto:** il laboratorio è uno strumento di prova. Non deve comparire nel menu né sembrare una funzione del gioco.
-
----
-
-## 12. Decisioni che restano ad Ale
-
-- Profili in una sezione di `index.html` o in un file a parte.
-- Se il profilo «Saturazione 20°» resta, o si prova invece un 22°.
-- Se i limiti dei cursori del §7 vanno bene, o se ne vuole di più stretti.
-- Se bloccare anche il salvataggio delle lezioni completate (riga 1226).
-- Il tasto per aprire la finestra: L, dopo aver verificato che sia libero.
-- Se il gioco continua mentre la finestra è aperta, o si ferma.
-- Se il raggio derivato si mostra a barra tutta, a metà barra o in tutti e due i modi.
-- Se l'avviso di versione diversa blocca il profilo o lo segnala soltanto.
-- Se il laboratorio entra in una versione del gioco o resta su un ramo di prova.
-- Quando passare alla fermata 2 (implementazione).
+**Cosa si nota, senza giudicarlo** (lo faranno i compiti sulla barca, con le fonti):
+- partendo ferma con la prua a 10° dal vento, la barca va all'indietro oltre mezzo nodo **dopo 1,8 s** e arriva a −1,8 nodi; il limite `backMax` (1,2 m/s, cioè 2,3 nodi) in questo caso non viene mai raggiunto, quindi per la retromarcia «che parte troppo presto» (Ale) contano di più altri valori;
+- con la barra al centro la barca **non esce** dall'angolo morto in 30 s: la prua si ferma intorno ai 21°;
+- `ironsA` fra 25 e 45 non cambia niente in questa prova; probabilmente il vento apparente resta sempre sotto i 25°, ma non l'ho misurato.

@@ -7,7 +7,7 @@
   let ghosts;
   const loadGhosts = () => { try { ghosts = JSON.parse(localStorage.getItem(GHOST_STORE) || "{}"); } catch(e){ ghosts = {}; } };
   loadGhosts();
-  const saveGhosts = () => { try { localStorage.setItem(GHOST_STORE, JSON.stringify(ghosts)); } catch(e){} };
+  const saveGhosts = () => { if (LAB) return; try { localStorage.setItem(GHOST_STORE, JSON.stringify(ghosts)); } catch(e){} };
   if (OLD_M.some(k => progress.best[k] || progress.clean[k] || ghosts[k])){ OLD_M.forEach(k => { delete progress.best[k]; delete progress.clean[k]; delete ghosts[k]; }); saveProgress(); saveGhosts(); wipeNote = true; } // 0.19, nessuna migrazione
   // coordinate "del vento": il vento arriva sempre da -y; così il fantasma vale con qualsiasi direzione del vento
   const toWF = (x, y) => { const th = -env.twd * D2R; return [x * Math.cos(th) - y * Math.sin(th), x * Math.sin(th) + y * Math.cos(th)]; };

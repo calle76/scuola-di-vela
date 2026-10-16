@@ -21,8 +21,8 @@
   }
   env.twd = 0; freshState(0, 0, 90, 0.4);
   showMenu();
-  // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo)
-  if (location.hash === "#collaudo"){ window.__sv = {
+  // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo, o #collaudo-lab per il laboratorio)
+  if (location.hash === "#collaudo" || location.hash === "#collaudo-lab"){ window.__sv = {
     // 0.21, pilota sostituto per collaudo_competizione.py: la guida degli avversari principianti (aiControl) sulla barca del giocatore,
     // con i campi che le mancano, la lettura istantanea e lo stesso bersaglio degli avversari (me.me falso solo durante la chiamata).
     // Raddrizza dopo 1 s di scuffia: ipotesi nostra, un giocatore che preme il tasto (gli avversari si raddrizzano da soli dopo 5 s).

@@ -15,6 +15,41 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.0.5 — i caratteri dentro il progetto
+
+Del 16 ottobre 2026. **Il gioco appare identico al pixel**, ma non chiede più niente a Google. Su consiglio della chat del progetto: chi gioca non manda più il proprio indirizzo a Google (tema GDPR, se il gioco viene pubblicato) e il gioco funziona anche senza rete.
+
+- **Cosa cambia.** I caratteri Barlow Semi Condensed (400, 500, 600, 700) e Source Serif 4 (400, 600) stanno nella cartella nuova `fonts/`: 10 file, 365 KB, sottoinsiemi «latin» e «latin-ext». Sono **gli stessi file** che Google Fonts mandava al browser, e le regole che li dichiarano in `index.html` sono le sue, con l'indirizzo cambiato. Tolte le tre righe che chiamavano Google.
+  - «latin» copre tutti i testi del gioco, controllato carattere per carattere; le frecce e i simboli (← → ★ ⚑ ⚙ ⛵) non erano in quei caratteri nemmeno prima.
+  - «latin-ext» serve per un nome con lettere straniere nell'attestato.
+- **Licenze:** tutti e due sono SIL Open Font License 1.1, senza nomi riservati. Il testo è accanto ai file (`fonts/OFL-Barlow-Semi-Condensed.txt`, `fonts/OFL-Source-Serif-4.txt`), scaricato dal repository di Google Fonts.
+- **Misure:**
+  - impronta del gioco identica al bit con i caratteri locali e con quelli di Google, 63 scene su 63. Riferimento preso sulla 1.0.4 con i caratteri di Google, facendo passare il browser dal proxy della sandbox, solo per quella prova. L'impronta presa senza caratteri era diversa (`6d04cc5bd6d4` contro `29c1ef0eb7cd`), quindi il confronto vede i caratteri;
+  - 8 foto di parti della pagina (menu del gioco libero e della carriera, pannello nei passi 1.1 e 3.5, regata, glossario, ripasso, istruzioni della prova) uguali al pixel, con la versione scritta nel menu riportata a 1.0.4 per la foto;
+  - pagina aperta come un giocatore, senza niente e con `#lab`: caratteri caricati dal disco, **nessuna richiesta fuori dal disco**, nessun errore;
+  - **nella sandbox, con Google bloccato, i collaudi del pannello sono validi per la prima volta**, tutti con «caratteri veri True» ed eccesso 0 px: `collaudo_pannello.py` (1360×650 e 1360×768), `collaudo_suggerimento.py`, `collaudo_quiz.py`, `collaudo_esame.py`, `collaudo_libretto.py`, `collaudo_carriera_esame.py`. Anche `collaudo_laboratorio.py` è OK.
+- **Collaudi adattati:**
+  - `tests/sorgente.py` copia anche `fonts/` insieme alla pagina;
+  - `collaudo_esame.py` confronta l'altezza del menu con la 0.19.5, che prendeva i caratteri da Google. Nella sandbox quella pagina restava con i caratteri di riserva: 454 px contro 464,45, e il primo giro dava FALLITO. Ora la 0.19.5 riceve gli stessi caratteri locali, e le due altezze sono 464,45 tutte e due, come sul PC di Ale col vecchio collaudo.
+- **Sandbox:** i due indirizzi di Google aggiunti per prova all'elenco della sandbox sono stati tolti; non servono più.
+
+## 1.0.4 — il laboratorio della barca
+
+Del 16 ottobre 2026. **Il gioco normale non cambia** (impronta identica al bit). Proposta, limiti misurati, criteri ed esito in `docs/PROPOSTA-LABORATORIO.md`.
+
+- **Cos'è.** Aprendo la pagina con `#lab` in fondo all'indirizzo compare una finestra con 15 cursori sui valori della barca: velocità, virata, marcia indietro, ripartenza dall'angolo morto. Si apre e si chiude col tasto L. Serve a provare valori diversi a confronto con i video, prima dei compiti sulla barca. Non compare nel menu.
+- **Con `#lab` il gioco non salva niente:** record, medaglie, fantasmi, lezioni, quiz, esame, carriera. I progressi si leggono come sempre; quello che si fa resta in memoria fino a quando si ricarica la pagina. In alto c'è l'avviso «LABORATORIO · *profilo* · niente salvataggi».
+- **Profili:** per ora solo «come oggi», che è la barca del gioco. Un profilo nuovo entra solo con fonte e stato per ogni valore. Il pulsante «Esporta» scrive i valori come profilo, e ogni valore toccato a mano esce «prova a mano», «non verificato». In regata un valore cambiato cambia anche gli avversari.
+- **Il motore:** sei numeri che erano scritti dentro `step()` ora sono voci di `BOAT`, con gli stessi valori: `hullK1` 4, `yawK` 4, `backMax` 1,2, `ironsA` 36, `ironsU` 0,5, `ironsYaw` 6. Sono quelli di marcia indietro e ripartenza, che un cursore altrimenti non raggiungeva.
+- **Altri file:** `js/laboratorio.js` nuovo, caricato per ultimo; `LAB` in `base.js`; una condizione in `saveProgress()` e `saveGhosts()`; i tasti dentro la finestra non guidano la barca (`gioco.js`); la testata del registratore aggiunge `profilo=` e i valori cambiati; l'aggancio dei collaudi accetta anche `#collaudo-lab`; `collaudo_impronta.py` si può importare.
+- **Misure:**
+  - `polare.js`, `raffiche_e_virate.js` e `angolo_morto.js` identici carattere per carattere dopo lo spostamento dei sei numeri;
+  - impronta identica al bit, 63 scene su 63, riferimento preso dalla 1.0.3 appena prima;
+  - `collaudo_laboratorio.py` nuovo: 14 controlli su 14; 10 corse su 10 senza salvataggi, contro-prova 10 su 10 salvate;
+  - `collaudo_registratore.py` OK;
+  - limiti dei cursori rimisurati sul motore della 1.0.4: nessun conto in errore agli estremi, passi di tempo 1/240 e 0,0125 s uguali entro 0,1 s e 1°.
+- **Difetto nel collaudo, trovato e corretto:** il caso «luffA0 33» doveva essere rifiutato, ma con `luffW` 7 la somma fa esattamente 40, che è permesso. Era sbagliato il caso, non il controllo; ora è 33 + 8.
+
 ## 1.0.3 — il codice diviso in file
 
 Del 16 ottobre 2026. **Il gioco non cambia:** stesso comportamento, stessi testi, stesse immagini, misurato al bit. Proposta, criteri e decisione in `docs/PROPOSTA-DIVISIONE-CODICE.md`: manutenzione decisa da Claude Code, prima del laboratorio e delle correzioni della barca.
