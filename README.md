@@ -8,7 +8,7 @@ Il gioco è una pagina sola, `index.html`, con il codice nella cartella `js/`: s
 
 ## Come si gioca
 
-- **In locale:** scarica il repository (servono `index.html` e la cartella `js/`) e apri `index.html` con il browser (doppio clic).
+- **In locale:** scarica il repository (servono `index.html` e le cartelle `js/` e `fonts/`) e apri `index.html` con il browser (doppio clic). Con lo zoom lontano Firefox su Linux può rallentare; Chrome è più fluido. Per avere Chrome a schermo intero anche dove F11 non regge: `google-chrome --kiosk --user-data-dir="$HOME/.config/scuola-vela-chrome" "file://$HOME/scuola-di-vela/index.html"` (si esce con Alt+F4).
 - **Online:** se il repository ha GitHub Pages attivo, il gioco è all'indirizzo `https://<utente>.github.io/<nome-repository>/`.
 
 Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
