@@ -24,7 +24,6 @@
     turnLen: [0.5, 2, 0.05, "m: più è corta, più la barca gira in fretta; vale anche all'indietro"],
     maxRudder: [15, 45, 1, "gradi della pala a barra tutta; vale anche all'indietro e cambia il disegno della barra"],
     yawK: [1, 10, 0.5, "1/s, quanto in fretta la rotazione segue la barra"],
-    backMax: [0, 2, 0.05, "m/s, velocità massima all'indietro"],
     ironsA: [25, 45, 1, "barca ferma nel vento: sotto questi gradi di vento apparente la prua poggia da sola (sopra luffA0+luffW anche con la vela che porta)"],
     ironsU: [0.1, 1, 0.05, "m/s: sotto questa velocità la prua poggia da sola"],
     ironsYaw: [0, 15, 0.5, "gradi al secondo con cui la prua poggia da sola"],

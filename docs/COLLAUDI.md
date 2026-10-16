@@ -66,11 +66,14 @@ cd tests/fisica
 node polare.js              # velocità di equilibrio a vari angoli dal vento, con 6, 10 e 15 nodi
 node raffiche_e_virate.js   # virate a diverse velocità e raffiche improvvise
 node angolo_morto.js        # uscita dall'angolo morto con la barca che arretra (0.20.1), circa un minuto
+node retromarcia.js         # retromarcia senza tetto (1.0.8): quando parte, quanto forte, quanto gira
 ```
 
 Risultati attesi con il motore attuale, con 10 nodi: circa 3,4 nodi a 45°, 5,2 a 90°, 3,5 a 180° (fino alla 0.12 erano 3,8 a 45°: l'angolo morto più largo della 0.13 li ha ridotti). Virata riuscita in circa 4 s partendo a 3,9 nodi, fallita partendo quasi fermi. Raffica a 20 nodi senza reagire: circa 55°, cioè scuffia.
 
-`angolo_morto.js` non è un controllo di non-regressione e `lancia_tutti.sh` non lo lancia: è la misura su cui si reggono il passo 5.4, il suggerimento e la domanda d'esame 22, da rilanciare se cambia il motore. Risultati della 0.20.1: con la barra verso il boma finché la barca arretra escono **2.180 partenze su 2.196**. Le 16 che non escono partono già fuori dall'angolo morto (50-58° dal vento) e restano ferme con la vela lascata. Muovendo la barra di continuo da un lato all'altro escono **26 su 4.860**, tutte col ritmo più lento.
+`angolo_morto.js` non è un controllo di non-regressione e `lancia_tutti.sh` non lo lancia: è la misura su cui si reggono il passo 5.4, il suggerimento e la domanda d'esame 22, da rilanciare se cambia il motore. Risultati della 0.20.1: con la barra verso il boma finché la barca arretra escono **2.180 partenze su 2.196**. Le 16 che non escono partono già fuori dall'angolo morto (50-58° dal vento) e restano ferme con la vela lascata. Muovendo la barra di continuo da un lato all'altro escono **26 su 4.860**, tutte col ritmo più lento. Dalla 1.0.6 (uguale nella 1.0.8): **2.188 su 2.196** e **28 su 4.860**.
+
+`retromarcia.js` (1.0.8) non è un controllo di non-regressione e `lancia_tutti.sh` non lo lancia: è la misura di `PROPOSTA-RETROMARCIA.md`. Risultati della 1.0.8: massimo all'indietro con la prua al vento 0,97 / 2,34 / 3,40 / 4,31 nodi con 6 / 10 / 15 / 20 nodi di vento; con la prua tenuta nel vento 1,57 / 2,60 / 3,73 / 4,66; a −0,5 nodi dopo 1,6 s da ferma con 10 nodi; rotazione all'indietro con la barra a fondo 33 / 46 / 56 °/s con 10 / 15 / 20 nodi.
 
 ## Browser (Python e Playwright)
 

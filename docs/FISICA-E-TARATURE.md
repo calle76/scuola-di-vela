@@ -34,7 +34,7 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `rollI`, `rollDamp` | 260, 520 | Inerzia e smorzamento del rollio |
 | `capsizeAt` | 60° | Soglia di scuffia |
 | `yawK` | 4 /s | Quanto in fretta la rotazione segue la barra (dalla 1.0.4 in `BOAT`, prima scritto nella formula) |
-| `backMax` | 1,2 m/s | Velocità massima all'indietro (come sopra) |
+| ~~`backMax`~~ | tolto nella 1.0.8 | Era la velocità massima all'indietro (1,2 m/s), senza fonte. Ora all'indietro conta solo la vela che sbatte contro la resistenza della tabella della vasca, misurata con la prua avanti (semplificazione dichiarata, nessun freno di poppa): `PROPOSTA-RETROMARCIA.md` |
 | `ironsA`, `ironsU`, `ironsYaw` | 36°, 0,5 m/s, 6 °/s | Barca ferma nel vento: sotto quel vento apparente e quella velocità la prua poggia da sola, fino a quella rotazione (come sopra) |
 
 Altre costanti nel codice di gioco: colpo della strambata con vela aperta `GYBE_KICK = 260 °/s`, scalato con (vento / 15 nodi)^1,6 e con una variazione casuale tra −15% e +25%; soglia della strambata «violenta»: boma aperto oltre 45°.

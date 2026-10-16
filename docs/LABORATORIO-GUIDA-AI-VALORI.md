@@ -78,10 +78,7 @@ Dalla 1.0.6 la resistenza dello scafo non è più una formula con tre numeri da 
 
 ### Marcia indietro e angolo morto
 
-**`backMax`: velocità massima all'indietro** (oggi 1,2 m/s, cioè 2,3 nodi; da 0 a 2)
-- **Cos'è:** un tetto: la barca non va all'indietro più veloce di così.
-- **Cosa cambia:** quanto forte può andare indietro, **non quando comincia**.
-- **Esempio:** con 0 la barca non va mai all'indietro. Dalla 1.0.6, nella prova di oggi, la barca **arriva al tetto** (2,3 nodi): abbassarlo rallenta subito la marcia indietro. Per la marcia indietro che parte troppo presto contano di più `mass`, `sailArea`, `ironsU` e `ironsYaw`.
+**`backMax` non c'è più** (tolto nella 1.0.8, `PROPOSTA-RETROMARCIA.md`): la barca va all'indietro solo per la vela che sbatte, contro la stessa resistenza della marcia avanti. Un profilo salvato prima che contiene `backMax` non si carica più (il laboratorio dice che «non è un valore del laboratorio»): va tolta quella riga. Per la marcia indietro che parte troppo presto contano `mass`, `sailArea`, `hullScale`, `ironsU` e `ironsYaw`.
 
 Gli ultimi tre valori di questo gruppo lavorano insieme. Quando la barca è quasi ferma e la prua è vicina al vento, il gioco la fa girare da sola verso fuori, come fa una barca vera che il vento spinge di prua.
 

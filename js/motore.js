@@ -28,7 +28,6 @@ const BOAT = {
   rollI: 260,         // kg·m², inerzia di rollio
   rollDamp: 520,      // smorzamento
   capsizeAt: 60,      // gradi
-  backMax: 1.2,       // m/s, velocità massima all'indietro (1.0.4: era nella formula)
   ironsA: 36,         // barca ferma nel vento: sotto questi gradi di vento apparente
   ironsU: 0.5,        //   e sotto questa velocità (m/s) la prua poggia da sola
   ironsYaw: 6         //   fino a questi gradi al secondo
@@ -82,7 +81,7 @@ function step(S, C, E, dt){
               BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   S.u += (drive - res * heelDrag) / BOAT.mass * dt;
-  S.u = Math.max(-BOAT.backMax, S.u);
+  // 1.0.8: nessun tetto all'indietro (docs/PROPOSTA-RETROMARCIA.md): vela che sbatte contro la resistenza della tabella, la stessa della marcia avanti
   // scarroccio: la deriva resiste molto, meno a bassa velocità
   const leewardSign = awa >= 0 ? -1 : 1; // vento da dritta -> scarroccia verso sinistra
   const latTarget = leewardSign * side / (BOAT.foilK * (S.u * S.u + 0.4) + 60);

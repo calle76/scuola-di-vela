@@ -82,7 +82,7 @@ async def main():
         es = await pg.evaluate("""() => { const P = (id, val) => ({ id, nome: id, versione: VERSIONE, valori: Object.fromEntries(Object.entries(val).map(([k, v]) => [k, { v, fonte: "collaudo", stato: "ipotesi" }])) });
           const tutti = Object.fromEntries(Object.entries(LAB_LIM).map(([k, L]) => [k, L[0]]));
           const out = [];
-          for (const p of [P("uno", { ironsYaw: 3 }), P("tre", { hullScale: 0.8, turnLen: 1.2, backMax: 0.8 }), P("quindici", tutti)]){
+          for (const p of [P("uno", { ironsYaw: 3 }), P("tre", { hullScale: 0.8, turnLen: 1.2, maxRudder: 25 }), P("quindici", tutti)]){
             const e = labCarica(p), atteso = JSON.stringify(BOAT), txt = labEsporta(); labCarica(LAB_OGGI);
             const q = JSON.parse(txt.replace(/,\\s*$/, "")), e2 = labCarica(q);
             out.push([p.id, Object.keys(q.valori).length, e, e2, JSON.stringify(BOAT) === atteso]); labCarica(LAB_OGGI); }

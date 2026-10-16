@@ -52,3 +52,19 @@ Barca con la prua al vento, barra al centro, scotta al 100% e al 50% (stesso ris
 ## Cosa serve da Ale
 
 Il via alla fermata 2, oppure una correzione. In particolare: va bene **nessun freno di poppa**, cioè la barca lasciata andare così com'è, anche se con 20 nodi arriva a 4,3 nodi all'indietro?
+
+## Decisione di Ale ed esito (fermata 2, 16 ottobre 2026, versione 1.0.8)
+
+**Ale:** «sì va bene», anche senza freno di poppa (fino a 4,3 nodi all'indietro con 20 nodi).
+
+**Fatto:** tolta da `step()` la riga del tetto e la costante `backMax` (anche da `js/laboratorio.js`); il collaudo del laboratorio usa `maxRudder` al posto di `backMax` nella prova di esportazione. Banco in `tests/fisica/retromarcia.js`.
+
+**Criteri:**
+1. Banco: numeri uguali al centesimo a quelli della tabella sopra (0,97 / 2,34 / 3,40 / 4,31; regime 1,57 / 2,60 / 3,73 / 4,66). **OK.** Rotazione all'indietro con la barra a fondo, misurata: 33 / 46 / 56 °/s con 10 / 15 / 20 nodi.
+2. `polare.js` identico carattere per carattere. **OK.**
+3. `raffiche_e_virate.js` identico. **OK** (attesa confermata).
+4. `angolo_morto.js`: 2.188 su 2.196 e 28 su 4.860, uscita identica a prima. **OK** (soglia: non meno di 2.188).
+5. `collaudo_suggerimento.py` identico; `collaudo_lezioni.py` stesso esito (una differenza di tempo nella scuffia della lezione 6, 0,8 contro 1,0 s, ripetuta 3 volte prima e 3 dopo: sempre 1,0 s, quindi variazione fra corse); `collaudo_laboratorio.py` OK.
+6. Impronta: **0 scene diverse su 63** (attesa nostra «poche»: nessuna). Vuol dire che lezioni, prove e regate dell'impronta non portano mai la barca all'indietro oltre 2,3 nodi; non dice niente sul gioco libero con vento forte, che è il caso che cambia.
+7. Pagina caricata senza `#collaudo`: nessun errore.
+8. Giudizio giocando: di Ale, soprattutto con 15-20 nodi.
