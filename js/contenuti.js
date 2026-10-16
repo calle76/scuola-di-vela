@@ -77,7 +77,7 @@
       done: "Barra a dritta, prua verso sinistra. Quando rilasci, la barra torna al centro da sola (si può cambiare nelle impostazioni); con <em>Spazio</em> la centri subito." },
     { title: "Barra sottovento: si orza", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
       text: ["La regola che usano i velisti: <em>barra sottovento, la barca orza</em>; <em>barra sopravento, la barca poggia</em>. Il lato sottovento è quello dove sta il boma.",
-             "Sposta la barra verso il boma e orza fino alla <em>bolina</em>, <em>a piccoli colpi</em> e non con un colpo lungo: fermati quando la lancetta della rosetta (in basso) è a metà strada tra il rosso e l'orizzontale. Poi centra la barra."],
+             "Sposta la barra verso il boma e orza fino alla <em>bolina</em>, <em>a piccoli colpi</em> e non con un colpo lungo: fermati quando la lancetta della rosetta (in basso) è a un terzo della strada tra il rosso e l'orizzontale. Poi centra la barra."],
       cond: I => I.twa >= 43 && I.twa <= 67 && Math.abs(I.r) < 4, hold: 1,
       done: "Esatto: barra verso il boma, cioè sottovento, e la prua è salita verso il vento." },
     { title: "Barra sopravento: si poggia", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",

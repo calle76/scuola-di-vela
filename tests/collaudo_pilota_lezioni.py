@@ -34,7 +34,7 @@ const PASSI = {
   "1:Troppo cazzata":                { lim: 40,  f: C => tieni(C, cazzaK(), () => sh() <= 0.005) },                  // «fino a chiudere del tutto la vela»
   "2:Barra a sinistra":              { lim: 20,  f: C => tieniPer(C, "ArrowLeft", 1.5) },                            // «sposta la barra verso sinistra e guarda»
   "2:Barra a dritta":                { lim: 20,  f: C => tieniPer(C, "ArrowRight", 1.5) },
-  "2:Barra sottovento: si orza":     { lim: 60,  f: C => guida(C, { twa: 65, colpi: true, centra: true }) },          // «a metà strada tra il rosso e l'orizzontale»
+  "2:Barra sottovento: si orza":     { lim: 60,  f: C => guida(C, { twa: 57, colpi: true, centra: true }) },          // 1.0.14: «a un terzo della strada tra il rosso e l'orizzontale»
   "2:Barra sopravento: si poggia":   { lim: 60,  f: C => guida(C, { twa: 120, colpi: true, centra: true }) },         // «scesa un terzo della strada tra l'orizzontale e il basso»
   "2:Tenere la rotta":               { lim: 90,  f: C => rotta(C) },                                                // «entro 6° per 8 s, piccoli colpi»
   "3:Bolina":                        { lim: 60,  f: C => guida(C, { twa: 58, centra: true }) },                       // settore tratteggiato 45-75

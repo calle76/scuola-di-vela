@@ -89,3 +89,30 @@ Quindi togliere la regola senza fonte rende la lezione 1 impossibile da fare con
 - **1.9:** nessun cambio; osservazione 45 chiusa come semplificazione dichiarata, numeri in `DUBBI-E-RICERCHE.md` (domanda 1).
 - **Retromarcia:** nuova costante `backDrag` = 1,5 (ipotesi, nessuna fonte): all'indietro lo scafo frena una volta e mezza. Banco `retromarcia.js`, massimo all'indietro con la prua al vento: 0,95 / 2,33 / 3,40 / 4,30 → **0,81 / 1,99 / 2,96 / 3,79 nodi** con 6 / 10 / 15 / 20 nodi; regime con la prua tenuta nel vento 1,57 / 2,60 / 3,73 / 4,66 → 1,34 / 2,24 / 3,26 / 4,15. Tempo per arrivare a −0,5 nodi **invariato** (con 10 nodi 1,6 s da ferma): «parte troppo presto» resta aperto.
 - **Controlli:** `polare.js` e `raffiche_e_virate.js` identici; `angolo_morto.js` stesse uscite (364 su 366 per caso), tempi di uscita da 0,1 a 0,3 s più lunghi; pilota veloce (semi 1-3) lezioni 1 e 5 tutto completato, 5.4 in 35,0 s (prima 34,7 s sui semi 1-20).
+
+## 3. Passo 2.4 «Barra sottovento: si orza» (fermata 1, 16 ottobre 2026)
+
+### Il difetto
+
+Il testo dice di fermarsi «quando la lancetta della rosetta è a metà strada tra il rosso e l'orizzontale», cioè a circa 65° dal vento (il rosso finisce a 40°, l'orizzontale è a 90°). Il passo accetta da 43° a 67°: il bersaglio sta a 2° dal bordo, e chi legge la lancetta con qualche grado di errore lo supera e deve tornare indietro.
+
+### Proposta: cambia solo il testo
+
+«a metà strada» → «**a un terzo della strada** tra il rosso e l'orizzontale», cioè circa 57°, al centro della finestra 43-67°. È lo stesso modo di dire del passo 2.5 («un terzo della strada tra l'orizzontale e il basso»). Condizione e motore invariati.
+
+### Misura già fatta (pilota con lettura ±5°, gioco 1.0.13)
+
+| Semi | Oggi (bersaglio 65°) | Bersaglio 57° |
+| --- | --- | --- |
+| 1-20 | 20 su 20, **5 riprese**, mediana 5,1 s | 20 su 20, **0 riprese**, 4,5 s |
+| 21-100 | 79 su 80, **29 riprese**, 5,3 s | **80 su 80, 0 riprese**, 6,1 s |
+
+A mani ferme 0 in entrambi i casi. «Già fatto dopo un colpo lungo» resta 2 su 20 e 3 su 80: è l'osservazione 49 (tenendo troppo la freccia nel passo 2.3 la prua è già in bolina), che non dipende dal testo e la lascio così: è ciò che succede davvero tenendo la barra.
+
+### Criteri alla fermata 2
+
+Pannello a 1360×650 eccesso 0 px; `polare.js` e `raffiche_e_virate.js` identici (il motore non cambia); `collaudo_versione.py`. Pilota aggiornato a 57°.
+
+### Esito (16 ottobre 2026, versione 1.0.14)
+
+Ale: «si». Testo cambiato; misure quelle della tabella sopra (pilota aggiornato a 57°).
