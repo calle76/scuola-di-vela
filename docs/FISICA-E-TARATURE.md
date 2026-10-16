@@ -7,10 +7,10 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 ## Il modello, passo per passo
 
 1. **Vento apparente.** Vettore del vento reale meno vettore della velocità della barca (avanzamento più scarroccio). Se ne ricavano l'angolo `awa` rispetto alla prua (positivo = da dritta) e l'intensità `aws`.
-2. **Boma.** La scotta fissa l'angolo massimo del boma, da `minBoom` (14°, anche cazzata a ferro la randa non sta sull'asse) a `maxBoom` (85°). Il vento spinge il boma fino a quel limite, ma mai oltre la direzione del vento stesso.
-3. **Forze sulla vela.** Angolo di incidenza α = |awa| − angolo del boma. Portanza `CL(α)`: cresce fino a 1,35 a 20°, poi cala (stallo). Resistenza `CD(α) = 0,06 + 1,15·sin²α + 0,12·CL²`, più una resistenza extra quando la vela sbatte (α < 6°). La pressione è ridotta dallo sbandamento (fattore cos φ). **Angolo morto:** quando il vento apparente scende sotto `luffA0` (27°) l'inferitura si sgonfia e la portanza cala fino ad annullarsi; porta del tutto sopra 34°.
+2. **Boma.** La scotta fissa l'angolo massimo del boma, da `minBoom` (9° dalla 1.0.11, prima 14°: anche cazzata a ferro la randa non sta sull'asse; nessuna fonte diretta, `PROPOSTA-BOLINA.md`) a `maxBoom` (85°). Il vento spinge il boma fino a quel limite, ma mai oltre la direzione del vento stesso.
+3. **Forze sulla vela.** Angolo di incidenza α = |awa| − angolo del boma. Portanza `CL(α)`: cresce fino a 1,35 a 20°, poi cala (stallo). Resistenza `CD(α) = 0,06 + 1,15·sin²α + sailCL2·CL²` (`sailCL2` 0,08 dalla 1.0.11, prima 0,12: di bolina CD vale 0,34, fra le stime di F17 §2.1, §2.5 e fig. 12), più una resistenza extra quando la vela sbatte (α < 6°). È l'unica resistenza in aria: vale per vela, albero, scafo e timoniere insieme. La pressione è ridotta dallo sbandamento (fattore cos φ). **Angolo morto:** quando il vento apparente scende sotto `luffA0` (22° dalla 1.0.11, prima 27°) l'inferitura si sgonfia e la portanza cala fino ad annullarsi; porta del tutto sopra 29° (prima 34°).
 4. **Spinta e forza laterale.** Spinta = L·sin|awa| − D·cos|awa|; forza laterale = L·cos|awa| + D·sin|awa|.
-5. **Avanzamento.** Massa 135 kg (barca più timoniere). Resistenza dello scafo `4·u + 12·u² + 0,9·u⁴`, aumentata dallo sbandamento e dalla barra angolata.
+5. **Avanzamento.** Massa 135 kg (barca più timoniere). Resistenza dello scafo dalla tabella della vasca più `appDA` (dalla 1.0.6, vedi le costanti), aumentata dallo sbandamento e dalla barra angolata. **Dalla 1.0.11 resistenza indotta:** `Ri = side²·u·|u| / (π·½·ρ·TE²·(u² + 0,4)²)` (Delft, F17 eq. 15), con `TE` = 0,80 m: la spinta laterale ora frena. Il termine 0,4 (lo stesso dello scarroccio) la spegne a barca ferma: senza, verso 0,2 m/s frenerebbe più della vela e la barca non ripartirebbe.
 6. **Scarroccio.** La deriva oppone una resistenza laterale che cresce col quadrato della velocità: a bassa velocità la barca scivola di più.
 7. **Timone.** Velocità di rotazione proporzionale a velocità della barca × seno dell'angolo della pala (fino a 30°). Senza velocità il timone non funziona; all'indietro funziona al contrario. Barca ferma nel vento: la prua poggia da sola, lentamente (al massimo 6 °/s), ma **solo** se il vento apparente è a meno di 36° dalla prua **e** la barca va a meno di 0,5 m/s (circa 1 nodo), avanti o indietro, con l'effetto che si spegne avvicinandosi a quella velocità (riga 443 di `index.html`, costanti senza fonte). **Semplificazione dichiarata (0.20.1):** fuori da quella fascia, con la barra al centro la prua non gira; una barca che arretra a circa 1 nodo, o con la prua fra 36° e 56° dal vento e la scotta lascata, resta all'indietro con la prua ferma anche per minuti (misura sul motore: a 10 nodi, scotta tutta lascata, 237 partenze su 366 fra 0° e 60° dal vento). Si esce con la barra verso il boma finché la barca arretra (misura nel `CHANGELOG.md`, 0.20.1). Il motore non è stato cambiato.
 8. **Sbandamento.** Momento sbandante = forza laterale × 2 m (altezza del centro velico). Momento raddrizzante = timoniere sporto fuori (75 kg × fino a 1 m) più stabilità di forma dello scafo. Il timoniere si regola da solo con circa 0,9 s di ritardo, per questo le raffiche improvvise fanno sbandare. Oltre 60° la barca scuffia.
@@ -24,8 +24,10 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `HULL_DA` (tabella in `motore.js`), `hullScale`, `appDA`, `rhoW` | vasca, 1, 0,0049 m², 1025 kg/m³ | **Dalla 1.0.6** resistenza dello scafo = (area di resistenza della vasca × `hullScale` + `appDA`) × ½ ρ v·\|v\|. Tabella misurata su uno scafo Laser da circa 160 kg, da 2 a 9 nodi (F16, F17 fig. 2), costante fuori da quell'intervallo; `appDA` = attrito di deriva e timone (F17 fig. 11, bolina). Fino alla 1.0.5: `hullK1`·u + `hullK2`·u² + `hullK4`·u⁴ con 4, 12, 0,9, cioè da 1,45 a 2,5 volte la vasca. Proposta e misure in `PROPOSTA-VELOCITA.md` |
 | `rudderDragK` | 45 | Resistenza della barra angolata |
 | `foilK` | 520 | Resistenza laterale della deriva |
-| `minBoom`, `maxBoom` | 14°, 85° | Escursione del boma |
-| `luffA0`, `luffW` | 27°, 7° | Vento apparente sotto cui la vela si sgonfia, e ampiezza della transizione |
+| `minBoom`, `maxBoom` | 9°, 85° | Escursione del boma (`minBoom` 14° fino alla 1.0.10) |
+| `luffA0`, `luffW` | 22°, 7° | Vento apparente sotto cui la vela si sgonfia, e ampiezza della transizione (`luffA0` 27° fino alla 1.0.10) |
+| `sailCL2` | 0,08 | Peso di CL² nella resistenza della vela (0,12 fino alla 1.0.10; dalla 1.0.11 in `BOAT`) |
+| `TE` | 0,80 m | **Dalla 1.0.11** profondità efficace di scafo e deriva per la resistenza indotta (ipotesi: dà il 14% di F17 §3.4 con 10 nodi). 0 = senza. Costante: in Delft cala sbandando e cambia col numero di Froude (`PROPOSTA-BOLINA.md`) |
 | `turnLen` | 1,05 m | Lunghezza efficace per la rotazione |
 | `maxRudder` | 30° | Angolo massimo della pala |
 | `zCE` | 2,0 m | Altezza del centro velico |
@@ -47,22 +49,27 @@ Misurati con i collaudi in `tests/`.
 
 | Angolo dal vento | 30° | 35° | 40° | 45° | 48° | 50° | 60° | 90° | 110° | 135° | 150° | 180° |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Nodi (dalla 1.0.6) | 0 | 1,3 | 2,6 | 3,8 | 4,4 | 4,8 | 5,4 | 6,0 | 5,7 | 5,0 | 4,4 | 4,1 |
+| Nodi (dalla 1.0.11) | 1,3 | 2,7 | 3,9 | 4,7 | 4,8 | 5,0 | 5,5 | 6,0 | 5,7 | 4,9 | 4,4 | 4,1 |
+| Nodi (1.0.6-1.0.10) | 0 | 1,3 | 2,6 | 3,8 | 4,4 | 4,8 | 5,4 | 6,0 | 5,7 | 5,0 | 4,4 | 4,1 |
 | Nodi (fino alla 1.0.5) | 0 | 1,1 | 2,3 | 3,4 | 4,0 | — | 4,6 | 5,2 | 5,0 | 4,2 | 3,8 | 3,5 |
 
-Sotto circa 33° la barca non avanza, tra 33° e 40° arranca: l'angolo morto effettivo di questa deriva è di circa 35–40° per lato, coerente con le dispense di vela (circa 35° per lato per le derive, 45° come convenzione didattica). La velocità utile controvento è massima intorno a 50° (45–48° fino alla 1.0.5).
+**Dalla 1.0.11** la barca non avanza sotto circa 26° dal vento e arranca (meno di 2 nodi con 10 nodi di vento) fino a circa 32°; la velocità utile controvento è massima a 42-48° (F17 §6.1: 40-46°; fig. 9: 40,5-44°). Fino alla 1.0.10: ferma sotto circa 31-33°, arrancava fino a 40°, VMG migliore intorno a 50° (45–48° fino alla 1.0.5). Le dispense di vela danno circa 35° per lato per le derive, 45° come convenzione didattica.
+
+**Confronto con le fonti (dalla 1.0.11, rapporti, non soglie):** VMG di bolina contro Day 2017 (F17 fig. 8) −15% con 6 nodi, −9% con 10, +7% con 15; di poppa invariata (dall'8 al 10% sotto). Contro Binns con 12 nodi (F17 fig. 5) da −1% a +1% fra 42° e 60°; con 9 nodi (fig. 4) da −12% a −15% fra 46,5° e 60°, −14% a 42°. Lo scarto che resta è col vento leggero, causa non identificata (`PROPOSTA-BOLINA.md` §6).
 
 **Confronto con le fonti (1.0.6, rapporti, non soglie):** VMG contro le previsioni di Day 2017 (F17 fig. 8, stessa vasca): di poppa dall'8 al 10% sotto con 6, 10 e 15 nodi; di bolina −22% con 6 nodi, −14% con 10, +5% con 15. Contro le misure di Binns (F10, da F17): con 12 nodi −4% a 60° e −6% al traverso, −27% a 42°, dal −21 al −32% sottovento (misure con del surf). Le cause probabili (vela che non stringe con poco vento, resistenza indotta assente, timoniere che raddrizza troppo bene) sono in `PROPOSTA-VELOCITA.md` §4.
 
-**Virata** (partendo di bolina, dalla 1.0.6): a 3,9 nodi riesce in 3,3 secondi; a 1,9 nodi riesce in 7,6 secondi; quasi ferma, fallisce e la barca arretra. Fino alla 1.0.5: 4,0 secondi, e a 1,9 nodi falliva.
+**Virata** (partendo di bolina, `raffiche_e_virate.js`, scotta tutta cazzata): dalla 1.0.11 a 3,9 nodi riesce in 3,0 secondi, a 1,9 nodi in 6,6; dalla 1.0.6 alla 1.0.10 3,3 e 7,6 secondi; quasi ferma, fallisce e la barca arretra. Fino alla 1.0.5: 4,0 secondi, e a 1,9 nodi falliva.
 
-**Raffica improvvisa** da 10 nodi, di bolina con vela regolata:
+**Raffica improvvisa** da 10 nodi, di bolina a 45° dal vento con il boma a 21° (scotta 0,1 fino alla 1.0.10, circa 0,16 dalla 1.0.11):
 
-| Raffica | Senza reagire | Lascando entro mezzo secondo |
-| --- | --- | --- |
-| 16 nodi | sbandamento 27° | 16° |
-| 18 nodi | 41° | 23° |
-| 20 nodi | 55° | 31° |
+| Raffica | Senza reagire (1.0.11) | Lascando entro mezzo secondo (1.0.11) | Fino alla 1.0.10 |
+| --- | --- | --- | --- |
+| 16 nodi | sbandamento 26° | 15° | 27-28° / 16° |
+| 18 nodi | 39° | 22° | 41-42° / 23-24° |
+| 20 nodi | 53° | 30° | 55° / 31-33° |
+
+`raffiche_e_virate.js` tiene la **scotta** fissa a 0,1, che dalla 1.0.11 vuol dire boma a 16,6° invece di 21,1°: lì escono 38° / 54° / 67° (scuffia), ma il confronto non è alla pari. Con la scotta che suggerisce il gioco (boma = apparente − 17°) una raffica da 20 nodi fa scuffiare sia nella 1.0.10 (71°) sia nella 1.0.11 (67°).
 
 **Strambata con la vela tutta aperta:** 6 nodi, circa 19° di sbandamento; 10 nodi, tra 39° e 58°; 15 nodi, scuffia sempre.
 
@@ -103,7 +110,7 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 ## Semplificazioni dichiarate
 
 - Planata solo nella resistenza (dalla 1.0.6): oltre i 6,5 nodi l'area di resistenza misurata in vasca cala, come in una barca che comincia a planare; sopra i 9 nodi resta costante (nessuna misura). Non ci sono assetto, onde né cambio di comportamento.
-- Nessuna resistenza indotta: la spinta laterale produce solo scarroccio, mai freno (con 10 nodi di bolina vale circa il 14% della resistenza, F17). Di bolina con vento forte la barca va un poco troppo forte.
+- Resistenza indotta (dalla 1.0.11) con `TE` costante: non cala sbandando e non cambia col numero di Froude, quindi con la barca sbandata è un po' sottostimata; a bassa velocità è smorzata (u² + 0,4) come lo scarroccio. Manca la parte dovuta al timone girato (dRi, 2-3,5% in F17). Di bolina con vento forte la barca va ancora un poco troppo forte (+7% su Day con 15 nodi): il gioco sventa solo lascando, non svergolando.
 - La deriva resta sempre tutta giù, anche in poppa.
 - Una sola vela, niente fiocco.
 - Timoniere automatico: nella realtà gestire il peso è una parte importante della conduzione.
@@ -116,7 +123,7 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 ## Da tenere presente
 
 - **Unità:** `S.r` in gradi/s, `S.heelRate` in **radianti/s**. Ogni impulso di sbandamento va convertito con `D2R`.
-- Angolo morto: nel gioco il cerchio delle andature lo disegna fino a 40° per lato, i testi citano la convenzione didattica di 45°, il motore lo fa sentire tra 33° e 40°. Se si cambia, vanno allineati motore, cerchio, lezioni 1-3 e 5, glossario e avversari.
+- Angolo morto: nel gioco il cerchio delle andature lo disegna fino a 40° per lato, i testi citano la convenzione didattica di 45°, il motore lo fa sentire sotto circa 26-32° (dalla 1.0.11; prima fra 33° e 40°). Se si cambia, vanno allineati motore, cerchio, lezioni 1-3 e 5, glossario e avversari.
 - **Soglia unica dell'angolo morto: 40° (decisione della 0.20.2, dopo la terza registrazione di Ale).** Rosa, voce «Andatura», registro degli errori (`IRONS_A = 40`), suggerimento «all'indietro» e regola d'uscita del passo 5.4 usano tutti 40°. Il suggerimento e il 5.4 prima usavano 45°. È stata scartata la soglia unica a 45°, perché il motore naviga fra 40° e 44°. Velocità di equilibrio con la scotta migliore, stesso metodo di `polare.js`:
 
   | Vento | 40° | 42° | 44° | 46° | Miglior guadagno controvento |

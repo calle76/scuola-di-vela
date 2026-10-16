@@ -7,14 +7,22 @@
   // Un profilo: { id: "breve_senza_spazi", nome: "…", versione: "1.0.4", nota: "cosa si vuole provare",
   //   valori: { hullScale: { v: 0.8, fonte: "documento e riga, o «scelta di progetto»", stato: "misura" | "ipotesi" | "non verificato" } } }
   // Solo i valori diversi da BOAT. Un profilo senza fonte non entra. La versione è un campo, mai «const VERSIONE =» (collaudo_versione.py).
-  const LAB_PROFILI = [
+  const LAB_PROFILI = [ // 1.0.11: la barca di prima e le due modifiche spente una alla volta (docs/PROPOSTA-BOLINA.md)
+    { id: "barca_1010", nome: "barca della 1.0.10", versione: "1.0.10", nota: "senza resistenza indotta e con la vela di prima, per confronto",
+      valori: { TE: { v: 0, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" }, minBoom: { v: 14, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" },
+        luffA0: { v: 27, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" }, sailCL2: { v: 0.12, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" } } },
+    { id: "senza_indotta", nome: "senza resistenza indotta", versione: "1.0.11", nota: "solo la vela nuova",
+      valori: { TE: { v: 0, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" } } },
+    { id: "vela_1010", nome: "vela della 1.0.10", versione: "1.0.11", nota: "solo la resistenza indotta",
+      valori: { minBoom: { v: 14, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" }, luffA0: { v: 27, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" },
+        sailCL2: { v: 0.12, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" } } }
   ];
   // FINE PROFILI
 
   // ======================================================================
   // LIMITI DEI CURSORI
   // ======================================================================
-  // [min, max, passo, avvertenza]: scelte nostre di prudenza, misurate il 16 ottobre 2026 sul motore della 1.0.4 (PROPOSTA-LABORATORIO.md §5); hullScale e appDA dalla 1.0.6 (PROPOSTA-VELOCITA.md)
+  // [min, max, passo, avvertenza]: scelte nostre di prudenza, misurate il 16 ottobre 2026 sul motore della 1.0.4 (PROPOSTA-LABORATORIO.md §5); hullScale e appDA dalla 1.0.6 (PROPOSTA-VELOCITA.md); minBoom, sailCL2 e TE dalla 1.0.11 (PROPOSTA-BOLINA.md)
   const LAB_LIM = {
     mass: [90, 250, 5, "kg, barca e timoniere: cambia l'accelerazione, non la velocità di regime"],
     sailArea: [4, 10, 0.1, "m² di vela"],
@@ -28,7 +36,10 @@
     ironsU: [0.1, 1, 0.05, "m/s: sotto questa velocità la prua poggia da sola"],
     ironsYaw: [0, 15, 0.5, "gradi al secondo con cui la prua poggia da sola"],
     luffA0: [15, 33, 1, "gradi di vento apparente sotto cui la vela si sgonfia: cambia anche filetti e angolo morto"],
-    luffW: [2, 15, 1, "ampiezza della transizione: cambia anche filetti e angolo morto"]
+    luffW: [2, 15, 1, "ampiezza della transizione: cambia anche filetti e angolo morto"],
+    minBoom: [5, 20, 1, "gradi del boma cazzato a ferro (9; era 14): la vela porta del tutto da minBoom + 20 di vento apparente; cambia anche suggerimento della scotta, avversari e disegno"],
+    sailCL2: [0.02, 0.2, 0.01, "peso di CL² nella resistenza della vela (0,08; era 0,12): conta di bolina, quasi niente in poppa"],
+    TE: [0, 1.5, 0.05, "m, profondità efficace della deriva per la resistenza indotta (0,80); 0 = senza: più è piccola, più la spinta laterale frena"]
   };
   const LAB_BASE = Object.assign({}, BOAT); // la barca del gioco: il profilo predefinito «come oggi» è lei, non è scritto da nessuna parte
   const LAB_OGGI = { id: "oggi", nome: "come oggi", versione: VERSIONE, valori: {} };

@@ -15,8 +15,8 @@ const BOAT = {
   rudderDragK: 45,
   foilK: 520,         // resistenza laterale della deriva
   maxBoom: 85,
-  minBoom: 14,
-  luffA0: 27,         // gradi di vento apparente sotto cui l'inferitura comincia a sgonfiarsi
+  minBoom: 9,         // 1.0.11: era 14; con α = 20° la vela porta del tutto da 29° di vento apparente (docs/PROPOSTA-BOLINA.md)
+  luffA0: 22,         // gradi di vento apparente sotto cui l'inferitura comincia a sgonfiarsi (1.0.11: era 27)
   luffW: 7,           // ampiezza della transizione: sopra luffA0+luffW la vela porta del tutto
   turnLen: 1.05,       // m, lunghezza efficace per la virata
   yawK: 4,            // 1/s, quanto in fretta la rotazione segue la barra (1.0.4: era nella formula)
@@ -30,7 +30,9 @@ const BOAT = {
   capsizeAt: 60,      // gradi
   ironsA: 36,         // barca ferma nel vento: sotto questi gradi di vento apparente
   ironsU: 0.5,        //   e sotto questa velocità (m/s) la prua poggia da sola
-  ironsYaw: 6         //   fino a questi gradi al secondo
+  ironsYaw: 6,        //   fino a questi gradi al secondo
+  sailCL2: 0.08,      // 1.0.11: peso di CL² nella resistenza della vela (era 0,12): CD 0,34 di bolina, galleria del vento più timoniere (Day 2017, §2.1 e §2.5)
+  TE: 0.80            // m, 1.0.11: profondità efficace di scafo e deriva per la resistenza indotta (ipotesi: dà il 14% di Day 2017 §3.4 con 10 nodi); 0 = senza
 };
 
 // 1.0.6: resistenza dello scafo dritto da una tabella misurata in vasca, al posto di k1·u + k2·u² + k4·u⁴ (docs/PROPOSTA-VELOCITA.md).
@@ -51,7 +53,7 @@ function CL(a){ // a: angolo di incidenza (gradi, >=0)
   if (a < 20) return 1.35 * a / 20;
   return Math.max(0.55, 1.35 - (a - 20) * 0.022);
 }
-function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.06 + 1.15 * s * s + 0.12 * cl * cl; }
+function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.06 + 1.15 * s * s + BOAT.sailCL2 * cl * cl; }
 
 // state: {x,y,h,u,r,boomSide,boom}  controls: {sheet 0..1, tiller -1..1 (+ = barra a dritta)}  env: {twd (da), tws m/s}
 function step(S, C, E, dt){
@@ -80,7 +82,10 @@ function step(S, C, E, dt){
   const res = hullDrag(S.u) +
               BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
-  S.u += (drive - res * heelDrag) / BOAT.mass * dt;
+  // 1.0.11: resistenza indotta, Delft (Day 2017, eq. 15) Ri = Fh² / (π·½ρ·V²·TE²), con u² + 0,4 come nello scarroccio: a bassa velocità la deriva non regge
+  // la spinta laterale e la formula pura fermerebbe la barca (docs/PROPOSTA-BOLINA.md §3). TE costante: in Delft cala sbandando e cambia col Froude.
+  const Ri = BOAT.TE > 0 ? side * side * S.u * Math.abs(S.u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (S.u * S.u + 0.4) ** 2) : 0;
+  S.u += (drive - res * heelDrag - Ri) / BOAT.mass * dt;
   // 1.0.8: nessun tetto all'indietro (docs/PROPOSTA-RETROMARCIA.md): vela che sbatte contro la resistenza della tabella, la stessa della marcia avanti
   // scarroccio: la deriva resiste molto, meno a bassa velocità
   const leewardSign = awa >= 0 ? -1 : 1; // vento da dritta -> scarroccia verso sinistra

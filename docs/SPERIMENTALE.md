@@ -37,7 +37,7 @@ Verificare un'idea prima di portarla in `index.html`: se la fisica di una cosa n
 
 La manovra a farfalla (fiocco dal lato opposto) non è nel prototipo.
 
-**Dalla 1.0.6 il prototipo non è più allineato al gioco:** ha una copia sua del motore, con la resistenza dello scafo della 1.0.5 (`hullK2`·u² + `hullK4`·u⁴ + 4·u), mentre il gioco usa la tabella della vasca (`PROPOSTA-VELOCITA.md`). La regola «la barca senza fiocco è identica al gioco» vale per il motore fino alla 1.0.5; il prototipo si allinea quando si riprende il fiocco.
+**Dalla 1.0.6 il prototipo non è più allineato al gioco:** ha una copia sua del motore, con la resistenza dello scafo della 1.0.5 (`hullK2`·u² + `hullK4`·u⁴ + 4·u), mentre il gioco usa la tabella della vasca (`PROPOSTA-VELOCITA.md`). La regola «la barca senza fiocco è identica al gioco» vale per il motore fino alla 1.0.5; il prototipo si allinea quando si riprende il fiocco. Dalla 1.0.11 il gioco ha anche la resistenza indotta e la vela che stringe (`minBoom` 9°, `luffA0` 22°, `sailCL2` 0,08, `TE` 0,80 m, `PROPOSTA-BOLINA.md`); il prototipo no.
 
 Sul C2: misurato fuori dal motore che il momento del **solo** fiocco farebbe una barca sempre poggiera, il contrario di quello che dicono le fonti, e ingiocabile (circa 3 °/s di scarto con la barra al centro). Il momento di imbardata riguarda tutta la barca e non si aggiunge a metà. Numeri in `misure_tappaC2.txt`, ragioni in `FISICA-E-TARATURE.md`.
 

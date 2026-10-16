@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0.10"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.11"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -96,8 +96,8 @@
   let [STORE, GHOST_STORE] = KEYS(modo);
   // record e fantasmi dei percorsi cambiati usano chiavi nuove; i completamenti restano.
   // 0.14: giro di boa dal lato giusto (prove 4 e 5, regate). 0.19: linea d'arrivo in tutte le prove.
-  const KEYV = { m0: "m0.3", m1: "m1.3", m2: "m2.3", m3: "m3.4", m4: "m4.5", r0: "r0.3", r1: "r1.3" }; // 1.0.6: barca nuova (resistenza dalla vasca), i tempi di prima non sono confrontabili
-  const OLD_M = ["m0", "m1", "m2", "m3", "m4", "m3.2", "m4.3", "m0.2", "m1.2", "m2.2", "m3.3", "m4.4", "r0.2", "r1.2"]; // chiavi di prima della 0.19 e (1.0.6) della barca vecchia: si cancellano al primo avvio
+  const KEYV = { m0: "m0.4", m1: "m1.4", m2: "m2.4", m3: "m3.5", m4: "m4.6", r0: "r0.4", r1: "r1.4" }; // 1.0.6: barca nuova (resistenza dalla vasca); 1.0.11: bolina nuova (resistenza indotta, vela che stringe): i tempi di prima non sono confrontabili
+  const OLD_M = ["m0", "m1", "m2", "m3", "m4", "m3.2", "m4.3", "m0.2", "m1.2", "m2.2", "m3.3", "m4.4", "r0.2", "r1.2", "m0.3", "m1.3", "m2.3", "m3.4", "m4.5", "r0.3", "r1.3"]; // chiavi di prima della 0.19 e delle barche vecchie (1.0.6, 1.0.11): si cancellano al primo avvio
   let wipeNote = false;
   const recK = k => KEYV[k] || k;
   let progress;

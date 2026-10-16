@@ -84,7 +84,7 @@ Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (f
 ## 4. Cosa il gioco fa bene
 
 - **Il vento apparente.** Il vento che senti a bordo è la combinazione del vento reale e del vento dovuto al moto: accelerando si sposta verso prua. Su questo lavora la vela.
-- **L'angolo morto.** Con la prua troppo vicina al vento la vela non spinge e la barca si pianta. In questa barca la barca non avanza sotto circa 33° dal vento e arranca fino a circa 40°.
+- **L'angolo morto.** Con la prua troppo vicina al vento la vela non spinge e la barca si pianta. In questa barca (dalla 1.0.11) la barca non avanza sotto circa 26° dal vento e arranca fino a circa 32°; la bolina più efficace resta intorno a 45°.
 - **Le andature.** Bolina, traverso, lasco, gran lasco e poppa, con la velocità che cambia di conseguenza: la barca è più veloce al traverso e al lasco che in poppa.
 - **La regolazione della vela con i filetti.** Due filetti sulla randa mostrano se la vela è troppo lasca, troppo cazzata o regolata, e il gioco dice cosa fare.
 - **L'abbrivio e lo scarroccio.** La barca ha una velocità che sale e scende con la massa e la resistenza, e a bassa velocità scivola di lato.

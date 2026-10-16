@@ -247,6 +247,7 @@
   // bands: tempi massimi in secondi per oro, argento e bronzo (0.16), tarati con tests/collaudo_fasce.py:
   // oro = tempo del pilota automatico arrotondato ai 5 s superiori, argento +25%, bronzo +60%.
   // 1.0.6: ritarate per la barca nuova (resistenza dalla vasca) e il pilota corretto: argento e bronzo arrotondati ai 5 s più vicini.
+  // 1.0.11: ritarate per la bolina nuova (pilota 79,0 / 124,5 / 156,8 / 276,0 s, prova 5 mediana 297,8): cambiano le prove 3, 4 e 5.
   // Dalla 0.19 l'ultima voce di marks è una linea d'arrivo (FIN_HALF m per lato, perpendicolare all'ultimo lato), non una boa da raggiungere.
   const MISSIONS = [
     { title: "Al traverso", desc: "Taglia l'arrivo con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
@@ -259,15 +260,15 @@
       marks: [{ x: 60, y: 260, label: "Arrivo" }] },
     { title: "Risalire il vento", desc: "Raggiungi l'arrivo controvento.", wind: 180, tws: 10, gusts: 0,
       text: "L'arrivo è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [165, 205, 265],
+      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [160, 200, 255],
       marks: [{ x: 0, y: -220, label: "Arrivo" }] },
     { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
       text: "Risali di bolina fino alla boa e girala lasciandola a sinistra, poi torna a tagliare la linea da cui sei partito, con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [290, 365, 465],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [280, 350, 450],
       marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
       text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino alla linea d'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [305, 380, 490],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [300, 375, 480],
       marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 
