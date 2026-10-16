@@ -29,7 +29,7 @@ Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
 
 Tutto è sempre accessibile: nessuna lezione o regata va sbloccata, nemmeno in carriera.
 
-**Stato:** versione 1.0 (14 ottobre 2026), il livello 1 completo e giocabile. Le correzioni della barca (resistenza dello scafo, timone), delle regole di regata e del disegno vengono nelle versioni 1.x: vedi `docs/ROADMAP.md`.
+**Stato:** versione 1.0.2 (16 ottobre 2026), la 1.0 con correzioni e manutenzione: il livello 1 giocabile dall'inizio alla fine, ancora da rifinire (vedi `docs/ROADMAP.md`). Il livello 2 sarà dedicato alle regole di regata e di precedenza, sulla stessa barca. Le correzioni della barca (resistenza dello scafo, timone), delle regole di regata e del disegno vengono nelle versioni 1.x: vedi `docs/ROADMAP.md`.
 
 ### Comandi
 
