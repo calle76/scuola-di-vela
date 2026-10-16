@@ -62,3 +62,13 @@ Via alla fermata 2 con la seconda prova: vela, albero e segnavento attaccati all
 - se giocando disturba, si rende più leggibile oppure si toglie, insieme ai testi della lezione 4 e del glossario che lo nominano.
 
 Sullo sbandamento: Ale nota che fra 15° e 30° il disegno cambia poco. Con la vela attaccata all'albero si vedrà meglio; se non basta, diventa un'osservazione a parte.
+
+## Fermata 2: esito (16 ottobre 2026, versione 1.0.7)
+
+**[codice]** Il codice della prova su copia era andato perso con la cartella temporanea: riscritto in `drawBoat` (`js/disegno.js`) seguendo questo documento. Contorno: albero → fine del boma (controllo a metà base + 0,5 × grasso sottovento) → penna in testa d'albero (controllo a metà balumina + (1,6 × grasso + svergolamento) sottovento) → albero. Stecche dalla balumina verso l'albero, lunghe 0,35 della distanza. Segnavento in testa d'albero. Filetti calcolati come prima (stessi punti). L'etichetta «randa» punta al centro del triangolo.
+
+**Criteri:**
+1. Impronta (riferimento preso subito prima): diverso **solo** il campo dell'immagine del mare, in 20 scene su 21; uguale la lezione 6.5 (barca scuffiata, disegno a parte, non toccato). Stato delle barche, testi e registro identici. Esito del collaudo «FALLITO» atteso: si confronta campo per campo.
+2. `polare.js` e `raffiche_e_virate.js` identici carattere per carattere alla versione precedente; pannello a 1360×650 eccesso 0 px, errori nessuno.
+3. Giudizio a occhio: di Ale. Schermate in `tests/output/vela/v107/` (12 situazioni, compresa la barca sbandata sopravento, dove la penna va sopravento con l'albero e la vela diventa una striscia sottile).
+4. Versione 1.0.7, voce nel `CHANGELOG.md`.

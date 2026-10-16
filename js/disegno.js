@@ -374,7 +374,7 @@
     const to = (env.twd + 180) * D2R;
     const P = {
       prua: L(0, -2.1), poppa: L(0, 2.1), dritta: L(0.62, 0.5), sinistra: L(-0.62, 0.5), albero: L(0, geo.mastY),
-      boma: L(geo.ex * 0.75, geo.mastY + (geo.ey - geo.mastY) * 0.75), randa: L((geo.mx + geo.tx) / 2, (geo.my + geo.ty) / 2),
+      boma: L(geo.ex * 0.75, geo.mastY + (geo.ey - geo.mastY) * 0.75), randa: L(geo.rx, geo.ry),
       timone: L(-Math.sin(geo.tau) * 0.45, 2.05 + Math.cos(geo.tau) * 0.45), barra: L(Math.sin(geo.tau) * 0.6, 2.05 - Math.cos(geo.tau) * 0.6),
       deriva: L(0, 0.28), filetti: L(geo.qx, geo.qy),
       sopravento: toScreen(v, S.x - Math.sin(to) * 2.2, S.y + Math.cos(to) * 2.2), sottovento: toScreen(v, S.x + Math.sin(to) * 2.2, S.y - Math.cos(to) * 2.2)
@@ -442,19 +442,24 @@
     let camber = 0.22 + 0.3 * load, twist = 0.35 + 0.25 * load;
     if (st === "flog"){ camber = Math.sin(t * 28) * 0.3; twist = 0.15 + Math.sin(t * 19) * 0.25; }
     else if (st === "wind"){ camber *= 0.55 + 0.45 * Math.sin(t * 22); }
-    // sbandando, la parte alta della vela si sposta sottovento (proiezione dall'alto)
+    // sbandando, la parte alta della vela si sposta sottovento (proiezione dall'alto); punto e curva servono ai filetti, che restano dove erano
     const hs = lee * sinH * 2.6;
     const tx = ex + nx * twist + hs, ty = ey + ny * twist;
     const mx = tx / 2 + nx * camber * 2 + hs * 0.5, my = (mastY + ty) / 2 + ny * camber * 2;
+    // contorno della randa: base sul boma, balumina dalla fine del boma alla penna, penna in testa d'albero (dove finisce l'albero disegnato)
+    const hx = lee * sinH * 5.5; // testa d'albero, sottovento quando la barca sbanda
+    const fx = ex / 2 + nx * camber * 0.5, fy = (mastY + ey) / 2 + ny * camber * 0.5; // base appena gonfia
+    const bulge = camber * 1.6 + twist; // ponytail: gonfiore della balumina a occhio, nessuna fonte
+    const lx = (ex + hx) / 2 + nx * bulge, ly = (ey + mastY) / 2 + ny * bulge;
     const sg = ctx.createLinearGradient(0, mastY, ex + nx, ey + ny); sg.addColorStop(0, colors["sail-shade"]); sg.addColorStop(0.55, S.sailColor || colors.sail); sg.addColorStop(1, colors["sail-shade"]);
     ctx.fillStyle = sg; ctx.strokeStyle = "rgba(60,70,80,.6)"; ctx.lineWidth = 0.04;
-    ctx.beginPath(); ctx.moveTo(0, mastY); ctx.quadraticCurveTo(mx, my, tx, ty); ctx.lineTo(ex, ey); ctx.lineTo(0, mastY); ctx.fill(); ctx.stroke();
-    // stecche
+    ctx.beginPath(); ctx.moveTo(0, mastY); ctx.quadraticCurveTo(fx, fy, ex, ey); ctx.quadraticCurveTo(lx, ly, hx, mastY); ctx.lineTo(0, mastY); ctx.fill(); ctx.stroke();
+    // stecche: dalla balumina verso l'albero
     ctx.strokeStyle = "rgba(60,70,80,.25)";
     for (const f of [0.3, 0.55, 0.8]){
-      const qx = 2 * (1 - f) * f * mx + f * f * tx, qy = (1 - f) * (1 - f) * mastY + 2 * (1 - f) * f * my + f * f * ty;
-      const lx = f * ex, ly = mastY + f * (ey - mastY);
-      ctx.beginPath(); ctx.moveTo(qx, qy); ctx.lineTo(qx + (lx - qx) * 0.6, qy + (ly - qy) * 0.6); ctx.stroke();
+      const px = (1 - f) * (1 - f) * ex + 2 * (1 - f) * f * lx + f * f * hx, py = (1 - f) * (1 - f) * ey + 2 * (1 - f) * f * ly + f * f * mastY;
+      const ax = f * hx, ay = mastY;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + (ax - px) * 0.35, py + (ay - py) * 0.35); ctx.stroke();
     }
     // boma
     ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.09; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(ex, ey); ctx.stroke();
@@ -477,16 +482,16 @@
       }
       ctx.stroke();
     }
-    // albero (visibile come linea quando la barca sbanda) e segnavento
-    if (Math.abs(sinH) > 0.05){ ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(lee * sinH * 5.5, mastY); ctx.stroke(); }
+    // albero (visibile come linea quando la barca sbanda) e segnavento in testa d'albero
+    if (Math.abs(sinH) > 0.05){ ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(hx, mastY); ctx.stroke(); }
     ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(0, mastY, 0.08, 0, Math.PI * 2); ctx.fill();
     const awRel = info.awa * D2R; // da dove arriva, rispetto alla prua (+ dritta)
     const vx = Math.sin(awRel), vy = -Math.cos(awRel);
     ctx.strokeStyle = colors.app; ctx.fillStyle = colors.app; ctx.lineWidth = 0.06;
-    ctx.beginPath(); ctx.moveTo(vx * 0.7, mastY + vy * 0.7); ctx.lineTo(-vx * 0.3, mastY - vy * 0.3); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(vx * 0.7, mastY + vy * 0.7); ctx.lineTo(vx * 0.45 - vy * 0.12, mastY + vy * 0.45 + vx * 0.12); ctx.lineTo(vx * 0.45 + vy * 0.12, mastY + vy * 0.45 - vx * 0.12); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.7, mastY + vy * 0.7); ctx.lineTo(hx - vx * 0.3, mastY - vy * 0.3); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.7, mastY + vy * 0.7); ctx.lineTo(hx + vx * 0.45 - vy * 0.12, mastY + vy * 0.45 + vx * 0.12); ctx.lineTo(hx + vx * 0.45 + vy * 0.12, mastY + vy * 0.45 - vx * 0.12); ctx.closePath(); ctx.fill();
     ctx.restore();
-    geo = { mastY, ex, ey, mx, my, tx, ty, qx, qy, tau };
+    geo = { mastY, ex, ey, rx: (hx + ex + lx) / 3, ry: (mastY + ey + ly) / 3, qx, qy, tau };
   }
   function drawCapsized(t){
     const side = S.capSide || 1, prog = S.righting ? Math.min(1, S.righting / 3) : 0;
