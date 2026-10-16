@@ -1,9 +1,9 @@
 # Impronta del gioco (1.0.1): serve alle pulizie del codice, che non devono cambiare niente di quello che il gioco fa.
-# Con Math.random a seme fisso (il seme si fissa nello stesso comando che apre la scena) guida, a passi fissi di 1/60 s:
+# Ogni gruppo di scene (una lezione, una prova, una regata, il menu) è in una pagina nuova. Con Math.random a seme fisso (il seme si fissa nello stesso comando che apre la scena) guida, a passi fissi di 1/60 s:
 #  - ogni passo di ogni lezione per 3 s, con una barra che va avanti e indietro (non serve completarli: conta lo stato);
 #  - le 5 prove con il pilota di collaudo_fasce.py, fino all'arrivo o a 900 s;
 #  - le 2 regate con principianti ed esperti, giocatore guidato da __sv.pilota, fino a 400 s;
-#  - il menu del gioco libero e della carriera dopo tutto questo, i meriti, un'estrazione dell'esame;
+#  - il menu del gioco libero e della carriera (in una pagina nuova), i meriti, un'estrazione dell'esame;
 #  - l'immagine del mare (canvas) in 21 momenti, con il ciclo del browser fermo (altrimenti increspature e zoom seguono l'orologio).
 # Da ogni scena legge stato delle barche, registro, testi del pannello e dei riquadri, e ne fa un'impronta.
 # Uso: python collaudo_impronta.py riferimento          salva tests/output/impronta/riferimento.json (sul codice da conservare)
@@ -115,19 +115,27 @@ async def impronta(pagina, nome):
     imp, errs = {}, []
     async with async_playwright() as p:
         b = await p.chromium.launch()
-        ctx = await b.new_context(viewport={"width": 1360, "height": 650})   # localStorage vuoto a ogni giro
-        pg = await ctx.new_page(); pg.on("pageerror", lambda e: errs.append(str(e)))
-        await pg.add_init_script(SEME); await pg.goto(url); await pg.wait_for_timeout(300)
-        await pg.evaluate("document.fonts.ready.then(() => 0)"); await pg.evaluate(COMUNE)
+        async def nuova():   # una pagina nuova (e un localStorage vuoto) per ogni gruppo di scene: nessuno stato passa da una scena all'altra
+            ctx = await b.new_context(viewport={"width": 1360, "height": 650})
+            pg = await ctx.new_page(); pg.on("pageerror", lambda e: errs.append(str(e)))
+            await pg.add_init_script(SEME); await pg.goto(url); await pg.wait_for_timeout(300)
+            await pg.evaluate("document.fonts.ready.then(() => 0)"); await pg.evaluate(COMUNE)
+            return pg
+        pg = await nuova()
         passi = await pg.evaluate("(() => { const n = []; for (let li = 0; li < 6; li++){ __sv.openItem(['l', li]); let k = 0; try { while (k < 40){ __sv.showStep(k); k++; } } catch(e){} n.push(k); } return n; })()")
+        await pg.close()
         # ponytail: il numero di passi si ricava provando showStep finché non dà errore; se showStep cambiasse comportamento, lo stampa qui sotto
         for li, n in enumerate(passi):
+            pg = await nuova()
             for k in range(n):
                 imp[f"lezione {li+1}.{k+1}"] = await pg.evaluate(LEZIONE, [li, k, 1000 + li * 50 + k])
-        for i in range(5): imp[f"prova {i+1}"] = await pg.evaluate(PROVA, [i, 11 + i])
+            await pg.close()
+        for i in range(5):
+            pg = await nuova(); imp[f"prova {i+1}"] = await pg.evaluate(PROVA, [i, 11 + i]); await pg.close()
         for r in range(2):
-            for liv in ("principianti", "esperti"): imp[f"regata {r+1} {liv}"] = await pg.evaluate(REGATA, [r, liv, 21 + r])
-        imp["menu, meriti, esame"] = await pg.evaluate(FINE)
+            for liv in ("principianti", "esperti"):
+                pg = await nuova(); imp[f"regata {r+1} {liv}"] = await pg.evaluate(REGATA, [r, liv, 21 + r]); await pg.close()
+        pg = await nuova(); imp["menu, meriti, esame"] = await pg.evaluate(FINE)   # il salvataggio è quello di una pagina senza giocate: il menu e i meriti partono da zero
         imp["errori della pagina"] = errs
         await b.close()
     return imp, passi

@@ -26,6 +26,9 @@ ATTREZZI = """() => { const sv = __sv; sv.fast(0); let seme = 1;
   L.aspetta = maxs => { L.semina(); const t = L.avanza(maxs, () => sv.stepDone); return [sv.stepDone, t, L.leggi()]; };
   L.premi = (k, sec) => { L.semina(); L.tasto("keydown", k); L.avanza(sec); L.tasto("keyup", k); };
 }"""
+NUOVI = []   # controlli con esito vero/falso (1.0.2); gli altri sono tempi da leggere
+def chk_ok(ok, nome):
+    NUOVI.append(bool(ok)); print(f"   {'OK ' if ok else 'NO '} {nome}", flush=True)
 def stampa(label, r):
     ok, t, I = r
     print(f"{label}: {'OK' if ok else 'NON COMPLETATO'} in {t:.1f}s  {I}", flush=True)
@@ -84,6 +87,24 @@ async def main():
         await pg.screenshot(path=str(OUT / "B_cap.png"))
         await pg.evaluate("__sv.showStep(3)"); await pg.evaluate('() => { L.tasto("keydown", "r"); L.tasto("keyup", "r"); }')
         await wait_until(pg, 8, "L6 raddrizzare")
+        # 1.0.2 (osservazione 50): in «La scuffia» la barca resta rovesciata e R non fa niente; «Raddrizzare» parte con la barca rovesciata, anche dopo Ricomincia
+        await pg.evaluate("__sv.openItem(['l',5])"); await pg.evaluate("__sv.showStep(2)")
+        await premi(pg, "ArrowRight", 0.6); await premi(pg, "ArrowUp", 3.0)
+        await wait_until(pg, 60, "L6 scuffia (di nuovo)")
+        await pg.evaluate('() => { L.tasto("keydown", "r"); L.tasto("keyup", "r"); }'); await pg.evaluate("__sv.run(1/60, 300)")
+        st = await pg.evaluate("({cap: __sv.S.capsized, righting: __sv.S.righting, btn: !document.getElementById('rightBtn').hidden, ov: !document.getElementById('capOverlay').hidden})")
+        print("   La scuffia dopo R:", st); chk_ok(st["cap"] and not st["righting"] and not st["btn"] and not st["ov"], "L6 scuffia: R non raddrizza, pulsante e riquadro nascosti")
+        await pg.evaluate("__sv.showStep(3)"); await pg.evaluate("__sv.panel()")
+        st = await pg.evaluate("({cap: __sv.S.capsized, btn: !document.getElementById('rightBtn').hidden, ov: !document.getElementById('capOverlay').hidden, done: __sv.stepDone})")
+        print("   Raddrizzare, avvio:", st); chk_ok(st["cap"] and st["btn"] and st["ov"] and not st["done"], "L6 raddrizzare: parte rovesciata, con pulsante e riquadro")
+        await pg.click("#lRetry"); await pg.evaluate("__sv.panel()")
+        st = await pg.evaluate("({cap: __sv.S.capsized, btn: !document.getElementById('rightBtn').hidden})")
+        print("   Raddrizzare dopo Ricomincia:", st); chk_ok(st["cap"] and st["btn"], "L6 raddrizzare dopo Ricomincia: di nuovo rovesciata")
+        await pg.evaluate("__sv.showStep(2)"); st = await pg.evaluate("({cap: __sv.S.capsized})")
+        chk_ok(not st["cap"], "L6 scuffia: tornando indietro la barca è dritta (niente blocco)")
+        await pg.evaluate("__sv.showStep(3)"); await pg.evaluate('() => { L.tasto("keydown", "r"); L.tasto("keyup", "r"); }')
+        await wait_until(pg, 8, "L6 raddrizzare (partendo da dritta)")
+        print(f"controlli vero/falso: {sum(NUOVI)} su {len(NUOVI)}" + ("" if all(NUOVI) and NUOVI else "  <-- DA CONTROLLARE"))
         print("errori:", errs[:5])
         await b.close()
 asyncio.run(main())

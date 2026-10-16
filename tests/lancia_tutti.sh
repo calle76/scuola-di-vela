@@ -99,7 +99,7 @@ nota() {
         "collaudo_aggressiva.py") echo "almeno il 90% degli incontri evitabili a ogni distanza (semi fissi)" ;;
         "collaudo_strambata.py (6 nodi)") echo "nessuna scuffia" ;;
         "collaudo_strambata.py (15 nodi)") echo "scuffia sempre" ;;
-        "collaudo_pannello.py (1360x650)") echo "«pannello che eccede:» esattamente i sette passi completati noti (l1p7 +12, l2p4 +44, l2p6 +20, l3p5 +79, l5p3 +7, l6p2 +37, l6p4 +13; docs/CONTENUTI-DA-VERIFICARE.md), qualunque altro è un problema nuovo; riga dei tasti 0 px, «errori: []» e «caratteri del gioco caricati: True»" ;;
+        "collaudo_pannello.py (1360x650)") echo "«pannello che eccede: nessuno» e «eccesso massimo del pannello (pixel): 0» (dalla 1.0.2 nessun passo sfora; qualunque eccesso è un problema nuovo); riga dei tasti 0 px, «errori: []» e «caratteri del gioco caricati: True»" ;;
         "collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
         "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): valori del PC di Ale: prove 1-4 a 92,1/142,6/196,4/333,3 s per ogni vento, 8 su 8; prova 5 finite 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
         "collaudo_fantasma.py") echo "la prova deve completarsi e il fantasma risultare salvato" ;;

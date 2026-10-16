@@ -83,7 +83,7 @@ canvas:focus{outline:none}
 .focusTip{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(10,24,36,.7);color:#fff;border-radius:16px;padding:5px 14px;font-size:.95rem;pointer-events:none}
 .zoomBox{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
 .zoomBox button{width:40px;height:40px;border-radius:8px;border:none;background:rgba(10,24,36,.65);color:#fff;font-size:1.4rem;cursor:pointer}
-.panel{border-left:1px solid var(--line);overflow-y:auto;padding:8px 16px 8px;display:flex;flex-direction:column;gap:7px}
+.panel{border-left:1px solid var(--line);overflow-y:auto;padding:6px 16px 6px;display:flex;flex-direction:column;gap:6px} /* 1.0.2: 8/8/7 px → 6/6/6, per far stare i passi di lezione completati in 650 px */
 /* prove, regate, navigazione libera: prima strumenti e comandi, poi stato, istruzioni in fondo */
 .panel.play > .topbar{order:0} .panel.play > #instr{order:1} .panel.play > #hint,.panel.play > #errBox{order:2}
 .panel.play > #sem,.panel.play > #direct{order:3} .panel.play > #status{order:4}
@@ -104,7 +104,7 @@ canvas:focus{outline:none}
 .status .clock span{font-weight:400;color:var(--ink-soft)}
 .errs{margin:0;font-size:.95rem;color:var(--ink-soft);line-height:1.3}
 .errs.some{color:var(--warn);font-weight:600}
-.stepline{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 2px;line-height:1.2}
+.stepline{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0;line-height:1.2}
 .stepline .step{margin:0!important;white-space:nowrap}
 #lErr{font-size:.9rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .item .state .star{color:var(--good);margin-left:4px}
@@ -114,9 +114,9 @@ canvas:focus{outline:none}
 .topbar .where{flex:1;font-size:1rem;font-weight:600;color:var(--ink-soft);line-height:1.2}
 .topbar button{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 12px;border-radius:14px;cursor:pointer}
 .card .step{font-size:.9rem;color:var(--ink-soft);margin:0 0 4px}
-.card h2{font-size:1.55rem;font-weight:700;margin:0 0 6px;line-height:1.1}
+.card h2{font-size:1.55rem;font-weight:700;margin:0 0 4px;line-height:1.1}
 .panel.play .card h2{font-size:1.3rem}
-.card p{font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.5;margin:0 0 8px}
+.card p{font-family:"Source Serif 4",Georgia,serif;font-size:1rem;line-height:1.5;margin:0 0 6px}
 .card em{font-style:normal;font-weight:600;color:var(--accent)}
 .feedback{border-left:3px solid var(--good);padding:2px 0 2px 12px;margin-top:1px}
 .feedback p{margin:0}
@@ -124,10 +124,10 @@ canvas:focus{outline:none}
 .feedback.pending,#lNext.pending{visibility:hidden}
 .row{display:flex;gap:6px;flex-wrap:wrap}
 .row button,.btn{font:inherit;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:7px 16px;border-radius:6px;cursor:pointer}
-.panel .row button,.panel .btn{padding:4px 10px}
+.panel .row button,.panel .btn{padding:3px 10px}
 .row button.primary,.btn.primary{background:var(--ink);color:var(--panel)}
 .done{border:2px solid var(--good);border-radius:8px;padding:12px}
-.done p{margin:0 0 10px;font-size:1.1rem;font-weight:600}
+.done p{margin:0;font-size:1.1rem;font-weight:600} .done .row{margin-top:10px}
 .standings{margin:0;padding-left:22px;font-size:1rem;line-height:1.3}
 .standings li{margin:1px 0}
 .standings li.me b{color:var(--accent)}
@@ -206,9 +206,14 @@ dialog#gloss{border:none;border-radius:10px;padding:0;width:min(640px,94vw);max-
 dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
 dialog#attest{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:92vh;background:var(--panel);color:var(--ink)}
 dialog#attest::backdrop{background:rgba(13,25,36,.5)}
-.att{padding:26px 34px 22px;text-align:center;border:3px double var(--line);margin:10px;border-radius:6px}
-.att .sc{margin:0;font-size:1rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
-.att h2{margin:6px 0 0;font-size:2rem}
+.att{position:relative;padding:26px 34px 22px;text-align:center;border:3px double var(--ink-soft);margin:10px;border-radius:6px}
+.att::before{content:"";position:absolute;inset:6px;border:1px solid var(--line);border-radius:3px;pointer-events:none}
+.att .nave{display:block;margin:0 auto 4px;width:120px;height:auto;color:var(--ink)}
+.att .nave .vela{fill:var(--panel);stroke:currentColor} .att .nave .scafo{fill:var(--accent);stroke:none} .att .nave .onda{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round}
+.att hr{border:none;border-top:1px solid var(--line);margin:12px auto;width:60%}
+.att .titolo{margin:0;font-family:"Source Serif 4",Georgia,serif;font-size:1.05rem;font-style:italic;color:var(--ink-soft)}
+.att .sc{margin:0;font-size:1.25rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.att h2{margin:8px 0 0;font-size:2.1rem;line-height:1.1}
 .att .ruolo{margin:2px 0 14px;font-size:1.3rem;font-weight:600;color:var(--accent)}
 .att label{display:block;font-size:.95rem;color:var(--ink-soft)}
 .att input{display:block;margin:4px auto 12px;width:80%;font:inherit;font-size:1.3rem;text-align:center;border:none;border-bottom:1px solid var(--line);background:transparent;color:var(--ink)}
@@ -223,6 +228,8 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
   dialog#attest{position:static;display:block;max-height:none;width:auto;color:#000;background:#fff}
   dialog#attest::backdrop{display:none}
   .att .row{display:none}
+  .att{border-color:#000} .att::before{border-color:#666} .att .nave{color:#000} .att .nave .vela{fill:#fff} .att .nave .scafo{fill:#000} .att .nave .onda{stroke:#000}
+  .att .sc,.att .ruolo{color:#000} .att .titolo{color:#333}
   .att input{border:none;outline:none}
   .att label{display:none}
 }
@@ -319,7 +326,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
       <h2 id="lTitle"></h2>
       <div id="lText"></div>
       <div class="feedback pending" id="lFeedback"></div>
-      <div class="row" style="margin-top:8px">
+      <div class="row" style="margin-top:4px">
         <button id="lBack">Indietro</button>
         <button id="lRetry">Ricomincia</button>
         <button id="lQuiz" hidden>Fai il ripasso</button>
@@ -330,7 +337,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
     <section class="card brief-line" id="mission" hidden><h2 id="mTitle"></h2><button class="pillbtn" id="mBrief">Istruzioni</button></section>
     <section class="done" id="done" hidden>
       <p id="doneText"></p>
-      <div class="row"><button class="primary" id="mNext">Prosegui</button><button id="mRetry2">Rifai</button><button id="mWind2">Rifai con altro vento</button></div>
+      <div class="row"><button class="primary" id="mNext">Prosegui</button></div>
     </section>
 
     <section class="card brief-line" id="race" hidden><h2 id="rTitle"></h2><button class="pillbtn" id="rBrief">Istruzioni</button></section>
@@ -341,7 +348,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
       <p class="errs" id="stErr"></p>
     </section>
     <div class="done" id="rDone" hidden><p id="rDoneText"></p>
-      <div class="row"><button class="primary" id="rAgain">Nuova regata</button><button id="rWind2">Con altro vento</button></div></div>
+      </div>
     <div class="row" id="rRow" hidden><button id="rRestart">Ricomincia</button><button id="rWind">Cambia vento</button></div>
 
     <section class="card" id="free" hidden>
@@ -568,15 +575,15 @@ function step(S, C, E, dt){
       done: "Barra a dritta, prua verso sinistra. Quando rilasci, la barra torna al centro da sola (si può cambiare nelle impostazioni); con <em>Spazio</em> la centri subito." },
     { title: "Barra sottovento: si orza", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
       text: ["La regola che usano i velisti: <em>barra sottovento, la barca orza</em>; <em>barra sopravento, la barca poggia</em>. Il lato sottovento è quello dove sta il boma.",
-             "Sposta la barra verso il boma e orza fino alla <em>bolina</em>, a piccoli colpi e non con un colpo lungo: fermati quando la lancetta della rosetta (in basso) è a metà strada tra il rosso e l'orizzontale. Poi centra la barra."],
+             "Sposta la barra verso il boma e orza fino alla <em>bolina</em>, <em>a piccoli colpi</em> e non con un colpo lungo: fermati quando la lancetta della rosetta (in basso) è a metà strada tra il rosso e l'orizzontale. Poi centra la barra."],
       cond: I => I.twa >= 43 && I.twa <= 67 && Math.abs(I.r) < 4, hold: 1,
       done: "Esatto: barra verso il boma, cioè sottovento, e la prua è salita verso il vento." },
     { title: "Barra sopravento: si poggia", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["Ora sposta la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, a piccoli colpi: fermati quando la lancetta è scesa un terzo della strada tra l'orizzontale e il basso. Poi centra la barra."],
+      text: ["Ora sposta la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, <em>a piccoli colpi</em>: fermati quando la lancetta è scesa un terzo della strada tra l'orizzontale e il basso. Poi centra la barra."],
       cond: I => I.twa >= 110 && I.twa <= 145 && Math.abs(I.r) < 4, hold: 1,
       done: "Barra sopravento, la barca poggia." },
     { title: "Tenere la rotta", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
-      text: ["In certe condizioni, la barca tende a salire da sola verso il vento: si dice che è <em>orziera</em>. Consulta il glossario per avere più informazioni. Tieni la rotta indicata nel riquadro sopra i comandi, correggendo con piccoli colpi di barra: resta entro 6° per 8 secondi di fila.",
+      text: ["In certe condizioni, la barca tende a salire da sola verso il vento: si dice che è <em>orziera</em>. Consulta il glossario per avere più informazioni. Tieni la rotta indicata nel riquadro sopra i comandi, correggendo con <em>piccoli colpi</em> di barra: resta entro 6° per 8 secondi di fila.",
              "Timonare bene vuol dire usare poca barra: ogni angolo di barra frena la barca."],
       course: true, yawNoise: true,
       cond: (I, S) => Math.abs(norm180(S.h - S.course)) < 6 && I.kn > 2, hold: 8,
@@ -712,13 +719,13 @@ function step(S, C, E, dt){
       text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco (e di bolina puoi anche <em>orzare</em> leggermente) per tenere lo sbandamento sotto i 20°. Passata la raffica, cazza di nuovo."],
       cond: I => I.inGust && I.heel < 20 && I.kn > 2, hold: 3,
       done: "Ben fatto. Lascare riduce la forza sulla vela; orzare di poco la scarica. È la tecnica principale per navigare con vento rafficato." },
-    { title: "La scuffia", allow: ["capsizes"], tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
+    { title: "La scuffia", allow: ["capsizes"], noRight: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
       text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: vela tutta cazzata, e in raffica non lascare."],
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
       done: "Oltre circa 60° di sbandamento la barca si è rovesciata: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
-    { title: "Raddrizzare", tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",
+    { title: "Raddrizzare", startCapsized: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",
       text: ["Premi <em>Raddrizza</em> (o il tasto R). Nella realtà prima si lasciano libere le scotte, poi il timoniere sale sulla lama della deriva e fa leva con il proprio peso finché la barca torna dritta, e risale a bordo."],
-      cond: (I, S) => !S.capsized && S.capsizes > 0, hold: 1,
+      cond: (I, S, B) => B.cap0 && !S.capsized, hold: 1, // B.cap0: la barca era rovesciata all'inizio del passo (showStep la rovescia se serve)
       done: "Barca dritta. Regola la vela con i filetti e riparti." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,
       text: ["Guarda le raffiche arrivare, <em>lasca</em> quando entri, <em>cazza</em> quando escono. Oltre circa 60° di sbandamento si <em>scuffia</em>.",
@@ -897,7 +904,7 @@ function step(S, C, E, dt){
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0.1"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.2"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -990,7 +997,7 @@ function step(S, C, E, dt){
   // fasce di tempo delle prove: bands = [oro, argento, bronzo] in secondi (tempo massimo per ciascuna)
   const MEDALS = ["oro", "argento", "bronzo"];
   const medalOf = (i, sec) => { const b = MISSIONS[i].bands; if (!sec) return 0; for (let k = 0; k < 3; k++) if (sec <= b[k]) return k + 1; return 0; };
-  const medalTag = (i, sec) => { const m = medalOf(i, sec); return m ? `<span class="medal m${m}" title="Fascia: ${MEDALS[m - 1]}"></span>` : ""; };
+  const medalTag = (i, sec) => { const m = medalOf(i, sec); return m ? `<span class="medal m${m}" title="Medaglia: ${MEDALS[m - 1]}"></span>` : ""; };
   // 0.23, meriti del libretto (solo carriera): tabella provvisoria di docs/PROPOSTA-ESAME-E-BREVETTO.md §12, da tarare giocando.
   // Si ricalcolano ogni volta da progress: niente si salva. Competizione: solo il piazzamento, senza il +1 «senza errori».
   const MERITI = [["abil", "Abilità", 20, 8], ["cono", "Conoscenza", 12, 6], ["comp", "Competizione", 8, 3], ["esp", "Esperienza", 6, 6]];
@@ -1018,13 +1025,13 @@ function step(S, C, E, dt){
         let i = MISSIONS.findIndex((m, j) => !fas(j)); if (i >= 0) return tit(i) + ".";
         i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
         i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
-      if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : "il ripasso della " + LESSONS[i].name + "."; }
+      if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
       const rp = RACES.map((rc, i) => racePt(i));
       const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES[i].title + " (con avversari).";
     };
     const aree = sotto.length ? sotto : totale < TOT_MIN ? MERITI.filter(([k, , max]) => pt[k] < max) : [];
     const sugg = aree.map(([k]) => voce(k)).filter(Boolean);
-    if (!sugg.length && !esame) p.exam?.ripasso?.length ? p.exam.ripasso.forEach(i => sugg.push("il ripasso della " + LESSONS[i].name + " (dopo l'esame).")) : sugg.push("l'esame su tutte le lezioni.");
+    if (!sugg.length && !esame) p.exam?.ripasso?.length ? p.exam.ripasso.forEach(i => sugg.push(ripName(i) + ", " + LESSONS[i].title + " (dopo l'esame).")) : sugg.push("l'esame su tutte le lezioni.");
     return { pt, pulite, totale, esame, superato: !manca, manca, sugg };
   }
   let giroSug = 0; // il suggerimento cambia a ogni ritorno al menu; il giro non si salva
@@ -1055,17 +1062,20 @@ function step(S, C, E, dt){
   }
   const oggi = () => { const d = new Date(); return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); };
   const fmtData = d => new Date(d + "T12:00").toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
-  const lezElenco = a => (a.length > 1 ? "lezioni " + a.slice(0, -1).join(", ") + " e " + a[a.length - 1] : "lezione " + a[0]);
+  const ripName = li => "Ripasso " + (li + 1); // 1.0.2: «Lezione» resta alla Scuola; ripassi ed esame usano «Ripasso N»
+  const ripElenco = a => (a.length > 1 ? "ripassi " + a.slice(0, -1).join(", ") + " e " + a[a.length - 1] : "ripasso " + a[0]);
   function esameBtn(){
     const ex = modo === "carriera" ? progress.exam : null, tot = QUOTE.reduce((a, b) => a + b);
     if (ex?.superato) return `<button id="goEsame" disabled>Esame superato<small>${ex.voto} su ${tot}</small></button>`;
-    if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${lezElenco(ex.ripasso.map(i => i + 1))}</small></button>`;
+    if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${ripElenco(ex.ripasso.map(i => i + 1))}</small></button>`;
     return `<button id="goEsame">Esame su tutte le lezioni<small>${tot} domande, ne servono ${SOGLIA_ESAME}</small></button>`;
   }
   // 0.24, attestato (solo carriera): compare da solo la prima volta che si torna al menu con il livello superato, poi dal libretto
+  // disegno nostro: una deriva stilizzata sul mare, in alto sull'attestato (non è un marchio né un logo di nessuna classe)
+  const NAVE = `<svg class="nave" viewBox="0 0 120 70" role="img" aria-label="Una deriva a vela"><path class="vela" stroke-width="2" stroke-linejoin="round" d="M58 6 L58 46 L22 46 Z"/><path class="vela" stroke-width="2" stroke-linejoin="round" d="M64 14 L64 46 L92 46 Z"/><path class="scafo" d="M14 50 L102 50 L90 60 L28 60 Z"/><path class="onda" d="M6 66 Q16 60 26 66 T46 66 T66 66 T86 66 T106 66 T116 66"/></svg>`;
   function openAttest(){
     const B = progress.brevetto, m = meriti(progress), q = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-    $("atBody").innerHTML = `<p class="sc">Scuola di vela</p><h2 id="atTitle">Brevetto di livello 1</h2><p class="ruolo">Timoniere di deriva</p>
+    $("atBody").innerHTML = `${NAVE}<p class="sc">Scuola di vela</p><hr><p class="titolo">Attestato del gioco</p><h2 id="atTitle">Brevetto di livello 1</h2><p class="ruolo">Timoniere di deriva</p>
       <label for="atName">Nome (facoltativo)</label><input id="atName" maxlength="60" autocomplete="off" value="${q(B.nome || "")}">
       <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${QUOTE.reduce((a, b) => a + b)}.</p>
       <ul>${MERITI.map(([k, nome, max]) => `<li>${nome}: ${m.pt[k]} / ${max}</li>`).join("")}</ul>
@@ -1096,7 +1106,7 @@ function step(S, C, E, dt){
     const races = RACES.map((rc, i) => { const b = progress.best[recK("r" + i)];
       return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
     const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
-      return `<button data-q="${i}">${L.name}: ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
+      return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
       <header class="menu-head"><div><h1>Scuola di vela <span class="ver">V. ${VERSIONE}</span></h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
         <div class="head-r"><div class="seg" id="modoSel"><button data-v="libero" aria-pressed="${modo === "libero"}">Gioco libero</button><button data-v="carriera" aria-pressed="${modo === "carriera"}">Carriera</button></div>
@@ -1113,7 +1123,7 @@ function step(S, C, E, dt){
           ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>`}
         </section>
       </div>
-      <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. I pallini oro, argento e bronzo indicano la fascia del tuo record.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
+      <footer class="menu-foot"><span>${wipeNote ? "<b>Le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
     $("goEsame").onclick = openEsame;
@@ -1178,7 +1188,7 @@ function step(S, C, E, dt){
     const car = modo === "carriera", rip = groups.map(([L]) => LESSONS.indexOf(L));
     if (car){ progress.exam = ok ? { superato: true, voto: qz.score, data: oggi() } : { superato: false, voto: qz.score, data: oggi(), ripasso: rip }; saveProgress(); }
     const btns = !car ? `<button class="primary" id="qzAgain">Rifai l'esame</button>`
-      : ok ? "" : rip.map(li => `<button data-rq="${li}">Ripasso: ${LESSONS[li].name}</button>`).join("");
+      : ok ? "" : rip.map(li => `<button data-rq="${li}">${ripName(li)}</button>`).join("");
     b.innerHTML = `<h2>Esame · livello 1</h2><div class="score">${qz.score} su ${n}: ${ok ? "superato" : `non superato (servono ${SOGLIA_ESAME})`}</div>
       ${car ? `<p class="q">${ok ? "Il voto è definitivo." : "Ripassa le lezioni in cui hai sbagliato, poi potrai rifare l'esame."}</p>` : ""}
       ${groups.length ? `<div class="wlist" id="qzWrong">${groups.map(([L, ws]) => `<h3>${L.name}: ${L.title}</h3>${ws.map(wrongItem).join("")}`).join("")}</div>` : ""}
@@ -1195,7 +1205,7 @@ function step(S, C, E, dt){
       if (!qz.partial){ progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score;
         const ex = modo === "carriera" ? progress.exam : null; if (ex?.ripasso) ex.ripasso = ex.ripasso.filter(x => x !== qz.li); // 0.24: ripasso completo dopo l'esame, con qualsiasi punteggio
         saveProgress(); } // il giro parziale non tocca il record
-      b.innerHTML = `<h2>Ripasso · ${L.name}: ${L.title}</h2><div class="score">${qz.score} su ${n}</div>
+      b.innerHTML = `<h2>${ripName(qz.li)} · ${L.title}</h2><div class="score">${qz.score} su ${n}</div>
         <p class="q">${nw === 0 ? "Tutto giusto." : nw === 1 ? "Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati: ecco le domande sbagliate."}</p>
         ${nw ? `<div class="wlist" id="qzWrong">${qz.wrong.map(wrongItem).join("")}</div>` : ""}
         <div class="row"><button class="primary" id="qzAgain">Rifai il ripasso</button>${nw ? `<button id="qzOnly">Ripassa solo le sbagliate</button><button id="qzLesson">Rivedi la lezione</button>` : ""}<button id="qzClose">Chiudi</button></div>`;
@@ -1204,7 +1214,7 @@ function step(S, C, E, dt){
       return;
     }
     const Q = qz.qs[qz.i];
-    b.innerHTML = `<div class="qz-top"><h2>${qz.exam ? "Esame · livello 1" : "Ripasso · " + L.name}</h2><span>Domanda ${qz.i + 1} di ${qz.qs.length}</span></div>
+    b.innerHTML = `<div class="qz-top"><h2>${qz.exam ? "Esame · livello 1" : ripName(qz.li)}</h2><span>Domanda ${qz.i + 1} di ${qz.qs.length}</span></div>
       <p class="q">${Q.q}</p><div class="opts2">${Q.opts.map((o, k) => `<button class="opt" data-k="${k}">${o.t}</button>`).join("")}</div>
       <div id="qzAfter"></div>`;
     b.querySelectorAll(".opt").forEach(btn => btn.onclick = () => {
@@ -1336,7 +1346,10 @@ function step(S, C, E, dt){
     if (gustLevel !== e.gusts) setGusts(e.gusts);
     if (st.pause) freshState(0, 0, 90, 0.4);
     else if (!prev || prev.pause) { freshState(0, 0, 90, st.autoTrim ? 0.4 : 0.3); }
-    base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes };
+    // 1.0.2: «La scuffia» non fa raddrizzare (la barca resta rovesciata fino al passo dopo); «Raddrizzare» parte sempre con la barca rovesciata
+    if (st.noRight && S.capsized) freshState(0, 0, 90, 0.4);
+    if (st.startCapsized && !S.capsized){ Object.assign(S, { capsized: true, indietro: 0, capCause: "heel", capSide: S.boomSide, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); }
+    base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized };
     S.markReached = false;
     // 0.20.2: il punto del passo è una linea d'arrivo (FIN_HALF m per lato), perpendicolare alla direzione dalla partenza del passo all'arrivo
     S.lessonMark = st.mark ? { x: S.x + st.mark[0], y: S.y + st.mark[1], label: "Arrivo", fin: true, nx: st.mark[0] / Math.hypot(...st.mark), ny: st.mark[1] / Math.hypot(...st.mark) } : null;
@@ -1425,16 +1438,16 @@ function step(S, C, E, dt){
     setGusts(m.gusts);
     recStart(recK("m" + i));
     $("mTitle").textContent = "Prova " + (i + 1) + ". " + m.title;
-    $("mNext").textContent = nextLabel();
+    $("mNext").textContent = nextLabel(); $("mNext").parentElement.hidden = !nextItem(); // l'ultima prova della Scuola: «Torna al menu» c'è già in alto
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief($("mTitle").textContent, missionText(), true);
   }
-  const bandText = b => "Fasce di tempo: oro entro " + fmtTime(b[0]) + ", argento entro " + fmtTime(b[1]) + ", bronzo entro " + fmtTime(b[2]) + ".";
+  const bandText = b => "Tempi delle medaglie: oro entro " + fmtTime(b[0]) + ", argento entro " + fmtTime(b[1]) + ", bronzo entro " + fmtTime(b[2]) + ".";
   const missionText = () => { const m = MISSIONS[missionIdx]; return m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote() + " " + bandText(m.bands); };
   $("mBrief").onclick = () => showBrief($("mTitle").textContent, missionText(), false);
   $("bGo").onclick = hideBrief;
-  $("mRetry").onclick = $("mRetry2").onclick = () => startMission(missionIdx, env.twd);
-  $("mWind").onclick = $("mWind2").onclick = () => startMission(missionIdx, otherWind());
+  $("mRetry").onclick = () => startMission(missionIdx, env.twd);
+  $("mWind").onclick = () => startMission(missionIdx, otherWind());
   $("mNext").onclick = goNext;
 
   // ---- navigazione libera ----
@@ -1501,8 +1514,8 @@ function step(S, C, E, dt){
   $("allInstr").onchange = e => { opt.allInstr = e.target.checked; setHud(hudLevel); };
   $("showGhost").onchange = e => opt.ghost = e.target.checked;
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
-  $("rRestart").onclick = $("rAgain").onclick = () => startRace(raceIdx, env.twd);
-  $("rWind").onclick = $("rWind2").onclick = () => startRace(raceIdx, otherWind());
+  $("rRestart").onclick = () => startRace(raceIdx, env.twd);
+  $("rWind").onclick = () => startRace(raceIdx, otherWind());
   $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
   $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
@@ -1514,7 +1527,7 @@ function step(S, C, E, dt){
   canvas.addEventListener("pointerdown", () => canvas.focus());
   const updFocus = () => $("focusTip").hidden = mode === "menu" || document.hasFocus();
   addEventListener("focus", updFocus); addEventListener("blur", updFocus); setInterval(updFocus, 1000);
-  function rightBoat(){ if (S && S.capsized && !S.righting) S.righting = 0.001; }
+  function rightBoat(){ const st = curStep(); if (st && st.noRight) return; if (S && S.capsized && !S.righting) S.righting = 0.001; }
   $("rightBtn").onclick = rightBoat; $("capBtn").onclick = rightBoat;
 
   function applyInput(dt){
@@ -1635,7 +1648,7 @@ function step(S, C, E, dt){
           progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); }
           const clean = regTotal() === 0; if (clean) progress.clean[bk] = true; saveProgress();
           $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
-            (medalOf(missionIdx, sec) ? " Fascia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Fuori dalle fasce: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") +
+            (medalOf(missionIdx, sec) ? " Medaglia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Nessuna medaglia: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") +
             (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
           $("done").hidden = false; toast("Arrivato!");
         } else { S.markIdx++; toast("Boa girata: ora verso " + (curMarks[S.markIdx].fin ? "l'arrivo" : curMarks[S.markIdx].label.toLowerCase())); }
@@ -2185,8 +2198,9 @@ function step(S, C, E, dt){
     $("vSh").textContent = "boma a " + Math.round(S.boom) + "°";
     if (!dragTiller) $("tiller").value = Math.round(ctl.tiller * 100);
     $("sheet").value = Math.round(ctl.sheet * 100);
-    $("rightBtn").hidden = !S.capsized || S.righting > 0;
-    $("capOverlay").hidden = !S.capsized || S.righting > 0;
+    const noRight = !!(st && st.noRight); // lezione 6, «La scuffia»: niente raddrizzamento finché non si passa al passo dopo
+    $("rightBtn").hidden = !S.capsized || S.righting > 0 || noRight;
+    $("capOverlay").hidden = !S.capsized || S.righting > 0 || noRight;
     $("capText").textContent = S.capCause === "gybe"
       ? "Hai scuffiato per una strambata: il vento è passato dall'altro lato con la vela tutta aperta e il boma ha attraversato la barca di colpo. Per strambare senza rischi: prima cazza, poi poggia, poi lasca (lezione 5)."
       : "Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.";
@@ -2203,7 +2217,8 @@ function step(S, C, E, dt){
     if (I.tt === "lee" && I.sheet > 0.99){ cls = "good"; msg = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."; }
     const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
     let back = false; // 0.20.2: «all'indietro» si mostra anche nei passi a suggerimenti spenti, se il passo dà la barra
-    if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
+    if (S.capsized && noRight){ cls = "good"; msg = "Hai scuffiato: la barca resta rovesciata. Premi Avanti: nel passo dopo la raddrizzi."; }
+    else if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
     else if (S.heel > 25){ cls = "bad"; msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco." : "Sbandi troppo: lasca la scotta" + (I.twa < 80 ? ", oppure orza di poco." : "."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
     // 0.20.2, fasi di backCheck(): sotto IRONS_A (40°) la barra verso il boma, poi barra al centro e cazzare, poi lasciar prendere velocità
@@ -2222,6 +2237,9 @@ function step(S, C, E, dt){
     }
     if (mode === "lesson" && kind === "none" && !S.capsized && !(back && st.tiller)) { $("hint").hidden = true; }
     else if (mode === "lesson" && !st.pause && st.hud) $("hint").hidden = false;
+    // 1.0.2: a passo completato il suggerimento ripete quello che dice il testo di fine passo, e a 1360x650 il pannello non ci sta:
+    // si nasconde, tranne se la barca è rovesciata, sbanda oltre 25° o arretra, o se il passo ha i pulsanti Cazza e Lasca (spostarli sotto il puntatore è il difetto della 0.18.1)
+    if (mode === "lesson" && stepDone && !(st.sem && st.sem.length) && !S.capsized && S.heel <= 25 && !back) $("hint").hidden = true;
     $("hint").className = "hint " + cls; $("hint").textContent = msg;
     if (mode === "race") racePanel();
     if (mode === "mission" || mode === "race") regShow($("stErr"));
@@ -2971,7 +2989,7 @@ function step(S, C, E, dt){
       if (!me.ai) Object.assign(me, { ai: aiParams("principianti"), side: 1, boardT: 0, boardMax: 40, rOff: Math.random() * 6, char: "normale", startX: toWF(S.x, S.y)[0] * 0.5, capW: 0 });
       if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
       me.capW = 0; me.info = info; me.me = false; aiControl(me, dt); me.me = true; return ctl.tiller; },
-    openItem, estraiEsame, meriti, showStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
+    openItem, estraiEsame, meriti, showStep, completeStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
     frame: dt => { simulate(dt, curStep()); simTime += dt; draw(dt); }, get viewOff(){ return viewOff; }, get zoomQ(){ return zoomQ; }, get camZoom(){ return camZoom; }, draw: dt => draw(dt), gusts: () => gusts.map(g => [g.x, g.y, g.r, g.k, g.sh, g.ttl]), get rippleCells(){ return rippleCells; }, goal, cam: () => { const v = view(); return { cx: v.cx, cy: v.cy, W, H }; } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce); sesTick è il registratore, solo lettura

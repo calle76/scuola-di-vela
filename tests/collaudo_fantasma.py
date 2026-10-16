@@ -34,7 +34,7 @@ async def main():
         print("prova 1 completata:", await pg.is_visible("#done"), "|", await pg.inner_text("#doneText") if await pg.is_visible("#done") else "")
         g = await pg.evaluate("Object.keys(__sv.ghosts()).map(k=>k+':'+__sv.ghosts()[k].length+' campioni')")
         print("fantasmi salvati:", g)
-        await pg.evaluate("__sv.fast(1)"); await pg.click("#mRetry2"); await pg.wait_for_timeout(4000)
+        await pg.evaluate("__sv.fast(1)"); await pg.click("#mRetry"); await pg.wait_for_timeout(4000)
         await pg.screenshot(path=str(OUT / "ghost.png"))
         print("errori:", errs[:2])
         await b.close()

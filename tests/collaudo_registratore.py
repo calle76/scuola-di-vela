@@ -300,7 +300,7 @@ REGATA_E = """([quando, seme]) => {
   }
   let fin2 = null, ric = 0;
   if (quando === 'riavvio') {   // «Nuova regata» (stesso pulsante di «Ricomincia»): startRace crea un nuovo R
-    const R1 = sv.R; sv.run(dt, 60); document.getElementById('rAgain').click(); ric = sv.R !== R1 ? 1 : 0;
+    const R1 = sv.R; sv.run(dt, 60); document.getElementById('rRestart').click(); ric = sv.R !== R1 ? 1 : 0;
     const R2 = sv.R, me2 = R2.boats[0]; n = 0;
     while (me2.fin === null && R2.t < 900 && n < 60 * 1200) { sv.pilota(dt); sv.run(dt, 1); n++; }
     fin2 = me2.fin;

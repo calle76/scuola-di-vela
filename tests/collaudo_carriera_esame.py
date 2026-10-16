@@ -87,10 +87,10 @@ async def main():
         chk("E2", voto == 12 and sb == [0, 2] and "non superato" in await pg.inner_text("#qzBody .score"), f"E2: voto {voto}, lezioni sbagliate {sb}")
         p = await salvato(pg)
         chk("E2", p["exam"]["superato"] is False and p["exam"]["ripasso"] == sb and p["exam"]["voto"] == 12, f"E2: salvato {p.get('exam')}")
-        chk("E2", await pg.locator("#qzAgain").count() == 0 and [await x.inner_text() for x in await pg.locator("[data-rq]").all()] == ["Ripasso: Lezione 1", "Ripasso: Lezione 3"], "E2: pulsanti dei ripassi nell'esito")
+        chk("E2", await pg.locator("#qzAgain").count() == 0 and [await x.inner_text() for x in await pg.locator("[data-rq]").all()] == ["Ripasso 1", "Ripasso 3"], "E2: pulsanti dei ripassi nell'esito")
         await chiudi_quiz(pg)
-        chk("E2", not await pg.is_enabled("#goEsame") and "lezioni 1 e 3" in await pg.inner_text("#goEsame"), f"E2: pulsante «{await pg.inner_text('#goEsame')}»")
-        chk("E2", "Ti manca l'esame." == await pg.inner_text("#libManca") and (await pg.inner_text("#libSug")).split(": ", 1)[1] in ("il ripasso della Lezione 1 (dopo l'esame).", "il ripasso della Lezione 3 (dopo l'esame)."), f"E2: libretto «{await pg.inner_text('#libSug')}»")
+        chk("E2", not await pg.is_enabled("#goEsame") and "ripassi 1 e 3" in await pg.inner_text("#goEsame"), f"E2: pulsante «{await pg.inner_text('#goEsame')}»")
+        chk("E2", "Ti manca l'esame." == await pg.inner_text("#libManca") and (await pg.inner_text("#libSug")).split(": ", 1)[1] in ("Ripasso 1, La barca e il vento (dopo l'esame).", "Ripasso 3, Andature e filetti (dopo l'esame)."), f"E2: libretto «{await pg.inner_text('#libSug')}»")
         await ripasso(pg, 0, ferma=2)   # lasciato a metà: non conta
         chk("E2", (await salvato(pg))["exam"]["ripasso"] == [0, 2] and not await pg.is_enabled("#goEsame"), "E2: ripasso lasciato a metà non conta")
         await ripasso(pg, 0, sbagliate=3)   # completo, con 3 errori: conta (qualsiasi punteggio)

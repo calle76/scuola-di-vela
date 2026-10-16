@@ -66,7 +66,7 @@ async def main():
         m = await M(prog(**base)); area(m)
         chk("L2", (m["pt"]["abil"], m["pt"]["cono"], m["pt"]["comp"], m["pt"]["esp"], m["totale"]) == (8, 6, 3, 6, 23), f"L2 tutti al minimo: {m['pt']} {m['totale']}")
         chk("L2", m["manca"] == "Ti mancano 6 punti al totale; poi l'esame." and len(m["sugg"]) == 3, f"L2 tutti al minimo: «{m['manca']}» {m['sugg']}")
-        for nome, mod, k, att, voce in (("Abilità", dict(prove=[1, 1, 1, 2, None]), "abil", 7, "Prova 5, "), ("Conoscenza", dict(ripassi={0: NQ[0], 1: NQ[1]}), "cono", 4, "il ripasso della Lezione 3."),
+        for nome, mod, k, att, voce in (("Abilità", dict(prove=[1, 1, 1, 2, None]), "abil", 7, "Prova 5, "), ("Conoscenza", dict(ripassi={0: NQ[0], 1: NQ[1]}), "cono", 4, "Ripasso 3, Andature e filetti."),
                                   ("Competizione", dict(regate={"r0.2:principianti": (3, False)}), "comp", 2, "la Regata nelle raffiche (con avversari)."), ("Esperienza", dict(lezioni=range(5)), "esp", 5, "Lezione 6, ")):
             m = await M(prog(**{**base, **mod})); area(m)
             chk("L2", m["pt"][k] == att and m["manca"] == f"Ti mancano punti in {nome}; poi l'esame." and len(m["sugg"]) == 1 and m["sugg"][0].startswith(voce),
@@ -132,7 +132,7 @@ async def main():
         giro = []
         for _ in range(4):
             giro.append(await q.inner_text("#libSug")); await q.click("#modoSel button[data-v='libero']"); await q.click("#modoSel button[data-v='carriera']")
-        att = ["Prova 1, Al traverso.", "il ripasso della Lezione 1.", "la Regata a bastone (con avversari).", "Lezione 1, La barca e il vento."]
+        att = ["Prova 1, Al traverso.", "Ripasso 1, La barca e il vento.", "la Regata a bastone (con avversari).", "Lezione 1, La barca e il vento."]
         chk("L3", sorted(x.split(": ", 1)[1] for x in giro) == sorted(att), f"L3 giro dei suggerimenti: {giro}")
         print("L3 giro dei suggerimenti:", [x.split(": ", 1)[1] for x in giro])
         await ctx.close()

@@ -100,17 +100,23 @@ async def k2_k4(b):
 
 async def k5(b):
     vecchio = pathlib.Path(tempfile.mkdtemp()) / "index.html"
-    vecchio.write_bytes(subprocess.run(["git", "show", "d53abc1:index.html"], cwd=QUI.parent, capture_output=True, check=True).stdout)
+    # Riferimento: la 1.0.1 (8da0d7c). Dalla 1.0.2 il menu cambia in due punti voluti, che si portano al testo nuovo prima del confronto:
+    # i ripassi si chiamano «Ripasso N · titolo» (osservazione 44) e il piede parla di medaglie (osservazione 46).
+    vecchio.write_bytes(subprocess.run(["git", "show", "8da0d7c:index.html"], cwd=QUI.parent, capture_output=True, check=True).stdout)
     testi = []
     for url in (BASE, vecchio.as_uri()):
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page()
         await pg.goto(url); await pg.wait_for_timeout(300)
-        testi.append([await pg.inner_text(".tiles"), await pg.inner_text(".menu-foot")])
+        tiles, foot = await pg.inner_text(".tiles"), await pg.inner_text(".menu-foot")
+        if url != BASE:
+            tiles = re.sub(r"Lezione (\d): ", r"Ripasso \1 · ", tiles)
+            foot = foot.replace("I pallini oro, argento e bronzo indicano la fascia del tuo record.", "Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.")
+        testi.append([tiles, foot])
         if url == BASE:
             chk(await modo(pg) == "libero", "K5: senza chiavi si parte in gioco libero")
             chk(MODO not in await pg.evaluate(LEGGI), "K5: aprire il menu non scrive la modalità")
         await ctx.close()
-    chk(testi[0] == testi[1], "K5: riquadri e piede del menu uguali alla 0.21.6")
+    chk(testi[0] == testi[1], "K5: riquadri e piede del menu uguali alla 1.0.1 (salvo i due testi voluti della 1.0.2)")
 
 async def main():
     global QUIZ_JS

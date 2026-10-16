@@ -31,8 +31,17 @@ async def main():
                 d = await pg.evaluate(PH); misure.append(d)
                 if d > 0: eccede.append(f"lezione {li+1} passo {k+1}: +{d}")
                 # 0.20.2: anche a passo completato (testo di fine passo e «Avanti» visibili), come fa completeStep() nel gioco
-                fatto = await pg.evaluate("""()=>{const f=document.getElementById('lFeedback'), n=document.getElementById('lNext');
-                  if (!f.textContent.trim()) return false; f.classList.remove('pending'); f.hidden=false; n.classList.remove('pending'); n.hidden=false; return true}""")
+                # 1.0.2: si chiama il vero completeStep() e si ridisegna il pannello (panel()), perché a passo completato il pannello cambia anche altro
+                # (suggerimento nascosto); e lo stato della barca è quello di chi ha davvero completato il passo: in «La scuffia» rovesciata (senza
+                # pulsante né riquadro), in «Raddrizzare» di nuovo dritta. Prima si mostrava solo il testo e la barca restava com'era (nel passo dopo «Raddrizzare»
+                # restava rovesciata anche il passo «Riepilogo», che nel gioco non può succedere).
+                stato = await pg.evaluate("({capsized: __sv.S.capsized})")
+                if (li, k) == (5, 2):
+                    await pg.evaluate("(()=>{Object.assign(__sv.S,{capsized:true,heel:90,u:0,vl:0,r:0,heelRate:0,righting:0}); __sv.panel()})()")
+                    d = await pg.evaluate(PH); misure.append(d)
+                    if d > 0: eccede.append(f"lezione {li+1} passo {k+1} con la barca rovesciata: +{d}")
+                if (li, k) == (5, 3): await pg.evaluate("(()=>{Object.assign(__sv.S,{capsized:false,heel:0,heelRate:0,righting:0,u:1}); __sv.panel()})()")
+                fatto = await pg.evaluate("""()=>{const f=document.getElementById('lFeedback'); if (!f.textContent.trim()) return false; __sv.completeStep(); __sv.panel(); return true}""")
                 if fatto:
                     await pg.wait_for_timeout(50); d = await pg.evaluate(PH); misure.append(d); n_fatti += 1
                     if d > 0: eccede.append(f"lezione {li+1} passo {k+1} completato: +{d}")
