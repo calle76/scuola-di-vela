@@ -81,6 +81,30 @@ Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate
 
 Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A e Z liberi per funzioni speciali; R raddrizza la barca e non va riusato; il livello 1 resta com'è (tabella sopra).
 
+### Il timone nel livello 2 (in prova dalla 1.0.25)
+
+Nel livello 2 la barra va fino a 45°. Oltre un certo angolo la pala del timone **stalla**: l'acqua non la segue più, il timone frena invece di far girare, e il suggerimento lo dice. Per questo i tasti sono due. Per ora si prova nella navigazione libera, impostazioni, «Barca: livello 2 (prova)». Numeri misurati sul motore con 10 nodi di vento (`PROPOSTA-STALLO-TIMONE.md` §9).
+
+**Virata normale: solo la freccia.** Tenuta premuta, la barra arriva a 35° in mezzo secondo e si ferma lì. Quasi sempre: bordeggiare, cambiare mura, virare con la barca lanciata.
+- Pro: la barca esce dalla virata ancora veloce, perché la pala non stalla (conserva il 49% della velocità, come nel livello 1); non c'è niente da sbagliare.
+- Contro: la prua gira più piano e la curva è più larga (3,3 s per virare); serve più spazio, e alla boa o in un giro di penalità si perde tempo. Con la barca lenta può non bastare: al 50% della velocità la virata dura 5,9 s e la barca quasi si ferma.
+
+**Virata stretta: freccia + Maiusc.** La barra va fino in fondo, a 45°. Alla boa, per girarle vicino; nel giro di penalità (7,4 s invece di 9,5); per evitare un'altra barca all'ultimo momento; quando la barca è lenta e i 35° non bastano a passare il vento (al 50% della velocità 4,6 s invece di 5,9).
+- Pro: la prua gira più in fretta e la curva è più stretta (2,7 s invece di 3,3).
+- Contro: la pala stalla e la barca esce più lenta (38% della velocità invece del 49%). Col vento leggero costa di più (con 6 nodi 33% invece di 50%); con vento forte il costo quasi sparisce.
+
+**La via di mezzo: accompagnare la barra.** Si parte con la sola freccia e si aggiunge Maiusc quando la prua passa il vento. La barca sta già girando, l'acqua arriva sulla pala più di traverso e a 45° la pala non stalla più: 3,1 s, e la barca esce quasi veloce come con la virata normale (48%).
+
+| Situazione | Tasti |
+| --- | --- |
+| Virata normale | Solo freccia |
+| Boa, penalità, evitare una barca | Freccia + Maiusc |
+| Barca lenta, la prua non passa il vento | Freccia + Maiusc |
+| Vento leggero | Solo freccia: sbattere la barra costa di più |
+| Per fare bene | Freccia, poi Maiusc quando la prua passa il vento |
+
+**Onestà.** Il fermo a 35° è una **regola del gioco**: in barca vera non c'è, c'è la mano che sente la barra alleggerirsi quando la pala stalla. I numeri sono del nostro motore; le fonti (un 470 misurato, F4) dicono la stessa cosa nella sostanza (la barra arriva a 45°, accompagnata è il modo migliore, data di colpo fa perdere più velocità), ma la nostra barca è più leggera e le differenze sono più piccole. Il giro di penalità non ha ancora una fonte.
+
 ## 4. Cosa il gioco fa bene
 
 - **Il vento apparente.** Il vento che senti a bordo è la combinazione del vento reale e del vento dovuto al moto: accelerando si sposta verso prua. Su questo lavora la vela.
@@ -97,7 +121,7 @@ Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (f
 | Cosa | Nel gioco | In barca vera | Quanto conta per chi impara |
 | --- | --- | --- | --- |
 | **La barca che gira da sola per effetto delle vele** | Con la barra al centro la barca va dritta (salvo il disturbo apposta nella lezione 2) | Secondo le fonti consultate, cazzando la randa la barca tende a orzare, e sbandando orza ancora di più: si sente la barra «pesante» | Alto: è una sensazione che un velista riconosce subito |
-| **La barra a fondo** | È sempre la scelta migliore | Oltre circa 15° il timone frena senza girare di più (una sola fonte) | Medio: si può imparare un'abitudine sbagliata |
+| **La barra a fondo** | Nel livello 1 è sempre la scelta migliore (nel livello 2 in prova la pala stalla: vedi «Il timone nel livello 2») | Oltre circa 15° il timone frena senza girare di più (una sola fonte) | Medio: si può imparare un'abitudine sbagliata |
 | **Uscire dall'angolo morto** | Si esce solo col timone: mentre la barca arretra, barra verso il boma, poi barra al centro e si cazza. Il boma non si può spingere a mano; con la barra al centro la barca può restare a lungo all'indietro | Tre fonti descrivono la randa «a collo»: si spinge il boma fuori e la barra dalla stessa parte, la barca arretra e la prua si allontana dal vento, poi si centra, si cazza e si riparte (US Sailing; guida Sunfish di un circolo; associazione di classe di un catamarano; vedi `DUBBI-E-RICERCHE.md`, sez. 3). Da ricontrollare sulle pagine originali | Medio |
 | **La planata** | C'è solo nella resistenza dello scafo (dalla 1.0.6, misurata in vasca fino a 9 nodi): niente assetto né onde | Sopra circa 8 nodi di velocità una deriva a due olimpica passa a un regime di alta velocità (una fonte) | Medio: conta di più dal livello 3 |
 | **Il peso del timoniere** | Si sporge da solo, con un ritardo | Gestire il peso è una parte importante della conduzione | Medio: diventerà un'azione del prodiere |
