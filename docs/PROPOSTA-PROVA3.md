@@ -8,6 +8,10 @@
 
 La barca si ferma **6-10 metri prima** del punto d'arrivo (`dist` 9,7 / 6,2 / 6,2) e il pilota smette di guidarla. Il pilota ha come ultimo punto il **centro della linea d'arrivo**, e passa al passo successivo quando è entro 7 metri: con quel punto era l'ultimo, e da lì non dà più ordini. La barca va avanti per inerzia a 1-1,5 nodi e non attraversa la linea. Il collaudo legge il risultato 2 secondi dopo e lo segna come «non finita».
 
+## Storia (aggiunta dopo la domanda di Ale: «non era già stato corretto?»)
+
+Il difetto è **noto dalla 1.0.10**: `CHANGELOG.md` lo chiama «difetto vecchio del collaudo», non del gioco, e non è mai stato corretto. Quello che è già corretto è un caso vicino: dalla 0.21.4 gli **avversari** dopo l'arrivo vanno nella zona di sosta, 25 metri oltre l'estremità della linea e 30 dietro (`docs/PROGETTO.md`, riga 109; osservazione 37 in `OSSERVAZIONI-GIOCANDO.md`). Il **pilota di prova** del collaudo non ha mai avuto una regola simile: si ferma sul punto d'arrivo. Nel gioco per il giocatore non serve, perché la prova si chiude al taglio della linea (`finCross` in `js/gioco.js`).
+
 ## Perché pensiamo che sia il collaudo e non il gioco
 
 - Le prove 1 e 2 arrivano alla linea con lo stesso pilota e finiscono: il meccanismo di arrivo funziona.
