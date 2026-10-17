@@ -32,6 +32,8 @@
 
 ## Prossimo lavoro
 
+**Decisione di Ale, 17 ottobre 2026 (sera): ordine per chiudere il livello 1.** 1) Manutenzione: rileggere a freddo il codice della partenza degli avversari (`js/regate.js`) e rigenerare il riferimento di `collaudo_impronta.py`. 2) **Per ultima la bolina lenta con poco vento** (−15% rispetto a Day 2017, causa mai trovata): un ultimo tentativo, con fermata 1; se non si trova la causa si dichiara limite noto e **si chiude il livello 1**. 3) Poi il livello 2.
+
 **Livello 2: regole di regata e avversari**, sulla stessa barca (`VISIONE-LIVELLI-E-CARRIERA.md` §2-3). Prima una mezz'ora di manutenzione del codice della partenza, appena scritto, e il pilota da tastiera; poi la ricerca sulle fonti del regolamento, la proposta rivista in chat, e solo dopo lezioni, colpa nei contatti, penalità e protesta. Il fiocco e la barca a due sono **livello 3** (prototipo in `sperimentale/`, tappa C chiusa).
 
 ## Dove cercare
