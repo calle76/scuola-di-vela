@@ -61,7 +61,7 @@ PROVA = """([idx, seme]) => {
       sv.ctl.tiller = Math.max(-1, Math.min(1, n180(S.h - want) / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1);
       const gybe = (Math.abs(cur) > 150 && Math.sign(n180(want - sv.twd)) !== Math.sign(cur)) || Math.abs(cur) > 174;
       sv.ctl.sheet = gybe ? Math.min(sv.autoSheet(), 0.3) : sv.autoSheet();
-      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "r" }));
+      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
     }
     sv.run(1 / 60, 1); n++;
     if (n === 60 * 40) { sv.panel(); sv.draw(1 / 60); tela = I.tela(); }

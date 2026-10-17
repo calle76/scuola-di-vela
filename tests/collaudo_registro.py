@@ -17,7 +17,7 @@ VAI = """
   clearInterval(window.__p2); let i = 0, side = 1; window.__p2end = false;
   window.__p2 = setInterval(() => {
     const sv = __sv, S = sv.S;
-    if (S.capsized){ if (!S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "r" })); return; }
+    if (S.capsized){ if (!S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "a" })); return; }
     if (i >= pts.length){
       window.__p2end = true;
       if (fine === "luff"){ const err = n180(S.h - sv.twd); sv.ctl.tiller = Math.max(-1, Math.min(1, err / 20)) * (S.u < 0 ? -1 : 1); sv.ctl.sheet = 1; }

@@ -226,7 +226,7 @@
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
       done: "Oltre circa 60° di sbandamento la barca si è rovesciata: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
     { title: "Raddrizzare", startCapsized: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",
-      text: ["Premi <em>Raddrizza</em> (o il tasto R). Nella realtà prima si lasciano libere le scotte, poi il timoniere sale sulla lama della deriva e fa leva con il proprio peso finché la barca torna dritta, e risale a bordo."],
+      text: ["Premi <em>Raddrizza</em> (o il tasto A). Nella realtà prima si lasciano libere le scotte, poi il timoniere sale sulla lama della deriva e fa leva con il proprio peso finché la barca torna dritta, e risale a bordo."],
       cond: (I, S, B) => B.cap0 && !S.capsized, hold: 1, // B.cap0: la barca era rovesciata all'inizio del passo (showStep la rovescia se serve)
       done: "Barca dritta. Regola la vela con i filetti e riparti." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,

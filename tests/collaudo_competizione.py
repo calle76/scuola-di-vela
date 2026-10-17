@@ -202,7 +202,7 @@ async def regata_tastiera(b, liv):
     while time.time() - inizio < 720:
         s = await pg.evaluate(LEGGI)
         if s["cap"]:
-            await pg.keyboard.press("r"); await pg.wait_for_timeout(300); continue
+            await pg.keyboard.press("a"); await pg.wait_for_timeout(300); continue
         if "arrivata" in s["stato"]:
             t_end = time.time(); break
         twd = 0   # il pannello scrive l'angolo del vento senza segno: la regata a bastone ha il vento fisso da nord (RACES[0]), come mostra il riquadro del vento sul mare

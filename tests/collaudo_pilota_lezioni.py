@@ -57,7 +57,7 @@ const PASSI = {
   "5:Strambata controllata":         { lim: 90,  f: C => strambaBene(C) },
   "6:Assorbire una raffica":         { lim: 120, aspetta: true, f: C => raffica(C) },                                // «aspetta una raffica»
   "6:La scuffia":                    { lim: 90,  f: C => scuffia(C) },
-  "6:Raddrizzare":                   { lim: 30,  f: C => premi(C, "r") },
+  "6:Raddrizzare":                   { lim: 30,  f: C => premi(C, "a") },
 };"""
 
 PILOTA = r"""

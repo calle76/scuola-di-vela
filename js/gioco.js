@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.26"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.27"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -592,7 +592,7 @@
     if (mode === "menu" || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || e.target.tagName === "INPUT" && e.target.type === "search" || e.target.closest?.("#lab")) return; // 1.0.4: i tasti dentro il laboratorio non guidano la barca
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (KEYSEM[k]){ semPress(KEYSEM[k]); if (allowSem.length) e.preventDefault(); return; }
-    if (k === "r"){ rightBoat(); return; }
+    if (k === "a"){ rightBoat(); return; } // 1.0.27: raddrizza con A (era R; R resta libero per le manovre dei livelli futuri, decisione di Ale)
     if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nel livello 2 la barra arriva fino a 45°
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
     if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto (solo la barca del livello 2)

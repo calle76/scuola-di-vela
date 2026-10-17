@@ -19,7 +19,7 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 | Barra del timone | frecce ← → |
 | Barra al centro | Spazio |
 | Randa: lascare e cazzare | frecce ↓ ↑ |
-| Raddrizzare la barca dopo uno sbandamento forte | R |
+| Raddrizzare la barca dopo uno sbandamento forte | A (fino alla 1.0.26 era R) |
 | Pulsanti della lezione 1 | W e S |
 | Vista del percorso: tenuto premuto, sposta la barca verso il bordo dello schermo opposto all'arrivo o alla boa e, se serve, allontana l'inquadratura finché l'arrivo o la boa si vedono; al rilascio tornano posizione e zoom di prima (solo nelle prove e nelle regate) | Q |
 | Avvicinare e allontanare l'inquadratura | pulsanti + e − sul mare, rotellina del mouse (dalla 0.19.3 si allontana fino a circa 480 m di campo in altezza a 1360×650) |
@@ -79,7 +79,7 @@ Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate
 
 ## 3. I comandi nei livelli successivi
 
-Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A e Z liberi per funzioni speciali; R raddrizza la barca e non va riusato; il livello 1 resta com'è (tabella sopra).
+Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A raddrizza la barca (dalla 1.0.27, prima R), Z spinge il boma nel livello 2, R resta libero per le manovre dei livelli futuri; il livello 1 resta com'è (tabella sopra).
 
 ### Il timone nel livello 2 (in prova dalla 1.0.25)
 

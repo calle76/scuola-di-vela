@@ -123,7 +123,7 @@ Dichiarato: le soglie sono scritte **dopo** la prima prova del §4, e servono so
 
 ## 8. Fermata 2 (17 ottobre 2026, versione 1.0.26)
 
-**Via di Ale** con Z tenuto premuto e il boma spinto dalla parte dove si trova. Raddrizzare con A: non ancora deciso, R resta.
+**Via di Ale** con Z tenuto premuto e il boma spinto dalla parte dove si trova. Raddrizzare con A: deciso da Ale dopo, fatto nella 1.0.27 (R resta libero).
 
 **Fatto:** `BOMA2` e la forza della vela spinta in `step()` (`js/motore.js`), solo con `C.push` e `S.lv === 2`; Z in `js/gioco.js` (`ctl.push`, tenuto premuto, non nella barca del livello 1 né a barca scuffiata); suggerimento in `js/disegno.js`; misure in `tests/fisica/boma2.js`; collaudo nel browser `tests/collaudo_boma2.py` (dentro `lancia_tutti.sh`).
 

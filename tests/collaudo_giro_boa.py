@@ -35,7 +35,7 @@ PILOTA = """
     const err = n180(S.h - want);
     sv.ctl.tiller = Math.max(-1, Math.min(1, err / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1); // all'indietro la barra funziona al contrario
     sv.ctl.sheet = Math.abs(cur) > 150 ? Math.min(sv.autoSheet(), 0.3) : sv.autoSheet(); // prima di strambare si cazza
-    if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "r" }));  // raddrizza come il giocatore (tasto R)
+    if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));  // raddrizza come il giocatore (tasto A)
   }, 25);
   window.__pilLog = log; window.__pilDone = 0;
 }

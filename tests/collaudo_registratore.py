@@ -51,7 +51,7 @@ PILOTA = """
       sv.ctl.tiller = Math.max(-1, Math.min(1, err / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1);
       const gybe = (Math.abs(cur) > 150 && Math.sign(n180(want - sv.twd)) !== Math.sign(cur)) || Math.abs(cur) > 174;
       sv.ctl.sheet = gybe ? Math.min(sv.autoSheet(), 0.3) : sv.autoSheet();
-      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "r" }));
+      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
     }
     sv.run(1 / 60, 1); P.n++;
   }
@@ -221,7 +221,7 @@ TRAIETTORIA = """
       if (Math.abs(cur) < 48 && S.u < 0.8) want = sv.twd + Math.sign(cur || 1) * 95;
       sv.ctl.tiller = Math.max(-1, Math.min(1, n180(S.h - want) / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1);
       sv.ctl.sheet = sv.autoSheet();
-      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "r" }));
+      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
     }
     sv.run(1 / 60, 1);
     mix(sv.S.x); mix(sv.S.y); mix(sv.S.h); mix(sv.S.u); mix(sv.S.heel); lungo += Math.hypot(sv.S.x - px, sv.S.y - py); px = sv.S.x; py = sv.S.y;

@@ -38,7 +38,7 @@ Tutto è sempre accessibile: nessuna lezione o regata va sbloccata, nemmeno in c
 | ← → | Muovono la barra del timone (nelle impostazioni si può scegliere «girano la prua», più semplice) |
 | ↑ ↓ | Cazza e lasca la scotta |
 | Spazio | Barra al centro |
-| R | Raddrizza la barca dopo una scuffia |
+| A | Raddrizza la barca dopo una scuffia (fino alla 1.0.26 era R) |
 | Invio | Parte dopo aver letto le istruzioni di una prova o di una regata |
 | W S | Cazza e lasca con i pulsanti della lezione 1 (anche ↑ ↓) |
 | Rotella o + − | Zoom |

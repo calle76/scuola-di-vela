@@ -39,7 +39,7 @@ CORSA = """
       sv.ctl.tiller = Math.max(-1, Math.min(1, err / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1);
       const gybe = (Math.abs(cur) > 150 && Math.sign(n180(want - sv.twd)) !== Math.sign(cur)) || Math.abs(cur) > 174;   // sta per strambare, o è così in poppa che può strambare per sbaglio
       sv.ctl.sheet = gybe ? Math.min(sv.autoSheet(), 0.3) : sv.autoSheet();   // cazza solo prima di strambare
-      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "r" }));
+      if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
     }
     sv.run(1 / 60, 1); n++;
   }

@@ -272,6 +272,8 @@ Con il gioco a due vele cambieranno anche i comandi: nel prototipo la barra usa 
 
 Regola decisa il 6 ottobre 2026.
 
+**Aggiornamento del 17 ottobre 2026 (1.0.27, Ale):** raddrizzare passa da R ad A in tutti i livelli; Z è «spingi il boma» (livello 2); Q resta la vista. **R torna libero** per le manovre dei livelli futuri (non è più «da evitare»). Le righe seguenti che dicono «R per raddrizzare» o «evitando R» sono superate.
+
 **Aggiornamento del 7 ottobre 2026 (0.19.2), che sostituisce le parti su frecce e A D qui sotto:** per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. Le righe seguenti restano come registro della regola del 6 ottobre; gli esempi vanno rifatti con la regola nuova quando si scrivono le lezioni del livello 2.
 
 - **Il livello 1 resta com'è**: barra con le frecce ← →, randa con ↑ ↓ e con W e S nella lezione 1, Spazio per la barra al centro, R per raddrizzare.
