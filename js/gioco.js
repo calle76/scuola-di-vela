@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0.22"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.23"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -707,7 +707,7 @@
       backCheck(dt);
       if (S.heel > BOAT.capsizeAt || S.heel < -45){
         S.capCause = S.gybeAt !== undefined && simTime - S.gybeAt < 4 ? "gybe" : "heel";
-        S.capsized = true; S.indietro = 0; S.capsizes++; regAdd("capsizes"); S.capSide = S.heel > 0 ? S.boomSide : -S.boomSide; S.u = 0; S.vl = 0; S.r = 0; S.heel = 90 * Math.sign(S.heel); S.heelRate = 0;
+        S.capsized = true; S.capAt = simTime; S.indietro = 0; S.capsizes++; regAdd("capsizes"); S.capSide = S.heel > 0 ? S.boomSide : -S.boomSide; S.u = 0; S.vl = 0; S.r = 0; S.heel = 90 * Math.sign(S.heel); S.heelRate = 0;
       }
     } else {
       const to = (local.twd + 180) * D2R;

@@ -364,7 +364,7 @@
     aiControl(b, dt);
     const w = windAt(s.x, s.y);
     for (let i = 0; i < 3; i++) b.info = step(s, b.ctl, w, dt / 3);
-    if (s.heel > BOAT.capsizeAt || s.heel < -45){ s.capsized = true; s.capSide = s.heel > 0 ? s.boomSide : -s.boomSide; s.heel = 0; s.u = 0; }
+    if (s.heel > BOAT.capsizeAt || s.heel < -45){ s.capsized = true; s.capAt = simTime; s.capSide = s.heel > 0 ? s.boomSide : -s.boomSide; s.heel = 0; s.u = 0; }
     s.dispBoom += (s.boomSide * s.boom - s.dispBoom) * Math.min(1, dt * 6);
     b.wakeT += dt;
     if (b.wakeT > 0.1){ b.wakeT = 0; const h = s.h * D2R; b.wake.push({ x: s.x - Math.sin(h) * 2.1, y: s.y + Math.cos(h) * 2.1, nx: Math.cos(h), ny: Math.sin(h), t: simTime }); if (b.wake.length > 70) b.wake.shift(); }

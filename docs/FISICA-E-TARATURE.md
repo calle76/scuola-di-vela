@@ -115,7 +115,7 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 - La deriva resta sempre tutta giù, anche in poppa.
 - Una sola vela, niente fiocco.
 - Timoniere automatico: nella realtà gestire il peso è una parte importante della conduzione.
-- Niente onde né corrente (salvo i piccoli disturbi di rotta nell'esercizio della lezione 2).
+- Niente onde né corrente (salvo i piccoli disturbi di rotta nell'esercizio della lezione 2). **Dalla 1.0.23 la barca balla su un'onda corta solo disegnata** (`PROPOSTA-MOTO-SUL-MARE.md`): rollio e beccheggio del disegno secondo da dove arrivano le onde (sottovento, come le increspature), con ampiezza e periodo **ipotesi nostre senza fonte** (5° di rollio con 15 nodi, periodo 1,5-2,5 s). Il motore non la vede: velocità, rotta, sbandamento vero e scuffia non cambiano.
 - Raddrizzamento con un pulsante, in 3 secondi.
 - Raffiche come chiazze che viaggiano col vento, senza la struttura reale del vento sull'acqua.
 - Il fiocco non va mai a collo: in virata conta solo per la resistenza della vela che sbatte (tappa C, terzo compito).

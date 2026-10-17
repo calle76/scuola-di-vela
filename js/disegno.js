@@ -425,13 +425,50 @@
   }
 
   // ---- barca ----
+  // 1.0.23 (docs/PROPOSTA-MOTO-SUL-MARE.md): onda corta che scorre sottovento, SOLO DISEGNO (il motore non la vede). La barca prende la
+  // pendenza dell'onda dove si trova: di prua beccheggia, di lato rolla; andando contro le onde la fase corre più in fretta (Doppler da solo).
+  // ponytail: periodo e ampiezze sono ipotesi nostre senza fonte («carino da vedere, non perfetto», Ale); una misura da video le sostituirebbe
+  const WAVE_DEG = 5, CARENA = "#B9C4CB"; // rollio disegnato con 15 nodi (il beccheggio è il 70%), colore della carena
+  function waveTilt(x, y, h, u){
+    const kn = env.tws * KN, T = clamp(1.5 + kn * 0.05, 1.5, 2.5);
+    const amp = WAVE_DEG * Math.min(1.2, kn / 15) * (1 + Math.max(0, 1 - Math.abs(u) / 1.5)); // ferma balla fino al doppio: navigando la deriva e la vela piena la tengono (Ale, «da ferma si muove di più»)
+    let roll = 0, pitch = 0, heave = 0;
+    for (const [da, kl, ka] of [[0, 1, 1], [30, 0.6, 0.5]]){ // onda principale e una più corta di lato, perché il moto non sia regolare
+      const Tk = T * Math.sqrt(kl), k = 2 * Math.PI / (9.81 * Tk * Tk / (2 * Math.PI)), w = 2 * Math.PI / Tk; // λ = gT²/2π, acqua profonda
+      const d = (env.twd + 180 + da) * D2R, dx = Math.sin(d), dy = -Math.cos(d); // verso dove va l'onda: sottovento
+      const ph = k * (x * dx + y * dy) - w * simTime, s = Math.cos(ph) * amp * ka;
+      const rel = d - h * D2R; // onda rispetto alla prua
+      pitch += s * 0.7 * Math.cos(rel); roll += s * Math.sin(rel); heave += Math.sin(ph) * ka;
+    }
+    return { roll, pitch, amp, heave: heave * 0.012 * Math.min(1, kn / 10) };
+  }
   function drawBoat(){
     const t = simTime;
     ctx.save(); ctx.translate(S.x, S.y); ctx.rotate(S.h * D2R);
     if (S.capsized){ drawCapsized(t); ctx.restore(); return; }
-    const sinH = Math.sin(Math.max(-40, Math.min(70, S.heel)) * D2R), lee = S.boomSide; // lato verso cui sbanda (se positivo)
+    const wv = waveTilt(S.x, S.y, S.h, S.u);
+    ctx.scale(1 + wv.heave, 1 + wv.heave); // sulla cresta la barca è un filo più vicina
+    const lee = S.boomSide, sinH = Math.sin(Math.max(-40, Math.min(70, S.heel + lee * wv.roll)) * D2R); // lee: lato verso cui sbanda (se positivo)
+    const hy = -Math.sin(wv.pitch * D2R) * 5.5; // beccheggio: la testa d'albero va avanti e indietro
     // ombra
-    ctx.fillStyle = "rgba(0,0,0,.18)"; hullPath(0.12 + lee * sinH * 0.9, 0.18); ctx.fill();
+    ctx.fillStyle = "rgba(0,0,0,.18)"; hullPath(0.12 + lee * sinH * 0.9, 0.18 - hy * 0.1); ctx.fill();
+    // baffi d'acqua alla prua, più lunghi e chiari con la velocità, aperti di circa 20° dalla rotta (l'angolo di Kelvin delle scie), e uno
+    // spruzzo quando la prua scende sull'onda (disegno, non calcolo)
+    const sp = clamp((S.u - 0.3) / 2.5, 0, 1);
+    if (sp > 0){
+      ctx.strokeStyle = "rgba(255,255,255," + (0.3 + 0.4 * sp).toFixed(3) + ")"; ctx.lineCap = "round";
+      for (const sd of [-1, 1]) for (const [o, w] of [[0, 0.09], [0.25, 0.05]]){
+        const j = 0.04 * Math.sin(t * 9 + sd * 2 + o * 7); // la schiuma trema
+        const len = 1.2 + 1.8 * sp; // metri dietro la prua
+        ctx.lineWidth = w + 0.05 * sp; ctx.beginPath(); ctx.moveTo(sd * 0.03, -2.12);
+        ctx.quadraticCurveTo(sd * (0.5 + o + j), -1.75 + o, sd * (0.62 + o + len * 0.36), -2.1 + len + o); ctx.stroke();
+      }
+      const sz = clamp(wv.amp > 0 ? wv.pitch / (0.7 * wv.amp) * 2 - 1 : 0, 0, 1) * sp;
+      if (sz > 0){ ctx.fillStyle = "rgba(255,255,255," + (0.55 * sz).toFixed(3) + ")";
+        for (const sd of [-1, 1]){ ctx.beginPath(); ctx.ellipse(sd * 0.35, -1.95, 0.25 + 0.35 * sz, 0.15 + 0.2 * sz, sd * 0.6, 0, Math.PI * 2); ctx.fill(); } }
+    }
+    // carena: sbandando, sopravento si vede il fondo dello scafo (lo stesso grigio della barca scuffiata)
+    if (Math.abs(sinH) > 0.02){ ctx.save(); ctx.scale(1 - Math.abs(sinH) * 0.15, 1); ctx.fillStyle = CARENA; hullPath(-lee * sinH * 0.55, 0); ctx.fill(); ctx.restore(); }
     // scafo (sbandando, visto dall'alto appare più stretto)
     ctx.save(); ctx.scale(1 - Math.abs(sinH) * 0.35, 1);
     ctx.fillStyle = S.hullColor || colors.hull; ctx.strokeStyle = colors["hull-edge"]; ctx.lineWidth = 0.05; hullPath(0, 0); ctx.fill(); ctx.stroke();
@@ -445,12 +482,19 @@
     ctx.strokeStyle = colors.spar; ctx.lineCap = "round";
     ctx.lineWidth = 0.09; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(-Math.sin(tau) * 0.55, 2.05 + Math.cos(tau) * 0.55); ctx.stroke();
     ctx.lineWidth = 0.06; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(Math.sin(tau) * 1.0, 2.05 - Math.cos(tau) * 1.0); ctx.stroke();
-    // timoniere seduto sopravento
-    const ws = -S.boomSide; // lato sopravento: opposto al boma
-    ctx.fillStyle = S.sailorColor || colors.sailor;
-    const sx = ws * (0.45 + 0.5 * (S.hike || 0)); // più si sporge, più esce dallo scafo
-    ctx.beginPath(); ctx.ellipse(sx, 1.05, 0.2 + 0.12 * (S.hike || 0), 0.3, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#F2D2B6"; ctx.beginPath(); ctx.arc(sx + ws * 0.18 * (S.hike || 0), 1.0, 0.13, 0, Math.PI * 2); ctx.fill();
+    // timoniere seduto sopravento (1.0.23): piedi nel pozzetto, sedere sul bordo, busto che esce fuori bordo quanto più si sporge,
+    // braccio sulla prolunga del timone; dall'alto il busto dritto si vede corto, sdraiato fuori bordo si vede lungo
+    const ws = -S.boomSide, hk = S.hike || 0; // lato sopravento: opposto al boma
+    const hipX = ws * (0.5 + 0.14 * hk), shX = hipX + ws * (0.12 + 0.72 * hk), shY = 1.0 - 0.08 * hk;
+    ctx.strokeStyle = S.sailorColor || colors.sailor; ctx.lineCap = "round";
+    ctx.lineWidth = 0.14; ctx.beginPath(); ctx.moveTo(ws * 0.08, 1.3); ctx.lineTo(hipX, 1.12); ctx.stroke();   // gambe
+    ctx.lineWidth = 0.3; ctx.beginPath(); ctx.moveTo(hipX, 1.12); ctx.lineTo(shX, shY); ctx.stroke();           // busto
+    // prolunga del timone: dalla fine della barra alla mano, che sta a un braccio (45 cm) dalla spalla; il braccio non si allunga mai
+    const tx0 = Math.sin(tau) * 1.0, ty0 = 2.05 - Math.cos(tau) * 1.0, dd = Math.hypot(tx0 - shX, ty0 - shY), arm = Math.min(0.45, dd);
+    const hdX = shX + (tx0 - shX) / (dd || 1) * arm, hdY = shY + (ty0 - shY) / (dd || 1) * arm;
+    ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.035; ctx.beginPath(); ctx.moveTo(tx0, ty0); ctx.lineTo(hdX, hdY); ctx.stroke();
+    ctx.strokeStyle = S.sailorColor || colors.sailor; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.moveTo(shX, shY); ctx.lineTo(hdX, hdY); ctx.stroke(); // braccio
+    ctx.fillStyle = "#F2D2B6"; ctx.beginPath(); ctx.arc(shX + ws * (0.08 + 0.1 * hk), shY - 0.04, 0.13, 0, Math.PI * 2); ctx.fill();
     // randa e boma
     const bs = S.dispBoom >= 0 ? 1 : -1; // lato su cui sta il boma (anche durante lo spostamento)
     const mastY = -0.95, boomLen = 2.75, b = S.dispBoom * D2R;
@@ -467,18 +511,18 @@
     const tx = ex + nx * twist + hs, ty = ey + ny * twist;
     const mx = tx / 2 + nx * camber * 2 + hs * 0.5, my = (mastY + ty) / 2 + ny * camber * 2;
     // contorno della randa: base sul boma, balumina dalla fine del boma alla penna, penna in testa d'albero (dove finisce l'albero disegnato)
-    const hx = lee * sinH * 5.5; // testa d'albero, sottovento quando la barca sbanda
+    const hx = lee * sinH * 5.5, hY = mastY + hy; // testa d'albero, sottovento quando la barca sbanda (e avanti e indietro col beccheggio)
     const fx = ex / 2 + nx * camber * 0.5, fy = (mastY + ey) / 2 + ny * camber * 0.5; // base appena gonfia
     const bulge = camber * 1.6 + twist; // ponytail: gonfiore della balumina a occhio, nessuna fonte
-    const lx = (ex + hx) / 2 + nx * bulge, ly = (ey + mastY) / 2 + ny * bulge;
+    const lx = (ex + hx) / 2 + nx * bulge, ly = (ey + hY) / 2 + ny * bulge;
     const sg = ctx.createLinearGradient(0, mastY, ex + nx, ey + ny); sg.addColorStop(0, colors["sail-shade"]); sg.addColorStop(0.55, S.sailColor || colors.sail); sg.addColorStop(1, colors["sail-shade"]);
     ctx.fillStyle = sg; ctx.strokeStyle = "rgba(60,70,80,.6)"; ctx.lineWidth = 0.04;
-    ctx.beginPath(); ctx.moveTo(0, mastY); ctx.quadraticCurveTo(fx, fy, ex, ey); ctx.quadraticCurveTo(lx, ly, hx, mastY); ctx.lineTo(0, mastY); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, mastY); ctx.quadraticCurveTo(fx, fy, ex, ey); ctx.quadraticCurveTo(lx, ly, hx, hY); ctx.lineTo(0, mastY); ctx.fill(); ctx.stroke();
     // stecche: dalla balumina verso l'albero
     ctx.strokeStyle = "rgba(60,70,80,.25)";
     for (const f of [0.3, 0.55, 0.8]){
-      const px = (1 - f) * (1 - f) * ex + 2 * (1 - f) * f * lx + f * f * hx, py = (1 - f) * (1 - f) * ey + 2 * (1 - f) * f * ly + f * f * mastY;
-      const ax = f * hx, ay = mastY;
+      const px = (1 - f) * (1 - f) * ex + 2 * (1 - f) * f * lx + f * f * hx, py = (1 - f) * (1 - f) * ey + 2 * (1 - f) * f * ly + f * f * hY;
+      const ax = f * hx, ay = mastY + f * hy;
       ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + (ax - px) * 0.35, py + (ay - py) * 0.35); ctx.stroke();
     }
     // boma
@@ -503,24 +547,29 @@
       ctx.stroke();
     }
     // albero (visibile come linea quando la barca sbanda) e segnavento in testa d'albero
-    if (Math.abs(sinH) > 0.05){ ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(hx, mastY); ctx.stroke(); }
+    const mastSeen = Math.hypot(hx, hy) > 0.25;
+    if (mastSeen){ ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(hx, hY); ctx.stroke(); }
     ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(0, mastY, 0.08, 0, Math.PI * 2); ctx.fill();
     const awRel = info.awa * D2R; // da dove arriva, rispetto alla prua (+ dritta)
     const vx = Math.sin(awRel), vy = -Math.cos(awRel);
     ctx.strokeStyle = colors.app; ctx.fillStyle = colors.app; ctx.lineWidth = 0.06;
     // 1.0.10: perno vicino alla punta, come una banderuola: la coda, più lunga, sta sottovento (docs/PROPOSTA-DISEGNO-VELA.md)
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, mastY + vy * 0.3); ctx.lineTo(hx - vx * 0.7, mastY - vy * 0.7); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, mastY + vy * 0.3); ctx.lineTo(hx + vx * 0.05 - vy * 0.12, mastY + vy * 0.05 + vx * 0.12); ctx.lineTo(hx + vx * 0.05 + vy * 0.12, mastY + vy * 0.05 - vx * 0.12); ctx.closePath(); ctx.fill();
-    if (Math.abs(sinH) > 0.05){ ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(hx, mastY, 0.07, 0, Math.PI * 2); ctx.fill(); } // perno del segnavento in testa d'albero
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, hY + vy * 0.3); ctx.lineTo(hx - vx * 0.7, hY - vy * 0.7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, hY + vy * 0.3); ctx.lineTo(hx + vx * 0.05 - vy * 0.12, hY + vy * 0.05 + vx * 0.12); ctx.lineTo(hx + vx * 0.05 + vy * 0.12, hY + vy * 0.05 - vx * 0.12); ctx.closePath(); ctx.fill();
+    if (mastSeen){ ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(hx, hY, 0.07, 0, Math.PI * 2); ctx.fill(); } // perno del segnavento in testa d'albero
     ctx.restore();
-    geo = { mastY, ex, ey, rx: (hx + ex + lx) / 3, ry: (mastY + ey + ly) / 3, qx, qy, tau };
+    geo = { mastY, ex, ey, rx: (hx + ex + lx) / 3, ry: (mastY + ey + ly) / 3, qx, qy, tau, hx, hY, sc: 1 + wv.heave }; // hx, hY: testa d'albero (collaudo_moto_mare.py)
   }
   function drawCapsized(t){
     const side = S.capSide || 1, prog = S.righting ? Math.min(1, S.righting / 3) : 0;
-    const lie = 1 - prog; // 1 = sdraiata, 0 = dritta
+    // 1.0.23: nei primi 0,6 s dopo la scuffia l'albero finisce di cadere (prima la barca passava di colpo da sbandata a sdraiata)
+    const fall = S.capAt === undefined ? 1 : Math.min(1, (t - S.capAt) / 0.6);
+    const lie = (1 - prog) * (0.75 + 0.25 * (1 - (1 - fall) * (1 - fall))); // 1 = sdraiata, 0 = dritta
+    if (fall < 1){ ctx.strokeStyle = "rgba(255,255,255," + (0.7 * (1 - fall)).toFixed(3) + ")"; ctx.lineWidth = 0.12; // spruzzo dove l'albero tocca l'acqua
+      ctx.beginPath(); ctx.ellipse(side * 5, -1.1, 0.6 + 2.4 * fall, 0.4 + 1.4 * fall, 0, 0, Math.PI * 2); ctx.stroke(); }
     // scafo sul fianco: si vede la carena
     ctx.save(); ctx.scale(1 - 0.45 * lie, 1);
-    ctx.fillStyle = lie > 0.5 ? "#B9C4CB" : colors.hull; ctx.strokeStyle = colors["hull-edge"]; ctx.lineWidth = 0.05; hullPath(0, 0); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = lie > 0.5 ? CARENA : colors.hull; ctx.strokeStyle = colors["hull-edge"]; ctx.lineWidth = 0.05; hullPath(0, 0); ctx.fill(); ctx.stroke();
     ctx.restore();
     // albero e vela distesi sull'acqua
     const mastY = -0.95, L = 5.8 * lie;
