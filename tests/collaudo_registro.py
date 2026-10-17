@@ -141,7 +141,9 @@ async def main():
         if "f" in casi:  # regata senza avversari: al via la barca è oltre la linea; piantarsi prima del via non conta
             await pg.evaluate(SET, ["#aiLevel", "nessuno"]); await pg.evaluate(SET, ["#cdSel", "180"]); await pg.evaluate("__sv.openItem(['r',0])")
             await pg.evaluate("__sv.fast(8)"); await pg.evaluate(VAI, [[[-20, 10], [20, 10]] * 20, "free"])   # avanti e indietro sotto la linea
-            await attendi(pg, "__sv.R.t > -40", 60); await pg.evaluate(VAI, [[[0, -15]], "luff"])                 # poi oltre la linea, e lì resta
+            await attendi(pg, "__sv.R.t > -40", 60); await pg.evaluate(VAI, [[[0, -15], [0, -300]], "free"])   # poi oltre la linea, e continua a bolinare verso il largo
+            # 17 ottobre 2026: prima si fermava oltre la linea con la prua nel vento ("luff") per restarci. Con la retromarcia senza tetto (1.0.8, backDrag 1.0.13)
+            # una barca piantata non sta ferma: scivola all'indietro a 1,1 m/s e in 40 s rientrava dietro la linea prima dello sparo (ocs 0, a volte sì a volte no)
             await attendi(pg, "__sv.R.t > 0.3", 60); r = await reg(pg)
             verifica("partenza anticipata", r["ocs"] == 1 and r["irons"] == 0 and r["outLine"] == 0, f"registro subito dopo il via {r}")
             await pg.evaluate(FERMA)
@@ -159,7 +161,7 @@ async def main():
             await pg.evaluate("""() => { window.__ct = 0; let last = null; clearInterval(window.__ctw);
               window.__ctw = setInterval(() => { const t = __sv.toast; if (t && t !== last && t.startsWith('Contatto')) window.__ct++; last = t; }, 20); }""")
             trovato = False
-            for _ in range(60):
+            for _ in range(120):   # 17 ottobre 2026: era 60 (30 s reali). Dalla 1.0.17 gli avversari si scansano meglio anche dal giocatore: inseguirne uno richiede più tempo
                 pos = await pg.evaluate("(() => { const me = __sv.R.boats[0].S; let best = null, d = 1e9; for (const o of __sv.R.boats.slice(1)){ const dd = Math.hypot(o.S.x - me.x, o.S.y - me.y); if (dd < d){ d = dd; best = [o.S.x, o.S.y]; } } return best; })()")
                 await pg.evaluate(VAI, [[pos], "free"]); await pg.wait_for_timeout(500)
                 if await pg.evaluate("__sv.reg.contacts > 0"): trovato = True; await pg.wait_for_timeout(1500); break
