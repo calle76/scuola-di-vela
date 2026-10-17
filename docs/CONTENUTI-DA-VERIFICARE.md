@@ -140,6 +140,8 @@ Nota alla domanda 5: la definizione di «cazzare» sta nel testo del passo «La 
 
 ## Da sistemare dopo la 0.20
 
+**Le due domande del ripasso qui sotto sono sistemate dalla 1.0.20 (17 ottobre 2026, decisione di Ale):** la domanda 4 della lezione 2 è passata nel ripasso della lezione 5, dove la lezione la insegna, e al suo posto c'è una domanda nuova sulla barra sopravento; il passo «Filetti dritti» della lezione 3 ora dice che in mare si può anche poggiare. Le righe qui sotto restano come storia.
+
 Due domande del **ripasso** non hanno un passo che le insegni nella loro lezione. Il ripasso non si tocca nella 0.20; due strade possibili per ciascuna: spostare la domanda nel ripasso della lezione che la insegna, oppure cambiarla.
 
 | Domanda del ripasso | Problema | Opzioni |
