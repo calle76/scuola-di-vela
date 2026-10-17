@@ -367,4 +367,5 @@ async def main():
     print("ESITO:", "NON VALIDO (passi mancanti o errori della pagina)" if not valido else ("OK" if not problemi else "DA GUARDARE"))
     sys.exit(2 if not valido else 0)   # i casi «da guardare» sono un rapporto, non un fallimento dello script: si leggono (lancia_tutti.sh li mostra)
 
-asyncio.run(main())
+if __name__ == "__main__":   # importabile da collaudo_carriera_intera.py, che riusa PILOTA
+    asyncio.run(main())

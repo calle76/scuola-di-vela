@@ -1,8 +1,9 @@
 # Collaudo della 1.0: una carriera intera, da zero all'attestato, nella stessa pagina e nello stesso salvataggio (criteri I1-I4 di
 # docs/PROPOSTA-ESAME-E-BREVETTO.md, §14, scritti prima del codice). «Carriera» si sceglie cliccando il selettore; alla fine si
 # legge solo quello che il gioco ha salvato. Serve #collaudo, perché i piloti usano l'aggancio __sv.
-#  - Lezioni: tutti i passi, fino all'ultimo (è lì che il gioco segna la lezione completata). I passi pratici che collaudo_lezioni.py
-#    sa guidare (14 su 32) si guidano davvero, con le stesse azioni; gli altri si saltano con l'aggancio (showStep): LIMITE DICHIARATO.
+#  - Lezioni: tutti i passi, fino all'ultimo (è lì che il gioco segna la lezione completata). Dalla 1.0.19 li guida il **pilota delle
+#    lezioni** (`collaudo_pilota_lezioni.py`, costante PILOTA): prima prova 30 s a mani ferme, poi guida; solo i passi che non sa
+#    guidare li salta con l'aggancio (showStep), e il collaudo stampa quanti. Prima ne guidava 14 su 32 con una tabella propria.
 #  - Prove 1-4: il pilota di collaudo_fasce.py, letto dal suo file. La prova 5 no: il pilota la finisce 19 volte su 24.
 #  - Regate: il pilota sostituto (__sv.pilota) di collaudo_competizione.py, letto dal suo file, avversari principianti;
 #    si ritenta con semi nuovi finché i due piazzamenti migliori danno almeno 3 punti, al massimo 3 tentativi per regata.
@@ -23,17 +24,10 @@ BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]"
 MK = ["m0.4", "m1.4", "m2.4", "m3.5", "m4.6"]
 GIUSTO = [60, 0, -60]; PIANI = [[], [], [], [[0, GIUSTO]]]   # come in collaudo_fasce.py
 
-# passi pratici guidati, con le azioni di collaudo_lezioni.py: (lezione, passo da 0) -> lista di azioni dentro la pagina
-T = lambda k, m: f"L.tieni('{k}', {m})"; A = lambda m: f"L.aspetta({m})"; P = lambda k, s: f"L.premi('{k}', {s})"
-GUIDATI = {
-    (0, 6): [T("ArrowLeft", 12)], (0, 7): [T("ArrowRight", 25)],
-    (0, 8): ["""(() => { L.semina(); L.tasto("keydown", "ArrowLeft"); L.avanza(25, () => __sv.readI().twa > 80); L.tasto("keyup", "ArrowLeft"); })()""", A(15)],
-    (0, 9): [T("s", 10)], (0, 10): [T("w", 1.4), A(4)], (0, 11): [T("w", 10)],
-    (1, 1): [T("ArrowLeft", 5)], (1, 2): [T("ArrowRight", 5)],
-    (2, 7): [T("ArrowDown", 10)], (2, 9): [T("ArrowUp", 10)],
-    (4, 1): [P("ArrowRight", 0.7), P("ArrowUp", 1.5), A(12)], (4, 2): [T("ArrowRight", 8), A(8)],
-    (5, 2): [P("ArrowRight", 0.6), P("ArrowUp", 3.0), A(60)], (5, 3): ["""(() => { L.tasto("keydown", "r"); L.tasto("keyup", "r"); })()""", A(8)],
-}
+# il pilota delle lezioni, letto dal suo file (che ora è importabile): definisce window.__corsa(lezione, impreciso, seme, seme2)
+import collaudo_pilota_lezioni as PL
+PILOTA_LEZIONI = PL.PILOTA
+
 fail = []; nonvalido = []; casi = {}
 def chk(parte, c, m):
     casi[parte] = casi.get(parte, 0) + 1
@@ -52,21 +46,22 @@ async def main():
         await pg.evaluate(f"({ATTREZZI})()")
         NQ = await pg.evaluate("__B.QUIZ.map(q => q.length)")
 
-        # ---- lezioni
-        guidati = completati = saltati = 0
+        # ---- lezioni, guidate dal pilota delle lezioni
+        await pg.evaluate(PILOTA_LEZIONI)
+        guidati = completati = forzati = ignoti = 0
         for li in range(6):
-            await pg.evaluate(f"__sv.openItem(['l',{li}])")
-            n = int((await pg.inner_text("#lStep")).split(" di ")[1])
-            for k in range(n):
-                await pg.evaluate(f"__sv.showStep({k})")
-                pratico = await pg.evaluate("() => { const x = document.getElementById('lNext'); return x.hidden || x.classList.contains('pending'); }")
-                if not pratico: continue
-                if (li, k) in GUIDATI:
-                    for az in GUIDATI[(li, k)]: await pg.evaluate(f"() => {az}")
-                    ok = await pg.evaluate("__sv.stepDone"); guidati += 1; completati += bool(ok)
-                    print(f"  lezione {li + 1}, passo {k + 1}: guidato, {'completato' if ok else 'NON completato'}", flush=True)
-                else: saltati += 1
-        print(f"lezioni: passi pratici guidati {guidati} (completati {completati}), saltati con l'aggancio {saltati}", flush=True)
+            r = await pg.evaluate("a => __corsa(...a)", [li, False, 1000 + li, 7919 + li * 31])
+            for x in r:
+                if not x["noto"]: ignoti += 1
+                else:
+                    guidati += 1
+                    completati += bool(x["guida"])
+                if x.get("forzato"): forzati += 1
+            print(f"  lezione {li + 1}: {len(r)} passi, completati {sum(1 for x in r if x['guida'])}, "
+                  f"forzati {sum(1 for x in r if x.get('forzato'))}", flush=True)
+        chk("I1", guidati > 0 and completati >= guidati - 2, f"passi guidati {guidati}, completati {completati} (al massimo 2 falliti)")
+        print(f"lezioni: passi che il pilota sa guidare {guidati} (completati {completati}), "
+              f"passi non previsti dal pilota {ignoti}, saltati con l'aggancio {forzati}", flush=True)
 
         # ---- prove 1-4
         tempi = []
@@ -126,7 +121,7 @@ async def main():
         chk("I3", await pg.evaluate(f"localStorage.getItem('{LIB}')") is None, "I3: il gioco libero non è stato toccato")
         # I4: il metro ha misurato davvero
         chk("I4", esp == 6 and all(p["done"].get(f"m{i}") for i in range(4)) and len(p.get("race", {})) >= 1, f"I4: completati dal gioco: lezioni {esp}, prove {[p['done'].get(f'm{i}') for i in range(4)]}, regate {list(p.get('race', {}))}")
-        chk("I4", guidati == len(GUIDATI) and guidati + saltati == 32, f"I4: passi pratici guidati {guidati} su {len(GUIDATI)}, totale {guidati + saltati} (attesi 32)")
+        chk("I4", guidati + ignoti == 32 and forzati == 0, f"I4: passi pratici 32 attesi, il pilota ne guida {guidati} e non prevede {ignoti}; saltati con l'aggancio {forzati}")
         chk("I4", not errs, f"errori di pagina: {errs[:3]}")
         print(f"meriti: Abilità {abil}, Conoscenza {cono}, Competizione {comp}, Esperienza {esp}, totale {abil + cono + comp + esp}; "
               f"regate senza errori {sum(1 for v in p.get('race', {}).values() if v['pulita'])}; durata {time.time() - t_inizio:.0f} s")
