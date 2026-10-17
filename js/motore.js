@@ -37,6 +37,11 @@ const BOAT = {
   TE: 0.80            // m, 1.0.11: profondità efficace di scafo e deriva per la resistenza indotta (ipotesi: dà il 14% di Day 2017 §3.4 con 10 nodi); 0 = senza
 };
 
+// ==== BARCA DEL LIVELLO 2 (1.0.24-1.0.28) ====
+// Tutto ciò che vale solo con S.lv === 2 (il livello 1 non ha S.lv e resta identico al bit): RUD2 (timone), BOMA2 (spingi il boma), SALTI2 con
+// newShift/stepShift (salti di vento), poi in step() i rami `lv2` e `push`. Fuori da qui: gioco.js (scelta «Barca», salti di vento, barra con Maiusc,
+// Z per il boma), regate.js (regate con rc.lv2), disegno.js (angolo della barra nel disegno). Per trovarli: grep -nE "S\.lv|lv2|RUD2|BOMA2|SALTI2".
+
 // 1.0.24: timone del livello 2 (docs/PROPOSTA-STALLO-TIMONE.md). Vale solo per una barca con S.lv === 2 che va avanti ad almeno uMin;
 // sotto, all'indietro e nel livello 1 il timone resta quello di sempre (barra fino a 30°, rotazione che insegue la barra).
 // La pala sente l'angolo effettivo (barra meno l'acqua che le arriva di traverso perché la barca gira), stalla oltre stallA

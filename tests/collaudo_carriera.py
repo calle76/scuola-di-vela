@@ -110,6 +110,7 @@ async def k5(b):
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page()
         await pg.goto(url); await pg.wait_for_timeout(300)
         tiles, foot = await pg.inner_text(".tiles"), await pg.inner_text(".menu-foot")
+        if url == BASE: tiles = re.sub(r"⚑\nRegata nei salti di vento \(livello 2, prova\)\nDa fare\n[^\n]*\n", "", tiles)  # 1.0.28: riquadro voluto del livello 2, nel menu del gioco libero
         if url != BASE:
             tiles = re.sub(r"Lezione (\d): ", r"Ripasso \1 · ", tiles)
             tiles = tiles.replace("Ripasso 5 · Virata e strambata\n5 domande", "Ripasso 5 · Virata e strambata\n6 domande")
