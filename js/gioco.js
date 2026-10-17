@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.24"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.25"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -593,7 +593,7 @@
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (KEYSEM[k]){ semPress(KEYSEM[k]); if (allowSem.length) e.preventDefault(); return; }
     if (k === "r"){ rightBoat(); return; }
-    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, barra veloce nel livello 2
+    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nel livello 2 la barra arriva fino a 45°
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
       if (e.target.tagName === "SELECT") return;
@@ -653,9 +653,9 @@
       if (l || r){
         let dir = (r ? 1 : 0) - (l ? 1 : 0);
         if (opt.helm === "prua") dir = -dir * (S.u < 0 ? -1 : 1);
-        // 1.0.24, livello 2: la freccia muove la barra piano (20°/s su 45°), Maiusc + freccia veloce come nel livello 1
-        const rate = S.lv === 2 && !keys.has("Shift") ? RUD2_LENTA : 1.6;
-        ctl.tiller = clamp(ctl.tiller + dir * rate * dt, -1, 1); tillerInput = true;
+        // 1.0.25, livello 2: la sola freccia porta la barra fino a 35° (RUD2_SICURA), Maiusc + freccia fino a 45°; sempre alla velocità del livello 1
+        const lim = S.lv === 2 && !keys.has("Shift") ? Math.max(RUD2_SICURA, Math.abs(ctl.tiller)) : 1;
+        ctl.tiller = clamp(ctl.tiller + dir * 1.6 * dt, -lim, lim); tillerInput = true;
       }
     }
     // lezione 1: la barra torna al centro in fretta, così la prua smette di girare appena si rilascia la freccia

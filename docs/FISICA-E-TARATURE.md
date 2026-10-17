@@ -50,7 +50,7 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `dragK` | 184 N·s²/m² | Resistenza della pala sull'angolo effettivo: 12 kgf a 15° e 6 nodi (F4, pala del 470) |
 | `yawG`, `yawRho` | 0,6 /m², 0 m | Quanto in fretta la pala fa girare la barca e smorzamento dello scafo. **Ipotesi tarate** con 10 e 14 nodi; con `yawRho` 0 la rotazione la frena solo la pala |
 | `uMin` | 0,5 m/s | Sotto, e all'indietro, il timone del livello 1 (barra fino a 30°) |
-| `RUD2_LENTA` | 20/45 al secondo | Barra con la sola freccia, 20°/s (F4: accompagnata circa 14°/s, in fretta circa 35). Con Maiusc 1,6 al secondo, come nel livello 1 |
+| `RUD2_SICURA` | 35/45 | **Dalla 1.0.25** la sola freccia porta la barra fino a 35°, Maiusc + freccia fino a 45°, sempre a 1,6 al secondo come nel livello 1. **Regola del gioco, nessuna fonte** (nella 1.0.24 la freccia andava piano, 20°/s) |
 
 Altre costanti nel codice di gioco: colpo della strambata con vela aperta `GYBE_KICK = 260 °/s`, scalato con (vento / 15 nodi)^1,6 e con una variazione casuale tra −15% e +25%; soglia della strambata «violenta»: boma aperto oltre 45°.
 

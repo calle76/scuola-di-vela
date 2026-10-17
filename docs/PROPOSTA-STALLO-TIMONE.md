@@ -212,3 +212,29 @@ Nel gioco la barra accompagnata perde **più** velocità di quella data in frett
 **La cosa più importante, e sgradita: dove nasce la differenza fra barra lenta e veloce.** Un primo giro contava stallo e velocità minima anche dopo la virata, quando il collaudo molla la barra (in fretta, uguale per i due gesti). Separando le due fasi: **mentre la prua gira, con 10 e 14 nodi, la barra veloce non stalla quasi mai** (0,07 e 0 s) e la velocità minima è la stessa (50 contro 51%, 43 contro 49%). La differenza nasce **dopo**: la barca girata in fretta ha più rotazione addosso, e quando si molla la barra la pala stalla dall'altra parte e frena (1,8 contro 1,2 s di stallo con 10 nodi). È coerente con F4 (chi gira più in fretta perde più velocità), ma **non è il «non sbattere la barra» che si voleva insegnare**. Lo stallo mentre la prua gira compare solo con `yawG` 0,3 o meno, e allora la virata dura 4-5 s e la barca scende al 21-31% della velocità: C4 e C5 fuori. Il gioco nel browser dà lo stesso quadro (`collaudo_timone2.py`, 12 virate guidate coi tasti: tutte riuscite; avviso di stallo in tutte e 6 quelle con la barra veloce, ma anche in 4 delle 6 lente, con 6 e 10 nodi, perché la barra che torna al centro da sola fa stallare la pala uscendo dalla virata).
 
 **Lettura.** Il modello è più vicino alla fisica di prima (la barca gira 3,6 s invece di 2,5 con 10 nodi, curvatura 0,34 contro 0,46 rad/m, la barra fino a 45° come nel 470 vero), ma **l'obiettivo didattico non è raggiunto**: con la barca leggera del gioco, «accompagnare la barra» e «girare abbastanza in fretta da non fermarsi» tirano in direzioni opposte. Due strade per il seguito, da decidere: (a) cercare dati di virate su una deriva singola di questa taglia (più pertinenti di F4) e ritarare; (b) ricontrollare la frenata della barca prua al vento, che la rende più leggera di quanto F4 lasci girare (dubbio già aperto il 13 ottobre: 1-1,6 lunghezze contro 3-4). La barca del livello 2 resta **in prova** nella navigazione libera, per sentirla giocando.
+
+---
+
+## 9. 1.0.25: la freccia fino a 35°, Maiusc fino a 45° (idea di Ale giocando, 17 ottobre 2026)
+
+**Cosa ha detto Ale provando la 1.0.24** (osservazione 56): con Maiusc la barca sembra quella del livello 1, senza la barca gira più lenta, «ma nessun'altra conseguenza»; gli avvisi non si leggono (rimandati). **La sua proposta:** la differenza non sia la velocità della mano ma l'angolo: la sola freccia porta la barra veloce (come nel livello 1) fino a un angolo sicuro; con Maiusc si va fino in fondo, per girare più stretto (boa, penalità, barca lenta) o per una manovra rischiosa; freccia e Maiusc insieme da subito sono «una tirata» che frena.
+
+**Fatto:** la barra va sempre a 1,6 al secondo; la sola freccia si ferma a 35° (`RUD2_SICURA`), Maiusc + freccia arriva a 45°. Il motore non cambia. **35° è una regola del gioco, senza fonte**: in barca vera non c'è un fermo, c'è la mano che sente la barra. Scelto perché lì, con 10 e 14 nodi, la pala non stalla mentre la prua gira; 30° e 25° rendono la virata lenta (3,8 e 4,7 s con 10 nodi).
+
+**Criteri ridefiniti per i gesti nuovi** (C1: con Maiusc da subito si perdono almeno 5 punti di velocità in più che con la sola freccia; C2: con 45° la virata è almeno il 10% più rapida; C3-C5 sulla sola freccia). **Dichiarato: le soglie sono state scritte dopo aver visto le tabelle mostrate ad Ale in chat**, quindi non sono una prova alla cieca.
+
+| Criterio | 10 | 14 | 6 | 8 | 12 | 16 |
+|---|---|---|---|---|---|---|
+| C1 Maiusc da subito perde almeno 5 punti in più | ok (49 / 38%) | ok (44 / 36) | ok (50 / 33) | ok (50 / 35) | ok (47 / 40) | **fuori** (36 / 41) |
+| C2 con 45° almeno il 10% più rapida | ok (2,72 / 3,28 s) | ok (2,22 / 2,67) | ok | ok | ok | ok |
+| C3 curvatura 0,12-0,30 rad/m | **fuori** (0,36) | **fuori** (0,37) | **fuori** | **fuori** | **fuori** | **fuori** (0,39) |
+| C4 virata 2,5-4,5 s | ok (3,28) | ok (2,67) | **fuori** (4,89) | ok | ok | ok |
+| C5 minima 35-60% | ok | ok | ok | ok | ok | ok (36%) |
+
+- Freccia fino a 35°, 1 s di pausa, poi Maiusc: con 10 e 14 nodi 2,99 e 2,52 s, minima 45% e 46%: più rapida della sola freccia e quasi senza perdita in più. **È l'«accompagnare la barra»**, che nasce da solo dal motore: mentre si aspetta la barca comincia a girare e a 45° la pala non stalla più. Con 6 e 8 nodi non aiuta (34% e 39%).
+- Barca lenta (entrata al 50% della bolina, 10 nodi): sola freccia 5,9 s, con 45° 4,6 s: piano, serve tutta la barra.
+- C7 ok (6,56 s). C8 fuori solo con 6 nodi (3,29 s contro 2,19). C9 ok. Giro di penalità: con Maiusc 11,6 / 7,4 / 5,9 s con 6 / 10 / 14 nodi, con la sola freccia 14,5 / 9,5 / 7,6 s.
+- **Nel browser** (`collaudo_timone2.py`, 12 virate coi tasti, poi i tasti lasciati e la barra che torna al centro da sola) **la perdita in più con Maiusc è più piccola**: 38 contro 51% con 6 nodi, 47 contro 49% con 10, e con 15 nodi Maiusc perde **meno** (46 contro 42%). In Node la barra viene mollata in fretta, nel gioco torna al centro piano: la perdita dipende anche da come si molla la barra. Con la sola freccia la pala non stalla con 10 e 15 nodi; con 6 nodi sì, 0,57 s.
+
+**Lettura.** La regola dà una scelta che si sente (45° gira più in fretta, utile a boe, penalità e barca lenta), ma il costo di velocità è piccolo e non regolare fra i venti. La perdita vera della virata «sbattuta» resta legata soprattutto al momento in cui si molla la barra.
+

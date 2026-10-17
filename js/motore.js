@@ -51,7 +51,7 @@ const RUD2 = {
   dragK: 184,         // N·s²/m²: resistenza della pala, 12 kgf a 15° e 6 nodi (F4, pala del 470); usa l'angolo effettivo
   uMin: 0.5           // m/s: sotto, il timone del livello 1 (come ironsU: niente sovrapposizione con la prua che poggia da sola)
 };
-const RUD2_LENTA = 20 / 45; // barra al secondo nel livello 2 con la sola freccia (20°/s: F4, virate accompagnate circa 14°/s, in fretta circa 35)
+const RUD2_SICURA = 35 / 45; // 1.0.25: nel livello 2 la sola freccia porta la barra fino a 35° (quasi senza stallo), Maiusc + freccia fino a 45°; regola del gioco, nessuna fonte
 function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso segno della barra
   return tiller * RUD2.maxRudder + Math.atan2(S.r * D2R * RUD2.xR, S.u) / D2R;
 }

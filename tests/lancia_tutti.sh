@@ -99,7 +99,7 @@ nota() {
     case "$1" in
         "polare.js") echo "confronta a mano con circa 4,7 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.11; 1.0.6-1.0.10 3,8 / 6,0 / 4,1)" ;;
         "raffiche_e_virate.js") echo "virata riuscita in circa 3,0 s da 3,9 nodi e in circa 6,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 67° (scuffia) con la scotta fissa e circa 53° col boma a 21° (dalla 1.0.11)" ;;
-        "collaudo_timone2.py") echo "riga «ESITO: OK» (barca del livello 2 in prova: barra lenta e con Maiusc, 12 virate guidate coi tasti, avviso di stallo, pagina senza #collaudo)" ;;
+        "collaudo_timone2.py") echo "riga «ESITO: OK» (barca del livello 2 in prova: freccia fino a 35°, Maiusc fino a 45°, 12 virate guidate coi tasti, avviso di stallo, pagina senza #collaudo)" ;;
         "collaudo_moto_mare.py") echo "riga «ESITO: OK» (barca che balla sull'onda, solo disegno: testa d'albero ferma senza vento, almeno 4 px con 10 nodi, rollio al traverso e beccheggio in poppa, ritmo più fitto di bolina; 24.000 quadri)" ;;
         "collaudo_riquadro_regata.py") echo "riga «ESITO: OK» (60 partenze con caratteri degli avversari a caso, nessun eccesso del riquadro delle istruzioni; NON VALIDO se non ha visto il caso peggiore con tre prudenti)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;

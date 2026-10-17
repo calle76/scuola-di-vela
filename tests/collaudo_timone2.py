@@ -1,8 +1,8 @@
-# Timone del livello 2 in prova nella navigazione libera (1.0.24, docs/PROPOSTA-STALLO-TIMONE.md §8).
+# Timone del livello 2 in prova nella navigazione libera (1.0.24-1.0.25, docs/PROPOSTA-STALLO-TIMONE.md §8-9).
 # Guida davvero la barca con i tasti (pagina con #collaudo, passi fissi di 1/60 s, senza raffiche):
 #  1. la scelta «Barca» mette la barca del livello 2 e la toglie; il livello 1 resta con la barra veloce (1,6 al secondo);
-#  2. livello 2: la freccia muove la barra piano (20°/s su 45°), Maiusc + freccia in fretta; il cursore trascinato non va oltre la velocità di Maiusc;
-#  3. 12 virate (6, 10 e 15 nodi, mure a dritta e a sinistra, barra lenta e veloce): tutte riescono; con la barra veloce la pala stalla
+#  2. livello 2: la sola freccia porta la barra fino a 35°, Maiusc + freccia fino a 45°, sempre a 1,6 al secondo; il cursore trascinato non va più veloce;
+#  3. 12 virate (6, 10 e 15 nodi, mure a dritta e a sinistra, sola freccia e freccia con Maiusc): tutte riescono; con Maiusc la pala stalla
 #     e il suggerimento lo dice; si riportano durata, velocità minima e secondi in stallo, da confrontare con tests/fisica/timone2.js;
 #  4. la pagina caricata come la carica un giocatore (senza #collaudo): la scelta c'è, si cambia, nessun errore della pagina.
 # Esce con 1 se un controllo fallisce.
@@ -61,13 +61,13 @@ async def main():
         t1 = await tieni(pg, ["ArrowRight"], 0.5); check(abs(t1 - 0.8) <= 1.6 / 60 + 0.005, f"livello 1, freccia per 0,5 s: barra {t1:.3f} (attesa 0,8; un fotogramma vero in più è ammesso)")
         await apri(pg, 10, 2)
         check(await pg.evaluate("__sv.S.lv === 2"), "livello 2: la barca ha il timone del livello 2")
-        t2 = await tieni(pg, ["ArrowRight"], 1.0); check(abs(t2 - 20 / 45) <= 20 / 45 / 60 + 0.005, f"livello 2, freccia per 1 s: barra {t2:.3f} (attesa {20/45:.3f}, cioè 20°)")
+        t2 = await tieni(pg, ["ArrowRight"], 1.0); check(abs(t2 - 35 / 45) < 0.001, f"livello 2, freccia per 1 s: barra {t2:.3f} (attesa {35/45:.3f}, cioè 35°: si ferma lì)")
         await pg.evaluate("__sv.ctl.tiller = 0")
         t3 = await tieni(pg, ["Shift", "ArrowRight"], 0.5); check(abs(t3 - 0.8) <= 1.6 / 60 + 0.005, f"livello 2, Maiusc + freccia per 0,5 s: barra {t3:.3f} (attesa 0,8)")
-        await pg.evaluate("__sv.ctl.tiller = 0; const e = document.getElementById('tiller'); e.value = 100; e.dispatchEvent(new Event('input'))")
-        await pg.evaluate("__sv.run(1 / 60, 6)")
-        # fra due chiamate può passare un fotogramma vero del gioco (1/60 s): al massimo 7 passi, 0,19 di barra
-        t4 = await pg.evaluate("__sv.ctl.tiller"); check(t4 <= 1.6 * 7 / 60 + 0.005, f"livello 2, cursore portato a fondo: dopo 6 passi barra {t4:.3f} (al massimo 0,19: 1,6 al secondo)")
+        t5 = await tieni(pg, ["Shift", "ArrowRight"], 0.5); check(t5 == 1, f"livello 2, Maiusc + freccia ancora 0,5 s: barra {t5:.3f} (attesa 1, cioè 45°)")
+        # cursore e passi nella stessa chiamata: nessun fotogramma vero in mezzo
+        t4 = await pg.evaluate("() => { __sv.ctl.tiller = 0; const e = document.getElementById('tiller'); e.value = 100; e.dispatchEvent(new Event('input')); __sv.run(1 / 60, 6); return __sv.ctl.tiller; }")
+        check(t4 <= 1.6 * 6 / 60 + 0.001, f"livello 2, cursore portato a fondo: dopo 6 passi barra {t4:.3f} (al massimo 0,16: 1,6 al secondo)")
         await pg.evaluate("const e = document.getElementById('tiller'); e.dispatchEvent(new Event('change'))")
         await pg.evaluate("const e = document.getElementById('boatLv'); e.value = '1'; e.dispatchEvent(new Event('change'))")
         check(await pg.evaluate("__sv.S.lv === undefined"), "di nuovo livello 1 dalla scelta «Barca»: la barca torna quella del livello 1")
@@ -80,10 +80,10 @@ async def main():
                 for veloce in (False, True):
                     r = await virata(pg, kn, mure, veloce); n += 1
                     ok = r["t"] < 14.9 and not r["cap"]
-                    print(f"  {kn} nodi, mure {'a sinistra' if mure > 0 else 'a dritta'}, barra {'veloce' if veloce else 'lenta '}: "
+                    print(f"  {kn} nodi, mure {'a sinistra' if mure > 0 else 'a dritta'}, {'freccia e Maiusc' if veloce else 'sola freccia    '}: "
                           f"{r['t']:.2f} s, {r['umin'] / r['u0']:.0%}, stallo {r['st']:.2f} s, avviso {'sì' if r['hint'] else 'no'}")
                     check(ok and r["lv"] == 2, f"virata {n} riuscita con la barca del livello 2")
-                    if veloce: check(r["st"] > 0.2 and r["hint"], f"virata {n}, barra veloce: la pala stalla e il suggerimento lo dice")
+                    if veloce: check(r["st"] > 0.2 and r["hint"], f"virata {n}, freccia e Maiusc: la pala stalla e il suggerimento lo dice")
 
         # 4: pagina come la carica un giocatore
         await pg.goto("about:blank"); await pg.goto(BASE); await pg.wait_for_timeout(400)
