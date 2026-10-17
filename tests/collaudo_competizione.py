@@ -232,6 +232,11 @@ async def regata_tastiera(b, liv):
                 want = twd + side * 48
             cur = n180(s["hdg"] - twd)
             if abs(rel) > 165 and abs(cur) > 90: want = twd + (1 if cur > 0 else -1) * 165
+        # 17 ottobre 2026: per cambiare mura serve velocità (il gioco lo dice da sempre: da fermi la virata non riesce). Allo sparo il rilevamento della linea
+        # faceva scegliere la mura opposta a quella su cui era fermo, e la regola «piantata» qui sotto lo riportava su quella di prima: rimbalzava a 41-48°
+        # per sette minuti, all'indietro a 0,5 nodi. Ora, sotto i 3 nodi e con la mura sbagliata, poggia prima con la vela regolata (docs/PROPOSTA-PARTENZE.md §9)
+        cur = n180(s["hdg"] - twd)
+        if want is not None and s["spd"] < 3.0 and n180(want - twd) * cur < 0 and abs(cur) < 120: want, lasca = twd + (1 if cur >= 0 else -1) * 95, False
         d = n180(want - twd)
         if abs(d) < 46: want = twd + (1 if d >= 0 else -1) * 46   # mai nell'angolo morto
         if abs(s["twa"]) < 44 and s["spd"] < 1.2: want, lasca = twd + (1 if n180(s["hdg"] - twd) > 0 else -1) * 95, True   # piantata: poggia sulle sue mure con la vela lascata

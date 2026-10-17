@@ -153,6 +153,8 @@ Due domande del **ripasso** non hanno un passo che le insegni nella loro lezione
 
 **Testo B («Ora vai avanti piano…») mentre la barca si ferma.** Resta a schermo mentre la barca si ferma e comincia ad arretrare, fino a circa −0,1 nodi (lo stato 3 si spegne sotto −0,05 m/s, `index.html:1153-1154`). Visto nelle tracce del caso 8 della 0.20.3: B per 1,1-1,7 s con la barca da +0,04 a −0,07 nodi. Osservazione, il gioco non è cambiato.
 
+*(Superato il 17 ottobre 2026: le due voci qui sotto sugli avversari — gli esperti che anticipano più dei principianti e lo sconfinamento senza limite oltre la linea — non valgono più dalla 1.0.16. Con la nuova partenza gli esperti anticipano meno dei principianti (3,8-5,4% contro 4,6-6,7% di partenze con un richiamo, semi 21-100) e nessuna barca taglia fuori dagli estremi; vedi `PROPOSTA-PARTENZE.md` §7 e §9. Si lasciano come storia.)*
+
 **Gli avversari esperti anticipano allo sparo più dei principianti** (misura di `collaudo_partenze.py --lungo`, parte «anticipi allo sparo», dopo la 0.20.3: semi 1-100, 900 partenze di avversari per livello). Allo sparo sono oltre la linea 230 su 900 con gli esperti (25,6%) contro 184 su 900 con i principianti (20,4%); sui soli semi 1-20, 54 su 180 (30,0%) e 40 su 180 (22,2%). La 0.17 riportava «0 su 90 con gli esperti», ma contava le barche ancora segnate come anticipate a +60 s. Tornano dietro la linea tutte entro 60 s, al più tardi in 30,1 s. Da esaminare se è accettabile; il gioco non è stato toccato.
 
 **Avversari: lo sconfinamento oltre la linea prima dello sparo non ha limite fuori dalla zona del freno** (stessa misura).
