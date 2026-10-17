@@ -1,12 +1,12 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026, versione 1.0.21**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026, versione 1.0.22**.
 
 ## Dove siamo
 
 **Il livello 1 è chiuso.** Il gioco è un simulatore didattico di vela in una pagina (`index.html` più `js/`), con 6 lezioni (32 passi pratici), 5 prove, 2 regate contro tre avversari, esame, brevetto e carriera. Tutto si collauda da solo: una carriera intera, da zero all'attestato, gira con **32 passi su 32 guidati** dal pilota e dà OK.
 
-**Fatto nella sessione del 17 ottobre** (dettagli nel `CHANGELOG.md`): partenze degli avversari rifatte (1.0.16), contatti ridotti del 38% (1.0.17), avviso sul richiamo nel riquadro e parti 2-4-6 delle partenze chiuse (1.0.18), increspature più vive dentro le raffiche (1.0.19), due domande del ripasso tornate al loro posto (1.0.20), la lezione 5 spiega che andando all'indietro la barra va al contrario (1.0.21).
+**Fatto nella sessione del 17 ottobre** (dettagli nel `CHANGELOG.md`): partenze degli avversari rifatte (1.0.16), contatti ridotti del 38% (1.0.17), avviso sul richiamo nel riquadro e parti 2-4-6 delle partenze chiuse (1.0.18), increspature più vive dentro le raffiche (1.0.19), due domande del ripasso tornate al loro posto (1.0.20), la lezione 5 spiega che andando all'indietro la barra va al contrario (1.0.21), pulizia del codice della partenza (1.0.22).
 
 ## Come si lavora (regole che non cambiano)
 
@@ -32,9 +32,9 @@
 
 ## Prossimo lavoro
 
-**Decisione di Ale, 17 ottobre 2026 (sera): ordine per chiudere il livello 1.** 1) Manutenzione: rileggere a freddo il codice della partenza degli avversari (`js/regate.js`) e rigenerare il riferimento di `collaudo_impronta.py`. 2) **Per ultima la bolina lenta con poco vento** (−15% rispetto a Day 2017, causa mai trovata): un ultimo tentativo, con fermata 1; se non si trova la causa si dichiara limite noto e **si chiude il livello 1**. 3) Poi il livello 2.
+**Decisione di Ale, 17 ottobre 2026 (sera): ordine per chiudere il livello 1.** 1) ~~Manutenzione~~: **fatta nella 1.0.22** (guida degli avversari non più scritta tre volte, impronta rigenerata e identica al bit). 2) **Per ultima la bolina lenta con poco vento** (−15% rispetto a Day 2017, causa mai trovata): un ultimo tentativo, con fermata 1; se non si trova la causa si dichiara limite noto e **si chiude il livello 1**. 3) Poi il livello 2.
 
-**Livello 2: regole di regata e avversari**, sulla stessa barca (`VISIONE-LIVELLI-E-CARRIERA.md` §2-3). Prima una mezz'ora di manutenzione del codice della partenza, appena scritto, e il pilota da tastiera; poi la ricerca sulle fonti del regolamento, la proposta rivista in chat, e solo dopo lezioni, colpa nei contatti, penalità e protesta. Il fiocco e la barca a due sono **livello 3** (prototipo in `sperimentale/`, tappa C chiusa).
+**Livello 2: regole di regata e avversari**, sulla stessa barca (`VISIONE-LIVELLI-E-CARRIERA.md` §2-3). Prima la ricerca sulle fonti del regolamento, la proposta rivista in chat, e solo dopo lezioni, colpa nei contatti, penalità e protesta. Il fiocco e la barca a due sono **livello 3** (prototipo in `sperimentale/`, tappa C chiusa).
 
 ## Dove cercare
 

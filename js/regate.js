@@ -77,6 +77,7 @@
   // Vincoli: almeno START_GAP fra due barche, e nessuna coppia che si avvicini sotto START_CPA entro 25 secondi.
   const START_GAP = 20, START_CPA = 14;
   const AGGRO_OFF = 15; // metri: sotto questa distanza l'aggressiva smette di stringere (spirito della regola 16)
+  const HOLD_S = -1; // in partenza si aspetta e si parte mure a dritta (precedenza): virare da fermi al via non riesce, e puntando un punto dritto controvento la barca zigzagava
   function startSpots(n){
     // in coordinate del vento una barca mure a sinistra (s = 1) avanza verso +x, una mure a dritta verso -x
     const ok = (a, c) => {
@@ -213,8 +214,7 @@
     if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart)){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
       const [bx, by] = toWF(s.x, s.y);
       const L = BOAT.length, lat = Math.tan((ai.up + 4) * D2R); // metri di lato per ogni metro guadagnato verso la linea, in bolina larga
-      b.holdS = -1; // si aspetta e si parte mure a dritta (precedenza): virare da fermi al via non riesce, e puntando un punto dritto controvento la barca zigzagava
-      const lineAim = twd + b.holdS * (ai.up + 4); // verso la linea in bolina larga
+      const lineAim = twd + HOLD_S * (ai.up + 4); // verso la linea in bolina larga
       const yW = 1.5 * L, yF = 6 * L; // il punto d'attesa (metà della fascia) e il punto dove si attende il proprio turno, abbastanza dietro perché la deriva non conti
       if (b.waitX === undefined) // attesa e ritrovo spostati di lato quanto la barca scivolerà (verso -x in coordinate del vento), così il taglio cade fra le boe
         b.waitX = clamp(b.startX + lat * yW, lat * yW - (LINE_HALF - 2), LINE_HALF - 2); // dentro gli estremi sia l'attesa sia il taglio
@@ -222,10 +222,10 @@
       const [px, py] = far ? fromWF(b.waitX + lat * (yF - yW), yF) : fromWF(b.waitX, yW);
       if (!b.goStart && -R.t <= 30){ // quattro volte al secondo simula la propria partenza con step() e parte quando serve
         b.simT = (b.simT || 0) - dt;
-        if (b.simT <= 0){ b.simT = 0.25; const T = startTime(b, lineAim, w, -R.t + 2); b.startT = T; // simula fin poco oltre lo zero: se non arriva in tempo, parte subito
+        if (b.simT <= 0){ b.simT = 0.25; const T = startTime(b, lineAim, w, -R.t + 2); // simula fin poco oltre lo zero: se non arriva in tempo, parte subito
           if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)) b.goStart = true; } // il margine fa arrivare dopo lo zero, mai prima
       }
-      b.holdA = by < 0.5 * L ? 45 : 55; // in attesa: a 55° arretra appena senza scivolare di lato, a 45° arretra di più (misure in PROPOSTA-PARTENZE.md §2)
+      b.holdA = holdAngle(by);
       if (b.goStart){ pre = true; b.preDesired = lineAim; if (by < 1 && R.t < -1) hold = true; } // partita: se è in anticipo non supera la linea prima dello zero
       // ancora in avvicinamento, con la logica generale perché sa fare i bordi; si lasca quando lo scivolamento simulato finirebbe
       // dentro la fascia d'attesa, cioè quando è il momento di smettere di spingere per fermarsi lì
@@ -236,7 +236,7 @@
     const brg = bearingTo(s, dest);
     const rel = norm180(brg - twd);
     b.boardT += dt;
-    if (hold){ desired = twd + (pre ? b.holdS * b.holdA : 62); } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
+    if (hold){ desired = twd + (pre ? HOLD_S * b.holdA : 62); } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
     else if (pre){ desired = b.preDesired; }
     else if (Math.abs(rel) < ai.up){ // bolina: bordi alternati
       const near = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
@@ -305,18 +305,24 @@
     // piantata nell'angolo morto: poggia e lascia sbattere la vela finché riparte
     const irons = A < ironsA && s.u < 0.6; // 44°: tra 40° e 44° una barca ferma restava sospesa senza ripartire; in partenza resta 40° (con 44° poggia troppo presto vicino alla linea), salvo chi torna dietro la linea dopo una partenza anticipata
     if (irons) desired = twd - side * 80;
-    const err = norm180(s.h - desired);
-    const tTarget = clamp(err / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1);
-    b.ctl.tiller += (tTarget - b.ctl.tiller) * Math.min(1, dt * ai.react);
-    // scotta: regolata sul vento apparente, con l'errore tipico di questo avversario
-    const aw = Math.abs(b.info ? b.info.awa : 60);
-    let boomT = Math.max(BOAT.minBoom, aw - 17 + ai.trim);
-    let sheet = clamp((boomT - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1);
+    b.ctl.tiller += (tillerFor(s, desired, ai) - b.ctl.tiller) * Math.min(1, dt * ai.react);
+    let sheet = sheetFor(b.info, ai);
     if (hold || irons) sheet = 1;
     if (A > 158) sheet = Math.min(sheet, 0.42); // abbattuta controllata
     if (s.heel > 22) sheet = Math.min(1, sheet + 0.2);
     b.ctl.sheet += (sheet - b.ctl.sheet) * Math.min(1, dt * 3);
   }
+
+  // la guida dell'avversario, la stessa nella regata e nelle due simulazioni qui sotto (startTime, glideY): se divergessero, la
+  // simulazione non sarebbe quella che succederà. Barra verso la prua d (al contrario andando all'indietro):
+  function tillerFor(s, d, ai){ return clamp(norm180(s.h - d) / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1); }
+  // scotta regolata sul vento apparente, con l'errore tipico di questo avversario
+  function sheetFor(info, ai){
+    const boomT = Math.max(BOAT.minBoom, Math.abs(info ? info.awa : 60) - 17 + ai.trim);
+    return clamp((boomT - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1);
+  }
+  // prua d'attesa rispetto al vento, a y metri dalla linea: a 55° arretra appena senza scivolare di lato, a 45° arretra di più (misure in PROPOSTA-PARTENZE.md §2)
+  function holdAngle(y){ return y < 0.5 * BOAT.length ? 45 : 55; }
 
   // 1.0.16: secondi per tagliare la linea partendo adesso (cazza e va verso la prua d), con lo stesso step(); null se non ci arriva entro tMax
   function startTime(b, d, w, tMax){
@@ -324,9 +330,8 @@
     let info = b.info;
     for (let t = 0; t < tMax; t += dt){
       if (toWF(s.x, s.y)[1] <= 0) return t;
-      c.tiller += (clamp(norm180(s.h - d) / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1) - c.tiller) * Math.min(1, dt * ai.react);
-      const boomT = Math.max(BOAT.minBoom, Math.abs(info ? info.awa : 60) - 17 + ai.trim);
-      c.sheet += (clamp((boomT - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1) - c.sheet) * Math.min(1, dt * 3);
+      c.tiller += (tillerFor(s, d, ai) - c.tiller) * Math.min(1, dt * ai.react);
+      c.sheet += (sheetFor(info, ai) - c.sheet) * Math.min(1, dt * 3);
       for (let i = 0; i < 3; i++) info = step(s, c, w, dt / 3);
     }
     return null;
@@ -342,8 +347,7 @@
     for (let t = 0; t < 30; t += dt){
       const y = toWF(s.x, s.y)[1];
       if (y <= BOAT.length || s.u < 0.05) return b.glY = y; // si fermerebbe a meno di una lunghezza dalla linea, oppure è già ferma
-      const d = w.twd + b.holdS * (y < 0.5 * BOAT.length ? 45 : 55); // le stesse prue dell'attesa, altrimenti la simulazione non è quella che succederà
-      c.tiller += (clamp(norm180(s.h - d) / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1) - c.tiller) * Math.min(1, dt * ai.react);
+      c.tiller += (tillerFor(s, w.twd + HOLD_S * holdAngle(y), ai) - c.tiller) * Math.min(1, dt * ai.react); // le stesse prue dell'attesa
       c.sheet += (1 - c.sheet) * Math.min(1, dt * 3);           // vela tutta lascata, come in attesa
       for (let i = 0; i < 3; i++) step(s, c, w, dt / 3);
     }
