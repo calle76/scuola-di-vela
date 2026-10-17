@@ -27,8 +27,9 @@
 
 1. **Prove giocando di Ale:** increspature (1.0.19), retromarcia con 15-20 nodi, disegno della vela (1.0.7), testi delle raffiche da dietro da accorciare.
 2. **Pilota da tastiera** di `collaudo_competizione.py --tastiera`: parte bene ma in solitaria non taglia l'arrivo, quindi quel collaudo resta NON VALIDO. È il pilota di prova, non il gioco.
-3. **Senza causa trovata:** bolina più lenta del 15% con poco vento rispetto a Day 2017; +7% con 15 nodi.
-4. **Semplificazioni dichiarate da tenere a mente:** il timone non stalla mai; la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento; lo scorrimento più veloce delle increspature nella raffica non ha fonti (aiuto visivo).
+3. **Passo 5.8 «Strambata controllata»:** il pilota delle lezioni non lo completa 4 volte su 100 (soglia: al massimo 1). Era 1 su 100 la mattina del 16 ottobre e 4 su 100 la sera del 16, identico il 17: il cambio è avvenuto fra le due, non nelle versioni del 17. Non si sa se è il gioco o il pilota.
+4. **Senza causa trovata:** bolina più lenta del 15% con poco vento rispetto a Day 2017; +7% con 15 nodi.
+5. **Semplificazioni dichiarate da tenere a mente:** il timone non stalla mai; la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento; lo scorrimento più veloce delle increspature nella raffica non ha fonti (aiuto visivo).
 
 ## Prossimo lavoro
 
