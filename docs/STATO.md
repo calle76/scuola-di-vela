@@ -27,12 +27,12 @@
 
 1. **Prove giocando di Ale:** increspature (1.0.19), retromarcia con 15-20 nodi, disegno della vela (1.0.7), testi delle raffiche da dietro da accorciare.
 2. **Passo 5.8 «Strambata controllata»:** il pilota preciso non lo completa 4 volte su 100 (soglia: al massimo 1) perché strambo con il boma a 49° invece di 45° o meno, per l'errore di lettura del pilota. Non è un difetto del gioco; la soglia del collaudo resta com'è.
-3. **Senza causa trovata:** bolina più lenta del 15% con poco vento rispetto a Day 2017; +7% con 15 nodi.
+3. **Limite noto dichiarato (17 ottobre):** bolina dal 9 al 15% più lenta delle fonti con poco vento, +7% con 15 nodi; cause escluse e parziali in `PROPOSTA-BOLINA.md` §11. Il braccio sbandante `zCE` è fra i dubbi, per il livello 3.
 4. **Semplificazioni dichiarate da tenere a mente:** il timone non stalla mai; la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento; lo scorrimento più veloce delle increspature nella raffica non ha fonti (aiuto visivo).
 
 ## Prossimo lavoro
 
-**Decisione di Ale, 17 ottobre 2026 (sera): ordine per chiudere il livello 1.** 1) ~~Manutenzione~~: **fatta nella 1.0.22** (guida degli avversari non più scritta tre volte, impronta rigenerata e identica al bit). 2) **Per ultima la bolina lenta con poco vento** (−15% rispetto a Day 2017, causa mai trovata): un ultimo tentativo, con fermata 1; se non si trova la causa si dichiara limite noto e **si chiude il livello 1**. 3) Poi il livello 2.
+**Decisione di Ale, 17 ottobre 2026 (sera): ordine per chiudere il livello 1.** 1) ~~Manutenzione~~: **fatta nella 1.0.22** (guida degli avversari non più scritta tre volte, impronta rigenerata e identica al bit). 2) ~~Bolina lenta con poco vento~~: ultimo tentativo fatto (fermata 1, `PROPOSTA-BOLINA.md` §11), causa intera non trovata, **limite noto dichiarato: il livello 1 è chiuso** (Ale, «A»). 3) Poi il livello 2.
 
 **Livello 2: regole di regata e avversari**, sulla stessa barca (`VISIONE-LIVELLI-E-CARRIERA.md` §2-3). Prima la ricerca sulle fonti del regolamento, la proposta rivista in chat, e solo dopo lezioni, colpa nei contatti, penalità e protesta. Il fiocco e la barca a due sono **livello 3** (prototipo in `sperimentale/`, tappa C chiusa).
 

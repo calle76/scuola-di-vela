@@ -151,6 +151,7 @@ Quattro video informali (trascrizioni automatiche incollate da Ale, non viste n�
 | --- | --- | --- |
 | Polari pubbliche di derive | Non risultano. I database aperti vengono da certificati ORC e riguardano barche a chiglia e sportboat; la licenza dei dati non è chiara | *web* |
 | Confronto del gioco con una deriva monoposto standard | Una tabellina in un forum (provenienza non verificabile): a 10 nodi il gioco risulta più lento del 20-40%, soprattutto in poppa, dove una barca vera plana | *web* (articolo del 2002), poi *codice* |
+| Braccio sbandante `zCE` = 2,0 m, senza fonte (17 ottobre 2026, `PROPOSTA-BOLINA.md` §11) | Cambia solo il vento forte: con 2,8 m la bolina con 15 nodi passa da +7% a −1% contro Day, con 9 nodi non cambia. Il braccio va dal centro velico al centro della spinta laterale sotto l'acqua; Day dà le proporzioni (36,4% dell'inferitura sopra il boma, 43% della deriva) ma non le misure dell'armo | *web*: misure dell'armo con una fonte usabile (principio 5), quando si cambia la barca (livello 3) |
 | Coefficienti di portanza e resistenza delle vele leggibili nel testo | Le figure dello studio sulla deriva olimpica non lo sono | *libro* |
 
 ## 5. Modelli e dati esistenti

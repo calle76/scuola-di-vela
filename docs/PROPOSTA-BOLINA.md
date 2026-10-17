@@ -286,3 +286,55 @@ Variante 9° / 22° (`minBoom` 9°, `luffA0` 22°, `sailCL2` 0,08, `TE` 0,80 m).
 - **Lezione 5 passo 4 nel collaudo del suggerimento:** anche il caso 4 (45° dal vento, −0,5 nodi, scotta a metà) riparte senza piantarsi; elenco dei casi «non misurati» aggiornato **dopo** aver visto il risultato (tutti i 20 casi riusciti).
 
 **Lezioni, il resto (semi 21-100, prima → dopo):** «Ripartire» già fatto dopo un colpo lungo 29 → 2, ma a mani ferme 1 → 17 (arriva dal passo prima saltato); «La scuffia» a mani ferme 28 → 21, dopo un colpo lungo 20 → 11; «Assorbire una raffica» a mani ferme 46 → 54; «Troppo cazzata» dopo un colpo lungo 7 → 1; «Risalire il vento» 71 → 67 s.
+
+---
+
+## 11. Ultimo tentativo sulla bolina lenta con poco vento (17 ottobre 2026, fermata 1, versione 1.0.22)
+
+**Fermata 1: il motore non è stato toccato.** Misure con una copia di `js/motore.js` cambiata solo in memoria (script fuori dal repository, stesso banco del §4: angoli dal vento reale da 34° a 60° grado per grado, scotta a passi di 0,02, 60 s di equilibrio). Il banco non usa numeri casuali: un giro basta, e la riga «oggi» ridà i numeri della 1.0.11 (VMG 2,25 / 3,29 / 4,07, Binns uguali al §4).
+
+### 11.1 Cosa ho misurato [misura]
+
+**Al punto di VMG migliore**, oggi:
+
+| Vento | Barca | Apparente | Incidenza | Portanza della vela | Sbandamento | Timoniere fuori | Scarroccio |
+|---|---|---|---|---|---|---|---|
+| 6 nodi | 3,18 nodi a 45° | 29,0° | 20,0° | **piena** (CL 1,35, rampa al 100%) | 4,7° | 25% | 2,3° |
+| 10 nodi | 4,66 nodi a 45° | 30,5° | 20,0° | piena | 4,9° | 71% | 2,1° |
+| 15 nodi | 5,66 nodi a 44° | 32,0° | 13,8° | sventata (CL 0,93) | 5,0° | 99% | 1,6° |
+
+- **Con poco vento la vela porta già al massimo**: la causa non è la rampa dell'angolo morto. Spostarla di 4° o renderla un gradino non cambia la VMG al centesimo.
+- **Esclusi (nessun effetto, al centesimo, su VMG e Binns con 9 nodi):** timoniere che può spostarsi anche sottovento (barca piatta con poco vento, come dice Day §6.2); vasca sotto i 3 nodi più leggera del 10%. Barca tenuta per forza sempre piatta: +0,01 nodi con 6 nodi.
+- **Acqua: d'accordo con Day.** Con 6 nodi lo scafo nudo fa il 64% della resistenza in acqua (Day fig. 11, 5 nodi: 67%), la resistenza indotta l'11% (Day 8%; con 5 nodi il gioco dà 8,4%, §4).
+
+**Prove di sensibilità** (scarto contro Day fig. 8 e contro le misure di Binns, fig. 4 e 5):
+
+| Copia del motore | Day 6 / 10 / 15 nodi | Binns 9 nodi, 42°-60° | Binns 12 nodi, 42°-60° |
+|---|---|---|---|
+| oggi | −15 / −9 / +7% | −14 −11 −13 −14% | −1 −1 −1 0 +1% |
+| vela più forte del 15% (portanza e resistenza) | −11 / −5 / +9% | −13 −8 −9 −10% | +2 +1 +2 +2 +4% |
+| vela più forte del 30% | −8 / −3 / +9% | −11 −5 −6 −7% | +3 +3 +4 +4 +6% |
+| resistenza della vela 0,27 | −9 / −3 / +12% | −10 −6 −9 −10% | +6 +5 +6 +6 +6% |
+| resistenza della vela 0,21 | −4 / +2 / +16% | −7 −2 −6 −8% | +10 +10 +11 +10 +12% |
+| braccio della vela `zCE` 2,4 m | −15 / −9 / +3% | uguale a oggi | −3 −3 −4 −3 −3% |
+| braccio della vela `zCE` 2,8 m | −15 / −9 / −1% | uguale a oggi | −4 −6 −6 −7 −6% |
+| resistenza 0,27 + `zCE` 2,8 m | −9 / −3 / +2% | −10 −6 −9 −10% | −1 −2 −3 −3 −2% |
+
+### 11.2 Cosa se ne ricava
+
+1. **Nessun ritocco della sola vela mette a posto insieme 9 e 12 nodi.** Fra 9 e 12 nodi la barca di Binns guadagna circa l'8% (5,0 → 5,4 a 46,5°), il gioco il 21%. Una vela più forte o meno frenata alza 9 nodi ma porta 12 nodi sopra le misure.
+2. **Il braccio sbandante `zCE` = 2,0 m non ha una fonte** (`FISICA-E-TARATURE.md`, tabella delle costanti: «altezza del centro velico») e cambia solo il vento forte: con 2,8 m il +7% con 15 nodi diventa −1%, e con 9 nodi non cambia niente. Fisicamente il braccio va dal centro velico al centro della spinta laterale sotto l'acqua, non dal pelo dell'acqua [stima]. Day mette il centro velico al 36,4% dell'inferitura sopra il boma (§2.1) e la spinta della deriva al 43% della sua profondità (§3), ma non scrive le misure dell'armo (la tabella 2 dà solo lo scafo): **il numero non c'è nel materiale in mano.**
+3. **La resistenza della vela del gioco è più alta di quella di Day.** Il gioco usa 0,34 = 0,27 di Flay in galleria (vela, albero e scafo, senza timoniere) + 0,07 per il timoniere (§3 B); Day, nella stessa condizione, adotta lo 0,20 dei coefficienti ORC (§2.1) più il timoniere a parte. È una scelta già fatta e motivata il 16 ottobre (§8, condizione 5), non un errore: la riporto perché da sola spiega circa 6 dei 15 punti con 6 nodi.
+4. **Anche con le due correzioni insieme resta circa −9% con poco vento** (Day con 6 nodi, Binns con 9). **La causa di quel residuo non è stata trovata.**
+
+### 11.3 Proposta
+
+**Decisione di Ale, 17 ottobre 2026: «A»** (limite noto, motore invariato, livello 1 chiuso).
+
+Secondo la regola decisa da Ale il 17 ottobre («se la causa non si trova, limite noto dichiarato e livello 1 chiuso»), **propongo di non toccare il motore**:
+
+- **Limite noto, dichiarato** in `FISICA-E-TARATURE.md` e qui: con poco vento la bolina è dal 9% al 15% più lenta delle fonti, e con 15 nodi il 7% più veloce. Si scrive cosa è escluso (§11.1), cosa spiega una parte (braccio sbandante senza fonte, resistenza della vela scelta più alta di Day) e cosa resta senza causa (circa −9%).
+- **`zCE` va fra i dubbi** (`DUBBI-E-RICERCHE.md`): da risolvere quando si cambia la barca (livello 3, barca a due), cercando prima una misura dell'armo con una fonte usabile (principio 5), altrimenti fermandosi.
+- **Livello 1 chiuso**, si passa al livello 2.
+
+**Alternativa, se Ale vuole correggere almeno il vento forte:** fermata 2 sul solo `zCE`, **solo dopo aver trovato una fonte** per l'altezza del centro velico e per la profondità della deriva. Soglie dichiarate adesso, come attese nostre: VMG con 15 nodi entro ±5% da Day; Binns con 12 nodi entro ±5% a tutti gli angoli; con 6, 9 e 10 nodi nessun peggioramento oltre 0,02 nodi. Costo: cambiano sbandamento e raffiche (`raffiche_e_virate.js`, lezioni «Assorbire una raffica» e «La scuffia»), fasce delle prove ritarate e record azzerati, revisione in chat prima della fermata 2. **Rischio:** il livello 1 appena chiuso nei collaudi si riapre.
