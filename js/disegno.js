@@ -92,7 +92,7 @@
   function resize(){ const r = canvas.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
   addEventListener("resize", resize);
   const hash = (i, j, k) => { let n = i * 374761393 + j * 668265263 + k * 2147483647; n = (n ^ (n >> 13)) * 1274126177; return ((n ^ (n >> 16)) >>> 0) / 4294967295; };
-  let rippleOff = [0, 0], wakeT = 0;
+  let rippleOff = [0, 0], ripplePh = [0, 0], wakeT = 0; // ripplePh: sfasamento del secondo strato dentro le raffiche (1.0.19)
   // ---- vista e telecamera ----
   // tasto vista (Q tenuto), «vista del percorso»: sposta la barca sullo schermo dalla parte opposta all'obiettivo e, se serve, allontana
   // l'inquadratura finché barca e obiettivo stanno sullo schermo con un margine (mai sotto ZMIN). Solo disegno: fisica e tempo non lo leggono.
@@ -150,6 +150,10 @@
     // increspature
     const to = (env.twd + 180) * D2R, wx = Math.sin(to), wy = -Math.cos(to);
     rippleOff[0] += wx * env.tws * 0.35 * dt; rippleOff[1] += wy * env.tws * 0.35 * dt;
+    // 1.0.19 (docs/PROPOSTA-INCRESPATURE.md): dentro le chiazze un secondo strato di trattini, più fitti e con uno scorrimento proprio,
+    // quello del vento della raffica più forte in acqua. Lo sfasamento sta dentro una cella, così i trattini restano sullo schermo.
+    let kMax = 0; for (const gg of gusts) kMax = Math.max(kMax, gg.k * gg.life);
+    ripplePh[0] = (ripplePh[0] + wx * env.tws * kMax * 0.35 * dt) % 7; ripplePh[1] = (ripplePh[1] + wy * env.tws * kMax * 0.35 * dt) % 7;
     // attorno al centro dello schermo (non alla barca): con la barca spostata (prua in alto, tasto vista) le celle restano le stesse
     const cell = 7, R = Math.hypot(W, H) / v.ppm / 2 + cell, sdx = W / 2 - v.cx, sdy = H / 2 - v.cy, vc = Math.cos(v.rot), vs = Math.sin(v.rot);
     const mx = S.x + (sdx * vc + sdy * vs) / v.ppm, my = S.y + (-sdx * vs + sdy * vc) / v.ppm;
@@ -173,6 +177,20 @@
           ctx.beginPath(); ctx.moveTo(rx - px * l + 0.6, ry - py * l + 0.4);
           ctx.quadraticCurveTo(rx + wx * l * 0.25 + 0.6, ry + wy * l * 0.25 + 0.4, rx + px * l + 0.6, ry + py * l + 0.4); ctx.stroke();
           ctx.strokeStyle = colors.ripple;
+          // secondo strato: fino al doppio dei trattini nel cuore, sfumati a zero sul bordo della chiazza.
+          // La forza si scala su 0,4, che è il massimo delle raffiche del gioco: con gk puro si aggiungeva un trattino solo, invisibile.
+          const f = Math.min(1, gk / 0.4), extra = Math.round(nk * f);
+          if (extra > 0){
+            ctx.globalAlpha = ripA * f;
+            for (let e = 0; e < extra; e++){
+              const ex = (i + hash(i, j, k + 13 + e)) * cell + rippleOff[0] + ripplePh[0];
+              const ey = (j + hash(j, i, k + 19 + e)) * cell + rippleOff[1] + ripplePh[1];
+              const el = l * (0.5 + hash(i, k + e, j));
+              ctx.beginPath(); ctx.moveTo(ex - px * el, ey - py * el);
+              ctx.quadraticCurveTo(ex + wx * el * 0.25, ey + wy * el * 0.25, ex + px * el, ey + py * el); ctx.stroke();
+            }
+            ctx.globalAlpha = ripA;
+          }
         }
         ctx.beginPath(); ctx.moveTo(rx - px * l, ry - py * l);
         ctx.quadraticCurveTo(rx + wx * l * 0.25, ry + wy * l * 0.25, rx + px * l, ry + py * l); ctx.stroke();

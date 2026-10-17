@@ -37,7 +37,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 
 ## Git
 
-- **Non fare commit né push**: li fa l'utente. A fine compito indica i comandi `git add` con i percorsi uno per uno.
+- **Commit e push li fai tu** (Ale, 17 ottobre 2026; prima li faceva lui). Si committa solo a collaudi verdi e versione chiusa, aggiungendo i file **uno per uno** e dicendo sempre quali sono entrati e con che messaggio. Prima di committare, `git status --short` per controllare che non entri niente dell'ambiente.
 - **Mai `git add -A` né `git add .`**: i file `.gitmodules`, `.bashrc` e `.mcp.json` e la cartella `.codex/` li monta l'ambiente e vanno lasciati fuori.
 - Prima di chiudere, controlla che `index.html` e `js/` non risultino modificati nelle sessioni sul prototipo.
 

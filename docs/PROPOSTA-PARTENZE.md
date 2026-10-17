@@ -222,3 +222,12 @@ Senza soglia, si riportano: `collaudo_competizione.py` C1 (il pilota sostituto a
 Il grilletto **a tempo** scatta a 26 m fra due boline che convergono a 90° (si avvicinano a 6,4 m/s): le barche si allargano, perdono strada e si incontrano più spesso. **Poggiare** per evitare accelera la barca dentro al gruppo, e in attesa è il peggio possibile.
 
 **Cosa resta** (non è un difetto da correggere nel livello 1): 82 contatti sono tre barche che convergono sulla stessa boa su mure opposte e si sfiorano a 1,4-3,1 nodi. Servono le regole di precedenza e lo spazio alla boa, cioè il **livello 2**. Da rimisurare dopo: `collaudo_competizione.py` C1 (il pilota sostituto arrivava ultimo nel 46-48% delle regate per le penalità dei contatti).
+
+## 9. Parti 2, 4, 5 e 6: esito (17 ottobre 2026, 1.0.18)
+
+- **Parte 2, estremi della linea: chiusa senza modifiche.** Misure della 1.0.16 e 1.0.17, oltre 3.600 partenze di avversari: nessun taglio fuori dagli estremi, nessuno rimasto fuori senza partire. Il punto d'attesa è per costruzione entro due metri dagli estremi (`clamp` in `js/regate.js`), e lo spostamento di lato fa cadere il taglio fra le boe.
+- **Parte 4, rientro dopo l'anticipo: chiusa con una frase.** La regola 29.1 (F15) dice di tornare dalla parte di pre-partenza e ripartire, senza attese: i messaggi durante la regata lo dicevano già, il riquadro no. Aggiunta nella 1.0.18 la frase scelta da Ale: «Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, non c'è nessuna attesa da scontare». La regola 21.1 (dare acqua a chi rientra) resta livello 2.
+- **Parte 5, pilota da tastiera: metà risolta.** Il difetto della 1.0.11 (fermo all'indietro a 41-49° prima del via) non c'è più: con gli avversari il pilota parte e arriva quarto. In solitaria non taglia l'arrivo (si perde in poppa sull'ultimo lato): `collaudo_competizione.py --tastiera` resta **NON VALIDO**. È il pilota di prova, non il gioco: resta aperto **come collaudo**, da sistemare a parte.
+- **Parte 6, C1: rientrata.** Ultimo posto del pilota sostituto dal 46-48% (1.0.11) al **35%** (semi di misura) e **28%** (conferma), dentro la fascia 10-40%; `collaudo_competizione.py` **OK** in tutte le parti. Con gli esperti, solo riportato: 35% e 48%.
+
+**Il compito partenze è chiuso**, tranne il pilota di prova della parte 5. Quel che resta sui contatti (82 sfioramenti alla boa su 80 regate) richiede le precedenze alla boa: livello 2.
