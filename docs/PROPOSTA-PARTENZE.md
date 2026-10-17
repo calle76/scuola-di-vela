@@ -133,3 +133,92 @@ Esito **OK** sui semi di conferma. Sui semi 1-20 l'unico criterio fuori era «es
 **Conferma di Ale (17 ottobre 2026):** in questa classe di barche si parte da fermi, non lanciati; le barche grandi e pesanti che partono lanciate restano una nota per i livelli futuri.
 
 **Idea di Ale tenuta in riserva (17 ottobre 2026):** se la deriva in attesa tornasse a dare problemi, invece di far manovrare la barca si può aiutarla da fuori — vento ridotto oppure resistenza dell'acqua moltiplicata mentre aspetta (ancora virtuale, come `backDrag`). Con le misure di questa versione non serve, e sarebbe un aiuto che il giocatore non ha: da dichiarare.
+
+## 8. Parte 3, contatti fra avversari: proposta (fermata 1, 17 ottobre 2026)
+
+### 8.1 Cosa succede oggi (misure del 17 ottobre, 1.0.16 contro 1.0.15)
+
+Diagnostica temporanea (non committata): 80 regate complete per versione (bastone e raffiche x principianti ed esperti x semi 1-20), preparazione 3 minuti, giocatore fermo, passi fissi di 1/60 s; si registra ogni contatto nuovo con tempo, posizione in coordinate del vento, mure e prue delle due barche.
+
+| Contatti | 1.0.15 | 1.0.16 |
+| --- | --- | --- |
+| prima del via | 45 | 47 |
+| nei 30 s dopo il via | **93** | **1** |
+| nella risalita alla boa | 178 | 158 |
+| verso l'arrivo | 5 | 3 |
+| totale | 246 | 208 |
+| barche con almeno una penalita | 159 su 240 (66%) | 141 su 240 (59%) |
+
+I 93 contatti subito dopo il via erano il contatore dei bordi che scadeva durante l'attesa (tutti viravano insieme allo sparo): corretto nella 1.0.16. Il raduno a sei lunghezze **non** ha peggiorato la fase di attesa (45 contro 47, alle stesse distanze: da 11-14 a 70 m dietro la linea).
+
+**Dove e perche si toccano adesso** (158 contatti nella risalita): **135 su 158 fra mure opposte** (85%), prue a **93 gradi** in mediana (quartili 87-102, cioe due barche di bolina che convergono), **da 113 a 143 m oltre la linea** con la boa a 140, e a **1,4-3,1 nodi** contro i 4,7 di regime. Non sono urti in corsa: sono barche che si strusciano mentre girano la boa, gia lente perche stanno manovrando.
+
+### 8.2 Due meccanismi sospettati (da confermare all'inizio della fermata 2)
+
+1. **Tutte puntano lo stesso punto.** Sotto i 30 m dal bersaglio l'avversario scegle il bordo che punta piu vicino alla boa (`js/regate.js`, ramo `near`): tre barche convergono sullo stesso metro d'acqua.
+2. **La regola dell'angolo morto annulla lo scarto.** Lo scarto per evitare (`avoidR` 14 m, 22 per la prudente; deviazione fino a 35 gradi) viene applicato a `desired`, ma subito dopo la regola «la prua desiderata non deve mai finire nell'angolo morto» la riporta fuori: chi dovrebbe orzare per evitare non orza. Da verificare registrando la prua desiderata prima e dopo quella regola nei 10 s che precedono ogni contatto.
+
+### 8.3 Proposta (modello piu semplice plausibile)
+
+Per il livello 1 l'obiettivo non e la regola di regata (spazio alla boa, regola 18: livello 2), ma **non urtarsi**: un timoniere che vede arrivare una barca cambia rotta prima, e passa di poppa.
+
+1. **Evitare in base al tempo, non alla distanza.** Oggi lo scarto comincia a 14 m fissi. Si sostituisce con il **tempo al punto di minimo avvicinamento** calcolato sulle velocita attuali (lo stesso conto che `collaudo_partenze.py` fa gia per la geometria): si comincia a scartare quando quel tempo scende sotto una soglia (ipotesi: **4 s**) e il minimo avvicinamento previsto e sotto **due lunghezze di barca**. Cosi vale a ogni velocita e a ogni angolo, come la frenata e la partenza della 1.0.16.
+2. **Lo scarto non deve poter finire nell'angolo morto:** se evitare richiederebbe di orzare oltre la bolina, si poggia invece (si passa di poppa), che e anche cio che dicono le regole quando si deve lasciare strada.
+3. **Boa sfalsata per barca.** Il punto che ogni avversario punta vicino alla boa e spostato di mezza lunghezza per barca (ipotesi: 0, +0,5 e +1,0 lunghezze verso l'esterno del giro), cosi tre barche non convergono sullo stesso metro d'acqua.
+4. **Niente altro:** nessuna regola di precedenza nuova, nessuna penalita nuova, nessun cambio alla barca del giocatore.
+
+Costanti nuove, tutte **ipotesi nostre**: soglia di 4 s, minimo avvicinamento di 2 lunghezze, sfalsamento di 0,5 lunghezze per barca.
+
+### 8.4 Criteri (soglie nostre, scritte prima di provare)
+
+Si misurano con la stessa diagnostica dell'8.1 (80 regate, semi 1-20 per scegliere, 21-100 per confermare):
+
+1. **Contatti nella risalita: al massimo la metà di oggi** (da 158 a 79 o meno).
+2. **Barche con almeno una penalita: al massimo il 30%** (oggi 59%).
+3. **Nessun peggioramento della partenza:** contatti prima del via e nei 30 s dopo non piu di oggi (47 e 1, con tolleranza +25%); criteri della partenza (§3) ancora OK.
+4. **La regata non si deve rallentare:** mediana d'arrivo degli avversari entro +5% di oggi (201 s a bastone, 188 s nelle raffiche), 18 arrivi su 18 e nessuna BLOCCATA.
+5. **Nessuna barca che gira la boa dal lato sbagliato** piu di oggi (`wrongMarks` nei collaudi delle regate).
+6. **Controllo del metro:** la diagnostica stampa quanti contatti ha visto e quante regate ha portato a termine; se le regate finite sono meno di 76 su 80 l'esito non vale.
+7. `polare.js` e `raffiche_e_virate.js` identici; pannello invariato (non si tocca il testo).
+
+Senza soglia, si riportano: `collaudo_competizione.py` C1 (il pilota sostituto arriva ultimo nel 46-48% delle regate: dovrebbe migliorare se i contatti calano) e la distanza minima fra barche durante il giro.
+
+### 8.5 Rischi
+
+- **Barche troppo prudenti**: se lo scarto parte troppo presto si allargano, allungano la strada e la regata rallenta (criterio 4).
+- **Scarti a catena**: tre barche che si scansano a vicenda possono oscillare; si guarda la distanza minima e i tempi.
+- **Il giocatore non ha questo aiuto**: resta lui a dover evitare. Va bene, ma va detto che gli avversari non applicano le regole di precedenza, solo il buon senso di non urtarsi (livello 2 le regole).
+- La causa dell'8.2 potrebbe essere una sola delle due: si verifica prima di scrivere codice, e se basta la (2) la (3) non si fa.
+
+### 8.6 Fermata 2, esito (17 ottobre 2026): parte 3 chiusa nella 1.0.17
+
+**Causa confermata prima di scrivere codice** (copia del gioco nello scratchpad con quattro righe di registrazione, `index.html` e `js/` intatti; 40 regate complete, bastone x due livelli x semi 1-20): lo scarto per evitare viene riscritto dalla regola dell'angolo morto nel **39%** degli istanti in cui una barca sta scartando (un altro 12% ridotto), e **83 contatti su 88** hanno uno scarto annullato nei dieci secondi prima. Il meccanismo 1 dell'8.2 (tutte puntano lo stesso punto) **non andava toccato**: la boa è già sfalsata per barca (`rOff`, da 0 a 6 m), cosa che la proposta non aveva controllato.
+
+**Fatto nella 1.0.17** (due righe in `js/regate.js`): chi sta evitando può orzare anche dentro l'angolo morto, e il cono in cui guarda le altre barche passa da 60° a 90° (i contatti misurati hanno le prue a 93° in mediana: chi arriva di fianco non veniva considerato).
+
+**Esito sui criteri dell'8.4** (80 regate complete per variante, semi 1-20):
+
+| Criterio | Soglia | Esito |
+| --- | --- | --- |
+| 1. contatti nella risalita | ≤79 (metà di 158) | **82: non raggiunto**, −48% |
+| 2. barche con penalità | ≤30% | **40%: non raggiunto** (era 59%) |
+| 3. partenza non peggiorata | ≤47 prima del via, ≤1 nei 30 s dopo | 45 e 1: **rispettato** |
+| 4. regata non più lenta del 5% | 201 e 188 s | 207 e 195 s su 24 semi (+1,5% e +3,7%): **rispettato**, 72 arrivi su 72, 0 BLOCCATA |
+| 5. giri di boa sbagliati | non più di oggi | nessuno nei collaudi delle regate: **rispettato** |
+| 6. controllo del metro | ≥76 regate su 80 | 80 su 80, e stesso codice sui semi 21-40 entro il 3% (contatti 249 contro 254): **rispettato** |
+| 7. non-regressione | identici | `polare.js` e `raffiche_e_virate.js` identici: **rispettato** |
+
+**Varianti provate e scartate** (stessa misura, 80 regate ciascuna; totale contatti, poi prima del via / risalita):
+
+| Variante | totale | prima del via | risalita | penalità | regata |
+| --- | --- | --- | --- | --- | --- |
+| 1.0.16, riferimento | 208 | 47 | 158 | 59% | 201 / 188 s |
+| evitare a tempo (4 s al minimo avvicinamento, 2 lunghezze) | 255 | 46 | 205 | 65% | 234 s, +16% |
+| poggiare quando orzare finirebbe nell'angolo morto | 275 | 137 | 124 | 67% | 210 s |
+| la stessa poggiata solo per chi naviga, non in attesa | 254 | 96 | 149 | 62% | 213 s |
+| **orzare anche nell'angolo morto** | 147 | 45 | 100 | 47,5% | 203 s |
+| **orzare + cono a 90° (scelta)** | **128** | **45** | **82** | **40%** | **207 / 195 s** |
+
+Il grilletto **a tempo** scatta a 26 m fra due boline che convergono a 90° (si avvicinano a 6,4 m/s): le barche si allargano, perdono strada e si incontrano più spesso. **Poggiare** per evitare accelera la barca dentro al gruppo, e in attesa è il peggio possibile.
+
+**Cosa resta** (non è un difetto da correggere nel livello 1): 82 contatti sono tre barche che convergono sulla stessa boa su mure opposte e si sfiorano a 1,4-3,1 nodi. Servono le regole di precedenza e lo spazio alla boa, cioè il **livello 2**. Da rimisurare dopo: `collaudo_competizione.py` C1 (il pilota sostituto arrivava ultimo nel 46-48% delle regate per le penalità dei contatti).

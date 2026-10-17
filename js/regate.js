@@ -281,17 +281,20 @@
     }
     // evita qualsiasi barca vicina davanti (anche quando avrebbe diritto di rotta: meglio non urtare)
     // la prudente comincia da più lontano: è il suo carattere
+    // 1.0.17 (docs/PROPOSTA-PARTENZE.md §8): chi sta evitando può orzare anche dentro l'angolo morto. Prima lo scarto veniva riscritto
+    // dalla regola qui sotto: annullato nel 39% degli istanti in cui una barca stava scartando, e presente in 83 contatti su 88.
     const avoidR = b.char === "prudente" ? 22 : 14;
+    let avoiding = false;
     for (const o of R.boats){
       if (o === b || o.fin !== null) continue;
       const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > avoidR) continue;
-      const relB = norm180(bearingTo(s, o.S) - s.h); if (Math.abs(relB) > 60) continue;
-      desired -= (relB >= 0 ? 1 : -1) * 35 * (1 - d / avoidR + 0.3); break;
+      const relB = norm180(bearingTo(s, o.S) - s.h); if (Math.abs(relB) > 90) continue; // 1.0.17: era 60°; i contatti misurati hanno le prue a 93°, cioè l'altra arriva di fianco
+      desired -= (relB >= 0 ? 1 : -1) * 35 * (1 - d / avoidR + 0.3); avoiding = true; break;
     }
     // la prua desiderata non deve mai finire nell'angolo morto (tranne durante una virata voluta)
     const dTwa = norm180(twd - desired);
     const wantsTack = !hold && Math.abs(rel) < ai.up && sgn(dTwa) !== side;
-    if (!wantsTack && Math.abs(dTwa) < ai.up - 2) desired = twd - (sgn(dTwa) || side) * (ai.up - 2);
+    if (!wantsTack && !avoiding && Math.abs(dTwa) < ai.up - 2) desired = twd - (sgn(dTwa) || side) * (ai.up - 2); // 1.0.17: chi evita può orzare oltre, e perde velocità come nella realtà
     // se per arrivare alla rotta voluta bisogna attraversare il vento e manca velocità: prima poggia e prendi abbrivio
     const turn = norm180(desired - s.h), toWind = norm180(twd - s.h);
     // (vale solo prima di iniziare: a virata in corso la velocità cala per forza, e non va interrotta)
