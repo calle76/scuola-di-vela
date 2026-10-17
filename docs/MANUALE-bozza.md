@@ -105,6 +105,17 @@ Nel livello 2 la barra va fino a 45°. Oltre un certo angolo la pala del timone 
 
 **Onestà.** Il fermo a 35° è una **regola del gioco**: in barca vera non c'è, c'è la mano che sente la barra alleggerirsi quando la pala stalla. I numeri sono del nostro motore; le fonti (un 470 misurato, F4) dicono la stessa cosa nella sostanza (la barra arriva a 45°, accompagnata è il modo migliore, data di colpo fa perdere più velocità), ma la nostra barca è più leggera e le differenze sono più piccole. Il giro di penalità non ha ancora una fonte.
 
+### Spingere il boma (livello 2, in prova dalla 1.0.26)
+
+**Tasto Z, tenuto premuto.** Il boma va tutto fuori (80°) dalla parte dove si trova e resta lì contro il vento: la vela prende il vento dalla parte sbagliata («a collo»). La barca va all'indietro e la prua gira verso il boma.
+
+**Per uscire dall'angolo morto** (come insegnano le scuole di vela): Z, e la barra dalla stessa parte del boma. Quando la prua è arrivata al traverso, molla Z, centra la barra (Spazio) e cazza: la barca riparte. Con 10 nodi si esce in 1-2 secondi; con la sola barra ne servono 4-5.
+**Per frenare:** dalla bolina, Z ferma la barca in un paio di secondi (con 10 nodi sotto 1 nodo in 1,2 s, lascando tutta la scotta 9 s) e la fa poggiare; tenendolo, la barca va all'indietro.
+**Per andare all'indietro apposta**, per esempio prima della partenza: prua nel vento, Z tenuto. Attenzione: col vento forte va forte (fino a 5 nodi con 15 nodi di vento) e sbanda verso di te.
+**In regata** chi va all'indietro spingendo la vela deve tenersi lontano da chi non lo fa (regola 21.3).
+
+**Onestà.** Le fonti descrivono la manovra ma non danno numeri: tempi e velocità del gioco vengono da quattro stime nostre (dove sta il centro velico, quanto l'acqua frena la barca che ruota). Il momento delle vele, nel gioco, esiste solo col boma spinto.
+
 ## 4. Cosa il gioco fa bene
 
 - **Il vento apparente.** Il vento che senti a bordo è la combinazione del vento reale e del vento dovuto al moto: accelerando si sposta verso prua. Su questo lavora la vela.
@@ -122,7 +133,7 @@ Nel livello 2 la barra va fino a 45°. Oltre un certo angolo la pala del timone 
 | --- | --- | --- | --- |
 | **La barca che gira da sola per effetto delle vele** | Con la barra al centro la barca va dritta (salvo il disturbo apposta nella lezione 2) | Secondo le fonti consultate, cazzando la randa la barca tende a orzare, e sbandando orza ancora di più: si sente la barra «pesante» | Alto: è una sensazione che un velista riconosce subito |
 | **La barra a fondo** | Nel livello 1 è sempre la scelta migliore (nel livello 2 in prova la pala stalla: vedi «Il timone nel livello 2») | Oltre circa 15° il timone frena senza girare di più (una sola fonte) | Medio: si può imparare un'abitudine sbagliata |
-| **Uscire dall'angolo morto** | Si esce solo col timone: mentre la barca arretra, barra verso il boma, poi barra al centro e si cazza. Il boma non si può spingere a mano; con la barra al centro la barca può restare a lungo all'indietro | Tre fonti descrivono la randa «a collo»: si spinge il boma fuori e la barra dalla stessa parte, la barca arretra e la prua si allontana dal vento, poi si centra, si cazza e si riparte (US Sailing; guida Sunfish di un circolo; associazione di classe di un catamarano; vedi `DUBBI-E-RICERCHE.md`, sez. 3). Da ricontrollare sulle pagine originali | Medio |
+| **Uscire dall'angolo morto** | Nel livello 1 si esce solo col timone (nel livello 2 in prova c'è anche il boma spinto, Z): mentre la barca arretra, barra verso il boma, poi barra al centro e si cazza. Il boma non si può spingere a mano; con la barra al centro la barca può restare a lungo all'indietro | Tre fonti descrivono la randa «a collo»: si spinge il boma fuori e la barra dalla stessa parte, la barca arretra e la prua si allontana dal vento, poi si centra, si cazza e si riparte (US Sailing; guida Sunfish di un circolo; associazione di classe di un catamarano; vedi `DUBBI-E-RICERCHE.md`, sez. 3). Da ricontrollare sulle pagine originali | Medio |
 | **La planata** | C'è solo nella resistenza dello scafo (dalla 1.0.6, misurata in vasca fino a 9 nodi): niente assetto né onde | Sopra circa 8 nodi di velocità una deriva a due olimpica passa a un regime di alta velocità (una fonte) | Medio: conta di più dal livello 3 |
 | **Il peso del timoniere** | Si sporge da solo, con un ritardo | Gestire il peso è una parte importante della conduzione | Medio: diventerà un'azione del prodiere |
 | **Onde e corrente** | Non ci sono, salvo piccoli disturbi nella lezione 2 | Cambiano la guida e la velocità | Basso |

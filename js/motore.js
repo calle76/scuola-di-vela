@@ -52,6 +52,15 @@ const RUD2 = {
   uMin: 0.5           // m/s: sotto, il timone del livello 1 (come ironsU: niente sovrapposizione con la prua che poggia da sola)
 };
 const RUD2_SICURA = 35 / 45; // 1.0.25: nel livello 2 la sola freccia porta la barra fino a 35° (quasi senza stallo), Maiusc + freccia fino a 45°; regola del gioco, nessuna fonte
+// 1.0.26: «spingi il boma» del livello 2 (docs/PROPOSTA-SPINGI-BOMA.md). Con C.push e S.lv === 2 il boma resta a BOMA2.angle dalla parte
+// dove si trovava quando si è cominciato a spingere; la vela è una piastra investita dal vento (forza normale CN = CL cos α + CD sin α)
+// applicata al centro velico lungo il boma, quindi spinge indietro, di lato e fa girare la prua verso il boma. Costanti: stime senza fonte.
+const BOMA2 = {
+  angle: 80,          // gradi del boma spinto: le fonti dicono «circa 90°», «tutto fuori»; maxBoom è 85°
+  xMast: 0.8,         // m, albero a prua del centro della barca (stima, deriva da 4,2 m)
+  dCE: 0.9,           // m, centro velico lungo il boma dall'albero (stima: circa un terzo del boma)
+  Kq: 1230            // N·m·s², acqua contro lo scafo che ruota: ½·ρ·1,2·(carena, pala, deriva per il cubo della distanza) (stima)
+};
 function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso segno della barra
   return tiller * RUD2.maxRudder + Math.atan2(S.r * D2R * RUD2.xR, S.u) / D2R;
 }
@@ -97,9 +106,19 @@ function step(S, C, E, dt){
   const q = 0.5 * BOAT.rho * BOAT.sailArea * aws * aws * ch; // la vela inclinata prende meno vento
   const lf = Math.max(0, Math.min(1, (A - BOAT.luffA0) / BOAT.luffW)); // vento apparente troppo stretto: la vela si sgonfia (angolo morto)
   const L = q * CL(alpha) * lf, Dg = q * (CD(alpha) + (alpha < 6 ? 0.2 * (1 - alpha / 6) : 0)); // vela che sbatte: più resistenza
-  const drive = L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
-  const side = L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento
-  const lv2 = S.lv === 2 && S.u >= RUD2.uMin, a2 = lv2 ? rud2Alpha(S, C.tiller) : 0;
+  let push = null; // boma spinto (livello 2): forza e momento della vela a collo, nel riferimento della barca (x avanti, y a dritta)
+  if (C.push && S.lv === 2){
+    if (!S.pushSide) S.pushSide = S.boomSide;
+    const p = S.pushSide, b = BOMA2.angle * D2R, f = [-Math.cos(awa * D2R), -Math.sin(awa * D2R)]; // f: dove va l'aria
+    let n = [p * Math.sin(b), Math.cos(b)]; // normale alla vela, girata dalla parte verso cui la spinge il vento
+    const fn = f[0] * n[0] + f[1] * n[1]; if (fn < 0) n = [-n[0], -n[1]];
+    const al = Math.asin(Math.min(1, Math.abs(fn))) / D2R, CN = CL(al) * Math.cos(al * D2R) + CD(al) * Math.sin(al * D2R);
+    const Fx = q * CN * n[0], Fy = q * CN * n[1], xc = BOMA2.xMast - BOMA2.dCE * Math.cos(b), yc = p * BOMA2.dCE * Math.sin(b);
+    push = { Fx, Fy, M: xc * Fy - yc * Fx }; // M > 0: la prua va a dritta
+  } else if (S.pushSide) S.pushSide = 0;
+  const drive = push ? push.Fx : L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
+  const side = push ? push.Fy * (awa >= 0 ? -1 : 1) : L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento (col boma spinto può essere negativa)
+  const lv2 = S.lv === 2 && S.u >= RUD2.uMin && !push, a2 = lv2 ? rud2Alpha(S, C.tiller) : 0;
   const rud = lv2 ? 0 : C.tiller * BOAT.maxRudder; // livello 2: la barra conta solo attraverso a2
   const res = hullDrag(S.u) * (S.u < 0 ? BOAT.backDrag : 1) +
               (lv2 ? RUD2.dragK * S.u * S.u * Math.sin(Math.abs(a2) * D2R) ** 2 :
@@ -135,11 +154,13 @@ function step(S, C, E, dt){
   let rTarget = -(S.u / BOAT.turnLen) * Math.sin(rud * D2R) / D2R; // gradi/s
   // barca ferma nel vento: la prua poggia da sola
   if (A < BOAT.ironsA && Math.abs(S.u) < BOAT.ironsU) rTarget += (awa >= 0 ? -1 : 1) * BOAT.ironsYaw * (1 - Math.abs(S.u) / BOAT.ironsU);
+  if (push) rTarget += Math.sign(push.M) * Math.sqrt(Math.abs(push.M) / BOMA2.Kq) / D2R; // boma spinto: la vela fa girare la barca
   S.r += (rTarget - S.r) * Math.min(1, dt * BOAT.yawK);
   }
   S.h = norm360(S.h + S.r * dt);
   S.x += bv[0] * dt; S.y += bv[1] * dt;
-  S.boomSide = awa >= 0 ? -1 : 1; // -1: boma a sinistra
-  S.boom = boom;
+  S.boomSide = push ? S.pushSide : awa >= 0 ? -1 : 1; // -1: boma a sinistra
+  S.boom = push ? BOMA2.angle : boom;
+  if (S.lv === 2) S.pushing = !!push;
   return { heel: S.heel, hike: S.hike, awa, aws, alpha, awFrom, drive, side, twa: norm180(E.twd - S.h), leeway: Math.atan2(S.vl, Math.max(0.3, Math.abs(S.u))) / D2R };
 }

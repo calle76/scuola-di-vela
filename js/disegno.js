@@ -44,6 +44,7 @@
     if (S.capsized && noRight){ cls = "good"; msg = "Hai scuffiato: la barca resta rovesciata. Premi Avanti: nel passo dopo la raddrizzi."; }
     else if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
     // 1.0.9: dal traverso in giù (oltre 75°, confine fra bolina larga e traverso) in raffica si poggia, non si orza (docs/PROPOSTA-RAFFICHE-PORTANTI.md)
+    else if (S.pushing){ cls = ""; msg = "Boma spinto: la barca va all'indietro e la prua gira verso il boma. Al traverso molla Z, centra la barra e cazza."; }
     else if (S.stall){ cls = "bad"; msg = "La pala del timone è in stallo: l'acqua non la segue più e la barca frena. Muovi la barra più dolcemente."; }
     else if (S.heel > 25){ cls = "bad"; const bol = I.twa < 75;
       msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: " + (bol ? "prova a orzare un poco." : "poggia un poco.") : "Sbandi troppo: lasca la scotta" + (bol ? ", oppure orza di poco." : " e poggia un poco."); }

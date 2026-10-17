@@ -52,6 +52,15 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `uMin` | 0,5 m/s | Sotto, e all'indietro, il timone del livello 1 (barra fino a 30°) |
 | `RUD2_SICURA` | 35/45 | **Dalla 1.0.25** la sola freccia porta la barra fino a 35°, Maiusc + freccia fino a 45°, sempre a 1,6 al secondo come nel livello 1. **Regola del gioco, nessuna fonte** (nella 1.0.24 la freccia andava piano, 20°/s) |
 
+**Boma spinto del livello 2 (`BOMA2`, dalla 1.0.26, tasto Z tenuto premuto, solo per la barca con `S.lv === 2`).** `docs/PROPOSTA-SPINGI-BOMA.md`. Il boma resta a `angle` dalla parte dove si trova; la vela è una piastra (forza normale `CN = CL(α)·cos α + CD(α)·sin α`) applicata al centro velico lungo il boma: spinge indietro, di lato, e fa girare la prua verso il boma con velocità `√(|M| / Kq)`. Mentre il boma è spinto il timone usa la formula del livello 1.
+
+| Costante | Valore | Significato |
+| --- | --- | --- |
+| `angle` | 80° | Boma spinto (fonti: «circa 90°», «tutto fuori»). **Stima** |
+| `xMast` | 0,8 m | Albero a prua del centro della barca. **Stima** |
+| `dCE` | 0,9 m | Centro velico lungo il boma, dall'albero. **Stima** |
+| `Kq` | 1230 N·m·s² | Resistenza dell'acqua allo scafo che ruota (smorzamento quadratico). **Stima** da carena, pala e deriva |
+
 Altre costanti nel codice di gioco: colpo della strambata con vela aperta `GYBE_KICK = 260 °/s`, scalato con (vento / 15 nodi)^1,6 e con una variazione casuale tra −15% e +25%; soglia della strambata «violenta»: boma aperto oltre 45°.
 
 ## Risultati delle tarature
@@ -132,6 +141,7 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 - Raffiche come chiazze che viaggiano col vento, senza la struttura reale del vento sull'acqua.
 - Il fiocco non va mai a collo: in virata conta solo per la resistenza della vela che sbatte (tappa C, terzo compito).
 - **Livello 1: la barca gira più stretta e risponde alla barra più in fretta di una deriva vera, per scelta didattica** (dichiarato il 17 ottobre 2026). Curvatura media in virata 0,45-0,46 rad/m contro 0,11-0,23 delle virate misurate di un 470 (F4); la rotazione insegue la barra in circa 0,25 s; la pala non stalla mai, quindi sbattere la barra dà la virata più rapida e senza costi, mentre in F4 fa perdere più velocità. Il livello 2 (in prova dalla 1.0.24) ha un timone più realistico, che però non raggiunge ancora l'obiettivo di insegnare ad accompagnare la barra (`PROPOSTA-STALLO-TIMONE.md` §8).
+- **Il momento delle vele esiste solo col boma spinto** (livello 2, dalla 1.0.26): in navigazione normale la vela non fa girare la barca. Con il boma spinto il timoniere non si sporge dall'altra parte quando la barca sbanda verso il vento.
 - Nessuna tendenza orziera nella navigazione normale (c'è solo nell'esercizio di rotta): né dalla randa, né dal fiocco, né dallo sbandamento. Vale anche per il prototipo del fiocco (tappa C, secondo compito).
 
 ## Da tenere presente

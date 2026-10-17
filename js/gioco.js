@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.25"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.26"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -595,6 +595,7 @@
     if (k === "r"){ rightBoat(); return; }
     if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nel livello 2 la barra arriva fino a 45°
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
+    if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto (solo la barca del livello 2)
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
       if (e.target.tagName === "SELECT") return;
       e.preventDefault(); keys.add(k);
@@ -644,6 +645,7 @@
 
   function applyInput(dt){
     let tillerInput = false;
+    ctl.push = S.lv === 2 && keys.has("z") && !S.capsized; // 1.0.26: boma spinto finché Z è premuto (docs/PROPOSTA-SPINGI-BOMA.md)
     if (tillerAim !== null){ // livello 2: il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
       const d = tillerAim - ctl.tiller, m = 1.6 * dt; ctl.tiller = Math.abs(d) <= m ? tillerAim : ctl.tiller + Math.sign(d) * m; tillerInput = true;
       if (!dragTiller && ctl.tiller === tillerAim) tillerAim = null;
