@@ -103,3 +103,6 @@ Dichiarato: le fasce sono scelte **dopo** le misure del §2.
 1. Il via alla fermata 2.
 2. La bolina di 300 m nelle regate del livello 2, con regate più lunghe (circa 6 minuti), oppure un'altra lunghezza.
 3. Dove si prova finché non c'è il menu dei livelli: una regata provvisoria «nei salti di vento» con la barca del livello 2, e i salti anche nella navigazione libera con la barca del livello 2.
+
+**Ale, 17 ottobre 2026:** bolina di 300 m va bene, le regate saranno più lunghe. E i percorsi non sono solo «a bastone» (avanti e indietro da una boa): esistono anche percorsi **a trapezio** e **a triangolo**. Da prevedere nelle regate del livello 2, con una ricerca sulle fonti (forma, angoli dei lati, quali lati sono di lasco), dopo i salti di vento.
+

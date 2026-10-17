@@ -68,6 +68,8 @@ Il tattico arriva al livello 5: su una deriva a due il timoniere decide da solo 
 - **In sospeso:** tendenza orziera (la barca che orza da sola sbandando), finché non si ricontrolla la fonte (`DUBBI-E-RICERCHE.md` §3).
 - **Restano al livello 3-4:** braccio sbandante `zCE`, bolina lenta con poco vento, svergolamento, peso del timoniere come comando, deriva, massa nella resistenza, planata, corrente, onde vere.
 
+**Percorsi (Ale, 17 ottobre 2026):** oltre al bastone, percorsi a trapezio e a triangolo nelle regate del livello 2; bolina più lunga (300 m, `PROPOSTA-SALTI-VENTO.md`).
+
 Fisica fra le barche: copertura del vento, colpa nei contatti decisa dalle regole, penalità a giri, avversari che rispettano le regole e escono dalle coperture, protesta (elenco qui sopra). Prima stesura: le novità sono le regole e chi le applica. Il lavoro parte da una ricerca sulle fonti (il regolamento di regata si parafrasa, non si copia; punto di partenza `REGOLE-DI-REGATA.md`) e dalle osservazioni di Ale sulla 1.0. Temi già emersi, da ordinare nella proposta:
 
 - precedenze: mure diverse; stesse mure, affiancate o no; durante la virata; evitare il contatto; spazio alla boa;
