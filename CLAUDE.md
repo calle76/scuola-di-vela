@@ -37,7 +37,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 
 ## Git
 
-- **Commit e push li fai tu** (Ale, 17 ottobre 2026; prima li faceva lui). Si committa solo a collaudi verdi e versione chiusa, aggiungendo i file **uno per uno** e dicendo sempre quali sono entrati e con che messaggio. Prima di committare, `git status --short` per controllare che non entri niente dell'ambiente.
+- **I commit li fai tu, il push lo fa l'utente** (Ale, 17 ottobre 2026; prima faceva entrambi lui). Il push da qui non funziona: git chiede le credenziali di GitHub, che in questo ambiente non ci sono. A fine lavoro quindi: commit fatto da te, e all'utente il comando `git push`. Si committa solo a collaudi verdi e versione chiusa, aggiungendo i file **uno per uno** e dicendo sempre quali sono entrati e con che messaggio. Prima di committare, `git status --short` per controllare che non entri niente dell'ambiente.
 - **Mai `git add -A` né `git add .`**: i file `.gitmodules`, `.bashrc` e `.mcp.json` e la cartella `.codex/` li monta l'ambiente e vanno lasciati fuori.
 - Prima di chiudere, controlla che `index.html` e `js/` non risultino modificati nelle sessioni sul prototipo.
 
