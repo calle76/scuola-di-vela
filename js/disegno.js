@@ -44,6 +44,7 @@
     if (S.capsized && noRight){ cls = "good"; msg = "Hai scuffiato: la barca resta rovesciata. Premi Avanti: nel passo dopo la raddrizzi."; }
     else if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o R)." : "Hai scuffiato! Premi Raddrizza (o R)."); }
     // 1.0.9: dal traverso in giù (oltre 75°, confine fra bolina larga e traverso) in raffica si poggia, non si orza (docs/PROPOSTA-RAFFICHE-PORTANTI.md)
+    else if (S.stall){ cls = "bad"; msg = "La pala del timone è in stallo: l'acqua non la segue più e la barca frena. Muovi la barra più dolcemente."; }
     else if (S.heel > 25){ cls = "bad"; const bol = I.twa < 75;
       msg = I.sheet > 0.99 ? "Sbandi troppo e la vela è già tutta lasca: " + (bol ? "prova a orzare un poco." : "poggia un poco.") : "Sbandi troppo: lasca la scotta" + (bol ? ", oppure orza di poco." : " e poggia un poco."); }
     else if (S.heel < -15){ cls = "bad"; msg = "La barca sbanda verso di te: il vento è calato. Cazza un po' o poggia."; }
@@ -478,7 +479,7 @@
     ctx.fillStyle = colors.spar; ctx.fillRect(-0.04, 0.05, 0.08, 0.45);
     ctx.restore();
     // timone: pala dietro lo specchio di poppa, barra in avanti
-    const tau = ctl.tiller * BOAT.maxRudder * D2R;
+    const tau = ctl.tiller * (S.lv === 2 ? RUD2.maxRudder : BOAT.maxRudder) * D2R;
     ctx.strokeStyle = colors.spar; ctx.lineCap = "round";
     ctx.lineWidth = 0.09; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(-Math.sin(tau) * 0.55, 2.05 + Math.cos(tau) * 0.55); ctx.stroke();
     ctx.lineWidth = 0.06; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(Math.sin(tau) * 1.0, 2.05 - Math.cos(tau) * 1.0); ctx.stroke();

@@ -40,6 +40,18 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `backDrag` | 1,5 | Dalla 1.0.13: all'indietro la resistenza dello scafo della vasca si moltiplica per 1,5 (specchio di poppa e pala al contrario). **Ipotesi, nessuna fonte**: scelto per una retromarcia «un po' più lenta» (Ale), circa −15% di velocità massima; non cambia quanto presto parte |
 | `ironsA`, `ironsU`, `ironsYaw` | 36°, 0,5 m/s, 6 °/s | Barca ferma nel vento: sotto quel vento apparente e quella velocità la prua poggia da sola, fino a quella rotazione (come sopra) |
 
+**Timone del livello 2 (`RUD2`, dalla 1.0.24, solo per la barca con `S.lv === 2` che va avanti ad almeno `uMin`; in prova nella navigazione libera).** `docs/PROPOSTA-STALLO-TIMONE.md` §8.
+
+| Costante | Valore | Significato |
+| --- | --- | --- |
+| `maxRudder` | 45° | Barra tutta: nelle virate misurate del 470 la barra arriva a 45° (F4) |
+| `xR` | 1,9 m | Distanza della pala dal centro di rotazione. **Stima** (poppa di una barca da 4,2 m) |
+| `stallA` | 22° | Angolo effettivo oltre cui la pala stalla. F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera): **fissato prima di misurare**, a metà |
+| `dragK` | 184 N·s²/m² | Resistenza della pala sull'angolo effettivo: 12 kgf a 15° e 6 nodi (F4, pala del 470) |
+| `yawG`, `yawRho` | 0,6 /m², 0 m | Quanto in fretta la pala fa girare la barca e smorzamento dello scafo. **Ipotesi tarate** con 10 e 14 nodi; con `yawRho` 0 la rotazione la frena solo la pala |
+| `uMin` | 0,5 m/s | Sotto, e all'indietro, il timone del livello 1 (barra fino a 30°) |
+| `RUD2_LENTA` | 20/45 al secondo | Barra con la sola freccia, 20°/s (F4: accompagnata circa 14°/s, in fretta circa 35). Con Maiusc 1,6 al secondo, come nel livello 1 |
+
 Altre costanti nel codice di gioco: colpo della strambata con vela aperta `GYBE_KICK = 260 °/s`, scalato con (vento / 15 nodi)^1,6 e con una variazione casuale tra −15% e +25%; soglia della strambata «violenta»: boma aperto oltre 45°.
 
 ## Risultati delle tarature
@@ -119,6 +131,7 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 - Raddrizzamento con un pulsante, in 3 secondi.
 - Raffiche come chiazze che viaggiano col vento, senza la struttura reale del vento sull'acqua.
 - Il fiocco non va mai a collo: in virata conta solo per la resistenza della vela che sbatte (tappa C, terzo compito).
+- **Livello 1: la barca gira più stretta e risponde alla barra più in fretta di una deriva vera, per scelta didattica** (dichiarato il 17 ottobre 2026). Curvatura media in virata 0,45-0,46 rad/m contro 0,11-0,23 delle virate misurate di un 470 (F4); la rotazione insegue la barra in circa 0,25 s; la pala non stalla mai, quindi sbattere la barra dà la virata più rapida e senza costi, mentre in F4 fa perdere più velocità. Il livello 2 (in prova dalla 1.0.24) ha un timone più realistico, che però non raggiunge ancora l'obiettivo di insegnare ad accompagnare la barra (`PROPOSTA-STALLO-TIMONE.md` §8).
 - Nessuna tendenza orziera nella navigazione normale (c'è solo nell'esercizio di rotta): né dalla randa, né dal fiocco, né dallo sbandamento. Vale anche per il prototipo del fiocco (tappa C, secondo compito).
 
 ## Da tenere presente

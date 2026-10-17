@@ -12,8 +12,8 @@
   const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180 };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
-  const freeEnv = { twd: 0, tws: 10, gusts: 1 };
-  const VERSIONE = "1.0.23"; // sola fonte: menu, mare e registratore la leggono da qui
+  const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
+  const VERSIONE = "1.0.24"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -565,19 +565,21 @@
     env.twd = freeEnv.twd; env.tws = freeEnv.tws / KN;
     curMarks = [{ x: 0, y: -160, label: "Boa 1" }, { x: 110, y: -40, label: "Boa 2" }, { x: -110, y: -40, label: "Boa 3" }];
     freshState(0, 30, norm360(env.twd + 90), 0.3);
+    if (freeEnv.lv === 2) S.lv = 2;
     setGusts(freeEnv.gusts);
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
   }
   $("wDir").onchange = e => { freeEnv.twd = +e.target.value; env.twd = freeEnv.twd; setGusts(gustLevel); };
   $("wSpd").onchange = e => { freeEnv.tws = +e.target.value; env.tws = freeEnv.tws / KN; };
   $("gustSel").onchange = e => { freeEnv.gusts = +e.target.value; setGusts(freeEnv.gusts); };
+  $("boatLv").onchange = e => { freeEnv.lv = +e.target.value; if (mode === "free"){ if (freeEnv.lv === 2) S.lv = 2; else { delete S.lv; delete S.stall; } } };
 
   // ======================================================================
   // INPUT
   // ======================================================================
   const keys = new Set(), semHeld = new Set();
   const releaseKeys = () => { keys.clear(); semHeld.clear(); }; // all'apertura di finestre e riquadri: niente tasti rimasti «premuti»
-  let dragTiller = false;
+  let dragTiller = false, tillerAim = null;
   const KEYSEM = { w: "cazza", s: "lasca" };
   function semPress(a){
     if (!allowSem.includes(a) || semHeld.has(a)) return;
@@ -591,6 +593,7 @@
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (KEYSEM[k]){ semPress(KEYSEM[k]); if (allowSem.length) e.preventDefault(); return; }
     if (k === "r"){ rightBoat(); return; }
+    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, barra veloce nel livello 2
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
       if (e.target.tagName === "SELECT") return;
@@ -606,7 +609,7 @@
     ["pointerup","pointercancel","lostpointercapture"].forEach(ev => btn.addEventListener(ev, () => semRelease(a)));
     btn.addEventListener("contextmenu", e => e.preventDefault());
   });
-  $("tiller").addEventListener("input", e => { ctl.tiller = e.target.value / 100; dragTiller = true; });
+  $("tiller").addEventListener("input", e => { if (S.lv === 2) tillerAim = e.target.value / 100; else ctl.tiller = e.target.value / 100; dragTiller = true; });
   ["pointerup","change","touchend"].forEach(ev => $("tiller").addEventListener(ev, () => dragTiller = false));
   $("sheet").addEventListener("input", e => { ctl.sheet = e.target.value / 100; });
   function seg(id, key){
@@ -641,12 +644,18 @@
 
   function applyInput(dt){
     let tillerInput = false;
+    if (tillerAim !== null){ // livello 2: il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
+      const d = tillerAim - ctl.tiller, m = 1.6 * dt; ctl.tiller = Math.abs(d) <= m ? tillerAim : ctl.tiller + Math.sign(d) * m; tillerInput = true;
+      if (!dragTiller && ctl.tiller === tillerAim) tillerAim = null;
+    }
     if (allowTiller){
       const l = keys.has("ArrowLeft"), r = keys.has("ArrowRight");
       if (l || r){
         let dir = (r ? 1 : 0) - (l ? 1 : 0);
         if (opt.helm === "prua") dir = -dir * (S.u < 0 ? -1 : 1);
-        ctl.tiller = clamp(ctl.tiller + dir * 1.6 * dt, -1, 1); tillerInput = true;
+        // 1.0.24, livello 2: la freccia muove la barra piano (20°/s su 45°), Maiusc + freccia veloce come nel livello 1
+        const rate = S.lv === 2 && !keys.has("Shift") ? RUD2_LENTA : 1.6;
+        ctl.tiller = clamp(ctl.tiller + dir * rate * dt, -1, 1); tillerInput = true;
       }
     }
     // lezione 1: la barra torna al centro in fretta, così la prua smette di girare appena si rilascia la freccia

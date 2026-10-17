@@ -176,7 +176,7 @@ dialog#setDlg::backdrop{background:rgba(13,25,36,.5)}
 select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .check{display:flex;gap:8px;align-items:center;font-size:.95rem;cursor:pointer}
 .check input{width:18px;height:18px;accent-color:var(--ink)}
-#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:4px} #freeOpts{flex-direction:row;gap:10px} #freeOpts .optrow{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza */
+#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:4px} #freeOpts{flex-direction:row;flex-wrap:wrap;gap:4px 10px} #freeOpts .optrow{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza; 1.0.24: a capo, la scelta «Barca» sta su una riga sua */
 #sesBox{display:flex;gap:8px;align-items:center} #sesBox[hidden]{display:none} #sesNote{flex:1;font:inherit;font-size:.9rem;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);resize:none}
 
 /* ---- glossario ---- */
@@ -291,6 +291,8 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
             <select id="wSpd"><option value="6">6 nodi, brezza leggera</option><option value="10" selected>10 nodi, brezza tesa</option><option value="15">15 nodi, vento fresco</option></select></div>
           <div class="optrow"><span>Raffiche</span>
             <select id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
+          <div class="optrow"><span>Barca</span>
+            <select id="boatLv" title="Livello 2, in prova: il timone stalla se dai troppa barra troppo in fretta; la freccia muove la barra piano, Maiusc + freccia in fretta"><option value="1" selected>livello 1</option><option value="2">livello 2 (prova)</option></select></div>
         </div>
         <label class="check"><input type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (vale per la modalità in corso: nelle prove e nelle regate parte spenta)</label>
         <label class="check"><input type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>

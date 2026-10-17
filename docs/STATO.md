@@ -1,12 +1,16 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026, versione 1.0.23**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026 (sera), versione 1.0.24**.
 
 ## Dove siamo
 
 **Il livello 1 è chiuso.** Il gioco è un simulatore didattico di vela in una pagina (`index.html` più `js/`), con 6 lezioni (32 passi pratici), 5 prove, 2 regate contro tre avversari, esame, brevetto e carriera. Tutto si collauda da solo: una carriera intera, da zero all'attestato, gira con **32 passi su 32 guidati** dal pilota e dà OK.
 
 **Fatto nella sessione del 17 ottobre** (dettagli nel `CHANGELOG.md`): partenze degli avversari rifatte (1.0.16), contatti ridotti del 38% (1.0.17), avviso sul richiamo nel riquadro e parti 2-4-6 delle partenze chiuse (1.0.18), increspature più vive dentro le raffiche (1.0.19), due domande del ripasso tornate al loro posto (1.0.20), la lezione 5 spiega che andando all'indietro la barra va al contrario (1.0.21), pulizia del codice della partenza (1.0.22), la barca che balla sull'acqua, solo disegno (1.0.23).
+
+**Fatto dopo, nella stessa giornata (1.0.24):** il punto sul livello 2 e il primo pezzo della sua fisica.
+- **Decisioni di Ale sul livello 2** (`VISIONE-LIVELLI-E-CARRIERA.md` §3 e §8): tutta la fisica nuova c'è dal primo momento del livello 2, le lezioni la spiegano (non la accendono) e non si spegne; ogni livello ha la sua fisica e la sua barca; nel gioco libero si passa fra i livelli e si prova tutto in qualunque ordine, la carriera si apre coi brevetti. Nel livello 2 entrano: timone che stalla, «spingi il boma», salti di vento (la linea di partenza resta perpendicolare al vento medio, sono i salti a renderla storta). Tendenza orziera in sospeso; il resto al livello 3-4.
+- **Timone del livello 2, in prova** (`PROPOSTA-STALLO-TIMONE.md`, con revisione in chat): nella navigazione libera, impostazioni, «Barca: livello 2 (prova)»; freccia = barra lenta, Maiusc + freccia = veloce. Il livello 1 è identico al bit. **L'obiettivo didattico non è raggiunto:** la differenza fra barra lenta e veloce compare solo con vento medio, nasce mollando la barra e non sbattendola, e sparisce con lo stallo a 15° o 30°. La barca del gioco pesa la metà del 470 delle fonti e frena circa il doppio più in fretta.
 
 ## Come si lavora (regole che non cambiano)
 
@@ -32,11 +36,9 @@
 
 ## Prossimo lavoro
 
-**Decisione di Ale, 17 ottobre 2026 (sera): ordine per chiudere il livello 1.** 1) ~~Manutenzione~~: **fatta nella 1.0.22** (guida degli avversari non più scritta tre volte, impronta rigenerata e identica al bit). 2) ~~Bolina lenta con poco vento~~: ultimo tentativo fatto (fermata 1, `PROPOSTA-BOLINA.md` §11), causa intera non trovata, **limite noto dichiarato: il livello 1 è chiuso** (Ale, «A»). 3) Poi il livello 2.
-
-**Prima cosa della prossima sessione (Ale, 17 ottobre 2026): il punto sul livello 2**, con l'elenco delle cose che completeranno la fisica della barca e fra le barche (punto di partenza: le semplificazioni dichiarate in `FISICA-E-TARATURE.md` e i dubbi in `DUBBI-E-RICERCHE.md`); la copertura del vento va nel livello 2, spiegata da una lezione che da lì la attiva (`VISIONE-LIVELLI-E-CARRIERA.md` §3).
-
-**Livello 2: regole di regata e avversari**, sulla stessa barca (`VISIONE-LIVELLI-E-CARRIERA.md` §2-3). Prima la ricerca sulle fonti del regolamento, la proposta rivista in chat, e solo dopo lezioni, colpa nei contatti, penalità e protesta. Il fiocco e la barca a due sono **livello 3** (prototipo in `sperimentale/`, tappa C chiusa).
+1. **Ale prova giocando la barca del livello 2** (navigazione libera, ⚙, «Barca: livello 2 (prova)»; Maiusc + freccia per la barra veloce): si sente la differenza fra accompagnare e sbattere la barra? La barca è piacevole o pigra?
+2. **Timone del livello 2, seguito** (`PROPOSTA-STALLO-TIMONE.md` §8): o si cercano virate misurate su una deriva singola da circa 4 m e si ritara, o si ricontrolla prima la frenata della barca prua al vento (1-1,6 lunghezze contro 3-4, dubbio del 13 ottobre), che è la causa di fondo.
+3. Poi gli altri pezzi della barca del livello 2: «spingi il boma», salti di vento; poi la fisica fra le barche (copertura del vento), le regole, le lezioni. Ordine: «prima la barca, poi il resto».
 
 ## Dove cercare
 

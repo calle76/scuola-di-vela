@@ -64,7 +64,7 @@ Dalla fonte su una deriva olimpica a due (una sola barca):
 | Dubbio | Cosa sappiamo | Per chiuderlo |
 | --- | --- | --- |
 | **Momento d'imbardata dovuto alle vele** (randa che fa orzare, fiocco che fa poggiare, scafo sbandato che orza da solo) | Non modellato: il motore gira solo col timone. Modellare il solo fiocco dà una barca sempre poggiera, contro la fonte | *web* (ricontrollare la fonte), poi *codice* con un motore più dinamico |
-| **Timone in stallo oltre circa 15°** | Nel motore non stalla mai: barra a fondo (30°) gira 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore | *libro* o *video*; cambiarlo tocca tutte le virate e i tempi del gioco |
+| **Timone in stallo oltre circa 15°** | Nel motore non stalla mai: barra a fondo (30°) gira 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore | *Aggiornato il 17 ottobre 2026:* nel livello 1 resta così, dichiarato; il livello 2 in prova ha lo stallo (`PROPOSTA-STALLO-TIMONE.md`), ma l'effetto didattico non c'è ancora. **Da cercare:** virate misurate su una deriva singola da circa 4 m (più pertinenti del 470), e la frenata della barca prua al vento |
 | **Coppia raddrizzante di una deriva a due** | Circa 60 kgf·m senza trapezio e circa 220 col trapezio (una barca); il prototipo vale 83,7 kgf·m a 22,6° | *libro* o *video* |
 | **Massa e resistenza dello scafo** | Nel motore la massa non entra nella resistenza: una barca più pesante andrebbe più veloce. Nessun dato per ritarare | *web* (polari di derive) |
 | **Peso dell'equipaggio come comando** | Oggi il timoniere si sporge da solo, con 0,9 s di ritardo; nella realtà è una manovra (lezione 2.5) | *codice*, con il prodiere |

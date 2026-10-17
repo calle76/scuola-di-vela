@@ -37,6 +37,25 @@ const BOAT = {
   TE: 0.80            // m, 1.0.11: profondità efficace di scafo e deriva per la resistenza indotta (ipotesi: dà il 14% di Day 2017 §3.4 con 10 nodi); 0 = senza
 };
 
+// 1.0.24: timone del livello 2 (docs/PROPOSTA-STALLO-TIMONE.md). Vale solo per una barca con S.lv === 2 che va avanti ad almeno uMin;
+// sotto, all'indietro e nel livello 1 il timone resta quello di sempre (barra fino a 30°, rotazione che insegue la barra).
+// La pala sente l'angolo effettivo (barra meno l'acqua che le arriva di traverso perché la barca gira), stalla oltre stallA
+// (la forza resta quella dello stallo, la resistenza continua a crescere: Masuyama e Ogihara 2020, F4) e la rotazione nasce dalla
+// forza della pala contro lo smorzamento dello scafo: dr/dt = −yawG·u·(u·F + yawRho·r), a regime curvatura = δ / (xR + yawRho).
+const RUD2 = {
+  maxRudder: 45,      // gradi: nelle virate misurate del 470 la barra arriva a 45° (F4, fig. 5 e 6)
+  xR: 1.9,            // m, distanza della pala dal centro di rotazione (stima: poppa di una barca da 4,2 m)
+  yawRho: 0,          // m, smorzamento dello scafo come lunghezza: 0 = la rotazione la frena solo la pala (tarato, docs/PROPOSTA-STALLO-TIMONE.md §8)
+  yawG: 0.6,          // 1/m², quanto in fretta la pala fa girare la barca (ipotesi, tarata con 10 e 14 nodi: §8)
+  stallA: 22,         // gradi di angolo effettivo: F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera); fissato prima di misurare
+  dragK: 184,         // N·s²/m²: resistenza della pala, 12 kgf a 15° e 6 nodi (F4, pala del 470); usa l'angolo effettivo
+  uMin: 0.5           // m/s: sotto, il timone del livello 1 (come ironsU: niente sovrapposizione con la prua che poggia da sola)
+};
+const RUD2_LENTA = 20 / 45; // barra al secondo nel livello 2 con la sola freccia (20°/s: F4, virate accompagnate circa 14°/s, in fretta circa 35)
+function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso segno della barra
+  return tiller * RUD2.maxRudder + Math.atan2(S.r * D2R * RUD2.xR, S.u) / D2R;
+}
+
 // 1.0.6: resistenza dello scafo dritto da una tabella misurata in vasca, al posto di k1·u + k2·u² + k4·u⁴ (docs/PROPOSTA-VELOCITA.md).
 // Area di resistenza (resistenza / ½ρv², m²) di uno scafo da 4,2 m di circa 160 kg, senza deriva né timone, letta a occhio da
 // A. H. Day, «Performance prediction for sailing dinghies», Ocean Engineering 136, 2017, fig. 2 (= Day e Nixon 2014, fig. 4, curva 80 kg).
@@ -80,9 +99,11 @@ function step(S, C, E, dt){
   const L = q * CL(alpha) * lf, Dg = q * (CD(alpha) + (alpha < 6 ? 0.2 * (1 - alpha / 6) : 0)); // vela che sbatte: più resistenza
   const drive = L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
   const side = L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento
-  const rud = C.tiller * BOAT.maxRudder;
+  const lv2 = S.lv === 2 && S.u >= RUD2.uMin, a2 = lv2 ? rud2Alpha(S, C.tiller) : 0;
+  const rud = lv2 ? 0 : C.tiller * BOAT.maxRudder; // livello 2: la barra conta solo attraverso a2
   const res = hullDrag(S.u) * (S.u < 0 ? BOAT.backDrag : 1) +
-              BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2;
+              (lv2 ? RUD2.dragK * S.u * S.u * Math.sin(Math.abs(a2) * D2R) ** 2 :
+              BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2);
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   // 1.0.11: resistenza indotta, Delft (Day 2017, eq. 15) Ri = Fh² / (π·½ρ·V²·TE²), con u² + 0,4 come nello scarroccio: a bassa velocità la deriva non regge
   // la spinta laterale e la formula pura fermerebbe la barca (docs/PROPOSTA-BOLINA.md §3). TE costante: in Delft cala sbandando e cambia col Froude.
@@ -104,11 +125,18 @@ function step(S, C, E, dt){
   const acc = (mHeel - mRight) / BOAT.rollI - BOAT.rollDamp / BOAT.rollI * S.heelRate;
   S.heelRate += acc * dt;
   S.heel += S.heelRate / D2R * dt;
+  if (lv2){ // livello 2: la forza della pala (che stalla oltre stallA) contro lo smorzamento dello scafo
+    const F = Math.max(-RUD2.stallA, Math.min(RUD2.stallA, a2)) * D2R;
+    S.r += -RUD2.yawG * S.u * (S.u * F + RUD2.yawRho * S.r * D2R) * dt / D2R;
+    S.stall = Math.abs(a2) > RUD2.stallA;
+  } else {
+  if (S.lv === 2) S.stall = false;
   // virata: la barra a dritta porta la pala a sinistra -> la prua gira a sinistra
   let rTarget = -(S.u / BOAT.turnLen) * Math.sin(rud * D2R) / D2R; // gradi/s
   // barca ferma nel vento: la prua poggia da sola
   if (A < BOAT.ironsA && Math.abs(S.u) < BOAT.ironsU) rTarget += (awa >= 0 ? -1 : 1) * BOAT.ironsYaw * (1 - Math.abs(S.u) / BOAT.ironsU);
   S.r += (rTarget - S.r) * Math.min(1, dt * BOAT.yawK);
+  }
   S.h = norm360(S.h + S.r * dt);
   S.x += bv[0] * dt; S.y += bv[1] * dt;
   S.boomSide = awa >= 0 ? -1 : 1; // -1: boma a sinistra
