@@ -180,8 +180,8 @@
       cond: (I, S, B) => S.tacks > B.tacks && I.twa >= 40 && I.twa <= 78 && I.kn > 1.2, hold: 0.8,
       done: "Virata riuscita: il boma è passato dall'altra parte e il timoniere ha cambiato lato. A bordo si annuncia così: «Pronti a virare?», «Pronti!», «Viro!»." },
     { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
-      text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare. Se non rallenti abbastanza, orza fino alla bolina, con la vela lasca.",
-             "Se la barca si pianta nel vento, <em>arretra</em>. Per uscirne sposta la barra <em>verso il boma</em>: la prua si allontana dal vento. Fuori dall'angolo morto centra la barra e cazza: la barca riparte."],
+      text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare.",
+             "Orza a bolina lascando: rallenta fino a perdere l'abbrivio e fallendo la virata. Se la barca arretra risponde al timone in modo opposto. Porta la prua fuori dall'angolo morto, centra e cazza per ripartire."],
       // 0.20.2, due fasi. Fase 1: barca piantata (la condizione della 0.20.1, tenuta 1 s). Fase 2: uscita, prua ad almeno IRONS_A (40°) dal vento
       // e barca che va avanti, tenuta 1 s (hold); vale su tutte e due le mure. Lo stato delle fasi sta in B, che showStep rifà a ogni passo.
       cond: (I, S, B) => {

@@ -56,6 +56,7 @@ TESTS=(
     "polare.js|node|ambiguo|0||fisica/polare.js"
     "raffiche_e_virate.js|node|ambiguo|0||fisica/raffiche_e_virate.js"
     "collaudo_schermate.py|py|ambiguo|0||collaudo_schermate.py"
+    "collaudo_riquadro_regata.py|py|chiaro|0||collaudo_riquadro_regata.py"
     "collaudo_lezioni.py|py|ambiguo|0||collaudo_lezioni.py"
     "collaudo_quiz.py|py|chiaro|0||collaudo_quiz.py"
     "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
@@ -96,6 +97,7 @@ nota() {
     case "$1" in
         "polare.js") echo "confronta a mano con circa 4,7 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.11; 1.0.6-1.0.10 3,8 / 6,0 / 4,1)" ;;
         "raffiche_e_virate.js") echo "virata riuscita in circa 3,0 s da 3,9 nodi e in circa 6,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 67° (scuffia) con la scotta fissa e circa 53° col boma a 21° (dalla 1.0.11)" ;;
+        "collaudo_riquadro_regata.py") echo "riga «ESITO: OK» (60 partenze con caratteri degli avversari a caso, nessun eccesso del riquadro delle istruzioni; NON VALIDO se non ha visto il caso peggiore con tre prudenti)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
         "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.11 La scotta: cazzare dopo un colpo lungo, 2.4 Barra sottovento dopo un colpo lungo, 6.3 La scuffia a mani ferme, voluto dalla 1.0.15; esito in docs/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
         "collaudo_pilota_lezioni.py (semi 1-100)") echo "«guidando» non completato al più 1 volta su 100 per passo; «da guardare» con i casi noti dell'esito in docs/PROPOSTA-PILOTA-LEZIONI.md (1.9, 1.11, 1.12, 2.4, 2.5, 5.8, 6.2, 6.3): numeri molto diversi o passi nuovi sono un problema" ;;
