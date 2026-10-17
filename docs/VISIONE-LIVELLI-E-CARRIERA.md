@@ -64,6 +64,7 @@ Stessa barca, stessa fisica del livello 1: le novità sono le regole e chi le ap
 - penalità a giri al posto dei 15 secondi; colpa nei contatti decisa dalle regole, non solo da mure e posizione (osservazioni 33 e 39, `ROADMAP.md`);
 - avversari che rispettano le regole e guidano meglio (partenze, giri di boa, comportamento dopo l'arrivo; osservazioni 25-28);
 - la **protesta**, idea di Ale del 16 ottobre 2026 **[aperto]**: se ne parla con le osservazioni sulla 1.0.
+- la **copertura del vento**, chiesta da Ale il 17 ottobre 2026 **[aperto]**: «una barca che affianca l'altra toglie vento a chi è sottovento». Oggi ogni barca ha il vento pieno. È già descritta in `ROADMAP.md` (cono d'ombra: cosa richiede) e in `CONTENUTI-DA-VERIFICARE.md` (lunghezza del cono e perdita di vento da cercare nelle fonti); nel piano vecchio stava al livello 4 (`PIANO-GENERALE.md`), ora va nel livello 2 perché fa parte della dinamica delle regate. Tocca il vento che riceve la barca, quindi non è solo disegno: va con la ricerca sulle fonti del livello 2.
 
 I corsi dipendono dalla fisica del prototipo: se non regge, cambiano. Ogni lezione chiede un solo ruolo alla volta. Nelle lezioni gli ordini all'equipaggio sono sempre espliciti.
 
