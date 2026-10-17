@@ -17,10 +17,15 @@ PILOTA = """
     for (const a of angs) { const b = (m.out + a) * D; pts.push({ x: m.x + Math.sin(b) * 13, y: m.y - Math.cos(b) * 13 }); }
   }
   const last = sv.marks[sv.marks.length - 1]; pts.push({ x: last.x, y: last.y });
-  const log = []; let i = 0, side = 1, lastToast = null;
+  const log = []; let i = 0, side = 1, lastToast = null, oltre = false;
   window.__pil = setInterval(() => {
     const S = sv.S; if (S.finished || i >= pts.length){ window.__pilDone = (window.__pilDone || 0) + 1; return; }
     if (sv.toast && sv.toast !== lastToast) { lastToast = sv.toast; log.push([Math.round(S.time), sv.toast, S.markIdx, S.rnd || 0]); }
+    // 1.0.19: quando il traguardo diventa il punto da raggiungere, si aggiunge un punto 25 m oltre, sulla direzione da cui si arriva (la posizione
+    // di quel momento). Prima l'ultimo punto era il centro della linea e a meno di 7 m il pilota smetteva di guidare: la barca scivolava ferma a
+    // 6-10 m dalla linea e la prova 3 risultava non finita (docs/PROPOSTA-PROVA3.md). Dalla partenza non va bene: nella prova 4 si risale fino alla
+    // boa e poi si torna, e la direzione partenza-traguardo non è quella di arrivo.
+    if (!oltre && i === pts.length - 1) { oltre = true; const dx = last.x - S.x, dy = last.y - S.y, d = Math.hypot(dx, dy) || 1; pts.push({ x: last.x + dx / d * 25, y: last.y + dy / d * 25 }); }
     const p = pts[i]; if (Math.hypot(p.x - S.x, p.y - S.y) < 7) { i++; return; }
     const brg = Math.atan2(p.x - S.x, -(p.y - S.y)) / D, rel = n180(brg - sv.twd);
     let want = brg;
@@ -45,7 +50,8 @@ async def prova(pg, idx, plan, nome):
         if await pg.evaluate("__sv.S.finished || window.__pilDone > 80"): break
     r = await pg.evaluate("[__sv.S.finished, Math.round(__sv.S.time), __sv.S.markIdx, __sv.S.wrongMarks||0, __pilLog, __sv.S.capsizes, [Math.round(__sv.S.x), Math.round(__sv.S.y), Math.round(__sv.S.h), +__sv.S.u.toFixed(1)], window.__pilDone]")
     await pg.evaluate("clearInterval(window.__pil)")
-    print(f"prova {idx+1}, {nome}: finita={r[0]} tempo={r[1]} s boe girate={r[2]} giri sbagliati={r[3]} scuffie={r[5]} posizione finale={r[6]} fine pilota={r[7]}")
+    dist = await pg.evaluate("(() => { const m = __sv.marks, l = m[m.length - 1]; return Math.round(Math.hypot(__sv.S.x - l.x, __sv.S.y - l.y)); })()")
+    print(f"prova {idx+1}, {nome}: finita={r[0]} tempo={r[1]} s boe girate={r[2]} giri sbagliati={r[3]} scuffie={r[5]} posizione finale={r[6]} fine pilota={r[7]} distanza dal punto d'arrivo={dist} m")
     for t, msg, mi, rnd in r[4]: print(f"    {t:4d} s  boa {mi}  conto {rnd:+d}  «{msg}»")
     return r
 

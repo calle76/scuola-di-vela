@@ -37,3 +37,18 @@ Il pilota deve **puntare un punto oltre la linea** (per esempio 25 metri oltre) 
 ## Passi successivi (dopo il via)
 
 Fermata 2: modifica del solo pilota, tre semi, poi le prove 1-5 del giro per la regressione. Nessuna modifica al gioco, quindi nessuna nuova versione.
+
+## Esito (fermata 2, 17 ottobre 2026): fatto, solo nel collaudo
+
+**Fatto:** `collaudo_giro_boa.py`, quando il traguardo diventa il punto da raggiungere, aggiunge un punto 25 metri oltre, sulla direzione da cui si arriva. Il collaudo stampa anche la distanza dal punto d'arrivo (criterio 4). Il gioco non è stato toccato (`index.html` e `js/` identici).
+
+| Criterio | Esito |
+| --- | --- |
+| 1. prova 3 finisce, 3 semi su 3 | **rispettato**: 157 / 156 / 157 s |
+| 2. prove 1, 2, 4, 5 non cambiano esito | **rispettato** (vedi sotto, dopo un primo tentativo sbagliato) |
+| 3. gioco non toccato | **rispettato** |
+| 4. il metro misura | **rispettato**: il pilota finisce a 14-15 m **oltre** il punto d'arrivo, prima a 6-10 m prima (soglia: sotto 7 m in tutti i semi = nessun cambiamento) |
+
+**Primo tentativo, sbagliato:** il punto oltre il traguardo lo calcolavo dalla direzione partenza-traguardo. Nella prova 3 va bene, ma nella prova 4 si risale fino alla boa e poi si torna, quindi partenza e traguardo sono vicini e la direzione risultava sbagliata: **le prove 4 «boa a sinistra» e «sbaglia e rimedia» non finivano più** (prima 310 e 345 s). Il criterio 2 ha preso l'errore. Ora il punto si calcola nel momento in cui il traguardo diventa il bersaglio, dalla posizione di allora.
+
+**Prove dopo la correzione** (un giro completo): prova 4 boa a sinistra finita in 310 s, boa a dritta non finita con 1 giro sbagliato, sbaglia e rimedia finita in 345 s con 1 giro sbagliato; prova 5 triangolo finita in 298 s, boa 2 a dritta non finita con 1 giro sbagliato; prove 1 e 2 finite in 79 e 135 s.
