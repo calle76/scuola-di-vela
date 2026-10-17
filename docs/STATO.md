@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026 (sera), versione 1.0.28**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026 (notte), versione 1.0.29**.
 
 ## Dove siamo
 
@@ -14,6 +14,7 @@
 - **«Spingi il boma», in prova (1.0.26):** Z tenuto premuto nella barca del livello 2; si esce dall'angolo morto 3 volte più in fretta che con la sola barra, la prua gira verso il boma come dicono le fonti, serve anche per frenare e andare all'indietro. Tutti i criteri nelle soglie (`PROPOSTA-SPINGI-BOMA.md` §8).
 - **Raddrizzare con A** (1.0.27); R resta libero per i livelli futuri.
 - **Salti di vento, in prova (1.0.28):** barca del livello 2 nella navigazione libera e «Regata nei salti di vento» (boa a 300 m, fuori da meriti e carriera); virare sugli scarsi rende circa il 6%, il salto persistente si gioca andando verso la rotazione (`PROPOSTA-SALTI-VENTO.md` §7-8). Percorsi a trapezio e triangolo: da fare.
+- **Pulizia del codice (1.0.29):** solo commenti e collaudi, gioco identico al bit. Intestazione «BARCA DEL LIVELLO 2» in `motore.js` per trovare i controlli del livello 2; collaudo K5 aggiornato. Codice 292 864 byte. **`tests/fisica/timone2.js` esce con criteri FUORI soglia (C1, C3, C4, C8 a 6 nodi): è noto (§8 di `PROPOSTA-STALLO-TIMONE.md`), si confrontano le uscite con le precedenti, non l'esito.**
 
 ## Come si lavora (regole che non cambiano)
 
@@ -39,7 +40,7 @@
 
 ## Prossimo lavoro
 
-1. **Ale prova giocando la 1.0.26** (Z per spingere il boma; poi decide se raddrizzare passa da R ad A). Prima la 1.0.25 (navigazione libera, ⚙, «Barca: livello 2 (prova)»): sola freccia fino a 35°, Maiusc fino a 45°. Si sente la scelta? Poi, se convince, l'aiuto «la barra si ferma dove la pala stallerebbe» (disattivabile), idea nata dalla «variabile» di Ale.
+1. **Ale prova giocando le versioni 1.0.25-1.0.28 del livello 2** (la 1.0.26 Z per spingere il boma; raddrizzare con A è fatto, 1.0.27). Prima la 1.0.25 (navigazione libera, ⚙, «Barca: livello 2 (prova)»): sola freccia fino a 35°, Maiusc fino a 45°. Si sente la scelta? Poi, se convince, l'aiuto «la barra si ferma dove la pala stallerebbe» (disattivabile), idea nata dalla «variabile» di Ale.
 2. **Timone del livello 2, seguito** (`PROPOSTA-STALLO-TIMONE.md` §8): o si cercano virate misurate su una deriva singola da circa 4 m e si ritara, o si ricontrolla prima la frenata della barca prua al vento (1-1,6 lunghezze contro 3-4, dubbio del 13 ottobre), che è la causa di fondo.
 3. Poi i percorsi a trapezio e triangolo; poi la fisica fra le barche (copertura del vento), le regole, le lezioni. Ordine: «prima la barca, poi il resto».
 
