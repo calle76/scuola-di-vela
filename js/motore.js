@@ -61,6 +61,27 @@ const BOMA2 = {
   dCE: 0.9,           // m, centro velico lungo il boma dall'albero (stima: circa un terzo del boma)
   Kq: 1230            // N·m·s², acqua contro lo scafo che ruota: ½·ρ·1,2·(carena, pala, deriva per il cubo della distanza) (stima)
 };
+// 1.0.28: salti di vento del livello 2 (docs/PROPOSTA-SALTI-VENTO.md §7). Puro: lo stato st lo tiene chi chiama, rnd() dà numeri fra 0 e 1.
+// «osc»: oscillazione attorno al vento medio con ampiezza e periodo propri di ogni regata (fasce amp e half), ogni mezza oscillazione
+// diversa di ±jit; «pers»: rotazione sempre dalla stessa parte (persRate gradi al secondo, fino a persMax) più una piccola oscillazione.
+// Fasce: ipotesi dentro gli ordini di grandezza delle fonti, con il periodo accorciato per la bolina del gioco (dichiarato).
+const SALTI2 = { amp: [12, 15], half: [60, 75], jit: 0.1, persRate: [10 / 200, 20 / 200], persMax: 25, persAmp: [3, 5] };
+function newShift(kind, rnd){
+  const a = kind === "pers" ? SALTI2.persAmp : SALTI2.amp, s0 = rnd() < 0.5 ? -1 : 1;
+  const st = { kind, A: a[0] + rnd() * (a[1] - a[0]), H: SALTI2.half[0] + rnd() * (SALTI2.half[1] - SALTI2.half[0]), drift: 0, rate: 0 };
+  st.v0 = s0 * st.A; st.v1 = -s0 * st.A; st.d = st.H; st.t = rnd() * st.d; // una sinusoide presa in un punto qualunque
+  if (kind === "pers") st.rate = (rnd() < 0.5 ? -1 : 1) * (SALTI2.persRate[0] + rnd() * (SALTI2.persRate[1] - SALTI2.persRate[0]));
+  return st;
+}
+function stepShift(st, dt, rnd, ruota = true){ // avanza di dt secondi; restituisce di quanti gradi il vento è girato rispetto al medio (+ = in senso orario); ruota = false: la rotazione persistente aspetta
+  st.t += dt;
+  if (st.t >= st.d){
+    st.t -= st.d; st.v0 = st.v1; const j = () => 1 + (rnd() * 2 - 1) * SALTI2.jit;
+    st.v1 = -Math.sign(st.v1 || 1) * st.A * j(); st.d = st.H * j();
+  }
+  if (st.kind === "pers" && ruota) st.drift = Math.max(-SALTI2.persMax, Math.min(SALTI2.persMax, st.drift + st.rate * dt));
+  return st.drift + st.v0 + (st.v1 - st.v0) * (1 - Math.cos(Math.PI * Math.min(1, st.t / st.d))) / 2;
+}
 function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso segno della barra
   return tiller * RUD2.maxRudder + Math.atan2(S.r * D2R * RUD2.xR, S.u) / D2R;
 }

@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026 (sera), versione 1.0.26**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **17 ottobre 2026 (sera), versione 1.0.28**.
 
 ## Dove siamo
 
@@ -8,10 +8,12 @@
 
 **Fatto nella sessione del 17 ottobre** (dettagli nel `CHANGELOG.md`): partenze degli avversari rifatte (1.0.16), contatti ridotti del 38% (1.0.17), avviso sul richiamo nel riquadro e parti 2-4-6 delle partenze chiuse (1.0.18), increspature più vive dentro le raffiche (1.0.19), due domande del ripasso tornate al loro posto (1.0.20), la lezione 5 spiega che andando all'indietro la barra va al contrario (1.0.21), pulizia del codice della partenza (1.0.22), la barca che balla sull'acqua, solo disegno (1.0.23).
 
-**Fatto dopo, nella stessa giornata (1.0.24-1.0.26):** il punto sul livello 2 e il primo pezzo della sua fisica.
+**Fatto dopo, nella stessa giornata (1.0.24-1.0.28):** il punto sul livello 2 e il primo pezzo della sua fisica.
 - **Decisioni di Ale sul livello 2** (`VISIONE-LIVELLI-E-CARRIERA.md` §3 e §8): tutta la fisica nuova c'è dal primo momento del livello 2, le lezioni la spiegano (non la accendono) e non si spegne; ogni livello ha la sua fisica e la sua barca; nel gioco libero si passa fra i livelli e si prova tutto in qualunque ordine, la carriera si apre coi brevetti. Nel livello 2 entrano: timone che stalla, «spingi il boma», salti di vento (la linea di partenza resta perpendicolare al vento medio, sono i salti a renderla storta). Tendenza orziera in sospeso; il resto al livello 3-4.
 - **Timone del livello 2, in prova** (`PROPOSTA-STALLO-TIMONE.md`, con revisione in chat): nella navigazione libera, impostazioni, «Barca: livello 2 (prova)»; dalla 1.0.25 (idea di Ale) la freccia porta la barra fino a 35°, Maiusc + freccia fino a 45°. Il livello 1 è identico al bit. Con 45° si gira più in fretta (boe, penalità, barca lenta); il costo di velocità è piccolo e non regolare fra i venti, e nasce soprattutto mollando la barra. La barca del gioco pesa la metà del 470 delle fonti e frena circa il doppio più in fretta. Avvisi che si sovrappongono: rimandati da Ale.
 - **«Spingi il boma», in prova (1.0.26):** Z tenuto premuto nella barca del livello 2; si esce dall'angolo morto 3 volte più in fretta che con la sola barra, la prua gira verso il boma come dicono le fonti, serve anche per frenare e andare all'indietro. Tutti i criteri nelle soglie (`PROPOSTA-SPINGI-BOMA.md` §8).
+- **Raddrizzare con A** (1.0.27); R resta libero per i livelli futuri.
+- **Salti di vento, in prova (1.0.28):** barca del livello 2 nella navigazione libera e «Regata nei salti di vento» (boa a 300 m, fuori da meriti e carriera); virare sugli scarsi rende circa il 6%, il salto persistente si gioca andando verso la rotazione (`PROPOSTA-SALTI-VENTO.md` §7-8). Percorsi a trapezio e triangolo: da fare.
 
 ## Come si lavora (regole che non cambiano)
 
@@ -39,7 +41,7 @@
 
 1. **Ale prova giocando la 1.0.26** (Z per spingere il boma; poi decide se raddrizzare passa da R ad A). Prima la 1.0.25 (navigazione libera, ⚙, «Barca: livello 2 (prova)»): sola freccia fino a 35°, Maiusc fino a 45°. Si sente la scelta? Poi, se convince, l'aiuto «la barra si ferma dove la pala stallerebbe» (disattivabile), idea nata dalla «variabile» di Ale.
 2. **Timone del livello 2, seguito** (`PROPOSTA-STALLO-TIMONE.md` §8): o si cercano virate misurate su una deriva singola da circa 4 m e si ritara, o si ricontrolla prima la frenata della barca prua al vento (1-1,6 lunghezze contro 3-4, dubbio del 13 ottobre), che è la causa di fondo.
-3. Poi gli altri pezzi della barca del livello 2: salti di vento; poi la fisica fra le barche (copertura del vento), le regole, le lezioni. Ordine: «prima la barca, poi il resto».
+3. Poi i percorsi a trapezio e triangolo; poi la fisica fra le barche (copertura del vento), le regole, le lezioni. Ordine: «prima la barca, poi il resto».
 
 ## Dove cercare
 

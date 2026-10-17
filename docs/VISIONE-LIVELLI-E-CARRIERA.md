@@ -64,7 +64,7 @@ Il tattico arriva al livello 5: su una deriva a due il timoniere decide da solo 
 
 - **timone che stalla** oltre un certo angolo (oggi barra a fondo è sempre la scelta migliore; serve anche perché le penalità a giri siano una manovra vera). **In prova dalla 1.0.24** (`PROPOSTA-STALLO-TIMONE.md`), obiettivo didattico non ancora raggiunto;
 - **comando «spingi il boma»** (la vela tenuta a collo per uscire dall'angolo morto). **In prova dalla 1.0.26**, tasto Z (`PROPOSTA-SPINGI-BOMA.md`);
-- **salti di vento sul campo** (oggi solo un'oscillazione fissa di ±3° quando le raffiche sono accese). **La linea di partenza resta posata perpendicolare al vento medio**, come fa il comitato; sono i salti a renderla storta, e il lato favorito diventa un argomento della lezione sulle partenze (che il regolamento non imponga la perpendicolare è da verificare nelle fonti).
+- **salti di vento sul campo** (oggi solo un'oscillazione fissa di ±3° quando le raffiche sono accese). **In prova dalla 1.0.28** (`PROPOSTA-SALTI-VENTO.md`). **La linea di partenza resta posata perpendicolare al vento medio**, come fa il comitato; sono i salti a renderla storta, e il lato favorito diventa un argomento della lezione sulle partenze (che il regolamento non imponga la perpendicolare è da verificare nelle fonti).
 - **In sospeso:** tendenza orziera (la barca che orza da sola sbandando), finché non si ricontrolla la fonte (`DUBBI-E-RICERCHE.md` §3).
 - **Restano al livello 3-4:** braccio sbandante `zCE`, bolina lenta con poco vento, svergolamento, peso del timoniere come comando, deriva, massa nella resistenza, planata, corrente, onde vere.
 

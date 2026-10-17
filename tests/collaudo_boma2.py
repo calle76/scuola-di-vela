@@ -22,6 +22,7 @@ async def apri(pg, kn, lv):
     await pg.evaluate("""([k, lv]) => { for (const [id, v] of [['wSpd', k], ['gustSel', '0'], ['wDir', '0'], ['boatLv', lv]]){
         const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); } }""", [str(kn), str(lv)])
     await pg.evaluate("__sv.openItem('free')")
+    await pg.evaluate("__sv.setShifts(null)")  # dalla 1.0.28 la barca del livello 2 ha i salti di vento: qui si misura il boma, senza
     await pg.click("#c")
 
 async def main():

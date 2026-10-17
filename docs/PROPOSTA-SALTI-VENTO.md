@@ -106,3 +106,31 @@ Dichiarato: le fasce sono scelte **dopo** le misure del §2.
 
 **Ale, 17 ottobre 2026:** bolina di 300 m va bene, le regate saranno più lunghe. E i percorsi non sono solo «a bastone» (avanti e indietro da una boa): esistono anche percorsi **a trapezio** e **a triangolo**. Da prevedere nelle regate del livello 2, con una ricerca sulle fonti (forma, angoli dei lati, quali lati sono di lasco), dopo i salti di vento.
 
+---
+
+## 7. Fermata 2: il modello cambiato prima della conferma (17 ottobre 2026)
+
+Prima di scegliere le costanti il modello del §3 è stato misurato con il generatore vero (`tests/fisica/salti2.js`) e **non dava il guadagno atteso**. Riportato in ordine:
+
+| Modello | Semi | Guadagno di chi vira sugli scarsi | Vince |
+|---|---|---|---|
+| §3: ampiezza 8-15° e durata 60-90 s nuove a ogni mezza oscillazione | 1-40 / 41-80 | **−8,9% / −2,6%** | 9 / 12 su 40 |
+| stesso, pilota con soglia 8° o 10° invece di 5° (Dellenbaugh: «una decina di gradi») | 1-40 / 41-80 | da −3,8% a +0,8% | 8-15 su 40 |
+| ampiezza 12-15° e mezza oscillazione 75-90 s **per regata**, ogni mezza ±10% | 1-40 / 81-120 | +3,8% / +3,9% (soglia 5%) | 25 / 22 su 40 |
+| ampiezza 12-15°, mezza oscillazione **60-75 s** per regata, ±10% (scelta sui semi 1-40) | 1-40 | **+7,0%** | 31 su 40 |
+| stessa, **conferma** sui semi 121-160 mai usati | 121-160 | **+5,7%** | 28 su 40 |
+
+Lettura: con oscillazioni del tutto irregolari e una bolina che dura poco più di un ciclo, «vira sugli scarsi» non paga, perché il salto dopo è imprevedibile; con un ritmo proprio della giornata, come nelle cronache delle fonti («3,5-4,5 minuti fra un'oscillazione e l'altra»), paga. Il modello scelto resta dentro le fasce scritte nel §3 (ampiezza 8-15°, periodo 2-3 minuti). Il pilota usato è sempre lo stesso (soglia 5°, vento medio conosciuto); un giocatore vero può fare meglio o peggio.
+
+**S2** (salto persistente, partire verso la rotazione): 38-40 su 40 in tutti i gruppi di semi.
+
+## 8. Fermata 2: risultati (versione 1.0.28)
+
+- **S1** ok: +7,0% (31 su 40) in taratura, **+5,7% (28 su 40) in conferma**.
+- **S2** ok: 40 su 40 in taratura e in conferma.
+- **S3** ok dopo due correzioni: nel primo giro 1 regata su 12 con una barca mai partita (il salto persistente cominciava prima del via); poi 1 su 24 con una barca passata fuori dall'estremo che non rientrava più. Corretti solo nella regata del livello 2 (il salto persistente comincia al via; dopo il via, chi è fuori dagli estremi usa la guida normale). Dopo: 12 su 12 nel collaudo, 40 su 40 con principianti e 40 su 40 con esperti (semi 1-40), nessuna barca oltre 700 s.
+- **S4** ok: livello 1 identico (impronta: diverso solo il menu del gioco libero, per il pulsante della regata nuova); `polare.js`, `raffiche_e_virate.js`, `timone2.js` identici.
+- **S5** ok: menu senza eccesso a 1360×650; pagina senza `#collaudo` senza errori.
+- **Durata delle regate:** arrivi fra circa 380 e 900 s dal via, di solito 420-550 s (7-9 minuti), più lunghe della stima di 6 minuti.
+- **Effetto sui collaudi del timone e del boma:** misurano nella navigazione libera con la barca del livello 2, dove ora il vento gira; un giro del collaudo del timone è fallito per un salto durante una virata. Ora spengono i salti (`__sv.setShifts(null)`).
+

@@ -8,10 +8,10 @@
 // Uso: node salti_bolina.js [D metri] ['[[A,P],...]']
 const { step, norm180 } = require("./motore.js");
 
-function bolina(kn, D, A, P, phi, strat, thr = 5, dt = 0.02){
-  const S = { x: 0, y: 0, h: 45, u: 0, vl: 0, r: 0, lv: 2 }, twdAt = t => A * Math.sin(2 * Math.PI * t / P + phi);
+function bolina(kn, D, twdAt, strat, thr = 5, dt = 0.02, primaMura = 0){ // twdAt(t): gradi rispetto al vento medio; primaMura ±1 forza le mure di partenza
+  const S = { x: 0, y: 0, h: 45, u: 0, vl: 0, r: 0, lv: 2 };
   let twd = twdAt(0), lastTack = -99, ntack = 0, tacking = false;
-  let tack = Math.abs(norm180(twd + 45)) < Math.abs(norm180(twd - 45)) ? 1 : -1; // +1: prua a twd+45 (mure a sinistra); parte sulle mure più vicine alla boa
+  let tack = primaMura || (Math.abs(norm180(twd + 45)) < Math.abs(norm180(twd - 45)) ? 1 : -1); // +1: prua a twd+45 (mure a sinistra); parte sulle mure più vicine alla boa
   S.h = twd + 45 * tack; S.u = 2.0;
   for (let t = 0; t < 900; t += dt){
     twd = twdAt(t);
@@ -39,9 +39,11 @@ function bolina(kn, D, A, P, phi, strat, thr = 5, dt = 0.02){
   return { t: null, ntack };
 }
 
+module.exports = bolina;
+if (require.main !== module) return;
 const N = 24, fasi = [...Array(N)].map((_, i) => i * 2 * Math.PI / N);
 function media(D, A, P, s){
-  const v = fasi.map(p => bolina(10, D, A, P, p, s)), ok = v.filter(r => r.t !== null);
+  const v = fasi.map(p => bolina(10, D, t => A * Math.sin(2 * Math.PI * t / P + p), s)), ok = v.filter(r => r.t !== null);
   return { t: ok.reduce((a, r) => a + r.t, 0) / ok.length, n: ok.reduce((a, r) => a + r.ntack, 0) / ok.length, fall: v.length - ok.length };
 }
 const D = +process.argv[2] || 140;

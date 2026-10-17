@@ -61,6 +61,15 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `dCE` | 0,9 m | Centro velico lungo il boma, dall'albero. **Stima** |
 | `Kq` | 1230 N·m·s² | Resistenza dell'acqua allo scafo che ruota (smorzamento quadratico). **Stima** da carena, pala e deriva |
 
+**Salti di vento del livello 2 (`SALTI2`, dalla 1.0.28; barca del livello 2 nella navigazione libera e nella regata nei salti).** `docs/PROPOSTA-SALTI-VENTO.md`. Il vento oscilla attorno al medio, uguale in tutto il campo; le raffiche restano con il loro salto.
+
+| Costante | Valore | Significato |
+| --- | --- | --- |
+| `amp` | 12-15° | Ampiezza dell'oscillazione, scelta per regata (fonti: 10-20° tipico) |
+| `half` | 60-75 s | Mezza oscillazione, scelta per regata: periodo 2-2,5 minuti (fonti: 3,5-8 minuti; **accorciato** per la bolina di 300 m, tenendo il rapporto periodo/bolina che dà il guadagno) |
+| `jit` | ±10% | Ogni mezza oscillazione diversa di tanto in ampiezza e durata |
+| `persRate`, `persMax`, `persAmp` | 10-20° per 200 s, 25°, 3-5° | Salto persistente (una regata su tre): rotazione dalla stessa parte dal via, fino a 25°, più una piccola oscillazione. **Ipotesi**, nessun numero nelle fonti |
+
 Altre costanti nel codice di gioco: colpo della strambata con vela aperta `GYBE_KICK = 260 °/s`, scalato con (vento / 15 nodi)^1,6 e con una variazione casuale tra −15% e +25%; soglia della strambata «violenta»: boma aperto oltre 45°.
 
 ## Risultati delle tarature
@@ -141,6 +150,7 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 - Raffiche come chiazze che viaggiano col vento, senza la struttura reale del vento sull'acqua.
 - Il fiocco non va mai a collo: in virata conta solo per la resistenza della vela che sbatte (tappa C, terzo compito).
 - **Livello 1: la barca gira più stretta e risponde alla barra più in fretta di una deriva vera, per scelta didattica** (dichiarato il 17 ottobre 2026). Curvatura media in virata 0,45-0,46 rad/m contro 0,11-0,23 delle virate misurate di un 470 (F4); la rotazione insegue la barra in circa 0,25 s; la pala non stalla mai, quindi sbattere la barra dà la virata più rapida e senza costi, mentre in F4 fa perdere più velocità. Il livello 2 (in prova dalla 1.0.24) ha un timone più realistico, che però non raggiunge ancora l'obiettivo di insegnare ad accompagnare la barra (`PROPOSTA-STALLO-TIMONE.md` §8).
+- **Salti di vento uguali in tutto il campo** (livello 2, dalla 1.0.28): nella realtà arrivano con le raffiche e si vedono sull'acqua; periodi accorciati rispetto alle fonti per la bolina del gioco.
 - **Livello 2: sotto 1 nodo circa (`RUD2.uMin`, 0,5 m/s) e all'indietro la pala non stalla** (dichiarato il 17 ottobre 2026, osservazione 57): lì vale il timone del livello 1, e la barra in più (Maiusc) aiuta sempre un poco (uscita dall'angolo morto circa il 10% più rapida, virata lenta sempre più rapida). Nella realtà a quelle velocità la pala stalla facilmente, ma le forze sono piccole; per la pala che va all'indietro nessuna fonte con numeri. Lasciato così per decisione di Ale; da riprendere se giocando sembra troppo facile.
 - **Il momento delle vele esiste solo col boma spinto** (livello 2, dalla 1.0.26): in navigazione normale la vela non fa girare la barca. Con il boma spinto il timoniere non si sporge dall'altra parte quando la barca sbanda verso il vento.
 - Nessuna tendenza orziera nella navigazione normale (c'è solo nell'esercizio di rotta): né dalla randa, né dal fiocco, né dallo sbandamento. Vale anche per il prototipo del fiocco (tappa C, secondo compito).

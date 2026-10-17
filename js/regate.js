@@ -56,8 +56,11 @@
   // ---------------- regate ----------------
   const RACES = [
     { title: "Regata a bastone", desc: "Tre avversari, vento costante: partenza, bolina, poppa, arrivo.", wind: 0, tws: 10, gusts: 0 },
-    { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 }
+    { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 },
+    // 1.0.28: livello 2 in prova (docs/PROPOSTA-SALTI-VENTO.md): barca del livello 2, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
+    { title: "Regata nei salti di vento (livello 2, prova)", desc: "Barca del livello 2, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300 }
   ];
+  const RACES1 = RACES.filter(rc => !rc.lv2); // le regate del livello 1 (stessi indici: quelle del livello 2 stanno in fondo)
   const LINE_HALF = 35, MARK_UP = 140;
   const FLEET_LOOK = [
     { name: "Rossa", hull: "#E9E4DF", sail: "#F6D5D0", sailor: "#C7362F" },
@@ -125,8 +128,10 @@
     const [px, py] = fromWF(spots[0].x, spots[0].y);
     freshState(px, py, norm360(env.twd + spots[0].s * 90), 0.35);
     setGusts(rc.gusts);
-    const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -MARK_UP), [cX, cY] = fromWF(0, 0);
-    R = { t: -opt.countdown, phase: "pre", pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    if (rc.lv2){ S.lv = 2; setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); } // un salto persistente una regata su tre
+    const up = rc.up || MARK_UP;
+    const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
+    R = { t: -opt.countdown, phase: "pre", up, lv2: !!rc.lv2, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, signals: new Set(), doneAt: null };
     const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: spots[0].y };
     R.boats.push(me);
@@ -137,6 +142,7 @@
       const spot = spots[k + 1];
       const [x, y] = fromWF(spot.x, spot.y);
       const bs = newBoat(x, y, norm360(env.twd + spot.s * 90));
+      if (rc.lv2) bs.lv = 2;
       Object.assign(bs, { hullColor: look.hull, sailColor: look.sail, sailorColor: look.sailor });
       const b = { me: false, name: look.name, S: bs, ctl: { sheet: 0.4, tiller: 0 }, info: null, wake: [], wakeT: 0, leg: 0, ocs: false, pen: 0, fin: null,
                   prevWY: spot.y, rOff: Math.random() * 6, ai: aiParams(opt.aiLevel), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6,
@@ -147,6 +153,7 @@
     recStart(recK("r" + i) + "b");
     $("rTitle").textContent = rc.title;
     R.brief = "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
+      (rc.lv2 ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Barca del livello 2, boa a 300 m" : "") +
       ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
       (opt.aiLevel === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
@@ -175,13 +182,13 @@
     }
     if (b.leg === 1){
       if (b.me) return { ...R.mark, kind: "mark" };
-      // avversari: tre punti di passaggio per lasciare la boa a sinistra (coordinate del vento, boa in (0, -MARK_UP))
+      // avversari: tre punti di passaggio per lasciare la boa a sinistra (coordinate del vento, boa in (0, -R.up))
       // 0: poco sotto e a destra della boa; 1: oltre la boa, verso sinistra (qui si attraversa la semiretta e la boa è girata);
       // 2: solo se la boa è stata girata male o mancata: si torna sotto e a sinistra, per riprovare dal punto 0 passando sotto la boa
-      const [wx, wy] = toWF(b.S.x, b.S.y), o = b.rOff, P = [[9 + o, -MARK_UP - 3], [-16 - o, -MARK_UP - 10 - o * 0.5], [-10, -MARK_UP + 14]];
+      const [wx, wy] = toWF(b.S.x, b.S.y), o = b.rOff, P = [[9 + o, -R.up - 3], [-16 - o, -R.up - 10 - o * 0.5], [-10, -R.up + 14]];
       const near = (k, r) => Math.hypot(wx - P[k][0], wy - P[k][1]) < r;
       // il punto 1 si punta solo da sopra la boa: da più in basso la bolina porterebbe la barca proprio sopra la boa
-      if (!b.rp && (near(0, 4) || (wy < -MARK_UP - 2 && wx > 3))) b.rp = 1;
+      if (!b.rp && (near(0, 4) || (wy < -R.up - 2 && wx > 3))) b.rp = 1;
       else if (b.rp === 1 && ((wx < -8 && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
       else if (b.rp === 2 && near(2, 8)) b.rp = 0;
       const [x, y] = fromWF(P[b.rp || 0][0], P[b.rp || 0][1]); return { x, y, kind: "mark" };
@@ -211,7 +218,10 @@
     // di bolina generale virava subito prima della linea, perdendo metà della velocità. L'avvicinamento, invece, resta alla logica
     // generale, che sa fare i bordi: il punto d'attesa è controvento e puntandolo con una prua sola la barca scivolava fino a 90 m di
     // lato, fuori dagli estremi, dove il taglio non conta.
-    if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart)){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
+    // 1.0.28, solo livello 2: col vento girato la prua di partenza può portare fuori dall'estremo, e da lì non si rientrava più
+    // (regata nei salti, seme 20): dopo il via chi è fuori dagli estremi usa la logica generale, che punta un punto dentro la linea
+    const fuori = R.lv2 && R.t >= 0 && Math.abs(toWF(s.x, s.y)[0]) > LINE_HALF - 3;
+    if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart) && !fuori){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
       const [bx, by] = toWF(s.x, s.y);
       const L = BOAT.length, lat = Math.tan((ai.up + 4) * D2R); // metri di lato per ogni metro guadagnato verso la linea, in bolina larga
       const lineAim = twd + HOLD_S * (ai.up + 4); // verso la linea in bolina larga

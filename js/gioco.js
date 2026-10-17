@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.27"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.28"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -22,7 +22,7 @@
           tacks: 0, gybesV: 0, gybesC: 0, capsizes: 0, markIdx: 0, time: 0, finished: false,
           lessonMark: null, markReached: false, shake: 0, toast: null, indietro: 0 };
     ctl.sheet = sheet; ctl.tiller = 0;
-    wake.length = 0;
+    wake.length = 0; shiftSt = null; shiftDeg = 0; // i salti li rimettono la navigazione libera e la regata del livello 2
     Object.assign(local, env);
     info = step(S, ctl, local, 0);
     S.dispBoom = S.boomSide * S.boom;
@@ -35,11 +35,15 @@
     const dx = x - g.x, dy = y - g.y, along = dx * ax + dy * ay, across = dx * -ay + dy * ax;
     return (along / (g.r * 1.4)) ** 2 + (across / g.r) ** 2;
   }
+  // ---- salti di vento del livello 2 (1.0.28) ----
+  let shiftSt = null, shiftDeg = 0; // stato del generatore (newShift, js/motore.js) e gradi di cui il vento è girato rispetto al medio
+  function setShifts(kind){ shiftSt = kind ? newShift(kind, Math.random) : null; shiftDeg = shiftSt ? stepShift(shiftSt, 0, Math.random) : 0; }
   function windAt(x, y){
     let k = 0, sh = 0;
     for (const g of gusts){ const d2 = gustGeom(g, x, y); if (d2 < 1){ const f = (g.big ? Math.min(1, (1 - d2) * 4) : (1 - d2) ** 2) * g.life; k += f * g.k; sh += f * g.sh; } } // la raffica garantita ha un fronte netto
     const osc = gustLevel ? Math.sin(simTime / 45) * 3 + Math.sin(simTime / 17) * 1.5 : 0;
-    return { twd: norm360(env.twd + sh + osc), tws: env.tws * (1 + k) };
+    const twd = env.twd + sh + osc;
+    return { twd: norm360(shiftSt ? twd + shiftDeg : twd), tws: env.tws * (1 + k) };
   }
   function gustAt(x, y){
     let k = 0;
@@ -57,6 +61,7 @@
     if (level){ spawnGust(22, -14, true); spawnGust(45, 18, true); spawnGust(70, -6, true); spawnGust(95, 25, true); gustTimer = 3; }
   }
   function updateGusts(dt){
+    if (shiftSt) shiftDeg = stepShift(shiftSt, dt, Math.random, !(mode === "race" && R && R.t < 0)); // il salto persistente comincia al via (la linea è allineata poco prima)
     const to = (env.twd + 180) * D2R, ax = Math.sin(to), ay = -Math.cos(to);
     for (const g of gusts){ g.x += ax * env.tws * 0.8 * dt; g.y += ay * env.tws * 0.8 * dt; g.age += dt; g.life = Math.max(0, Math.min(1, g.age / 3, (g.ttl - g.age) / 3)); }
     for (let i = gusts.length - 1; i >= 0; i--) if (gusts[i].age > gusts[i].ttl) gusts.splice(i, 1);
@@ -116,9 +121,9 @@
     const pt = {
       abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
       cono: QUIZ.reduce((a, q, i) => { const s = p.quiz?.["q" + i]; return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
-      comp: RACES.reduce((a, rc, i) => a + racePt(i), 0),
+      comp: RACES1.reduce((a, rc, i) => a + racePt(i), 0),
       esp: LESSONS.filter((L, i) => p.done["l" + i]).length };
-    const pulite = RACES.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
+    const pulite = RACES1.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
     const totale = MERITI.reduce((a, [k]) => a + pt[k], 0), esame = !!p.exam?.superato;
     // 0.23, dopo la prova di Ale: una riga con tutto quello che manca, e un suggerimento concreto per ogni area che manca
     const sotto = MERITI.filter(([k, , , min]) => pt[k] < min);
@@ -135,8 +140,8 @@
         i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
         i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
       if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
-      const rp = RACES.map((rc, i) => racePt(i));
-      const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES[i].title + " (con avversari).";
+      const rp = RACES1.map((rc, i) => racePt(i));
+      const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES1[i].title + " (con avversari).";
     };
     const aree = sotto.length ? sotto : totale < TOT_MIN ? MERITI.filter(([k, , max]) => pt[k] < max) : [];
     const sugg = aree.map(([k]) => voce(k)).filter(Boolean);
@@ -149,7 +154,7 @@
     const rows = MERITI.map(([k, nome, max, min]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-m="${k}">${m.pt[k]} / ${max}</span> · <span class="${m.pt[k] >= min ? "ok" : "no"}">servono ${min}</span></span></div>`).join("");
     const sug = m.sugg.length ? m.sugg[giroSug++ % m.sugg.length] : null;
     return `<div><div class="part-head"><h2>Libretto</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
-      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Brevetto ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Attestato</button></p>`
+      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES1.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Brevetto ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Attestato</button></p>`
         : `<p class="manca" id="libManca">${m.superato ? "Livello 1 superato." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
   loadProgress();
@@ -212,7 +217,7 @@
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
-    const races = RACES.map((rc, i) => { const b = progress.best[recK("r" + i)];
+    const races = (modo === "carriera" ? RACES1 : RACES).map((rc, i) => { const b = progress.best[recK("r" + i)];
       return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
     const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
       return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
@@ -565,14 +570,14 @@
     env.twd = freeEnv.twd; env.tws = freeEnv.tws / KN;
     curMarks = [{ x: 0, y: -160, label: "Boa 1" }, { x: 110, y: -40, label: "Boa 2" }, { x: -110, y: -40, label: "Boa 3" }];
     freshState(0, 30, norm360(env.twd + 90), 0.3);
-    if (freeEnv.lv === 2) S.lv = 2;
+    if (freeEnv.lv === 2){ S.lv = 2; setShifts("osc"); }
     setGusts(freeEnv.gusts);
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
   }
   $("wDir").onchange = e => { freeEnv.twd = +e.target.value; env.twd = freeEnv.twd; setGusts(gustLevel); };
   $("wSpd").onchange = e => { freeEnv.tws = +e.target.value; env.tws = freeEnv.tws / KN; };
   $("gustSel").onchange = e => { freeEnv.gusts = +e.target.value; setGusts(freeEnv.gusts); };
-  $("boatLv").onchange = e => { freeEnv.lv = +e.target.value; if (mode === "free"){ if (freeEnv.lv === 2) S.lv = 2; else { delete S.lv; delete S.stall; } } };
+  $("boatLv").onchange = e => { freeEnv.lv = +e.target.value; if (mode === "free"){ if (freeEnv.lv === 2){ S.lv = 2; setShifts("osc"); } else { delete S.lv; delete S.stall; setShifts(null); } } };
 
   // ======================================================================
   // INPUT

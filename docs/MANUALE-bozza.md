@@ -116,6 +116,16 @@ Nel livello 2 la barra va fino a 45°. Oltre un certo angolo la pala del timone 
 
 **Onestà.** Le fonti descrivono la manovra ma non danno numeri: tempi e velocità del gioco vengono da quattro stime nostre (dove sta il centro velico, quanto l'acqua frena la barca che ruota). Il momento delle vele, nel gioco, esiste solo col boma spinto.
 
+### I salti di vento (livello 2, in prova dalla 1.0.28)
+
+Con la barca del livello 2 il vento non soffia sempre dalla stessa direzione: oscilla di una dozzina di gradi attorno alla direzione media, avanti e indietro ogni due minuti circa. Si prova nella navigazione libera e nella «Regata nei salti di vento», che ha la boa a 300 m.
+
+**Come lo vedi:** di bolina, con la vela regolata, la prua segue il vento. Se la prua (nel pannello, in gradi) scende rispetto al solito, sei **scarso**: il vento ti obbliga a puntare più lontano dalla boa. Se sale, sei **buono**.
+**Cosa fare:** sugli scarsi si vira, perché sull'altra mura quello stesso salto diventa buono; sui buoni si resta. Nella regata, con la bolina di 300 m, chi lo fa arriva alla boa in media il 6-7% prima (misurato con un pilota).
+**Il salto persistente:** in una regata su tre, dal via, il vento gira sempre dalla stessa parte (fino a 25°). Lì la regola è un'altra: si va prima verso la parte da cui ruota il vento.
+
+**Onestà.** Ampiezze e periodi vengono da articoli di allenatori e cronache di regate, non da misure scientifiche; i periodi del gioco sono più corti di quelli veri (2-2,5 minuti invece di 3,5-8) perché il percorso è più corto. Nel gioco il salto è uguale in tutto il campo; nella realtà arriva con le raffiche.
+
 ## 4. Cosa il gioco fa bene
 
 - **Il vento apparente.** Il vento che senti a bordo è la combinazione del vento reale e del vento dovuto al moto: accelerando si sposta verso prua. Su questo lavora la vela.
