@@ -93,22 +93,43 @@ Senza soglia, si riportano: posizione allo sparo lungo la linea (quanti fuori da
 - **Partenza nelle raffiche, scivolamento laterale, pannello del giocatore:** aggiunti (criteri, riporto, §2).
 - **Fonti scritte trovate dalla chat** (da registrare in `FONTI-PUBBLICHE.md` alla fermata 2): Kim Couranz, *Let's Get This Race Rolling* (SpinSheet); Dave Dellenbaugh, *Practice drills for better starts* (WindCheck); MIT Sailing, *Sailboat racing* (avvicinarsi lentamente alla linea fra 30 s e 1 minuto prima); SailJuice, *Starting Episode 3: The Dinghy Start* (video RaceQs); ILCA, *Starting for Lasers* (Emmett: si accelera meglio da appena sotto la bolina). Non ancora lette da Claude Code: alla fermata 2 si controlla che dicano quanto riportato.
 
-## 7. Fermata 2, stato a fine sessione (16 ottobre 2026, sera): IN CORSO, non è ancora una versione
+## 7. Fermata 2, esito (17 ottobre 2026): parte 1 chiusa nella 1.0.16
 
-Ale ha dato il via alla seconda stesura. Il codice è in `js/regate.js` (non ancora una versione: `VERSIONE` e `CHANGELOG.md` non toccati). **Da non consegnare così.**
+**Regola finale** (codice in `js/regate.js`, costante `BOAT.length` in `js/motore.js`): nessun numero in metri scritto a mano.
 
-**Fatto:** attesa nella fascia e partenza decisa simulando con `step()` (`startTime`, fino a poco oltre lo zero); attesa e partenza **mure a dritta** (prima la prua sceglieva il lato all'ultimo e, col punto da raggiungere dritto controvento, la barca zigzagava); a meno di 2 m dalla linea, o oltre, prua a 45° (arretra); margine dei caratteri **dopo** lo zero (un errore di segno lo faceva arrivare prima); margine principianti 1,5 ± 1,5 s (era 1 ± 2: con un margine negativo arrivavano in anticipo apposta; scelto sui semi 1-20); riquadro col consiglio nuovo; tempo alla linea del pannello solo sotto 60 s. `collaudo_partenze.py`: la parte «anticipi allo sparo» sostituita dai criteri del §3, con esito OK / FALLITO / NON VALIDO e uscita 1 se non OK.
+1. **Fascia d'attesa in lunghezze di barca** (`BOAT.length` = 4,2 m): da una a due lunghezze dietro la linea, punto d'attesa a 1,5 lunghezze.
+2. **Punto di ritrovo a 6 lunghezze** (25 m) dietro la linea fino a 45 s dal via; l'avvicinamento vero comincia lì. Così l'attesa vicino alla linea dura mezzo minuto e non tre.
+3. **Attesa e ritrovo spostati di lato** di `tan(bolina+4°)` per ogni metro che resta da guadagnare: la scivolata della risalita porta la barca dove deve tagliare, fra le boe.
+4. **Avvicinamento con la logica generale** degli avversari, che sa fare i bordi (vedi «difetti trovati» sotto).
+5. **Quando lascare:** due volte al secondo `glideY()` simula con lo stesso `step()`, su una copia dello stato, dove la barca si fermerebbe lascando adesso; si lasca quando quel punto cade dentro la fascia.
+6. **Quando partire:** quattro volte al secondo `startTime()` simula in quanti secondi taglierebbe cazzando adesso; si parte quando quel tempo più il margine del carattere arriva al conto alla rovescia. Margini (ipotesi nostre): esperti 0,5 ± 0,5 s, principianti 1,5 ± 1,5 s, prudente +1 s.
+7. **In attesa** (vela tutta lascata): prua a **55°** dal vento, **45°** sotto mezza lunghezza dalla linea. Il freno vale su tutta la linea e sui prolungamenti.
+8. **Riquadro delle regate** e **pannello** come al §2.
 
-**Misura (semi 1-20, bastone 10 nodi e raffiche 12 nodi):** richiami per partenza 8,3% / 6,7% (bastone, principianti / esperti) e 3,3% / 10,0% (raffiche): **dentro** le soglie 30% e 20%, ma nelle raffiche gli esperti più dei principianti (**fuori**); velocità mediana alla partenza 4,07 / 3,99 / 4,54 / 4,33 nodi (**dentro**); barche passate dalla fascia 164-174 su 180 (metro valido); calcolo 2,65 ms per secondo simulato; **ritardo mediano 6-15 s, fuori** (soglia 3 s).
+**Cambio dichiarato rispetto al §2:** la prua di attesa a **62°** per chi sta più indietro della fascia **è stata tolta**. Misura: a 62° la barca avanza di 0,04-0,08 m/s ma scivola di lato 0,3-0,5 m/s, cioè una trentina di metri in un'attesa lunga, e finisce fuori dagli estremi; a 55° il lato è 0,01 m/s. Deciso dopo aver visto le misure, non prima.
 
-**Causa del ritardo, trovata:** molte barche aspettano a 14-17 m invece che a 4-8 (lascano a 18 m ma arrivano lente e scivolano poco); partendo mure a dritta da lì percorrono 20-25 m di lato, e chi aspetta vicino a un'estremità taglia fuori dalla linea (vale solo fra le boe, `raceLegs`), deve tornare e ripartire. È anche la parte 2.
+**Difetti trovati per strada** (nessuno dei tre era nella proposta):
+- il contatore dei bordi (`boardT`) scadeva durante l'attesa, così **allo sparo tutti viravano subito**, perdendo metà della velocità proprio prima della linea. Ora resta a zero fino al taglio e la prua della partenza si tiene finché non si taglia;
+- **chi era segnato anticipato** continuava a tenere la prua della partenza e se ne andava di bolina senza mai partire (37 avversari su 720). Ora esce dal blocco della partenza e rientra con la logica generale, che punta la linea, come prima della 1.0.16;
+- puntando il punto d'attesa **con una prua sola** la barca scivolava fino a 90 m di lato e aspettava lì, fuori dagli estremi, dove il taglio non conta: il freno guardava solo la distanza dalla linea, non quella dal punto.
 
-**Prossimi passi decisi con Ale:**
-1. Fascia d'attesa **in lunghezze della barca** (1-2), con una costante `length` nuova in `BOAT` (4,2 m, il dato in testa a `motore.js`), così vale anche per le barche dei livelli futuri.
-2. Il momento di lascare deciso **simulando lo scivolamento** con `step()` (dove si fermerebbe lascando adesso), come per la partenza: niente più 18 m fissi.
-3. Punto d'attesa spostato di lato quanto la rincorsa porterà la barca, così il taglio cade fra le boe.
-4. Rilanciare i semi 1-20; poi la conferma sui 21-100 mai guardati, le regate (`collaudo_regate.py`), il pannello, `polare.js` e `raffiche_e_virate.js`, e solo allora la versione 1.0.16 con le fonti in `FONTI-PUBBLICHE.md`.
+**Misure finali** (`collaudo_partenze.py`, criteri del §3; semi 1-20 per scegliere, **21-100 mai guardati** per confermare, 2880 partenze di avversari):
 
-**Fonti controllate da Claude Code** (ricerca web, 16 ottobre): Dellenbaugh (WindCheck) **confermata**: alla boa a piena velocità a zero; fermarsi accanto a una boa e controllare la barca a velocità molto bassa. SpinSheet, «Let's Get This Race Rolling»: **contenuto confermato** (una lunghezza dietro la linea, si cazza circa 8 s prima), **autore non confermato** (Couranz è da verificare). ILCA, Emmett: confermata solo l'attesa appena sotto la bolina; la parte sull'accelerazione non letta. MIT e SailJuice: non controllate.
+| | principianti | esperti | soglia |
+| --- | --- | --- | --- |
+| partenze con un richiamo, bastone 10 nodi | 6,7% | 5,4% | 30% / 20%, esperti meno |
+| partenze con un richiamo, raffiche 12 nodi | 4,6% | 3,8% | 30% / 20%, esperti meno |
+| ritardo mediano al via (1, 3, 5 min) | 1,9-2,2 s | 0,9-1,1 s | 3 s |
+| velocità mediana al taglio (bastone / raffiche) | 4,85 / 5,33 nodi | 4,65 / 5,12 | 3,72 / 4,20 |
+| non partiti entro 60 s | 0 | 0 | 0 |
+| passati dalla fascia d'attesa | 718-719 su 720 | 718-719 su 720 | almeno metà |
 
-**Nota di Ale per i livelli futuri:** barche più grandi e pesanti partono lanciate; non si gestisce ora. La regola usa la fisica della barca e sarà il punto di partenza.
+Esito **OK** sui semi di conferma. Sui semi 1-20 l'unico criterio fuori era «esperti meno dei principianti» nelle raffiche, **3,3% contro 3,3%**: pari, cioè 2 richiami su 60 contro 2 su 60, differenza non misurabile con 20 semi; con 80 semi si separa. Nessuna anticipata fuori dagli estremi. Calcolo 3,1 ms per secondo simulato (massimo 5,8). Regate a bastone e raffiche (semi 1-6): 18 arrivi su 18, nessuna BLOCCATA. `polare.js` e `raffiche_e_virate.js` identici; pannello e riquadro 0 px di eccesso a 1360×650.
+
+**Non misurato:** contatti fra avversari (parte 3) e `collaudo_competizione.py` (parte 6).
+
+**Fonti** (elenco e stato in `FONTI-PUBBLICHE.md`, F25-F30): regge il metodo «aspettare quasi fermi una o due lunghezze sotto la linea e accelerare per essere a piena velocità allo zero» (WindCheck, F25, contenuto confermato il 17 ottobre). L'articolo di SpinSheet da cui veniva il numero «si cazza circa 8 s prima» **non è stato ritrovato** (F26): quel numero non è usato nel codice e non compare nel gioco. ILCA, MIT e SailJuice non sono stati letti. Per avversari che *scelgono* le mosse in partenza esiste un modello pubblicato (teoria dei giochi e Monte-Carlo tree search, F30, solo abstract letto): materiale per il livello 2.
+
+**Conferma di Ale (17 ottobre 2026):** in questa classe di barche si parte da fermi, non lanciati; le barche grandi e pesanti che partono lanciate restano una nota per i livelli futuri.
+
+**Idea di Ale tenuta in riserva (17 ottobre 2026):** se la deriva in attesa tornasse a dare problemi, invece di far manovrare la barca si può aiutarla da fuori — vento ridotto oppure resistenza dell'acqua moltiplicata mentre aspetta (ancora virtuale, come `backDrag`). Con le misure di questa versione non serve, e sarebbe un aiuto che il giocatore non ha: da dichiarare.

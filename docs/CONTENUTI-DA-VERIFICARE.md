@@ -195,6 +195,8 @@ Schede in `SCHEDATURA-FONTI.md`. Parafrasati, mai copiati; non diventano domande
 | Dalla 0.19.2 la linea d'arrivo è disegnata a scacchi bianchi e neri e la scritta «Arrivo» ha una bandierina a scacchi: è un simbolo del gioco per riconoscerla, non una cosa che si vede in mare, dove la linea è solo immaginaria fra le due boe (o fra boa e barca giuria). Da dichiarare, non da verificare; resta da verificare se e quale bandiera segnala l'arrivo in una regata vera prima di scriverne nei testi. | |
 | Le raffiche portano spesso un salto di direzione oltre all'aumento di vento (fonte: nessuna; parere comune). Da confermare con fonti. Nel gioco ogni raffica ha già un salto di direzione proprio (`sh`). | |
 | Una barca deve evitare il contatto quando è ragionevolmente possibile, anche se ha la precedenza (il registro degli errori conta tutti i contatti, distinguendo quelli con penalità). | |
+| In partenza conviene aspettare quasi fermi una o due lunghezze sotto la linea e accelerare per essere a piena velocità allo zero (metodo degli avversari e consiglio del riquadro dalla 1.0.16). | ⚠️ Una sola fonte controllata (F25, WindCheck: arrivare a piena velocità allo zero ed esercizio di stare quasi fermi con la vela che sbatte); l'autore dell'articolo non è confermato. F27 (ILCA) conferma solo l'attesa appena sotto la bolina; F28 e F29 non lette; F26 non ritrovata. Da confermare con una seconda fonte indipendente. |
+| Quante lunghezze dietro la linea si aspetta, e quanti secondi prima si cazza (nel gioco: una o due lunghezze, e il momento lo calcola la barca simulando sé stessa). | Numeri **nostri**, nessuna fonte confermata: il «circa 8 s prima» veniva da F26, non ritrovata. |
 
 ## Ipotesi del prototipo del fiocco (`sperimentale/fiocco.html`, non nel gioco)
 

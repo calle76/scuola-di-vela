@@ -16,7 +16,7 @@ import pathlib
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=True)
 URL = BASE + "#collaudo"
-LUNGO = "--lungo" in sys.argv; ARG = [a for a in sys.argv[1:] if a != "--lungo"]
+LUNGO = "--lungo" in sys.argv; ARG = [a for a in sys.argv[1:] if a != "--lungo" and not a.startswith("--semi") and "-" not in a]
 RIP = int(ARG[0]) if len(ARG) > 0 else 10
 LIV = ARG[1] if len(ARG) > 1 else "principianti"
 SEMI_RIT = list(range(11, 41)) if LUNGO else list(range(1, RIP + 1))
@@ -65,71 +65,82 @@ async def partenza(b, cd, seme):
     geo, st, ocs = r
     return geo, st, ocs, errs
 
-# Anticipi allo sparo (dopo la 0.20.3): riproducibile come collaudo_suggerimento.py. Tutto dentro una sola chiamata alla pagina:
-# livello, Math.random a seme fisso, simTime a zero, preparazione (che riavvia la regata), poi passi fissi di 1/60 s con __sv.run
-# fino a 60 s dopo lo sparo; il giocatore resta fermo. Per ogni avversario: oltre la linea allo sparo e di quanti metri,
-# anticipo (secondi prima dello sparo dell'ultimo attraversamento della linea), secondi dallo sparo al ritorno dietro la linea.
-# Criterio (decisione di Ale, dopo la 0.20.3): boccia solo il ritorno, cioè ogni barca anticipata deve tornare dietro la linea
-# entro 60 s. Il primo criterio chiedeva anche al massimo 10 m oltre la linea, soglia scelta dopo aver visto i semi 1-20
-# (massimo 9,4 m); sui semi 21-100 non ha retto (10,3 e 17,7 m), perché fuori dalla zona del freno (40 m dal centro della linea)
-# nessun codice limita lo sconfinamento. Ora metri, frequenza e anticipo si stampano ma non bocciano; la riga «oltre 10 m» è
-# solo informativa. Minimo 10 anticipate per livello, scelto prima di rilanciare.
-SEMI_SPARO = range(1, 101 if LUNGO else 21); OLTRE_INFO = 10; RITORNO_MAX = 60; MIN_ANTICIPATE = 10
+# Criteri della partenza (1.0.16, docs/PROPOSTA-PARTENZE.md §3, scritti prima di provare). Tutto in una chiamata alla pagina per partenza:
+# regata, livello, Math.random a seme fisso, simTime a zero, preparazione (che riavvia la regata), passi fissi di 1/60 s fino a 60 s dopo
+# lo sparo; il giocatore resta fermo. Le due regate del gioco: bastone (10 nodi costanti) e raffiche (12 nodi rafficati). Per ogni avversario:
+# oltre la linea allo sparo (e di quanti metri, a che distanza dal centro), ritardo (sparo → partenza), velocità alla partenza, se nell'ultimo
+# minuto è stato nella fascia d'attesa (da una a due lunghezze di barca dietro la linea, 4,2-8,4 m), ritorno dietro la linea se anticipata.
+# Criteri: (1) partenze con almeno un richiamo al massimo 30% (principianti) e 20% (esperti), esperti meno dei principianti; (2) ritardo
+# mediano al massimo 3 s per preparazione; (3) velocità mediana alla partenza almeno 75% del regime a 50° (10 nodi 4,97 → 3,72; 12 nodi
+# 5,60 → 4,20, conto su step() del 16 ottobre 2026); (4) nessun avversario non partito entro 60 s; (6) controllo del metro: almeno metà delle
+# barche passa dalla fascia d'attesa, altrimenti NON VALIDO. Uso: --semi a-b (default 1-20; conferma 21-100), --lungo = 1-100.
+SEMI_SPARO = range(1, 101 if LUNGO else 21)
+if "--semi" in sys.argv: _a, _b = sys.argv[sys.argv.index("--semi") + 1].split("-"); SEMI_SPARO = range(int(_a), int(_b) + 1)
+RICHIAMI_MAX = {"principianti": 30, "esperti": 20}; RITARDO_MAX = 3; VEL_MIN = {0: 3.72, 1: 4.20}; RITORNO_MAX = 60
 SPARO = """([liv, cd, seme]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   sv.fast(0); sel('aiLevel', liv);
   (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
   sv.simTime = 0; sel('cdSel', String(cd));
-  const R = sv.R, ai = R.boats.filter(b => !b.me), tx = {}, out = {};
+  const R = sv.R, ai = R.boats.filter(b => !b.me), out = {};
   if (R.t >= 0) return null;
-  for (const b of ai){ tx[b.name] = null; out[b.name] = { oltre: null, lato: null, anticipo: null, ritorno: null }; }
-  let sparo = false;
+  for (const b of ai){ out[b.name] = { oltre: null, lato: null, ritardo: null, vel: null, fascia: false, ritorno: null };
+    let v = b.leg; Object.defineProperty(b, 'leg', { get(){ return v; }, set(n){ if (v === 0 && n === 1){ out[b.name].ritardo = +R.t.toFixed(2); out[b.name].vel = +(b.S.u * 1.943844).toFixed(2); } v = n; } }); }
+  let sparo = false; const t0 = performance.now(), tSim0 = R.t;
   while (R.t < 60){
-    const prima = ai.map(b => b.prevWY); sv.run(1/60, 1);
-    ai.forEach((b, i) => { const o = out[b.name], wy = b.prevWY;
-      if (R.t < 0 && prima[i] > 0 && wy <= 0) tx[b.name] = R.t;
-      if (!sparo && R.t >= 0 && b.ocs){ o.oltre = +(-wy).toFixed(1); o.lato = +Math.sqrt(Math.max(0, b.S.x*b.S.x + b.S.y*b.S.y - wy*wy)).toFixed(1); o.anticipo = tx[b.name] === null ? null : +(-tx[b.name]).toFixed(2); }
+    sv.run(1/60, 1);
+    ai.forEach(b => { const o = out[b.name], wy = b.prevWY;
+      if (R.t < 0 && R.t > -60 && wy >= BOAT.length && wy <= 2 * BOAT.length) o.fascia = true;
+      if (!sparo && R.t >= 0 && b.ocs){ o.oltre = +(-wy).toFixed(1); o.lato = +Math.sqrt(Math.max(0, (b.S.x - R.center.x) ** 2 + (b.S.y - R.center.y) ** 2 - wy * wy)).toFixed(1); }
       if (sparo && o.oltre !== null && o.ritorno === null && !b.ocs) o.ritorno = +R.t.toFixed(2); });
     if (R.t >= 0) sparo = true;
   }
-  return ai.map(b => [b.name, out[b.name]]);
+  return [ai.map(b => [b.name, out[b.name]]), (performance.now() - t0) / (R.t - tSim0)];
 }"""
 
 async def anticipi_allo_sparo(b):
     q = lambda v: f"{min(v)} / {round(statistics.median(v), 2)} / {max(v)}" if v else "—"
-    errs = []; non_valido = []; fallite = []
-    print(f"anticipi allo sparo: semi {SEMI_SPARO.start}-{SEMI_SPARO.stop - 1}, 3 avversari, passi fissi di 1/60 s, giocatore fermo", flush=True)
-    for liv in ["principianti", "esperti"]:
-        casi = 0; ant = []; per_cd = {}; oltre = []
-        for cd in [60, 180, 300]:
-            n = 0; k = 0
-            for seme in SEMI_SPARO:
-                pg = await b.new_page(viewport={"width":1280,"height":800}); pg.on("pageerror", lambda e: errs.append(str(e)))
-                await pg.goto(URL); await pg.wait_for_timeout(300); await pg.click("[data-r='0']"); await pg.wait_for_timeout(100)
-                r = await pg.evaluate(SPARO, [liv, cd, seme]); await pg.close()
-                if not r: non_valido.append(f"{liv} {cd} s seme {seme}: regata non partita"); continue
-                for nome, o in r:
-                    n += 1
-                    if o["oltre"] is None: continue
-                    k += 1; ant.append(o)
-                    if o["anticipo"] is None: non_valido.append(f"{liv} {cd} s seme {seme} {nome}: attraversamento non trovato")
-                    if o["ritorno"] is None or o["ritorno"] > RITORNO_MAX: fallite.append(f"{liv} {cd} s seme {seme} {nome}: {o}")
-                    if o["oltre"] > OLTRE_INFO: oltre.append(f"{liv} {cd} s seme {seme} {nome} {o['oltre']} m, a {o['lato']} m dal centro")
-                    print(f"  {liv} {cd} s seme {seme} {nome}: oltre {o['oltre']} m, a {o['lato']} m dal centro, anticipo {o['anticipo']} s, ritorno {o['ritorno']} s", flush=True)
-            casi += n; per_cd[cd] = (k, n)
-        print(f"{liv}: partenze di avversari misurate {casi} (previste {3 * 3 * len(SEMI_SPARO)}); anticipate {len(ant)}"
-              f" ({100 * len(ant) / casi if casi else 0:.1f}%); per preparazione "
-              + ", ".join(f"{cd} s {k} su {n} ({100 * k / n if n else 0:.1f}%)" for cd, (k, n) in per_cd.items()), flush=True)
-        print(f"  anticipo min / mediana / max: {q(sorted(o['anticipo'] for o in ant if o['anticipo'] is not None))} s;"
-              f" oltre la linea: {q(sorted(o['oltre'] for o in ant))} m;"
-              f" ritorno dietro la linea: {q(sorted(o['ritorno'] for o in ant if o['ritorno'] is not None))} s", flush=True)
-        print(f"  oltre {OLTRE_INFO} m (solo informativo, non boccia): {len(oltre)} su {len(ant)} anticipate" + (f": {oltre}" if oltre else ""), flush=True)
-        if casi < 3 * 3 * len(SEMI_SPARO): non_valido.append(f"{liv}: misurate {casi} partenze, previste {3 * 3 * len(SEMI_SPARO)}")
-        if len(ant) < MIN_ANTICIPATE: non_valido.append(f"{liv}: {len(ant)} anticipate misurate, minimo {MIN_ANTICIPATE}")
+    errs = []; non_valido = []; fuori = []; ms = []; richiami = {}
+    print(f"criteri della partenza: semi {SEMI_SPARO.start}-{SEMI_SPARO.stop - 1}, 3 avversari, passi fissi di 1/60 s, giocatore fermo", flush=True)
+    for reg, nome_reg in ((0, "bastone, 10 nodi"), (1, "raffiche, 12 nodi")):
+        for liv in ["principianti", "esperti"]:
+            barche = []; partenze = 0; con_richiamo = 0; rit_cd = {}
+            for cd in [60, 180, 300]:
+                rit_cd[cd] = []
+                for seme in SEMI_SPARO:
+                    pg = await b.new_page(viewport={"width":1280,"height":800}); pg.on("pageerror", lambda e: errs.append(str(e)))
+                    await pg.goto(URL); await pg.wait_for_timeout(300); await pg.click(f"[data-r='{reg}']"); await pg.wait_for_timeout(100)
+                    r = await pg.evaluate(SPARO, [liv, cd, seme]); await pg.close()
+                    if not r: non_valido.append(f"{nome_reg} {liv} {cd} s seme {seme}: regata non partita"); continue
+                    r, m = r; ms.append(m); partenze += 1
+                    if any(o["oltre"] is not None for _, o in r): con_richiamo += 1
+                    for nome, o in r:
+                        barche.append(o)
+                        if o["ritardo"] is None: fuori.append(f"(4) {nome_reg} {liv} {cd} s seme {seme} {nome}: non partita entro 60 s")
+                        else: rit_cd[cd].append(o["ritardo"])
+                        if o["oltre"] is not None:
+                            if o["ritorno"] is None or o["ritorno"] > RITORNO_MAX: fuori.append(f"(4) {nome_reg} {liv} {cd} s seme {seme} {nome}: anticipata e non rientrata")
+                            print(f"  {nome_reg} {liv} {cd} s seme {seme} {nome}: oltre {o['oltre']} m, a {o['lato']} m dal centro, ritorno {o['ritorno']} s", flush=True)
+            pr = 100 * con_richiamo / partenze if partenze else 0; richiami[(reg, liv)] = pr
+            ant = [o for o in barche if o["oltre"] is not None]; vel = [o["vel"] for o in barche if o["vel"] is not None]
+            fascia = sum(o["fascia"] for o in barche); fuori_estremi = sum(1 for o in ant if o["lato"] > 35)
+            print(f"{nome_reg}, {liv}: partenze {partenze}, con almeno un richiamo {con_richiamo} ({pr:.1f}%, soglia {RICHIAMI_MAX[liv]}%);"
+                  f" barche oltre la linea {len(ant)} su {len(barche)} ({100 * len(ant) / max(1, len(barche)):.1f}%), di cui fuori dagli estremi {fuori_estremi}", flush=True)
+            print(f"  ritardo mediano per preparazione: " + ", ".join(f"{cd} s {statistics.median(v):.1f} s" if v else f"{cd} s —" for cd, v in rit_cd.items())
+                  + f" (soglia {RITARDO_MAX} s); velocità alla partenza min / mediana / max {q(sorted(vel))} nodi (soglia mediana {VEL_MIN[reg]});"
+                  f" passate dalla fascia d'attesa {fascia} su {len(barche)}; oltre la linea {q(sorted(o['oltre'] for o in ant))} m", flush=True)
+            if pr > RICHIAMI_MAX[liv]: fuori.append(f"(1) {nome_reg} {liv}: richiami {pr:.1f}%")
+            for cd, v in rit_cd.items():
+                if v and statistics.median(v) > RITARDO_MAX: fuori.append(f"(2) {nome_reg} {liv} {cd} s: ritardo mediano {statistics.median(v):.1f} s")
+            if vel and statistics.median(vel) < VEL_MIN[reg]: fuori.append(f"(3) {nome_reg} {liv}: velocità mediana {statistics.median(vel):.2f} nodi")
+            if partenze < 3 * len(SEMI_SPARO): non_valido.append(f"{nome_reg} {liv}: {partenze} partenze, previste {3 * len(SEMI_SPARO)}")
+            if fascia < len(barche) / 2: non_valido.append(f"(6) {nome_reg} {liv}: solo {fascia} barche su {len(barche)} passate dalla fascia d'attesa")
+        if richiami[(reg, "esperti")] >= richiami[(reg, "principianti")]: fuori.append(f"(1) {nome_reg}: esperti {richiami[(reg, 'esperti')]:.1f}% non meno dei principianti {richiami[(reg, 'principianti')]:.1f}%")
     if errs: non_valido.append(f"errori della pagina: {errs[:2]}")
-    esito = "NON VALIDO" if non_valido else ("FALLITO" if fallite else "OK")
-    print(f"anticipi allo sparo: {esito} (ogni anticipata di nuovo dietro la linea entro {RITORNO_MAX} s)"
-          + (f"; non valido: {non_valido}" if non_valido else "") + (f"; fuori criterio: {fallite}" if fallite else ""), flush=True)
+    print(f"tempo di calcolo: {statistics.median(ms):.2f} ms per secondo simulato (mediana, massimo {max(ms):.2f})", flush=True)
+    esito = "NON VALIDO" if non_valido else ("FALLITO" if fuori else "OK")
+    print(f"criteri della partenza: {esito}" + (f"; non valido: {non_valido}" if non_valido else "") + (f"; fuori criterio: {fuori}" if fuori else ""), flush=True)
+    return esito
 
 async def main():
     async with async_playwright() as p:
@@ -161,7 +172,7 @@ async def main():
                 print(f"  distanza dalla linea e ritardo: correlazione {num/den if den else 0:+.2f};"
                       f" nate vicine (y<={my:.0f} m) ritardo mediano {statistics.median(vicine):.1f} s su {len(vicine)};"
                       f" nate lontane ritardo mediano {statistics.median(lontane):.1f} s su {len(lontane)}", flush=True)
-        await anticipi_allo_sparo(b)
+        esito = await anticipi_allo_sparo(b)
         # solo contro il fantasma
         pg = await b.new_page(viewport={"width":1280,"height":800}); errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(300); await pg.click("[data-r='0']"); await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#aiLevel", "nessuno"]); await pg.wait_for_timeout(300)
@@ -171,4 +182,5 @@ async def main():
         await pg.screenshot(path=str(OUT / "turn.png")); await pg.keyboard.up("ArrowLeft")
         print("errori:", errs[:1])
         await b.close()
+    sys.exit(0 if esito == "OK" else 1)
 asyncio.run(main())

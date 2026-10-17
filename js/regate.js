@@ -111,8 +111,8 @@
   function aiParams(level){
     const r = () => Math.random();
     return level === "esperti"
-      ? { up: 45 + r() * 3, down: 150 + r() * 5, trim: (r() - 0.5) * 4, gain: 18, boardMin: 35, boardMax: 90, react: 5 }
-      : { up: 49 + r() * 5, down: 142 + r() * 8, trim: (r() - 0.5) * 12, gain: 26, boardMin: 25, boardMax: 60, react: 3 };
+      ? { up: 45 + r() * 3, down: 150 + r() * 5, trim: (r() - 0.5) * 4, gain: 18, boardMin: 35, boardMax: 90, react: 5, startM: 0.5 + (r() - 0.5) * 1 }
+      : { up: 49 + r() * 5, down: 142 + r() * 8, trim: (r() - 0.5) * 12, gain: 26, boardMin: 25, boardMax: 60, react: 3, startM: 1.5 + (r() - 0.5) * 3 };
   }
   function startRace(i, wind){
     mode = "race"; raceIdx = i; showCards("race"); regReset();
@@ -146,7 +146,7 @@
     recStart(recK("r" + i) + "b");
     $("rTitle").textContent = rc.title;
     R.brief = "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
-      ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: l'ideale è tagliarla lanciato proprio allo zero." +
+      ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero." +
       (opt.aiLevel === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
@@ -204,22 +204,39 @@
     }
     // prima della partenza: blocco a sé, senza la logica di bolina generale
     let pre = false;
-    if (R.t < 0 && b.leg === 0){
-      pre = true;
+    // 1.0.16 (docs/PROPOSTA-PARTENZE.md): si aspetta quasi fermi da una a due lunghezze dietro la linea e si parte per essere a piena
+    // velocità allo zero. Prima si partiva a una velocità stimata fissa (1,9 m/s) frenando a 7 m: dalla 1.0.6 la barca scivola 10-11 m
+    // e l'83% era oltre la linea allo sparo. Il blocco vale anche dopo lo sparo, finché chi è già partito non ha tagliato: con la logica
+    // di bolina generale virava subito prima della linea, perdendo metà della velocità. L'avvicinamento, invece, resta alla logica
+    // generale, che sa fare i bordi: il punto d'attesa è controvento e puntandolo con una prua sola la barca scivolava fino a 90 m di
+    // lato, fuori dagli estremi, dove il taglio non conta.
+    if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart)){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
       const [bx, by] = toWF(s.x, s.y);
-      // l'aggressiva attende dall'altro lato, così arriva alla linea mure a dritta: con la precedenza in mano
-      const [hx, hy] = fromWF(b.startX + (b.char === "aggressiva" ? 55 : -55), 18), [lx, ly] = fromWF(b.startX, -10);
-      const go = -R.t <= Math.hypot(s.x - lx, s.y - ly) / 1.9 + 5;
-      const aim = p => { let d = bearingTo(s, p); const r = norm180(d - twd); if (Math.abs(r) < ai.up + 4) d = twd + (r >= 0 ? 1 : -1) * (ai.up + 4); return d; };
-      if (go) b.preDesired = aim({ x: lx, y: ly });
-      else if (Math.hypot(s.x - hx, s.y - hy) > 15) b.preDesired = aim({ x: hx, y: hy });
-      else hold = true;
-      if (by < 7 && Math.abs(bx) <= LINE_HALF + 5 && R.t < -1) hold = true; // davanti alla linea: non superarla prima dello zero. 7 m e non 4: con le posizioni casuali e la prudente che evita da 22 m, qualcuna scivolava oltre la linea prima del via
+      const L = BOAT.length, lat = Math.tan((ai.up + 4) * D2R); // metri di lato per ogni metro guadagnato verso la linea, in bolina larga
+      b.holdS = -1; // si aspetta e si parte mure a dritta (precedenza): virare da fermi al via non riesce, e puntando un punto dritto controvento la barca zigzagava
+      const lineAim = twd + b.holdS * (ai.up + 4); // verso la linea in bolina larga
+      const yW = 1.5 * L, yF = 6 * L; // il punto d'attesa (metà della fascia) e il punto dove si attende il proprio turno, abbastanza dietro perché la deriva non conti
+      if (b.waitX === undefined) // attesa e ritrovo spostati di lato quanto la barca scivolerà (verso -x in coordinate del vento), così il taglio cade fra le boe
+        b.waitX = clamp(b.startX + lat * yW, lat * yW - (LINE_HALF - 2), LINE_HALF - 2); // dentro gli estremi sia l'attesa sia il taglio
+      const far = -R.t > 45; // l'avvicinamento comincia a 45 s dal via: più presto si aspetterebbe vicino alla linea per minuti, scivolando fuori dagli estremi
+      const [px, py] = far ? fromWF(b.waitX + lat * (yF - yW), yF) : fromWF(b.waitX, yW);
+      if (!b.goStart && -R.t <= 30){ // quattro volte al secondo simula la propria partenza con step() e parte quando serve
+        b.simT = (b.simT || 0) - dt;
+        if (b.simT <= 0){ b.simT = 0.25; const T = startTime(b, lineAim, w, -R.t + 2); b.startT = T; // simula fin poco oltre lo zero: se non arriva in tempo, parte subito
+          if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)) b.goStart = true; } // il margine fa arrivare dopo lo zero, mai prima
+      }
+      b.holdA = by < 0.5 * L ? 45 : 55; // in attesa: a 55° arretra appena senza scivolare di lato, a 45° arretra di più (misure in PROPOSTA-PARTENZE.md §2)
+      if (b.goStart){ pre = true; b.preDesired = lineAim; if (by < 1 && R.t < -1) hold = true; } // partita: se è in anticipo non supera la linea prima dello zero
+      // ancora in avvicinamento, con la logica generale perché sa fare i bordi; si lasca quando lo scivolamento simulato finirebbe
+      // dentro la fascia d'attesa, cioè quando è il momento di smettere di spingere per fermarsi lì
+      else if (Math.hypot(s.x - px, s.y - py) > (far ? 8 : 6) && glideY(b, w) > 2 * L) dest = { x: px, y: py };
+      else { pre = true; hold = true; } // in attesa: si frena su tutta la linea e sui prolungamenti, non solo vicino agli estremi
+      if (pre) b.boardT = 0; // il timer dei bordi non deve scadere durante l'attesa, altrimenti si vira appena tagliata la linea
     }
     const brg = bearingTo(s, dest);
     const rel = norm180(brg - twd);
     b.boardT += dt;
-    if (hold){ desired = twd + 62; } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
+    if (hold){ desired = twd + (pre ? b.holdS * b.holdA : 62); } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
     else if (pre){ desired = b.preDesired; }
     else if (Math.abs(rel) < ai.up){ // bolina: bordi alternati
       const near = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
@@ -296,6 +313,38 @@
     if (A > 158) sheet = Math.min(sheet, 0.42); // abbattuta controllata
     if (s.heel > 22) sheet = Math.min(1, sheet + 0.2);
     b.ctl.sheet += (sheet - b.ctl.sheet) * Math.min(1, dt * 3);
+  }
+
+  // 1.0.16: secondi per tagliare la linea partendo adesso (cazza e va verso la prua d), con lo stesso step(); null se non ci arriva entro tMax
+  function startTime(b, d, w, tMax){
+    const s = Object.assign({}, b.S), c = { sheet: b.ctl.sheet, tiller: b.ctl.tiller }, ai = b.ai, dt = 1 / 20;
+    let info = b.info;
+    for (let t = 0; t < tMax; t += dt){
+      if (toWF(s.x, s.y)[1] <= 0) return t;
+      c.tiller += (clamp(norm180(s.h - d) / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1) - c.tiller) * Math.min(1, dt * ai.react);
+      const boomT = Math.max(BOAT.minBoom, Math.abs(info ? info.awa : 60) - 17 + ai.trim);
+      c.sheet += (clamp((boomT - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1) - c.sheet) * Math.min(1, dt * 3);
+      for (let i = 0; i < 3; i++) info = step(s, c, w, dt / 3);
+    }
+    return null;
+  }
+
+  // 1.0.16: dove si fermerebbe lascando adesso (distanza dalla linea in coordinate del vento), con lo stesso step(); ricalcolata due volte al secondo
+  function glideY(b, w){
+    const by0 = toWF(b.S.x, b.S.y)[1];
+    if (by0 > 20) return by0;                                  // più lontana dell'abbrivio (10-11 m): non serve simulare
+    if (b.glAt !== undefined && R.t - b.glAt < 0.5) return b.glY;
+    b.glAt = R.t;
+    const s = Object.assign({}, b.S), c = { sheet: b.ctl.sheet, tiller: b.ctl.tiller }, ai = b.ai, dt = 1 / 20;
+    for (let t = 0; t < 30; t += dt){
+      const y = toWF(s.x, s.y)[1];
+      if (y <= BOAT.length || s.u < 0.05) return b.glY = y; // si fermerebbe a meno di una lunghezza dalla linea, oppure è già ferma
+      const d = w.twd + b.holdS * (y < 0.5 * BOAT.length ? 45 : 55); // le stesse prue dell'attesa, altrimenti la simulazione non è quella che succederà
+      c.tiller += (clamp(norm180(s.h - d) / ai.gain + s.r * 0.02, -1, 1) * (s.u < 0 ? -1 : 1) - c.tiller) * Math.min(1, dt * ai.react);
+      c.sheet += (1 - c.sheet) * Math.min(1, dt * 3);           // vela tutta lascata, come in attesa
+      for (let i = 0; i < 3; i++) step(s, c, w, dt / 3);
+    }
+    return b.glY = toWF(s.x, s.y)[1];
   }
 
   function stepAI(b, dt){
@@ -467,7 +516,7 @@
       big = "Partenza tra " + fmtClock(Math.ceil(-R.t));
       const [wx, wy] = toWF(S.x, S.y), dLine = Math.max(0, wy);
       const h = (S.h - env.twd) * D2R, vUp = S.u * Math.cos(h); // velocità verso la linea (verso il vento)
-      const tLine = vUp > 0.2 ? Math.round(dLine / vUp) : null;
+      const tLine = vUp > 0.2 && dLine / vUp < 60 ? Math.round(dLine / vUp) : null; // 1.0.16: sopra 60 s il numero non serve (con la barca quasi ferma veniva enorme)
       small = "Alla linea: " + Math.round(dLine) + " m" + (tLine !== null ? " · " + tLine + " s alla velocità attuale" : "") + (Math.abs(wx) > LINE_HALF ? " (fuori dagli estremi)" : "");
     }
     else { big = fmtClock(me.fin !== null ? me.fin : R.t); small = pos + "° su " + rank.length; }

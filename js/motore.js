@@ -7,6 +7,7 @@ const norm360 = a => ((a % 360) + 360) % 360;
 
 const BOAT = {
   mass: 135,          // kg, barca + timoniere
+  length: 4.2,        // m, lunghezza fuori tutto (1.0.16: la fascia d'attesa degli avversari si misura in lunghezze di barca)
   sailArea: 7.0,      // m²
   rho: 1.225,
   hullScale: 1,       // 1.0.6: moltiplica l'area di resistenza dello scafo misurata in vasca (HULL_DA); 1 = la vasca, solo per il laboratorio
