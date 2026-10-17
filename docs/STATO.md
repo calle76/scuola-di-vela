@@ -34,6 +34,8 @@
 
 **Decisione di Ale, 17 ottobre 2026 (sera): ordine per chiudere il livello 1.** 1) ~~Manutenzione~~: **fatta nella 1.0.22** (guida degli avversari non più scritta tre volte, impronta rigenerata e identica al bit). 2) ~~Bolina lenta con poco vento~~: ultimo tentativo fatto (fermata 1, `PROPOSTA-BOLINA.md` §11), causa intera non trovata, **limite noto dichiarato: il livello 1 è chiuso** (Ale, «A»). 3) Poi il livello 2.
 
+**Prima cosa della prossima sessione (Ale, 17 ottobre 2026): il punto sul livello 2**, con l'elenco delle cose che completeranno la fisica della barca e fra le barche (punto di partenza: le semplificazioni dichiarate in `FISICA-E-TARATURE.md` e i dubbi in `DUBBI-E-RICERCHE.md`); la copertura del vento va nel livello 2, spiegata da una lezione che da lì la attiva (`VISIONE-LIVELLI-E-CARRIERA.md` §3).
+
 **Livello 2: regole di regata e avversari**, sulla stessa barca (`VISIONE-LIVELLI-E-CARRIERA.md` §2-3). Prima la ricerca sulle fonti del regolamento, la proposta rivista in chat, e solo dopo lezioni, colpa nei contatti, penalità e protesta. Il fiocco e la barca a due sono **livello 3** (prototipo in `sperimentale/`, tappa C chiusa).
 
 ## Dove cercare
