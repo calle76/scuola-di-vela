@@ -154,7 +154,7 @@ Prova sperimentale di una seconda vela, in vista di una futura deriva a due. **N
 - **Salti di vento uguali in tutto il campo** (livello 2, dalla 1.0.28): nella realtà arrivano con le raffiche e si vedono sull'acqua; periodi accorciati rispetto alle fonti per la bolina del gioco.
 - **Livello 2: sotto 1 nodo circa (`RUD2.uMin`, 0,5 m/s) e all'indietro la pala non stalla** (dichiarato il 17 ottobre 2026, osservazione 57): lì vale il timone del livello 1, e la barra in più (Maiusc) aiuta sempre un poco (uscita dall'angolo morto circa il 10% più rapida, virata lenta sempre più rapida). Nella realtà a quelle velocità la pala stalla facilmente, ma le forze sono piccole; per la pala che va all'indietro nessuna fonte con numeri. Lasciato così per decisione di Ale; da riprendere se giocando sembra troppo facile.
 - **Il momento delle vele esiste solo col boma spinto** (livello 2, dalla 1.0.26): in navigazione normale la vela non fa girare la barca. Con il boma spinto il timoniere non si sporge dall'altra parte quando la barca sbanda verso il vento.
-- Nessuna tendenza orziera nella navigazione normale (c'è solo nell'esercizio di rotta): né dalla randa, né dal fiocco, né dallo sbandamento. Vale anche per il prototipo del fiocco (tappa C, secondo compito).
+- Nessuna tendenza orziera nella navigazione normale (c'è solo nell'esercizio di rotta): né dalla randa, né dal fiocco, né dallo sbandamento. Vale anche per il prototipo del fiocco (tappa C, secondo compito). **Limite dichiarato per i livelli 1 e 2 (Ale, 19 ottobre 2026); si riprende al livello 3.**
 
 ## Da tenere presente
 
