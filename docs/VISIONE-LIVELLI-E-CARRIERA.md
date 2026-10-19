@@ -41,14 +41,14 @@ Regole di disegno:
 
 **Decisione di Ale, 19 ottobre 2026 (riorganizzazione dei livelli), che supera la numerazione del 16 ottobre.** Un livello = una barca. **Ogni livello ha due parti:** «a», la scuola (lezioni, prove, regate di prova: quello che si vede in regata si trova spiegato in una lezione, e viceversa); «b», la pratica (lezioni brevi solo dove servono, **replay delle proprie regate come lezioni, prove e verifiche**, `PROPOSTA-REGATA-COME-FONTE.md`, e **tornei** con punteggi e classifiche, senza novità che spiazzino). Dettagli in `RICERCA-CONTENUTI-LIVELLI.md` §8. **[deciso]**
 
-- **Livello 1** = la deriva singola di oggi (modello di riferimento nei documenti: una deriva olimpica in singolo di circa 4,2 m e 7 m² **[da verificare]**; nel gioco nessun nome di classe, principio 5). **1a** = il livello 1 di oggi con la barca più semplice da guidare, ritoccato solo con alcune lezioni nuove (regole, segnali, penalità; nelle regate di prova la penalità resta 15 secondi «per istruzioni di regata», come permette la regola 44.1). **1b** = la barca completa (quella chiamata finora «del livello 2»: timone che stalla, Z, salti di vento, raddrizzata lunga), le sue lezioni brevi, replay e tornei con la penalità di due giri.
+- **Livello 1** = la deriva singola di oggi (modello di riferimento nei documenti: una deriva olimpica in singolo di circa 4,2 m e 7 m² **[da verificare]**; nel gioco nessun nome di classe, principio 5). **1a** = il livello 1 di oggi con la barca più semplice da guidare, **congelato**: si correggono solo i difetti trovati giocando. **1b** = la barca completa (quella chiamata finora «del livello 2»: timone che stalla, Z, salti di vento, raddrizzata lunga), le sue lezioni brevi, **precedenze, penalità a giri e segnali di partenza**, replay e tornei.
 - **Eccezione dichiarata, solo del livello 1:** due barche con fisica diversa (1a più semplice, 1b completa). Nasce da come si è lavorato finora; dal livello 2 in poi **la barca si progetta e si congela prima**, ed è la stessa in «a» e «b».
 - **I numeri scalano di uno:** quello che finora si chiamava livello 2 è l'1b; il fiocco diventa il livello 2, il gennaker il 3, l'equipaggio da tre il 4, catamarano e cabinato 5-6. Nei documenti scritti prima del 19 ottobre i numeri vecchi restano; la tabella qui sotto usa quelli nuovi.
 
 | Livello | Barca e vele | Ruoli | Cosa c'è di nuovo | Stato |
 | --- | --- | --- | --- | --- |
-| 1a | Deriva singola, solo randa (barca semplice) | Timoniere | Le basi; lezioni su regole, segnali e penalità da aggiungere | **[esiste]**, lezioni nuove **[proposta]** |
-| 1b | La stessa deriva, barca completa | Timoniere | Regole in pratica, replay, tornei | barca **[in prova]**, resto **[proposta]** |
+| 1a | Deriva singola, solo randa (barca semplice) | Timoniere | Le basi | **[esiste]**, congelato |
+| 1b | La stessa deriva, barca completa | Timoniere | Precedenze, penalità a giri, segnali di partenza, replay, tornei | barca **[in prova]**, resto **[proposta]** |
 | 2 | Deriva a due, randa + fiocco | Timoniere, prodiere (un ruolo alla volta) | Il fiocco e il coordinamento a due | prototipo del fiocco (tappe A-C chiuse) |
 | 3 | Deriva a due con gennaker (vela di portanza asimmetrica) | Timoniere, prodiere (gestisce anche il gennaker) | Vela di portanza, planata, strumenti e angoli limite | **[proposta]** |
 | 4 | Equipaggio da tre | Timoniere, trimmer, tattico | Elaborare le informazioni mentre un altro guida; tattica | **[aperto]** |

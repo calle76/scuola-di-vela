@@ -20,7 +20,7 @@
 - **Raddrizzata del livello 2 (1.0.32, `PROPOSTA-RADDRIZZATA.md`):** 10 s invece di 3, barca al traverso con la vela lascata, avversari 15 s; da un video di allenamento; lezione breve da scrivere.
 - **Distacchi in regata (1.0.33, `PROPOSTA-DISTACCHI.md`):** secondi da te accanto a ogni barca nella classifica, e all'arrivo i secondi dalla barca davanti e dalla prima. **Da fare, in quest'ordine:** cosa influenza l'abilità (cercare nel manuale), poi trapezio e triangolo.
 
-**Riorganizzazione dei livelli (decisione di Ale, 19 ottobre 2026):** ogni livello è una barca in due parti, «a» scuola e «b» pratica (replay e tornei). Il livello 1 diventa 1a (quello di oggi, barca semplice, più qualche lezione sulle regole) e 1b (la barca finora detta «del livello 2», replay, tornei, penalità a due giri). Il fiocco diventa il livello 2. Dettagli: `VISIONE-LIVELLI-E-CARRIERA.md` §2 e `RICERCA-CONTENUTI-LIVELLI.md` §8.
+**Riorganizzazione dei livelli (decisione di Ale, 19 ottobre 2026):** ogni livello è una barca in due parti, «a» scuola e «b» pratica (replay e tornei). Il livello 1 diventa 1a (quello di oggi, barca semplice, **congelato**: solo correzioni di difetti) e 1b (la barca finora detta «del livello 2», precedenze, penalità a due giri, segnali, replay, tornei). Il fiocco diventa il livello 2. Dettagli: `VISIONE-LIVELLI-E-CARRIERA.md` §2 e `RICERCA-CONTENUTI-LIVELLI.md` §8.
 
 ## Come si lavora (regole che non cambiano)
 

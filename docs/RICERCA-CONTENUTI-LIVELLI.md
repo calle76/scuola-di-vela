@@ -184,14 +184,14 @@ Accolti anche:
 Supera la divisione 2a/2b del §7 e la numerazione dei §2 e §5 (scritti prima).
 
 - **Un livello = una barca, in due parti.** «a»: scuola (lezioni, prove, regate di prova; quello che si vede in regata ha la sua lezione, e viceversa). «b»: pratica (lezioni brevi solo dove servono, replay delle proprie regate come lezioni, prove e verifiche, tornei con punteggi e classifiche, nessuna novità che spiazzi).
-- **Livello 1:** 1a = il livello 1 di oggi, barca semplice, ritoccato **solo con alcune lezioni** (regole, segnali, penalità); nelle regate di prova la penalità resta 15 secondi, presentata come scelta delle istruzioni di regata (regola 44.1, verificato su F15). 1b = la barca completa (finora «del livello 2»), le sue lezioni brevi, replay, tornei, penalità di due giri.
+- **Livello 1:** 1a = il livello 1 di oggi, barca semplice, **congelato** (vedi la decisione finale qui sotto). 1b = la barca completa (finora «del livello 2»), le sue lezioni brevi, replay, tornei, penalità di due giri.
 - **Eccezione solo del livello 1:** due barche con fisica diversa. Dal livello 2 la barca si progetta e si congela prima, uguale in «a» e «b».
 - **Numeri nuovi:** fiocco = livello 2, gennaker = 3, equipaggio da tre e tattica = 4, catamarano e cabinato = 5-6. Quello che qui sopra è chiamato «livello 2» è l'1b; «livello 3» è il 2, e così via.
 - **Nel gioco nessun nome di classe** (principio 5): il modello di riferimento della barca si nomina solo nei documenti.
 
-**Correzione (Ale, 19 ottobre 2026), che supera i §2 e §5 dove dicono altro:**
-- **1a** (scuola): lezioni nuove sulle **precedenze** (la parte portante, probabilmente più di una lezione), sulla **penalità** (15 s «per istruzioni di regata», di solito due giri) e sui **segnali di partenza** (`PROPOSTA-SEGNALI-PARTENZA.md`).
-- **1b** (pratica): barca completa e le sue lezioni brevi (timone, Z, salti, raddrizzata), replay, tornei con i due giri.
+**Decisione finale (Ale, 19 ottobre 2026), che supera tutto quello che sopra dice altro:**
+- **1a = il vecchio livello 1, congelato.** Non si aggiunge niente; si correggono solo i difetti trovati giocando.
+- **1b = il vecchio livello 2:** barca completa e le sue lezioni brevi (timone, Z, salti, raddrizzata); **precedenze** (la parte portante), **penalità a giri** e **segnali di partenza** con le bandiere (`PROPOSTA-SEGNALI-PARTENZA.md`, da riferire all'1b); replay; tornei.
 - **Ogni livello ha la sua lezione «I nomi»:** il livello 1 c'è già (le parti della barca); il livello 2 avrà le parti della vela insieme a quelle del fiocco e dell'albero; i livelli successivi le loro (gennaker, bompresso…). Sono lezioni di contorno, non portanti.
 
 **Deciso (Ale, 19 ottobre 2026): due riconoscimenti, con nomi diversi.** Alla fine dell'1a un **«attestato di partecipazione»** (l'attestato di oggi, da rinominare nel gioco quando si lavorerà all'1b); alla fine dell'1b un **«brevetto da regatante»**, dopo i tornei. Sempre «nessun valore legale».
