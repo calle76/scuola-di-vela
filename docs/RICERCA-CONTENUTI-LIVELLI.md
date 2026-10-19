@@ -77,6 +77,8 @@ Peso: **leggero** = una lezione o un disegno; **medio** = codice di gioco nuovo 
 
 ## 5. Quadro completo, livello per livello **[proposta]**
 
+**La regata come fonte (replay, momenti chiave, «ripeti da qui», domande sugli incidenti) si costruisce nel livello 2 e vale in tutti i livelli successivi**; ogni livello aggiunge solo gli argomenti di cui parla (Ale, 19 ottobre 2026).
+
 Mette insieme `VISIONE-LIVELLI-E-CARRIERA.md` (§2-§7), `PROPOSTA-REGATA-COME-FONTE.md`, quello che è già nel gioco e il catalogo del §2. «C'è» = nel gioco oggi (in prova per il livello 2).
 
 ### Livello 1: le basi (chiuso)
@@ -116,14 +118,14 @@ Mette insieme `VISIONE-LIVELLI-E-CARRIERA.md` (§2-§7), `PROPOSTA-REGATA-COME-F
 | --- | --- |
 | Barca | Vela di portanza asimmetrica, planata, strumenti (VMG) e angoli limite. Prototipo isolato prima, come per il fiocco |
 | Lezioni brevi | I nomi: gennaker, bompresso; La vela di portanza; Alzata e ammainata; Regolare il gennaker; Strambata col gennaker; Planare; Strumenti e angoli limite |
-| Pratica | Regate con lati in poppa decisivi; consigli del coach sugli angoli in poppa |
+| Pratica | Regate con lati in poppa decisivi; la regata come fonte parla di angoli in poppa, planata, alzata e ammainata |
 
 ### Livello 5: equipaggio da tre e tattica **[aperto]**
 
 | | |
 | --- | --- |
 | Barca e ruoli | Timoniere, regolatore delle vele, tattico |
-| Contenuti | Copertura del vento, consigli di vento e brezze, spazio alla boa e protesta se non entrano prima, tornei per categoria (vento leggero, teso, raffiche, salti) |
+| Contenuti | La regata come fonte parla di tattica (coperture, salti sfruttati o no); copertura del vento, consigli di vento e brezze, spazio alla boa e protesta se non entrano prima, tornei per categoria (vento leggero, teso, raffiche, salti) |
 
 ### Livelli 6-7: catamarano e cabinato **[aperto]**
 
