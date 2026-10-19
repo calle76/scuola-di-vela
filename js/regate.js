@@ -452,6 +452,8 @@
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
     contacts();
+    if (R.t >= 0 && Math.floor(R.t * 2) !== Math.floor(prevT * 2)) for (const b of R.boats){ // strada fatta ogni 0,5 s, per i distacchi
+      const p = b.fin === null ? strada(b) : null; if (p !== null) (b.hist = b.hist || []).push([R.t, p]); }
     recSample(R.t, dt);
     const me = R.boats[0];
     if (me.fin !== null && R.phase !== "done"){
@@ -474,6 +476,34 @@
       R.pend = null;
     }
   }
+  // 1.0.33: distacchi in secondi (docs/PROPOSTA-DISTACCHI.md). Strada fatta in metri, nella direzione del vento medio (lo spostamento
+  // di lato non conta, come nel tracciamento delle regate vere): di bolina i metri saliti dalla linea (al più R.up), in poppa R.up più
+  // i metri scesi dalla boa; null prima della partenza (o richiamata). Prima della conferma era la distanza in linea d'aria da boa e
+  // centro della linea: chi tagliava l'arrivo a 15 m dal centro sembrava indietro. Ogni barca se la ricorda ogni 0,5 s; il distacco è
+  // da quanti secondi la barca davanti aveva la strada che ho fatto io: un tempo vero, senza le penalità.
+  function strada(b){
+    if (b.fin !== null) return 2 * R.up;
+    if (b.leg === 0 || b.ocs) return null;
+    const wy = toWF(b.S.x, b.S.y)[1];
+    return b.leg === 1 ? Math.min(R.up, -wy) : 2 * R.up + Math.min(0, wy);
+  }
+  function quando(b, p){ // primo istante in cui la barca b ha avuto la strada p (interpolato), null se mai
+    const h = b.hist || [];
+    for (let i = 0; i < h.length; i++) if (h[i][1] >= p){
+      if (!i) return h[0][0];
+      const [t0, p0] = h[i - 1], [t1, p1] = h[i]; return t0 + (t1 - t0) * (p - p0) / (p1 - p0 || 1);
+    }
+    return null;
+  }
+  function distacco(b){ // secondi della barca b da me: positivi se è davanti, negativi se è dietro; null se non si sa
+    const me = R.boats[0];
+    if (b.me || R.t < 0) return null;
+    if (me.fin !== null) return b.fin !== null ? me.fin - b.fin : null; // dopo il mio arrivo: i tempi d'arrivo, con le penalità
+    const pm = strada(me), pb = strada(b);
+    if (pm === null || pb === null) return null;
+    const t = pb >= pm ? quando(b, pm) : quando(me, pb);
+    return t === null ? null : (pb >= pm ? 1 : -1) * (R.t - t);
+  }
   function ranking(){
     const score = b => b.fin !== null ? 1e7 - b.fin : (b.ocs ? -1e6 : b.leg * 1e4 - Math.hypot(b.S.x - targetOf(b).x, b.S.y - targetOf(b).y));
     return [...R.boats].sort((a, b) => score(b) - score(a));
@@ -482,8 +512,14 @@
     const rank = ranking(), pos = rank.indexOf(R.boats[0]) + 1;
     $("rDone").hidden = false;
     $("rDoneText").textContent = pos + "° su " + rank.length + " in " + fmtTime(tot) +
-      (R.boats[0].pen ? " (penalità comprese: " + R.boats[0].pen + " s)" : "") + "." + (!prev ? "" : tot < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
+      (R.boats[0].pen ? " (penalità comprese: " + R.boats[0].pen + " s)" : "") + arrivoDistacchi() + "." + (!prev ? "" : tot < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
       (regTotal() === 0 ? (reg.contacts ? " " + regText() + ". ★ senza errori." : " Nessun errore: ★ senza errori.") : " " + regText() + ".");
+  }
+  function arrivoDistacchi(){ // 1.0.33: «, a 4 s dalla Rossa (prima)»; tempi d'arrivo con le penalità, come la classifica
+    const me = R.boats[0], prima = R.boats.filter(b => !b.me && b.fin !== null && b.fin <= me.fin).sort((a, b) => a.fin - b.fin);
+    if (!prima.length) return "";
+    const dav = prima[prima.length - 1], s = b => Math.round(me.fin - b.fin) + " s dalla " + b.name;
+    return ", a " + s(dav) + (prima.length === 1 ? " (prima)" : ", a " + s(prima[0]) + " (prima)");
   }
   function legName(b){
     if (b.fin !== null) return "arrivata · " + fmtTime(Math.round(b.fin));
@@ -495,7 +531,8 @@
   function racePanel(){
     if (!R) return;
     const rank = ranking();
-    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · +" + b.pen + " s" : ""}</span></li>`).join("");
+    const gap = b => { const s = distacco(b); return s === null ? "" : " · " + (Math.round(s) < 0 ? "−" + -Math.round(s) : Math.round(s)) + " s"; }; // 1.0.33
+    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · +" + b.pen + " s" : ""}${gap(b)}</span></li>`).join("");
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
   }
 
