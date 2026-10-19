@@ -189,6 +189,6 @@ Supera la divisione 2a/2b del §7 e la numerazione dei §2 e §5 (scritti prima)
 - **Numeri nuovi:** fiocco = livello 2, gennaker = 3, equipaggio da tre e tattica = 4, catamarano e cabinato = 5-6. Quello che qui sopra è chiamato «livello 2» è l'1b; «livello 3» è il 2, e così via.
 - **Nel gioco nessun nome di classe** (principio 5): il modello di riferimento della barca si nomina solo nei documenti.
 
-**Deciso (Ale, 19 ottobre 2026): due riconoscimenti.** L'attestato di oggi resta alla fine dell'1a; alla fine dell'1b un brevetto «da regatante», dopo i tornei (sempre «nessun valore legale»).
+**Deciso (Ale, 19 ottobre 2026): due riconoscimenti, con nomi diversi.** Alla fine dell'1a un **«attestato di partecipazione»** (l'attestato di oggi, da rinominare nel gioco quando si lavorerà all'1b); alla fine dell'1b un **«brevetto da regatante»**, dopo i tornei. Sempre «nessun valore legale».
 
-**Aperto:** se i punti di Competizione restano alle regate dell'1a o passano ai tornei dell'1b.
+**Deciso (Ale, 19 ottobre 2026): i punti restano nella propria parte.** Esperienza, Conoscenza, Abilità e Competizione si guadagnano e si «spendono» separatamente nell'1a (per l'attestato di partecipazione) e nell'1b (per il brevetto da regatante): le regate dell'1a continuano a dare punti di Competizione per l'1a, i tornei dell'1b per l'1b. Vale anche per i livelli successivi.
