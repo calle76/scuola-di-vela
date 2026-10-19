@@ -100,7 +100,7 @@ Mette insieme `VISIONE-LIVELLI-E-CARRIERA.md` (§2-§7), `PROPOSTA-REGATA-COME-F
 | Pratica | Prova nuova «fermarsi in un punto»; regate a bastone, trapezio e triangolo, bolina di 300 m; **regata come fonte**, fasi 1-4: registrazione e replay, momenti chiave e consigli geometrici, «ripeti da qui», domande sugli incidenti |
 | Schermo | Distacchi in classifica (**c'è**, 1.0.33); suggerimenti da principiante spenti all'inizio, riaccendibili |
 | Meriti e brevetto | Gli stessi quattro: Conoscenza anche dalle domande sugli incidenti e sui segnali; Abilità anche da «ripeti da qui» **[aperto]**; Competizione con le penalità a giri; esame sulle regole |
-| Fuori (va più avanti) | Copertura del vento, consigli di vento, protesta, spazio alla boa **[aperto]**, gioco a più persone |
+| Fuori (va più avanti) | Copertura del vento, consigli di vento, protesta, gioco a più persone. **Dopo la revisione in chat (§7): livello 2 diviso in 2a e 2b, spazio alla boa semplificato nel 2b, trapezio rimandato** |
 
 ### Livello 3: in due, randa e fiocco
 
@@ -142,3 +142,37 @@ Solo una direzione (`VISIONE` §2): vento apparente dominante, scuffia diversa; 
 2. Copertura del vento: livello 5, o resta nel livello 2?
 3. Protesta e spazio alla boa: livello 2 o 5?
 4. «Ripeti da qui» dà punti di Abilità o serve solo ad allenarsi?
+
+---
+
+## 7. Revisione in chat (19 ottobre 2026) e cosa ne segue
+
+La chat ha letto questo documento e il regolamento 2025-2028 in rete. I punti sulle regole sono stati **verificati qui sulla copia locale di F15** (che è l'edizione 2025-2028).
+
+**Livello 2 diviso in due tappe, ognuna giocabile** (principio «sempre giocabile») **[proposta]**:
+
+| Tappa | Contenuto |
+| --- | --- |
+| **2a** | Barca congelata; segnali di partenza e **tecnica di partenza** (quasi fermi vicino alla linea con le vele lascate, prendere i tempi, accelerare al via; la prova «fermarsi in un punto» ci si collega); precedenze 10-14 con la colpa decisa dalle regole; registrazione, replay, momenti chiave e consigli geometrici (lay line di bolina, giro di boa «largo in entrata, stretto in uscita») |
+| **2b** | Penalità a giri e avversari che le fanno; **spazio alla boa (18) semplificato**: la barca interna, sovrapposta quando entra nella zona di 3 lunghezze, ha diritto allo spazio; «ripeti da qui»; domande sugli incidenti |
+
+Accolti anche:
+- **Percorso a trapezio rimandato**: con quattro barche il triangolo basta a portare i lati al lasco.
+- **Spazio alla boa nel livello 2b, non al 5**: se il gioco decide la colpa, molti contatti avvengono alle boe, e senza la 18 i verdetti sarebbero spesso sbagliati.
+- **Il gioco fa da arbitro in acqua**: una riga nella lezione sulla penalità. Nella realtà, senza protesta non succede niente; esistono regate con arbitri sull'acqua (un'appendice di World Sailing per le regate di flotta arbitrate) **[da verificare: non è nel libro del regolamento in archivio]**. La protesta resta al livello 5.
+- **Salti di vento, reazione base nel livello 2**: virare quando il vento scarseggia, tenere le mure quando ridonda (già misurato in `PROPOSTA-SALTI-VENTO.md`); la strategia «col senno di poi» resta al 5.
+- **Copertura del vento**: oggi la fisica non toglie vento fra le barche; se un giorno lo farà prima del livello 5, servirà una frase che lo spieghi.
+- **Deriva mobile al livello 3** come novità del livello, non come «cosa da fare in due» (sulle derive in singolo la regola il timoniere).
+- **Le «cinque cose» dei corsi di deriva** (rotta, regolazione della vela, equilibrio laterale, assetto avanti-indietro, deriva) come modo di ordinare i commenti del coach, in tutti i livelli **[da verificare]** su una fonte scritta.
+- **Precedenze fuori dalla regata**: in navigazione libera vale il regolamento per prevenire gli abbordi in mare, non quello di regata; una frase nella lezione sulle mure **[da verificare]**.
+- **Leggere le raffiche sull'acqua**: il gioco le mostra già (chiazze scure, lezione 6 del livello 1).
+- **Il vang**: nominato nel livello 4, dove la poppa conta di più; senza fisica.
+- **Nomi**: «angolo di mura» sempre per intero (non confonderlo con le mure); dal livello 3 una frase chiarisce che «deriva» è sia il tipo di barca sia la lama.
+
+**Regole, correzioni verificate su F15:**
+- Regola 26: corretta. I preparatori possibili sono P, I, Z, Z con I, U o bandiera nera (la chat aveva omesso Z); il gioco userà solo P.
+- **Regola 44.1**: i due giri si devono per aver **infranto una regola della parte 2**, non per il contatto in sé: si possono dover fare i giri senza toccare nessuno, e si può toccare senza colpa. Inoltre: con una regola della parte 2 e la 31 nello stesso incidente bastano i due giri (44.1(a)); se si causano ferite o danni seri, o si ottiene un vantaggio significativo nonostante la penalità, si deve ritirarsi (44.1(b)).
+- **Regola 44.2**: i giri si fanno subito dopo essersi allontanati dalle altre barche, nello stesso verso, ognuno con una virata e una strambata; vicino all'arrivo, lo scafo deve tornare tutto dalla parte del percorso prima di arrivare.
+- **Esonero**: chi ha diritto di rotta (o naviga nello spazio che gli spetta) ed è coinvolto in un contatto è esonerato dalla regola 14 se non ci sono danni né ferite. Nel 2025-2028 è la **regola 43.1(c)**, non la 14(b) citata dalla chat (numerazione dell'edizione precedente).
+- «In regata»: dal segnale preparatorio fino all'arrivo (definizioni).
+- Regola 60.2: corretta, la bandiera rossa serve solo sopra i 6 m.
