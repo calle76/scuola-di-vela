@@ -48,7 +48,8 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `xR` | 1,9 m | Distanza della pala dal centro di rotazione. **Stima** (poppa di una barca da 4,2 m) |
 | `stallA` | 22° | Angolo effettivo oltre cui la pala stalla. F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera): **fissato prima di misurare**, a metà |
 | `dragK` | 184 N·s²/m² | Resistenza della pala sull'angolo effettivo: 12 kgf a 15° e 6 nodi (F4, pala del 470) |
-| `yawG`, `yawRho` | 0,6 /m², 0 m | Quanto in fretta la pala fa girare la barca e smorzamento dello scafo. **Ipotesi tarate** con 10 e 14 nodi; con `yawRho` 0 la rotazione la frena solo la pala |
+| `yawG`, `yawRho` | 1,5 /m² (fino alla 1.0.30: 0,6), 0 m | Quanto in fretta la pala fa girare la barca e smorzamento lineare dello scafo. **Ipotesi tarate** con 10 e 14 nodi. Dalla 1.0.31 la pala sente V² = u² + (r·xR)² (anche l'acqua che le arriva di lato perché la poppa ruota) |
+| `hullKq`, `Izz` | 600 N·m·s², 200 kg·m² | 1.0.31: acqua contro il solo scafo che ruota (−hullKq/Izz·r·\|r\|, anche a barca lenta) e inerzia d'imbardata con l'acqua trascinata. **Stime** della revisione in chat, fissate prima di misurare, non tarate (`PROPOSTA-VIRATE-AVVERSARI.md`) |
 | `uMin` | 0,5 m/s | Sotto, e all'indietro, il timone del livello 1 (barra fino a 30°) |
 | `RUD2_SICURA` | 35/45 | **Dalla 1.0.25** la sola freccia porta la barra fino a 35°, Maiusc + freccia fino a 45°, sempre a 1,6 al secondo come nel livello 1. **Regola del gioco, nessuna fonte** (nella 1.0.24 la freccia andava piano, 20°/s) |
 

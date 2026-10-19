@@ -2,8 +2,9 @@
 # Guida davvero la barca con i tasti (pagina con #collaudo, passi fissi di 1/60 s, senza raffiche):
 #  1. la scelta «Barca» mette la barca del livello 2 e la toglie; il livello 1 resta con la barra veloce (1,6 al secondo);
 #  2. livello 2: la sola freccia porta la barra fino a 35°, Maiusc + freccia fino a 45°, sempre a 1,6 al secondo; il cursore trascinato non va più veloce;
-#  3. 12 virate (6, 10 e 15 nodi, mure a dritta e a sinistra, sola freccia e freccia con Maiusc): tutte riescono; con Maiusc la pala stalla
-#     e il suggerimento lo dice; si riportano durata, velocità minima e secondi in stallo, da confrontare con tests/fisica/timone2.js;
+#  3. 12 virate (6, 10 e 15 nodi, mure a dritta e a sinistra, sola freccia e freccia con Maiusc): tutte riescono (dalla 1.0.31 la pala
+#     stalla di rado in virata: lo stallo si riporta, non si pretende); poi barca lenta (30% della bolina) e barra a fondo di colpo:
+#     la pala stalla e il suggerimento lo dice; si riportano durata, velocità minima e secondi in stallo, da confrontare con tests/fisica/timone2.js;
 #  4. la pagina caricata come la carica un giocatore (senza #collaudo): la scelta c'è, si cambia, nessun errore della pagina.
 # Esce con 1 se un controllo fallisce.
 import asyncio, pathlib, sys
@@ -84,7 +85,15 @@ async def main():
                     print(f"  {kn} nodi, mure {'a sinistra' if mure > 0 else 'a dritta'}, {'freccia e Maiusc' if veloce else 'sola freccia    '}: "
                           f"{r['t']:.2f} s, {r['umin'] / r['u0']:.0%}, stallo {r['st']:.2f} s, avviso {'sì' if r['hint'] else 'no'}")
                     check(ok and r["lv"] == 2, f"virata {n} riuscita con la barca del livello 2")
-                    if veloce: check(r["st"] > 0.2 and r["hint"], f"virata {n}, freccia e Maiusc: la pala stalla e il suggerimento lo dice")
+
+        # 3b (1.0.31): barca lenta e barra a fondo di colpo, il caso in cui la pala stalla ancora (tests/fisica: circa 0,6 s con 10 nodi)
+        await apri(pg, 10, 2)
+        st = await pg.evaluate("""() => { const S = __sv.S, c = __sv.ctl; for (let i = 0; i < 2400; i++){ S.h = 45; c.sheet = 0.1; c.tiller = 0; __sv.run(1 / 60, 1); }
+          const u = S.u * 0.3; while (S.u > u){ S.h = 45; c.sheet = 1; __sv.run(1 / 60, 1); }
+          let st = 0, hint = false; for (let i = 0; i < 90; i++){ c.tiller = 1; c.sheet = 0.3; __sv.run(1 / 60, 1); __sv.panel();
+            if (S.stall){ st += 1 / 60; const h = document.getElementById('hint'); if (/stallo/.test(h.textContent) && !h.hidden) hint = true; } }
+          return { st, hint, lv: S.lv }; }""")
+        check(st["lv"] == 2 and st["st"] > 0.2 and st["hint"], f"barca lenta, barra a fondo di colpo: la pala stalla {st['st']:.2f} s e il suggerimento lo dice")
 
         # 4: pagina come la carica un giocatore
         await pg.goto("about:blank"); await pg.goto(BASE); await pg.wait_for_timeout(400)

@@ -47,11 +47,15 @@ const BOAT = {
 // La pala sente l'angolo effettivo (barra meno l'acqua che le arriva di traverso perché la barca gira), stalla oltre stallA
 // (la forza resta quella dello stallo, la resistenza continua a crescere: Masuyama e Ogihara 2020, F4) e la rotazione nasce dalla
 // forza della pala contro lo smorzamento dello scafo: dr/dt = −yawG·u·(u·F + yawRho·r), a regime curvatura = δ / (xR + yawRho).
+// 1.0.31 (docs/PROPOSTA-VIRATE-AVVERSARI.md): la pala sente anche l'acqua che le arriva di lato perché la poppa ruota, V² = u² + (r·xR)²
+// al posto di u², e l'acqua frena lo scafo che ruota (−hullKq/Izz·r·|r|, anche a barca lenta). Prima la prua girava 20-45° oltre la bolina.
 const RUD2 = {
   maxRudder: 45,      // gradi: nelle virate misurate del 470 la barra arriva a 45° (F4, fig. 5 e 6)
   xR: 1.9,            // m, distanza della pala dal centro di rotazione (stima: poppa di una barca da 4,2 m)
   yawRho: 0,          // m, smorzamento dello scafo come lunghezza: 0 = la rotazione la frena solo la pala (tarato, docs/PROPOSTA-STALLO-TIMONE.md §8)
-  yawG: 0.6,          // 1/m², quanto in fretta la pala fa girare la barca (ipotesi, tarata con 10 e 14 nodi: §8)
+  yawG: 1.5,          // 1/m², quanto in fretta la pala fa girare la barca (ipotesi, tarata con 10 e 14 nodi; 1.0.31: era 0,6, ritarata con lo smorzamento dello scafo)
+  hullKq: 600,        // N·m·s², 1.0.31: acqua contro il solo scafo che ruota (stima della revisione in chat; BOMA2.Kq 1230 comprende anche la pala)
+  Izz: 200,           // kg·m², 1.0.31: inerzia d'imbardata con l'acqua trascinata da pala e deriva (stima, fissata prima di misurare; sensibilità 130-300)
   stallA: 22,         // gradi di angolo effettivo: F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera); fissato prima di misurare
   dragK: 184,         // N·s²/m²: resistenza della pala, 12 kgf a 15° e 6 nodi (F4, pala del 470); usa l'angolo effettivo
   uMin: 0.5           // m/s: sotto, il timone del livello 1 (come ironsU: niente sovrapposizione con la prua che poggia da sola)
@@ -172,7 +176,9 @@ function step(S, C, E, dt){
   S.heel += S.heelRate / D2R * dt;
   if (lv2){ // livello 2: la forza della pala (che stalla oltre stallA) contro lo smorzamento dello scafo
     const F = Math.max(-RUD2.stallA, Math.min(RUD2.stallA, a2)) * D2R;
-    S.r += -RUD2.yawG * S.u * (S.u * F + RUD2.yawRho * S.r * D2R) * dt / D2R;
+    const V2 = S.u * S.u + (S.r * D2R * RUD2.xR) ** 2;
+    S.r += -RUD2.yawG * (V2 * F + S.u * RUD2.yawRho * S.r * D2R) * dt / D2R;
+    S.r /= 1 + RUD2.hullKq / RUD2.Izz * Math.abs(S.r * D2R) * dt; // forma che non inverte mai il verso della rotazione
     S.stall = Math.abs(a2) > RUD2.stallA;
   } else {
   if (S.lv === 2) S.stall = false;

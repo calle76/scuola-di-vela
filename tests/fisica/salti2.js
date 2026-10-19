@@ -23,7 +23,7 @@ for (const [nome, semi] of [["taratura", [1, 40]], ["conferma", [121, 160]]]){
     if (a.t !== null && b.t !== null){ nP++; gd += a.t; gs += b.t; if (a.t < b.t) giuste++; }
   }
   const guad = n ? (sd - ss) / sd : 0;
-  const S1 = n > 0 && guad >= 0.05 && vinte >= n * 2 / 3, S2 = nP > 0 && giuste >= nP * 3 / 4;
+  const S1 = n === (semi[1] - semi[0] + 1) && guad >= 0.05 && vinte >= n * 2 / 3, S2 = nP === (semi[1] - semi[0] + 1) && giuste >= nP * 3 / 4; // 1.0.31: tutte le bolinate devono arrivare (prima bastava una)
   console.log(`${nome} (semi ${semi[0]}-${semi[1]}):`);
   console.log(`  S1 ${S1 ? "ok   " : "FUORI"} salti oscillanti: due bordi ${(sd / n).toFixed(1)} s, sui salti ${(ss / n).toFixed(1)} s, guadagno ${(guad * 100).toFixed(1)}% (almeno 5%); vince ${vinte} su ${n} (almeno 2 su 3)`);
   console.log(`  S2 ${S2 ? "ok   " : "FUORI"} salto persistente: verso la rotazione ${(gd / nP).toFixed(1)} s, dall'altra parte ${(gs / nP).toFixed(1)} s; meglio ${giuste} su ${nP} (almeno 3 su 4)`);

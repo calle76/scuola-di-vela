@@ -21,7 +21,7 @@ function bolina(kn, D, twdAt, strat, thr = 5, dt = 0.02, primaMura = 0){ // twdA
     const layOther = Math.abs(norm180(brg - twd)) >= 45 && Math.sign(norm180(brg - twd)) === -tack; // boa raggiungibile sulle altre mure
     let want = tack;
     if (!tacking){
-      if (layOther && t - lastTack > 3) want = -tack;
+      if (layOther && t - lastTack > 3 && S.u > 1.2) want = -tack; // 1.0.31: non vira quasi da fermo (vicino alla boa virava due volte di fila e restava piantato)
       else if (strat === "salti"){
         const scarso = tack * twd > thr; // mure +1: il vento che gira in senso orario porta la prua lontano dalla boa
         const nuovaFuori = Math.sign(Math.sin((twd - 45 * tack) * Math.PI / 180)) === Math.sign(S.x) && Math.abs(S.x) > 0.4 * D;
