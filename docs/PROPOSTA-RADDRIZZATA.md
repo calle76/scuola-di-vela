@@ -48,3 +48,5 @@ Rimandato: la scuffia sopravento in poppa e la barca rovesciata del tutto (servi
 - **R5 ok**: `collaudo_salti2.py` 12 regate su 12 con tutte le barche arrivate. Avversario fatto scuffiare apposta: livello 2 ancora rovesciato a 14,5 s, dritto a 15,5 s a 90°; livello 1 dritto dopo 5 s a 60°.
 
 **Difetti del collaudo trovati e corretti prima del risultato:** velocità di R1 letta mezzo secondo dopo invece che all'istante (la vela che sbatte spinge già a 0,2-0,5 nodi); R3 teneva ↑ per 30 s, cazzando a ferro al traverso; la prua dell'avversario letta da `b.info`, che mentre la barca è rovesciata non si aggiorna.
+
+**Limite dichiarato (Ale, 19 ottobre 2026):** con 20 nodi fissi la barca non riparte dopo la raddrizzata (anche nell'1a). Nel gioco il vento di base arriva al più a 15 nodi; 20-25 nodi si hanno solo al centro di una raffica forte, per pochi secondi, e dopo i 10 s della raddrizzata la raffica è di solito passata. Caso raro e passeggero: non si corregge.
