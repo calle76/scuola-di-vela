@@ -101,6 +101,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 | La raffica è un'occasione per accelerare: in regata si cerca e si sfrutta, e si manovra quando arriva il pericolo (1.0.9, indicazione di Ale). | ❓ parere di Ale; F18 e F21 (la raffica diventa velocità) lo sostengono in parte |
 | Il timoniere si sporge fuori bordo, sopravento, contro lo sbandamento. | |
 | Si raddrizza salendo sulla lama di deriva e facendo leva col proprio peso. | |
+| Livello 2 (1.0.32): si raddrizza con la schiena al vento (timoniere sopravento, albero sottovento), la barca torna dritta al traverso con la vela che sbatte libera, e fatta bene la manovra dura 15-20 s. | Una fonte divulgativa: video di un allenatore inglese (YouTube `T7lUaEafLv8`, trascrizione e fotogrammi forniti da Ale il 19 ottobre 2026). Il traverso è letto dagli schemi, non detto a parole. **Da confermare con altre fonti.** |
 | Prima di raddrizzare si lasciano libere le scotte (passo «Raddrizzare», dalla 0.20.1). | **Da confermare con altre fonti (scritte o video).** Due fonti indipendenti ma deboli (blog di un circolo, conferenza di un progettista); nessuna federazione. Per ripartire dopo il raddrizzamento (lascare o cazzare) nessuna fonte trovata: il gioco non dà più nessuna regola |
 
 ## Domande dell'esame (0.20)

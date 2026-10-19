@@ -38,9 +38,9 @@ const BOAT = {
 };
 
 // ==== BARCA DEL LIVELLO 2 (1.0.24-1.0.28) ====
-// Tutto ciò che vale solo con S.lv === 2 (il livello 1 non ha S.lv e resta identico al bit): RUD2 (timone), BOMA2 (spingi il boma), SALTI2 con
+// Tutto ciò che vale solo con S.lv === 2 (il livello 1 non ha S.lv e resta identico al bit): RUD2 (timone), RADD2 (raddrizzata), BOMA2 (spingi il boma), SALTI2 con
 // newShift/stepShift (salti di vento), poi in step() i rami `lv2` e `push`. Fuori da qui: gioco.js (scelta «Barca», salti di vento, barra con Maiusc,
-// Z per il boma), regate.js (regate con rc.lv2), disegno.js (angolo della barra nel disegno). Per trovarli: grep -nE "S\.lv|lv2|RUD2|BOMA2|SALTI2".
+// Z per il boma), regate.js (regate con rc.lv2), disegno.js (angolo della barra nel disegno). Per trovarli: grep -nE "S\.lv|lv2|RUD2|RADD2|raddT|BOMA2|SALTI2".
 
 // 1.0.24: timone del livello 2 (docs/PROPOSTA-STALLO-TIMONE.md). Vale solo per una barca con S.lv === 2 che va avanti ad almeno uMin;
 // sotto, all'indietro e nel livello 1 il timone resta quello di sempre (barra fino a 30°, rotazione che insegue la barra).
@@ -61,6 +61,10 @@ const RUD2 = {
   uMin: 0.5           // m/s: sotto, il timone del livello 1 (come ironsU: niente sovrapposizione con la prua che poggia da sola)
 };
 const RUD2_SICURA = 35 / 45; // 1.0.25: nel livello 2 la sola freccia porta la barra fino a 35° (quasi senza stallo), Maiusc + freccia fino a 45°; regola del gioco, nessuna fonte
+// 1.0.32: raddrizzata del livello 2 (docs/PROPOSTA-RADDRIZZATA.md): più lunga e con la barca al traverso, vela tutta lascata che sbatte,
+// come negli schemi di un video di allenamento (raddrizzare con la schiena al vento, 15-20 s in tutto). Livello 1: 3 s e 60°, come sempre.
+const RADD2 = { t: 10, tAI: 15, twa: 90 }; // secondi dal tasto A (giocatore), secondi dalla scuffia (avversari), gradi dal vento
+function raddT(S){ return S.lv === 2 ? RADD2.t : 3; }
 // 1.0.26: «spingi il boma» del livello 2 (docs/PROPOSTA-SPINGI-BOMA.md). Con C.push e S.lv === 2 il boma resta a BOMA2.angle dalla parte
 // dove si trovava quando si è cominciato a spingere; la vela è una piastra investita dal vento (forza normale CN = CL cos α + CD sin α)
 // applicata al centro velico lungo il boma, quindi spinge indietro, di lato e fa girare la prua verso il boma. Costanti: stime senza fonte.

@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **19 ottobre 2026, versione 1.0.31**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **19 ottobre 2026, versione 1.0.32**.
 
 ## Dove siamo
 
@@ -16,7 +16,8 @@
 - **Salti di vento, in prova (1.0.28):** barca del livello 2 nella navigazione libera e «Regata nei salti di vento» (boa a 300 m, fuori da meriti e carriera); virare sugli scarsi rende circa il 6%, il salto persistente si gioca andando verso la rotazione (`PROPOSTA-SALTI-VENTO.md` §7-8). Percorsi a trapezio e triangolo: da fare.
 - **Pulizia del codice (1.0.29):** solo commenti e collaudi, gioco identico al bit. Intestazione «BARCA DEL LIVELLO 2» in `motore.js` per trovare i controlli del livello 2; collaudo K5 aggiornato. Codice 292 864 byte. **`tests/fisica/timone2.js` esce con criteri FUORI soglia (C1, C3, C4, C8 a 6 nodi): è noto (§8 di `PROPOSTA-STALLO-TIMONE.md`), si confrontano le uscite con le precedenti, non l'esito.**
 - **Piccole correzioni dal gioco di Ale (1.0.30, 19 ottobre):** omino con due gambe, banderuola con il perno più al centro, W e S sempre attivi come ↑ e ↓ (scritte invariate). 
-- **La prua non va più oltre la bolina dopo la virata (1.0.31, 19 ottobre, `PROPOSTA-VIRATE-AVVERSARI.md`):** nella barca del livello 2 la rotazione la frenava solo la pala; ora la pala sente anche l'acqua che le arriva di lato e l'acqua frena lo scafo che ruota (idea e stime della revisione in chat), `yawG` ritarato. Prua del giocatore dopo la virata da 67-81° a 34-40°; avversari oltre la bolina + 15° dal 97% al 17% delle virate (soglia 5%: fuori, quasi tutte manovre volute della guida). Prezzo dichiarato: la pala stalla di rado e Maiusc non costa più velocità; virate più lente con 6-8 nodi. Provata da Ale e tenuta. **Da fare, in quest'ordine:** posizione dopo la raddrizzata e tempo per girare, distacchi in regata, cosa influenza l'abilità (cercare nel manuale), poi trapezio e triangolo.
+- **La prua non va più oltre la bolina dopo la virata (1.0.31, 19 ottobre, `PROPOSTA-VIRATE-AVVERSARI.md`):** nella barca del livello 2 la rotazione la frenava solo la pala; ora la pala sente anche l'acqua che le arriva di lato e l'acqua frena lo scafo che ruota (idea e stime della revisione in chat), `yawG` ritarato. Prua del giocatore dopo la virata da 67-81° a 34-40°; avversari oltre la bolina + 15° dal 97% al 17% delle virate (soglia 5%: fuori, quasi tutte manovre volute della guida). Prezzo dichiarato: la pala stalla di rado e Maiusc non costa più velocità; virate più lente con 6-8 nodi. Provata da Ale e tenuta.
+- **Raddrizzata del livello 2 (1.0.32, `PROPOSTA-RADDRIZZATA.md`):** 10 s invece di 3, barca al traverso con la vela lascata, avversari 15 s; da un video di allenamento; lezione breve da scrivere. **Da fare, in quest'ordine:** distacchi in regata, cosa influenza l'abilità (cercare nel manuale), poi trapezio e triangolo.
 
 ## Come si lavora (regole che non cambiano)
 

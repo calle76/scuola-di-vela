@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.31"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.32"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -733,10 +733,10 @@
       S.x += Math.sin(to) * 0.25 * dt; S.y -= Math.cos(to) * 0.25 * dt;
       if (S.righting){
         S.righting += dt;
-        if (S.righting > 3){
-          const side = S.capSide;
-          S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = 0.3;
-          S.h = norm360(local.twd + side * 60); ctl.sheet = 0.8; ctl.tiller = 0;
+        if (S.righting > raddT(S)){
+          const side = S.capSide, lv2 = S.lv === 2; // livello 2: al traverso, ferma, vela tutta lascata (RADD2)
+          S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = lv2 ? 0 : 0.3;
+          S.h = norm360(local.twd + side * (lv2 ? RADD2.twa : 60)); ctl.sheet = lv2 ? 1 : 0.8; ctl.tiller = 0;
           S.prevSide = sgn(norm180(local.twd - S.h));
         }
       }

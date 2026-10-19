@@ -368,7 +368,7 @@
     const s = b.S;
     if (s.capsized){
       s.capT += dt; s.u = 0;
-      if (s.capT > 5){ s.capsized = false; s.capT = 0; s.heel = 0; s.heelRate = 0; s.h = norm360(env.twd + s.capSide * 60); b.ctl.sheet = 0.8; }
+      if (s.capT > (s.lv === 2 ? RADD2.tAI : 5)){ s.capsized = false; s.capT = 0; s.heel = 0; s.heelRate = 0; s.h = norm360((s.lv === 2 ? windAt(s.x, s.y).twd : env.twd) + s.capSide * (s.lv === 2 ? RADD2.twa : 60)); b.ctl.sheet = s.lv === 2 ? 1 : 0.8; } // 1.0.32: livello 2 più lenta e al traverso del vento vero (coi salti, env.twd è il medio)
       return;
     }
     aiControl(b, dt);

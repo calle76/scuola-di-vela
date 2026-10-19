@@ -77,6 +77,7 @@ Fisica fra le barche: copertura del vento, colpa nei contatti decisa dalle regol
 - avversari che rispettano le regole e guidano meglio (partenze, giri di boa, comportamento dopo l'arrivo; osservazioni 25-28);
 - la **protesta**, idea di Ale del 16 ottobre 2026 **[aperto]**: se ne parla con le osservazioni sulla 1.0.
 - la **copertura del vento**, chiesta da Ale il 17 ottobre 2026 **[aperto]**: «una barca che affianca l'altra toglie vento a chi è sottovento». Oggi ogni barca ha il vento pieno. È già descritta in `ROADMAP.md` (cono d'ombra: cosa richiede) e in `CONTENUTI-DA-VERIFICARE.md` (lunghezza del cono e perdita di vento da cercare nelle fonti); nel piano vecchio stava al livello 4 (`PIANO-GENERALE.md`), ora va nel livello 2 perché fa parte della dinamica delle regate. Tocca il vento che riceve la barca, quindi non è solo disegno: va con la ricerca sulle fonti del livello 2. **Da insegnare in una lezione** (Ale): dalla lezione in poi la copertura agisce nel gioco.
+- la **raddrizzata del livello 2** (1.0.32, `PROPOSTA-RADDRIZZATA.md`): più lunga (10 s dal tasto A) e con la barca al traverso, vela tutta lascata. **Da spiegare in una lezione breve** (Ale, 19 ottobre 2026), che dica cosa cambia rispetto al livello 1. **[deciso, lezione da scrivere]**
 
 I corsi dipendono dalla fisica del prototipo: se non regge, cambiano. Ogni lezione chiede un solo ruolo alla volta. Nelle lezioni gli ordini all'equipaggio sono sempre espliciti.
 
