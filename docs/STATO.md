@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **19 ottobre 2026, versione 1.0.33**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **19 ottobre 2026 (notte), versione 1.0.33**.
 
 ## Dove siamo
 
@@ -39,16 +39,21 @@
 
 ## Aperto
 
-1. **Prove giocando di Ale:** barca che balla sull'acqua, timoniere, baffi alla prua e scuffia (1.0.23: ampiezze ipotesi da ritoccare guardando); increspature (1.0.19), retromarcia con 15-20 nodi, disegno della vela (1.0.7), testi delle raffiche da dietro da accorciare.
-2. **Passo 5.8 «Strambata controllata»:** il pilota preciso non lo completa 4 volte su 100 (soglia: al massimo 1) perché strambo con il boma a 49° invece di 45° o meno, per l'errore di lettura del pilota. Non è un difetto del gioco; la soglia del collaudo resta com'è.
-3. **Limite noto dichiarato (17 ottobre):** bolina dal 9 al 15% più lenta delle fonti con poco vento, +7% con 15 nodi; cause escluse e parziali in `PROPOSTA-BOLINA.md` §11. Il braccio sbandante `zCE` è fra i dubbi, per il livello 3.
-4. **Semplificazioni dichiarate da tenere a mente:** il timone non stalla mai; la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento; lo scorrimento più veloce delle increspature nella raffica non ha fonti (aiuto visivo).
+1. **Prove giocando di Ale:** raddrizzata di 10 s dell'1b (1.0.32); distacchi in classifica (1.0.33); barca che balla, increspature, retromarcia con 15-20 nodi, disegno della vela, testi delle raffiche da dietro.
+2. **Passo 5.8 «Strambata controllata»:** il pilota preciso non lo completa 4 volte su 100 (soglia: al massimo 1) per l'errore di lettura del pilota. Non è un difetto del gioco.
+3. **Limiti dichiarati:** bolina dal 9 al 15% più lenta delle fonti con poco vento (`PROPOSTA-BOLINA.md` §11); nella barca dell'1b la barra a 45° (Maiusc) in virata non frena più della sola freccia, il prezzo è il controllo (`PROPOSTA-STALLO-TIMONE.md` §10, da riverificare con video); con 20 nodi fissi dopo la raddrizzata la barca non riparte (raro, solo nelle raffiche); nessuna tendenza orziera (si riprende al livello 3); avversari dell'1b oltre la bolina + 15° nel 17% delle virate, quasi tutte manovre volute.
+4. **Semplificazioni da tenere a mente:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio; lo scorrimento più veloce delle increspature nella raffica non ha fonti.
 
 ## Prossimo lavoro
 
-1. **Ale prova giocando le versioni 1.0.25-1.0.28 del livello 2** (la 1.0.26 Z per spingere il boma; raddrizzare con A è fatto, 1.0.27). Prima la 1.0.25 (navigazione libera, ⚙, «Barca: livello 2 (prova)»): sola freccia fino a 35°, Maiusc fino a 45°. Si sente la scelta? Poi, se convince, l'aiuto «la barra si ferma dove la pala stallerebbe» (disattivabile), idea nata dalla «variabile» di Ale.
-2. **Timone del livello 2, seguito** (`PROPOSTA-STALLO-TIMONE.md` §8): o si cercano virate misurate su una deriva singola da circa 4 m e si ritara, o si ricontrolla prima la frenata della barca prua al vento (1-1,6 lunghezze contro 3-4, dubbio del 13 ottobre), che è la causa di fondo.
-3. Poi i percorsi a trapezio e triangolo; poi la fisica fra le barche (copertura del vento), le regole, le lezioni. Ordine: «prima la barca, poi il resto».
+Impianto e ordine in `VISIONE-LIVELLI-E-CARRIERA.md` §2. La barca dell'1b non ha più punti aperti.
+
+1. **Congelare la barca dell'1b:** un collaudo che la fotografa, come l'impronta fa per l'1a.
+2. **Pulizia** di codice e documenti (proposte finite, numeri vecchi dei livelli).
+3. **Avversari con la barca dell'1b** (partenze, virate, boe) su molte regate.
+4. **La regata come fonte** (`PROPOSTA-REGATA-COME-FONTE.md`): registrazione e replay, momenti chiave e consigli geometrici, «ripeti da qui». Compito grosso: Opus e revisione in chat.
+5. **Tornei** dell'1b (4 regate, uno scarto, percorso a triangolo), **lezioni brevi** dell'1b, **menu** (attestato di partecipazione, brevetto dell'1b), per ultimi i **tempi delle medaglie**.
+6. Poi il **livello 2** (il regolamento: segnali, precedenze, penalità a giri; `PROPOSTA-SEGNALI-PARTENZA.md` è già pronta come fermata 1).
 
 ## Dove cercare
 

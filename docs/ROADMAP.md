@@ -4,6 +4,12 @@ Aggiornata al 4 ottobre 2026; ordine dopo la 1.0 e livelli rivisti il 16 ottobre
 
 Il disegno dei livelli, dei ruoli, dei meriti e della carriera è in `VISIONE-LIVELLI-E-CARRIERA.md`; le fonti pubbliche consultate in `FONTI-PUBBLICHE.md`. Dove questa roadmap e la visione dicono cose diverse sulle fasi C ed E, vale la visione.
 
+## Ordine dei lavori dal 19 ottobre 2026 (vale su tutto quello che segue)
+
+**Impianto dei livelli:** `VISIONE-LIVELLI-E-CARRIERA.md` §2 (unico riferimento). Una novità grande per livello; «a» teoria, «b» pratica con replay e tornei. 1a = il livello 1 di oggi (congelato); 1b = barca completa, replay, tornei; 2 = il regolamento con la stessa deriva; 3 = fiocco; 4 = gennaker; 5 = equipaggio da tre e tattica. Le fasi qui sotto sono scritte prima e usano i numeri vecchi.
+
+**Ordine:** congelare la barca dell'1b → pulizia → avversari con la barca dell'1b → regata come fonte (`PROPOSTA-REGATA-COME-FONTE.md`) → tornei, lezioni brevi e menu dell'1b → tempi delle medaglie → livello 2 (regolamento). Dettagli e stato: `STATO.md`, «Prossimo lavoro».
+
 ## Principi che valgono per ogni fase
 
 - **Tutto sempre giocabile**: nessun contenuto va sbloccato nella modalità libera.
