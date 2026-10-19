@@ -15,6 +15,7 @@
 - **Raddrizzare con A** (1.0.27); R resta libero per i livelli futuri.
 - **Salti di vento, in prova (1.0.28):** barca del livello 2 nella navigazione libera e «Regata nei salti di vento» (boa a 300 m, fuori da meriti e carriera); virare sugli scarsi rende circa il 6%, il salto persistente si gioca andando verso la rotazione (`PROPOSTA-SALTI-VENTO.md` §7-8). Percorsi a trapezio e triangolo: da fare.
 - **Pulizia del codice (1.0.29):** solo commenti e collaudi, gioco identico al bit. Intestazione «BARCA DEL LIVELLO 2» in `motore.js` per trovare i controlli del livello 2; collaudo K5 aggiornato. Codice 292 864 byte. **`tests/fisica/timone2.js` esce con criteri FUORI soglia (C1, C3, C4, C8 a 6 nodi): è noto (§8 di `PROPOSTA-STALLO-TIMONE.md`), si confrontano le uscite con le precedenti, non l'esito.**
+- **Piccole correzioni dal gioco di Ale (1.0.30, 19 ottobre):** omino con due gambe, banderuola con il perno più al centro, W e S sempre attivi come ↑ e ↓ (scritte invariate). **Da fare, in quest'ordine:** indagine su virate e avversari (dopo la virata l'angolo al vento arriva a 65-92° in 14 virate su 21 delle registrazioni del 18 ottobre, in 4 a 147-180°; gli avversari non sono nelle registrazioni: serve una prova a parte), posizione dopo la raddrizzata e tempo per girare, distacchi in regata, cosa influenza l'abilità (cercare nel manuale), poi trapezio e triangolo.
 
 ## Come si lavora (regole che non cambiano)
 

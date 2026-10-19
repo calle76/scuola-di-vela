@@ -18,9 +18,9 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 | --- | --- |
 | Barra del timone | frecce ← → |
 | Barra al centro | Spazio |
-| Randa: lascare e cazzare | frecce ↓ ↑ |
+| Randa: lascare e cazzare | frecce ↓ ↑, oppure S e W (dalla 1.0.30) |
 | Raddrizzare la barca dopo uno sbandamento forte | A (fino alla 1.0.26 era R) |
-| Pulsanti della lezione 1 | W e S |
+| Pulsanti della lezione 1 | W e S (anche i tasti) |
 | Vista del percorso: tenuto premuto, sposta la barca verso il bordo dello schermo opposto all'arrivo o alla boa e, se serve, allontana l'inquadratura finché l'arrivo o la boa si vedono; al rilascio tornano posizione e zoom di prima (solo nelle prove e nelle regate) | Q |
 | Avvicinare e allontanare l'inquadratura | pulsanti + e − sul mare, rotellina del mouse (dalla 0.19.3 si allontana fino a circa 480 m di campo in altezza a 1360×650) |
 

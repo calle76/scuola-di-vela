@@ -489,7 +489,8 @@
     const ws = -S.boomSide, hk = S.hike || 0; // lato sopravento: opposto al boma
     const hipX = ws * (0.5 + 0.14 * hk), shX = hipX + ws * (0.12 + 0.72 * hk), shY = 1.0 - 0.08 * hk;
     ctx.strokeStyle = S.sailorColor || colors.sailor; ctx.lineCap = "round";
-    ctx.lineWidth = 0.14; ctx.beginPath(); ctx.moveTo(ws * 0.08, 1.3); ctx.lineTo(hipX, 1.12); ctx.stroke();   // gambe
+    ctx.lineWidth = 0.11; // gambe (1.0.30: due, piedi uno avanti all'altro nel pozzetto)
+    for (const fy of [1.12, 1.48]){ ctx.beginPath(); ctx.moveTo(ws * 0.08, fy); ctx.lineTo(hipX, 1.12 + (fy - 1.12) * 0.3); ctx.stroke(); }
     ctx.lineWidth = 0.3; ctx.beginPath(); ctx.moveTo(hipX, 1.12); ctx.lineTo(shX, shY); ctx.stroke();           // busto
     // prolunga del timone: dalla fine della barra alla mano, che sta a un braccio (45 cm) dalla spalla; il braccio non si allunga mai
     const tx0 = Math.sin(tau) * 1.0, ty0 = 2.05 - Math.cos(tau) * 1.0, dd = Math.hypot(tx0 - shX, ty0 - shY), arm = Math.min(0.45, dd);
@@ -555,9 +556,9 @@
     const awRel = info.awa * D2R; // da dove arriva, rispetto alla prua (+ dritta)
     const vx = Math.sin(awRel), vy = -Math.cos(awRel);
     ctx.strokeStyle = colors.app; ctx.fillStyle = colors.app; ctx.lineWidth = 0.06;
-    // 1.0.10: perno vicino alla punta, come una banderuola: la coda, più lunga, sta sottovento (docs/PROPOSTA-DISEGNO-VELA.md)
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, hY + vy * 0.3); ctx.lineTo(hx - vx * 0.7, hY - vy * 0.7); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.3, hY + vy * 0.3); ctx.lineTo(hx + vx * 0.05 - vy * 0.12, hY + vy * 0.05 + vx * 0.12); ctx.lineTo(hx + vx * 0.05 + vy * 0.12, hY + vy * 0.05 - vx * 0.12); ctx.closePath(); ctx.fill();
+    // 1.0.10: banderuola, la coda sta sottovento (docs/PROPOSTA-DISEGNO-VELA.md); 1.0.30: perno a 0,4 della lunghezza dalla punta (era 0,3)
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.4, hY + vy * 0.4); ctx.lineTo(hx - vx * 0.6, hY - vy * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx + vx * 0.4, hY + vy * 0.4); ctx.lineTo(hx + vx * 0.15 - vy * 0.12, hY + vy * 0.15 + vx * 0.12); ctx.lineTo(hx + vx * 0.15 + vy * 0.12, hY + vy * 0.15 - vx * 0.12); ctx.closePath(); ctx.fill();
     if (mastSeen){ ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(hx, hY, 0.07, 0, Math.PI * 2); ctx.fill(); } // perno del segnavento in testa d'albero
     ctx.restore();
     geo = { mastY, ex, ey, rx: (hx + ex + lx) / 3, ry: (mastY + ey + ly) / 3, qx, qy, tau, hx, hY, sc: 1 + wv.heave }; // hx, hY: testa d'albero (collaudo_moto_mare.py)
