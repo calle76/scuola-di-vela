@@ -66,7 +66,7 @@ Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate
 | --- | --- | --- | --- |
 | Abilità | Prove a tempo: bronzo 1, argento 2, oro 3, e 1 in più se la prova è stata completata almeno una volta senza errori | 20 | 8 |
 | Conoscenza | Ripassi: 2 punti con almeno l'80% di risposte giuste, 1 con almeno il 60% | 12 | 6 |
-| Competizione | Le due regate, con gli avversari (principianti o esperti): 1° 4 punti, 2° 3, 3° 2, 4° 1 | 8 | 3 |
+| Competizione | Le due regate, con gli avversari (principianti o esperti): 1° 4 punti, 2° 3, 3° 2, 4° 1. Per ogni regata conta il piazzamento migliore fra le due difficoltà, che valgono uguale; senza avversari la regata non dà punti | 8 | 3 |
 | Esperienza | 1 punto per ogni lezione completata | 6 | 6 (tutte) |
 | Totale | La somma | 46 | 29 |
 
