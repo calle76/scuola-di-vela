@@ -39,20 +39,25 @@ Regole di disegno:
 
 ## 2. I livelli
 
-**Decisione di Ale, 19 ottobre 2026 (riorganizzazione dei livelli), che supera la numerazione del 16 ottobre.** Un livello = una barca. **Ogni livello ha due parti:** «a», la scuola (lezioni, prove, regate di prova: quello che si vede in regata si trova spiegato in una lezione, e viceversa); «b», la pratica (lezioni brevi solo dove servono, **replay delle proprie regate come lezioni, prove e verifiche**, `PROPOSTA-REGATA-COME-FONTE.md`, e **tornei** con punteggi e classifiche, senza novità che spiazzino). Dettagli in `RICERCA-CONTENUTI-LIVELLI.md` §8. **[deciso]**
+**Impianto dei livelli (decisione di Ale, 19 ottobre 2026, sera), che supera ogni versione precedente.** **[deciso]**
 
-- **Livello 1** = la deriva singola di oggi (modello di riferimento nei documenti: una deriva olimpica in singolo di circa 4,2 m e 7 m² **[da verificare]**; nel gioco nessun nome di classe, principio 5). **1a** = il livello 1 di oggi con la barca più semplice da guidare, **congelato**: si correggono solo i difetti trovati giocando. **1b** = la barca completa (quella chiamata finora «del livello 2»: timone che stalla, Z, salti di vento, raddrizzata lunga), le sue lezioni brevi, **precedenze, penalità a giri e segnali di partenza**, replay e tornei.
-- **Eccezione dichiarata, solo del livello 1:** due barche con fisica diversa (1a più semplice, 1b completa). Nasce da come si è lavorato finora; dal livello 2 in poi **la barca si progetta e si congela prima**, ed è la stessa in «a» e «b».
-- **I numeri scalano di uno:** quello che finora si chiamava livello 2 è l'1b; il fiocco diventa il livello 2, il gennaker il 3, l'equipaggio da tre il 4, catamarano e cabinato 5-6. Nei documenti scritti prima del 19 ottobre i numeri vecchi restano; la tabella qui sotto usa quelli nuovi.
+- **Ogni livello ha una sola novità grande**: a volte una barca nuova, a volte un argomento nuovo. La barca di un livello si progetta e si congela prima di costruirci sopra.
+- **Ogni livello ha due parti.** **«a» = teoria**: lezioni, prove, regate di prova (quello che si vede in regata ha la sua lezione, e viceversa). **«b» = pratica**: tornei con punteggi e classifiche, e il meccanismo dei **replay** delle proprie regate, da cui nascono domande su un errore, ripetizioni di una fase e lezioni su come si poteva fare meglio una manovra (`PROPOSTA-REGATA-COME-FONTE.md`); anche nella «b» ci sono alcune lezioni teoriche, quelle che nella «a» non ci stanno.
+- **Riconoscimenti e punti:** alla fine di ogni «a» un attestato di partecipazione, alla fine di ogni «b» un brevetto (per il livello 1: «brevetto da regatante» **[da rivedere col nuovo impianto]**). I quattro punteggi si guadagnano e si spendono nella propria parte. Sempre «nessun valore legale».
+- **Nel gioco nessun nome di classe** (principio 5): la barca del livello 1 e 2 ha come modello di riferimento, solo nei documenti, una deriva olimpica in singolo di circa 4,2 m e 7 m² **[da verificare]**.
 
-| Livello | Barca e vele | Ruoli | Cosa c'è di nuovo | Stato |
-| --- | --- | --- | --- | --- |
-| 1a | Deriva singola, solo randa (barca semplice) | Timoniere | Le basi | **[esiste]**, congelato |
-| 1b | La stessa deriva, barca completa | Timoniere | Precedenze, penalità a giri, segnali di partenza, replay, tornei | barca **[in prova]**, resto **[proposta]** |
-| 2 | Deriva a due, randa + fiocco | Timoniere, prodiere (un ruolo alla volta) | Il fiocco e il coordinamento a due | prototipo del fiocco (tappe A-C chiuse) |
-| 3 | Deriva a due con gennaker (vela di portanza asimmetrica) | Timoniere, prodiere (gestisce anche il gennaker) | Vela di portanza, planata, strumenti e angoli limite | **[proposta]** |
-| 4 | Equipaggio da tre | Timoniere, trimmer, tattico | Elaborare le informazioni mentre un altro guida; tattica | **[aperto]** |
-| 5-6 | Catamarano; cabinato | Da definire | Vento apparente dominante, scuffia diversa, VMG; inerzia, mare, correnti | **[aperto]** |
+| Livello | Barca | a (teoria) | b (pratica) |
+| --- | --- | --- | --- |
+| **1** | Deriva singola | **1a:** le basi, cioè il livello 1 di oggi. **Congelato**: si correggono solo i difetti trovati giocando | **1b:** la barca completa (timone che stalla, Z, salti di vento, raddrizzata lunga, virate corrette: oggi «barca del livello 2, in prova») con le sue lezioni brevi; replay; tornei con le regole semplici di oggi (mure, sopravento, 15 s) |
+| **2** | La stessa deriva singola completa | **2a:** il regolamento: bandiere e segnali di partenza, tecnica di partenza, precedenze (10-14, 21), spazio alla boa (18, semplificato), penalità a giri (due per una regola della parte 2, uno per una boa toccata), il gioco come arbitro; regate di prova | **2b:** tornei con le regole vere; replay con domande sugli incidenti («chi aveva la precedenza?»), ripetizioni, lezioni |
+| **3** | Deriva a due, randa e fiocco | **3a:** fiocco e prodiere (un ruolo alla volta), lezione «I nomi» (parti della vela, fiocco, albero), deriva mobile | **3b:** pratica e tornei in due; replay sul coordinamento |
+| **4** | Deriva a due con gennaker | **4a:** vela di portanza, planata, angoli limite, lezione «I nomi» | **4b** |
+| **5** | Equipaggio da tre | **5a:** tattica: copertura del vento, consigli di vento, protesta | **5b** |
+| **6-7** | Catamarano; cabinato | **[aperto]** | |
+
+- **Eccezione dichiarata, solo del livello 1:** l'1a e l'1b hanno barche con fisica diversa (1a più semplice). Nasce da come si è lavorato prima di questo impianto; dal livello 2 in poi «a» e «b» hanno la stessa barca.
+- **Numeri:** i documenti scritti prima del 19 ottobre usano i numeri vecchi: il vecchio «livello 2» (regole e barca completa) corrisponde qui all'**1b più il livello 2**; il vecchio «livello 3» (fiocco) è il **3**, il vecchio 4 (gennaker) è il **4**. I numeri del fiocco e del gennaker quindi non cambiano.
+- **Ordine di lavoro:** prima congelare la barca dell'1b (serve all'1b e al livello 2), poi replay e tornei dell'1b, poi il regolamento del 2a.
 
 La tabella è una mappa, non un impegno: si pianifica nel dettaglio fino al livello 4, gli altri restano una direzione. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
 
@@ -61,6 +66,8 @@ Il gennaker asimmetrico è stato scelto perché è più semplice da modellare e 
 Il tattico arriva al livello 5: su una deriva a due il timoniere decide da solo e il prodiere ha già abbastanza da fare. **[da verificare]** (esistenza e funzione del tattico su equipaggi di più persone).
 
 ## 3. Cosa si impara nei livelli 2, 3 e 4
+
+**Numeri vecchi in questa sezione** (scritta prima del 19 ottobre): «Livello 2» qui = **1b** (barca completa) **più livello 2** (regolamento) dell'impianto del §2; «Livello 3» = 3 (fiocco), «Livello 4» = 4 (gennaker). L'impianto valido è nel §2.
 
 ### Livello 2: regole di regata e avversari **[deciso, contenuti da proporre]**
 

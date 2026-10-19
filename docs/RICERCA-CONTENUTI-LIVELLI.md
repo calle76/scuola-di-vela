@@ -1,4 +1,6 @@
-# Ricerca: cosa insegnare nei livelli 2, 3, 4 e come (imparare dalla pratica)
+# Ricerca: cosa insegnare nei livelli e come (imparare dalla pratica)
+
+**Attenzione: l'impianto dei livelli valido è nel §8** (e in `VISIONE-LIVELLI-E-CARRIERA.md` §2). I §1-§7 usano numeri e divisioni superati.
 
 19 ottobre 2026, su richiesta di Ale: «di materiale ce n'è, bisogna capire cosa inserire, senza appesantire». **Nessun codice.** Stati come in `VISIONE-LIVELLI-E-CARRIERA.md`: **[deciso]**, **[proposta]**, **[aperto]**, **[da verificare]**.
 
@@ -179,21 +181,26 @@ Accolti anche:
 
 ---
 
-## 8. Decisione di Ale: ogni livello in due parti (19 ottobre 2026) **[deciso]**
+## 8. Impianto finale (19 ottobre 2026, sera) **[deciso]**
 
-Supera la divisione 2a/2b del §7 e la numerazione dei §2 e §5 (scritti prima).
+**Supera tutto quello che i §1-§7 dicono sui livelli** (divisioni 2a/2b, numeri, dove vanno precedenze e segnali): i §1-§7 restano come catalogo dei contenuti e registro della revisione. L'impianto è scritto una volta sola, in `VISIONE-LIVELLI-E-CARRIERA.md` §2; qui sotto la copia.
 
-- **Un livello = una barca, in due parti.** «a»: scuola (lezioni, prove, regate di prova; quello che si vede in regata ha la sua lezione, e viceversa). «b»: pratica (lezioni brevi solo dove servono, replay delle proprie regate come lezioni, prove e verifiche, tornei con punteggi e classifiche, nessuna novità che spiazzi).
-- **Livello 1:** 1a = il livello 1 di oggi, barca semplice, **congelato** (vedi la decisione finale qui sotto). 1b = la barca completa (finora «del livello 2»), le sue lezioni brevi, replay, tornei, penalità di due giri.
-- **Eccezione solo del livello 1:** due barche con fisica diversa. Dal livello 2 la barca si progetta e si congela prima, uguale in «a» e «b».
-- **Numeri nuovi:** fiocco = livello 2, gennaker = 3, equipaggio da tre e tattica = 4, catamarano e cabinato = 5-6. Quello che qui sopra è chiamato «livello 2» è l'1b; «livello 3» è il 2, e così via.
-- **Nel gioco nessun nome di classe** (principio 5): il modello di riferimento della barca si nomina solo nei documenti.
+**Impianto dei livelli (decisione di Ale, 19 ottobre 2026, sera), che supera ogni versione precedente.** **[deciso]**
 
-**Decisione finale (Ale, 19 ottobre 2026), che supera tutto quello che sopra dice altro:**
-- **1a = il vecchio livello 1, congelato.** Non si aggiunge niente; si correggono solo i difetti trovati giocando.
-- **1b = il vecchio livello 2:** barca completa e le sue lezioni brevi (timone, Z, salti, raddrizzata); **precedenze** (la parte portante), **penalità a giri** e **segnali di partenza** con le bandiere (`PROPOSTA-SEGNALI-PARTENZA.md`, da riferire all'1b); replay; tornei.
-- **Ogni livello ha la sua lezione «I nomi»:** il livello 1 c'è già (le parti della barca); il livello 2 avrà le parti della vela insieme a quelle del fiocco e dell'albero; i livelli successivi le loro (gennaker, bompresso…). Sono lezioni di contorno, non portanti.
+- **Ogni livello ha una sola novità grande**: a volte una barca nuova, a volte un argomento nuovo. La barca di un livello si progetta e si congela prima di costruirci sopra.
+- **Ogni livello ha due parti.** **«a» = teoria**: lezioni, prove, regate di prova (quello che si vede in regata ha la sua lezione, e viceversa). **«b» = pratica**: tornei con punteggi e classifiche, e il meccanismo dei **replay** delle proprie regate, da cui nascono domande su un errore, ripetizioni di una fase e lezioni su come si poteva fare meglio una manovra (`PROPOSTA-REGATA-COME-FONTE.md`); anche nella «b» ci sono alcune lezioni teoriche, quelle che nella «a» non ci stanno.
+- **Riconoscimenti e punti:** alla fine di ogni «a» un attestato di partecipazione, alla fine di ogni «b» un brevetto (per il livello 1: «brevetto da regatante» **[da rivedere col nuovo impianto]**). I quattro punteggi si guadagnano e si spendono nella propria parte. Sempre «nessun valore legale».
+- **Nel gioco nessun nome di classe** (principio 5): la barca del livello 1 e 2 ha come modello di riferimento, solo nei documenti, una deriva olimpica in singolo di circa 4,2 m e 7 m² **[da verificare]**.
 
-**Deciso (Ale, 19 ottobre 2026): due riconoscimenti, con nomi diversi.** Alla fine dell'1a un **«attestato di partecipazione»** (l'attestato di oggi, da rinominare nel gioco quando si lavorerà all'1b); alla fine dell'1b un **«brevetto da regatante»**, dopo i tornei. Sempre «nessun valore legale».
+| Livello | Barca | a (teoria) | b (pratica) |
+| --- | --- | --- | --- |
+| **1** | Deriva singola | **1a:** le basi, cioè il livello 1 di oggi. **Congelato**: si correggono solo i difetti trovati giocando | **1b:** la barca completa (timone che stalla, Z, salti di vento, raddrizzata lunga, virate corrette: oggi «barca del livello 2, in prova») con le sue lezioni brevi; replay; tornei con le regole semplici di oggi (mure, sopravento, 15 s) |
+| **2** | La stessa deriva singola completa | **2a:** il regolamento: bandiere e segnali di partenza, tecnica di partenza, precedenze (10-14, 21), spazio alla boa (18, semplificato), penalità a giri (due per una regola della parte 2, uno per una boa toccata), il gioco come arbitro; regate di prova | **2b:** tornei con le regole vere; replay con domande sugli incidenti («chi aveva la precedenza?»), ripetizioni, lezioni |
+| **3** | Deriva a due, randa e fiocco | **3a:** fiocco e prodiere (un ruolo alla volta), lezione «I nomi» (parti della vela, fiocco, albero), deriva mobile | **3b:** pratica e tornei in due; replay sul coordinamento |
+| **4** | Deriva a due con gennaker | **4a:** vela di portanza, planata, angoli limite, lezione «I nomi» | **4b** |
+| **5** | Equipaggio da tre | **5a:** tattica: copertura del vento, consigli di vento, protesta | **5b** |
+| **6-7** | Catamarano; cabinato | **[aperto]** | |
 
-**Deciso (Ale, 19 ottobre 2026): i punti restano nella propria parte.** Esperienza, Conoscenza, Abilità e Competizione si guadagnano e si «spendono» separatamente nell'1a (per l'attestato di partecipazione) e nell'1b (per il brevetto da regatante): le regate dell'1a continuano a dare punti di Competizione per l'1a, i tornei dell'1b per l'1b. Vale anche per i livelli successivi.
+- **Eccezione dichiarata, solo del livello 1:** l'1a e l'1b hanno barche con fisica diversa (1a più semplice). Nasce da come si è lavorato prima di questo impianto; dal livello 2 in poi «a» e «b» hanno la stessa barca.
+- **Numeri:** i documenti scritti prima del 19 ottobre usano i numeri vecchi: il vecchio «livello 2» (regole e barca completa) corrisponde qui all'**1b più il livello 2**; il vecchio «livello 3» (fiocco) è il **3**, il vecchio 4 (gennaker) è il **4**. I numeri del fiocco e del gennaker quindi non cambiano.
+- **Ordine di lavoro:** prima congelare la barca dell'1b (serve all'1b e al livello 2), poi replay e tornei dell'1b, poi il regolamento del 2a.

@@ -1,6 +1,6 @@
-# Proposta: i segnali di partenza (livello 1b)
+# Proposta: i segnali di partenza (livello 2a)
 
-**Aggiornamento (Ale, 19 ottobre 2026): l'1a è congelato; questa proposta vale per l'1b** (regate e lezioni dell'1b). Da rivedere prima della fermata 2: niente lezione 7 nell'1a, la lezione va fra quelle dell'1b, e le bandiere solo nelle regate dell'1b.
+**Aggiornamento (Ale, 19 ottobre 2026, sera): vale per il livello 2a** (il regolamento, con la stessa deriva dell'1b; `VISIONE-LIVELLI-E-CARRIERA.md` §2). Da rivedere prima della fermata 2: niente lezione 7 nell'1a (congelato); la lezione va fra quelle del 2a, le bandiere nelle regate del livello 2.
 
 19 ottobre 2026, fermata 1. Nessun codice. Primo pezzo delle lezioni nuove dell'1a (`RICERCA-CONTENUTI-LIVELLI.md` §8): quello che si vede in regata ha la sua lezione, e viceversa.
 
