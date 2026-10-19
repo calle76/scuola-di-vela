@@ -238,3 +238,15 @@ Nel gioco la barra accompagnata perde **più** velocità di quella data in frett
 
 **Lettura.** La regola dà una scelta che si sente (45° gira più in fretta, utile a boe, penalità e barca lenta), ma il costo di velocità è piccolo e non regolare fra i venti. La perdita vera della virata «sbattuta» resta legata soprattutto al momento in cui si molla la barra.
 
+
+---
+
+## 10. Dopo la 1.0.31: Maiusc in virata non frena (limite dichiarato, Ale, 19 ottobre 2026)
+
+Dalla 1.0.31 (`PROPOSTA-VIRATE-AVVERSARI.md`) la pala stalla di rado e la barra a 45° (Maiusc) **in virata non frena più della sola freccia**: misure di `timone2.js`, velocità minima 34-49% con Maiusc contro 25-45%, virata circa 1 s più corta; nel giro di 360° si esce più lenti del 4-7%. Diverso dal 470 di F4, dove la barra sbattuta frena di più (ma in una figura su due).
+
+**Provato e scartato (copia del motore fuori da `js/`):** togliere alla velocità l'energia assorbita dall'acqua sullo scafo che ruota (`hullKq·|r|³`). Va nella direzione giusta ma rallenta tutte le virate (fino al 13-21% con l'effetto intero) e con nessuna frazione (0,1 / 0,25 / 0,5 / 1) Maiusc perde 5 punti più della freccia senza portare la virata oltre i 4,5 s. Nella realtà la perdita nasce dallo stallo all'inizio della virata, prima che la barca giri; la barca del gioco, leggera, comincia a girare troppo in fretta perché la pala stalli.
+
+**Il prezzo di Maiusc è il controllo:** al momento in cui si centra la barra la prua gira circa il 45% più in fretta (26 contro 18 °/s con 10 nodi); centrando nello stesso punto va oltre solo 1-2° in più, ma ogni mezzo secondo di ritardo vale circa 13° oltre la bolina contro 9. Bisogna centrare prima e con più tempismo.
+
+**Limite dichiarato per la barca dell'1b**; da riverificare misurando da video di derive singole in virata quanto perde chi sbatte la barra rispetto a chi la accompagna (`DUBBI-E-RICERCHE.md`). Solo se i video lo confermano si apre un compito sul motore.

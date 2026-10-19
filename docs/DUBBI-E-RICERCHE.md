@@ -205,3 +205,7 @@ Domande pensate un tempo per un velista esperto, che non ci sarà: ognuna si chi
 8. **Regola delle stesse mure (lascia strada chi è sopravento): non è insegnata in nessuna lezione. Si conferma che è giusto così per il livello 1?** Fonte attuale nei documenti: nessuna (`CONTENUTI-DA-VERIFICARE.md`, regate, esito vuoto).
 9. **Il resto:** i «Dubbi specifici» di `CONTENUTI-DA-VERIFICARE.md` e il questionario di 27 domande di `RIPARTI-DA-QUI.md` (negli appunti, fuori dal repository).
 10. **Dopo l'uscita dall'angolo morto, mentre si cazza: la barra va al centro o un po' dal lato opposto al boma?** Il testo B dice «barra al centro». Lee (2022, originale inglese, righe 248-277) dice che cazzando con la barra un po' dal lato del boma la barca orza di nuovo e ricade nei ferri, e consiglia di tirare la barra un po' verso di sé oltre la linea centrale. Una fonte, informale (video, parafrasato, non usato per tarare il motore); nessun'altra. Da confermare con un'altra fonte prima di cambiare qualcosa. Origine: parte D di `SCHEDE-VIDEO-2026-10-11.md` (negli appunti); le altre due domande della parte D sono già coperte dai punti 1 e 2.
+
+## Barra sbattuta su una deriva singola (19 ottobre 2026)
+
+Da misurare su video di derive singole in virata: velocità minima e durata con la barra data di colpo fino in fondo contro la barra accompagnata. Serve a decidere se la barca dell'1b deve far pagare Maiusc in velocità (`PROPOSTA-STALLO-TIMONE.md` §10). Sessione *video*; nessun codice.
