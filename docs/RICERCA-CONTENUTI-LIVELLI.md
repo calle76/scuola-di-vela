@@ -96,7 +96,7 @@ Mette insieme `VISIONE-LIVELLI-E-CARRIERA.md` (§2-§7), `PROPOSTA-REGATA-COME-F
 | --- | --- |
 | Barca | Timone che stalla, «spingi il boma» (Z), salti di vento, virate senza prua che va oltre, raddrizzata di 10 s al traverso. **C'è, in prova.** Da fare: congelarla (impronta), pulire codice e documenti («prima la barca») |
 | Regole | Segnali di partenza veri (5-4-1-0, bandiere sulla barca giuria; X; arrivo e linea); precedenze 10-14, 21; colpa nei contatti decisa dalle regole; penalità a giri (2 per un contatto, 1 per una boa toccata); avversari che le rispettano e fanno i giri |
-| Lezioni brevi | I nomi: la vela; I segnali di partenza; Mure diverse; Stesse mure; Durante la virata ed evitare il contatto; La penalità a giri; Il timone che stalla e Z; I salti di vento e la linea favorita; La raddrizzata del livello 2 |
+| Lezioni brevi | **Superato dal §8:** segnali, precedenze e penalità vanno nelle lezioni dell'**1a**; qui restano Il timone che stalla e Z; I salti di vento e la linea favorita; La raddrizzata. «I nomi: la vela» va al livello 2 (§8) |
 | Pratica | Prova nuova «fermarsi in un punto»; regate a bastone, trapezio e triangolo, bolina di 300 m; **regata come fonte**, fasi 1-4: registrazione e replay, momenti chiave e consigli geometrici, «ripeti da qui», domande sugli incidenti |
 | Schermo | Distacchi in classifica (**c'è**, 1.0.33); suggerimenti da principiante spenti all'inizio, riaccendibili |
 | Meriti e brevetto | Gli stessi quattro: Conoscenza anche dalle domande sugli incidenti e sui segnali; Abilità anche da «ripeti da qui» **[aperto]**; Competizione con le penalità a giri; esame sulle regole |
@@ -108,7 +108,7 @@ Mette insieme `VISIONE-LIVELLI-E-CARRIERA.md` (§2-§7), `PROPOSTA-REGATA-COME-F
 | --- | --- |
 | Barca | Deriva a due con fiocco (prototipo, tappe A-C chiuse); peso dell'equipaggio come comando del prodiere; deriva da alzare e abbassare; ancora da fare: massa nella resistenza, braccio sbandante, bolina con poco vento |
 | Ruoli | Timoniere o prodiere, uno alla volta; l'altro lo fa il computer, con errori plausibili e un registro di chi ha sbagliato (`VISIONE` §4-5) |
-| Lezioni brevi | I nomi: fiocco, strallo, sartie, drizze; Due vele, una barca; La scotta del fiocco; La virata a due (fiocco a collo come errore di coordinamento); Poppa e strambata a due; Raffiche in due; Gli occhi dell'equipaggio |
+| Lezioni brevi | I nomi: le parti della vela (penna, angolo di mura, angolo di scotta, inferitura, balumina, base, stecche) e del fiocco, strallo, sartie, drizze; Due vele, una barca; La scotta del fiocco; La virata a due (fiocco a collo come errore di coordinamento); Poppa e strambata a due; Raffiche in due; Gli occhi dell'equipaggio |
 | Pratica | Prove a due; regate; la regata come fonte parla anche di coordinamento («fiocco cazzato tardi»), «ripeti da qui» per le virate a due |
 | Meriti e brevetto | I quattro, in ognuno dei due ruoli; tornei da 4 regate con uno scarto (`VISIONE` §7) **[provvisorio]** |
 
@@ -188,6 +188,11 @@ Supera la divisione 2a/2b del §7 e la numerazione dei §2 e §5 (scritti prima)
 - **Eccezione solo del livello 1:** due barche con fisica diversa. Dal livello 2 la barca si progetta e si congela prima, uguale in «a» e «b».
 - **Numeri nuovi:** fiocco = livello 2, gennaker = 3, equipaggio da tre e tattica = 4, catamarano e cabinato = 5-6. Quello che qui sopra è chiamato «livello 2» è l'1b; «livello 3» è il 2, e così via.
 - **Nel gioco nessun nome di classe** (principio 5): il modello di riferimento della barca si nomina solo nei documenti.
+
+**Correzione (Ale, 19 ottobre 2026), che supera i §2 e §5 dove dicono altro:**
+- **1a** (scuola): lezioni nuove sulle **precedenze** (la parte portante, probabilmente più di una lezione), sulla **penalità** (15 s «per istruzioni di regata», di solito due giri) e sui **segnali di partenza** (`PROPOSTA-SEGNALI-PARTENZA.md`).
+- **1b** (pratica): barca completa e le sue lezioni brevi (timone, Z, salti, raddrizzata), replay, tornei con i due giri.
+- **Ogni livello ha la sua lezione «I nomi»:** il livello 1 c'è già (le parti della barca); il livello 2 avrà le parti della vela insieme a quelle del fiocco e dell'albero; i livelli successivi le loro (gennaker, bompresso…). Sono lezioni di contorno, non portanti.
 
 **Deciso (Ale, 19 ottobre 2026): due riconoscimenti, con nomi diversi.** Alla fine dell'1a un **«attestato di partecipazione»** (l'attestato di oggi, da rinominare nel gioco quando si lavorerà all'1b); alla fine dell'1b un **«brevetto da regatante»**, dopo i tornei. Sempre «nessun valore legale».
 
