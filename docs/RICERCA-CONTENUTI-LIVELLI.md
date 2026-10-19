@@ -176,3 +176,17 @@ Accolti anche:
 - **Esonero**: chi ha diritto di rotta (o naviga nello spazio che gli spetta) ed è coinvolto in un contatto è esonerato dalla regola 14 se non ci sono danni né ferite. Nel 2025-2028 è la **regola 43.1(c)**, non la 14(b) citata dalla chat (numerazione dell'edizione precedente).
 - «In regata»: dal segnale preparatorio fino all'arrivo (definizioni).
 - Regola 60.2: corretta, la bandiera rossa serve solo sopra i 6 m.
+
+---
+
+## 8. Decisione di Ale: ogni livello in due parti (19 ottobre 2026) **[deciso]**
+
+Supera la divisione 2a/2b del §7 e la numerazione dei §2 e §5 (scritti prima).
+
+- **Un livello = una barca, in due parti.** «a»: scuola (lezioni, prove, regate di prova; quello che si vede in regata ha la sua lezione, e viceversa). «b»: pratica (lezioni brevi solo dove servono, replay delle proprie regate come lezioni, prove e verifiche, tornei con punteggi e classifiche, nessuna novità che spiazzi).
+- **Livello 1:** 1a = il livello 1 di oggi, barca semplice, ritoccato **solo con alcune lezioni** (regole, segnali, penalità); nelle regate di prova la penalità resta 15 secondi, presentata come scelta delle istruzioni di regata (regola 44.1, verificato su F15). 1b = la barca completa (finora «del livello 2»), le sue lezioni brevi, replay, tornei, penalità di due giri.
+- **Eccezione solo del livello 1:** due barche con fisica diversa. Dal livello 2 la barca si progetta e si congela prima, uguale in «a» e «b».
+- **Numeri nuovi:** fiocco = livello 2, gennaker = 3, equipaggio da tre e tattica = 4, catamarano e cabinato = 5-6. Quello che qui sopra è chiamato «livello 2» è l'1b; «livello 3» è il 2, e così via.
+- **Nel gioco nessun nome di classe** (principio 5): il modello di riferimento della barca si nomina solo nei documenti.
+
+**Aperto:** un brevetto solo alla fine dell'1b, o un primo attestato alla fine dell'1a (oggi la carriera finisce con l'attestato del livello 1, cioè dell'1a); se i punti di Competizione restano alle regate dell'1a o passano ai tornei dell'1b.
