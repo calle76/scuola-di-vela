@@ -8,7 +8,7 @@ Il disegno dei livelli, dei ruoli, dei meriti e della carriera è in `VISIONE-LI
 
 **Impianto dei livelli:** `VISIONE-LIVELLI-E-CARRIERA.md` §2 (unico riferimento). Una novità grande per livello; «a» teoria, «b» pratica con replay e tornei. 1a = il livello 1 di oggi (congelato); 1b = barca completa, replay, tornei; 2 = il regolamento con la stessa deriva; 3 = fiocco; 4 = gennaker; 5 = equipaggio da tre e tattica. Le fasi qui sotto sono scritte prima e usano i numeri vecchi.
 
-**Ordine:** congelare la barca dell'1b → pulizia → avversari con la barca dell'1b → regata come fonte (`PROPOSTA-REGATA-COME-FONTE.md`) → tornei, lezioni brevi e menu dell'1b → tempi delle medaglie → livello 2 (regolamento). Dettagli e stato: `STATO.md`, «Prossimo lavoro».
+**Ordine:** congelare la barca dell'1b → pulizia → avversari con la barca dell'1b → tornei dell'1b, tappa T2 (triangolo; la T1, formato e punteggio a bastone, è fatta nella 1.0.34-1.0.35) → regata come fonte, solo nei tornei (`PROPOSTA-REGATA-COME-FONTE.md` §9) → lezioni brevi e menu dell'1b → tempi delle medaglie → livello 2 (regolamento). Dettagli e stato: `STATO.md`, «Prossimo lavoro».
 
 ## Principi che valgono per ogni fase
 

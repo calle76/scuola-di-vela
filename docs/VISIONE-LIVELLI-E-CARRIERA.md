@@ -230,7 +230,7 @@ Struttura **[provvisorio]**:
 
 - **4 regate** di circa 4-5 minuti ciascuna, punteggio a punti bassi (1 al primo, 2 al secondo e così via) e **uno scarto**: la regata peggiore non conta. Le regate reali del programma di riferimento durano 40-60 minuti: la differenza è una compressione del gioco.
 - Ruolo ed equipaggio sono scelti all'iscrizione e bloccati. Se si abbandona, il torneo non conta.
-- Il torneo si salva tra una regata e l'altra: serve un salvataggio con il torneo in corso, che oggi non esiste.
+- Il torneo si salva tra una regata e l'altra (fatto per l'1b nella 1.0.34: `PROPOSTA-TORNEI-1B.md` §7).
 - Rifare un torneo con lo stesso ruolo serve solo a migliorare il piazzamento. Non si «fallisce»: un cattivo piazzamento dà pochi punti.
 
 Più tornei per categoria, con condizioni diverse:

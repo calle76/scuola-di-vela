@@ -4,7 +4,7 @@
 
 ## Dove siamo
 
-**Il livello 1 è chiuso.** Il gioco è un simulatore didattico di vela in una pagina (`index.html` più `js/`), con 6 lezioni (32 passi pratici), 5 prove, 2 regate contro tre avversari, esame, brevetto e carriera. Tutto si collauda da solo: una carriera intera, da zero all'attestato, gira con **32 passi su 32 guidati** dal pilota e dà OK.
+**Il livello 1 (1a) è chiuso; l'1b ha la barca completa e il primo pezzo dei tornei (1.0.34-1.0.35).** Il gioco è un simulatore didattico di vela in una pagina (`index.html` più `js/`), con 6 lezioni (32 passi pratici), 5 prove, 2 regate contro tre avversari, esame, brevetto e carriera. Tutto si collauda da solo: una carriera intera, da zero all'attestato, gira con **32 passi su 32 guidati** dal pilota e dà OK.
 
 **Fatto nella sessione del 17 ottobre** (dettagli nel `CHANGELOG.md`): partenze degli avversari rifatte (1.0.16), contatti ridotti del 38% (1.0.17), avviso sul richiamo nel riquadro e parti 2-4-6 delle partenze chiuse (1.0.18), increspature più vive dentro le raffiche (1.0.19), due domande del ripasso tornate al loro posto (1.0.20), la lezione 5 spiega che andando all'indietro la barra va al contrario (1.0.21), pulizia del codice della partenza (1.0.22), la barca che balla sull'acqua, solo disegno (1.0.23).
 
@@ -18,7 +18,7 @@
 - **Piccole correzioni dal gioco di Ale (1.0.30, 19 ottobre):** omino con due gambe, banderuola con il perno più al centro, W e S sempre attivi come ↑ e ↓ (scritte invariate). 
 - **La prua non va più oltre la bolina dopo la virata (1.0.31, 19 ottobre, `PROPOSTA-VIRATE-AVVERSARI.md`):** nella barca del livello 2 la rotazione la frenava solo la pala; ora la pala sente anche l'acqua che le arriva di lato e l'acqua frena lo scafo che ruota (idea e stime della revisione in chat), `yawG` ritarato. Prua del giocatore dopo la virata da 67-81° a 34-40°; avversari oltre la bolina + 15° dal 97% al 17% delle virate (soglia 5%: fuori, quasi tutte manovre volute della guida). Prezzo dichiarato: la pala stalla di rado e Maiusc non costa più velocità; virate più lente con 6-8 nodi. Provata da Ale e tenuta.
 - **Raddrizzata del livello 2 (1.0.32, `PROPOSTA-RADDRIZZATA.md`):** 10 s invece di 3, barca al traverso con la vela lascata, avversari 15 s; da un video di allenamento; lezione breve da scrivere.
-- **Torneo dell'1b, tappa T1 (1.0.34, `PROPOSTA-TORNEI-1B.md` §7):** 4 regate a bastone con la barca dell'1b contro gli stessi tre avversari, punteggio del regolamento (punti bassi, uno scarto, parità A8), penalità sul punteggio (+1 punto) invece dei 15 s, finestra d'arrivo, salvataggio dopo ogni regata, ritiri, meriti in carriera. Tutti i criteri nelle soglie; 1a identica (cambia solo il menu).
+- **Torneo dell'1b, tappa T1 (1.0.34; 1.0.35 sposta il riquadro nel menu del gioco libero perché la pagina scorreva, `PROPOSTA-TORNEI-1B.md` §7):** 4 regate a bastone con la barca dell'1b contro gli stessi tre avversari, punteggio del regolamento (punti bassi, uno scarto, parità A8), penalità sul punteggio (+1 punto) invece dei 15 s, finestra d'arrivo, salvataggio dopo ogni regata, ritiri, meriti in carriera. Tutti i criteri nelle soglie; 1a identica (cambia solo il menu).
 - **Distacchi in regata (1.0.33, `PROPOSTA-DISTACCHI.md`):** secondi da te accanto a ogni barca nella classifica, e all'arrivo i secondi dalla barca davanti e dalla prima. **Da fare, in quest'ordine:** cosa influenza l'abilità (cercare nel manuale), poi trapezio e triangolo.
 
 **Impianto dei livelli (decisione di Ale, 19 ottobre 2026, sera):** ogni livello ha una sola novità grande e due parti, «a» teoria e «b» pratica (tornei e replay). **1a** = il livello 1 di oggi, congelato; **1b** = la barca completa (oggi «barca del livello 2, in prova»), replay, tornei con le regole semplici; **livello 2** = il regolamento (segnali, precedenze, penalità a giri) con la stessa deriva; **3** = fiocco, **4** = gennaker, **5** = equipaggio da tre e tattica. Unico riferimento: `VISIONE-LIVELLI-E-CARRIERA.md` §2.
@@ -40,7 +40,7 @@
 
 ## Aperto
 
-1. **Prove giocando di Ale:** raddrizzata di 10 s dell'1b (1.0.32); distacchi in classifica (1.0.33); barca che balla, increspature, retromarcia con 15-20 nodi, disegno della vela, testi delle raffiche da dietro.
+1. **Prove giocando di Ale:** il torneo dell'1b (1.0.34: com'è, quanto pesano le penalità a punti); raddrizzata di 10 s dell'1b (1.0.32); distacchi in classifica (1.0.33); barca che balla, increspature, retromarcia con 15-20 nodi, disegno della vela, testi delle raffiche da dietro.
 2. **Passo 5.8 «Strambata controllata»:** il pilota preciso non lo completa 4 volte su 100 (soglia: al massimo 1) per l'errore di lettura del pilota. Non è un difetto del gioco.
 3. **Limiti dichiarati:** bolina dal 9 al 15% più lenta delle fonti con poco vento (`PROPOSTA-BOLINA.md` §11); nella barca dell'1b la barra a 45° (Maiusc) in virata non frena più della sola freccia, il prezzo è il controllo (`PROPOSTA-STALLO-TIMONE.md` §10, da riverificare con video); con 20 nodi fissi dopo la raddrizzata la barca non riparte (raro, solo nelle raffiche); nessuna tendenza orziera (si riprende al livello 3); avversari dell'1b oltre la bolina + 15° nel 17% delle virate, quasi tutte manovre volute.
 4. **Semplificazioni da tenere a mente:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio; lo scorrimento più veloce delle increspature nella raffica non ha fonti.
@@ -49,7 +49,7 @@
 
 ## Prossimo lavoro
 
-Impianto e ordine in `VISIONE-LIVELLI-E-CARRIERA.md` §2. La barca dell'1b non ha più punti aperti.
+Impianto e ordine in `VISIONE-LIVELLI-E-CARRIERA.md` §2. La barca dell'1b non ha più punti aperti. Ultimo giro `lancia_tutti.sh --veloce` (20 ottobre, 1.0.35): 23 OK, 0 falliti; riferimento dell'impronta rigenerato sulla 1.0.35.
 
 1. **Congelare la barca dell'1b:** un collaudo che la fotografa, come l'impronta fa per l'1a.
 2. **Pulizia** di codice e documenti (proposte finite, numeri vecchi dei livelli).
