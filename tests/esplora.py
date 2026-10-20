@@ -5,9 +5,14 @@
 #   stato di tutte le barche e conta i secondi senza cambio di tratto (barca «ferma»). Una riga JSON per corsa.
 # Parte 2 (--scimmia N): pagina senza #collaudo, come la carica un giocatore, 1360x650; N secondi reali di tasti e clic a caso
 #   (seme fisso), annotando errori della pagina e pagina che scorre (pixel in più di 1360x650).
+#   Per ogni corsa annota anche versione del gioco e condizioni: carattere degli avversari, quanto gira il vento (gradi dal
+#   vento iniziale, minimo e massimo), raffiche (quante al massimo insieme, la più forte), eccesso del pannello (ogni 10 s).
+#   La scimmia annota le ultime 30 azioni prima di ogni errore, per poterlo rifare.
 # Uso: python esplora.py <primo seme> <ultimo seme> [--scimmia SECONDI]
 #   es. python esplora.py 1 20            poi la volta dopo   python esplora.py 21 40 --scimmia 300
-# Uscite: tests/output/esplora/<data-ora>.jsonl (tutto) e il riepilogo a schermo (da incollare a Claude).
+#      python esplora.py --scimmia 800    solo la scimmia, con un seme dei tasti nuovo ogni volta (scritto nel file)
+#      python esplora.py --riassumi       riepilogo di TUTTI i file raccolti finora, diviso per versione del gioco
+# Uscite: tests/output/esplora/<data-ora>.jsonl (tutto) e il riepilogo a schermo.
 import asyncio, json, pathlib, random, statistics, sys, time
 from playwright.async_api import async_playwright
 
@@ -27,8 +32,13 @@ CORSA = """([race, seme, liv]) => {
   let visti = 0;   // numeri controllati: se resta 0 il controllo non ha misurato niente
   const nonFiniti = o => { const num = o ? Object.entries(o).filter(([k, v]) => typeof v === "number") : []; visti += num.length; return num.filter(([k, v]) => !isFinite(v)).map(([k]) => k); };
   const nan = new Set(), ferma = {}, ultimoTratto = {}, daQuando = {};
-  let vMax = 0, n = 0;
+  let vMax = 0, n = 0, giroMin = 0, giroMax = 0, raffMax = 0, raffForte = 0, panMax = 0;
+  const twd0 = sv.twd, caratteri = R.boats.filter(b => !b.me).map(b => b.name + ":" + b.char);
+  const pannello = () => { sv.panel(); const p = document.querySelector(".panel"); panMax = Math.max(panMax, p ? p.scrollHeight - p.clientHeight : 0); };
   const controlla = () => {
+    const giro = ((sv.twd - twd0) % 360 + 540) % 360 - 180; giroMin = Math.min(giroMin, giro); giroMax = Math.max(giroMax, giro);
+    const g = sv.gusts(); raffMax = Math.max(raffMax, g.length); g.forEach(x => raffForte = Math.max(raffForte, x[3]));
+    if (n % 600 === 0) pannello();
     R.boats.forEach(b => { nonFiniti(b.S).forEach(k => nan.add(b.name + "." + k));
       if (b.fin !== null || b.dnf) return;
       if (ultimoTratto[b.name] !== b.leg){ ultimoTratto[b.name] = b.leg; daQuando[b.name] = R.t; }
@@ -37,8 +47,9 @@ CORSA = """([race, seme, liv]) => {
   };
   while (me.fin === null && !me.dnf && R.t < 900){ sv.pilota(dt); sv.run(dt, 1); if (++n % 60 === 0) controlla(); }
   const reg = Object.assign({}, sv.reg), arrivo = me.fin;
-  let k = 0; while (k < 60 * 400 && !R.boats.every(b => b.fin !== null || b.dnf)){ sv.run(dt, 1); if (++k % 60 === 0) controlla(); }
-  return { arrivo, ritirato: !!me.dnf, t: Math.round(R.t), vMax: +vMax.toFixed(2), reg, nan: [...nan].slice(0, 10), visti, fermaMax: ferma,
+  let k = 0; while (k < 60 * 400 && !R.boats.every(b => b.fin !== null || b.dnf)){ sv.run(dt, 1); if (++k % 60 === 0){ n += 60; controlla(); } }
+  return { versione: typeof VERSIONE === "undefined" ? null : VERSIONE, caratteri, giroVento: [Math.round(giroMin), Math.round(giroMax)],
+           raffiche: [raffMax, +raffForte.toFixed(2)], pannelloPx: panMax, arrivo, ritirato: !!me.dnf, t: Math.round(R.t), vMax: +vMax.toFixed(2), reg, nan: [...nan].slice(0, 10), visti, fermaMax: ferma,
            barche: R.boats.map(b => [b.name, b.fin === null ? null : Math.round(b.fin), b.pen || 0, b.fin === null ? "tratto " + b.leg : ""]) };
 }"""
 
@@ -69,58 +80,79 @@ async def parte2(b, secondi, seme):
     errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     pg.on("console", lambda m: errs.append("console: " + m.text) if m.type == "error" else None)
     await pg.goto(BASE); await pg.wait_for_timeout(500)
-    sfori, azioni, fine = {}, 0, time.time() + secondi
+    sfori, azioni, fine, storia, casi = {}, 0, time.time() + secondi, [], []
     while time.time() < fine:
+        nerr = len(errs)
         if rnd.random() < 0.15:   # clic su un pulsante visibile a caso (menu, istruzioni, fine prova)
             bott = await pg.query_selector_all("button:visible")
             if bott:
-                try: await rnd.choice(bott).click(timeout=500)
+                x = rnd.choice(bott); storia.append("clic " + ((await x.inner_text()) or "?").strip()[:40])
+                try: await x.click(timeout=500)
                 except Exception: pass
         else:
-            t = rnd.choice(TASTI); await pg.keyboard.down(t); await pg.wait_for_timeout(rnd.randint(30, 1500)); await pg.keyboard.up(t)
-        azioni += 1
+            t, ms = rnd.choice(TASTI), rnd.randint(30, 1500); storia.append(f"{t} {ms} ms")
+            await pg.keyboard.down(t); await pg.wait_for_timeout(ms); await pg.keyboard.up(t)
+        azioni += 1; storia = storia[-30:]
+        if len(errs) > nerr and len(casi) < 5: casi.append({"errore": errs[nerr][:200], "ultime_azioni": list(storia)})
         dw, dh, cosa = await pg.evaluate("""() => [document.documentElement.scrollWidth - innerWidth, document.documentElement.scrollHeight - innerHeight,
             [...document.querySelectorAll('h1,h2,.title')].filter(e => e.offsetParent).map(e => e.textContent.trim()).slice(0, 1).join('')]""")
         if dw > 0 or dh > 0: sfori[cosa[:60] or "?"] = max(sfori.get(cosa[:60] or "?", 0), dw, dh)
+    r = {"scimmia": secondi, "seme": seme, "azioni": azioni, "errori": list(dict.fromkeys(errs))[:10], "sfori_px": sfori, "casi": casi,
+         "versione": await pg.evaluate("typeof VERSIONE === 'undefined' ? null : VERSIONE")}; scrivi(r)
     await pg.close()
-    r = {"scimmia": secondi, "seme": seme, "azioni": azioni, "errori": list(dict.fromkeys(errs))[:10], "sfori_px": sfori}; scrivi(r)
     return r
 
+def riepilogo(righe):
+    corse = [c for c in righe if "race" in c]; scim = [c for c in righe if "scimmia" in c]
+    for ver in sorted({c.get("versione") or "?" for c in righe}):
+        cv = [c for c in corse if (c.get("versione") or "?") == ver]; sv = [c for c in scim if (c.get("versione") or "?") == ver]
+        semi = sorted({c["seme"] for c in cv})
+        print(f"\n--- versione {ver}: {len(cv)} corse" + (f", {len(semi)} semi ({semi[0]}-{semi[-1]})" if semi else "") + f", {len(sv)} giri di scimmia")
+        for race in range(3):
+            for liv in ("principianti", "esperti"):
+                g = [c for c in cv if c["race"] == race and c["liv"] == liv and "eccezione" not in c]
+                if not g: continue
+                arr = [c["arrivo"] for c in g if c["arrivo"] is not None]
+                avv = [x for c in g for x in c["barche"][1:]]
+                fin_avv = [x[1] for x in avv if x[1] is not None]
+                reg = {}
+                for c in g:
+                    for k, v in (c["reg"] or {}).items():
+                        if isinstance(v, (int, float)): reg[k] = round(reg.get(k, 0) + v, 1)
+                ferma = max([v for c in g for v in c["fermaMax"].values()] or [0])
+                lenti = sorted(g, key=lambda c: -(c["arrivo"] or 1e9))[:3]
+                print(f"regata {race} {liv}: pilota arrivato {len(arr)}/{len(g)}"
+                      + (f", mediana {statistics.median(arr):.0f} s (min {min(arr):.0f}, max {max(arr):.0f})" if arr else "")
+                      + f"; avversari arrivati {len(fin_avv)}/{len(avv)}" + (f", mediana {statistics.median(fin_avv):.0f} s" if fin_avv else "")
+                      + f", penalità {sum(x[2] for x in avv)}; secondi max senza cambio di tratto {ferma}"
+                      + f"; pannello oltre di {max(c.get('pannelloPx', 0) for c in g)} px al massimo"
+                      + f"; semi più lenti {[c['seme'] for c in lenti]}; registro del pilota {reg}")
+        nan = [(c["seme"], c["race"], c["liv"], c["nan"]) for c in cv if c.get("nan")]
+        ecc = [(c["seme"], c["race"], c["liv"], c["eccezione"][:100]) for c in cv if "eccezione" in c]
+        err = list(dict.fromkeys(e for c in cv for e in c.get("errori", [])))
+        bloc = [(c["seme"], c["race"], c["liv"], x[0], x[3]) for c in cv if "barche" in c for x in c["barche"] if x[1] is None]
+        print(f"numeri non finiti: {len(nan)} corse {nan[:5]} (numeri controllati: {sum(c.get('visti', 0) for c in cv)})")
+        print(f"barche non arrivate: {len(bloc)} {bloc[:5]}")
+        print(f"eccezioni: {len(ecc)} {ecc[:3]}")
+        print(f"errori della pagina (diversi): {len(err)} {err[:3]}")
+        for s in sv:
+            print(f"scimmia seme {s['seme']}, {s['scimmia']} s, {s['azioni']} azioni: errori {len(s['errori'])} {s['errori'][:3]}; pagina che scorre {s['sfori_px']}")
+
 async def main():
-    args = [a for a in sys.argv[1:]]
+    args = sys.argv[1:]
+    if "--riassumi" in args:
+        righe = [json.loads(l) for f in sorted(OUT.glob("*.jsonl")) for l in f.read_text(encoding="utf-8").splitlines() if l.strip()]
+        print(f"===== RIEPILOGO DI TUTTI I FILE ({len(list(OUT.glob('*.jsonl')))} in {OUT.relative_to(ROOT)})"); riepilogo(righe); return
     sc = 0
     if "--scimmia" in args: i = args.index("--scimmia"); sc = int(args[i + 1]); del args[i:i + 2]
-    semi = list(range(int(args[0]), int(args[1]) + 1)) if len(args) >= 2 else [1, 2, 3]
+    semi = list(range(int(args[0]), int(args[1]) + 1)) if len(args) >= 2 else ([] if sc else [1, 2, 3])
     t0 = time.time()
     async with async_playwright() as p:
         b = await p.chromium.launch()
-        corse = await parte1(b, semi)
-        scim = await parte2(b, sc, semi[0]) if sc else None
+        corse = await parte1(b, semi) if semi else []
+        scim = await parte2(b, sc, semi[0] if semi else int(time.time()) % 100000) if sc else None
         await b.close()
-    # ---- riepilogo da incollare
-    print(f"\n===== RIEPILOGO ESPLORA (semi {semi[0]}-{semi[-1]}, {len(corse)} corse, {time.time() - t0:.0f} s reali) — dati in {FILE.relative_to(ROOT)}")
-    for race in range(3):
-        for liv in ("principianti", "esperti"):
-            g = [c for c in corse if c["race"] == race and c["liv"] == liv and "eccezione" not in c]
-            arr = [c["arrivo"] for c in g if c["arrivo"] is not None]
-            avv = [x for c in g for x in c["barche"][1:]]
-            fin_avv = [x[1] for x in avv if x[1] is not None]
-            pen = sum(x[2] for x in avv)
-            reg = {}
-            for c in g:
-                for k, v in (c["reg"] or {}).items():
-                    if isinstance(v, (int, float)): reg[k] = reg.get(k, 0) + v
-            ferma = max([v for c in g for v in c["fermaMax"].values()] or [0])
-            print(f"regata {race} {liv}: pilota arrivato {len(arr)}/{len(g)}"
-                  + (f", mediana {statistics.median(arr):.0f} s (min {min(arr):.0f}, max {max(arr):.0f})" if arr else "")
-                  + f"; avversari arrivati {len(fin_avv)}/{len(avv)}" + (f", mediana {statistics.median(fin_avv):.0f} s" if fin_avv else "")
-                  + f", penalità {pen}; secondi max senza cambio di tratto {ferma}; registro del pilota {reg}")
-    nan = [(c["seme"], c["race"], c["liv"], c["nan"]) for c in corse if c.get("nan")]
-    ecc = [(c["seme"], c["race"], c["liv"], c["eccezione"][:100]) for c in corse if "eccezione" in c]
-    err = list(dict.fromkeys(e for c in corse for e in c.get("errori", [])))
-    print(f"numeri non finiti: {len(nan)} corse {nan[:5]} (numeri controllati: {sum(c.get('visti', 0) for c in corse)})")
-    print(f"eccezioni: {len(ecc)} {ecc[:3]}")
-    print(f"errori della pagina (diversi): {len(err)} {err[:3]}")
-    if scim: print(f"scimmia {scim['scimmia']} s, {scim['azioni']} azioni: errori {len(scim['errori'])} {scim['errori'][:3]}; pagina che scorre {scim['sfori_px']}")
+    print(f"\n===== RIEPILOGO ESPLORA ({len(corse)} corse, {time.time() - t0:.0f} s reali) — dati in {FILE.relative_to(ROOT)}")
+    riepilogo(corse + ([scim] if scim else []))
 
 asyncio.run(main())
