@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **20 ottobre 2026, versione 1.0.34**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **20 ottobre 2026, versione 1.0.35**.
 
 ## Dove siamo
 

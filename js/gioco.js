@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.34"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.35"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -220,10 +220,10 @@
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
     const races = (modo === "carriera" ? RACES1 : RACES).map((rc, i) => { const b = progress.best[recK("r" + i)];
-      return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("")
-      + (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
+      return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
+    const torBtn = (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
         const st = chiuso ? "dopo il brevetto di livello 1" : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
-        return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo dell'1b</span><span class="state ${F ? "ok" : "todo"}">${st}</span><span class="desc">Quattro regate con la barca completa, contro gli stessi tre avversari: punti, uno scarto, classifica.</span></button>`; })();
+        return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo dell'1b</span><span class="state ${F ? "ok" : "todo"}">${st}</span></button>`; })(); // senza descrizione (la dà il riquadro che si apre); nel gioco libero sta nel terzo riquadro: in «Regate» il menu non stava in 1360x650
     const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
       return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
@@ -233,13 +233,13 @@
       <div class="tiles">
         <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></div></section>
         <section class="tile">
-          <div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div>
+          <div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}${modo === "carriera" ? torBtn : ""}</div></div>
           <div><div class="part-head"><h2>Navigazione libera</h2></div><div class="items"><button class="item wide free" id="goFree"><span class="num">⛵</span><span class="title">Naviga senza obiettivi</span><span></span><span class="desc">Scegli vento e raffiche e prova quello che vuoi.</span></button></div></div>
         </section>
         <section class="tile">
           <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
             ${esameBtn()}</div></div>
-          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">Altri tipi di barca.</p></div>`}
+          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>Tornei</h2></div><div class="items">${torBtn}</div></div><div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">Altri tipi di barca.</p></div>`}
         </section>
       </div>
       <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
