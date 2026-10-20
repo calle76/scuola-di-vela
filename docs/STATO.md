@@ -51,8 +51,8 @@ Impianto e ordine in `VISIONE-LIVELLI-E-CARRIERA.md` §2. La barca dell'1b non h
 1. **Congelare la barca dell'1b:** un collaudo che la fotografa, come l'impronta fa per l'1a.
 2. **Pulizia** di codice e documenti (proposte finite, numeri vecchi dei livelli).
 3. **Avversari con la barca dell'1b** (partenze, virate, boe) su molte regate.
-4. **La regata come fonte** (`PROPOSTA-REGATA-COME-FONTE.md`): registrazione e replay, momenti chiave e consigli geometrici, «ripeti da qui». Compito grosso: Opus e revisione in chat.
-5. **Tornei** dell'1b (4 regate, uno scarto, percorso a triangolo), **lezioni brevi** dell'1b, **menu** (attestato di partecipazione, brevetto dell'1b), per ultimi i **tempi delle medaglie**.
+4. **Tornei** dell'1b (4 regate, uno scarto, percorso a triangolo), **lezioni brevi** dell'1b, **menu** (attestato di partecipazione, brevetto dell'1b).
+5. **La regata come fonte, solo nei tornei della parte «b»** (Ale, 20 ottobre 2026): replay, momenti salienti, ripasso «ripeti da qui», domande sulle penalità, tarati su quello che insegna il livello. Rimandata a dopo i tornei; la fermata 1 e la revisione in chat sono in `PROPOSTA-REGATA-COME-FONTE.md` §9 (§9.8 = cosa resta da risolvere). Poi i **tempi delle medaglie**.
 6. Poi il **livello 2** (il regolamento: segnali, precedenze, penalità a giri; `PROPOSTA-SEGNALI-PARTENZA.md` è già pronta come fermata 1).
 
 ## Dove cercare
