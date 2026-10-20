@@ -272,6 +272,8 @@ I testi delle lezioni brevi si scrivono a parte, senza toccare il motore.
 
 **Come è andata la revisione:** la chat ha lavorato prima su `regate.js` e `avvio.js` vecchi, presi dalle conoscenze del progetto (anteriori alla 1.0.16, con quattro copie di `avvio.js`), e senza sapere che il replay è per i tornei. Poi ha ricontrollato sui file della 1.0.33. Qui sotto ci sono solo i punti che restano veri sul codice di oggi; quelli marcati «verificato qui» li ho ricontrollati io il 20 ottobre.
 
+**Decisione di Ale (20 ottobre 2026): si ripete la situazione, non la regata al bit.** Come un allenatore che dice «rimettiamoci in quel momento: rifai il giro di boa, la strambata, il sorpasso, evita il contatto», senza pretendere la stessa onda. Il ripasso ripristina l'istantanea (posizioni, barche, vento e raffiche presenti in quel momento), poi il caso del gioco prosegue normalmente. **Cadono** quindi il generatore col seme di §9.7, i passi fissi, la registrazione dei tasti e il criterio S10. Il primo e il quarto punto qui sotto non vanno più risolti, basta dichiararli. Resta da garantire che il ripristino sia giusto (S4) e che la ripetizione non scriva niente (S5).
+
 **Da risolvere nella prossima proposta:**
 - **Passo della fisica variabile** (verificato qui: `avvio.js:13`, `dt = min(0,05 s, fotogramma)`, ripetuto `timeScale` volte). Il punto di ripartenza può essere esatto; il seguito nel browser no, nemmeno con le stesse mosse. Per avere anche il seguito servono passi fissi in regata, oppure va registrata la durata di ogni passo. Il documento deve dire cosa promette.
 - **Mosse del giocatore:** per ripetere una regata vanno registrati i comandi a ogni passo (barra, scotta, Maiusc, Z, A). Senza questi S10 non si può eseguire.
