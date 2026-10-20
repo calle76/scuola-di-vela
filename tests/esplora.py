@@ -6,12 +6,12 @@
 # Parte 2 (--scimmia N): pagina senza #collaudo, come la carica un giocatore, 1360x650; N secondi reali di tasti e clic a caso
 #   (seme fisso), annotando errori della pagina e pagina che scorre (pixel in più di 1360x650).
 #   Per ogni corsa annota anche versione del gioco e condizioni: carattere degli avversari, quanto gira il vento (gradi dal
-#   vento iniziale, minimo e massimo), raffiche (quante al massimo insieme, la più forte), eccesso del pannello (ogni 10 s).
+#   vento iniziale, minimo e massimo), raffiche (quante al massimo insieme, la più forte), eccesso del pannello (ogni secondo, col momento e le righe del massimo).
 #   La scimmia annota le ultime 30 azioni prima di ogni errore, per poterlo rifare.
 # Uso: python esplora.py <primo seme> <ultimo seme> [--scimmia SECONDI]
 #   es. python esplora.py 1 20            poi la volta dopo   python esplora.py 21 40 --scimmia 300
 #      python esplora.py --scimmia 800    solo la scimmia, con un seme dei tasti nuovo ogni volta (scritto nel file)
-#      python esplora.py --riassumi       riepilogo di TUTTI i file raccolti finora, diviso per versione del gioco
+#      python esplora.py --rigioca        rigioca le regate che avevano sforato il pannello + 100 di controllo, con il dettaglio dello sforamento\n#      python esplora.py --riassumi       riepilogo di TUTTI i file raccolti finora, diviso per versione del gioco
 # Uscite: tests/output/esplora/<data-ora>.jsonl (tutto) e il riepilogo a schermo.
 import asyncio, json, pathlib, random, statistics, sys, time
 from playwright.async_api import async_playwright
@@ -32,13 +32,16 @@ CORSA = """([race, seme, liv]) => {
   let visti = 0;   // numeri controllati: se resta 0 il controllo non ha misurato niente
   const nonFiniti = o => { const num = o ? Object.entries(o).filter(([k, v]) => typeof v === "number") : []; visti += num.length; return num.filter(([k, v]) => !isFinite(v)).map(([k]) => k); };
   const nan = new Set(), ferma = {}, ultimoTratto = {}, daQuando = {};
-  let vMax = 0, n = 0, giroMin = 0, giroMax = 0, raffMax = 0, raffForte = 0, panMax = 0;
+  let vMax = 0, n = 0, giroMin = 0, giroMax = 0, raffMax = 0, raffForte = 0, panMax = 0, panCaso = null;
   const twd0 = sv.twd, caratteri = R.boats.filter(b => !b.me).map(b => b.name + ":" + b.char);
-  const pannello = () => { sv.panel(); const p = document.querySelector(".panel"); panMax = Math.max(panMax, p ? p.scrollHeight - p.clientHeight : 0); };
+  const pannello = () => { sv.panel(); const p = document.querySelector(".panel"), px = p ? p.scrollHeight - p.clientHeight : 0;
+    if (px > panMax){ panMax = px;   // il momento del massimo sforamento: righe visibili (nome, altezza, inizio del testo) e stato
+      panCaso = { t: Math.round(R.t), px, altezza: p.clientHeight, righe: [...p.children].filter(e => e.offsetParent).map(e => [e.id || e.className || e.tagName, e.offsetHeight, e.textContent.trim().replace(/\\s+/g, " ").slice(0, 50)]),
+                  reg: Object.assign({}, sv.reg), scuffiata: !!sv.S.capsized }; } };
   const controlla = () => {
     const giro = ((sv.twd - twd0) % 360 + 540) % 360 - 180; giroMin = Math.min(giroMin, giro); giroMax = Math.max(giroMax, giro);
     const g = sv.gusts(); raffMax = Math.max(raffMax, g.length); g.forEach(x => raffForte = Math.max(raffForte, x[3]));
-    if (n % 600 === 0) pannello();
+    pannello();   // ogni secondo (fino alla 1.0.35 ogni 10 s)
     R.boats.forEach(b => { nonFiniti(b.S).forEach(k => nan.add(b.name + "." + k));
       if (b.fin !== null || b.dnf) return;
       if (ultimoTratto[b.name] !== b.leg){ ultimoTratto[b.name] = b.leg; daQuando[b.name] = R.t; }
@@ -49,21 +52,22 @@ CORSA = """([race, seme, liv]) => {
   const reg = Object.assign({}, sv.reg), arrivo = me.fin;
   let k = 0; while (k < 60 * 400 && !R.boats.every(b => b.fin !== null || b.dnf)){ sv.run(dt, 1); if (++k % 60 === 0){ n += 60; controlla(); } }
   return { versione: typeof VERSIONE === "undefined" ? null : VERSIONE, caratteri, giroVento: [Math.round(giroMin), Math.round(giroMax)],
-           raffiche: [raffMax, +raffForte.toFixed(2)], pannelloPx: panMax, arrivo, ritirato: !!me.dnf, t: Math.round(R.t), vMax: +vMax.toFixed(2), reg, nan: [...nan].slice(0, 10), visti, fermaMax: ferma,
+           raffiche: [raffMax, +raffForte.toFixed(2)], pannelloPx: panMax, pannelloCaso: panCaso, arrivo, ritirato: !!me.dnf, t: Math.round(R.t), vMax: +vMax.toFixed(2), reg, nan: [...nan].slice(0, 10), visti, fermaMax: ferma,
            barche: R.boats.map(b => [b.name, b.fin === null ? null : Math.round(b.fin), b.pen || 0, b.fin === null ? "tratto " + b.leg : ""]) };
 }"""
 
 def scrivi(riga):
     with open(FILE, "a", encoding="utf-8") as f: f.write(json.dumps(riga, ensure_ascii=False) + "\n")
 
-async def parte1(b, semi):
+async def parte1(b, semi, casi=None):
     pg = await b.new_page(viewport={"width": 1360, "height": 650}); await pg.add_init_script(SEME)
     errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
     corse = []
-    for seme in semi:
-        for race in range(3):
-            for liv in ("principianti", "esperti"):
+    elenco = casi or [(seme, race, liv) for seme in semi for race in range(3) for liv in ("principianti", "esperti")]
+    for seme, race, liv in elenco:
+        if True:
+            if True:
                 prima = len(errs)
                 try: r = await pg.evaluate(CORSA, [race, seme, liv])
                 except Exception as e: r = {"eccezione": str(e)[:300]}
@@ -72,6 +76,13 @@ async def parte1(b, semi):
                       + (f" ECCEZIONE {r['eccezione'][:80]}" if "eccezione" in r else ""), flush=True)
     await pg.close()
     return corse
+
+def rigioca(vecchie):
+    """Le regate che avevano sforato il pannello + 100 che non sforavano (scelte con seme fisso), per rigiocarle con la registrazione nuova."""
+    chiave = lambda c: (c["seme"], c["race"], c["liv"])
+    r = [c for c in vecchie if "race" in c and "eccezione" not in c]
+    sfora = sorted({chiave(c) for c in r if c.get("pannelloPx")}); altre = sorted({chiave(c) for c in r if not c.get("pannelloPx")} - set(sfora))
+    return sfora, random.Random(1).sample(altre, min(100, len(altre)))
 
 TASTI = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Shift", "Space", "Enter", "Escape", "w", "s", "a", "d", "q", "e", "z", "x", "c", "v", "p", "h", "1", "2", "3", "Tab"]
 async def parte2(b, secondi, seme):
@@ -143,6 +154,21 @@ async def main():
     if "--riassumi" in args:
         righe = [json.loads(l) for f in sorted(OUT.glob("*.jsonl")) for l in f.read_text(encoding="utf-8").splitlines() if l.strip()]
         print(f"===== RIEPILOGO DI TUTTI I FILE ({len(list(OUT.glob('*.jsonl')))} in {OUT.relative_to(ROOT)})"); riepilogo(righe); return
+    if "--rigioca" in args:
+        vecchie = [json.loads(l) for f in sorted(OUT.glob("*.jsonl")) for l in f.read_text(encoding="utf-8").splitlines() if l.strip()]
+        px_prima = {(c["seme"], c["race"], c["liv"]): c.get("pannelloPx", 0) for c in vecchie if "race" in c}
+        sfora, ctrl = rigioca(vecchie)
+        async with async_playwright() as p:
+            b = await p.chromium.launch(); nuove = await parte1(b, [], sfora + ctrl); await b.close()
+        ns = {(c["seme"], c["race"], c["liv"]): c for c in nuove}
+        print(f"\n===== RIGIOCATE: {len(sfora)} che sforavano + {len(ctrl)} di controllo")
+        print("sforanti: prima -> ora (px)", [(k, px_prima[k], ns[k].get("pannelloPx")) for k in sfora if k in ns])
+        print("tornate a sforare:", sum(1 for k in sfora if k in ns and ns[k].get("pannelloPx")), "su", len(sfora),
+              "| controllo che ora sfora:", sum(1 for k in ctrl if k in ns and ns[k].get("pannelloPx")), "su", len(ctrl))
+        for k in sfora:
+            c = ns.get(k, {}).get("pannelloCaso")
+            if c: print(k, json.dumps(c, ensure_ascii=False))
+        return
     sc = 0
     if "--scimmia" in args: i = args.index("--scimmia"); sc = int(args[i + 1]); del args[i:i + 2]
     semi = list(range(int(args[0]), int(args[1]) + 1)) if len(args) >= 2 else ([] if sc else [1, 2, 3])
