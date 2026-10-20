@@ -12,7 +12,7 @@
   function tick(now){
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (mode === "menu") return;
-    const st = curStep(), paused = (st && st.pause) || briefing || $("gloss").open || $("quiz").open || $("setDlg").open;
+    const st = curStep(), paused = (st && st.pause) || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || $("torDlg").open;
     if (!paused){ for (let k = 0; k < timeScale; k++){ simulate(dt, st); simTime += dt; } }
     else { if (st && st.pause) ctl.sheet = autoSheet(); info = step(S, ctl, local, 0); S.dispBoom = S.boomSide * S.boom; }
     draw(paused ? 0.016 : dt);
@@ -30,7 +30,7 @@
       if (!me.ai) Object.assign(me, { ai: aiParams("principianti"), side: 1, boardT: 0, boardMax: 40, rOff: Math.random() * 6, char: "normale", startX: toWF(S.x, S.y)[0] * 0.5, capW: 0 });
       if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
       me.capW = 0; me.info = info; me.me = false; aiControl(me, dt); me.me = true; return ctl.tiller; },
-    openItem, estraiEsame, meriti, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
+    openItem, estraiEsame, meriti, torPunti, torSerie, torChiudi, torApri, get tor(){ return tor; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
     completeStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,

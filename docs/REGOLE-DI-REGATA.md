@@ -58,7 +58,7 @@ Ogni riga: cosa dice la regola (parafrasi), cosa fa il gioco oggi (con il punto 
 |---|---|---|---|
 | **44.1** Scontare la penalità | Chi può aver violato una regola della parte 2 sconta **due giri**; chi ha toccato una boa (regola 31) **un giro**. Le istruzioni di regata possono prevedere un'altra penalità (per esempio sul punteggio). Se ha causato danni o ha avuto un vantaggio grande nonostante la penalità, si ritira | +15 s al tempo del colpevole (`contacts()`) | **Due giri al posto dei 15 s** |
 | **44.2** Come si fanno i giri | Appena possibile, dopo essersi allontanata dalle altre, la barca fa i giri **nello stesso verso**, e **ogni giro comprende una virata e una strambata**. Vicino all'arrivo, prima di arrivare lo scafo deve tornare tutto dalla parte del percorso | — | Riconoscere i giri del giocatore, farli fare agli avversari |
-| **44.3** Penalità sul punteggio | Alternativa (bandiera gialla), solo se prevista dalle istruzioni | — | Non serve |
+| **44.3** Penalità sul punteggio | Alternativa (bandiera gialla), solo se prevista dalle istruzioni. Se le istruzioni non dicono quanto vale, il 20% dei punti di chi non arriva, al decimo; i punti delle altre barche non cambiano (due barche possono avere lo stesso punteggio); mai oltre i punti di chi non arriva | Dalla 1.0.34, **solo nel torneo dell'1b**: +1 punto per contatto con colpa (20% di 5), con il tetto di 5; la decide il gioco al contatto, senza bandiera gialla | Nelle altre regate restano i 15 s, senza fonte |
 
 ## Cosa cambierebbe nel gioco [stima]
 

@@ -6,14 +6,14 @@
   let mode = "menu", lessonIdx = 0, stepIdx = 0, stepDone = false, holdT = 0, missionIdx = 0;
   const env = { twd: 0, tws: 10 / KN };
   const local = { twd: 0, tws: 10 / KN };
-  let gustLevel = 0, gustTimer = 0;
+  let gustLevel = 0, gustTimer = 0, gustAll = false; // gustAll: torneo dell'1b, le raffiche nascono attorno a tutte le barche
   const gusts = [], wake = [];
   const ctl = { sheet: 0.4, tiller: 0 };
   const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180 };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.33"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.34"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -50,14 +50,14 @@
     for (const g of gusts){ const d2 = gustGeom(g, x, y); if (d2 < 1) k += (1 - d2) * g.life * g.k; }
     return k;
   }
-  function spawnGust(dist, lat, mature){
+  function spawnGust(dist, lat, mature, P = S){
     const to = (env.twd + 180) * D2R, ax = Math.sin(to), ay = -Math.cos(to);
-    gusts.push({ x: S.x - ax * dist - ay * lat, y: S.y - ay * dist + ax * lat, r: 9 + Math.random() * 11,
+    gusts.push({ x: P.x - ax * dist - ay * lat, y: P.y - ay * dist + ax * lat, r: 9 + Math.random() * 11,
       k: gustLevel === 1 ? 0.2 + Math.random() * 0.2 : 0.35 + Math.random() * 0.3,
       sh: (Math.random() - 0.5) * (gustLevel === 1 ? 12 : 20), age: mature ? 3 : 0, ttl: 40 + Math.random() * 20, life: mature ? 1 : 0 });
   }
-  function setGusts(level){
-    gustLevel = level; gusts.length = 0;
+  function setGusts(level, all = false){
+    gustLevel = level; gustAll = all; gusts.length = 0;
     if (level){ spawnGust(22, -14, true); spawnGust(45, 18, true); spawnGust(70, -6, true); spawnGust(95, 25, true); gustTimer = 3; }
   }
   function updateGusts(dt){
@@ -69,7 +69,8 @@
     gustTimer -= dt;
     if (gustTimer <= 0 && gusts.length < 12){
       gustTimer = (gustLevel === 1 ? 4 : 2.6) * (0.6 + Math.random() * 0.8);
-      spawnGust(55 + Math.random() * 60, (Math.random() - 0.5) * 90, false);
+      // torneo dell'1b: sopravento a una barca a caso (prima solo al giocatore, e un avversario lontano navigava senza raffiche)
+      spawnGust(55 + Math.random() * 60, (Math.random() - 0.5) * 90, false, gustAll && mode === "race" && R ? R.boats[Math.floor(Math.random() * R.boats.length)].S : S);
     }
   }
 
@@ -201,6 +202,7 @@
     $("attest").showModal();
   }
   function showMenu(){
+    if (mode === "race" && R && R.tor && R.phase === "done") torChiudi(); // regata del torneo finita: il risultato si salva anche uscendo dal menu
     mode = "menu"; setControls([], false, false);
     let nuovo = false;
     if (modo === "carriera" && !progress.brevetto && meriti(progress).superato){ progress.brevetto = { data: oggi() }; saveProgress(); nuovo = true; }
@@ -218,7 +220,10 @@
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
     const races = (modo === "carriera" ? RACES1 : RACES).map((rc, i) => { const b = progress.best[recK("r" + i)];
-      return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
+      return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("")
+      + (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
+        const st = chiuso ? "dopo il brevetto di livello 1" : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
+        return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo dell'1b</span><span class="state ${F ? "ok" : "todo"}">${st}</span><span class="desc">Quattro regate con la barca completa, contro gli stessi tre avversari: punti, uno scarto, classifica.</span></button>`; })();
     const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
       return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
@@ -234,12 +239,13 @@
         <section class="tile">
           <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
             ${esameBtn()}</div></div>
-          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">I tornei, altri tipi di barca.</p></div>`}
+          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">Altri tipi di barca.</p></div>`}
         </section>
       </div>
       <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><button class="linkish" id="resetProg">Azzera i progressi</button></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
     $("goFree").onclick = () => openItem("free");
+    $("goTor").onclick = torApri;
     $("goEsame").onclick = openEsame;
     if ($("goAttest")) $("goAttest").onclick = openAttest;
     if (nuovo) openAttest();
@@ -389,7 +395,7 @@
   function regReset(){ reg = REG_ZERO(); ironsT = 0; ironsFree = false; }
   function regClosed(){
     if (mode === "mission") return S.finished;
-    if (mode === "race") return !R || R.boats[0].fin !== null;
+    if (mode === "race") return !R || R.boats[0].fin !== null || !!R.boats[0].dnf;
     return mode !== "lesson";
   }
   function regAllowed(kind){ const st = mode === "lesson" ? curStep() : null; return !!(st && st.allow && st.allow.includes(kind)); }

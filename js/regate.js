@@ -58,7 +58,7 @@
     { title: "Regata a bastone", desc: "Tre avversari, vento costante: partenza, bolina, poppa, arrivo.", wind: 0, tws: 10, gusts: 0 },
     { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 },
     // 1.0.28: livello 2 in prova (docs/PROPOSTA-SALTI-VENTO.md): barca del livello 2, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
-    { title: "Regata nei salti di vento (livello 2, prova)", desc: "Barca del livello 2, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300 }
+    { title: "Regata nei salti di vento (livello 2, prova)", desc: "Barca del livello 2, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true }
   ];
   const RACES1 = RACES.filter(rc => !rc.lv2); // le regate del livello 1 (stessi indici: quelle del livello 2, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;
@@ -120,52 +120,55 @@
   }
   function startRace(i, wind){
     mode = "race"; raceIdx = i; showCards("race"); regReset();
-    const rc = RACES[i];
-    setWhere("Regata: " + rc.title);
+    const rc = i === "t" ? torRc() : RACES[i], liv = rc.tor ? tor.liv : opt.aiLevel; // "t": la regata del torneo in corso (torneo dell'1b)
+    setWhere(rc.tor ? "Torneo dell'1b" : "Regata: " + rc.title);
     env.twd = wind === undefined ? rc.wind : wind; env.tws = rc.tws / KN;
     curMarks = [];
-    const spots = startSpots(opt.aiLevel === "nessuno" ? 1 : 1 + FLEET_LOOK.length);
+    const spots = startSpots(liv === "nessuno" ? 1 : 1 + FLEET_LOOK.length);
     const [px, py] = fromWF(spots[0].x, spots[0].y);
     freshState(px, py, norm360(env.twd + spots[0].s * 90), 0.35);
-    setGusts(rc.gusts);
-    if (rc.lv2){ S.lv = 2; setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); } // un salto persistente una regata su tre
+    setGusts(rc.gusts, !!rc.tor);
+    if (rc.lv2) S.lv = 2;
+    if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const up = rc.up || MARK_UP;
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { t: -opt.countdown, phase: "pre", up, lv2: !!rc.lv2, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { t: -opt.countdown, phase: "pre", up, lv2: !!rc.lv2, tor: !!rc.tor, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, signals: new Set(), doneAt: null };
     const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: spots[0].y };
     R.boats.push(me);
     const slots = [-24, 2, 24].sort(() => Math.random() - 0.5);
     // una sola aggressiva, e solo con gli esperti; le altre prudenti o normali
-    const aggro = opt.aiLevel === "esperti" ? Math.floor(Math.random() * FLEET_LOOK.length) : -1;
-    (opt.aiLevel === "nessuno" ? [] : FLEET_LOOK).forEach((look, k) => {
+    const aggro = liv === "esperti" ? Math.floor(Math.random() * FLEET_LOOK.length) : -1;
+    (liv === "nessuno" ? [] : FLEET_LOOK).forEach((look, k) => {
       const spot = spots[k + 1];
       const [x, y] = fromWF(spot.x, spot.y);
       const bs = newBoat(x, y, norm360(env.twd + spot.s * 90));
       if (rc.lv2) bs.lv = 2;
       Object.assign(bs, { hullColor: look.hull, sailColor: look.sail, sailorColor: look.sailor });
       const b = { me: false, name: look.name, S: bs, ctl: { sheet: 0.4, tiller: 0 }, info: null, wake: [], wakeT: 0, leg: 0, ocs: false, pen: 0, fin: null,
-                  prevWY: spot.y, rOff: Math.random() * 6, ai: aiParams(opt.aiLevel), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6,
+                  prevWY: spot.y, rOff: Math.random() * 6, ai: aiParams(liv), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6,
                   char: k === aggro ? "aggressiva" : (Math.random() < 0.5 ? "prudente" : "normale") };
+      if (rc.tor) Object.assign(b, { ai: { ...tor.av[k].ai }, char: tor.av[k].char }); // nel torneo la flotta resta la stessa per tutta la serie
       b.info = step(bs, b.ctl, env, 0); bs.dispBoom = bs.boomSide * bs.boom;
       R.boats.push(b);
     });
     recStart(recK("r" + i) + "b");
     $("rTitle").textContent = rc.title;
-    R.brief = "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
-      (rc.lv2 ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Barca del livello 2, boa a 300 m" : "") +
+    R.brief = (rc.tor ? torBrief() : "") + "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
+      (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.lv2 ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Barca del livello 2, boa a 300 m" : "") +
       ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
-      (opt.aiLevel === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
+      (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
-    $("rDone").hidden = true;
+    $("rDone").hidden = true; $("rTor").hidden = true;
+    $("rRestart").hidden = $("rWind").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief(rc.title, R.brief, true);
   }
 
   // obiettivo attuale della barca: lo usano la freccia fuori schermo, il rilevamento del pannello e il tasto vista
   function goal(){
-    if (mode === "race") return R && R.boats[0].fin === null ? targetOf(R.boats[0]) : null;
+    if (mode === "race") return R && R.boats[0].fin === null && !R.boats[0].dnf ? targetOf(R.boats[0]) : null;
     if (mode === "mission") return S.finished ? null : curMarks[S.markIdx];
     if (mode === "lesson") return S.lessonMark && !S.markReached ? S.lessonMark : null;
     return null; // navigazione libera: nessun obiettivo
@@ -270,7 +273,7 @@
       for (const o of R.boats){
         if (o === b || o.S.capsized) continue;
         const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > 30) continue;
-        const oTwa = norm180(local.twd - o.S.h); if (oTwa < 0) continue;
+        const oTwa = norm180((R.lv2 ? windAt(o.S.x, o.S.y).twd : local.twd) - o.S.h); if (oTwa < 0) continue; // 1b: le mure col vento dove sta l'altra barca
         const ang = Math.abs(norm180(bearingTo(s, o.S) - s.h)); if (ang > 70) continue;
         desired -= side * 28; break;
       }
@@ -384,7 +387,7 @@
   function raceLegs(b){
     const s = b.S, [wx, wy] = toWF(s.x, s.y), prev = b.prevWY; b.prevWY = wy;
     const onLine = Math.abs(wx) <= LINE_HALF;
-    if (b.fin !== null) return;
+    if (b.fin !== null || b.dnf) return;
     if (b.leg === 0){
       if (R.t >= 0){
         if (b.ocs){ if (wy > 0){ b.ocs = false; if (b.me) toast("Sei tornato dietro la linea: ora riparti"); } }
@@ -407,19 +410,21 @@
     const bs = R.boats;
     for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
       const A = bs[i], B = bs[j], key = i + "-" + j;
-      if (A.fin !== null || B.fin !== null || A.S.capsized || B.S.capsized) continue;
+      if (A.fin !== null || B.fin !== null || A.dnf || B.dnf || A.S.capsized || B.S.capsized) continue;
       const d = Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y);
       if (R.contacts[key]){ if (d > 8) delete R.contacts[key]; continue; } // stesso contatto finché non si separano
       if (d > 4.2) continue;
       R.contacts[key] = simTime;
-      const tA = sgn(norm180(local.twd - A.S.h)), tB = sgn(norm180(local.twd - B.S.h));
+      // mure di ciascuna col vento nel suo punto (1b; nell'1a, difetto noto dalla 1.0.1, col vento del giocatore)
+      const twA = R.lv2 ? windAt(A.S.x, A.S.y).twd : local.twd, twB = R.lv2 ? windAt(B.S.x, B.S.y).twd : local.twd;
+      const tA = sgn(norm180(twA - A.S.h)), tB = sgn(norm180(twB - B.S.h));
       let guilty, why;
       if (tA !== tB) guilty = tA < 0 ? A : B;
       else { const ya = toWF(A.S.x, A.S.y)[1], yb = toWF(B.S.x, B.S.y)[1]; guilty = ya < yb ? A : B; }
       const v = (tu, lui) => guilty.me ? tu : lui; // 0.21.2: «tu eri… dovevi» al giocatore, terza persona per l'avversario
       why = tA !== tB ? v("eri", "era") + " mure a sinistra e " + v("dovevi", "doveva") + " lasciare strada a chi era mure a dritta"
                       : v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano";
-      guilty.pen += 15;
+      if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo
       for (const o of [A, B]){ o.S.u *= 0.6; }
       const dx = (A.S.x - B.S.x) / (d || 1), dy = (A.S.y - B.S.y) / (d || 1);
       const push = (4.6 - d) / 2 + 0.3;
@@ -427,8 +432,8 @@
       if (A.me || B.me){
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
-        toast(guilty.me ? "Contatto! Penalità +15 s" : "Contatto: penalità a " + other.name);
-        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + ". Penalità di 15 secondi.";
+        toast(guilty.me ? "Contatto! Penalità " + (R.tor ? "+1 punto" : "+15 s") : "Contatto: penalità a " + other.name);
+        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.tor ? ". Penalità di 1 punto sul punteggio della regata." : ". Penalità di 15 secondi.");
       }
     }
   }
@@ -456,6 +461,8 @@
       const p = b.fin === null ? strada(b) : null; if (p !== null) (b.hist = b.hist || []).push([R.t, p]); }
     recSample(R.t, dt);
     const me = R.boats[0];
+    if (R.tor) torFinestra();
+    if (R.tor && (me.fin !== null || me.dnf) && R.phase !== "done"){ R.phase = "done"; R.doneAt = R.t; torArrivo(); }
     if (me.fin !== null && R.phase !== "done"){
       R.phase = "done"; R.doneAt = R.t;
       const key = "r" + raceIdx, bk = recK(key), prev = progress.best[bk], tot = Math.round(me.fin);
@@ -497,7 +504,7 @@
   }
   function distacco(b){ // secondi della barca b da me: positivi se è davanti, negativi se è dietro; null se non si sa
     const me = R.boats[0];
-    if (b.me || R.t < 0) return null;
+    if (b.me || R.t < 0 || b.dnf || me.dnf) return null;
     if (me.fin !== null) return b.fin !== null ? me.fin - b.fin : null; // dopo il mio arrivo: i tempi d'arrivo, con le penalità
     const pm = strada(me), pb = strada(b);
     if (pm === null || pb === null) return null;
@@ -505,7 +512,7 @@
     return t === null ? null : (pb >= pm ? 1 : -1) * (R.t - t);
   }
   function ranking(){
-    const score = b => b.fin !== null ? 1e7 - b.fin : (b.ocs ? -1e6 : b.leg * 1e4 - Math.hypot(b.S.x - targetOf(b).x, b.S.y - targetOf(b).y));
+    const score = b => b.fin !== null ? 1e7 - b.fin : b.dnf ? -2e6 : (b.ocs ? -1e6 : b.leg * 1e4 - Math.hypot(b.S.x - targetOf(b).x, b.S.y - targetOf(b).y));
     return [...R.boats].sort((a, b) => score(b) - score(a));
   }
   function raceResults(prev, tot){
@@ -523,6 +530,7 @@
   }
   function legName(b){
     if (b.fin !== null) return "arrivata · " + fmtTime(Math.round(b.fin));
+    if (b.dnf) return b.me && b.ret ? "ritirata" : "non arrivata";
     if (b.S.capsized) return "scuffiata!";
     if (b.ocs) return "partenza anticipata";
     if (b.leg === 1 && b.rnd < 0) return "boa girata dal lato sbagliato";
@@ -532,9 +540,117 @@
     if (!R) return;
     const rank = ranking();
     const gap = b => { const s = distacco(b); return s === null ? "" : " · " + (Math.round(s) < 0 ? "−" + -Math.round(s) : Math.round(s)) + " s"; }; // 1.0.33
-    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · +" + b.pen + " s" : ""}${gap(b)}</span></li>`).join("");
+    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · +" + b.pen + " s" : ""}${b.pp ? " · +" + b.pp + " pt" : ""}${gap(b)}</span></li>`).join("");
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
   }
+
+  // ---- torneo dell'1b (1.0.34, tappa T1 di docs/PROPOSTA-TORNEI-1B.md) ----
+  // Serie di 4 regate a bastone con la barca dell'1b contro gli stessi tre avversari, con lo stesso carattere. Punteggio di F15,
+  // appendice A: punti bassi (A4), chi non arriva o si ritira prende iscritti + 1 (A5.2), uno scarto (A2.1) dopo la quarta regata,
+  // parità con A8; un contatto con colpa è una penalità sul punteggio (44.3(c)), non 15 s. Finestra d'arrivo (appendice S, 12.3):
+  // chi non arriva entro TOR_FIN volte il tempo della prima non arriva. Il torneo si salva in progress.torneo dopo ogni regata;
+  // la regata interrotta (pagina chiusa, menu) si ricorre da capo. Le altre regate restano con i 15 s.
+  const TOR_N = 4, TOR_FIN = 0.5; // TOR_FIN: ipotesi nostra, la finestra la scrivono le istruzioni di regata
+  const TOR_COND = [{ nome: "10 nodi costanti", tws: 10, gusts: 0 }, { nome: "raffiche", tws: 12, gusts: 1 }, { nome: "salti di vento", tws: 10, gusts: 0, shifts: true }];
+  let tor = null; // il torneo in corso: lo stesso oggetto di progress.torneo
+  const torNome = k => "regata " + (k + 1) + " di " + TOR_N + " (" + TOR_COND[tor.regate[k].c].nome + ")";
+  const fmtPt = v => String(Math.round(v * 10) / 10).replace(".", ",");
+  function torNuovo(){
+    const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = liv === "esperti" ? Math.floor(Math.random() * FLEET_LOOK.length) : -1;
+    return { ver: VERSIONE, liv, regate: [0, 1, 2, Math.floor(Math.random() * 3)].map(c => ({ c, wind: Math.floor(Math.random() * 8) * 45 })), // la quarta sorteggiata fra le tre
+             av: FLEET_LOOK.map((l, k) => ({ ai: aiParams(liv), char: k === aggro ? "aggressiva" : Math.random() < 0.5 ? "prudente" : "normale" })), ris: [] };
+  }
+  function torRc(){
+    const k = tor.ris.length, g = tor.regate[k], c = TOR_COND[g.c];
+    return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: c.tws, gusts: c.gusts, shifts: c.shifts, lv2: true, tor: true };
+  }
+  const torBrief = () => "Torneo dell'1b, " + torNome(tor.ris.length) + ", con la barca completa dell'1b. Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
+    (FLEET_LOOK.length + 2) + ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3). Chi non arriva entro metà del tempo della prima, dopo il suo arrivo, non arriva. ";
+  // punti di una regata, nell'ordine delle barche: r = [{ fin, pp }], fin = tempo d'arrivo o null (non arrivata o ritirata), pp = penalità
+  function torPunti(r){
+    const dnf = r.length + 1, pen = Math.round(2 * dnf) / 10; // A5.2; 44.3(c): 20% dei punti di chi non arriva, al decimo
+    // ponytail: due arrivi allo stesso tempo hanno lo stesso posto (A7 farebbe la media): con i decimi di secondo non capita
+    return r.map(b => b.fin === null ? dnf : Math.min(dnf, 1 + r.filter(o => o.fin !== null && o.fin < b.fin).length + b.pp * pen));
+  }
+  // classifica della serie: [{ i, p, sc, tot }] dalla prima all'ultima; i = barca, p = punti per regata, sc = regata scartata (-1 se nessuna)
+  function torSerie(ris){
+    const P = ris.map(torPunti);
+    const cl = (ris[0] || []).map((x, i) => {
+      const p = P.map(r => r[i]), sc = p.length >= TOR_N ? p.indexOf(Math.max(...p)) : -1; // a parità di peggiore si scarta la più vecchia
+      return { i, p, sc, tot: p.reduce((a, v, k) => k === sc ? a : a + v, 0) };
+    });
+    const tenuti = x => x.p.filter((v, k) => k !== x.sc).sort((u, v) => u - v);
+    return cl.sort((a, b) => {
+      if (Math.abs(a.tot - b.tot) > 1e-9) return a.tot - b.tot;
+      const ta = tenuti(a), tb = tenuti(b);
+      for (let k = 0; k < ta.length; k++) if (ta[k] !== tb[k]) return ta[k] - tb[k];  // A8.1, senza gli scarti
+      for (let k = a.p.length - 1; k >= 0; k--) if (a.p[k] !== b.p[k]) return a.p[k] - b.p[k]; // A8.2, dall'ultima regata, scarti compresi
+      return 0;
+    });
+  }
+  function torFinestra(){
+    const f = R.boats.filter(b => b.fin !== null).map(b => b.fin);
+    if (!f.length) return;
+    R.torLim = Math.min(...f) * (1 + TOR_FIN);
+    if (R.t < R.torLim) return;
+    for (const b of R.boats) if (b.fin === null && !b.dnf){ b.dnf = true; if (b.me) toast("Finestra d'arrivo chiusa: non sei arrivato"); }
+  }
+  function torArrivo(){ // il giocatore ha finito la sua regata: arrivato, ritirato o fuori dalla finestra
+    const me = R.boats[0], pen = me.pp ? " Penalità sul punteggio: +" + me.pp + (me.pp > 1 ? " punti." : " punto.") : "";
+    $("rDone").hidden = false; $("rTor").hidden = false; $("rRet").hidden = true; $("hint").hidden = true; // finita la regata il suggerimento non serve: fa posto al risultato
+    $("rDoneText").textContent = (me.fin !== null ? "Arrivato " + (1 + R.boats.filter(b => b.fin !== null && b.fin < me.fin).length) + "° in " + fmtTime(Math.round(me.fin)) + "." + pen
+      : (me.ret ? "Ti sei ritirato" : "Non sei arrivato entro la finestra d'arrivo") + ": " + (R.boats.length + 1) + " punti."); // gli errori sono già nella riga sopra
+  }
+  // chiude la regata del torneo: le barche che navigano ancora arrivano (simulazione accelerata, senza il giocatore) o restano
+  // fuori dalla finestra; poi il risultato entra nel torneo e si salva
+  function torChiudi(){
+    if (!R || !R.tor || R.torOk || !tor) return;
+    const dt = 1 / 60;
+    for (let k = 0; k < 60 * 1800 && R.boats.some(b => b.fin === null && !b.dnf); k++){ updateGusts(dt); updateRace(dt); simTime += dt; }
+    R.torOk = true;
+    tor.ris.push(R.boats.map(b => ({ fin: b.fin !== null && b.fin <= R.torLim ? Math.round(b.fin * 10) / 10 : null, pp: b.pp || 0 })));
+    if (tor.ris.length === TOR_N) torFine();
+    saveProgress();
+  }
+  function torFine(){ // dopo la quarta regata: piazzamento finale, meriti di Competizione dell'1b (solo carriera), torneo chiuso
+    const pos = torSerie(tor.ris).findIndex(x => x.i === 0) + 1, mer = modo === "carriera" ? [6, 4, 3, 2][pos - 1] + (tor.ris.every(r => !r[0].pp) ? 1 : 0) : 0;
+    const old = progress.torneoFatto || { pos: 9, mer: 0 };
+    progress.torneoFatto = { pos: Math.min(pos, old.pos), mer: Math.max(mer, old.mer) }; // il migliore di sempre, piazzamento e meriti
+    tor.fine = { pos, mer }; delete progress.torneo;
+  }
+  function torApri(){ // dal menu
+    let nota = "";
+    if (progress.torneo && progress.torneo.ver !== VERSIONE){ nota = "Il gioco è cambiato dalla versione " + progress.torneo.ver + ": il torneo in corso è stato chiuso, senza punti."; delete progress.torneo; saveProgress(); }
+    tor = progress.torneo || null;
+    torMostra(nota);
+  }
+  function torMostra(nota){
+    const T = tor || torNuovo(), k = T.ris.length, inGioco = mode === "race";
+    const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + CHAR_TEXT[a.char]).join(", ");
+    const tab = k ? (() => { const P = T.ris.map(torPunti), cl = torSerie(T.ris);
+      return `<table class="tor"><thead><tr><th></th><th>Barca</th>${T.ris.map((r, j) => `<th>R${j + 1}</th>`).join("")}<th>Totale</th></tr></thead><tbody>${cl.map((x, n) =>
+        `<tr class="${x.i ? "" : "me"}"><td>${n + 1}°</td><td>${nomi[x.i]}</td>${x.p.map((v, j) => { const c = fmtPt(v) + (T.ris[j][x.i].pp ? "*" : "") + (T.ris[j][x.i].fin === null ? "°" : "");
+          return `<td>${j === x.sc ? "(" + c + ")" : c}</td>`; }).join("")}<td><b>${fmtPt(x.tot)}</b></td></tr>`).join("")}</tbody></table>
+        <p class="tor-leg">* penalità sul punteggio · ° non arrivata o ritirata · fra parentesi lo scarto${k < TOR_N ? ", che conta dopo la quarta regata" : ""}</p>`; })() : "";
+    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione dell'1b: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
+    const testa = !k ? `<p>Quattro regate a bastone con la barca completa dell'1b, contro gli stessi tre avversari (${T.liv}): ${car}. Vento: ${T.regate.map((g, j) => (j + 1) + ") " + TOR_COND[g.c].nome).join(", ")}.</p>
+      <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Un contatto con colpa vale 1 punto in più nella regata. Il torneo si salva dopo ogni regata: se chiudi la pagina, la regata interrotta si ricorre da capo.</p>`
+      : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Torneo dell'1b</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
+      ${nota ? `<p class="manca">${nota}</p>` : ""}${fine}${testa}${tab}
+      <div class="row">${T.fine ? `<button class="primary" id="torMenu">Torna al menu</button>`
+        : `<button class="primary" id="torGo">${k ? "Corri la regata " + (k + 1) : "Inizia il torneo"}</button>${tor ? `<button id="torRit">Ritirati dal torneo</button>` : ""}<button id="torMenu">${inGioco ? "Menu" : "Chiudi"}</button>`}</div>`;
+    const chiudi = () => $("torDlg").close();
+    $("torMenu").onclick = () => { chiudi(); if (T.fine) tor = null; if (inGioco || T.fine) showMenu(); };
+    if ($("torGo")) $("torGo").onclick = () => { if (!tor){ tor = progress.torneo = T; saveProgress(); } chiudi(); openItem(["r", "t"]); };
+    if ($("torRit")) $("torRit").onclick = () => { if (!confirm("Ritirarti dal torneo? Il torneo non conta: niente punti e niente piazzamento.")) return;
+      delete progress.torneo; tor = null; saveProgress(); chiudi(); showMenu(); };
+    releaseKeys(); $("torDlg").showModal();
+  }
+  $("rTor").onclick = () => { torChiudi(); torMostra(); };
+  $("rRet").onclick = () => { const me = R && R.boats[0];
+    if (!me || !R.tor || R.phase === "done" || !confirm("Ritirarti da questa regata? Prendi " + (R.boats.length + 1) + " punti, come chi non arriva.")) return;
+    me.dnf = me.ret = true; };
 
   // ---- disegno della regata e aiuti a schermo ----
   function drawRaceWorld(v){

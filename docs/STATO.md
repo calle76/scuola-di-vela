@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **19 ottobre 2026 (notte), versione 1.0.33**.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **20 ottobre 2026, versione 1.0.34**.
 
 ## Dove siamo
 
@@ -18,6 +18,7 @@
 - **Piccole correzioni dal gioco di Ale (1.0.30, 19 ottobre):** omino con due gambe, banderuola con il perno più al centro, W e S sempre attivi come ↑ e ↓ (scritte invariate). 
 - **La prua non va più oltre la bolina dopo la virata (1.0.31, 19 ottobre, `PROPOSTA-VIRATE-AVVERSARI.md`):** nella barca del livello 2 la rotazione la frenava solo la pala; ora la pala sente anche l'acqua che le arriva di lato e l'acqua frena lo scafo che ruota (idea e stime della revisione in chat), `yawG` ritarato. Prua del giocatore dopo la virata da 67-81° a 34-40°; avversari oltre la bolina + 15° dal 97% al 17% delle virate (soglia 5%: fuori, quasi tutte manovre volute della guida). Prezzo dichiarato: la pala stalla di rado e Maiusc non costa più velocità; virate più lente con 6-8 nodi. Provata da Ale e tenuta.
 - **Raddrizzata del livello 2 (1.0.32, `PROPOSTA-RADDRIZZATA.md`):** 10 s invece di 3, barca al traverso con la vela lascata, avversari 15 s; da un video di allenamento; lezione breve da scrivere.
+- **Torneo dell'1b, tappa T1 (1.0.34, `PROPOSTA-TORNEI-1B.md` §7):** 4 regate a bastone con la barca dell'1b contro gli stessi tre avversari, punteggio del regolamento (punti bassi, uno scarto, parità A8), penalità sul punteggio (+1 punto) invece dei 15 s, finestra d'arrivo, salvataggio dopo ogni regata, ritiri, meriti in carriera. Tutti i criteri nelle soglie; 1a identica (cambia solo il menu).
 - **Distacchi in regata (1.0.33, `PROPOSTA-DISTACCHI.md`):** secondi da te accanto a ogni barca nella classifica, e all'arrivo i secondi dalla barca davanti e dalla prima. **Da fare, in quest'ordine:** cosa influenza l'abilità (cercare nel manuale), poi trapezio e triangolo.
 
 **Impianto dei livelli (decisione di Ale, 19 ottobre 2026, sera):** ogni livello ha una sola novità grande e due parti, «a» teoria e «b» pratica (tornei e replay). **1a** = il livello 1 di oggi, congelato; **1b** = la barca completa (oggi «barca del livello 2, in prova»), replay, tornei con le regole semplici; **livello 2** = il regolamento (segnali, precedenze, penalità a giri) con la stessa deriva; **3** = fiocco, **4** = gennaker, **5** = equipaggio da tre e tattica. Unico riferimento: `VISIONE-LIVELLI-E-CARRIERA.md` §2.
@@ -44,6 +45,8 @@
 3. **Limiti dichiarati:** bolina dal 9 al 15% più lenta delle fonti con poco vento (`PROPOSTA-BOLINA.md` §11); nella barca dell'1b la barra a 45° (Maiusc) in virata non frena più della sola freccia, il prezzo è il controllo (`PROPOSTA-STALLO-TIMONE.md` §10, da riverificare con video); con 20 nodi fissi dopo la raddrizzata la barca non riparte (raro, solo nelle raffiche); nessuna tendenza orziera (si riprende al livello 3); avversari dell'1b oltre la bolina + 15° nel 17% delle virate, quasi tutte manovre volute.
 4. **Semplificazioni da tenere a mente:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio; lo scorrimento più veloce delle increspature nella raffica non ha fonti.
 
+5. **Dal torneo (1.0.34):** il pilota prende 1,7 penalità per regata, quasi tutte prima del via (come nell'1a): con +1 punto l'una pesano molto. Nelle regate dell'1a, all'arrivo, il pannello sfora di 48 px (l'1a è congelata: da decidere). Tornando al menu a metà regata del torneo, la regata si ricorre da capo.
+
 ## Prossimo lavoro
 
 Impianto e ordine in `VISIONE-LIVELLI-E-CARRIERA.md` §2. La barca dell'1b non ha più punti aperti.
@@ -51,7 +54,7 @@ Impianto e ordine in `VISIONE-LIVELLI-E-CARRIERA.md` §2. La barca dell'1b non h
 1. **Congelare la barca dell'1b:** un collaudo che la fotografa, come l'impronta fa per l'1a.
 2. **Pulizia** di codice e documenti (proposte finite, numeri vecchi dei livelli).
 3. **Avversari con la barca dell'1b** (partenze, virate, boe) su molte regate.
-4. **Tornei** dell'1b (4 regate, uno scarto, percorso a triangolo; fermata 1 in `PROPOSTA-TORNEI-1B.md`), **lezioni brevi** dell'1b, **menu** (attestato di partecipazione, brevetto dell'1b).
+4. **Tornei** dell'1b: T1 fatta (1.0.34); T2, il triangolo, dopo la barca congelata e gli avversari (`PROPOSTA-TORNEI-1B.md`), **lezioni brevi** dell'1b, **menu** (attestato di partecipazione, brevetto dell'1b).
 5. **La regata come fonte, solo nei tornei della parte «b»** (Ale, 20 ottobre 2026): replay, momenti salienti, ripasso «ripeti da qui», domande sulle penalità, tarati su quello che insegna il livello. Rimandata a dopo i tornei; la fermata 1 e la revisione in chat sono in `PROPOSTA-REGATA-COME-FONTE.md` §9 (§9.8 = cosa resta da risolvere). Poi i **tempi delle medaglie**.
 6. Poi il **livello 2** (il regolamento: segnali, precedenze, penalità a giri; `PROPOSTA-SEGNALI-PARTENZA.md` è già pronta come fermata 1).
 

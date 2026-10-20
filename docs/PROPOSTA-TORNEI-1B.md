@@ -1,6 +1,6 @@
 # Proposta: i tornei dell'1b
 
-20 ottobre 2026, **fermata 1. Nessun codice.**
+20 ottobre 2026, fermata 1; **T1 fatta nella 1.0.34** (§7).
 
 ## 0. Contesto (da leggere prima, anche in chat)
 
@@ -124,3 +124,36 @@ Semi da 1 a 20 per tarare, da 101 a 120 (mai guardati) per la conferma. Ogni cri
 - **Il triangolo tocca il codice dei distacchi e della classifica:** `ranking()` e `strada()` presuppongono il bastone. In T2 vanno riscritti e ricollaudati (`collaudo_distacchi.py`).
 - **Salvataggio con la barca che cambia:** un torneo salvato prima di un cambio della barca dell'1b mescolerebbe due barche. Si salva la versione del gioco nel torneo; se cambia, il torneo si chiude con un avviso. I salvataggi si possono sempre azzerare.
 - **Avversari dell'1b non ancora rifatti** (`STATO.md`, prossimo lavoro 3): il torneo T1 eredita gli avversari di oggi, con il 17% di virate oltre la bolina + 15°. È giocabile, ma i piazzamenti si tareranno dopo.
+
+## 7. Fermata 2, tappa T1 (1.0.34, 20 ottobre 2026)
+
+**Fatto:** formato, punteggio, salvataggio, ritiri, classifica della serie e riquadro, meriti, raffiche attorno a tutte le barche e mure col vento di ciascuna (solo 1b). Dettagli nel `CHANGELOG.md`, 1.0.34.
+
+**Scelte prese durante il lavoro (non erano nella fermata 1):**
+- **Finestra d'arrivo** (F15 appendice S, 12.3): chi non arriva entro 1,5 volte il tempo della prima prende i punti di chi non arriva. Il 50% è un'ipotesi nostra. Serve anche a chiudere la regata: quando il giocatore ha finito, le barche ancora in acqua arrivano in una simulazione accelerata.
+- **Lo scarto conta dalla quarta regata** (la serie ne ha 4 e uno scarto); prima la tabella non ne mostra.
+- **Lunghezza:** tutte e quattro le regate con la boa a 140 m, come le regate dell'1a, anche quella coi salti (la «Regata nei salti di vento» ha 300 m): regate di 4-5 minuti (`VISIONE` §7).
+- **Niente «Ricomincia» né «Cambia vento»** nel torneo; restano «Ritirati dalla regata» e «Ritirati dal torneo». **Limite dichiarato:** tornando al menu a metà regata, o chiudendo la pagina, quella regata si ricorre da capo, quindi una regata andata male si può ripetere.
+- In carriera il torneo si apre col brevetto di livello 1 (`VISIONE` §8: un livello è chiuso finché non si hanno i brevetti giusti).
+- Pannello: nel caso peggiore il pannello sforava (prima misura 202 px, con tutti e 7 i tipi di errore). Finita la regata del torneo il suggerimento si nasconde, il risultato non ripete errori e distacchi e «Classifica del torneo» sta nella riga di «Ritirati dalla regata»: 0 px.
+
+**Misure** (`tests/collaudo_torneo.py`):
+
+| | Criterio | Misura | Esito |
+| --- | --- | --- | --- |
+| C1 | Punteggio, casi a mano | 0 errori su 15 casi | OK |
+| C2 | 40 tornei col pilota (1-20 gioco libero, 101-120 carriera, meriti compresi) | 0 differenze; 80 + 80 regate concluse | OK |
+| C3 | Ripresa | 30 su 30; 10 serie completate; chiusura a metà regata 2 senza effetti in 10 su 10 | OK |
+| C4 | Ritiro | 10 su 10 | OK |
+| C5 | 1a identica | `polare.js` e `raffiche_e_virate.js` identici al 19 ottobre; impronta: 62 scene su 63 identiche, cambia solo il menu (riquadro del torneo, «In arrivo») | OK |
+| C6 | Pannello e riquadro a 1360×650, caso peggiore | 0 px | OK |
+| C7 | Da giocatore, senza `#collaudo` | torneo intero, pagina chiusa dopo la regata 2, nessun errore. **Il giocatore si ritira da ogni regata**: le regate le finiscono gli avversari; guidare davvero lo provano C2 (col pilota) e Ale | OK |
+| C10 | (aggiunto alla fermata 2, prima di misurare) raffiche: tempo in raffica degli avversari almeno metà di quello del giocatore | 92% (12,5% contro 13,6%), 20 regate; nell'1a 67% | OK |
+
+**Da sapere:**
+- Piazzamenti finali del pilota: 1° 9, 2° 7, 3° 13, 4° 11 su 40 tornei; una sola barca non arrivata su 640.
+- **Penalità:** il pilota ne prende 1,7 per regata (265 in 160), circa tre su quattro prima del via, come nell'1a (33 in 20 regate a bastone dell'1a, 39 in 20 regate del torneo). Con +1 punto l'una pesano molto più dei 15 s. Da riguardare con gli avversari dell'1b (prossimo lavoro 3) e giocando.
+- Nella regata con raffiche dell'1a gli avversari erano già al 67% del giocatore: il difetto delle raffiche era meno grave di quanto si temeva.
+- **Difetto trovato fuori dal torneo:** nelle regate dell'1a, all'arrivo, il pannello sfora di 48 px con errori normali (153 con tutti gli errori), perché il risultato ripete errori e distacchi. Mai misurato in quello stato. L'1a è congelata: da decidere con Ale.
+
+**T2 (triangolo) aspetta la barca dell'1b congelata.**
