@@ -9,11 +9,11 @@
   let gustLevel = 0, gustTimer = 0, gustAll = false; // gustAll: torneo dell'1b, le raffiche nascono attorno a tutte le barche
   const gusts = [], wake = [];
   const ctl = { sheet: 0.4, tiller: 0 };
-  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180 };
+  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180 };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.39"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.40"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -638,6 +638,7 @@
   $("showHint").onchange = e => { opt.hint = e.target.checked; if (mode !== "lesson") $("hint").hidden = !opt.hint; };
   $("showArrows").onchange = e => opt.arrows = e.target.checked;
   $("showDead").onchange = e => opt.dead = e.target.checked;
+  $("showSem").onchange = e => opt.sem = e.target.checked; // 1.0.40: spento di default
   $("allInstr").onchange = e => { opt.allInstr = e.target.checked; setHud(hudLevel); };
   $("showGhost").onchange = e => opt.ghost = e.target.checked;
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };

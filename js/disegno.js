@@ -481,6 +481,7 @@
     // scafo (sbandando, visto dall'alto appare più stretto)
     ctx.save(); ctx.scale(1 - Math.abs(sinH) * 0.35, 1);
     ctx.fillStyle = S.hullColor || colors.hull; ctx.strokeStyle = colors["hull-edge"]; ctx.lineWidth = 0.05; hullPath(0, 0); ctx.fill(); ctx.stroke();
+    if (opt.sem && mode === "race" && R && R.sem){ ctx.strokeStyle = R.sem === "rosso" ? "#E0553A" : "#3FBF6B"; ctx.lineWidth = R.sem === "rosso" ? 0.12 : 0.08; hullPath(0, 0); ctx.stroke(); } // 1.0.40: semaforo di precedenza, rosso più spesso (secondo segnale oltre al colore)
     // pozzetto e scassa della deriva
     ctx.fillStyle = colors.cockpit;
     ctx.beginPath(); ctx.moveTo(-0.38, 0.35); ctx.lineTo(0.38, 0.35); ctx.lineTo(0.42, 1.55); ctx.lineTo(-0.42, 1.55); ctx.closePath(); ctx.fill();

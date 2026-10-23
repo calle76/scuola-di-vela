@@ -160,7 +160,8 @@
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
-    if (rc.lv2) R.brief += " Da questo livello i contatti sono quelli veri, scafo contro scafo. Prima avevi imparato a stare lontano perché il contatto scattava prima del contatto vero.";
+    if (rc.lv2) R.brief += " Da questo livello i contatti sono quelli veri, scafo contro scafo. Prima avevi imparato a stare lontano perché il contatto scattava prima del contatto vero." +
+      " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();
     $("rRestart").hidden = $("rWind").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
@@ -430,6 +431,59 @@
     if (best.nx * (A.x - B.x) + best.ny * (A.y - B.y) < 0){ best.nx = -best.nx; best.ny = -best.ny; }
     return best;
   }
+  // ---- chi cede (1.0.40, docs/PROPOSTA-REGOLE-PRECEDENZA-1B.md) ----
+  // Una sola funzione per penalità, testo di fine regata e semaforo. Nell'1a (!R.lv2) le regole sono quelle di sempre (10, e le stesse
+  // mure col più sopravento in y), identiche al bit; nell'1b valgono 10, 11, 12 e 13 di F15, con le definizioni sui contorni degli scafi.
+  const windOf = b => R.lv2 ? windAt(b.S.x, b.S.y).twd : local.twd;
+  const tackOf = b => sgn(norm180(windOf(b) - b.S.h)); // -1 mure a sinistra, +1 mure a dritta
+  // X è «dietro» a Y (clear astern) se tutto lo scafo di X sta dietro la linea al traverso dal punto più a poppa dello scafo di Y
+  function dietroA(X, Y){
+    const h = Y.h * D2R, fx = Math.sin(h), fy = -Math.cos(h), proj = p => p[0] * fx + p[1] * fy;
+    return Math.max(...hullWorld(X).map(proj)) < Math.min(...hullWorld(Y).map(proj));
+  }
+  // la barca A è in virata finché non è di nuovo di bolina (regola 13); aggiornato a ogni passo per tutte le barche dell'1b
+  const VIRATA_MIN = 42, VIRATA_MAX = 10; // gradi dal vento vero e secondi: ipotesi nostre (docs/PROPOSTA-REGOLE-PRECEDENZA-1B.md)
+  function aggiornaVirate(){
+    for (const b of R.boats){
+      const a = norm180(windOf(b) - b.S.h), sg = sgn(a);
+      if (b.sgV !== undefined && sg !== b.sgV && Math.abs(a) < 90){ b.virando = true; b.virT = R.t; } // la prua ha passato il vento
+      if (b.virando && (Math.abs(a) >= VIRATA_MIN || R.t - b.virT > VIRATA_MAX)) b.virando = false;
+      b.sgV = sg;
+    }
+  }
+  // ritorna { cede: la barca che deve cedere, regola: 10-13 }
+  function chiCede(A, B){
+    const tA = tackOf(A), tB = tackOf(B);
+    if (!R.lv2){ // 1a: come prima della 1.0.40
+      if (tA !== tB) return { cede: tA < 0 ? A : B, regola: 10 };
+      const ya = toWF(A.S.x, A.S.y)[1], yb = toWF(B.S.x, B.S.y)[1]; return { cede: ya < yb ? A : B, regola: 11 };
+    }
+    if (A.virando !== B.virando) return { cede: A.virando ? A : B, regola: 13 };                 // 13: chi vira cede a chi non vira
+    if (A.virando){ const h = A.S.h * D2R, lat = (B.S.x - A.S.x) * Math.cos(h) + (B.S.y - A.S.y) * Math.sin(h);   // entrambe in virata: cede quella a sinistra dell'altra, o quella dietro
+      return { cede: lat < 0 ? B : A, regola: 13 }; }
+    if (tA !== tB) return { cede: tA < 0 ? A : B, regola: 10 };
+    if (dietroA(A.S, B.S)) return { cede: A, regola: 12 };                                       // 12: stesse mure, non affiancate, cede quella dietro
+    if (dietroA(B.S, A.S)) return { cede: B, regola: 12 };
+    const h = A.S.h * D2R, lat = (B.S.x - A.S.x) * Math.cos(h) + (B.S.y - A.S.y) * Math.sin(h);     // 11: affiancate, cede la sopravento
+    if (lat === 0){ const ya = toWF(A.S.x, A.S.y)[1], yb = toWF(B.S.x, B.S.y)[1]; return { cede: ya < yb ? A : B, regola: 11 }; }
+    return { cede: lat * tA > 0 ? B : A, regola: 11 };                                             // B sta dal lato delle mure di A: B è sopravento
+  }
+  // semaforo di precedenza sullo scafo del giocatore (facoltativo, solo 1b): R.sem = "rosso" (devi lasciare strada), "verde" (hai la precedenza) o null.
+  // Compare con un'altra barca (non finita né scuffiata) entro SEM_ON m che si avvicina; resta SEM_TENUTA s dopo l'ultimo avvicinamento, fino a SEM_OFF m.
+  const SEM_ON = 8, SEM_OFF = 10, SEM_TENUTA = 2; // ipotesi nostre
+  function semaforo(){
+    const me = R.boats[0]; let best = null, bd = 1e9;
+    for (const o of R.boats){
+      if (o === me || o.fin !== null || o.dnf || o.S.capsized) continue;
+      const d = Math.hypot(o.S.x - me.S.x, o.S.y - me.S.y);
+      if (o.dSemT === undefined || R.t - o.dSemT >= 0.5){ // distanza confrontata ogni mezzo secondo: si avvicina di almeno 0,1 m
+        if (o.dSem !== undefined && d < o.dSem - 0.1 && d < SEM_ON) R.semUntil = R.t + SEM_TENUTA;
+        o.dSem = d; o.dSemT = R.t; }
+      if (d < bd){ bd = d; best = o; }
+    }
+    R.semNome = best ? best.name : null; // per i collaudi: con quale barca è calcolato il colore
+    R.sem = best && !me.S.capsized && me.fin === null && !me.dnf && R.t <= (R.semUntil || -1) && bd < SEM_OFF ? (chiCede(me, best).cede === me ? "rosso" : "verde") : null;
+  }
   function contacts(){
     const bs = R.boats;
     for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
@@ -442,14 +496,12 @@
       else if (d > 4.2) continue;                                                          // 1a: cerchio di 4,2 m, la distanza di sicurezza dichiarata
       R.contacts[key] = simTime;
       // mure di ciascuna col vento nel suo punto (1b; nell'1a, difetto noto dalla 1.0.1, col vento del giocatore)
-      const twA = R.lv2 ? windAt(A.S.x, A.S.y).twd : local.twd, twB = R.lv2 ? windAt(B.S.x, B.S.y).twd : local.twd;
-      const tA = sgn(norm180(twA - A.S.h)), tB = sgn(norm180(twB - B.S.h));
-      let guilty, why;
-      if (tA !== tB) guilty = tA < 0 ? A : B;
-      else { const ya = toWF(A.S.x, A.S.y)[1], yb = toWF(B.S.x, B.S.y)[1]; guilty = ya < yb ? A : B; }
+      const cc = chiCede(A, B), guilty = cc.cede;
       const v = (tu, lui) => guilty.me ? tu : lui; // 0.21.2: «tu eri… dovevi» al giocatore, terza persona per l'avversario
-      why = tA !== tB ? v("eri", "era") + " mure a sinistra e " + v("dovevi", "doveva") + " lasciare strada a chi era mure a dritta"
-                      : v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano";
+      const why = ({ 10: v("eri", "era") + " mure a sinistra e " + v("dovevi", "doveva") + " lasciare strada a chi era mure a dritta",
+                     11: v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano",
+                     12: v("eri", "era") + " dietro, con le stesse mure e senza essere affiancat" + v("o", "a") + ": " + v("dovevi", "doveva") + " lasciare strada a chi stava davanti",
+                     13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non eri di nuovo di bolina" })[cc.regola] + (R.lv2 ? " (regola " + cc.regola + ")" : "");
       if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo
       for (const o of [A, B]){ o.S.u *= 0.6; }
       const dx = mtv ? mtv.nx : (A.S.x - B.S.x) / (d || 1), dy = mtv ? mtv.ny : (A.S.y - B.S.y) / (d || 1);
@@ -482,7 +534,9 @@
       else toast(ant.length ? "Partenza! Richiamo individuale: " + chi + (ant.length > 1 ? " devono" : " deve") + " tornare dietro la linea" : "Partenza!", ant.length ? 4.5 : 2.6);
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
+    if (R.lv2) aggiornaVirate();
     contacts();
+    if (R.lv2) semaforo();
     if (R.t >= 0 && Math.floor(R.t * 2) !== Math.floor(prevT * 2)) for (const b of R.boats){ // strada fatta ogni 0,5 s, per i distacchi
       const p = b.fin === null ? strada(b) : null; if (p !== null) (b.hist = b.hist || []).push([R.t, p]); }
     recSample(R.t, dt);

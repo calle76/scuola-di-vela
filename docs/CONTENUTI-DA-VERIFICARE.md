@@ -72,7 +72,7 @@ Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) �
 
 ### Testi nuovi della 0.21.2 (descrizioni del gioco, non affermazioni nautiche)
 
-- Etichetta dell'opzione nelle impostazioni: «Nel pannello, anche fuori dalle lezioni, i numeri di vento reale e apparente, sbandamento e scarroccio».
+- Etichetta dell'opzione nelle impostazioni: «Numeri di vento, sbandamento e scarroccio nel pannello, sempre» (accorciata nella 1.0.40 per far stare la nuova opzione del semaforo nella finestra delle impostazioni a 1360×650; prima: «Nel pannello, anche fuori dalle lezioni, i numeri di vento reale e apparente, sbandamento e scarroccio»).
 - Manuale, «Cosa si vede sul mare», quattro righe: «Linea scura corta, traversale, vicino all'albero: è l'albero inclinato visto dall'alto, verso sottovento. Più è lunga, più la barca sbanda.», «Pallino arancione: è il timoniere. Si sporge sopravvento da solo per contrastare lo sbandamento; il suo peso conta nella fisica ma non si regola con un comando.» e le due su sbandamento e scarroccio: «Sbandamento: il mezzo cerchio in basso a sinistra, con la lancetta bianca e la scritta «sbandamento N°»; le zone colorate vanno dal verde (sbandamento contenuto) al rosso scuro (barca quasi sdraiata).» e «Scarroccio: lo scivolamento laterale non ha un indicatore proprio. Si vede dalla freccia verde chiaro «velocità», che non è allineata con la prua: la differenza è lo scarroccio. Il numero in gradi sta nel pannello, alla voce «Scarroccio».»
 - Glossario, voce «Segnavento»: la piccola freccia gialla in cima all'albero indica da dove arriva il vento apparente.
 

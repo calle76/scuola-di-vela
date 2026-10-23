@@ -85,3 +85,5 @@ Ordine e versioni come sopra: **sì**. Regola 14 con il «contatto serio»: **s�
 **Rischi.** (1) Gli avversari sono guidati con «mure a sinistra cede» e «evita chi sta davanti»: con la regola 12 chi arriva da dietro cede, e ci possono essere più penalità agli avversari che tamponano; lo misuro. (2) La regola 13 dà torto a chi è in virata: i principianti virano spesso vicino ad altri; più penalità al giocatore nel torneo. (3) Il confine «affiancate» è sensibile al contorno: va provato con i casi di confine.
 
 **Collaudi nuovi:** `collaudo_regole.py` (24 casi a mano, criterio 1; entrerà in `lancia_tutti.sh`), `collaudo_semaforo.py` (criterio 2 e impostazione spenta).
+
+**Stato: 1.0.40 fatta il 23 ottobre 2026** (misure e collaudi nel CHANGELOG). Prossimo: 1.0.41, regole 15 e 16 e il giallo (fermata 1 da scrivere).
