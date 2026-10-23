@@ -47,7 +47,7 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `maxRudder` | 45° | Barra tutta: nelle virate misurate del 470 la barra arriva a 45° (F4) |
 | `xR` | 1,9 m | Distanza della pala dal centro di rotazione. **Stima** (poppa di una barca da 4,2 m) |
 | `stallA` | 22° | Angolo effettivo oltre cui la pala stalla. F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera): **fissato prima di misurare**, a metà |
-| `dragK` | 184 N·s²/m² | Resistenza della pala sull'angolo effettivo: 12 kgf a 15° e 6 nodi (F4, pala del 470) |
+| `dragK` | 117 N·s²/m² | Resistenza della pala sull'angolo effettivo: 12 kgf a 15° e 6 nodi (F4, pala del 470, 0,169 m²: 184 fino alla 1.0.43), scalata nella 1.0.44 alla pala di 0,107 m² (F37). Con tutta la pala in acqua (0,129 m²) sarebbe 141 |
 | `yawG`, `yawRho` | 1,5 /m² (fino alla 1.0.30: 0,6), 0 m | Quanto in fretta la pala fa girare la barca e smorzamento lineare dello scafo. **Ipotesi tarate** con 10 e 14 nodi. Dalla 1.0.31 la pala sente V² = u² + (r·xR)² (anche l'acqua che le arriva di lato perché la poppa ruota) |
 | `hullKq`, `Izz` | 400 N·m·s², 200 kg·m² | 1.0.31: acqua contro il solo scafo che ruota (−hullKq/Izz·r·\|r\|, anche a barca lenta) e inerzia d'imbardata con l'acqua trascinata. **Stime** della revisione in chat, fissate prima di misurare (`PROPOSTA-VIRATE-AVVERSARI.md`). **1.0.43:** `hullKq` da 600 a 400, **tarato** perché la virata con la sola freccia fosse più agile restando nelle fonti (2,5-3,5 s con 8-16 nodi), venti 10 e 14 di scelta (`PROPOSTA-VIRATA-1B.md`). La virata aiutata dal peso del timoniere non c'è: l'agilità che ne viene sta dentro il timone (semplificazione dichiarata) |
 | `uMin` | 0,5 m/s | Sotto, e all'indietro, il timone del livello 1 (barra fino a 30°) |

@@ -57,7 +57,7 @@ const RUD2 = {
   hullKq: 400,        // N·m·s², acqua contro il solo scafo che ruota: 1.0.31 600 (stima della revisione in chat; BOMA2.Kq 1230 comprende anche la pala); 1.0.43 400, scelto con i venti 10 e 14 (docs/PROPOSTA-VIRATA-1B.md)
   Izz: 200,           // kg·m², 1.0.31: inerzia d'imbardata con l'acqua trascinata da pala e deriva (stima, fissata prima di misurare; sensibilità 130-300)
   stallA: 22,         // gradi di angolo effettivo: F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera); fissato prima di misurare
-  dragK: 184,         // N·s²/m²: resistenza della pala, 12 kgf a 15° e 6 nodi (F4, pala del 470); usa l'angolo effettivo
+  dragK: 117,         // N·s²/m²: resistenza della pala, usa l'angolo effettivo. F4: 12 kgf a 15° e 6 nodi con la pala del 470 (0,169 m², era 184); 1.0.44: scalata alla pala di una deriva singola da 4,2 m, 0,107 m² (regole di classe, docs/PROPOSTA-PALA-DERIVA-1B.md)
   uMin: 0.5           // m/s: sotto, il timone del livello 1 (come ironsU: niente sovrapposizione con la prua che poggia da sola)
 };
 const RUD2_SICURA = 35 / 45; // 1.0.25: nel livello 2 la sola freccia porta la barra fino a 35° (quasi senza stallo), Maiusc + freccia fino a 45°; regola del gioco, nessuna fonte

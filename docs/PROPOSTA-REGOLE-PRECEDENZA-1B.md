@@ -86,9 +86,9 @@ Ordine e versioni come sopra: **sì**. Regola 14 con il «contatto serio»: **s�
 
 **Collaudi nuovi:** `collaudo_regole.py` (24 casi a mano, criterio 1; entrerà in `lancia_tutti.sh`), `collaudo_semaforo.py` (criterio 2 e impostazione spenta).
 
-**Stato: 1.0.40 fatta il 23 ottobre 2026** (misure e collaudi nel CHANGELOG). La 1.0.41 e la 1.0.42 sono servite a correzioni dal check visivo e la 1.0.43 alla virata dell'1b: i numeri dell'«Ordine proposto» scalano di tre (15 e 16 = 1.0.44; 17, 23, 18 = 1.0.45).
+**Stato: 1.0.40 fatta il 23 ottobre 2026** (misure e collaudi nel CHANGELOG). La 1.0.41 e la 1.0.42 sono servite a correzioni dal check visivo e la 1.0.43 alla virata dell'1b: i numeri dell'«Ordine proposto» non valgono più: prima si chiude la barca (1.0.43 virata, 1.0.44 pala, poi lo scarroccio), poi 15 e 16, poi 17, 23 e 18.
 
-## 1.0.44 (scritta come 1.0.43), dettaglio (fermata 1): regole 15 e 16, e il giallo
+## Regole 15 e 16 (scritta come 1.0.43; versione da assegnare dopo la barca), dettaglio (fermata 1): regole 15 e 16, e il giallo
 
 Stato: **proposta, nessun codice scritto** (23 ottobre 2026, notte). Solo nell'1b (`R.lv2`); l'1a resta com'è.
 
