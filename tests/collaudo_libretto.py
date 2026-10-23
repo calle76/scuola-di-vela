@@ -66,7 +66,7 @@ async def main():
         m = await M(prog(**base)); area(m)
         chk("L2", (m["pt"]["abil"], m["pt"]["cono"], m["pt"]["comp"], m["pt"]["esp"], m["totale"]) == (8, 6, 3, 6, 23), f"L2 tutti al minimo: {m['pt']} {m['totale']}")
         chk("L2", m["manca"] == "Ti mancano 6 punti al totale; poi l'esame." and len(m["sugg"]) == 3, f"L2 tutti al minimo: «{m['manca']}» {m['sugg']}")
-        for nome, mod, k, att, voce in (("Abilità", dict(prove=[1, 1, 1, 2, None]), "abil", 7, "Prova 5, "), ("Conoscenza", dict(ripassi={0: NQ[0], 1: NQ[1]}), "cono", 4, "Ripasso 3, Andature e filetti."),
+        for nome, mod, k, att, voce in (("Abilità", dict(prove=[1, 1, 1, 2, None]), "abil", 7, "Prova 5, "), ("Conoscenza", dict(ripassi={0: NQ[0], 1: NQ[1]}), "cono", 4, "Ripasso 3, Andature, mure e precedenze."),
                                   ("Competizione", dict(regate={"r0.4:principianti": (3, False)}), "comp", 2, "la Regata nelle raffiche (con avversari)."), ("Esperienza", dict(lezioni=range(5)), "esp", 5, "Lezione 6, ")):
             m = await M(prog(**{**base, **mod})); area(m)
             chk("L2", m["pt"][k] == att and m["manca"] == f"Ti mancano punti in {nome}; poi l'esame." and len(m["sugg"]) == 1 and m["sugg"][0].startswith(voce),

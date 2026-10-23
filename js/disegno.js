@@ -497,6 +497,9 @@
     const hdX = shX + (tx0 - shX) / (dd || 1) * arm, hdY = shY + (ty0 - shY) / (dd || 1) * arm;
     ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.035; ctx.beginPath(); ctx.moveTo(tx0, ty0); ctx.lineTo(hdX, hdY); ctx.stroke();
     ctx.strokeStyle = S.sailorColor || colors.sailor; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.moveTo(shX, shY); ctx.lineTo(hdX, hdY); ctx.stroke(); // braccio
+    // 1.0.37: secondo braccio, dalla spalla davanti verso la scotta (centro del pozzetto); come l'altro non si allunga oltre 45 cm
+    const sh2Y = shY - 0.28, d2 = Math.hypot(0 - shX, 1.5 - sh2Y), a2 = Math.min(0.45, d2);
+    ctx.lineWidth = 0.08; ctx.beginPath(); ctx.moveTo(shX, sh2Y); ctx.lineTo(shX + (0 - shX) / (d2 || 1) * a2, sh2Y + (1.5 - sh2Y) / (d2 || 1) * a2); ctx.stroke();
     ctx.fillStyle = "#F2D2B6"; ctx.beginPath(); ctx.arc(shX + ws * (0.08 + 0.1 * hk), shY - 0.04, 0.13, 0, Math.PI * 2); ctx.fill();
     // randa e boma
     const bs = S.dispBoom >= 0 ? 1 : -1; // lato su cui sta il boma (anche durante lo spostamento)
