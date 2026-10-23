@@ -1,4 +1,4 @@
-# Misura dei contatti fra le barche in regata (23 ottobre 2026, docs/PROPOSTA-CONTATTO-VERO.md). Non è un collaudo: non ha soglie.
+# Misura dei contatti fra le barche in regata (23 ottobre 2026, docs/archivio/PROPOSTA-CONTATTO-VERO.md). Non è un collaudo: non ha soglie.
 # Uso: python misura_contatti.py <regata 0-2> <attuale|senza> <primo seme> <ultimo seme>   (una riga JSON per corsa, principianti ed esperti)
 #  attuale: contatti con la regola di oggi (cerchio di 4,2 m fra i centri), con la distanza fra i contorni degli scafi (m) al passo prima del contatto
 #  senza:   mondo senza regola di contatto (le barche si attraversano): conta gli episodi in cui i contorni degli scafi si sovrappongono davvero

@@ -1,5 +1,5 @@
 # Collaudo della 1.0: una carriera intera, da zero all'attestato, nella stessa pagina e nello stesso salvataggio (criteri I1-I4 di
-# docs/PROPOSTA-ESAME-E-BREVETTO.md, §14, scritti prima del codice). «Carriera» si sceglie cliccando il selettore; alla fine si
+# docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md, §14, scritti prima del codice). «Carriera» si sceglie cliccando il selettore; alla fine si
 # legge solo quello che il gioco ha salvato. Serve #collaudo, perché i piloti usano l'aggancio __sv.
 #  - Lezioni: tutti i passi, fino all'ultimo (è lì che il gioco segna la lezione completata). Dalla 1.0.19 li guida il **pilota delle
 #    lezioni** (`collaudo_pilota_lezioni.py`, costante PILOTA): prima prova 30 s a mani ferme, poi guida; solo i passi che non sa

@@ -1,4 +1,4 @@
-# Pilota completo delle lezioni (proposta: docs/PROPOSTA-PILOTA-LEZIONI.md, rivista in chat e accettata il 16 ottobre 2026).
+# Pilota completo delle lezioni (proposta: docs/archivio/PROPOSTA-PILOTA-LEZIONI.md, rivista in chat e accettata il 16 ottobre 2026).
 # Per ogni lezione, dall'inizio e nell'ordine, come un giocatore (si passa da un passo all'altro con «Avanti», mai con showStep,
 # salvo il salto forzato quando un passo non si completa, dichiarato nel rapporto). In ogni passo pratico:
 #   1) «a mani ferme»: 30 s simulati senza tasti; se il passo si completa, è un passo che si completa da solo;

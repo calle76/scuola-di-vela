@@ -1,4 +1,4 @@
-// Virate del livello 2 (docs/PROPOSTA-VIRATE-AVVERSARI.md, 1.0.31): quanto la prua va oltre la bolina dopo la virata.
+// Virate del livello 2 (docs/archivio/PROPOSTA-VIRATE-AVVERSARI.md, 1.0.31): quanto la prua va oltre la bolina dopo la virata.
 // Giocatore (sola freccia fino a 35°, poi spazio a 20° o 35° oltre il vento, con e senza barra contro), uscita lenta da 0,3 a 1,0 m/s,
 // avversari (la guida di regate.js), oscillazione di rotta del pilota in bolina. Solo misura, nessuna soglia: i criteri sono nella proposta.
 const { step, norm180, BOAT, RUD2_SICURA } = require("./motore.js");

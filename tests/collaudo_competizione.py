@@ -8,7 +8,7 @@
 # Punti di una regata: 4/3/2/1 per 1°/2°/3°/4°; regata non finita = 0. Dalla 0.23 senza il «+1 senza errori» (decisione di Ale,
 # 14 ottobre 2026: meriti separati dalla classifica). Fino alla 0.22 c'era il +1, ma il sostituto non ha mai finito una regata pulita.
 #
-# Criteri scritti prima dei risultati (docs/PROPOSTA-ESAME-E-BREVETTO.md §4, decisioni di Ale per la 0.21), da non cambiare dopo:
+# Criteri scritti prima dei risultati (docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md §4, decisioni di Ale per la 0.21), da non cambiare dopo:
 #   C0 arrivate almeno il 90% delle regate per tipo (bastone, raffiche); sotto, la misura non vale: ci si ferma e si riporta.
 #   C1 ogni piazzamento 1°-4° fra il 10% e il 40%, contato sulle regate arrivate dei due tipi insieme (denominatore stampato).
 #   C2 coppia seme k (regata 1 + regata 2): almeno 3 punti in almeno il 60% delle coppie.
@@ -234,7 +234,7 @@ async def regata_tastiera(b, liv):
             if abs(rel) > 165 and abs(cur) > 90: want = twd + (1 if cur > 0 else -1) * 165
         # 17 ottobre 2026: per cambiare mura serve velocità (il gioco lo dice da sempre: da fermi la virata non riesce). Allo sparo il rilevamento della linea
         # faceva scegliere la mura opposta a quella su cui era fermo, e la regola «piantata» qui sotto lo riportava su quella di prima: rimbalzava a 41-48°
-        # per sette minuti, all'indietro a 0,5 nodi. Ora, sotto i 3 nodi e con la mura sbagliata, poggia prima con la vela regolata (docs/PROPOSTA-PARTENZE.md §9)
+        # per sette minuti, all'indietro a 0,5 nodi. Ora, sotto i 3 nodi e con la mura sbagliata, poggia prima con la vela regolata (docs/archivio/PROPOSTA-PARTENZE.md §9)
         cur = n180(s["hdg"] - twd)
         if want is not None and s["spd"] < 3.0 and n180(want - twd) * cur < 0 and abs(cur) < 120: want, lasca = twd + (1 if cur >= 0 else -1) * 95, False
         d = n180(want - twd)

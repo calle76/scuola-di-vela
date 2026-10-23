@@ -1,4 +1,4 @@
-# Collaudo della 0.23: libretto dei meriti in carriera (criteri L1-L4 di docs/PROPOSTA-ESAME-E-BREVETTO.md, §12, scritti prima
+# Collaudo della 0.23: libretto dei meriti in carriera (criteri L1-L4 di docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md, §12, scritti prima
 # del codice; tabella dei meriti dalla 0.23, senza il +1 «senza errori» in Competizione).
 # I salvataggi si costruiscono dalle regole scritte, non dal codice del gioco: fasce e numero di domande dei ripassi si leggono
 # dal testo di index.html. I numeri attesi sono quelli della tabella degli esempi del §12.

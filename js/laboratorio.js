@@ -1,13 +1,13 @@
 // Scuola di vela, laboratorio.js — Laboratorio della barca (1.0.4): cursori sui valori di BOAT, solo con #lab nell'indirizzo; con #lab il gioco non salva niente.
-// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
-// Proposta, limiti misurati e criteri in docs/PROPOSTA-LABORATORIO.md. Senza #lab questo file non fa niente (le funzioni esistono ma nessuno le chiama).
+// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/archivio/PROPOSTA-DIVISIONE-CODICE.md.
+// Proposta, limiti misurati e criteri in docs/archivio/PROPOSTA-LABORATORIO.md. Senza #lab questo file non fa niente (le funzioni esistono ma nessuno le chiama).
   // ======================================================================
   // PROFILI DEL LABORATORIO
   // ======================================================================
   // Un profilo: { id: "breve_senza_spazi", nome: "…", versione: "1.0.4", nota: "cosa si vuole provare",
   //   valori: { hullScale: { v: 0.8, fonte: "documento e riga, o «scelta di progetto»", stato: "misura" | "ipotesi" | "non verificato" } } }
   // Solo i valori diversi da BOAT. Un profilo senza fonte non entra. La versione è un campo, mai «const VERSIONE =» (collaudo_versione.py).
-  const LAB_PROFILI = [ // 1.0.11: la barca di prima e le due modifiche spente una alla volta (docs/PROPOSTA-BOLINA.md)
+  const LAB_PROFILI = [ // 1.0.11: la barca di prima e le due modifiche spente una alla volta (docs/archivio/PROPOSTA-BOLINA.md)
     { id: "barca_1010", nome: "barca della 1.0.10", versione: "1.0.10", nota: "senza resistenza indotta e con la vela di prima, per confronto",
       valori: { TE: { v: 0, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" }, minBoom: { v: 14, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" },
         luffA0: { v: 27, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" }, sailCL2: { v: 0.12, fonte: "js/motore.js della 1.0.10", stato: "ipotesi" } } },
@@ -22,7 +22,7 @@
   // ======================================================================
   // LIMITI DEI CURSORI
   // ======================================================================
-  // [min, max, passo, avvertenza]: scelte nostre di prudenza, misurate il 16 ottobre 2026 sul motore della 1.0.4 (PROPOSTA-LABORATORIO.md §5); hullScale e appDA dalla 1.0.6 (PROPOSTA-VELOCITA.md); minBoom, sailCL2 e TE dalla 1.0.11 (PROPOSTA-BOLINA.md)
+  // [min, max, passo, avvertenza]: scelte nostre di prudenza, misurate il 16 ottobre 2026 sul motore della 1.0.4 (docs/archivio/PROPOSTA-LABORATORIO.md §5); hullScale e appDA dalla 1.0.6 (docs/archivio/PROPOSTA-VELOCITA.md); minBoom, sailCL2 e TE dalla 1.0.11 (docs/archivio/PROPOSTA-BOLINA.md)
   const LAB_LIM = {
     mass: [90, 250, 5, "kg, barca e timoniere: cambia l'accelerazione, non la velocità di regime"],
     sailArea: [4, 10, 0.1, "m² di vela"],

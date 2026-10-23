@@ -1,7 +1,7 @@
-# Misura delle regate dell'1b per lo scarroccio (1.0.45, docs/PROPOSTA-SCARROCCIO-1B.md, criterio 5). Non è un collaudo: confronta due giri.
+# Misura delle regate dell'1b per lo scarroccio (1.0.45, docs/archivio/PROPOSTA-SCARROCCIO-1B.md, criterio 5). Non è un collaudo: confronta due giri.
 # Tornei del gioco libero guidati dal pilota (come C2 di collaudo_torneo.py), semi fissi: per ogni barca tempo d'arrivo, non arrivata, boe sbagliate.
 # Uso: python misura_scarroccio.py <primo seme> <ultimo seme>   (una riga JSON per regata; in fondo il riepilogo)
-# 1.0.46 (docs/PROPOSTA-ORZIERA-1B.md): conta anche penalità per contatto e scuffie; MISURA_INDEX=<percorso di index.html> misura un'altra copia del gioco.
+# 1.0.46 (docs/archivio/PROPOSTA-ORZIERA-1B.md): conta anche penalità per contatto e scuffie; MISURA_INDEX=<percorso di index.html> misura un'altra copia del gioco.
 import os
 import asyncio, json, pathlib, sys
 from playwright.async_api import async_playwright

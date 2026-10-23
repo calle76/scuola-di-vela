@@ -1,4 +1,4 @@
-// Salti di vento e bolina (misura per docs/PROPOSTA-SALTI-VENTO.md, 17 ottobre 2026; non è un controllo di non-regressione).
+// Salti di vento e bolina (misura per docs/archivio/PROPOSTA-SALTI-VENTO.md, 17 ottobre 2026; non è un controllo di non-regressione).
 // Barca del livello 2 guidata da un pilota verso una boa D metri sopravento; vento medio da nord, 10 nodi, direzione A·sin(2πt/P + φ).
 // Due strategie con le stesse regole per lay line e bordi del campo:
 //   «due bordi»: ignora i salti, vira solo sulla lay line (col vento di quel momento) o sul bordo del campo;

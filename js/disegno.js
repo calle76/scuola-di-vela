@@ -1,5 +1,5 @@
 // Scuola di vela, disegno.js — Pannello laterale e disegno del mare, della barca e degli strumenti.
-// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
+// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/archivio/PROPOSTA-DIVISIONE-CODICE.md.
   // ======================================================================
   // PANNELLO
   // ======================================================================
@@ -36,7 +36,7 @@
     const sailMsg = { flog: ["bad", "La vela sbatte: sei nell'angolo morto."], wind: ["bad", "La vela sbatte: è troppo lascata."],
                       lee: ["bad", "La vela è in stallo: troppo cazzata."], ok: ["good", "Vela gonfia e regolata."] }[I.tt];
     [cls, msg] = kind === "sail" ? sailMsg : ttMsg;
-    // 1.0.38: la banda dei filetti (incidenza 8°-27°) è larga e il massimo di velocità sta a circa 20° (sotto 17° e sopra 25° si perde fino al 10-25%) (misurato a 6, 10 e 15 nodi, docs/PROPOSTA-ELENCO-23-OTTOBRE.md §6):
+    // 1.0.38: la banda dei filetti (incidenza 8°-27°) è larga e il massimo di velocità sta a circa 20° (sotto 17° e sopra 25° si perde fino al 10-25%) (misurato a 6, 10 e 15 nodi, docs/archivio/PROPOSTA-ELENCO-23-OTTOBRE.md §6):
     // ai bordi della banda il messaggio dice da che parte si guadagna velocità, senza il rosso di «troppo cazzata» dove cazzare o lascare un poco conviene ancora
     if (I.tt === "ok" || I.tt === "lee" && I.alpha <= 30){
       const pre = kind === "sail" ? "La vela è regolata, " : "I filetti sono dritti, ";
@@ -51,7 +51,7 @@
     let back = false; // 0.20.2: «all'indietro» si mostra anche nei passi a suggerimenti spenti, se il passo dà la barra
     if (S.capsized && noRight){ cls = "good"; msg = "Hai scuffiato: la barca resta rovesciata. Premi Avanti: nel passo dopo la raddrizzi."; }
     else if (S.capsized){ cls = "bad"; msg = S.righting ? "Stai raddrizzando la barca…" : (S.capCause === "gybe" ? "Hai scuffiato per una strambata con la vela aperta: il boma ha attraversato la barca di colpo. Premi Raddrizza (o A)." : "Hai scuffiato! Premi Raddrizza (o A)."); }
-    // 1.0.9: dal traverso in giù (oltre 75°, confine fra bolina larga e traverso) in raffica si poggia, non si orza (docs/PROPOSTA-RAFFICHE-PORTANTI.md)
+    // 1.0.9: dal traverso in giù (oltre 75°, confine fra bolina larga e traverso) in raffica si poggia, non si orza (docs/archivio/PROPOSTA-RAFFICHE-PORTANTI.md)
     else if (S.pushing){ cls = ""; msg = "Boma spinto: la barca va all'indietro e la prua gira verso il boma. Al traverso molla Z, centra la barra e cazza."; }
     else if (S.stall){ cls = "bad"; msg = "La pala del timone è in stallo: l'acqua non la segue più e la barca frena. Muovi la barra più dolcemente."; }
     else if (S.heel > 25){ cls = "bad"; const bol = I.twa < 75;
@@ -160,7 +160,7 @@
     // increspature
     const to = (env.twd + 180) * D2R, wx = Math.sin(to), wy = -Math.cos(to);
     rippleOff[0] += wx * env.tws * 0.35 * dt; rippleOff[1] += wy * env.tws * 0.35 * dt;
-    // 1.0.19 (docs/PROPOSTA-INCRESPATURE.md): dentro le chiazze un secondo strato di trattini, più fitti e con uno scorrimento proprio,
+    // 1.0.19 (docs/archivio/PROPOSTA-INCRESPATURE.md): dentro le chiazze un secondo strato di trattini, più fitti e con uno scorrimento proprio,
     // quello del vento della raffica più forte in acqua. Lo sfasamento sta dentro una cella, così i trattini restano sullo schermo.
     let kMax = 0; for (const gg of gusts) kMax = Math.max(kMax, gg.k * gg.life);
     ripplePh[0] = (ripplePh[0] + wx * env.tws * kMax * 0.35 * dt) % 7; ripplePh[1] = (ripplePh[1] + wy * env.tws * kMax * 0.35 * dt) % 7;
@@ -434,7 +434,7 @@
   }
 
   // ---- barca ----
-  // 1.0.23 (docs/PROPOSTA-MOTO-SUL-MARE.md): onda corta che scorre sottovento, SOLO DISEGNO (il motore non la vede). La barca prende la
+  // 1.0.23 (docs/archivio/PROPOSTA-MOTO-SUL-MARE.md): onda corta che scorre sottovento, SOLO DISEGNO (il motore non la vede). La barca prende la
   // pendenza dell'onda dove si trova: di prua beccheggia, di lato rolla; andando contro le onde la fase corre più in fretta (Doppler da solo).
   // ponytail: periodo e ampiezze sono ipotesi nostre senza fonte («carino da vedere, non perfetto», Ale); una misura da video le sostituirebbe
   const WAVE_DEG = 5, CARENA = "#B9C4CB"; // rollio disegnato con 15 nodi (il beccheggio è il 70%), colore della carena
@@ -575,7 +575,7 @@
     const awRel = info.awa * D2R; // da dove arriva, rispetto alla prua (+ dritta)
     const vx = Math.sin(awRel), vy = -Math.cos(awRel);
     ctx.strokeStyle = colors.app; ctx.fillStyle = colors.app; ctx.lineWidth = 0.06;
-    // 1.0.10: banderuola, la coda sta sottovento (docs/PROPOSTA-DISEGNO-VELA.md); 1.0.30: perno a 0,4 della lunghezza dalla punta (era 0,3)
+    // 1.0.10: banderuola, la coda sta sottovento (docs/archivio/PROPOSTA-DISEGNO-VELA.md); 1.0.30: perno a 0,4 della lunghezza dalla punta (era 0,3)
     ctx.beginPath(); ctx.moveTo(hx + vx * 0.4, hY + vy * 0.4); ctx.lineTo(hx - vx * 0.6, hY - vy * 0.6); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(hx + vx * 0.4, hY + vy * 0.4); ctx.lineTo(hx + vx * 0.15 - vy * 0.12, hY + vy * 0.15 + vx * 0.12); ctx.lineTo(hx + vx * 0.15 + vy * 0.12, hY + vy * 0.15 - vx * 0.12); ctx.closePath(); ctx.fill();
     if (mastSeen){ ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(hx, hY, 0.07, 0, Math.PI * 2); ctx.fill(); } // perno del segnavento in testa d'albero

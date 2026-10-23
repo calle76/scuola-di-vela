@@ -1,4 +1,4 @@
-// Bolina (1.0.11, docs/PROPOSTA-BOLINA.md): VMG, quote di resistenza indotta, Binns, quanto vicino al vento, partenza da ferma.
+// Bolina (1.0.11, docs/archivio/PROPOSTA-BOLINA.md): VMG, quote di resistenza indotta, Binns, quanto vicino al vento, partenza da ferma.
 // Uso: node bolina.js [barca]   con barca = nuova (predefinita) | 1010 (la barca della 1.0.10) | soloA | soloB   ·   node bolina.js polare [barca]
 const M = require("./motore.js"), { step, BOAT, hullDrag } = M;
 const VECCHIA = { TE: 0, minBoom: 14, luffA0: 27, sailCL2: 0.12 }; // la 1.0.10: senza resistenza indotta, vela di prima

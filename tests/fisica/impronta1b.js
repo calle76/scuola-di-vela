@@ -1,4 +1,4 @@
-// Impronta della barca dell'1b in Node (congelamento, docs/PROPOSTA-CONGELAMENTO-1B.md): step() con S.lv = 2 in un elenco fisso di manovre,
+// Impronta della barca dell'1b in Node (congelamento, docs/archivio/PROPOSTA-CONGELAMENTO-1B.md): step() con S.lv = 2 in un elenco fisso di manovre,
 // somma di controllo di tutti gli stati a precisione piena, passo per passo. Il riferimento (impronta1b.txt, accanto) è in git.
 // Uso: node impronta1b.js                  confronta col riferimento: uguale al bit, o FALLITO (esce con 1)
 //      node impronta1b.js riferimento      riscrive il riferimento (solo per una modifica voluta della barca, dicendolo)

@@ -1,4 +1,4 @@
-# Laboratorio della barca (1.0.4): criteri 3-9 di docs/PROPOSTA-LABORATORIO.md §6.
+# Laboratorio della barca (1.0.4): criteri 3-9 di docs/archivio/PROPOSTA-LABORATORIO.md §6.
 #  3. con #collaudo-lab la prova 1 e la regata 1 (principianti), semi 1-5, non cambiano localStorage; contro-prova con #collaudo: lo cambiano tutte;
 #  4. il cursore hullScale da 1 a 0,5 cambia la velocità al traverso (almeno +5% dopo 30 s); riportato a 1 torna uguale entro 0,01 nodi (1.0.6: era hullK2 da 12 a 6);
 #  5. con il fuoco su un cursore le frecce muovono il cursore e non la barra; contro-prova: col fuoco fuori, la freccia muove la barra;

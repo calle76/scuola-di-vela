@@ -1,5 +1,5 @@
 # Collaudo della 0.24: esame in carriera, ripasso dopo un esame non superato, attestato (criteri E1-E6 di
-# docs/PROPOSTA-ESAME-E-BREVETTO.md, §13, scritti prima del codice; decisione di Ale: il ripasso completo conta con qualsiasi punteggio).
+# docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md, §13, scritti prima del codice; decisione di Ale: il ripasso completo conta con qualsiasi punteggio).
 # Pagina senza #collaudo, solo clic e tasti, come la carica un giocatore. Le risposte giuste si riconoscono leggendo le banche
 # ESAME e QUIZ dal testo di index.html. I salvataggi di partenza si preparano in localStorage dalle regole scritte.
 # Lo spazio vale solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).

@@ -1,4 +1,4 @@
-# Timone del livello 2 in prova nella navigazione libera (1.0.24-1.0.25, docs/PROPOSTA-STALLO-TIMONE.md §8-9).
+# Timone del livello 2 in prova nella navigazione libera (1.0.24-1.0.25, docs/archivio/PROPOSTA-STALLO-TIMONE.md §8-9).
 # Guida davvero la barca con i tasti (pagina con #collaudo, passi fissi di 1/60 s, senza raffiche):
 #  1. la scelta «Barca» mette la barca del livello 2 e la toglie; il livello 1 resta con la barra veloce (1,6 al secondo);
 #  2. livello 2: la sola freccia porta la barra fino a 35°, Maiusc + freccia fino a 45°, sempre a 1,6 al secondo; il cursore trascinato non va più veloce;

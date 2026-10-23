@@ -1,4 +1,4 @@
-# Distacchi in regata (1.0.33, docs/PROPOSTA-DISTACCHI.md). Pagina con #collaudo, passi di 1/60 s, Math.random a seme fisso, giocatore
+# Distacchi in regata (1.0.33, docs/archivio/PROPOSTA-DISTACCHI.md). Pagina con #collaudo, passi di 1/60 s, Math.random a seme fisso, giocatore
 # guidato da __sv.pilota. Regate 1, 2 e «nei salti di vento», principianti ed esperti; semi 1-20 da guardare, 21-60 di conferma.
 #  D1 il distacco nella classifica del pannello (distacco(b)) della barca che ha tagliato subito prima del giocatore, letto 5 s prima del
 #     taglio del giocatore, contro la differenza vera dei tagli (tempi senza penalità): entro 3 s nel 90% delle regate misurate (conferma);

@@ -1,4 +1,4 @@
-# Raddrizzata del livello 2 (1.0.32, docs/PROPOSTA-RADDRIZZATA.md). Pagina con #collaudo, passi di 1/60 s, tasti veri.
+# Raddrizzata del livello 2 (1.0.32, docs/archivio/PROPOSTA-RADDRIZZATA.md). Pagina con #collaudo, passi di 1/60 s, tasti veri.
 # Navigazione libera, 6/10/15/20 nodi, scuffiata da tutte e due le parti, livello 2 e livello 1 (confronto). Si preme A e si aspetta:
 #  R1 livello 2: dritta dopo 10 s (non prima), a 90° ± 5° dal vento, ferma, scotta tutta lascata; livello 1: dopo 3 s a 60° come sempre;
 #  R2 con la scotta lascata e la barra al centro la barca non riscuffia nei 10 s seguenti;

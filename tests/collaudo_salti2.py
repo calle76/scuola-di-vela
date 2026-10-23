@@ -1,4 +1,4 @@
-# Salti di vento del livello 2 in prova (1.0.28, docs/PROPOSTA-SALTI-VENTO.md): pagina con #collaudo, passi di 1/60 s, Math.random a seme fisso.
+# Salti di vento del livello 2 in prova (1.0.28, docs/archivio/PROPOSTA-SALTI-VENTO.md): pagina con #collaudo, passi di 1/60 s, Math.random a seme fisso.
 #  1. navigazione libera, barca del livello 1, senza raffiche: il vento non gira (240 s);
 #  2. navigazione libera, barca del livello 2: il vento gira di almeno 16° fra il minimo e il massimo in 240 s, e mai oltre 40°;
 #  3. regata nei salti di vento (S3): 12 regate (semi 1-6, principianti ed esperti), giocatore guidato da __sv.pilota come nell'impronta:

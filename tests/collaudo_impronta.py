@@ -3,7 +3,7 @@
 #  - ogni passo di ogni lezione per 3 s, con una barra che va avanti e indietro (non serve completarli: conta lo stato);
 #  - le 5 prove con il pilota di collaudo_fasce.py, fino all'arrivo o a 900 s;
 #  - le 2 regate con principianti ed esperti, giocatore guidato da __sv.pilota, fino a 400 s;
-#  - dal congelamento della barca dell'1b (docs/PROPOSTA-CONGELAMENTO-1B.md): la «Regata nei salti di vento» con principianti ed esperti e la
+#  - dal congelamento della barca dell'1b (docs/archivio/PROPOSTA-CONGELAMENTO-1B.md): la «Regata nei salti di vento» con principianti ed esperti e la
 #    prima regata del torneo, come sopra; il gioco libero con la barca dell'1b guidato coi tasti veri (frecce, Maiusc, Z, una scuffia e A);
 #  - il menu del gioco libero e della carriera (in una pagina nuova), i meriti, un'estrazione dell'esame;
 #  - l'immagine del mare (canvas) in 21 momenti, con il ciclo del browser fermo (altrimenti increspature e zoom seguono l'orologio).
@@ -188,7 +188,7 @@ def misura(imp, passi):
     finite = sum(1 for k, x in imp.items() if k.startswith("prova") and x["S"][18])
     print(f"misurato: {sum(passi)} passi di lezione {passi}, {finite} prove finite su 5, {sum(len(x['barche']) for x in reg)} barche in {len(reg)} regate, "
           f"{vel} barche con velocità diversa da zero, {tele} immagini del mare, errori della pagina {len(imp['errori della pagina'])}", flush=True)
-    b1 = [x for k, x in imp.items() if k.startswith(("regata 3", "torneo"))]   # 1b: deve aver misurato davvero (docs/PROPOSTA-CONGELAMENTO-1B.md, criterio 1)
+    b1 = [x for k, x in imp.items() if k.startswith(("regata 3", "torneo"))]   # 1b: deve aver misurato davvero (docs/archivio/PROPOSTA-CONGELAMENTO-1B.md, criterio 1)
     lib = imp.get("libera 1b") or {"stati": [], "lv": None}
     arrivi = sum(1 for x in b1 for b in x["barche"] if b[1] is not None); virate = sum(b[6][12] or 0 for x in b1 for b in x["barche"])   # indici di __imp.barca: 12 tacks, 15 capsizes
     stallo = sum(1 for st in lib["stati"] if st[3]); boma = sum(1 for st in lib["stati"] if st[4]); scuffie = 1 if lib.get("scuffia") == [True, False] else 0   # scuffiata a 90 s e raddrizzata con A

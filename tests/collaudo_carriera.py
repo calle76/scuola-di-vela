@@ -1,5 +1,5 @@
 # Collaudo della 0.22: bivio gioco libero / carriera, salvataggi e fantasmi separati (criteri K1-K5 di
-# docs/PROPOSTA-ESAME-E-BREVETTO.md, §11, scritti prima del codice). La modalità si cambia sempre cliccando il selettore.
+# docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md, §11, scritti prima del codice). La modalità si cambia sempre cliccando il selettore.
 # K1 (con #collaudo): il pilota di collaudo_fasce.py, letto dal suo file, completa la prova 1 in una modalità;
 #    l'altra modalità deve restare identica byte per byte. Vale solo se la modalità in uso è cambiata davvero.
 # K2-K5 (senza #collaudo, come la carica un giocatore): ripasso, modalità ricordata, «Azzera», primo avvio.

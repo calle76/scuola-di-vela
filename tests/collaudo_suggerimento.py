@@ -214,7 +214,7 @@ async def main():
             if I["tt"] == "lee":
                 n_sail += 1
                 if msg != NUOVO: sbagliati.append(f"lezione 3 «Poppa» a twa {I['twa']:.0f}: «{msg}»")
-        # 3b) sbandamento oltre 25 gradi (1.0.9, docs/PROPOSTA-RAFFICHE-PORTANTI.md): di bolina (sotto 75°) lascare o orzare,
+        # 3b) sbandamento oltre 25 gradi (1.0.9, docs/archivio/PROPOSTA-RAFFICHE-PORTANTI.md): di bolina (sotto 75°) lascare o orzare,
         # dal traverso in giù lascare e poggiare; con la scotta tutta lascata solo orzare (bolina) o poggiare. Tre fasce, due mure.
         SBT = {(True, 1.0): "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco.", (True, 0.6): "Sbandi troppo: lasca la scotta, oppure orza di poco.",
                (False, 1.0): "Sbandi troppo e la vela è già tutta lasca: poggia un poco.", (False, 0.6): "Sbandi troppo: lasca la scotta e poggia un poco."}

@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **23 ottobre 2026, versione 1.0.46**, durante la pulizia (`PROPOSTA-PULIZIA-1B.md`).
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **23 ottobre 2026, versione 1.0.47** (pulizia, `PROPOSTA-PULIZIA-1B.md`).
 
 ## Dove siamo
 
@@ -41,7 +41,7 @@
 
 Ordine in `ROADMAP.md`.
 
-1. **Pulizia** (in corso, `PROPOSTA-PULIZIA-1B.md`): proposte finite in `archivio/`, nomi dei livelli nei documenti, `STATO.md`; poi la 1.0.47 con «1a» / «1b» nelle impostazioni e nel menu e tre collaudi nel giro lungo.
+1. ~~**Pulizia**~~ fatta (documenti e 1.0.47: «1a» / «1b» nelle impostazioni e nel menu, tre collaudi nel giro lungo; `PROPOSTA-PULIZIA-1B.md`).
 2. **Avversari con la barca dell'1b** (partenze, virate, boe) su molte regate.
 3. **Tornei dell'1b, tappa T2** (triangolo, `PROPOSTA-TORNEI-1B.md`).
 4. **Lezioni brevi dell'1b** (da proporre): timone che stalla, Z, salti di vento, raddrizzata lunga, barca orziera, contatto vero e chi cede (12, 13), il torneo.

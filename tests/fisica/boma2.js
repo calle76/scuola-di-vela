@@ -1,4 +1,4 @@
-// «Spingi il boma» nel livello 2 (1.0.26, docs/PROPOSTA-SPINGI-BOMA.md): criteri B1-B5 della proposta sul motore.
+// «Spingi il boma» nel livello 2 (1.0.26, docs/archivio/PROPOSTA-SPINGI-BOMA.md): criteri B1-B5 della proposta sul motore.
 // Venti 6, 10 e 15 nodi; barca ferma con la prua da −30° a +30° dal vento ogni 5° (il boma è dalla parte dove lo mette il vento).
 // Uso: node boma2.js      esce con 1 se un criterio è fuori soglia o se ha misurato zero casi.
 const { step, norm180 } = require("./motore.js");

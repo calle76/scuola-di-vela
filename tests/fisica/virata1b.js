@@ -1,4 +1,4 @@
-// Virata della barca dell'1b col gesto da tastiera (docs/PROPOSTA-VIRATA-1B.md, 1.0.43): barra a 1,6 della corsa al secondo fino a 35°
+// Virata della barca dell'1b col gesto da tastiera (docs/archivio/PROPOSTA-VIRATA-1B.md, 1.0.43): barra a 1,6 della corsa al secondo fino a 35°
 // (sola freccia) o 45° (Maiusc), al centro quando la prua è 30° oltre il vento. Durata fino a quel punto, velocità minima rispetto
 // all'entrata, prua più larga dopo (V1). Barca lenta: 1,5 nodi al traverso, gradi girati in 3 s.
 // Uso: node virata1b.js            misura con le costanti del motore

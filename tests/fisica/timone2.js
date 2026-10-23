@@ -1,4 +1,4 @@
-// Timone del livello 2 (1.0.24-1.0.25, docs/PROPOSTA-STALLO-TIMONE.md §8-9): virate, strambate, risposta a barra piccola e giro di penalità.
+// Timone del livello 2 (1.0.24-1.0.25, docs/archivio/PROPOSTA-STALLO-TIMONE.md §8-9): virate, strambate, risposta a barra piccola e giro di penalità.
 // Dalla 1.0.25 la barra va sempre a 1,6 al secondo come nel livello 1: la sola freccia fino a 35° («sicura»), Maiusc + freccia fino a 45°;
 // si confrontano sola freccia, freccia e Maiusc insieme, freccia con 1 s di pausa a 35° e poi Maiusc, e il livello 1.
 // Uso: node timone2.js                         criteri C1-C9 sui venti di taratura (10, 14) e di conferma (6, 8, 12, 16)

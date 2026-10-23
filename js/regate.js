@@ -1,5 +1,5 @@
 // Scuola di vela, regate.js — Fantasma e regate: avversari, partenza, contatti, classifica, disegno della regata.
-// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
+// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/archivio/PROPOSTA-DIVISIONE-CODICE.md.
   // ======================================================================
   // FANTASMA E REGATE
   // ======================================================================
@@ -57,10 +57,10 @@
   const RACES = [
     { title: "Regata a bastone", desc: "Tre avversari, vento costante: partenza, bolina, poppa, arrivo.", wind: 0, tws: 10, gusts: 0 },
     { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 },
-    // 1.0.28: livello 2 in prova (docs/PROPOSTA-SALTI-VENTO.md): barca del livello 2, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
-    { title: "Regata nei salti di vento", desc: "Barca del livello 2, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true }
+    // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): barca dell'1b, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
+    { title: "Regata nei salti di vento", desc: "Barca dell'1b, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true }
   ];
-  const RACES1 = RACES.filter(rc => !rc.lv2); // le regate del livello 1 (stessi indici: quelle del livello 2, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
+  const RACES1 = RACES.filter(rc => !rc.lv2); // le regate dell'1a (stessi indici: quelle dell'1b, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;
   const FLEET_LOOK = [
     { name: "Rossa", hull: "#E9E4DF", sail: "#F6D5D0", sailor: "#C7362F" },
@@ -155,7 +155,7 @@
     recStart(recK("r" + i) + "b");
     $("rTitle").textContent = rc.title;
     R.brief = (rc.tor ? torBrief() : "") + "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
-      (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.lv2 ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Barca del livello 2, boa a 300 m" : "") +
+      (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.lv2 ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Barca dell'1b, boa a 300 m" : "") +
       ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
@@ -217,13 +217,13 @@
     }
     // prima della partenza: blocco a sé, senza la logica di bolina generale
     let pre = false;
-    // 1.0.16 (docs/PROPOSTA-PARTENZE.md): si aspetta quasi fermi da una a due lunghezze dietro la linea e si parte per essere a piena
+    // 1.0.16 (docs/archivio/PROPOSTA-PARTENZE.md): si aspetta quasi fermi da una a due lunghezze dietro la linea e si parte per essere a piena
     // velocità allo zero. Prima si partiva a una velocità stimata fissa (1,9 m/s) frenando a 7 m: dalla 1.0.6 la barca scivola 10-11 m
     // e l'83% era oltre la linea allo sparo. Il blocco vale anche dopo lo sparo, finché chi è già partito non ha tagliato: con la logica
     // di bolina generale virava subito prima della linea, perdendo metà della velocità. L'avvicinamento, invece, resta alla logica
     // generale, che sa fare i bordi: il punto d'attesa è controvento e puntandolo con una prua sola la barca scivolava fino a 90 m di
     // lato, fuori dagli estremi, dove il taglio non conta.
-    // 1.0.28, solo livello 2: col vento girato la prua di partenza può portare fuori dall'estremo, e da lì non si rientrava più
+    // 1.0.28, solo 1b: col vento girato la prua di partenza può portare fuori dall'estremo, e da lì non si rientrava più
     // (regata nei salti, seme 20): dopo il via chi è fuori dagli estremi usa la logica generale, che punta un punto dentro la linea
     const fuori = R.lv2 && R.t >= 0 && Math.abs(toWF(s.x, s.y)[0]) > LINE_HALF - 3;
     if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart) && !fuori){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
@@ -296,7 +296,7 @@
     }
     // evita qualsiasi barca vicina davanti (anche quando avrebbe diritto di rotta: meglio non urtare)
     // la prudente comincia da più lontano: è il suo carattere
-    // 1.0.17 (docs/PROPOSTA-PARTENZE.md §8): chi sta evitando può orzare anche dentro l'angolo morto. Prima lo scarto veniva riscritto
+    // 1.0.17 (docs/archivio/PROPOSTA-PARTENZE.md §8): chi sta evitando può orzare anche dentro l'angolo morto. Prima lo scarto veniva riscritto
     // dalla regola qui sotto: annullato nel 39% degli istanti in cui una barca stava scartando, e presente in 83 contatti su 88.
     const avoidR = b.char === "prudente" ? 22 : 14;
     let avoiding = false;
@@ -336,7 +336,7 @@
     const boomT = Math.max(BOAT.minBoom, Math.abs(info ? info.awa : 60) - 17 + ai.trim);
     return clamp((boomT - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1);
   }
-  // prua d'attesa rispetto al vento, a y metri dalla linea: a 55° arretra appena senza scivolare di lato, a 45° arretra di più (misure in PROPOSTA-PARTENZE.md §2)
+  // prua d'attesa rispetto al vento, a y metri dalla linea: a 55° arretra appena senza scivolare di lato, a 45° arretra di più (misure in docs/archivio/PROPOSTA-PARTENZE.md §2)
   function holdAngle(y){ return y < 0.5 * BOAT.length ? 45 : 55; }
 
   // 1.0.16: secondi per tagliare la linea partendo adesso (cazza e va verso la prua d), con lo stesso step(); null se non ci arriva entro tMax
@@ -373,7 +373,7 @@
     const s = b.S;
     if (s.capsized){
       s.capT += dt; s.u = 0;
-      if (s.capT > (s.lv === 2 ? RADD2.tAI : 5)){ s.capsized = false; s.capT = 0; s.heel = 0; s.heelRate = 0; s.h = norm360((s.lv === 2 ? windAt(s.x, s.y).twd : env.twd) + s.capSide * (s.lv === 2 ? RADD2.twa : 60)); b.ctl.sheet = s.lv === 2 ? 1 : 0.8; } // 1.0.32: livello 2 più lenta e al traverso del vento vero (coi salti, env.twd è il medio)
+      if (s.capT > (s.lv === 2 ? RADD2.tAI : 5)){ s.capsized = false; s.capT = 0; s.heel = 0; s.heelRate = 0; s.h = norm360((s.lv === 2 ? windAt(s.x, s.y).twd : env.twd) + s.capSide * (s.lv === 2 ? RADD2.twa : 60)); b.ctl.sheet = s.lv === 2 ? 1 : 0.8; } // 1.0.32: 1b più lenta e al traverso del vento vero (coi salti, env.twd è il medio)
       return;
     }
     aiControl(b, dt);
@@ -408,7 +408,7 @@
     }
   }
 
-  // 1.0.39 (docs/PROPOSTA-CONTATTO-VERO.md): nell'1b il contatto è fra i contorni degli scafi, non fra cerchi di 2,1 m attorno ai centri.
+  // 1.0.39 (docs/archivio/PROPOSTA-CONTATTO-VERO.md): nell'1b il contatto è fra i contorni degli scafi, non fra cerchi di 2,1 m attorno ai centri.
   // Poligono di 24 punti dagli stessi punti di hullPath (js/disegno.js): prua in (0, -2,1), poppa in y = 2,1; coordinate locali (x di lato, y verso poppa).
   const HULL_PTS = (() => {
     const bez = (p0, p1, p2, p3) => { const o = []; for (let i = 1; i <= 10; i++){ const t = i / 10, u = 1 - t;
@@ -567,7 +567,7 @@
       R.pend = null;
     }
   }
-  // 1.0.33: distacchi in secondi (docs/PROPOSTA-DISTACCHI.md). Strada fatta in metri, nella direzione del vento medio (lo spostamento
+  // 1.0.33: distacchi in secondi (docs/archivio/PROPOSTA-DISTACCHI.md). Strada fatta in metri, nella direzione del vento medio (lo spostamento
   // di lato non conta, come nel tracciamento delle regate vere): di bolina i metri saliti dalla linea (al più R.up), in poppa R.up più
   // i metri scesi dalla boa; null prima della partenza (o richiamata). Prima della conferma era la distanza in linea d'aria da boa e
   // centro della linea: chi tagliava l'arrivo a 15 m dal centro sembrava indietro. Ogni barca se la ricorda ogni 0,5 s; il distacco è
@@ -628,7 +628,7 @@
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
     finShow();
   }
-  // ---- schermata finale (1.0.36, docs/PROPOSTA-SCHERMATA-FINALE.md) ----
+  // ---- schermata finale (1.0.36, docs/archivio/PROPOSTA-SCHERMATA-FINALE.md) ----
   // A regata finita il riepilogo e la classifica passano dal pannello a un riquadro sopra il mare: il pannello non sfora più.
   // I riquadri #rDone e #standings restano compilati (i collaudi li leggono), solo nascosti dalla classe .fin.
   function finShow(){

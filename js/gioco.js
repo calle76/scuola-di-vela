@@ -1,5 +1,5 @@
 // Scuola di vela, gioco.js — Stato, raffiche, menu e progressi, quiz, modalità (lezioni, prove, navigazione libera), comandi, simulazione.
-// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
+// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/archivio/PROPOSTA-DIVISIONE-CODICE.md.
   // ======================================================================
   // STATO
   // ======================================================================
@@ -12,8 +12,8 @@
   const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180 };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
-  const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.46"; // sola fonte: menu, mare e registratore la leggono da qui
+  const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
+  const VERSIONE = "1.0.47"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -22,7 +22,7 @@
           tacks: 0, gybesV: 0, gybesC: 0, capsizes: 0, markIdx: 0, time: 0, finished: false,
           lessonMark: null, markReached: false, shake: 0, toast: null, indietro: 0 };
     ctl.sheet = sheet; ctl.tiller = 0;
-    wake.length = 0; shiftSt = null; shiftDeg = 0; // i salti li rimettono la navigazione libera e la regata del livello 2
+    wake.length = 0; shiftSt = null; shiftDeg = 0; // i salti li rimettono la navigazione libera e le regate dell'1b
     Object.assign(local, env);
     info = step(S, ctl, local, 0);
     S.dispBoom = S.boomSide * S.boom;
@@ -35,7 +35,7 @@
     const dx = x - g.x, dy = y - g.y, along = dx * ax + dy * ay, across = dx * -ay + dy * ax;
     return (along / (g.r * 1.4)) ** 2 + (across / g.r) ** 2;
   }
-  // ---- salti di vento del livello 2 (1.0.28) ----
+  // ---- salti di vento dell'1b (1.0.28) ----
   let shiftSt = null, shiftDeg = 0; // stato del generatore (newShift, js/motore.js) e gradi di cui il vento è girato rispetto al medio
   function setShifts(kind){ shiftSt = kind ? newShift(kind, Math.random) : null; shiftDeg = shiftSt ? stepShift(shiftSt, 0, Math.random) : 0; }
   function windAt(x, y){
@@ -113,7 +113,7 @@
   const MEDALS = ["oro", "argento", "bronzo"];
   const medalOf = (i, sec) => { const b = MISSIONS[i].bands; if (!sec) return 0; for (let k = 0; k < 3; k++) if (sec <= b[k]) return k + 1; return 0; };
   const medalTag = (i, sec) => { const m = medalOf(i, sec); return m ? `<span class="medal m${m}" title="Medaglia: ${MEDALS[m - 1]}"></span>` : ""; };
-  // 0.23, meriti del libretto (solo carriera): tabella provvisoria di docs/PROPOSTA-ESAME-E-BREVETTO.md §12, da tarare giocando.
+  // 0.23, meriti del libretto (solo carriera): tabella provvisoria di docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md §12, da tarare giocando.
   // Si ricalcolano ogni volta da progress: niente si salva. Competizione: solo il piazzamento, senza il +1 «senza errori».
   const MERITI = [["abil", "Abilità", 20, 8], ["cono", "Conoscenza", 12, 6], ["comp", "Competizione", 8, 3], ["esp", "Esperienza", 6, 6]];
   const TOT_MIN = 29;
@@ -607,9 +607,9 @@
       k = KEYARR[k];
     }
     if (k === "a"){ rightBoat(); return; } // 1.0.27: raddrizza con A (era R; R resta libero per le manovre dei livelli futuri, decisione di Ale)
-    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nel livello 2 la barra arriva fino a 45°
+    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nell'1b la barra arriva fino a 45°
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
-    if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto (solo la barca del livello 2)
+    if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto (solo la barca dell'1b)
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
       if (e.target.tagName === "SELECT") return;
       e.preventDefault(); keys.add(k);
@@ -660,8 +660,8 @@
 
   function applyInput(dt){
     let tillerInput = false;
-    ctl.push = S.lv === 2 && keys.has("z") && !S.capsized; // 1.0.26: boma spinto finché Z è premuto (docs/PROPOSTA-SPINGI-BOMA.md)
-    if (tillerAim !== null){ // livello 2: il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
+    ctl.push = S.lv === 2 && keys.has("z") && !S.capsized; // 1.0.26: boma spinto finché Z è premuto (docs/archivio/PROPOSTA-SPINGI-BOMA.md)
+    if (tillerAim !== null){ // 1b: il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
       const d = tillerAim - ctl.tiller, m = 1.6 * dt; ctl.tiller = Math.abs(d) <= m ? tillerAim : ctl.tiller + Math.sign(d) * m; tillerInput = true;
       if (!dragTiller && ctl.tiller === tillerAim) tillerAim = null;
     }
@@ -670,7 +670,7 @@
       if (l || r){
         let dir = (r ? 1 : 0) - (l ? 1 : 0);
         if (opt.helm === "prua") dir = -dir * (S.u < 0 ? -1 : 1);
-        // 1.0.25, livello 2: la sola freccia porta la barra fino a 35° (RUD2_SICURA), Maiusc + freccia fino a 45°; sempre alla velocità del livello 1
+        // 1.0.25, 1b: la sola freccia porta la barra fino a 35° (RUD2_SICURA), Maiusc + freccia fino a 45°; sempre alla velocità dell'1a
         const lim = S.lv === 2 && !keys.has("Shift") ? Math.max(RUD2_SICURA, Math.abs(ctl.tiller)) : 1;
         ctl.tiller = clamp(ctl.tiller + dir * 1.6 * dt, -lim, lim); tillerInput = true;
       }
@@ -741,7 +741,7 @@
       if (S.righting){
         S.righting += dt;
         if (S.righting > raddT(S)){
-          const side = S.capSide, lv2 = S.lv === 2; // livello 2: al traverso, ferma, vela tutta lascata (RADD2)
+          const side = S.capSide, lv2 = S.lv === 2; // 1b: al traverso, ferma, vela tutta lascata (RADD2)
           S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = lv2 ? 0 : 0.3;
           S.h = norm360(local.twd + side * (lv2 ? RADD2.twa : 60)); ctl.sheet = lv2 ? 1 : 0.8; ctl.tiller = 0;
           S.prevSide = sgn(norm180(local.twd - S.h));

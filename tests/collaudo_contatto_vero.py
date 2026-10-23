@@ -1,4 +1,4 @@
-# Contatto vero fra gli scafi nell'1b (1.0.39, docs/PROPOSTA-CONTATTO-VERO.md, parte A).
+# Contatto vero fra gli scafi nell'1b (1.0.39, docs/archivio/PROPOSTA-CONTATTO-VERO.md, parte A).
 # Parte 1: coppie di barche messe a mano (stesso passo, nessun avversario che si muova): l'1a (regata 0) usa il cerchio di 4,2 m fra i
 #   centri, l'1b (regata 2, «salti di vento») il contorno dello scafo. Ogni caso dice se il contatto deve esserci nei due livelli.
 # Parte 2: regate intere col pilota (semi 1-3, principianti ed esperti, 1a e 1b), passi di 1/240 s:

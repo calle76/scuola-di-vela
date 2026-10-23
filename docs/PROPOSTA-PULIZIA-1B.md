@@ -1,6 +1,6 @@
 # Proposta: pulizia dopo il congelamento della barca dell'1b
 
-Stato: **via di Ale alle quattro decisioni, tutte come consigliate** (23 ottobre 2026; per B4: «se un collaudo dura 5 minuti ok, ma sono tutti assieme che ci impiegano tempo», quindi i tre entrano solo fra i lunghi). **Parte A fatta** (esito in fondo); parte B dopo il giro di `esplora.py` di Ale. Punto «pulizia» della `ROADMAP.md`, dopo il congelamento (`PROPOSTA-CONGELAMENTO-1B.md`). Rete di sicurezza: le due impronte.
+Stato: **via di Ale alle quattro decisioni, tutte come consigliate** (23 ottobre 2026; per B4: «se un collaudo dura 5 minuti ok, ma sono tutti assieme che ci impiegano tempo», quindi i tre entrano solo fra i lunghi). **Parti A e B fatte** (esiti in fondo; B = versione 1.0.47). Punto «pulizia» della `ROADMAP.md`, dopo il congelamento (`PROPOSTA-CONGELAMENTO-1B.md`). Rete di sicurezza: le due impronte.
 
 **Regola della pulizia:** il gioco non cambia, salvo i testi elencati in B1, dichiarati qui prima di misurare. La storia non si riscrive: `CHANGELOG.md` e le proposte finite restano come sono state scritte, anche dove dicono «livello 2» per l'1b.
 
@@ -65,3 +65,13 @@ Modello per la fermata 2: basta Sonnet.
 - **A1:** 33 file in `docs/archivio/` (30 proposte, 3 ricerche) con `git mv`; in `docs/` restano 22 documenti. Riferimenti cambiati: **106 nei documenti di `docs/` e 9 fra `README.md` e `RIPARTI-DA-QUI.md`** (attese più di 50: il controllo ha misurato davvero). Citazioni rimaste del vecchio percorso nei documenti vivi: **0**. Restano da cambiare, nella parte B: i commenti di `js/` (circa 40) e di `tests/` (circa 45), e la riga in testa al `CHANGELOG.md`. Le proposte archiviate non sono state toccate: dove citano una proposta rimasta aperta col nome nudo, il rimando ora punta alla cartella sbagliata (storia, lasciato così).
 - **A2:** 43 righe in 10 documenti, una per una: 28 parlano della barca dell'1b («1b»), 12 del fiocco («livello 3»), 3 storiche annotate «(oggi: 1b)»; le righe sul regolamento restano «livello 2». `VISIONE` §2 dice anche che nei documenti più vecchi il fiocco è «livello 2»; `PIANO-GENERALE.md` ha in testa l'avviso dei numeri superati.
 - **A3:** `STATO.md` riscritto sulla 1.0.46, con i nomi dei livelli spiegati in testa.
+
+## Esito della parte B (23 ottobre 2026, versione 1.0.47)
+
+- **Criterio 1 (impronta):** 67 scene, 64 identiche; nelle 3 diverse (menu, salti di vento principianti ed esperti) cambiano 6 valori su 5081, tutti i testi di B1. **Ok.** Le impostazioni, che l'impronta non vede, misurate a parte: 0 px di scorrimento prima e dopo, finestra 580 → 524 px.
+- **Criterio 2:** `impronta1b.js`, `polare.js`, `raffiche_e_virate.js` identici alla 1.0.46. **Ok.**
+- **Criterio 3:** 77 rimandi corretti nei commenti di `js/` e `tests/`, tutti dentro commenti (controllato riga per riga), 0 rimasti. **Ok.**
+- **Criterio 4:** `collaudo_versione.py`, `collaudo_pannello.py` 1360×650, `collaudo_esame.py`, `collaudo_quiz.py`, più `collaudo_timone2.py` e `collaudo_raddrizzata.py`: OK.
+- **Criterio 5:** codice 325 539 → 325 737 byte (+198, commenti più lunghi per i percorsi `archivio/`).
+- **Un incidente, riparato:** un primo script sui commenti di `js/` aveva svuotato le righe con «livello» (errore mio sulle catture delle espressioni regolari); i tre file sono stati riportati all'ultimo commit con `git show` (controllo: `git diff` vuoto) e i commenti cambiati a mano, uno per uno.
+- **Lasciato:** i commenti di `tests/` che dicono ancora «livello 2» per l'1b (circa 40, nessun effetto); «Brevetto di livello 1» ed «Esame · livello 1» (parlano del livello, non della barca).

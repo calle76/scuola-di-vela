@@ -23,7 +23,7 @@ PILOTA = """
     if (sv.toast && sv.toast !== lastToast) { lastToast = sv.toast; log.push([Math.round(S.time), sv.toast, S.markIdx, S.rnd || 0]); }
     // 1.0.19: quando il traguardo diventa il punto da raggiungere, si aggiunge un punto 25 m oltre, sulla direzione da cui si arriva (la posizione
     // di quel momento). Prima l'ultimo punto era il centro della linea e a meno di 7 m il pilota smetteva di guidare: la barca scivolava ferma a
-    // 6-10 m dalla linea e la prova 3 risultava non finita (docs/PROPOSTA-PROVA3.md). Dalla partenza non va bene: nella prova 4 si risale fino alla
+    // 6-10 m dalla linea e la prova 3 risultava non finita (docs/archivio/PROPOSTA-PROVA3.md). Dalla partenza non va bene: nella prova 4 si risale fino alla
     // boa e poi si torna, e la direzione partenza-traguardo non è quella di arrivo.
     if (!oltre && i === pts.length - 1) { oltre = true; const dx = last.x - S.x, dy = last.y - S.y, d = Math.hypot(dx, dy) || 1; pts.push({ x: last.x + dx / d * 25, y: last.y + dy / d * 25 }); }
     const p = pts[i]; if (Math.hypot(p.x - S.x, p.y - S.y) < 7) { i++; return; }

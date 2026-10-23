@@ -1,4 +1,4 @@
-# «Spingi il boma» nel livello 2 in prova (1.0.26, docs/PROPOSTA-SPINGI-BOMA.md), guidando coi tasti veri (#collaudo, passi di 1/60 s, senza raffiche):
+# «Spingi il boma» nel livello 2 in prova (1.0.26, docs/archivio/PROPOSTA-SPINGI-BOMA.md), guidando coi tasti veri (#collaudo, passi di 1/60 s, senza raffiche):
 #  1. nella barca del livello 1 Z non fa niente;
 #  2. 9 uscite dall'angolo morto (6, 10, 15 nodi; prua nel vento, a 20° da una parte e dall'altra): Z tenuto e la freccia verso il boma
 #     finché la prua è a 50° dal vento; la prua gira verso il boma, il boma resta a 80° mentre Z è premuto e il suggerimento lo dice;

@@ -1,5 +1,5 @@
 # Prova a mano della carriera (0.24), senza dover giocare ore: apre il gioco in una finestra vera di Chromium, con una carriera
-# preparata in cui i meriti sono già a posto (come il giocatore A di docs/PROPOSTA-ESAME-E-BREVETTO.md, §12) e manca solo l'esame.
+# preparata in cui i meriti sono già a posto (come il giocatore A di docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md, §12) e manca solo l'esame.
 # Si fa l'esame dal menu: superato, compare l'attestato; sbagliato apposta, compaiono i ripassi da fare.
 # Usa un profilo del browser a parte, che si cancella alla chiusura: i salvataggi del tuo browser non si toccano.
 # Non è un collaudo: non controlla niente. Si chiude chiudendo la finestra.

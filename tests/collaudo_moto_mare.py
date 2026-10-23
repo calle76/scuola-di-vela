@@ -1,4 +1,4 @@
-# La barca che balla sull'onda (1.0.23, docs/PROPOSTA-MOTO-SUL-MARE.md): solo disegno, il motore non la vede.
+# La barca che balla sull'onda (1.0.23, docs/archivio/PROPOSTA-MOTO-SUL-MARE.md): solo disegno, il motore non la vede.
 # Pagina vera con #collaudo, ciclo del browser fermo, passi di 1/60 s: navigazione libera, prua tenuta fissa a 45° / 90° / 135° / 180° dal vento,
 # con 0 e 10 nodi, 5 punti di partenza diversi (fase dell'onda diversa), 25 s ciascuno (i primi 5 non contano). Ogni due passi si disegna il quadro
 # e si legge dove il disegno ha messo la testa d'albero (geo.hx di lato, geo.hY avanti e indietro), in pixel a zoom 1.
@@ -6,7 +6,7 @@
 # (primo giro: 1,1 px senza vento e fino a 25,7 px in poppa quando il boma cambia lato).
 # Criteri (soglie dichiarate nella proposta, prima di misurare): con 10 nodi la testa d'albero oscilla di almeno 4 px a ogni andatura, con 0 nodi 0 px;
 # al traverso il rollio (di lato) e almeno il doppio del beccheggio; in poppa il beccheggio e almeno il doppio del rollio;
-# di bolina il periodo d'incontro e piu corto che in poppa. Tolto dopo il primo giro, e dichiarato (PROPOSTA-MOTO-SUL-MARE.md §6): «di bolina il
+# di bolina il periodo d'incontro e piu corto che in poppa. Tolto dopo il primo giro, e dichiarato (docs/archivio/PROPOSTA-MOTO-SUL-MARE.md §6): «di bolina il
 # beccheggio e almeno il doppio del rollio», sbagliato in partenza perche di bolina le onde arrivano a 45° dalla prua e i due vengono uguali.
 # NON VALIDO se ha disegnato meno quadri del previsto o se la pagina da errori.
 # Uso: python collaudo_moto_mare.py

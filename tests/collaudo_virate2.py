@@ -1,4 +1,4 @@
-# Virate degli avversari nella «Regata nei salti di vento» (livello 2), docs/PROPOSTA-VIRATE-AVVERSARI.md, criterio V5 (1.0.31).
+# Virate degli avversari nella «Regata nei salti di vento» (livello 2), docs/archivio/PROPOSTA-VIRATE-AVVERSARI.md, criterio V5 (1.0.31).
 # Pagina con #collaudo, passi di 1/60 s, Math.random a seme fisso, giocatore guidato da __sv.pilota. Per ogni avversario, dopo il via
 # sul lato di bolina (leg 1) e ad almeno 25 m dalla boa, una virata è il passaggio della prua da una mura all'altra (twa rispetto al vento locale di quel momento,
 # letto da step()); la si segue fino a 12 s o alla virata seguente e se ne prende la prua massima dal vento. Conta come «oltre»

@@ -1,4 +1,4 @@
-// Scarroccio della barca dell'1b (1.0.45, docs/PROPOSTA-SCARROCCIO-1B.md): equilibrio a prua fissa come bolina.js, ma VMG sulla rotta vera (prua + scarroccio).
+// Scarroccio della barca dell'1b (1.0.45, docs/archivio/PROPOSTA-SCARROCCIO-1B.md): equilibrio a prua fissa come bolina.js, ma VMG sulla rotta vera (prua + scarroccio).
 // Uso: node scarroccio1b.js [470]   con 470: sensibilità con la forza laterale del 470 misurata in vasca e scalata (F35 fig. 12, K 1,35 m² invece di 1,70)
 const { step, DERIVA2 } = require("./motore.js");
 if (process.argv[2] === "470"){ const k = 2.042 / 2.574; DERIVA2.q *= k; DERIVA2.u0 /= k; } // stessa barca ferma: q·u0 resta 268

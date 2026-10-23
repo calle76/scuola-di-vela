@@ -1,4 +1,4 @@
-// Raffiche alle andature portanti (1.0.9, docs/PROPOSTA-RAFFICHE-PORTANTI.md). Uso: node raffiche_portanti.js [esplorazione]
+// Raffiche alle andature portanti (1.0.9, docs/archivio/PROPOSTA-RAFFICHE-PORTANTI.md). Uso: node raffiche_portanti.js [esplorazione]
 // Barca a regime con 10 nodi e la scotta della velocità massima, poi raffica; reazione dopo 0,3 s, in 1 s, prua girata a mano (non con la barra):
 // niente, lascare (+30% di scotta), poggiare 20°, orzare 20°, lascare e poggiare. Sbandamento massimo in 8 s.
 // Senza argomenti: gruppo di conferma della terza regola (14,5, 16,5 e 18,5 nodi; 78°/88°/98°/108°/120°/132°; due mure):
@@ -8,7 +8,7 @@
 //   «poggia» non sbanda mai più di «niente» (regola cambiata da Ale dopo aver visto il primo gruppo di conferma).
 // «esplorazione»: il gruppo su cui la prima regola è stata scelta (16 e 20 nodi, 90°/110°).
 // «conferma1»: il primo gruppo di conferma (14 e 18 nodi, 80°/100°/125°) con la prima regola, «poggia» almeno 2° meno di «niente»
-//   e «orza» non meno di «niente − 1°»: 6 casi su 12 dentro (docs/PROPOSTA-RAFFICHE-PORTANTI.md).
+//   e «orza» non meno di «niente − 1°»: 6 casi su 12 dentro (docs/archivio/PROPOSTA-RAFFICHE-PORTANTI.md).
 const { step } = require("./motore.js");
 const KN = 1.943844, DT = 1 / 120;
 function regola(twa){ let best = 0, bs = 0;

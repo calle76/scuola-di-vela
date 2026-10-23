@@ -1,4 +1,4 @@
-// Retromarcia senza tetto (1.0.8, docs/PROPOSTA-RETROMARCIA.md). Uso: node retromarcia.js   (pochi secondi)
+// Retromarcia senza tetto (1.0.8, docs/archivio/PROPOSTA-RETROMARCIA.md). Uso: node retromarcia.js   (pochi secondi)
 // 1) Barca con la prua al vento, barra al centro, scotta 100 e 50, ferma o lanciata a 2 nodi, 60 s: dopo quanto va all'indietro e quanto forte.
 // 2) Prua tenuta ferma nel vento per 120 s: velocità all'indietro di regime.
 // 3) Rotazione all'indietro con la barra a fondo, partendo dal regime del punto 2.

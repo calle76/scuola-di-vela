@@ -1,5 +1,5 @@
 // Scuola di vela, contenuti.js — Contenuti: lezioni, prove, ripassi, esame, glossario.
-// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
+// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/archivio/PROPOSTA-DIVISIONE-CODICE.md.
   // ======================================================================
   // CONTENUTI
   // Nelle lezioni il vento arriva da nord. Condizioni: I = lettura istantanea (vedi readI).

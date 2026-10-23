@@ -65,7 +65,7 @@ async def partenza(b, cd, seme):
     geo, st, ocs = r
     return geo, st, ocs, errs
 
-# Criteri della partenza (1.0.16, docs/PROPOSTA-PARTENZE.md §3, scritti prima di provare). Tutto in una chiamata alla pagina per partenza:
+# Criteri della partenza (1.0.16, docs/archivio/PROPOSTA-PARTENZE.md §3, scritti prima di provare). Tutto in una chiamata alla pagina per partenza:
 # regata, livello, Math.random a seme fisso, simTime a zero, preparazione (che riavvia la regata), passi fissi di 1/60 s fino a 60 s dopo
 # lo sparo; il giocatore resta fermo. Le due regate del gioco: bastone (10 nodi costanti) e raffiche (12 nodi rafficati). Per ogni avversario:
 # oltre la linea allo sparo (e di quanti metri, a che distanza dal centro), ritardo (sparo → partenza), velocità alla partenza, se nell'ultimo

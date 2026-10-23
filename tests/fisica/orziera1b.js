@@ -1,4 +1,4 @@
-// Barca dell'1b orziera sbandando (1.0.46, docs/PROPOSTA-ORZIERA-1B.md): criteri 2-4 della proposta e sensibilità.
+// Barca dell'1b orziera sbandando (1.0.46, docs/archivio/PROPOSTA-ORZIERA-1B.md): criteri 2-4 della proposta e sensibilità.
 // Uso: node orziera1b.js [k]   k moltiplica il termine nuovo (0 = senza; 1,3 = zCE 2,6 m; 0,9 = zCE 1,8 m; 1,54 = Izz 130; 0,67 = Izz 300).
 // Il fattore si ottiene aggiungendo dopo step() (k − 1) volte il termine del motore: il resto della barca non cambia.
 const { step, BOAT, RUD2, RUD2_SICURA } = require("./motore.js");

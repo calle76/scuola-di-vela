@@ -1,5 +1,5 @@
 // Scuola di vela, avvio.js — Ciclo del gioco, avvio e aggancio dei collaudi (#collaudo). Va caricato per ultimo.
-// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/PROPOSTA-DIVISIONE-CODICE.md.
+// Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/archivio/PROPOSTA-DIVISIONE-CODICE.md.
   // ======================================================================
   // CICLO
   // ======================================================================

@@ -68,6 +68,9 @@ TESTS=(
     "collaudo_torneo.py (veloce)|py|chiaro|0||collaudo_torneo.py --veloce"
     "collaudo_torneo.py (misura)|py|chiaro|1||collaudo_torneo.py"
     "collaudo_torneo.py (giocatore)|py|chiaro|0||collaudo_torneo.py --giocatore"
+    "collaudo_raddrizzata.py|py|chiaro|1||collaudo_raddrizzata.py"
+    "collaudo_virate2.py|py|chiaro|1||collaudo_virate2.py"
+    "collaudo_distacchi.py|py|chiaro|1||collaudo_distacchi.py"
     "collaudo_lezioni.py|py|ambiguo|0||collaudo_lezioni.py"
     "collaudo_quiz.py|py|chiaro|0||collaudo_quiz.py"
     "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
@@ -111,14 +114,15 @@ nota() {
         "collaudo_regole.py") echo "riga «ESITO: OK» (regole 10, 11, 12 e 13 nell'1b: 24 casi a mano dal regolamento, virata, e le due regole di sempre nell'1a)" ;;
         "collaudo_semaforo.py") echo "riga «ESITO: OK» (semaforo di precedenza: 16 regate dell'1b, colore uguale alla penalità, impostazione spenta, 1a senza semaforo)" ;;
         "collaudo_contatto_vero.py") echo "riga «ESITO: OK» (contatto fra gli scafi nell'1b: 8 coppie a mano nei due livelli, 6 regate col pilota nell'1a e nell'1b, 0 sovrapposizioni senza contatto, nessun contatto con gli scafi a più di 5 cm)" ;;
-        "collaudo_salti2.py") echo "riga «ESITO: OK» (salti di vento del livello 2: libera, 12 regate nei salti col pilota, menu, pagina senza #collaudo)" ;;
-        "collaudo_boma2.py") echo "riga «ESITO: OK» (spingi il boma, Z, nel livello 2 in prova: 9 uscite dall'angolo morto coi tasti veri, ripartenza, pannello, pagina senza #collaudo)" ;;
-        "collaudo_timone2.py") echo "riga «ESITO: OK» (barca del livello 2 in prova: freccia fino a 35°, Maiusc fino a 45°, 12 virate guidate coi tasti, avviso di stallo, pagina senza #collaudo)" ;;
+        "collaudo_salti2.py") echo "riga «ESITO: OK» (salti di vento dell'1b: libera, 12 regate nei salti col pilota, menu, pagina senza #collaudo)" ;;
+        "collaudo_virate2.py") echo "FALLITO noto dalla 1.0.31: avversari oltre la bolina + 15° nel 15-17% delle virate contro la soglia del 5% (quasi tutte manovre volute della guida); guardare che il numero non cresca" ;;
+        "collaudo_boma2.py") echo "riga «ESITO: OK» (spingi il boma, Z, nell'1b: 9 uscite dall'angolo morto coi tasti veri, ripartenza, pannello, pagina senza #collaudo)" ;;
+        "collaudo_timone2.py") echo "riga «ESITO: OK» (barca dell'1b: freccia fino a 35°, Maiusc fino a 45°, 12 virate guidate coi tasti, avviso di stallo, pagina senza #collaudo)" ;;
         "collaudo_moto_mare.py") echo "riga «ESITO: OK» (barca che balla sull'onda, solo disegno: testa d'albero ferma senza vento, almeno 4 px con 10 nodi, rollio al traverso e beccheggio in poppa, ritmo più fitto di bolina; 24.000 quadri)" ;;
         "collaudo_riquadro_regata.py") echo "riga «ESITO: OK» (60 partenze con caratteri degli avversari a caso, nessun eccesso del riquadro delle istruzioni; NON VALIDO se non ha visto il caso peggiore con tre prudenti)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
-        "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.11 La scotta: cazzare dopo un colpo lungo, 2.4 Barra sottovento dopo un colpo lungo, 6.3 La scuffia a mani ferme, voluto dalla 1.0.15; esito in docs/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
-        "collaudo_pilota_lezioni.py (semi 1-100)") echo "«guidando» non completato al più 1 volta su 100 per passo; «da guardare» con i casi noti dell'esito in docs/PROPOSTA-PILOTA-LEZIONI.md (1.9, 1.11, 1.12, 2.4, 2.5, 5.8, 6.2, 6.3): numeri molto diversi o passi nuovi sono un problema" ;;
+        "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.11 La scotta: cazzare dopo un colpo lungo, 2.4 Barra sottovento dopo un colpo lungo, 6.3 La scuffia a mani ferme, voluto dalla 1.0.15; esito in docs/archivio/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
+        "collaudo_pilota_lezioni.py (semi 1-100)") echo "«guidando» non completato al più 1 volta su 100 per passo; «da guardare» con i casi noti dell'esito in docs/archivio/PROPOSTA-PILOTA-LEZIONI.md (1.9, 1.11, 1.12, 2.4, 2.5, 5.8, 6.2, 6.3): numeri molto diversi o passi nuovi sono un problema" ;;
         "collaudo_pilota_lezioni.py (senza #collaudo)") echo "«3 tentativi su 3 con entrambi i passi completati»" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
         "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA» (semi 1-6, passi fissi: stesso risultato a ogni giro); la riga «riepilogo» dà la mediana d'arrivo, confrontabile fra versioni" ;;

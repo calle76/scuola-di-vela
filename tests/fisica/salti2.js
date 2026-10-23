@@ -1,4 +1,4 @@
-// Salti di vento del livello 2 (1.0.28, docs/PROPOSTA-SALTI-VENTO.md §4): criteri S1 e S2 sul generatore del gioco (newShift, stepShift),
+// Salti di vento del livello 2 (1.0.28, docs/archivio/PROPOSTA-SALTI-VENTO.md §4): criteri S1 e S2 sul generatore del gioco (newShift, stepShift),
 // bolina di 300 m con la barca del livello 2 e il pilota di salti_bolina.js. Semi 1-40 di taratura, 121-160 di conferma mai guardati (41-80 e 81-120 usati con le versioni scartate del modello: §7).
 // S1 (salti oscillanti): «sui salti» batte «due bordi» in media di almeno il 5% e in almeno 2 regate su 3.
 // S2 (salto persistente): partire verso la parte da cui ruota il vento batte partire dall'altra parte in almeno 3 regate su 4.
