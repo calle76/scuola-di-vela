@@ -61,6 +61,7 @@ TESTS=(
     "collaudo_timone2.py|py|chiaro|0||collaudo_timone2.py"
     "collaudo_boma2.py|py|chiaro|0||collaudo_boma2.py"
     "collaudo_salti2.py|py|chiaro|0||collaudo_salti2.py"
+    "collaudo_contatto_vero.py|py|chiaro|0||collaudo_contatto_vero.py"
     "collaudo_torneo.py (veloce)|py|chiaro|0||collaudo_torneo.py --veloce"
     "collaudo_torneo.py (misura)|py|chiaro|1||collaudo_torneo.py"
     "collaudo_torneo.py (giocatore)|py|chiaro|0||collaudo_torneo.py --giocatore"
@@ -104,6 +105,7 @@ nota() {
     case "$1" in
         "polare.js") echo "confronta a mano con circa 4,7 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.11; 1.0.6-1.0.10 3,8 / 6,0 / 4,1)" ;;
         "raffiche_e_virate.js") echo "virata riuscita in circa 3,0 s da 3,9 nodi e in circa 6,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 67° (scuffia) con la scotta fissa e circa 53° col boma a 21° (dalla 1.0.11)" ;;
+        "collaudo_contatto_vero.py") echo "riga «ESITO: OK» (contatto fra gli scafi nell'1b: 8 coppie a mano nei due livelli, 6 regate col pilota nell'1a e nell'1b, 0 sovrapposizioni senza contatto, nessun contatto con gli scafi a più di 5 cm)" ;;
         "collaudo_salti2.py") echo "riga «ESITO: OK» (salti di vento del livello 2: libera, 12 regate nei salti col pilota, menu, pagina senza #collaudo)" ;;
         "collaudo_boma2.py") echo "riga «ESITO: OK» (spingi il boma, Z, nel livello 2 in prova: 9 uscite dall'angolo morto coi tasti veri, ripartenza, pannello, pagina senza #collaudo)" ;;
         "collaudo_timone2.py") echo "riga «ESITO: OK» (barca del livello 2 in prova: freccia fino a 35°, Maiusc fino a 45°, 12 virate guidate coi tasti, avviso di stallo, pagina senza #collaudo)" ;;

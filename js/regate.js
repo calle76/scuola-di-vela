@@ -160,6 +160,7 @@
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
+    if (rc.lv2) R.brief += " Da questo livello i contatti sono quelli veri, scafo contro scafo. Prima avevi imparato a stare lontano perché il contatto scattava prima del contatto vero.";
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();
     $("rRestart").hidden = $("rWind").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
@@ -406,6 +407,29 @@
     }
   }
 
+  // 1.0.39 (docs/PROPOSTA-CONTATTO-VERO.md): nell'1b il contatto è fra i contorni degli scafi, non fra cerchi di 2,1 m attorno ai centri.
+  // Poligono di 24 punti dagli stessi punti di hullPath (js/disegno.js): prua in (0, -2,1), poppa in y = 2,1; coordinate locali (x di lato, y verso poppa).
+  const HULL_PTS = (() => {
+    const bez = (p0, p1, p2, p3) => { const o = []; for (let i = 1; i <= 10; i++){ const t = i / 10, u = 1 - t;
+      o.push([u*u*u*p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t*t*t*p3[0], u*u*u*p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t*t*t*p3[1]]); } return o; };
+    return [[0, -2.1], ...bez([0, -2.1], [0.55, -1.5], [0.72, -0.2], [0.68, 0.7]), [0.56, 2.1], [-0.56, 2.1], [-0.68, 0.7], ...bez([-0.68, 0.7], [-0.72, -0.2], [-0.55, -1.5], [0, -2.1])];
+  })();
+  const hullWorld = S => { const h = S.h * D2R, c = Math.cos(h), s = Math.sin(h); return HULL_PTS.map(([x, y]) => [S.x + x * c - y * s, S.y + x * s + y * c]); };
+  // sovrapposizione di due poligoni convessi (assi separatori): { pen, nx, ny } con la normale da B ad A, oppure null se non si toccano
+  function hullOverlap(A, B){
+    const pa = hullWorld(A), pb = hullWorld(B); let best = null;
+    for (const poly of [pa, pb]) for (let i = 0; i < poly.length; i++){
+      const [x0, y0] = poly[i], [x1, y1] = poly[(i + 1) % poly.length], l = Math.hypot(x1 - x0, y1 - y0), nx = (y1 - y0) / l, ny = -(x1 - x0) / l;
+      if (l < 1e-9) continue; // l'ultimo punto del contorno è uguale al primo: lato di lunghezza zero, senza asse
+      let a0 = 1e9, a1 = -1e9, b0 = 1e9, b1 = -1e9;
+      for (const [x, y] of pa){ const d = x * nx + y * ny; if (d < a0) a0 = d; if (d > a1) a1 = d; }
+      for (const [x, y] of pb){ const d = x * nx + y * ny; if (d < b0) b0 = d; if (d > b1) b1 = d; }
+      const pen = Math.min(a1, b1) - Math.max(a0, b0); if (pen <= 0) return null;
+      if (!best || pen < best.pen) best = { pen, nx, ny };
+    }
+    if (best.nx * (A.x - B.x) + best.ny * (A.y - B.y) < 0){ best.nx = -best.nx; best.ny = -best.ny; }
+    return best;
+  }
   function contacts(){
     const bs = R.boats;
     for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
@@ -413,7 +437,9 @@
       if (A.fin !== null || B.fin !== null || A.dnf || B.dnf || A.S.capsized || B.S.capsized) continue;
       const d = Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y);
       if (R.contacts[key]){ if (d > 8) delete R.contacts[key]; continue; } // stesso contatto finché non si separano
-      if (d > 4.2) continue;
+      let mtv = null;
+      if (R.lv2){ if (d > 4.4) continue; mtv = hullOverlap(A.S, B.S); if (!mtv) continue; } // 1b: scafo contro scafo; 4,4 m = due mezze lunghezze, oltre non si toccano
+      else if (d > 4.2) continue;                                                          // 1a: cerchio di 4,2 m, la distanza di sicurezza dichiarata
       R.contacts[key] = simTime;
       // mure di ciascuna col vento nel suo punto (1b; nell'1a, difetto noto dalla 1.0.1, col vento del giocatore)
       const twA = R.lv2 ? windAt(A.S.x, A.S.y).twd : local.twd, twB = R.lv2 ? windAt(B.S.x, B.S.y).twd : local.twd;
@@ -426,8 +452,8 @@
                       : v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano";
       if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo
       for (const o of [A, B]){ o.S.u *= 0.6; }
-      const dx = (A.S.x - B.S.x) / (d || 1), dy = (A.S.y - B.S.y) / (d || 1);
-      const push = (4.6 - d) / 2 + 0.3;
+      const dx = mtv ? mtv.nx : (A.S.x - B.S.x) / (d || 1), dy = mtv ? mtv.ny : (A.S.y - B.S.y) / (d || 1);
+      const push = mtv ? mtv.pen / 2 + 0.15 : (4.6 - d) / 2 + 0.3; // 1b: si separano di 0,3 m fra gli scafi
       A.S.x += dx * push; A.S.y += dy * push; B.S.x -= dx * push; B.S.y -= dy * push;
       if (A.me || B.me){
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
