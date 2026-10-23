@@ -322,7 +322,7 @@ async def giocatore(b):
         await pg.click("#bGo"); await pg.wait_for_timeout(1500)                      # un secondo e mezzo di conto alla rovescia vero
         t = await pg.inner_text("#where")
         await pg.click("#rRet"); await pg.wait_for_timeout(300)
-        await pg.click("#rTor"); await pg.wait_for_timeout(500)
+        await pg.click("#finTor"); await pg.wait_for_timeout(500)  # 1.0.36: a regata finita i pulsanti stanno nel riquadro sul mare, quelli del pannello sono nascosti
         righe = await pg.locator("#torBody tbody tr").count()
         fatti += 1
         print(f"  regata {k + 1}: «{t}», classifica con {righe} barche", flush=True)
