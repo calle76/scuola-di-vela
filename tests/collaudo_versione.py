@@ -4,7 +4,7 @@
 # confronto non dipende da quello che il gioco dice di se' stesso. Verifica tre cose, e dichiara quante
 # ne ha davvero confrontate (fallisce se una delle tre non e' stata eseguita):
 #  1) il testo nel menu, a fianco del titolo, e' "V. " + VERSIONE
-#  2) il testo disegnato sul mare (catturato intercettando ctx.fillText) contiene "V. " + VERSIONE
+#  2) il testo disegnato sul mare (catturato intercettando ctx.fillText) contiene il vento e, dalla 1.0.38, non contiene più la versione
 #  3) VERSIONE e' uguale alla versione piu' alta fra i titoli di CHANGELOG.md (righe "## 0.x[.y] — ...",
 #     escludendo "## Sperimentale" e le altre intestazioni senza un numero di versione all'inizio)
 # Uso: python collaudo_versione.py
@@ -69,8 +69,8 @@ async def main():
 
         await pg.click("#goFree"); await pg.wait_for_timeout(1200)
         testi_mare = await pg.evaluate("[...window.__testiCanvas]")
-        presente = ("V. " + attesa) in testi_mare
-        esito("testo sul mare uguale a «V. » + VERSIONE", presente, f"trovato: {presente}; testi catturati: {len(testi_mare)}")
+        vento = any(t.startswith("Vento reale da") for t in testi_mare); versione = any(t.startswith("V. ") for t in testi_mare)
+        esito("sul mare c'è il vento e non c'è più la versione", vento and not versione and len(testi_mare) > 0, f"vento: {vento}; versione: {versione}; testi catturati: {len(testi_mare)}")
 
         print("errori pagina:", errs[:5])
         await b.close()

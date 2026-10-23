@@ -58,7 +58,7 @@
     { title: "Regata a bastone", desc: "Tre avversari, vento costante: partenza, bolina, poppa, arrivo.", wind: 0, tws: 10, gusts: 0 },
     { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 },
     // 1.0.28: livello 2 in prova (docs/PROPOSTA-SALTI-VENTO.md): barca del livello 2, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
-    { title: "Regata nei salti di vento (livello 2, prova)", desc: "Barca del livello 2, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true }
+    { title: "Regata nei salti di vento", desc: "Barca del livello 2, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true }
   ];
   const RACES1 = RACES.filter(rc => !rc.lv2); // le regate del livello 1 (stessi indici: quelle del livello 2, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;

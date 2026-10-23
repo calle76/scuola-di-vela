@@ -63,4 +63,4 @@ Caso seme 256, salti di vento, `esplora.py --rigioca`: `status` da 198 px più l
 ## Decisioni di Ale (23 ottobre 2026)
 - Punto 4: sì alla seconda regola nella lezione; titolo della lezione sulle precedenze. **Fatto nella 1.0.37.**
 - Punto 1: anello rosso/verde (rosso: la colpa sarebbe tua; verde: dell'altra) solo attorno alla barca del giocatore, solo con un'altra barca vicina che si avvicina, facoltativo, dall'1b. Contatto vero fra gli scafi **solo nell'1b**; l'1a resta con il cerchio (distanza di sicurezza dichiarata), e l'introduzione dell'1b lo dice: «da questo livello i contatti sono quelli veri… ora puoi avere un aiuto visivo». Collaudi dei contatti: controllare che nell'1b ci siano contatti da misurare (controllo non vuoto) e un collaudo nuovo che verifichi la regola diversa nei due livelli.
-- Stato: 1.0.37 (punti 5, 4, 2) fatta; 1.0.38 (3, 6, 7) e 1.0.39 (1) da fare.
+- Stato: 1.0.37 (punti 5, 4, 2) e 1.0.38 (3, 6, 7) fatte; 1.0.39 (1) da fare.

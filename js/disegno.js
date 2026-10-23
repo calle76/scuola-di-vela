@@ -36,6 +36,14 @@
     const sailMsg = { flog: ["bad", "La vela sbatte: sei nell'angolo morto."], wind: ["bad", "La vela sbatte: è troppo lascata."],
                       lee: ["bad", "La vela è in stallo: troppo cazzata."], ok: ["good", "Vela gonfia e regolata."] }[I.tt];
     [cls, msg] = kind === "sail" ? sailMsg : ttMsg;
+    // 1.0.38: la banda dei filetti (incidenza 8°-27°) è larga e il massimo di velocità sta a circa 20° (sotto 17° e sopra 25° si perde fino al 10-25%) (misurato a 6, 10 e 15 nodi, docs/PROPOSTA-ELENCO-23-OTTOBRE.md §6):
+    // ai bordi della banda il messaggio dice da che parte si guadagna velocità, senza il rosso di «troppo cazzata» dove cazzare o lascare un poco conviene ancora
+    if (I.tt === "ok" || I.tt === "lee" && I.alpha <= 30){
+      const pre = kind === "sail" ? "La vela è regolata, " : "I filetti sono dritti, ";
+      if (I.alpha < 17){ cls = ""; msg = pre + "ma cazzando un po' vai più veloce."; }
+      else if (I.alpha > 25 && I.sheet <= 0.99){ cls = ""; msg = pre + "ma lascando un po' vai più veloce."; }
+      else if (I.alpha > 25){ cls = "good"; msg = "Vela tutta aperta: più di così non si può."; }
+    }
     // oltre circa 112° di vento apparente nessuna posizione della randa dà i filetti dritti (boma al massimo a BOAT.maxBoom):
     // a scotta tutta lascata «lasca» e «troppo cazzata» sarebbero consigli sbagliati, e in poppa i filetti non si usano.
     if (I.tt === "lee" && I.sheet > 0.99){ cls = "good"; msg = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."; }
@@ -245,7 +253,6 @@
     if (st && st.labels) drawLabels(v, st.labels);
     drawCompass(v);
     drawWindBox(v);
-    drawVersionTag();
     const heelG = !st || st.hud >= 3;
     if (heelG) drawHeelGauge();
     // rosa dell'angolo morto (0.16): dove c'è lo sbandamento e nei passi pratici delle lezioni, tranne quando c'è già la rosa grande
@@ -678,15 +685,10 @@
     ctx.fillText(inDead ? "nell'angolo morto" : "prua e vento", 0, -r - 12);
     ctx.restore();
   }
+  // 1.0.38: vento e bussola nello stesso angolo (in alto a destra, sotto la bussola); la versione sul mare non c'è più (sta nel menu), l'angolo in alto a sinistra è libero
   function drawWindBox(v){
-    ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-    ctx.fillText("Vento reale da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", 16, 26);
-    ctx.restore();
-  }
-  // sotto la bussola (in alto a destra), sopra i pulsanti dello zoom: unico punto libero a tutte le risoluzioni del pannello
-  function drawVersionTag(){
-    ctx.save(); ctx.font = font(600, 12); ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
-    ctx.fillText("V. " + VERSIONE, W - 16, 96);
+    ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
+    ctx.fillText("Vento reale da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", W - 16, 96);
     ctx.restore();
   }
 

@@ -110,7 +110,8 @@ async def k5(b):
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page()
         await pg.goto(url); await pg.wait_for_timeout(300)
         tiles, foot = await pg.inner_text(".tiles"), await pg.inner_text(".menu-foot")
-        if url == BASE: tiles = re.sub(r"⚑\nRegata nei salti di vento \(livello 2, prova\)\nDa fare\n+[^\n]*\n", "", tiles)  # 1.0.28: riquadro voluto del livello 2, nel menu del gioco libero
+        if url == BASE: tiles = re.sub(r"⚑\nRegata nei salti di vento\nDa fare\n+[^\n]*\n", "", tiles)  # 1.0.28: riquadro voluto del livello 2, nel menu del gioco libero
+        if url == BASE: tiles = tiles.replace("Andature, mure e precedenze", "Andature e filetti").replace("le mure e chi lascia strada;", "le mure;")  # 1.0.37: titolo e descrizione della lezione 3, voluti
         if url == BASE: tiles = re.sub(r"Tornei\n⚑\nTorneo dell'1b\nDa fare\n", "", tiles).replace("Altri tipi di barca.", "I tornei, altri tipi di barca.")  # 1.0.34: torneo dell'1b, voluto
         if url != BASE:
             tiles = re.sub(r"Lezione (\d): ", r"Ripasso \1 · ", tiles)
@@ -121,7 +122,7 @@ async def k5(b):
             chk(await modo(pg) == "libero", "K5: senza chiavi si parte in gioco libero")
             chk(MODO not in await pg.evaluate(LEGGI), "K5: aprire il menu non scrive la modalità")
         await ctx.close()
-    chk(testi[0] == testi[1], "K5: riquadri e piede del menu uguali alla 1.0.1 (salvo i due testi voluti della 1.0.2, il ripasso 5 con 6 domande della 1.0.20 e i riquadri voluti della 1.0.28 e 1.0.34)")
+    chk(testi[0] == testi[1], "K5: riquadri e piede del menu uguali alla 1.0.1 (salvo i due testi voluti della 1.0.2, il ripasso 5 con 6 domande della 1.0.20 e i riquadri voluti della 1.0.28, 1.0.34 e 1.0.37)")
 
 async def main():
     global QUIZ_JS
