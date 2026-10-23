@@ -2,7 +2,9 @@
 # Parte 1, coerenza: regate dei salti di vento (1b) col pilota, semi 1-8, principianti ed esperti, passi di 1/60 s, semaforo attivo. Per ogni contatto
 #   del giocatore il colore che il semaforo aveva un passo prima deve essere quello della penalità assegnata: rosso se la penalità è andata al
 #   giocatore, verde se è andata all'altra. 0 contraddizioni (non contano i contatti in cui al passo prima la geometria dietro/affiancate era a meno
-#   di 5 cm dal confine: nel passo la regola può cambiare; si riportano a parte, soglia aggiunta il 23 ottobre dopo aver visto un caso a 1,2 cm); il controllo deve aver visto contatti e semafori (n > 0), e si riporta quanti contatti
+#   di 5 cm dal confine: nel passo la regola può cambiare; si riportano a parte, soglia aggiunta il 23 ottobre dopo aver visto un caso a 1,2 cm; dalla 1.0.46,
+#   decisione di Ale dopo aver visto due casi, vale anche per il confine della regola 11, cioè l'altra barca a meno di 5 cm dalla linea della prua del giocatore,
+#   e si confrontano solo i contatti con la barca su cui era calcolato il semaforo: gli altri si riportano a parte); il controllo deve aver visto contatti e semafori (n > 0), e si riporta quanti contatti
 #   del giocatore erano senza semaforo visibile.
 # Parte 2, impostazione: con il semaforo spento l'immagine del mare non cambia quando c'è un colore (rosso o verde) e cambia quando è acceso.
 #   Spento di default; l'1a (regata 0) non lo ha mai (R.sem sempre nullo).
@@ -25,17 +27,20 @@ CORSA = """([race, seme, liv, acceso]) => {
   const sel = document.getElementById("aiLevel"); sel.value = liv; sel.dispatchEvent(new Event("change"));
   const cb = document.getElementById("showSem"); cb.checked = acceso; cb.dispatchEvent(new Event("change"));
   const R = sv.R, me = R.boats[0], dt = 1 / 60, c = document.getElementById("c");
-  const out = { contatti: 0, visibili: 0, sbagliati: 0, alConfine: 0, senza: 0, rossi: 0, verdi: 0, secondi: 0, nonNullo: 0, img: null }, visti = new Set();
+  const out = { contatti: 0, visibili: 0, sbagliati: 0, alConfine: 0, altraBarca: 0, senza: 0, rossi: 0, verdi: 0, secondi: 0, nonNullo: 0, img: null }, visti = new Set();
   let prevSem = null, prevNome = null, prevPen = 0, pos = null;
-  const margine = (i, j) => { const A = pos[i], B = pos[j], m = [];   // distanza (m) dal confine «dietro / affiancate» al passo prima: quanto manca perché la regola cambi
+  const margine = (i, j) => { const A = pos[i], B = pos[j], m = [];   // distanza (m) dai confini «dietro / affiancate» e «sopravento» (regola 11) al passo prima: quanto manca perché la regola cambi
     for (const [X, Y] of [[A, B], [B, A]]){ const h = Y.h * Math.PI / 180, fx = Math.sin(h), fy = -Math.cos(h), pr = p => p[0] * fx + p[1] * fy;
-      m.push(Math.abs(Math.max(...sv.hullWorld(X).map(pr)) - Math.min(...sv.hullWorld(Y).map(pr)))); } return +Math.min(...m).toFixed(3); };
+      m.push(Math.abs(Math.max(...sv.hullWorld(X).map(pr)) - Math.min(...sv.hullWorld(Y).map(pr)))); }
+    const h = A.h * Math.PI / 180; m.push(Math.abs((B.x - A.x) * Math.cos(h) + (B.y - A.y) * Math.sin(h))); // i = 0 è il giocatore: lato dell'altra rispetto alla sua prua (regola 11)
+    return +Math.min(...m).toFixed(3); };
   const foto = () => { sv.draw(0); return c.toDataURL().length + ":" + c.toDataURL().slice(-300); };
   const passo = () => {
     for (const key of Object.keys(R.contacts)){ const id = key + ":" + R.contacts[key]; if (visti.has(id)) continue; visti.add(id);
       const [i, j] = key.split("-").map(Number); if (i !== 0 && j !== 0) continue;
       out.contatti++; const colpa = (me.pen || 0) + (me.pp || 0) > prevPen;   // la penalità è andata al giocatore?
       if (prevSem === null){ out.senza++; continue; }
+      if (prevNome !== R.boats[i === 0 ? j : i].name){ out.altraBarca++; continue; }   // il semaforo parlava di un'altra barca (la più vicina)
       out.visibili++; if ((prevSem === "rosso") !== colpa){ const mg = margine(i, j); if (mg > 0.05) out.sbagliati++; else out.alConfine++; (out.dett = out.dett || []).push({ t: +R.t.toFixed(1), key, prevSem, colpa, vicina: prevNome, altra: R.boats[i === 0 ? j : i].name, lastRule: R.lastRule, margineDalConfine: mg }); } }
     if (R.sem){ out.nonNullo++; if (R.sem === "rosso") out.rossi++; else out.verdi++; }
     prevSem = R.sem; prevNome = R.semNome || null; prevPen = (me.pen || 0) + (me.pp || 0);
@@ -60,14 +65,14 @@ async def main():
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_function("window.__sv")
         print("== parte 1: coerenza fra semaforo e penalità (1b)")
-        tot = dict(contatti=0, visibili=0, sbagliati=0, alConfine=0, senza=0, rossi=0, verdi=0, nonNullo=0); immagini = []
+        tot = dict(contatti=0, visibili=0, sbagliati=0, alConfine=0, altraBarca=0, senza=0, rossi=0, verdi=0, nonNullo=0); immagini = []
         for seme in range(1, 9):
             for liv in ("principianti", "esperti"):
                 r = await pg.evaluate(CORSA, [2, seme, liv, True])
                 for k in tot: tot[k] += r[k]
                 if r["img"]: immagini.append(r["img"])
                 if r.get("dett"): print("  contraddizione", seme, liv, r["dett"])
-        print(f"  16 regate: contatti del giocatore {tot['contatti']}, con semaforo visibile {tot['visibili']}, senza {tot['senza']}, contraddizioni {tot['sbagliati']} (più {tot['alConfine']} con la regola al confine dietro/affiancate a meno di 5 cm al passo prima); passi con semaforo: rosso {tot['rossi']}, verde {tot['verdi']}")
+        print(f"  16 regate: contatti del giocatore {tot['contatti']}, con semaforo visibile {tot['visibili']}, senza {tot['senza']}, contraddizioni {tot['sbagliati']} (più {tot['alConfine']} con la regola al confine a meno di 5 cm al passo prima, {tot['altraBarca']} con una barca diversa da quella del semaforo); passi con semaforo: rosso {tot['rossi']}, verde {tot['verdi']}")
         chk(tot["contatti"] > 0 and tot["visibili"] > 0, "il controllo non ha misurato niente (nessun contatto o nessun semaforo visibile)")
         chk(tot["rossi"] > 0 and tot["verdi"] > 0, "il semaforo non è mai stato visto di tutti e due i colori")
         chk(tot["sbagliati"] == 0, f"{tot['sbagliati']} contatti con il colore diverso dalla penalità")

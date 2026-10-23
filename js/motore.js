@@ -39,7 +39,7 @@ const BOAT = {
 
 // ==== BARCA DEL LIVELLO 2 (1.0.24-1.0.28) ====
 // Tutto ciò che vale solo con S.lv === 2 (il livello 1 non ha S.lv e resta identico al bit): RUD2 (timone), RADD2 (raddrizzata), BOMA2 (spingi il boma), DERIVA2 (scarroccio), SALTI2 con
-// newShift/stepShift (salti di vento), poi in step() i rami `lv2` e `push`. Fuori da qui: gioco.js (scelta «Barca», salti di vento, barra con Maiusc,
+// newShift/stepShift (salti di vento), poi in step() i rami `lv2` (con la barca orziera sbandando, 1.0.46) e `push`. Fuori da qui: gioco.js (scelta «Barca», salti di vento, barra con Maiusc,
 // Z per il boma), regate.js (regate con rc.lv2), disegno.js (angolo della barra nel disegno). Per trovarli: grep -nE "S\.lv|lv2|RUD2|RADD2|raddT|BOMA2|SALTI2|DERIVA2".
 
 // 1.0.24: timone del livello 2 (docs/PROPOSTA-STALLO-TIMONE.md). Vale solo per una barca con S.lv === 2 che va avanti ad almeno uMin;
@@ -186,6 +186,9 @@ function step(S, C, E, dt){
     const F = Math.max(-RUD2.stallA, Math.min(RUD2.stallA, a2)) * D2R;
     const V2 = S.u * S.u + (S.r * D2R * RUD2.xR) ** 2;
     S.r += -RUD2.yawG * (V2 * F + S.u * RUD2.yawRho * S.r * D2R) * dt / D2R;
+    // 1.0.46: barca orziera sbandando (docs/PROPOSTA-ORZIERA-1B.md): F4 eq. 6, la spinta applicata al centro velico spostato sottovento
+    // di zCE·sin(sbandamento) fa girare verso il vento; nullo a barca dritta, sbandata sopravento poggia. Lo scafo che orza da solo è fuori (F4 non dà numeri).
+    S.r += (awa >= 0 ? 1 : -1) * drive * BOAT.zCE * Math.sin(phi) / RUD2.Izz * dt / D2R;
     S.r /= 1 + RUD2.hullKq / RUD2.Izz * Math.abs(S.r * D2R) * dt; // forma che non inverte mai il verso della rotazione
     S.stall = Math.abs(a2) > RUD2.stallA;
   } else {

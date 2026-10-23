@@ -12,7 +12,7 @@ Come si usa:
 ## Da fare per primi (proposta di priorità)
 
 1. **Chiudere con fonti le righe aperte di `CONTENUTI-DA-VERIFICARE.md`** (sessioni *web*, *libro*, *video*): ogni riga si chiude con una fonte citata, oppure resta una scelta dichiarata. Non ci sarà una persona esperta che le legga tutte (13 ottobre 2026).
-2. **Controllare la fonte sul momento di imbardata** (sessione *web*): il centro velico a circa 0,2 m a prua del centro scafo, il momento orziero che cresce con lo sbandamento, lo scafo sbandato che orza da solo. Due affermazioni risultano nel testo, la terza solo in parte.
+2. **Controllare la fonte sul momento di imbardata** (sessione *web*): il centro velico a circa 0,2 m a prua del centro scafo, il momento orziero che cresce con lo sbandamento, lo scafo sbandato che orza da solo. Due affermazioni risultano nel testo, la terza solo in parte. **Chiuso il 23 ottobre 2026:** sulla copia di F4 in `fonti-pdf/` ci sono tutte e tre (la terza senza numeri); vedi `PROPOSTA-ORZIERA-1B.md`.
 3. **Leggere l'articolo di Binns, Bethwaite e Saunders del 2002** (sessione *web*): previsione di velocità per una deriva monoposto; serve per calibrare la polare.
 4. **Studiare By The Lee** (sessione *codice*, sola lettura): come un simulatore dinamico organizza equilibrio, centro velico e smorzamento.
 5. **Titoli delle regole di regata 10, 11, 14 e 18** (sessione *web*): prima di scrivere le domande dell'esame.
