@@ -43,7 +43,9 @@ Ordine in `ROADMAP.md`.
 
 1. **Pulizia** (in corso, `PROPOSTA-PULIZIA-1B.md`): proposte finite in `archivio/`, nomi dei livelli nei documenti, `STATO.md`; poi la 1.0.47 con «1a» / «1b» nelle impostazioni e nel menu e tre collaudi nel giro lungo.
 2. **Avversari con la barca dell'1b** (partenze, virate, boe) su molte regate.
-3. **Regole 15 e 16 e il giallo del semaforo** (`PROPOSTA-REGOLE-PRECEDENZA-1B.md`, finestra T = 5,2 s misurata, soglia G da decidere), poi 17, 23 e 18, «contatto serio».
-4. **Tornei dell'1b, tappa T2** (triangolo, `PROPOSTA-TORNEI-1B.md`), lezioni brevi e menu dell'1b.
-5. **La regata come fonte**, solo nei tornei della parte «b» (`PROPOSTA-REGATA-COME-FONTE.md` §9), poi i tempi delle medaglie.
-6. **Livello 2** (il regolamento: segnali, precedenze, penalità a giri; `PROPOSTA-SEGNALI-PARTENZA.md` è la fermata 1 da rivedere).
+3. **Tornei dell'1b, tappa T2** (triangolo, `PROPOSTA-TORNEI-1B.md`).
+4. **Lezioni brevi dell'1b** (da proporre): timone che stalla, Z, salti di vento, raddrizzata lunga, barca orziera, contatto vero e chi cede (12, 13), il torneo.
+5. **Replay semplice nell'1b** (`PROPOSTA-REGATA-COME-FONTE.md` §9), menu, attestato e brevetto dell'1b, poi i tempi delle medaglie.
+6. **Livello 2.** 2a: il regolamento (regole 14 «contatto serio», 15, 16 e giallo, 17, 18, 21, 23, penalità a giri, segnali; `PROPOSTA-REGOLE-PRECEDENZA-1B.md` e `PROPOSTA-SEGNALI-PARTENZA.md` sono fermate 1 da rivedere). 2b: protesta, copertura del vento (al 2a se le fonti bastano), tornei con le regole vere, replay con domande.
+
+**Decisione di Ale (23 ottobre 2026):** le regole nell'1b si fermano a quelle di oggi (10-13, contatto vero, semaforo); copertura del vento e protesta passano dal livello 5 al 2.

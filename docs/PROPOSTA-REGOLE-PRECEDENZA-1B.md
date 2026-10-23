@@ -1,5 +1,7 @@
 # Proposta: le regole di precedenza dell'1b e il semaforo sullo scafo
 
+**Aggiornamento (Ale, 23 ottobre 2026): nell'1b le regole si fermano a quelle fatte (10-13, 1.0.40-1.0.42).** Le regole 15 e 16 col giallo, 17, 18, 23 e il «contatto serio» vanno al **livello 2a**, ognuna con la sua lezione; questa proposta resta come fermata 1 da rivedere allora (il nome del file resta «1B», per i rimandi). `VISIONE-LIVELLI-E-CARRIERA.md` §2.
+
 Stato: **proposta (fermata 1), nessun codice scritto.** Richiesta di Ale, 23 ottobre 2026: «tutte le regole possibili introdotte»; semaforo rosso/verde sul bordo dello scafo, giallo per «hai la precedenza ma ne stai abusando». Testo delle regole: F15 (`fonti-pdf/RRS-2025-2028-World-Sailing.pdf`), parafrasato qui, non copiato.
 
 ## Cosa fa oggi il gioco (1.0.39)
