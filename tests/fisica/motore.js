@@ -2,4 +2,4 @@
 // Fino alla 1.0.2 lo ritagliava da index.html fra due segnaposto di testo.
 const fs = require("fs"), path = require("path");
 const src = fs.readFileSync(path.join(__dirname, "..", "..", "js", "motore.js"), "utf8");
-module.exports = new Function(src + "\nreturn { step, BOAT, RUD2, RUD2_SICURA, BOMA2, SALTI2, newShift, stepShift, CL, CD, norm180, norm360, hullDrag };")();
+module.exports = new Function(src + "\nreturn { step, BOAT, RUD2, RUD2_SICURA, DERIVA2, BOMA2, SALTI2, newShift, stepShift, CL, CD, norm180, norm360, hullDrag };")();

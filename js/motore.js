@@ -38,9 +38,9 @@ const BOAT = {
 };
 
 // ==== BARCA DEL LIVELLO 2 (1.0.24-1.0.28) ====
-// Tutto ciò che vale solo con S.lv === 2 (il livello 1 non ha S.lv e resta identico al bit): RUD2 (timone), RADD2 (raddrizzata), BOMA2 (spingi il boma), SALTI2 con
+// Tutto ciò che vale solo con S.lv === 2 (il livello 1 non ha S.lv e resta identico al bit): RUD2 (timone), RADD2 (raddrizzata), BOMA2 (spingi il boma), DERIVA2 (scarroccio), SALTI2 con
 // newShift/stepShift (salti di vento), poi in step() i rami `lv2` e `push`. Fuori da qui: gioco.js (scelta «Barca», salti di vento, barra con Maiusc,
-// Z per il boma), regate.js (regate con rc.lv2), disegno.js (angolo della barra nel disegno). Per trovarli: grep -nE "S\.lv|lv2|RUD2|RADD2|raddT|BOMA2|SALTI2".
+// Z per il boma), regate.js (regate con rc.lv2), disegno.js (angolo della barra nel disegno). Per trovarli: grep -nE "S\.lv|lv2|RUD2|RADD2|raddT|BOMA2|SALTI2|DERIVA2".
 
 // 1.0.24: timone del livello 2 (docs/PROPOSTA-STALLO-TIMONE.md). Vale solo per una barca con S.lv === 2 che va avanti ad almeno uMin;
 // sotto, all'indietro e nel livello 1 il timone resta quello di sempre (barra fino a 30°, rotazione che insegue la barra).
@@ -95,6 +95,10 @@ function stepShift(st, dt, rnd, ruota = true){ // avanza di dt secondi; restitui
   if (st.kind === "pers" && ruota) st.drift = Math.max(-SALTI2.persMax, Math.min(SALTI2.persMax, st.drift + st.rate * dt));
   return st.drift + st.v0 + (st.v1 - st.v0) * (1 - Math.cos(Math.PI * Math.min(1, st.t / st.d))) / 2;
 }
+// 1.0.45: scarroccio del livello 2 (docs/PROPOSTA-SCARROCCIO-1B.md): deriva e pala come ali, Day 2017 eq. 11-12 (F17) con le misure delle regole di
+// classe (F37), barca dritta, scia della deriva sulla pala a zero: side = ½ρ·K·u·vl, K = 1,70 m² (deriva 1,176, pala 0,527 con l'acqua al 90%).
+// Al posto di u si usa √(u² + u0²): u0 è ricavato perché da ferma la barca scarrocci come nel livello 1 (q·u0 = 0,4·foilK + 60 = 268; ipotesi).
+const DERIVA2 = { q: 873, u0: 0.307 }; // q = ½·ρ·K (N·s/m²), u0 in m/s
 function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso segno della barra
   return tiller * RUD2.maxRudder + Math.atan2(S.r * D2R * RUD2.xR, S.u) / D2R;
 }
@@ -165,7 +169,7 @@ function step(S, C, E, dt){
   // 1.0.8: nessun tetto all'indietro (docs/PROPOSTA-RETROMARCIA.md): vela che sbatte contro la resistenza della tabella, la stessa della marcia avanti
   // scarroccio: la deriva resiste molto, meno a bassa velocità
   const leewardSign = awa >= 0 ? -1 : 1; // vento da dritta -> scarroccia verso sinistra
-  const latTarget = leewardSign * side / (BOAT.foilK * (S.u * S.u + 0.4) + 60);
+  const latTarget = leewardSign * side / (S.lv === 2 ? DERIVA2.q * Math.sqrt(S.u * S.u + DERIVA2.u0 * DERIVA2.u0) : BOAT.foilK * (S.u * S.u + 0.4) + 60);
   S.vl += (Math.max(-0.8, Math.min(0.8, latTarget)) - S.vl) * Math.min(1, dt * 2);
   // sbandamento: momento sbandante della vela contro timoniere sporto fuori e forma dello scafo
   S.heel = S.heel || 0; S.heelRate = S.heelRate || 0; S.hike = S.hike === undefined ? 0.2 : S.hike;
