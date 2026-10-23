@@ -76,7 +76,7 @@ Fonti e verifiche (non c'è una persona esperta: valgono fonti scritte e video)
   CONTENUTI-DA-VERIFICARE.md       affermazioni nautiche del gioco da confermare
   DUBBI-E-RICERCHE.md              domande aperte e ricerche da fare
   SCHEDATURA-FONTI.md              schede dei PDF e dei video consultati
-  RICERCA-DATI-IMBARDATA.md        ricerca sui dati per un motore dinamico
+  docs/archivio/RICERCA-DATI-IMBARDATA.md        ricerca sui dati per un motore dinamico
   REGOLE-DI-REGATA.md              regolamento di regata vero a confronto con il gioco
 
 Dove si va
@@ -86,9 +86,9 @@ Dove si va
   OSSERVAZIONI-GIOCANDO.md         diario delle prove di gioco
 
 Proposte aperte
-  PROPOSTA-RESISTENZA-SCAFO.md     prossimo compito di fisica: resistenza dello scafo
-  PROPOSTA-LABORATORIO.md          pannello nascosto per provare profili della barca
-  PROPOSTA-ESAME-E-BREVETTO.md     esame e brevetto (in parte fatta nella 0.20 e 0.21)
+  docs/archivio/PROPOSTA-RESISTENZA-SCAFO.md     prossimo compito di fisica: resistenza dello scafo
+  docs/archivio/PROPOSTA-LABORATORIO.md          pannello nascosto per provare profili della barca
+  docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md     esame e brevetto (in parte fatta nella 0.20 e 0.21)
 
 archivio/                          proposte chiuse o prove non adottate, tenute per memoria
 ```

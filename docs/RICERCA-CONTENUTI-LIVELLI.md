@@ -60,7 +60,7 @@ Peso: **leggero** = una lezione o un disegno; **medio** = codice di gioco nuovo 
 | Contenuto | Fonte | Come si impara | Peso | Stato |
 | --- | --- | --- | --- | --- |
 | Copertura del vento | Da cercare (`CONTENUTI-DA-VERIFICARE.md`) | Regate; consigli del coach | pesante | **[proposta]** di spostarla qui dal livello 2 |
-| Consigli di vento («il vento migliore era dall'altra parte»), brezze di mare e di terra | Dispensa, «Il vento»; `PROPOSTA-SALTI-VENTO.md` | Replay e consigli «col senno di poi» | pesante | **[proposta]** |
+| Consigli di vento («il vento migliore era dall'altra parte»), brezze di mare e di terra | Dispensa, «Il vento»; `archivio/PROPOSTA-SALTI-VENTO.md` | Replay e consigli «col senno di poi» | pesante | **[proposta]** |
 | Protesta e spazio alla boa, se non entrano nel livello 2 | F15 | — | — | **[aperto]** |
 
 ## 3. Scartati, per non appesantire
@@ -162,7 +162,7 @@ Accolti anche:
 - **Percorso a trapezio rimandato**: con quattro barche il triangolo basta a portare i lati al lasco.
 - **Spazio alla boa nel livello 2b, non al 5**: se il gioco decide la colpa, molti contatti avvengono alle boe, e senza la 18 i verdetti sarebbero spesso sbagliati.
 - **Il gioco fa da arbitro in acqua**: una riga nella lezione sulla penalità. Nella realtà, senza protesta non succede niente; esistono regate con arbitri sull'acqua (un'appendice di World Sailing per le regate di flotta arbitrate) **[da verificare: non è nel libro del regolamento in archivio]**. La protesta resta al livello 5.
-- **Salti di vento, reazione base nel livello 2**: virare quando il vento scarseggia, tenere le mure quando ridonda (già misurato in `PROPOSTA-SALTI-VENTO.md`); la strategia «col senno di poi» resta al 5.
+- **Salti di vento, reazione base nel livello 2**: virare quando il vento scarseggia, tenere le mure quando ridonda (già misurato in `archivio/PROPOSTA-SALTI-VENTO.md`); la strategia «col senno di poi» resta al 5.
 - **Copertura del vento**: oggi la fisica non toglie vento fra le barche; se un giorno lo farà prima del livello 5, servirà una frase che lo spieghi.
 - **Deriva mobile al livello 3** come novità del livello, non come «cosa da fare in due» (sulle derive in singolo la regola il timoniere).
 - **Le «cinque cose» dei corsi di deriva** (rotta, regolazione della vela, equilibrio laterale, assetto avanti-indietro, deriva) come modo di ordinare i commenti del coach, in tutti i livelli **[da verificare]** su una fonte scritta.

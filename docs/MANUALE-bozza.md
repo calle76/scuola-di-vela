@@ -81,11 +81,11 @@ Alla fine di un ripasso, se ci sono errori, il gioco elenca le domande sbagliate
 
 ## 3. I comandi nei livelli successivi
 
-Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 2 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A raddrizza la barca (dalla 1.0.27, prima R), Z spinge il boma nel livello 2, R resta libero per le manovre dei livelli futuri; il livello 1 resta com'è (tabella sopra).
+Oggi esiste solo il livello 1, con i tasti della tabella sopra. Dal livello 3 (fiocco, due ruoli) ogni ruolo comanda quello che deve comandare, senza un numero fisso di comandi, con questa regola (decisa il 7 ottobre 2026): per ogni ruolo il comando principale è su W S; le altre coppie verticali (E D, poi altre da scegliere evitando R) solo se il ruolo ha più comandi; A e Z restano liberi per funzioni speciali; Q è il tasto vista (dalla 0.19.2). Barra con ← →, Spazio, R e M restano come sono. In sintesi: ← → barra; W S comando principale del ruolo (randa, o fiocco per il prodiere); E D seconda coppia solo se il ruolo ha più comandi; Q vista del percorso (tenuto premuto, prove e regate); A raddrizza la barca (dalla 1.0.27, prima R), Z spinge il boma nel livello 3, R resta libero per le manovre dei livelli futuri; il livello 1 resta com'è (tabella sopra).
 
-### Il timone nel livello 2 (in prova dalla 1.0.25)
+### Il timone nell'1b (dalla 1.0.25)
 
-Nel livello 2 la barra va fino a 45°. Oltre un certo angolo la pala del timone **stalla**: l'acqua non la segue più, il timone frena invece di far girare, e il suggerimento lo dice. Per questo i tasti sono due. Per ora si prova nella navigazione libera, impostazioni, «Barca: livello 2 (prova)». Numeri misurati sul motore con 10 nodi di vento (`PROPOSTA-STALLO-TIMONE.md` §9).
+Nell'1b la barra va fino a 45°. Oltre un certo angolo la pala del timone **stalla**: l'acqua non la segue più, il timone frena invece di far girare, e il suggerimento lo dice. Per questo i tasti sono due. Per ora si prova nella navigazione libera, impostazioni, «Barca: 1b». Numeri misurati sul motore con 10 nodi di vento (`archivio/PROPOSTA-STALLO-TIMONE.md` §9).
 
 **Virata normale: solo la freccia.** Tenuta premuta, la barra arriva a 35° in mezzo secondo e si ferma lì. Quasi sempre: bordeggiare, cambiare mura, virare con la barca lanciata.
 - Pro: la barca esce dalla virata ancora veloce, perché la pala non stalla (conserva il 49% della velocità, come nel livello 1); non c'è niente da sbagliare.
@@ -107,7 +107,7 @@ Nel livello 2 la barra va fino a 45°. Oltre un certo angolo la pala del timone 
 
 **Onestà.** Il fermo a 35° è una **regola del gioco**: in barca vera non c'è, c'è la mano che sente la barra alleggerirsi quando la pala stalla. I numeri sono del nostro motore; le fonti (un 470 misurato, F4) dicono la stessa cosa nella sostanza (la barra arriva a 45°, accompagnata è il modo migliore, data di colpo fa perdere più velocità), ma la nostra barca è più leggera e le differenze sono più piccole. Il giro di penalità non ha ancora una fonte.
 
-### Spingere il boma (livello 2, in prova dalla 1.0.26)
+### Spingere il boma (1b, dalla 1.0.26)
 
 **Tasto Z, tenuto premuto.** Il boma va tutto fuori (80°) dalla parte dove si trova e resta lì contro il vento: la vela prende il vento dalla parte sbagliata («a collo»). La barca va all'indietro e la prua gira verso il boma.
 
@@ -118,9 +118,9 @@ Nel livello 2 la barra va fino a 45°. Oltre un certo angolo la pala del timone 
 
 **Onestà.** Le fonti descrivono la manovra ma non danno numeri: tempi e velocità del gioco vengono da quattro stime nostre (dove sta il centro velico, quanto l'acqua frena la barca che ruota). Il momento delle vele, nel gioco, esiste solo col boma spinto.
 
-### I salti di vento (livello 2, in prova dalla 1.0.28)
+### I salti di vento (1b, dalla 1.0.28)
 
-Con la barca del livello 2 il vento non soffia sempre dalla stessa direzione: oscilla di una dozzina di gradi attorno alla direzione media, avanti e indietro ogni due minuti circa. Si prova nella navigazione libera e nella «Regata nei salti di vento», che ha la boa a 300 m.
+Con la barca dell'1b il vento non soffia sempre dalla stessa direzione: oscilla di una dozzina di gradi attorno alla direzione media, avanti e indietro ogni due minuti circa. Si prova nella navigazione libera e nella «Regata nei salti di vento», che ha la boa a 300 m.
 
 **Come lo vedi:** di bolina, con la vela regolata, la prua segue il vento. Se la prua (nel pannello, in gradi) scende rispetto al solito, sei **scarso**: il vento ti obbliga a puntare più lontano dalla boa. Se sale, sei **buono**.
 **Cosa fare:** sugli scarsi si vira, perché sull'altra mura quello stesso salto diventa buono; sui buoni si resta. Nella regata, con la bolina di 300 m, chi lo fa arriva alla boa in media il 6-7% prima (misurato con un pilota).
@@ -144,8 +144,8 @@ Con la barca del livello 2 il vento non soffia sempre dalla stessa direzione: os
 | Cosa | Nel gioco | In barca vera | Quanto conta per chi impara |
 | --- | --- | --- | --- |
 | **La barca che gira da sola per effetto delle vele** | Con la barra al centro la barca va dritta (salvo il disturbo apposta nella lezione 2) | Secondo le fonti consultate, cazzando la randa la barca tende a orzare, e sbandando orza ancora di più: si sente la barra «pesante» | Alto: è una sensazione che un velista riconosce subito |
-| **La barra a fondo** | Nel livello 1 è sempre la scelta migliore (nel livello 2 in prova la pala stalla: vedi «Il timone nel livello 2») | Oltre circa 15° il timone frena senza girare di più (una sola fonte) | Medio: si può imparare un'abitudine sbagliata |
-| **Uscire dall'angolo morto** | Nel livello 1 si esce solo col timone (nel livello 2 in prova c'è anche il boma spinto, Z): mentre la barca arretra, barra verso il boma, poi barra al centro e si cazza. Il boma non si può spingere a mano; con la barra al centro la barca può restare a lungo all'indietro | Tre fonti descrivono la randa «a collo»: si spinge il boma fuori e la barra dalla stessa parte, la barca arretra e la prua si allontana dal vento, poi si centra, si cazza e si riparte (US Sailing; guida Sunfish di un circolo; associazione di classe di un catamarano; vedi `DUBBI-E-RICERCHE.md`, sez. 3). Da ricontrollare sulle pagine originali | Medio |
+| **La barra a fondo** | Nel livello 1 è sempre la scelta migliore (nell'1b la pala stalla: vedi «Il timone nell'1b») | Oltre circa 15° il timone frena senza girare di più (una sola fonte) | Medio: si può imparare un'abitudine sbagliata |
+| **Uscire dall'angolo morto** | Nel livello 1 si esce solo col timone (nell'1b c'è anche il boma spinto, Z): mentre la barca arretra, barra verso il boma, poi barra al centro e si cazza. Il boma non si può spingere a mano; con la barra al centro la barca può restare a lungo all'indietro | Tre fonti descrivono la randa «a collo»: si spinge il boma fuori e la barra dalla stessa parte, la barca arretra e la prua si allontana dal vento, poi si centra, si cazza e si riparte (US Sailing; guida Sunfish di un circolo; associazione di classe di un catamarano; vedi `DUBBI-E-RICERCHE.md`, sez. 3). Da ricontrollare sulle pagine originali | Medio |
 | **La planata** | C'è solo nella resistenza dello scafo (dalla 1.0.6, misurata in vasca fino a 9 nodi): niente assetto né onde | Sopra circa 8 nodi di velocità una deriva a due olimpica passa a un regime di alta velocità (una fonte) | Medio: conta di più dal livello 3 |
 | **Il peso del timoniere** | Si sporge da solo, con un ritardo | Gestire il peso è una parte importante della conduzione | Medio: diventerà un'azione del prodiere |
 | **Onde e corrente** | Non ci sono, salvo piccoli disturbi nella lezione 2 | Cambiano la guida e la velocità | Basso |
@@ -156,7 +156,7 @@ Con la barca del livello 2 il vento non soffia sempre dalla stessa direzione: os
 
 Nota onesta sulla velocità: confrontando con una tabella trovata in un forum (provenienza non verificabile) per una deriva monoposto standard, a 10 nodi di vento il gioco risulta più lento del 20-40%, soprattutto in poppa, dove una barca vera plana. Non è un difetto accertato: i dati sono incerti e i confronti approssimativi.
 
-## 6. Il fiocco (livello 2, per ora solo prototipo)
+## 6. Il fiocco (livello 3, per ora solo prototipo)
 
 Il fiocco non è ancora nel gioco: vive in un prototipo separato, `sperimentale/fiocco.html`.
 
@@ -174,11 +174,11 @@ Il fiocco non è ancora nel gioco: vive in un prototipo separato, `sperimentale/
 | Il fiocco a farfalla (dal lato opposto alla randa, in poppa) | Non modellato: il pannello lo dice | Con la randa che lo copre, il fiocco si porta dall'altra parte, spesso con un'asta; con spinnaker o gennaker si fissa |
 | Il fiocco a collo in virata | Sarebbe una taratura senza fonte, che andrebbe rifatta col prodiere | Un fiocco ancora cazzato dal lato vecchio spinge la prua; se ne occupa l'equipaggio. Nel gioco diventerà un errore di coordinamento |
 | Il momento d'imbardata dovuto alle vele | Il motore gira solo col timone. Modellare il solo fiocco dava una barca sempre poggiera, contro la fonte | La randa fa orzare, il fiocco fa poggiare |
-| Una barca a due con più massa | Una deriva a due senza trapezio sarebbe meno stabile del prototipo; il trapezio sarebbe una seconda novità per il livello 2 | Una deriva a due ha più massa e un equipaggio di due |
+| Una barca a due con più massa | Una deriva a due senza trapezio sarebbe meno stabile del prototipo; il trapezio sarebbe una seconda novità per il livello 3 | Una deriva a due ha più massa e un equipaggio di due |
 | L'upwash della randa sul fiocco | Non modellato: il fiocco non migliora la bolina | Il flusso della randa fa lavorare meglio il fiocco. La spiegazione «accelerazione come in un tubo» è sbagliata |
 | Lo stallo del timone; la planata (salvo la resistenza) | Non nel motore | Vedi sopra |
 
-**Il prototipo è sovrainvelato.** Con una raffica da 20 nodi si scuffia e a 15 nodi la virata non riesce. Il livello 2 va giocato con vento da leggero a medio (il limite esatto è una stima da misurare).
+**Il prototipo è sovrainvelato.** Con una raffica da 20 nodi si scuffia e a 15 nodi la virata non riesce. Il livello 3 va giocato con vento da leggero a medio (il limite esatto è una stima da misurare).
 
 ## 7. Come sono stati verificati i numeri
 

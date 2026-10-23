@@ -12,7 +12,7 @@ Come si usa:
 ## Da fare per primi (proposta di priorità)
 
 1. **Chiudere con fonti le righe aperte di `CONTENUTI-DA-VERIFICARE.md`** (sessioni *web*, *libro*, *video*): ogni riga si chiude con una fonte citata, oppure resta una scelta dichiarata. Non ci sarà una persona esperta che le legga tutte (13 ottobre 2026).
-2. **Controllare la fonte sul momento di imbardata** (sessione *web*): il centro velico a circa 0,2 m a prua del centro scafo, il momento orziero che cresce con lo sbandamento, lo scafo sbandato che orza da solo. Due affermazioni risultano nel testo, la terza solo in parte. **Chiuso il 23 ottobre 2026:** sulla copia di F4 in `fonti-pdf/` ci sono tutte e tre (la terza senza numeri); vedi `PROPOSTA-ORZIERA-1B.md`.
+2. **Controllare la fonte sul momento di imbardata** (sessione *web*): il centro velico a circa 0,2 m a prua del centro scafo, il momento orziero che cresce con lo sbandamento, lo scafo sbandato che orza da solo. Due affermazioni risultano nel testo, la terza solo in parte. **Chiuso il 23 ottobre 2026:** sulla copia di F4 in `fonti-pdf/` ci sono tutte e tre (la terza senza numeri); vedi `archivio/PROPOSTA-ORZIERA-1B.md`.
 3. **Leggere l'articolo di Binns, Bethwaite e Saunders del 2002** (sessione *web*): previsione di velocità per una deriva monoposto; serve per calibrare la polare.
 4. **Studiare By The Lee** (sessione *codice*, sola lettura): come un simulatore dinamico organizza equilibrio, centro velico e smorzamento.
 5. **Titoli delle regole di regata 10, 11, 14 e 18** (sessione *web*): prima di scrivere le domande dell'esame.
@@ -55,7 +55,7 @@ Il prototipo è chiuso con le semplificazioni dichiarate. I dubbi che restano:
 | **L'upwash della randa sul fiocco** | Spiega perché il fiocco fa stringere meglio il vento; non modellato, per questo l'ottimo di bolina resta a 50° e non a 48°. La spiegazione «Venturi» è sbagliata | *libro*; poi *codice* |
 | **Quanto spinge un fiocco a collo** | Nessuna fonte, né in gradi al secondo né in newton | *libro* o *video* |
 | **Il ginocchio nella velocità fra 126° e 132° di vento reale** (fino a 0,16 nodi per grado) | Dovuto alla rampa stretta dell'ombra; da giudicare giocando | *prova* |
-| **Il limite del vento per il livello 2** (stimato in 12-15 nodi) | È una stima: a 20 nodi di raffica si scuffia e a 15 la virata non riesce; il confine non è stato misurato | *codice* (misura), con le lezioni |
+| **Il limite del vento per il livello 3** (stimato in 12-15 nodi) | È una stima: a 20 nodi di raffica si scuffia e a 15 la virata non riesce; il confine non è stato misurato | *codice* (misura), con le lezioni |
 
 ## 3. Equilibrio, timone e raddrizzamento
 
@@ -64,7 +64,7 @@ Dalla fonte su una deriva olimpica a due (una sola barca):
 | Dubbio | Cosa sappiamo | Per chiuderlo |
 | --- | --- | --- |
 | **Momento d'imbardata dovuto alle vele** (randa che fa orzare, fiocco che fa poggiare, scafo sbandato che orza da solo) | Non modellato: il motore gira solo col timone. Modellare il solo fiocco dà una barca sempre poggiera, contro la fonte | *web* (ricontrollare la fonte), poi *codice* con un motore più dinamico |
-| **Timone in stallo oltre circa 15°** | Nel motore non stalla mai: barra a fondo (30°) gira 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore | *Aggiornato il 17 ottobre 2026:* nel livello 1 resta così, dichiarato; il livello 2 in prova ha lo stallo (`PROPOSTA-STALLO-TIMONE.md`), ma l'effetto didattico non c'è ancora. **Da cercare:** virate misurate su una deriva singola da circa 4 m (più pertinenti del 470), e la frenata della barca prua al vento |
+| **Timone in stallo oltre circa 15°** | Nel motore non stalla mai: barra a fondo (30°) gira 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore | *Aggiornato il 17 ottobre 2026:* nel livello 1 resta così, dichiarato; l'1b ha lo stallo (`archivio/PROPOSTA-STALLO-TIMONE.md`), ma l'effetto didattico non c'è ancora. **Da cercare:** virate misurate su una deriva singola da circa 4 m (più pertinenti del 470), e la frenata della barca prua al vento |
 | **Coppia raddrizzante di una deriva a due** | Circa 60 kgf·m senza trapezio e circa 220 col trapezio (una barca); il prototipo vale 83,7 kgf·m a 22,6° | *libro* o *video* |
 | **Massa e resistenza dello scafo** | Nel motore la massa non entra nella resistenza: una barca più pesante andrebbe più veloce. Nessun dato per ritarare | *web* (polari di derive) |
 | **Peso dell'equipaggio come comando** | Oggi il timoniere si sporge da solo, con 0,9 s di ritardo; nella realtà è una manovra (lezione 2.5) | *codice*, con il prodiere |
@@ -95,7 +95,7 @@ Nasce da due registrazioni (0.19.5 e 0.20): nel gioco, con la barca che arretra 
 - **Esito: «poggia da sola» non trovato in nessuna fonte.** Due fonti dicono il contrario, cioè che la barca **resta** nell'angolo morto se non si fa qualcosa. Nessuna delle due tratta il caso della barra al centro.
 - W2 (Sunfish, deriva): «there is powerful and EQUAL PRESSURE on both sides of the sail that can prevent the Sunfish from turning.» Il testo lo riferisce al vento sopra i 15 nodi e a un timoniere leggero.
 - W3 (catamarano): «The boat has to be steered out of irons and it won't do this by going forward any time soon.» Descrive anche la barca ferma che non risponde: «sit motionless with the boat refusing to respond to any amount of mainsheet tugging and rudder waggling».
-- **Misura del 16 ottobre 2026 (1.0.12, `PROPOSTA-CORREZIONI-PASSI.md` §2):** a mani ferme dopo il passo 1.8 la barca esce da sola dall'angolo morto 40 volte su 40. Su una copia con `ironsYaw` = 0 resta nel vento e arretra a circa 2 nodi, e il passo 1.9 guidato come dice il testo non riesce più (0 su 20): togliere la regola senza fonte richiede anche un modo di uscire per i principianti (le fonti: spingere il boma, comando previsto nel livello 2). Decisione di Ale: per ora non si cambia.
+- **Misura del 16 ottobre 2026 (1.0.12, `archivio/PROPOSTA-CORREZIONI-PASSI.md` §2):** a mani ferme dopo il passo 1.8 la barca esce da sola dall'angolo morto 40 volte su 40. Su una copia con `ironsYaw` = 0 resta nel vento e arretra a circa 2 nodi, e il passo 1.9 guidato come dice il testo non riesce più (0 su 20): togliere la regola senza fonte richiede anche un modo di uscire per i principianti (le fonti: spingere il boma, comando previsto nell'1b). Decisione di Ale: per ora non si cambia.
 - W1 non dice né l'una né l'altra cosa; dice solo «you'll find it hard to steer».
 - **Conteggio:** due fonti indipendenti, di cui una sola su una deriva e l'altra su un catamarano. Per il caso «deriva, barra al centro» il risultato è **non verificato**, ma **va contro** i testi attuali del gioco (passo 5.4, suggerimento, domanda 22).
 
@@ -113,7 +113,7 @@ Nasce da due registrazioni (0.19.5 e 0.20): nel gioco, con la barca che arretra 
   - lo stato sta in `S.indietro`, fuori dal motore.
 
   Nel collaudo: 0 ritorni al primo testo con la prua da 37° in su, e il controllo «solo il secondo testo» è passato nei casi 2, 4 e 5 in tutte le prove. Era una scelta di interfaccia, senza bisogno di fonti.
-- **Per il gioco.** *Dalla 1.0.26 il livello 2 in prova ha il boma spinto (tasto Z, `PROPOSTA-SPINGI-BOMA.md`): si esce in 1-2 s con 10 nodi, la prua gira verso il boma come dicono W1-W3.* Il livello 1 non ha un comando per spingere il boma. *Corretto l'11 ottobre 2026:* il dato «3,4-10,2 s» scritto qui prima era sbagliato. In quella prova la barra stava **lontano dal boma** e la prua attraversava il vento (a 0°) prima di uscire dall'altro lato. La misura giusta: mentre la barca arretra, barra a fondo **verso il boma**, poi al centro. Nel gioco libero, tre casi delle registrazioni, scotta 100 e 50, con e senza raffiche, 10 semi: la prua arriva a 45° dal vento in 60 casi su 60 e non passa mai a meno di 10° dal vento. Con la barra lontano dal boma la prua attraversa il vento in 60 casi su 60. *Corretto l'11 ottobre 2026 (0.20.2):* qui c'era scritto «e non esce mai», ma quel collaudo contava come uscita solo quella sulla stessa mura e fermava la prova dopo circa 12 s; lasciata fare, la barca esce sull'altra mura (8 su 8 nel collaudo del passo 5.4, circa 9 s dopo essersi piantata). Dalla 0.20.2 il passo 5.4 la conta come uscita buona: nessuna fonte dice che sia sbagliata. Griglia e collaudo su tutte e due le mure nel `CHANGELOG.md`, 0.20.1.
+- **Per il gioco.** *Dalla 1.0.26 l'1b ha il boma spinto (tasto Z, `archivio/PROPOSTA-SPINGI-BOMA.md`): si esce in 1-2 s con 10 nodi, la prua gira verso il boma come dicono W1-W3.* Il livello 1 non ha un comando per spingere il boma. *Corretto l'11 ottobre 2026:* il dato «3,4-10,2 s» scritto qui prima era sbagliato. In quella prova la barra stava **lontano dal boma** e la prua attraversava il vento (a 0°) prima di uscire dall'altro lato. La misura giusta: mentre la barca arretra, barra a fondo **verso il boma**, poi al centro. Nel gioco libero, tre casi delle registrazioni, scotta 100 e 50, con e senza raffiche, 10 semi: la prua arriva a 45° dal vento in 60 casi su 60 e non passa mai a meno di 10° dal vento. Con la barra lontano dal boma la prua attraversa il vento in 60 casi su 60. *Corretto l'11 ottobre 2026 (0.20.2):* qui c'era scritto «e non esce mai», ma quel collaudo contava come uscita solo quella sulla stessa mura e fermava la prova dopo circa 12 s; lasciata fare, la barca esce sull'altra mura (8 su 8 nel collaudo del passo 5.4, circa 9 s dopo essersi piantata). Dalla 0.20.2 il passo 5.4 la conta come uscita buona: nessuna fonte dice che sia sbagliata. Griglia e collaudo su tutte e due le mure nel `CHANGELOG.md`, 0.20.1.
 
 **3. Dopo la scuffia e il raddrizzamento: si lasca o si cazza per ripartire?**
 
@@ -151,7 +151,7 @@ Quattro video informali (trascrizioni automatiche incollate da Ale, non viste n�
 | --- | --- | --- |
 | Polari pubbliche di derive | Non risultano. I database aperti vengono da certificati ORC e riguardano barche a chiglia e sportboat; la licenza dei dati non è chiara | *web* |
 | Confronto del gioco con una deriva monoposto standard | Una tabellina in un forum (provenienza non verificabile): a 10 nodi il gioco risulta più lento del 20-40%, soprattutto in poppa, dove una barca vera plana | *web* (articolo del 2002), poi *codice* |
-| Braccio sbandante `zCE` = 2,0 m, senza fonte (17 ottobre 2026, `PROPOSTA-BOLINA.md` §11) | Cambia solo il vento forte: con 2,8 m la bolina con 15 nodi passa da +7% a −1% contro Day, con 9 nodi non cambia. Il braccio va dal centro velico al centro della spinta laterale sotto l'acqua; Day dà le proporzioni (36,4% dell'inferitura sopra il boma, 43% della deriva) ma non le misure dell'armo | *web*: misure dell'armo con una fonte usabile (principio 5), quando si cambia la barca (livello 3) |
+| Braccio sbandante `zCE` = 2,0 m, senza fonte (17 ottobre 2026, `archivio/PROPOSTA-BOLINA.md` §11) | Cambia solo il vento forte: con 2,8 m la bolina con 15 nodi passa da +7% a −1% contro Day, con 9 nodi non cambia. Il braccio va dal centro velico al centro della spinta laterale sotto l'acqua; Day dà le proporzioni (36,4% dell'inferitura sopra il boma, 43% della deriva) ma non le misure dell'armo | *web*: misure dell'armo con una fonte usabile (principio 5), quando si cambia la barca (livello 3) |
 | Coefficienti di portanza e resistenza delle vele leggibili nel testo | Le figure dello studio sulla deriva olimpica non lo sono | *libro* |
 
 ## 5. Modelli e dati esistenti
@@ -160,7 +160,7 @@ Quattro video informali (trascrizioni automatiche incollate da Ale, non viste n�
 | --- | --- | --- |
 | **By The Lee** (simulatore di vela in JavaScript, licenza Apache-2.0): riferimento per una dinamica minima nel nostro motore | Ricordata come riferimento; letto solo il README | *codice*, sola lettura: come organizza equilibrio, centro velico, smorzamento |
 | Python-VPP, sailboat-playground, simulatore su atterwind.info | Licenze non verificate | *web*, solo se serve |
-| **Scala del realismo**: gradino 1 motore cinematico dichiarato (oggi); gradino 2 pochi pezzi mirati con dati di fonte (barra «pesante» da sbandata, stallo del timone); gradino 3 motore dinamico completo | Idea | Decidere confrontando il livello 1 con le fonti (vedi `PROPOSTA-RESISTENZA-SCAFO.md`) |
+| **Scala del realismo**: gradino 1 motore cinematico dichiarato (oggi); gradino 2 pochi pezzi mirati con dati di fonte (barra «pesante» da sbandata, stallo del timone); gradino 3 motore dinamico completo | Idea | Decidere confrontando il livello 1 con le fonti (vedi `archivio/PROPOSTA-RESISTENZA-SCAFO.md`) |
 
 ## 6. Livelli, ruoli e carriera
 
@@ -208,4 +208,4 @@ Domande pensate un tempo per un velista esperto, che non ci sarà: ognuna si chi
 
 ## Barra sbattuta su una deriva singola (19 ottobre 2026)
 
-Da misurare su video di derive singole in virata: velocità minima e durata con la barra data di colpo fino in fondo contro la barra accompagnata. Serve a decidere se la barca dell'1b deve far pagare Maiusc in velocità (`PROPOSTA-STALLO-TIMONE.md` §10). Sessione *video*; nessun codice.
+Da misurare su video di derive singole in virata: velocità minima e durata con la barra data di colpo fino in fondo contro la barra accompagnata. Serve a decidere se la barca dell'1b deve far pagare Maiusc in velocità (`archivio/PROPOSTA-STALLO-TIMONE.md` §10). Sessione *video*; nessun codice.

@@ -1,6 +1,6 @@
 # Laboratorio: a cosa serve ogni valore
 
-Guida per chi usa il laboratorio (versione 1.0.4, aggiornata alla 1.0.6 il 16 ottobre 2026: esempi rimisurati con la resistenza della vasca). La proposta tecnica, i limiti e i collaudi sono in `PROPOSTA-LABORATORIO.md`.
+Guida per chi usa il laboratorio (versione 1.0.4, aggiornata alla 1.0.6 il 16 ottobre 2026: esempi rimisurati con la resistenza della vasca). La proposta tecnica, i limiti e i collaudi sono in `archivio/PROPOSTA-LABORATORIO.md`.
 
 ## Come si apre
 
@@ -44,7 +44,7 @@ Oggi la barca fa: velocità 3,8 nodi di bolina, 6,0 al traverso, 4,1 in poppa; v
 
 ### Resistenza dell'acqua (la velocità)
 
-Dalla 1.0.6 la resistenza dello scafo non è più una formula con tre numeri da tarare: è una **tabella misurata in vasca** su uno scafo vero (`PROPOSTA-VELOCITA.md`). I due cursori servono a provare uno scafo più o meno frenato di quello misurato.
+Dalla 1.0.6 la resistenza dello scafo non è più una formula con tre numeri da tarare: è una **tabella misurata in vasca** su uno scafo vero (`archivio/PROPOSTA-VELOCITA.md`). I due cursori servono a provare uno scafo più o meno frenato di quello misurato.
 
 **`hullScale`: quanto frena lo scafo, rispetto alla vasca** (oggi 1; da 0,5 a 2,5)
 - **Cos'è:** un moltiplicatore. 1 è lo scafo misurato; 2 è più o meno la barca fino alla 1.0.5, che frenava circa il doppio.
@@ -78,7 +78,7 @@ Dalla 1.0.6 la resistenza dello scafo non è più una formula con tre numeri da 
 
 ### Marcia indietro e angolo morto
 
-**`backMax` non c'è più** (tolto nella 1.0.8, `PROPOSTA-RETROMARCIA.md`): la barca va all'indietro solo per la vela che sbatte, contro la stessa resistenza della marcia avanti. Un profilo salvato prima che contiene `backMax` non si carica più (il laboratorio dice che «non è un valore del laboratorio»): va tolta quella riga. Per la marcia indietro che parte troppo presto contano `mass`, `sailArea`, `hullScale`, `ironsU` e `ironsYaw`.
+**`backMax` non c'è più** (tolto nella 1.0.8, `archivio/PROPOSTA-RETROMARCIA.md`): la barca va all'indietro solo per la vela che sbatte, contro la stessa resistenza della marcia avanti. Un profilo salvato prima che contiene `backMax` non si carica più (il laboratorio dice che «non è un valore del laboratorio»): va tolta quella riga. Per la marcia indietro che parte troppo presto contano `mass`, `sailArea`, `hullScale`, `ironsU` e `ironsYaw`.
 
 Gli ultimi tre valori di questo gruppo lavorano insieme. Quando la barca è quasi ferma e la prua è vicina al vento, il gioco la fa girare da sola verso fuori, come fa una barca vera che il vento spinge di prua.
 

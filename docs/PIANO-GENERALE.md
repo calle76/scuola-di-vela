@@ -1,6 +1,8 @@
 # Piano generale: livelli, ruoli, bravura, barche
 
-Bozza del 9 ottobre 2026 (sera: aggiunto il §0 con il traguardo 1.0), da approvare. Nasce dalla chiacchierata del 9 ottobre sera e dai documenti `VISIONE-LIVELLI-E-CARRIERA.md`, `ROADMAP.md`, `RICERCA-DATI-IMBARDATA.md`, `RIPARTI-DA-QUI.md`.
+**Attenzione: i numeri dei livelli qui sono superati.** Vale l'impianto di `VISIONE-LIVELLI-E-CARRIERA.md` §2 (19 ottobre 2026): ogni livello ha una parte «a» e una «b»; 1b = barca completa, 2 = regolamento con la stessa barca, 3 = fiocco.
+
+Bozza del 9 ottobre 2026 (sera: aggiunto il §0 con il traguardo 1.0), da approvare. Nasce dalla chiacchierata del 9 ottobre sera e dai documenti `VISIONE-LIVELLI-E-CARRIERA.md`, `ROADMAP.md`, `archivio/RICERCA-DATI-IMBARDATA.md`, `RIPARTI-DA-QUI.md`.
 
 Stato dei punti (come nella visione):
 
@@ -223,7 +225,7 @@ Regola: due fermate per ogni compito di modellazione (proposta, poi implementazi
 
 **Per la 1.0 (§0):**
 
-1. **Salvare** `docs/RICERCA-DATI-IMBARDATA.md` e il piano: fatto il 9 ottobre (commit `2b7ea3c`). Resta da ricaricare i file nelle conoscenze del progetto.
+1. **Salvare** `docs/archivio/RICERCA-DATI-IMBARDATA.md` e il piano: fatto il 9 ottobre (commit `2b7ea3c`). Resta da ricaricare i file nelle conoscenze del progetto.
 2. **Registrazioni** delle lezioni: portarle in chat tutte insieme e leggerle.
 3. **Esame, brevetto e libretto minimo del livello 1**, con bivio e salvataggio di carriera e con il sistema dei meriti provvisorio (Competizione dalle regate singole): chiude il livello.
 4. **Rilascio 1.0**: collaudo guidando davvero la barca, `CHANGELOG.md` aggiornato.

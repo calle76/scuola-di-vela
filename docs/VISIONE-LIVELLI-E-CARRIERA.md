@@ -48,7 +48,7 @@ Regole di disegno:
 
 | Livello | Barca | a (teoria) | b (pratica) |
 | --- | --- | --- | --- |
-| **1** | Deriva singola | **1a:** le basi, cioè il livello 1 di oggi. **Congelato**: si correggono solo i difetti trovati giocando | **1b:** la barca completa (timone che stalla, Z, salti di vento, raddrizzata lunga, virate corrette: oggi «barca del livello 2, in prova») con le sue lezioni brevi; replay; tornei con le regole semplici di oggi (mure, sopravento, 15 s) |
+| **1** | Deriva singola | **1a:** le basi, cioè il livello 1 di oggi. **Congelato**: si correggono solo i difetti trovati giocando | **1b:** la barca completa (timone che stalla, Z, salti di vento, raddrizzata lunga, virate corrette; congelata il 23 ottobre 2026. Fino alla 1.0.46 il gioco la chiamava «barca del livello 2, in prova», nel codice è ancora `lv 2`) con le sue lezioni brevi; replay; tornei con le regole semplici di oggi (mure, sopravento, 15 s) |
 | **2** | La stessa deriva singola completa | **2a:** il regolamento: bandiere e segnali di partenza, tecnica di partenza, precedenze (10-14, 21), spazio alla boa (18, semplificato), penalità a giri (due per una regola della parte 2, uno per una boa toccata), il gioco come arbitro; regate di prova | **2b:** tornei con le regole vere; replay con domande sugli incidenti («chi aveva la precedenza?»), ripetizioni, lezioni |
 | **3** | Deriva a due, randa e fiocco | **3a:** fiocco e prodiere (un ruolo alla volta), lezione «I nomi» (parti della vela, fiocco, albero), deriva mobile | **3b:** pratica e tornei in due; replay sul coordinamento |
 | **4** | Deriva a due con gennaker | **4a:** vela di portanza, planata, angoli limite, lezione «I nomi» | **4b** |
@@ -56,8 +56,8 @@ Regole di disegno:
 | **6-7** | Catamarano; cabinato | **[aperto]** | |
 
 - **Eccezione dichiarata, solo del livello 1:** l'1a e l'1b hanno barche con fisica diversa (1a più semplice). Nasce da come si è lavorato prima di questo impianto; dal livello 2 in poi «a» e «b» hanno la stessa barca.
-- **Numeri:** i documenti scritti prima del 19 ottobre usano i numeri vecchi: il vecchio «livello 2» (regole e barca completa) corrisponde qui all'**1b più il livello 2**; il vecchio «livello 3» (fiocco) è il **3**, il vecchio 4 (gennaker) è il **4**. I numeri del fiocco e del gennaker quindi non cambiano.
-- **Ordine di lavoro:** prima congelare la barca dell'1b (serve all'1b e al livello 2) — **congelata il 23 ottobre 2026** (`PROPOSTA-CONGELAMENTO-1B.md`), poi replay e tornei dell'1b, poi il regolamento del 2a.
+- **Numeri:** i documenti scritti prima del 19 ottobre usano i numeri vecchi: il vecchio «livello 2» (regole e barca completa) corrisponde qui all'**1b più il livello 2**; il vecchio «livello 3» (fiocco) è il **3** (nei documenti più vecchi, fino al 17 ottobre circa, il fiocco è chiamato anche «livello 2»), il vecchio 4 (gennaker) è il **4**. I numeri del fiocco e del gennaker quindi non cambiano.
+- **Ordine di lavoro:** prima congelare la barca dell'1b (serve all'1b e al livello 2) — **congelata il 23 ottobre 2026** (`archivio/PROPOSTA-CONGELAMENTO-1B.md`), poi replay e tornei dell'1b, poi il regolamento del 2a.
 
 La tabella è una mappa, non un impegno: si pianifica nel dettaglio fino al livello 4, gli altri restano una direzione. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
 
@@ -75,13 +75,13 @@ Il tattico arriva al livello 5: su una deriva a due il timoniere decide da solo 
 
 **Fisica della barca che entra nel livello 2 (Ale, 17 ottobre 2026, punto sul livello 2).** Prima si completa e si congela la barca, poi la fisica fra le barche e le regole (`ROADMAP.md`, «prima la barca»). Ogni voce passa per le due fermate e va cercata prima nelle fonti:
 
-- **timone che stalla** oltre un certo angolo (oggi barra a fondo è sempre la scelta migliore; serve anche perché le penalità a giri siano una manovra vera). **In prova dalla 1.0.24** (`PROPOSTA-STALLO-TIMONE.md`), obiettivo didattico non ancora raggiunto;
-- **comando «spingi il boma»** (la vela tenuta a collo per uscire dall'angolo morto). **In prova dalla 1.0.26**, tasto Z (`PROPOSTA-SPINGI-BOMA.md`);
-- **salti di vento sul campo** (oggi solo un'oscillazione fissa di ±3° quando le raffiche sono accese). **In prova dalla 1.0.28** (`PROPOSTA-SALTI-VENTO.md`). **La linea di partenza resta posata perpendicolare al vento medio**, come fa il comitato; sono i salti a renderla storta, e il lato favorito diventa un argomento della lezione sulle partenze (che il regolamento non imponga la perpendicolare è da verificare nelle fonti).
+- **timone che stalla** oltre un certo angolo (oggi barra a fondo è sempre la scelta migliore; serve anche perché le penalità a giri siano una manovra vera). **In prova dalla 1.0.24** (`archivio/PROPOSTA-STALLO-TIMONE.md`), obiettivo didattico non ancora raggiunto;
+- **comando «spingi il boma»** (la vela tenuta a collo per uscire dall'angolo morto). **In prova dalla 1.0.26**, tasto Z (`archivio/PROPOSTA-SPINGI-BOMA.md`);
+- **salti di vento sul campo** (oggi solo un'oscillazione fissa di ±3° quando le raffiche sono accese). **In prova dalla 1.0.28** (`archivio/PROPOSTA-SALTI-VENTO.md`). **La linea di partenza resta posata perpendicolare al vento medio**, come fa il comitato; sono i salti a renderla storta, e il lato favorito diventa un argomento della lezione sulle partenze (che il regolamento non imponga la perpendicolare è da verificare nelle fonti).
 - ~~**Tendenza orziera** (la barca che orza da sola sbandando): **limite dichiarato per i livelli 1 e 2** (Ale, 19 ottobre 2026); si riprende al **livello 3**, dove l'equilibrio fra randa e fiocco è un argomento e la barca si progetta da capo. Un tentativo del 4 ottobre (prototipo del fiocco, tappa C) ha mostrato che aggiungerla a metà rende la barca ingiocabile.~~ **Cambiato il 23 ottobre 2026 (Ale): la barca orziera sbandando entra nella barca dell'1b**, prima del congelamento, con la sua fermata 1 (F38: la barca sbandata diventa molto orziera, si raddrizza prima di poggiare; F4: a barca dritta di bolina timone circa a zero). Resta il rischio del 4 ottobre: il termine va legato allo sbandamento (nullo a barca dritta), non al solo momento della vela. L'1a resta senza.
 - **Restano al livello 3-4:** braccio sbandante `zCE`, bolina lenta con poco vento, svergolamento, peso del timoniere come comando, deriva, massa nella resistenza, planata, corrente, onde vere.
 
-**Percorsi (Ale, 17 ottobre 2026):** oltre al bastone, percorsi a trapezio e a triangolo nelle regate del livello 2; bolina più lunga (300 m, `PROPOSTA-SALTI-VENTO.md`).
+**Percorsi (Ale, 17 ottobre 2026):** oltre al bastone, percorsi a trapezio e a triangolo nelle regate del livello 2; bolina più lunga (300 m, `archivio/PROPOSTA-SALTI-VENTO.md`).
 
 Fisica fra le barche: copertura del vento, colpa nei contatti decisa dalle regole, penalità a giri, avversari che rispettano le regole e escono dalle coperture, protesta (elenco qui sopra). Prima stesura: le novità sono le regole e chi le applica. Il lavoro parte da una ricerca sulle fonti (il regolamento di regata si parafrasa, non si copia; punto di partenza `REGOLE-DI-REGATA.md`) e dalle osservazioni di Ale sulla 1.0. Temi già emersi, da ordinare nella proposta:
 
@@ -90,7 +90,7 @@ Fisica fra le barche: copertura del vento, colpa nei contatti decisa dalle regol
 - avversari che rispettano le regole e guidano meglio (partenze, giri di boa, comportamento dopo l'arrivo; osservazioni 25-28);
 - la **protesta**, idea di Ale del 16 ottobre 2026 **[aperto]**: se ne parla con le osservazioni sulla 1.0.
 - la **copertura del vento**, chiesta da Ale il 17 ottobre 2026 **[aperto]**: «una barca che affianca l'altra toglie vento a chi è sottovento». Oggi ogni barca ha il vento pieno. È già descritta in `ROADMAP.md` (cono d'ombra: cosa richiede) e in `CONTENUTI-DA-VERIFICARE.md` (lunghezza del cono e perdita di vento da cercare nelle fonti); nel piano vecchio stava al livello 4 (`PIANO-GENERALE.md`), ora va nel livello 2 perché fa parte della dinamica delle regate. Tocca il vento che riceve la barca, quindi non è solo disegno: va con la ricerca sulle fonti del livello 2. **Da insegnare in una lezione** (Ale): dalla lezione in poi la copertura agisce nel gioco.
-- la **raddrizzata del livello 2** (1.0.32, `PROPOSTA-RADDRIZZATA.md`): più lunga (10 s dal tasto A) e con la barca al traverso, vela tutta lascata. **Da spiegare in una lezione breve** (Ale, 19 ottobre 2026), che dica cosa cambia rispetto al livello 1. **[deciso, lezione da scrivere]**
+- la **raddrizzata del livello 2** (1.0.32, `archivio/PROPOSTA-RADDRIZZATA.md`): più lunga (10 s dal tasto A) e con la barca al traverso, vela tutta lascata. **Da spiegare in una lezione breve** (Ale, 19 ottobre 2026), che dica cosa cambia rispetto al livello 1. **[deciso, lezione da scrivere]**
 
 I corsi dipendono dalla fisica del prototipo: se non regge, cambiano. Ogni lezione chiede un solo ruolo alla volta. Nelle lezioni gli ordini all'equipaggio sono sempre espliciti.
 
