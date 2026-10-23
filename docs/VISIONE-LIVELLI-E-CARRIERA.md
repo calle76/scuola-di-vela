@@ -57,7 +57,7 @@ Regole di disegno:
 
 - **Eccezione dichiarata, solo del livello 1:** l'1a e l'1b hanno barche con fisica diversa (1a più semplice). Nasce da come si è lavorato prima di questo impianto; dal livello 2 in poi «a» e «b» hanno la stessa barca.
 - **Numeri:** i documenti scritti prima del 19 ottobre usano i numeri vecchi: il vecchio «livello 2» (regole e barca completa) corrisponde qui all'**1b più il livello 2**; il vecchio «livello 3» (fiocco) è il **3**, il vecchio 4 (gennaker) è il **4**. I numeri del fiocco e del gennaker quindi non cambiano.
-- **Ordine di lavoro:** prima congelare la barca dell'1b (serve all'1b e al livello 2), poi replay e tornei dell'1b, poi il regolamento del 2a.
+- **Ordine di lavoro:** prima congelare la barca dell'1b (serve all'1b e al livello 2) — **congelata il 23 ottobre 2026** (`PROPOSTA-CONGELAMENTO-1B.md`), poi replay e tornei dell'1b, poi il regolamento del 2a.
 
 La tabella è una mappa, non un impegno: si pianifica nel dettaglio fino al livello 4, gli altri restano una direzione. Una deriva scuola (lenta, stabile, che perdona gli errori) resta un'idea per un eventuale livello 0.
 

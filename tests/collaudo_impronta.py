@@ -3,6 +3,8 @@
 #  - ogni passo di ogni lezione per 3 s, con una barra che va avanti e indietro (non serve completarli: conta lo stato);
 #  - le 5 prove con il pilota di collaudo_fasce.py, fino all'arrivo o a 900 s;
 #  - le 2 regate con principianti ed esperti, giocatore guidato da __sv.pilota, fino a 400 s;
+#  - dal congelamento della barca dell'1b (docs/PROPOSTA-CONGELAMENTO-1B.md): la «Regata nei salti di vento» con principianti ed esperti e la
+#    prima regata del torneo, come sopra; il gioco libero con la barca dell'1b guidato coi tasti veri (frecce, Maiusc, Z, una scuffia e A);
 #  - il menu del gioco libero e della carriera (in una pagina nuova), i meriti, un'estrazione dell'esame;
 #  - l'immagine del mare (canvas) in 21 momenti, con il ciclo del browser fermo (altrimenti increspature e zoom seguono l'orologio).
 # Da ogni scena legge stato delle barche, registro, testi del pannello e dei riquadri, e ne fa un'impronta.
@@ -83,6 +85,38 @@ REGATA = """([race, liv, seme]) => {
   return { barche: R.boats.map(b => [b.name, b.fin, b.pen, b.leg, b.ocs, b.char, I.barca(b.S), b.ctl.sheet, b.ctl.tiller]), passi: n, rank: sv.rank(),
     reg: Object.assign({}, sv.reg), tela, brief: R.brief, testi: ["standings","rRule","stErr","rDone","rDoneText","hint","instr","bTitle","bText","bNote"].map(I.testo) };
 }"""
+# 1b: la prima regata del torneo, come REGATA (il torneo si apre dal menu, come in misura_scarroccio.py)
+TORNEO = """([seme]) => {
+  const sv = __sv, I = __imp; sv.fast(0); __seed(seme); sv.store = "scuolaVelaSim.v1"; sv.torApri(); document.getElementById("torGo").click();
+  const R = sv.R; let n = 0, tela = null;
+  while (R.t < 400 && !R.boats.every(b => b.fin !== null)) {
+    sv.pilota(1 / 60); sv.run(1 / 60, 1); n++;
+    if (n === 60 * 200) { sv.panel(); sv.draw(1 / 60); tela = I.tela(); }
+  }
+  sv.panel();
+  return { barche: R.boats.map(b => [b.name, b.fin, b.pp, b.leg, b.ocs, b.char, I.barca(b.S), b.ctl.sheet, b.ctl.tiller]), passi: n, rank: sv.rank(),
+    reg: Object.assign({}, sv.reg), tela, testi: ["standings","rRule","stErr","hint","instr"].map(I.testo) };
+}"""
+# 1b: gioco libero con la barca dell'1b, 10 nodi, tasti veri: ← e → (sola freccia e con Maiusc), Z tenuto, una scuffia e A; stato ogni 5 s
+LIBERA1B = """([seme]) => {
+  const sv = __sv, I = __imp; sv.fast(0); __seed(seme); sv.openItem("free");
+  for (const [id, v] of [["wSpd", "10"], ["gustSel", "1"], ["wDir", "0"], ["boatLv", "2"]]){ const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event("change")); }
+  sv.openItem("free"); const S = sv.S;
+  const giu = k => dispatchEvent(new KeyboardEvent("keydown", { key: k })), su = k => dispatchEvent(new KeyboardEvent("keyup", { key: k }));
+  const piano = [[5, giu, "ArrowLeft"], [6.5, su, "ArrowLeft"], [15, giu, "ArrowRight"], [17, su, "ArrowRight"], [30, giu, "Shift"], [30, giu, "ArrowLeft"], [31.5, su, "ArrowLeft"],
+    [31.5, su, "Shift"], [45, giu, "z"], [51, su, "z"], [60, giu, "ArrowDown"], [63, su, "ArrowDown"], [80, giu, "ArrowUp"], [82, su, "ArrowUp"]];
+  const out = { stati: [], lv: S.lv }; let n = 0, tela = null;
+  for (; n < 60 * 120; n++){
+    const t = n / 60; for (const [tt, f, k] of piano) if (Math.abs(t - tt) < 1e-6) f(k);
+    if (n === 60 * 90) Object.assign(S, { capsized: true, capSide: 1, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); // scuffia, poi A
+    if (n === 60 * 91){ out.scuffia = [!!S.capsized]; giu("a"); }
+    sv.run(1 / 60, 1);
+    if (n % 300 === 0) out.stati.push([I.barca(S), sv.ctl.sheet, sv.ctl.tiller, !!S.stall, !!S.pushing]);
+    if (n === 60 * 46) { sv.panel(); sv.draw(1 / 60); tela = I.tela(); }
+  }
+  sv.panel(); out.scuffia.push(!!S.capsized); out.S = I.barca(S); out.tela = tela; out.reg = Object.assign({}, sv.reg); out.testi = ["hint","stErr","instr"].map(I.testo);
+  return out;
+}"""
 FINE = """() => {
   const sv = __sv, I = __imp, out = {};
   document.getElementById("toMenu").click(); out.menuLibero = I.testo("menu");
@@ -137,6 +171,10 @@ async def impronta(pagina, nome):
         for r in range(2):
             for liv in ("principianti", "esperti"):
                 pg = await nuova(); imp[f"regata {r+1} {liv}"] = await pg.evaluate(REGATA, [r, liv, 21 + r]); await pg.close()
+        for liv in ("principianti", "esperti"):   # 1b (congelamento)
+            pg = await nuova(); imp[f"regata 3 {liv}"] = await pg.evaluate(REGATA, [2, liv, 23]); await pg.close()
+        pg = await nuova(); imp["torneo regata 1"] = await pg.evaluate(TORNEO, [24]); await pg.close()
+        pg = await nuova(); imp["libera 1b"] = await pg.evaluate(LIBERA1B, [25]); await pg.close()
         pg = await nuova(); imp["menu, meriti, esame"] = await pg.evaluate(FINE)   # il salvataggio è quello di una pagina senza giocate: il menu e i meriti partono da zero
         imp["errori della pagina"] = errs
         await b.close()
@@ -144,13 +182,19 @@ async def impronta(pagina, nome):
 
 def misura(imp, passi):
     v = [x for k, x in imp.items() if k.startswith(("lezione", "prova"))]
-    reg = [x for k, x in imp.items() if k.startswith("regata")]
+    reg = [x for k, x in imp.items() if k.startswith(("regata", "torneo"))]
     vel = sum(1 for x in v if x["S"] and abs(x["S"][3]) > 0.01) + sum(1 for x in reg for b in x["barche"] if abs(b[6][3]) > 0.01)
     tele = sum(1 for x in v + reg if x.get("tela"))
     finite = sum(1 for k, x in imp.items() if k.startswith("prova") and x["S"][18])
     print(f"misurato: {sum(passi)} passi di lezione {passi}, {finite} prove finite su 5, {sum(len(x['barche']) for x in reg)} barche in {len(reg)} regate, "
           f"{vel} barche con velocità diversa da zero, {tele} immagini del mare, errori della pagina {len(imp['errori della pagina'])}", flush=True)
-    return sum(passi) >= 40 and vel >= 30 and tele >= 6 and len(reg) == 4
+    b1 = [x for k, x in imp.items() if k.startswith(("regata 3", "torneo"))]   # 1b: deve aver misurato davvero (docs/PROPOSTA-CONGELAMENTO-1B.md, criterio 1)
+    lib = imp.get("libera 1b") or {"stati": [], "lv": None}
+    arrivi = sum(1 for x in b1 for b in x["barche"] if b[1] is not None); virate = sum(b[6][12] or 0 for x in b1 for b in x["barche"])   # indici di __imp.barca: 12 tacks, 15 capsizes
+    stallo = sum(1 for st in lib["stati"] if st[3]); boma = sum(1 for st in lib["stati"] if st[4]); scuffie = 1 if lib.get("scuffia") == [True, False] else 0   # scuffiata a 90 s e raddrizzata con A
+    print(f"barca dell'1b: {len(b1)} regate, {arrivi} arrivi, {virate} virate; gioco libero: barca {lib['lv']}, {len(lib['stati'])} stati, "
+          f"col boma spinto {boma}, con la pala in stallo {stallo}, scuffia e raddrizzata con A {scuffie}", flush=True)
+    return sum(passi) >= 40 and vel >= 30 and tele >= 6 and len(reg) == 7 and lib["lv"] == 2 and virate > 0 and boma > 0 and scuffie > 0
 
 async def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]

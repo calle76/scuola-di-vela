@@ -55,6 +55,7 @@ fi
 TESTS=(
     "polare.js|node|ambiguo|0||fisica/polare.js"
     "raffiche_e_virate.js|node|ambiguo|0||fisica/raffiche_e_virate.js"
+    "impronta1b.js|node|chiaro|0||fisica/impronta1b.js"
     "collaudo_schermate.py|py|ambiguo|0||collaudo_schermate.py"
     "collaudo_riquadro_regata.py|py|chiaro|0||collaudo_riquadro_regata.py"
     "collaudo_moto_mare.py|py|chiaro|0||collaudo_moto_mare.py"

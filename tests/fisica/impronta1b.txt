@@ -1,0 +1,25 @@
+andatura 6 nodi 45°: 945719282d71c6a7
+andatura 6 nodi 90°: 3001edccb49b439b
+andatura 6 nodi 150°: e55e06683fd732b7
+andatura 10 nodi 45°: 98802ae5262bc820
+andatura 10 nodi 90°: cd58e8df87bae6a5
+andatura 10 nodi 150°: a850378077b5279c
+andatura 16 nodi 45°: 24239ce9e29905a2
+andatura 16 nodi 90°: a1a320e749d5b9f0
+andatura 16 nodi 150°: 68f7c548a1228c29
+virata 6 nodi freccia: 53ac879ca9edfad4
+virata 6 nodi Maiusc: f1d1e49fa9330b47
+virata 10 nodi freccia: b212d64c9e24d4f0
+virata 10 nodi Maiusc: ee5dbba70b551417
+virata 16 nodi freccia: e802fb0b0e23eab0
+virata 16 nodi Maiusc: 1295204eafbe3f6f
+strambata 10 nodi: 329fc6dbe94247b8
+strambata 16 nodi: 38d51f93ab18c52e
+raffica 10→18 nodi: 039b3c8345189570
+raffica 10→18 nodi lascando: 57f18103d9d5dbb0
+raffica 10→24 nodi: 920934b87f632302
+boma spinto 10 nodi: 8a6d78c096259fa6
+ferma nel vento 10 nodi: 1f70f0065c22c008
+indietro 10 nodi: cea4226c3226bd8a
+salti osc 10 nodi: c5af27517e3ab68f
+salti pers 10 nodi: 60fa546f8c631a6e
