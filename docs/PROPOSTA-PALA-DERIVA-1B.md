@@ -35,3 +35,8 @@ Stato: **fermata 1, nessun codice nel gioco** (23 ottobre 2026, notte). Richiest
 
 ## Decisione di Ale e fermata 2 (23 ottobre 2026): punto 1 fatto, versione 1.0.44
 Ale: «sì punto 1, lo scarroccio come passo dopo». `dragK` 117 nel motore; criterio 1 ok su tutti i venti; 1a identica; `salti2.js` tutto nelle soglie. Numeri e collaudi nel `CHANGELOG.md`, 1.0.44. **Prossimo: lo scarroccio dell'1b** (punto 4), con la sua fermata 1.
+
+## Ordine deciso da Ale (23 ottobre 2026) prima del congelamento della barca dell'1b
+1. Scarroccio dell'1b (punto 4 sopra), con la sua fermata 1.
+2. **Barca orziera sbandando** (F38, F4), con la sua fermata 1: il termine deve valere zero a barca dritta (rischio del 4 ottobre, `VISIONE-LIVELLI-E-CARRIERA.md`).
+3. Congelamento della barca, poi le regole 15 e 16 (T e G da rimisurare se la barca cambia ancora).
