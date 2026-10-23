@@ -481,7 +481,12 @@
     // scafo (sbandando, visto dall'alto appare più stretto)
     ctx.save(); ctx.scale(1 - Math.abs(sinH) * 0.35, 1);
     ctx.fillStyle = S.hullColor || colors.hull; ctx.strokeStyle = colors["hull-edge"]; ctx.lineWidth = 0.05; hullPath(0, 0); ctx.fill(); ctx.stroke();
-    if (opt.sem && mode === "race" && R && R.sem){ ctx.strokeStyle = R.sem === "rosso" ? "#E0553A" : "#3FBF6B"; ctx.lineWidth = R.sem === "rosso" ? 0.12 : 0.08; hullPath(0, 0); ctx.stroke(); } // 1.0.40: semaforo di precedenza, rosso più spesso (secondo segnale oltre al colore)
+    // 1.0.41: solo la barca del giocatore (le altre passano da questa stessa funzione con S scambiato: nella 1.0.40 il colore finiva anche sugli avversari);
+    // più visibile: alone largo e trasparente sotto la linea colorata (rosso più spesso, secondo segnale oltre al colore)
+    if (opt.sem && mode === "race" && R && R.sem && S === R.boats[0].S){
+      const rosso = R.sem === "rosso", col = rosso ? "#E0553A" : "#3FBF6B";
+      ctx.save(); ctx.lineJoin = "round"; ctx.globalAlpha = 0.3; ctx.strokeStyle = col; ctx.lineWidth = rosso ? 0.5 : 0.36; hullPath(0, 0); ctx.stroke();
+      ctx.globalAlpha = 1; ctx.lineWidth = rosso ? 0.22 : 0.14; hullPath(0, 0); ctx.stroke(); ctx.restore(); }
     // pozzetto e scassa della deriva
     ctx.fillStyle = colors.cockpit;
     ctx.beginPath(); ctx.moveTo(-0.38, 0.35); ctx.lineTo(0.38, 0.35); ctx.lineTo(0.42, 1.55); ctx.lineTo(-0.42, 1.55); ctx.closePath(); ctx.fill();
@@ -500,14 +505,17 @@
     ctx.lineWidth = 0.11; // gambe (1.0.30: due, piedi uno avanti all'altro nel pozzetto)
     for (const fy of [1.12, 1.48]){ ctx.beginPath(); ctx.moveTo(ws * 0.08, fy); ctx.lineTo(hipX, 1.12 + (fy - 1.12) * 0.3); ctx.stroke(); }
     ctx.lineWidth = 0.3; ctx.beginPath(); ctx.moveTo(hipX, 1.12); ctx.lineTo(shX, shY); ctx.stroke();           // busto
-    // prolunga del timone: dalla fine della barra alla mano, che sta a un braccio (45 cm) dalla spalla; il braccio non si allunga mai
-    const tx0 = Math.sin(tau) * 1.0, ty0 = 2.05 - Math.cos(tau) * 1.0, dd = Math.hypot(tx0 - shX, ty0 - shY), arm = Math.min(0.45, dd);
-    const hdX = shX + (tx0 - shX) / (dd || 1) * arm, hdY = shY + (ty0 - shY) / (dd || 1) * arm;
+    // prolunga del timone: dalla fine della barra alla mano, che sta a un braccio (45 cm) dalla spalla; il braccio non si allunga mai.
+    // 1.0.41: due spalle ai lati della fine del busto (dietro per il braccio della barra, davanti per quello della scotta, verso il centro del pozzetto);
+    // ogni braccio ha un bordo scuro, così si distingue dal busto dello stesso colore e si vede che parte dalla spalla e non dal fianco
+    const shA = [shX, shY + 0.14], shB = [shX, shY - 0.14], tx0 = Math.sin(tau) * 1.0, ty0 = 2.05 - Math.cos(tau) * 1.0;
+    const braccio = (sh, tx, ty) => { const d = Math.hypot(tx - sh[0], ty - sh[1]), a = Math.min(0.45, d), hx = sh[0] + (tx - sh[0]) / (d || 1) * a, hy = sh[1] + (ty - sh[1]) / (d || 1) * a;
+      ctx.strokeStyle = "rgba(0,0,0,.4)"; ctx.lineWidth = 0.12; ctx.beginPath(); ctx.moveTo(sh[0], sh[1]); ctx.lineTo(hx, hy); ctx.stroke();
+      ctx.strokeStyle = S.sailorColor || colors.sailor; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.moveTo(sh[0], sh[1]); ctx.lineTo(hx, hy); ctx.stroke(); return [hx, hy]; };
+    const [hdX, hdY] = braccio(shA, tx0, ty0);
     ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.035; ctx.beginPath(); ctx.moveTo(tx0, ty0); ctx.lineTo(hdX, hdY); ctx.stroke();
-    ctx.strokeStyle = S.sailorColor || colors.sailor; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.moveTo(shX, shY); ctx.lineTo(hdX, hdY); ctx.stroke(); // braccio
-    // 1.0.37: secondo braccio, dalla spalla davanti verso la scotta (centro del pozzetto); come l'altro non si allunga oltre 45 cm
-    const sh2Y = shY - 0.28, d2 = Math.hypot(0 - shX, 1.5 - sh2Y), a2 = Math.min(0.45, d2);
-    ctx.lineWidth = 0.08; ctx.beginPath(); ctx.moveTo(shX, sh2Y); ctx.lineTo(shX + (0 - shX) / (d2 || 1) * a2, sh2Y + (1.5 - sh2Y) / (d2 || 1) * a2); ctx.stroke();
+    braccio(shB, 0, 1.5);
+    ctx.fillStyle = S.sailorColor || colors.sailor; for (const sh of [shA, shB]){ ctx.beginPath(); ctx.arc(sh[0], sh[1], 0.1, 0, Math.PI * 2); ctx.fill(); }   // spalle
     ctx.fillStyle = "#F2D2B6"; ctx.beginPath(); ctx.arc(shX + ws * (0.08 + 0.1 * hk), shY - 0.04, 0.13, 0, Math.PI * 2); ctx.fill();
     // randa e boma
     const bs = S.dispBoom >= 0 ? 1 : -1; // lato su cui sta il boma (anche durante lo spostamento)

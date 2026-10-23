@@ -2,6 +2,7 @@
 # Parte 1: coppie di barche messe a mano (stesso passo, nessun avversario che si muova): l'1a (regata 0) usa il cerchio di 4,2 m fra i
 #   centri, l'1b (regata 2, «salti di vento») il contorno dello scafo. Ogni caso dice se il contatto deve esserci nei due livelli.
 # Parte 2: regate intere col pilota (semi 1-3, principianti ed esperti, 1a e 1b), passi di 1/240 s:
+#   criterio 3 (1.0.41), nell'1b dopo il contatto gli scafi non restano sovrapposti: al massimo 0,5 s a regata e 0,25 m di penetrazione (prima 9 s e 1,37 m);
 #   criterio 1, nell'1b ogni contatto scatta con gli scafi a meno di 5 cm (al passo prima); criterio 2, nell'1b nessuna sovrapposizione senza
 #   contatto; e il numero di contatti, riportato senza soglia. Il controllo deve aver visto contatti (n > 0) e coppie vicine, altrimenti è non valido.
 # Uso: python collaudo_contatto_vero.py
@@ -54,7 +55,7 @@ SIM = """([race, seme, liv]) => {
   const R = sv.R, me = R.boats[0], dt = 1 / 240;
 """ + GEO + """
   const salva = () => R.boats.map(b => ({ x: b.S.x, y: b.S.y, h: b.S.h }));
-  const out = { contatti: 0, maxDist: 0, sovrapposti: 0, vicine: 0, passi: 0 }, visti = new Set();
+  const out = { contatti: 0, maxDist: 0, sovrapposti: 0, vicine: 0, passi: 0, secSov: 0, maxPen: 0 }, visti = new Set();
   let prev = salva();
   const passo = () => {
     for (const key of Object.keys(R.contacts)){ const id = key + ":" + R.contacts[key]; if (visti.has(id)) continue; visti.add(id);
@@ -63,7 +64,8 @@ SIM = """([race, seme, liv]) => {
     for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
       const A = bs[i], B = bs[j]; if (A.fin !== null || B.fin !== null || A.dnf || B.dnf || A.S.capsized || B.S.capsized) continue;
       if (Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y) > 5) continue;
-      out.vicine++; if (clear(A.S, B.S) === 0 && !R.contacts[i + "-" + j]) out.sovrapposti++; }
+      out.vicine++; if (clear(A.S, B.S) === 0 && !R.contacts[i + "-" + j]) out.sovrapposti++;
+      const o = sv.hullOverlap(A.S, B.S); if (o){ out.secSov += dt; out.maxPen = Math.max(out.maxPen, o.pen); } }   // 1.0.41: scafi che restano sovrapposti dopo il contatto
   };
   let n = 0;
   while (me.fin === null && !me.dnf && R.t < 900){ prev = salva(); sv.pilota(dt); sv.run(dt, 1); passo(); n++; }
@@ -86,16 +88,17 @@ async def main():
             print(f"  {nome:58s} 1a: {r1} (atteso {c1a})  1b: {r2} (atteso {c1b})")
             chk(r1 == c1a, f"1a, {nome}: contatti {r1}, attesi {c1a}"); chk(r2 == c1b, f"1b, {nome}: contatti {r2}, attesi {c1b}")
         print("== parte 2: regate intere (passi di 1/240 s)")
-        tot = {0: [0, 0, 0, 0.0, 0], 2: [0, 0, 0, 0.0, 0]}  # contatti, sovrapposti, vicine, distanza max, corse
+        tot = {0: [0, 0, 0, 0.0, 0, 0.0, 0.0], 2: [0, 0, 0, 0.0, 0, 0.0, 0.0]}  # contatti, sovrapposti, vicine, distanza max, corse, secondi sovrapposti, penetrazione max
         for race in (0, 2):
             for seme in (1, 2, 3):
                 for liv in ("principianti", "esperti"):
                     r = await pg.evaluate(SIM, [race, seme, liv]); t = tot[race]
-                    t[0] += r["contatti"]; t[1] += r["sovrapposti"]; t[2] += r["vicine"]; t[3] = max(t[3], r["maxDist"]); t[4] += 1
+                    t[0] += r["contatti"]; t[1] += r["sovrapposti"]; t[2] += r["vicine"]; t[3] = max(t[3], r["maxDist"]); t[4] += 1; t[5] += r["secSov"]; t[6] = max(t[6], r["maxPen"])
         for race, nome in ((0, "1a (regata a bastone)"), (2, "1b (salti di vento)")):
-            c, s_, v, d, n = tot[race]
-            print(f"  {nome}: {n} corse, contatti {c} ({c / n:.1f} a regata), istanti con barche entro 5 m {v}, sovrapposizioni senza contatto {s_}, distanza massima fra scafi al contatto {d:.3f} m")
-        c, s_, v, d, n = tot[2]
+            c, s_, v, d, n, ss, mp = tot[race]
+            print(f"  {nome}: {n} corse, contatti {c} ({c / n:.1f} a regata), istanti con barche entro 5 m {v}, sovrapposizioni senza contatto {s_}, distanza massima fra scafi al contatto {d:.3f} m, scafi sovrapposti {ss / n:.2f} s a regata, penetrazione massima {mp:.2f} m")
+        c, s_, v, d, n, ss, mp = tot[2]
+        chk(ss / n <= 0.5 and mp <= 0.25, f"1b: scafi sovrapposti {ss / n:.2f} s a regata (atteso al massimo 0,5) e penetrazione massima {mp:.2f} m (attesa al massimo 0,25)")   # attese scritte il 24 ottobre, prima di vedere i numeri: prima della 1.0.41 erano 9 s e 1,37 m
         chk(v > 0 and c > 0, "1b: il controllo non ha misurato niente (nessuna coppia vicina o nessun contatto)")
         chk(s_ == 0, f"1b: {s_} istanti con scafi sovrapposti e nessun contatto")
         chk(d <= 0.05, f"1b: un contatto è scattato con gli scafi a {d:.3f} m al passo prima (soglia 0,05 m)")

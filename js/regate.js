@@ -490,7 +490,11 @@
       const A = bs[i], B = bs[j], key = i + "-" + j;
       if (A.fin !== null || B.fin !== null || A.dnf || B.dnf || A.S.capsized || B.S.capsized) continue;
       const d = Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y);
-      if (R.contacts[key]){ if (d > 8) delete R.contacts[key]; continue; } // stesso contatto finché non si separano
+      if (R.contacts[key]){
+        if (d > 8) delete R.contacts[key];
+        else if (R.lv2 && d <= 4.4){ // 1.0.41: nell'1b gli scafi non si compenetrano: finché si toccano si spingono fuori ad ogni passo (la penalità resta una sola)
+          const m = hullOverlap(A.S, B.S); if (m){ const p = m.pen / 2 + 0.02; A.S.x += m.nx * p; A.S.y += m.ny * p; B.S.x -= m.nx * p; B.S.y -= m.ny * p; } }
+        continue; } // stesso contatto finché non si separano
       let mtv = null;
       if (R.lv2){ if (d > 4.4) continue; mtv = hullOverlap(A.S, B.S); if (!mtv) continue; } // 1b: scafo contro scafo; 4,4 m = due mezze lunghezze, oltre non si toccano
       else if (d > 4.2) continue;                                                          // 1a: cerchio di 4,2 m, la distanza di sicurezza dichiarata

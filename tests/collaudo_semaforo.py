@@ -15,6 +15,11 @@ BASE = (ROOT / "index.html").as_uri()
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
 
+# conta gli alone del semaforo disegnati (tratto largo e trasparente nei due colori): in ogni immagine con il semaforo ce ne deve essere uno solo, quello del giocatore
+# (nella 1.0.40 il colore finiva anche sugli avversari, perché passano dalla stessa funzione di disegno)
+HALO = """(() => { const st = CanvasRenderingContext2D.prototype.stroke; window.__halo = 0;
+  CanvasRenderingContext2D.prototype.stroke = function(...a){ if (Math.abs(this.globalAlpha - 0.3) < 1e-3 && (Math.abs(this.lineWidth - 0.5) < 1e-3 || Math.abs(this.lineWidth - 0.36) < 1e-3) && (this.strokeStyle === "#e0553a" || this.strokeStyle === "#3fbf6b")) window.__halo++; return st.apply(this, a); }; })();"""
+
 CORSA = """([race, seme, liv, acceso]) => {
   const sv = __sv; sv.fast(0); sv.openItem(["r", race]); __seed(seme); sv.simTime = 0;
   const sel = document.getElementById("aiLevel"); sel.value = liv; sel.dispatchEvent(new Event("change"));
@@ -38,9 +43,9 @@ CORSA = """([race, seme, liv, acceso]) => {
   let n = 0;
   while (me.fin === null && !me.dnf && R.t < 900){ pos = R.boats.map(b => ({ x: b.S.x, y: b.S.y, h: b.S.h })); sv.pilota(dt); sv.run(dt, 1); passo(); n++;
     if (acceso && !out.img && R.sem){   // immagine con il colore, poi con l'impostazione spenta (stesso istante) e con il colore tolto
-      const con = foto(); cb.checked = false; cb.dispatchEvent(new Event("change")); const spento = foto();
+      window.__halo = 0; const con = foto(); const alone = window.__halo; cb.checked = false; cb.dispatchEvent(new Event("change")); const spento = foto();
       const col = R.sem; R.sem = null; const senza = foto(); R.sem = col; cb.checked = true; cb.dispatchEvent(new Event("change"));
-      out.img = { colore: col, diverse: con !== spento, spentoUguale: spento === senza }; } }
+      out.img = { colore: col, diverse: con !== spento, spentoUguale: spento === senza, alone, barcheVicine: R.boats.filter(b => b !== me && Math.hypot(b.S.x - me.S.x, b.S.y - me.S.y) < 12).length }; } }
   out.secondi = +(n / 60).toFixed(0); out.lv2 = R.lv2; return out; }"""
 
 async def main():
@@ -50,7 +55,7 @@ async def main():
         casi += 1
         if not ok: fail.append(msg); print("FALLITO:", msg)
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650}); await pg.add_init_script(SEME)
+        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650}); await pg.add_init_script(SEME); await pg.add_init_script(HALO)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_function("window.__sv")
         print("== parte 1: coerenza fra semaforo e penalità (1b)")
@@ -68,6 +73,8 @@ async def main():
         print("== parte 2: impostazione")
         print("  immagini controllate:", len(immagini), immagini[:2])
         chk(len(immagini) > 0, "nessuna immagine controllata")
+        chk(all(i["alone"] == 1 for i in immagini), f"alone del semaforo disegnato {sorted(set(i['alone'] for i in immagini))} volte per immagine (atteso 1: solo il giocatore)")
+        chk(all(i["barcheVicine"] >= 1 for i in immagini), "il controllo non ha avuto avversari vicini")
         chk(all(i["diverse"] for i in immagini), "con il semaforo acceso l'immagine è uguale a quella senza colore")
         chk(all(i["spentoUguale"] for i in immagini), "con il semaforo spento l'immagine cambia per il colore")
         r = await pg.evaluate("() => document.getElementById('showSem').checked"); chk(r is False or r is True, "impostazione mancante")
