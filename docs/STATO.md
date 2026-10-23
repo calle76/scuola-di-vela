@@ -35,14 +35,15 @@
 2. **Limiti dell'1a:** bolina dal 9 al 15% più lenta delle fonti con poco vento; la VMG di `bolina.js` non conta lo scarroccio (circa +3%, dichiarato).
 3. **Collaudi:** `collaudo_partenze.py` criterio (1) oscilla fra OK e FALLITO per 1-3 partenze (rumore, soglie non toccate: da guardare con Ale); `collaudo_virate2.py` avversari oltre la bolina + 15° nel 16% delle virate (soglia 5%); `collaudo_timone2.py` a volte fallisce di un fotogramma con molti collaudi in parallelo.
 4. **Prove giocando di Ale:** torneo dell'1b, raddrizzata di 10 s, distacchi, barca che balla, retromarcia con 15-20 nodi. Nelle regate dell'1a, all'arrivo, il pannello sfora di 48 px (1a congelata: da decidere). Tornando al menu a metà regata del torneo, la regata si ricorre da capo.
-5. **Semplificazioni:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio.
+5. **Boe dal lato sbagliato della guida automatica** (23 ottobre 2026, `tests/misura_boe.py`): se la barca si trova di fianco alla boa dal lato sinistro, la guida degli avversari (che è anche il pilota dei collaudi) risale sopra la boa verso il suo primo punto e la passa dal lato sbagliato, poi la rigira. Stessi semi 1-40, 160 corse dell'1a col pilota: 0 nella 1.0.41, **7 dalla 1.0.42** (dove gli scafi dopo il contatto si spingono fuori: in 6 casi su 7 c'è un contatto vicino alla boa poco prima). Al giocatore non succede (la boa la gira lui); sugli avversari non misurato. Decisione di Ale: l'1a non si tocca ora, si corregge nel passo «avversari con la barca dell'1b», dove si decide anche se portare la correzione all'1a.
+6. **Semplificazioni:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio.
 
 ## Prossimo lavoro
 
 Ordine in `ROADMAP.md`.
 
 1. ~~**Pulizia**~~ fatta (documenti e 1.0.47: «1a» / «1b» nelle impostazioni e nel menu, tre collaudi nel giro lungo; `PROPOSTA-PULIZIA-1B.md`).
-2. **Avversari con la barca dell'1b** (partenze, virate, boe) su molte regate.
+2. **Avversari con la barca dell'1b** (partenze, virate, boe) su molte regate; dentro, la correzione delle boe dal lato sbagliato della guida (punto 5 di «Aperto»), con la misura sugli avversari.
 3. **Tornei dell'1b, tappa T2** (triangolo, `PROPOSTA-TORNEI-1B.md`).
 4. **Lezioni brevi dell'1b** (da proporre): timone che stalla, Z, salti di vento, raddrizzata lunga, barca orziera, contatto vero e chi cede (12, 13), il torneo.
 5. **Replay semplice nell'1b** (`PROPOSTA-REGATA-COME-FONTE.md` §9), menu, attestato e brevetto dell'1b, poi i tempi delle medaglie.
