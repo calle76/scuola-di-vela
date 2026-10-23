@@ -492,7 +492,7 @@
       const d = Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y);
       if (R.contacts[key]){
         if (d > 8) delete R.contacts[key];
-        else if (R.lv2 && d <= 4.4){ // 1.0.41: nell'1b gli scafi non si compenetrano: finché si toccano si spingono fuori ad ogni passo (la penalità resta una sola)
+        else if (d <= 4.4){ // 1.0.41 (1b) e 1.0.42 (anche 1a, correzione di un difetto): gli scafi non si compenetrano; finché si toccano si spingono fuori ad ogni passo (la penalità resta una sola)
           const m = hullOverlap(A.S, B.S); if (m){ const p = m.pen / 2 + 0.02; A.S.x += m.nx * p; A.S.y += m.ny * p; B.S.x -= m.nx * p; B.S.y -= m.ny * p; } }
         continue; } // stesso contatto finché non si separano
       let mtv = null;

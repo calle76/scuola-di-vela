@@ -103,6 +103,7 @@ async def main():
         chk(s_ == 0, f"1b: {s_} istanti con scafi sovrapposti e nessun contatto")
         chk(d <= 0.05, f"1b: un contatto è scattato con gli scafi a {d:.3f} m al passo prima (soglia 0,05 m)")
         chk(tot[0][0] > 0, "1a: nessun contatto misurato")
+        chk(tot[0][5] / tot[0][4] <= 0.5 and tot[0][6] <= 0.25, f"1a: scafi sovrapposti {tot[0][5] / tot[0][4]:.2f} s a regata e penetrazione massima {tot[0][6]:.2f} m (attesi al massimo 0,5 s e 0,25 m: la correzione vale anche nell'1a dalla 1.0.42; prima 2,8 s e 1,37 m)")
         chk(not errs, f"errori della pagina: {errs[:3]}")
         await b.close()
     print(f"controlli: {casi}, falliti: {len(fail)}")
