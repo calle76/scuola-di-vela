@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, barca del livello 2 in prova (docs/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.35"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.36"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -361,7 +361,7 @@
     $("autoCenter").checked = opt[centerKey()];
     $("lesson").hidden = which !== "lesson"; $("mission").hidden = which !== "mission"; $("free").hidden = which !== "free"; $("race").hidden = which !== "race";
     $("done").hidden = true; $("mRow").hidden = which !== "mission"; $("freeOpts").hidden = which !== "free";
-    $("rRow").hidden = which !== "race"; $("rDone").hidden = true;
+    $("rRow").hidden = which !== "race"; $("rDone").hidden = true; $("finOv").hidden = true; document.querySelector(".panel").classList.remove("fin");
     document.querySelector(".panel").classList.toggle("play", which !== "lesson");
     document.querySelector(".panel").classList.toggle("noends", which !== "lesson" || lessonIdx >= 2);
     $("status").hidden = which !== "mission" && which !== "race"; $("standings").hidden = which !== "race"; $("stClock").hidden = which !== "mission";

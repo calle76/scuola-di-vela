@@ -160,7 +160,7 @@
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
-    $("rDone").hidden = true; $("rTor").hidden = true;
+    $("rDone").hidden = true; $("rTor").hidden = true; finShow();
     $("rRestart").hidden = $("rWind").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief(rc.title, R.brief, true);
@@ -542,7 +542,20 @@
     const gap = b => { const s = distacco(b); return s === null ? "" : " · " + (Math.round(s) < 0 ? "−" + -Math.round(s) : Math.round(s)) + " s"; }; // 1.0.33
     $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · +" + b.pen + " s" : ""}${b.pp ? " · +" + b.pp + " pt" : ""}${gap(b)}</span></li>`).join("");
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
+    finShow();
   }
+  // ---- schermata finale (1.0.36, docs/PROPOSTA-SCHERMATA-FINALE.md) ----
+  // A regata finita il riepilogo e la classifica passano dal pannello a un riquadro sopra il mare: il pannello non sfora più.
+  // I riquadri #rDone e #standings restano compilati (i collaudi li leggono), solo nascosti dalla classe .fin.
+  function finShow(){
+    const on = R.phase === "done" && !$("rDone").hidden;
+    document.querySelector(".panel").classList.toggle("fin", on);
+    if (!on) return void ($("finOv").hidden = true);
+    $("finText").textContent = $("rDoneText").textContent; $("finList").innerHTML = $("standings").innerHTML;
+    $("finTor").hidden = $("rTor").hidden; $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
+    if ($("finOv").hidden){ $("finOv").hidden = false; releaseKeys(); setTimeout(() => (!$("finRestart").hidden ? $("finRestart") : $("finTor")).focus(), 0); }
+  }
+  $("finRestart").onclick = () => $("rRestart").click(); $("finWind").onclick = () => $("rWind").click(); $("finTor").onclick = () => $("rTor").click();
 
   // ---- torneo dell'1b (1.0.34, tappa T1 di docs/PROPOSTA-TORNEI-1B.md) ----
   // Serie di 4 regate a bastone con la barca dell'1b contro gli stessi tre avversari, con lo stesso carattere. Punteggio di F15,
