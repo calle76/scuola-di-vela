@@ -54,7 +54,7 @@ const RUD2 = {
   xR: 1.9,            // m, distanza della pala dal centro di rotazione (stima: poppa di una barca da 4,2 m)
   yawRho: 0,          // m, smorzamento dello scafo come lunghezza: 0 = la rotazione la frena solo la pala (tarato, docs/PROPOSTA-STALLO-TIMONE.md §8)
   yawG: 1.5,          // 1/m², quanto in fretta la pala fa girare la barca (ipotesi, tarata con 10 e 14 nodi; 1.0.31: era 0,6, ritarata con lo smorzamento dello scafo)
-  hullKq: 600,        // N·m·s², 1.0.31: acqua contro il solo scafo che ruota (stima della revisione in chat; BOMA2.Kq 1230 comprende anche la pala)
+  hullKq: 400,        // N·m·s², acqua contro il solo scafo che ruota: 1.0.31 600 (stima della revisione in chat; BOMA2.Kq 1230 comprende anche la pala); 1.0.43 400, scelto con i venti 10 e 14 (docs/PROPOSTA-VIRATA-1B.md)
   Izz: 200,           // kg·m², 1.0.31: inerzia d'imbardata con l'acqua trascinata da pala e deriva (stima, fissata prima di misurare; sensibilità 130-300)
   stallA: 22,         // gradi di angolo effettivo: F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera); fissato prima di misurare
   dragK: 184,         // N·s²/m²: resistenza della pala, 12 kgf a 15° e 6 nodi (F4, pala del 470); usa l'angolo effettivo

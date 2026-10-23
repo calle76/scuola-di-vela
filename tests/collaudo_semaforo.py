@@ -42,7 +42,8 @@ CORSA = """([race, seme, liv, acceso]) => {
   };
   let n = 0;
   while (me.fin === null && !me.dnf && R.t < 900){ pos = R.boats.map(b => ({ x: b.S.x, y: b.S.y, h: b.S.h })); sv.pilota(dt); sv.run(dt, 1); passo(); n++;
-    if (acceso && !out.img && R.sem){   // immagine con il colore, poi con l'impostazione spenta (stesso istante) e con il colore tolto
+    // 1.0.43: non durante lo scossone di un urto (S.shake sposta l'immagine a caso a ogni disegno: due foto di fila erano diverse, seme 3 esperti)
+    if (acceso && !out.img && R.sem && !(me.S.shake > 0)){   // immagine con il colore, poi con l'impostazione spenta (stesso istante) e con il colore tolto
       window.__halo = 0; const con = foto(); const alone = window.__halo; cb.checked = false; cb.dispatchEvent(new Event("change")); const spento = foto();
       const col = R.sem; R.sem = null; const senza = foto(); R.sem = col; cb.checked = true; cb.dispatchEvent(new Event("change"));
       out.img = { colore: col, diverse: con !== spento, spentoUguale: spento === senza, alone, barcheVicine: R.boats.filter(b => b !== me && Math.hypot(b.S.x - me.S.x, b.S.y - me.S.y) < 12).length }; } }
