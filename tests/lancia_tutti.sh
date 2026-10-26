@@ -71,6 +71,7 @@ TESTS=(
     "collaudo_raddrizzata.py|py|chiaro|1||collaudo_raddrizzata.py"
     "collaudo_virate2.py|py|chiaro|1||collaudo_virate2.py"
     "collaudo_distacchi.py|py|chiaro|1||collaudo_distacchi.py"
+    "collaudo_avversari1b.py|py|chiaro|1||collaudo_avversari1b.py"
     "collaudo_lezioni.py|py|ambiguo|0||collaudo_lezioni.py"
     "collaudo_quiz.py|py|chiaro|0||collaudo_quiz.py"
     "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
@@ -115,6 +116,7 @@ nota() {
         "collaudo_semaforo.py") echo "riga «ESITO: OK» (semaforo di precedenza: 16 regate dell'1b, colore uguale alla penalità, impostazione spenta, 1a senza semaforo)" ;;
         "collaudo_contatto_vero.py") echo "riga «ESITO: OK» (contatto fra gli scafi nell'1b: 8 coppie a mano nei due livelli, 6 regate col pilota nell'1a e nell'1b, 0 sovrapposizioni senza contatto, nessun contatto con gli scafi a più di 5 cm)" ;;
         "collaudo_salti2.py") echo "riga «ESITO: OK» (salti di vento dell'1b: libera, 12 regate nei salti col pilota, menu, pagina senza #collaudo)" ;;
+        "collaudo_avversari1b.py") echo "FALLITO noto dalla 1.0.49: scenario 5 (tre barche alla boa) 7 su 10 contro 9; gli altri quattro devono restare 10 su 10" ;;
         "collaudo_virate2.py") echo "FALLITO noto dalla 1.0.31: avversari oltre la bolina + 15° nel 15-17% delle virate contro la soglia del 5% (quasi tutte manovre volute della guida); guardare che il numero non cresca" ;;
         "collaudo_boma2.py") echo "riga «ESITO: OK» (spingi il boma, Z, nell'1b: 9 uscite dall'angolo morto coi tasti veri, ripartenza, pannello, pagina senza #collaudo)" ;;
         "collaudo_timone2.py") echo "riga «ESITO: OK» (barca dell'1b: freccia fino a 35°, Maiusc fino a 45°, 12 virate guidate coi tasti, avviso di stallo, pagina senza #collaudo)" ;;
