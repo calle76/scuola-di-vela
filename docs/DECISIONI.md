@@ -15,7 +15,7 @@ Costo di cambiamento:
 | --- | --- | --- | --- | --- |
 | Gioco nel browser: `index.html` più `js/`, script classici e non moduli, si apre con un doppio clic | 16 ott (1.0.3) | alto | Tutti i collaudi e la pubblicazione ci si appoggiano | `archivio/PROPOSTA-DIVISIONE-CODICE.md` |
 | Solo computer con tastiera | inizio | alto | Comandi, pannello e lezioni sono pensati per la tastiera | `PROGETTO.md` |
-| Pubblicazione su GitHub Pages da `main` [da verificare che sia attiva] | set | medio | Cambia solo come arriva il gioco a chi gioca | `README.md` |
+| Pubblicazione su GitHub Pages da `main` (attiva, verificata da Ale il 26 ott: https://calle76.github.io/scuola-di-vela/) | set | medio | Cambia solo come arriva il gioco a chi gioca | `README.md` |
 | Pannello senza eccedenze a 1360×650 | ott | medio | Ogni testo nuovo va misurato | `CLAUDE.md` |
 
 ## Fisica
