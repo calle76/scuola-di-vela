@@ -105,6 +105,7 @@ canvas:focus{outline:none}
 .overlay.finOv{top:50%;transform:translate(-50%,-50%);max-width:min(540px,90%);max-height:92%;overflow-y:auto;text-align:left;padding:16px 20px}
 .finOv .standings{margin:0 0 12px;font-size:1rem}.finOv .standings span{color:#cfe0ee}.finOv .standings li.me b{color:#F2C14E}
 .finBtns{display:flex;gap:10px;flex-wrap:wrap}
+.finPen{margin:0 0 12px;font-size:.85rem;color:#cfe0ee}
 .panel.fin > #status,.panel.fin > #rDone,.panel.fin > #rRow{display:none}
 .overlay.briefOv{top:50%;transform:translate(-50%,-50%);max-width:min(540px,90%);max-height:92%;overflow-y:auto;text-align:left;padding:18px 22px 20px}
 .briefOv h2{margin:0 0 8px;font-size:1.5rem;line-height:1.15}
@@ -320,7 +321,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
 <div class="layout" id="game" hidden>
   <div class="stage">
     <canvas id="c" tabindex="0" aria-label="Vista dall'alto della deriva sul mare. Clicca qui per usare la tastiera."></canvas>
-    <div class="overlay finOv" id="finOv" hidden role="dialog" aria-labelledby="finText"><p id="finText"></p><ol class="standings" id="finList"></ol><div class="finBtns"><button id="finRestart">Ricomincia</button><button id="finWind">Cambia vento</button><button id="finTor" hidden>Classifica del torneo</button></div></div>
+    <div class="overlay finOv" id="finOv" hidden role="dialog" aria-labelledby="finText"><p id="finText"></p><ol class="standings" id="finList"></ol><p class="finPen" id="finPen" hidden></p><div class="finBtns"><button id="finRestart">Ricomincia</button><button id="finWind">Cambia vento</button><button id="finTor" hidden>Classifica del torneo</button></div></div>
     <div class="overlay" id="capOverlay" hidden><p id="capText">Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.</p><button id="capBtn">Raddrizza la barca</button></div>
     <div class="overlay briefOv" id="briefOv" hidden role="dialog" aria-labelledby="bTitle">
       <h2 id="bTitle"></h2>

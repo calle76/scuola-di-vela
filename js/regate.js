@@ -133,7 +133,7 @@
     const up = rc.up || MARK_UP;
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
     R = { t: -opt.countdown, phase: "pre", up, lv2: !!rc.lv2, tor: !!rc.tor, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
-          boats: [], contacts: {}, signals: new Set(), doneAt: null };
+          boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: spots[0].y };
     R.boats.push(me);
     const slots = [-24, 2, 24].sort(() => Math.random() - 0.5);
@@ -270,8 +270,8 @@
       const newSide = sgn(norm180(twd - brg));
       if (newSide !== side && Math.abs(rel) < 90) desired = A > ai.up + 12 ? twd - side * ai.up : twd - newSide * ai.up;
     }
-    // mure a sinistra: lascia strada a chi è mure a dritta, passandogli di poppa
-    if (side < 0 && !hold){
+    // mure a sinistra: lascia strada a chi è mure a dritta, passandogli di poppa (solo 1a; nell'1b chi cede lo decide cedeLv2, qui sotto)
+    if (!R.lv2 && side < 0 && !hold){
       for (const o of R.boats){
         if (o === b || o.S.capsized) continue;
         const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > 30) continue;
@@ -300,7 +300,8 @@
     // dalla regola qui sotto: annullato nel 39% degli istanti in cui una barca stava scartando, e presente in 83 contatti su 88.
     const avoidR = b.char === "prudente" ? 22 : 14;
     let avoiding = false;
-    for (const o of R.boats){
+    if (R.lv2){ if (!hold) desired = cedeLv2(b, desired, twd, side, ai); } // avoiding resta false: nell'1b la prua non entra mai nell'angolo morto
+    else for (const o of R.boats){
       if (o === b || o.fin !== null) continue;
       const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > avoidR) continue;
       const relB = norm180(bearingTo(s, o.S) - s.h); if (Math.abs(relB) > 90) continue; // 1.0.17: era 60°; i contatti misurati hanno le prue a 93°, cioè l'altra arriva di fianco
@@ -326,6 +327,34 @@
     if (A > 158) sheet = Math.min(sheet, 0.42); // abbattuta controllata
     if (s.heel > 22) sheet = Math.min(1, sheet + 0.2);
     b.ctl.sheet += (sheet - b.ctl.sheet) * Math.min(1, dt * 3);
+  }
+
+  // 1.0.49 (docs/PROPOSTA-AVVERSARI-1B.md, punto A), solo 1b: chi deve cedere secondo chiCede si scosta, chi ha la precedenza tiene la
+  // rotta e scarta solo all'ultimo; mai dentro l'angolo morto. Prima ogni avversario scartava qualsiasi barca davanti entro 14-22 m, anche
+  // avendo la precedenza, orzando fin dentro l'angolo morto: 72 piantate su 124 avendo la precedenza (tests/misura_avversari.py, semi 1-20).
+  const D_CEDE = 30, T_CEDE = 15, CEDE_A = 28, ULTIMO = 1.5; // ipotesi nostre: 30 m e 28° come la regola 10 degli avversari dell'1a; 15 s di preavviso
+  function cedeLv2(b, desired, twd, side, ai){
+    const s = b.S, L = BOAT.length, vx = Math.sin(s.h * D2R) * s.u, vy = -Math.cos(s.h * D2R) * s.u;
+    if (b.virando) return desired; // a virata in corso la si finisce
+    let best = null, bt = 1e9;
+    for (const o of R.boats){ // la barca col contatto più vicino nel tempo: chi passa a meno di due lunghezze entro T_CEDE s
+      if (o === b || o.fin !== null || o.dnf || o.S.capsized) continue;
+      const rx = o.S.x - s.x, ry = o.S.y - s.y, d = Math.hypot(rx, ry); if (d > D_CEDE) continue;
+      const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
+      const t = w2 > 1e-6 ? Math.max(0, -(rx * wx + ry * wy) / w2) : 0; // fra quanti secondi si è più vicini
+      if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», torna su e urta
+      bt = t; best = { o, d };
+    }
+    if (!best){ b.cedeA = null; return desired; }
+    const o = best.o, devo = chiCede(b, o).cede === b; b.cedeA = devo ? o : null;
+    if (!devo && best.d > ULTIMO * L) return desired; // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+    const relB = norm180(bearingTo(s, o.S) - s.h);
+    const base = sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up; // se la guida chiede di virare (timer dei bordi), si cede sulle mure di adesso
+    const nd = devo && tackOf(b) !== tackOf(o) ? base - side * CEDE_A // regola 10: poggia e passa di poppa
+      : base - (relB >= 0 ? 1 : -1) * (devo ? CEDE_A : 35);          // stesse mure, o ultimo momento: si scosta dall'altra
+    const t2 = norm180(twd - nd);
+    if (sgn(t2) === side && Math.abs(t2) >= ai.up - 2) return nd;
+    return devo && Math.abs(relB) < 60 ? base - side * CEDE_A : twd - side * (ai.up - 2); // mai nell'angolo morto né oltre il vento: chi deve cedere a una barca davanti, se non può orzare, poggia
   }
 
   // la guida dell'avversario, la stessa nella regata e nelle due simulazioni qui sotto (startTime, glideY): se divergessero, la
@@ -505,12 +534,16 @@
       const why = ({ 10: v("eri", "era") + " mure a sinistra e " + v("dovevi", "doveva") + " lasciare strada a chi era mure a dritta",
                      11: v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano",
                      12: v("eri", "era") + " dietro, con le stesse mure e senza essere affiancat" + v("o", "a") + ": " + v("dovevi", "doveva") + " lasciare strada a chi stava davanti",
-                     13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non eri di nuovo di bolina" })[cc.regola] + (R.lv2 ? " (regola " + cc.regola + ")" : "");
+                     13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non " + v("eri", "era") + " di nuovo di bolina" })[cc.regola] + (R.lv2 ? " (regola " + cc.regola + ")" : "");
       if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo
       for (const o of [A, B]){ o.S.u *= 0.6; }
       const dx = mtv ? mtv.nx : (A.S.x - B.S.x) / (d || 1), dy = mtv ? mtv.ny : (A.S.y - B.S.y) / (d || 1);
       const push = mtv ? mtv.pen / 2 + 0.15 : (4.6 - d) / 2 + 0.3; // 1b: si separano di 0,3 m fra gli scafi
       A.S.x += dx * push; A.S.y += dy * push; B.S.x -= dx * push; B.S.y -= dy * push;
+      // 1.0.49 (docs/PROPOSTA-AVVERSARI-1B.md, punto C): ogni penalità col motivo, per l'elenco a fine regata; nell'1b anche un messaggio quando si toccano due avversari
+      const altra = guilty === A ? B : A;
+      R.penList.push((guilty.me ? "Tu" : "La " + guilty.name) + ", contatto con " + (altra.me ? "te" : "la " + altra.name) + ": " + why + ".");
+      if (R.lv2 && !A.me && !B.me) toast("Contatto fra " + A.name + " e " + B.name + ": penalità alla " + guilty.name);
       if (A.me || B.me){
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
@@ -636,6 +669,7 @@
     document.querySelector(".panel").classList.toggle("fin", on);
     if (!on) return void ($("finOv").hidden = true);
     $("finText").textContent = $("rDoneText").textContent; $("finList").innerHTML = $("standings").innerHTML;
+    $("finPen").hidden = !R.penList.length; $("finPen").innerHTML = R.penList.length ? "<b>Penalità</b><br>" + R.penList.join("<br>") : ""; // 1.0.49: tutte le penalità col motivo (richiesta di Ale)
     $("finTor").hidden = $("rTor").hidden; $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
     if ($("finOv").hidden){ $("finOv").hidden = false; releaseKeys(); setTimeout(() => (!$("finRestart").hidden ? $("finRestart") : $("finTor")).focus(), 0); }
   }
