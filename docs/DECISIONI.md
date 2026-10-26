@@ -47,7 +47,7 @@ Costo di cambiamento:
 | Nell'1b le regole si fermano alle 10-13; copertura del vento e protesta passano al livello 2 | 23 ott | medio | Avversari e domande dell'1b | `STATO.md` |
 | Avversari dell'1b: chi deve cedere cede, chi ha la precedenza tiene la rotta (piantate 36 → 2, penalità 73 → 97) | 26 ott (1.0.49) | medio | Guida degli avversari e pilota dei collaudi | `PROPOSTA-AVVERSARI-1B.md` |
 | Avversari dell'1a lasciati come sono: meno bravi, come chi comincia | 26 ott | basso | — | `PROPOSTA-AVVERSARI-1B.md` §10 |
-| Torneo: uscire a metà regata (menu o chiusura del browser, anche per sbaglio) vale come «Ritirati» per quella regata; il torneo continua. Oggi la regata si rifà da capo (scelta della 1.0.34) | 26 ott | basso | Salvataggio del torneo e `collaudo_torneo.py` C3 | `STATO.md` «Aperto» 4 |
+| Torneo: uscire a metà regata (menu o chiusura del browser, anche per sbaglio) vale come «Ritirati» per quella regata; il torneo continua. Fatto nella 1.0.50 (prima la regata si rifaceva da capo, scelta della 1.0.34); conta dal clic su «Corri la regata» | 26 ott | basso | Salvataggio del torneo e `collaudo_torneo.py` C3 | `STATO.md` «Aperto» 4 |
 | Nessun aiuto a schermo per i salti di vento: si leggono dalla prua nel pannello | 26 ott | basso | — | `archivio/PROPOSTA-SALTI-VENTO.md` |
 | Si guida sempre un solo ruolo; nel torneo il ruolo resta lo stesso fino alla fine | ott | alto | Equipaggio del computer, meriti, tornei | `VISIONE-LIVELLI-E-CARRIERA.md` |
 | Nessun numero fisso di novità per livello | 4 ott | basso | — | `VISIONE-LIVELLI-E-CARRIERA.md` §1 |

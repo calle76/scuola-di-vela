@@ -20,6 +20,7 @@
     panelT -= dt; if (panelT <= 0){ panel(); panelT = 0.1; }
   }
   env.twd = 0; freshState(0, 0, 90, 0.4);
+  addEventListener("pagehide", () => { if (mode === "race") torEsci(); }); // 1.0.50: pagina chiusa o ricaricata a metà regata del torneo = ritiro
   showMenu();
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo, o #collaudo-lab per il laboratorio)
   if (location.hash === "#collaudo" || location.hash === "#collaudo-lab"){ window.__sv = {
@@ -30,7 +31,7 @@
       if (!me.ai) Object.assign(me, { ai: aiParams("principianti"), side: 1, boardT: 0, boardMax: 40, rOff: Math.random() * 6, char: "normale", startX: toWF(S.x, S.y)[0] * 0.5, capW: 0 });
       if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
       me.capW = 0; me.info = info; me.me = false; aiControl(me, dt); me.me = true; return ctl.tiller; },
-    openItem, chiCede, hullWorld, hullOverlap, estraiEsame, meriti, torPunti, torSerie, torChiudi, torApri, get tor(){ return tor; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
+    openItem, chiCede, hullWorld, hullOverlap, estraiEsame, meriti, torPunti, torSerie, torChiudi, torEsci, torApri, get tor(){ return tor; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
     completeStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; },
     ctl, autoSheet, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,

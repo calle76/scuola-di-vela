@@ -680,7 +680,7 @@
   // appendice A: punti bassi (A4), chi non arriva o si ritira prende iscritti + 1 (A5.2), uno scarto (A2.1) dopo la quarta regata,
   // parità con A8; un contatto con colpa è una penalità sul punteggio (44.3(c)), non 15 s. Finestra d'arrivo (appendice S, 12.3):
   // chi non arriva entro TOR_FIN volte il tempo della prima non arriva. Il torneo si salva in progress.torneo dopo ogni regata;
-  // la regata interrotta (pagina chiusa, menu) si ricorre da capo. Le altre regate restano con i 15 s.
+  // la regata lasciata a metà (pagina chiusa, menu) vale come ritiro (1.0.50). Le altre regate restano con i 15 s.
   const TOR_N = 4, TOR_FIN = 0.5; // TOR_FIN: ipotesi nostra, la finestra la scrivono le istruzioni di regata
   const TOR_COND = [{ nome: "10 nodi costanti", tws: 10, gusts: 0 }, { nome: "raffiche", tws: 12, gusts: 1 }, { nome: "salti di vento", tws: 10, gusts: 0, shifts: true }];
   let tor = null; // il torneo in corso: lo stesso oggetto di progress.torneo
@@ -743,6 +743,15 @@
     if (tor.ris.length === TOR_N) torFine();
     saveProgress();
   }
+  // 1.0.50: lasciare la regata a metà (menu, pagina chiusa) è un ritiro, dal clic su «Corri la regata»; chi ha già finito resta com'è
+  const torInCorso = () => !!(R && R.tor && tor && !R.torOk && R.phase !== "done");
+  function torEsci(){
+    if (!R || !R.tor || !tor || R.torOk) return;
+    const me = R.boats[0];
+    if (me.fin === null && !me.dnf) me.dnf = me.ret = true;
+    torChiudi();
+  }
+  const torEsciOk = () => !torInCorso() || confirm("Uscire dalla regata? Conta come ritirata: prendi " + (R.boats.length + 1) + " punti, come chi non arriva.");
   function torFine(){ // dopo la quarta regata: piazzamento finale, meriti di Competizione dell'1b (solo carriera), torneo chiuso
     const pos = torSerie(tor.ris).findIndex(x => x.i === 0) + 1, mer = modo === "carriera" ? [6, 4, 3, 2][pos - 1] + (tor.ris.every(r => !r[0].pp) ? 1 : 0) : 0;
     const old = progress.torneoFatto || { pos: 9, mer: 0 };
@@ -765,14 +774,14 @@
         <p class="tor-leg">* penalità sul punteggio · ° non arrivata o ritirata · fra parentesi lo scarto${k < TOR_N ? ", che conta dopo la quarta regata" : ""}</p>`; })() : "";
     const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione dell'1b: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
     const testa = !k ? `<p>Quattro regate a bastone con la barca completa dell'1b, contro gli stessi tre avversari (${T.liv}): ${car}. Vento: ${T.regate.map((g, j) => (j + 1) + ") " + TOR_COND[g.c].nome).join(", ")}.</p>
-      <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Un contatto con colpa vale 1 punto in più nella regata. Il torneo si salva dopo ogni regata: se chiudi la pagina, la regata interrotta si ricorre da capo.</p>`
+      <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Un contatto con colpa vale 1 punto in più nella regata. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Torneo dell'1b</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
       ${nota ? `<p class="manca">${nota}</p>` : ""}${fine}${testa}${tab}
       <div class="row">${T.fine ? `<button class="primary" id="torMenu">Torna al menu</button>`
         : `<button class="primary" id="torGo">${k ? "Corri la regata " + (k + 1) : "Inizia il torneo"}</button>${tor ? `<button id="torRit">Ritirati dal torneo</button>` : ""}<button id="torMenu">${inGioco ? "Menu" : "Chiudi"}</button>`}</div>`;
     const chiudi = () => $("torDlg").close();
-    $("torMenu").onclick = () => { chiudi(); if (T.fine) tor = null; if (inGioco || T.fine) showMenu(); };
+    $("torMenu").onclick = () => { if (inGioco && !torEsciOk()) return; chiudi(); if (T.fine) tor = null; if (inGioco || T.fine) showMenu(); };
     if ($("torGo")) $("torGo").onclick = () => { if (!tor){ tor = progress.torneo = T; saveProgress(); } chiudi(); openItem(["r", "t"]); };
     if ($("torRit")) $("torRit").onclick = () => { if (!confirm("Ritirarti dal torneo? Il torneo non conta: niente punti e niente piazzamento.")) return;
       delete progress.torneo; tor = null; saveProgress(); chiudi(); showMenu(); };

@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.49"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.50"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -202,7 +202,7 @@
     $("attest").showModal();
   }
   function showMenu(){
-    if (mode === "race" && R && R.tor && R.phase === "done") torChiudi(); // regata del torneo finita: il risultato si salva anche uscendo dal menu
+    if (mode === "race") torEsci(); // regata del torneo: finita si salva il risultato, a metà vale come ritiro (1.0.50)
     mode = "menu"; setControls([], false, false);
     let nuovo = false;
     if (modo === "carriera" && !progress.brevetto && meriti(progress).superato){ progress.brevetto = { data: oggi() }; saveProgress(); nuovo = true; }
@@ -256,7 +256,7 @@
     $("resetProg").onclick = () => { if (confirm(modo === "carriera" ? "Azzerare i progressi della carriera, fantasmi compresi? Il gioco libero non cambia." : "Azzerare i progressi del gioco libero, fantasmi compresi? La carriera non cambia.")){ progress = { done: {}, best: {}, clean: {} }; ghosts = {}; saveProgress(); saveGhosts(); showMenu(); } };
     window.scrollTo(0, 0); wipeNote = false; // il messaggio compare una volta sola
   }
-  $("toMenu").onclick = showMenu;
+  $("toMenu").onclick = () => { if (torEsciOk()) showMenu(); };
   function setModo(m){
     modo = m; [STORE, GHOST_STORE] = KEYS(m); loadProgress(); loadGhosts();
     try { localStorage.setItem(MODO, m); } catch(e){}

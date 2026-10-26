@@ -133,7 +133,7 @@ Semi da 1 a 20 per tarare, da 101 a 120 (mai guardati) per la conferma. Ogni cri
 - **Finestra d'arrivo** (F15 appendice S, 12.3): chi non arriva entro 1,5 volte il tempo della prima prende i punti di chi non arriva. Il 50% è un'ipotesi nostra. Serve anche a chiudere la regata: quando il giocatore ha finito, le barche ancora in acqua arrivano in una simulazione accelerata.
 - **Lo scarto conta dalla quarta regata** (la serie ne ha 4 e uno scarto); prima la tabella non ne mostra.
 - **Lunghezza:** tutte e quattro le regate con la boa a 140 m, come le regate dell'1a, anche quella coi salti (la «Regata nei salti di vento» ha 300 m): regate di 4-5 minuti (`VISIONE` §7).
-- **Niente «Ricomincia» né «Cambia vento»** nel torneo; restano «Ritirati dalla regata» e «Ritirati dal torneo». **Limite dichiarato:** tornando al menu a metà regata, o chiudendo la pagina, quella regata si ricorre da capo, quindi una regata andata male si può ripetere.
+- **Niente «Ricomincia» né «Cambia vento»** nel torneo; restano «Ritirati dalla regata» e «Ritirati dal torneo». **Dalla 1.0.50:** tornando al menu a metà regata, o chiudendo la pagina, quella regata vale come ritirata (5 punti). Limite: se il browser viene ucciso senza `pagehide` (blocco del PC, batteria) l'uscita non si registra e la regata si ricorre da capo.
 - In carriera il torneo si apre col brevetto di livello 1 (`VISIONE` §8: un livello è chiuso finché non si hanno i brevetti giusti).
 - Pannello: nel caso peggiore il pannello sforava (prima misura 202 px, con tutti e 7 i tipi di errore). Finita la regata del torneo il suggerimento si nasconde, il risultato non ripete errori e distacchi e «Classifica del torneo» sta nella riga di «Ritirati dalla regata»: 0 px.
 
