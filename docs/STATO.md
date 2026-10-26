@@ -1,6 +1,6 @@
 # Stato del progetto
 
-**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **26 ottobre 2026, versione 1.0.50** (regata del torneo lasciata a metà = ritiro, `PROPOSTA-RITIRO-A-META.md`; prima la 1.0.49, avversari dell'1b). Metodo e decisioni: `METODO.md`, `DECISIONI.md`.
+**Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **26 ottobre 2026, versione 1.0.51** (classifica con «2 penalità (+30 s)»; prima la 1.0.50, regata del torneo lasciata a metà = ritiro, `PROPOSTA-RITIRO-A-META.md`). Metodo e decisioni: `METODO.md`, `DECISIONI.md`.
 
 ## Dove siamo
 
@@ -35,7 +35,7 @@
 1. **Limiti congelati con la barca dell'1b** (`FISICA-E-TARATURE.md`): Maiusc in virata non frena più della freccia; con 20 nodi fissi dopo la raddrizzata non riparte; centro velico più basso del vero (2,0 m contro circa 2,6); lo scafo sbandato non orza da solo; scia della deriva sulla pala a zero; tre criteri della 1.0.46 fuori di poco; `timone2.js` C1 e C3 fuori come da sempre.
 2. **Limiti dell'1a:** bolina dal 9 al 15% più lenta delle fonti con poco vento; la VMG di `bolina.js` non conta lo scarroccio (circa +3%, dichiarato).
 3. **Collaudi:** `collaudo_partenze.py` criterio (1) oscilla fra OK e FALLITO per 1-3 partenze (rumore, soglie non toccate: da guardare con Ale); `collaudo_virate2.py` avversari oltre la bolina + 15° nel 16% delle virate (soglia 5%); `collaudo_timone2.py` a volte fallisce di un fotogramma con molti collaudi in parallelo.
-4. **Dal check di Ale sulla 1.0.47** (26 ottobre 2026): regata lasciata a metà = ritiro (**fatto nella 1.0.50**; R7: uscita dal menu 2,51 s contro 2 s attesi, fuori soglia); registratore di tutte le barche; classifica con le penalità più leggibili; raddrizzata 10 s contro 15 s cronometrati in un video (da misurare); retromarcia con 15-20 nodi ancora da provare. Il pannello dell'1a all'arrivo non sfora più (verificato da Ale).
+4. **Dal check di Ale sulla 1.0.47** (26 ottobre 2026): regata lasciata a metà = ritiro (**fatto nella 1.0.50**; R7: uscita dal menu 2,51 s contro 2 s attesi, fuori soglia); registratore di tutte le barche; classifica con le penalità più leggibili (**fatto nella 1.0.51**; resta «i secondi di distacco più immediati»); raddrizzata 10 s contro 15 s cronometrati in un video (da misurare); retromarcia con 15-20 nodi ancora da provare. Il pannello dell'1a all'arrivo non sfora più (verificato da Ale).
 4b. **Avversari dell'1b, fuori soglia nella 1.0.49:** penalità 97 contro 70; boe sbagliate cedendo vicino alla boa e scenario delle tre barche alla boa 7 su 10 (vanno con la regola 18, livello 2); `collaudo_semaforo.py` 1 contatto su 37 col colore diverso (probabile fine di una virata in quell'istante, non verificato).
 5. **Boe dal lato sbagliato della guida automatica (1a; Ale il 26 ottobre: l'1a resta così)** (23 ottobre 2026, `tests/misura_boe.py`): se la barca si trova di fianco alla boa dal lato sinistro, la guida degli avversari (che è anche il pilota dei collaudi) risale sopra la boa verso il suo primo punto e la passa dal lato sbagliato, poi la rigira. Stessi semi 1-40, 160 corse dell'1a col pilota: 0 nella 1.0.41, **7 dalla 1.0.42** (dove gli scafi dopo il contatto si spingono fuori: in 6 casi su 7 c'è un contatto vicino alla boa poco prima). Al giocatore non succede (la boa la gira lui); sugli avversari non misurato. Decisione di Ale: l'1a non si tocca ora, si corregge nel passo «avversari con la barca dell'1b», dove si decide anche se portare la correzione all'1a.
 6. **Semplificazioni:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio.
@@ -45,7 +45,7 @@
 Ordine in `ROADMAP.md`.
 
 1. ~~**Pulizia**~~ fatta (documenti e 1.0.47: «1a» / «1b» nelle impostazioni e nel menu, tre collaudi nel giro lungo; `PROPOSTA-PULIZIA-1B.md`).
-2. ~~**Avversari con la barca dell'1b**~~ fatto nella 1.0.49 (`PROPOSTA-AVVERSARI-1B.md`). Fatto nella 1.0.50: regata lasciata a metà = ritiro. Restano da proporre: registratore di tutte le barche, classifica più leggibile (punto 4 di «Aperto»).
+2. ~~**Avversari con la barca dell'1b**~~ fatto nella 1.0.49 (`PROPOSTA-AVVERSARI-1B.md`). Fatto nella 1.0.50: regata lasciata a metà = ritiro. Fatto nella 1.0.51: penalità leggibili nella classifica. Resta da proporre: registratore di tutte le barche (punto 4 di «Aperto»).
 3. **Tornei dell'1b, tappa T2** (triangolo, `PROPOSTA-TORNEI-1B.md`).
 4. **Lezioni brevi dell'1b** (da proporre): timone che stalla, Z, salti di vento, raddrizzata lunga, barca orziera, contatto vero e chi cede (12, 13), il torneo.
 5. **Replay semplice nell'1b** (`PROPOSTA-REGATA-COME-FONTE.md` §9), menu, attestato e brevetto dell'1b, poi i tempi delle medaglie.

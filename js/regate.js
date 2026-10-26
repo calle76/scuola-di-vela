@@ -657,7 +657,7 @@
     if (!R) return;
     const rank = ranking();
     const gap = b => { const s = distacco(b); return s === null ? "" : " · " + (Math.round(s) < 0 ? "−" + -Math.round(s) : Math.round(s)) + " s"; }; // 1.0.33
-    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · +" + b.pen + " s" : ""}${b.pp ? " · +" + b.pp + " pt" : ""}${gap(b)}</span></li>`).join("");
+    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · " + b.pen / 15 + " penalità (+" + b.pen + " s)" : ""}${b.pp ? " · " + b.pp + " penalità (+" + b.pp + " pt)" : ""}${gap(b)}</span></li>`).join("");
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
     finShow();
   }
