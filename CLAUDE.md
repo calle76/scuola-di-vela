@@ -8,6 +8,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 - **Il codice non si legge mai tutto.** Dalla 1.0.3 è diviso: `index.html` (stile e struttura) e `js/` (`motore.js`, `base.js`, `contenuti.js`, `gioco.js`, `regate.js`, `disegno.js`, `registratore.js`, `avvio.js`, `laboratorio.js`, caricati in quest'ordine; la prima riga di ogni file dice cosa contiene). Si apre solo il file che serve, e dentro si legge prima la mappa:
   `grep -nE "^  // ([A-ZÀ-Ú]{4,}|-{3,})" js/nome.js`
   Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna. Una riga eseguita al caricamento di un file non vede le funzioni dei file caricati dopo: il codice nuovo che deve partire all'avvio va in `avvio.js`.
+- Sul metodo: `docs/METODO.md` (fasi, traguardi, revisione a fine tappa); `docs/DECISIONI.md` (decisioni prese e quanto costa cambiarle) prima di aprire un livello o una proposta grossa, e ogni decisione nuova di Ale ci va con una riga.
 - Sul prototipo del fiocco: `docs/SPERIMENTALE.md`, `docs/FISICA-E-TARATURE.md`, `docs/FONTI-PUBBLICHE.md`, `docs/CONTENUTI-DA-VERIFICARE.md`.
 - Su livelli, ruoli e carriera: `docs/VISIONE-LIVELLI-E-CARRIERA.md` e `docs/ROADMAP.md`.
 - Lo stato corrente sta nei documenti, non qui: non fidarti di quello che ricordi.
