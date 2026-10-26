@@ -30,6 +30,29 @@ def riassunto_gioco(head):
 
 def mmss(s): return f"{int(s // 60)}:{int(s % 60):02d}"
 
+def avversari(rows, durata, out):
+    """Formato 2 (1.0.52): per ogni avversario righe B, tempo fermo, contatti, penalità, secondi passati a cedere. Ritorna il riepilogo."""
+    B = [(t, d.split(" ")) for k, t, d in rows if k == "B"]
+    nomi = sorted({c[0] for _, c in B})
+    res = {}
+    if not nomi: return res
+    out("Avversari (righe B, una al secondo):")
+    for n in nomi:
+        mie = [(t, c) for t, c in B if c[0] == n]
+        ferma, aperto = 0.0, None
+        for k, t, d in rows:
+            if k != "E": continue
+            p = d.split(" ")
+            if p[0] == "avv_fermo" and p[1] == n: aperto = t
+            elif p[0] == "avv_riparte" and p[1] == n and aperto is not None: ferma += t - aperto; aperto = None
+        if aperto is not None: ferma += max(0, (mie[-1][0] if mie else durata) - aperto)
+        cont = sum(1 for k, t, d in rows if k == "E" and d.startswith("contatto_barche") and n in d.split(" ")[1:])
+        pen = [d for k, t, d in rows if k == "E" and d.startswith("avv_penalita " + n + " ")]
+        cede = sum(1 for _, c in mie if "cede:" in c[-1])
+        res[n] = {"righe": len(mie), "ferma": ferma, "contatti": cont, "penalita": len(pen), "cede": cede}
+        out(f"  {n}: {len(mie)} righe · ferma {ferma:.0f} s · contatti {cont} · penalità {len(pen)} · a cedere {cede} s")
+    return res
+
 def analizza(testo, out=print):
     head, rows = leggi(testo)
     for h in head[:5]: out(h[2:])
@@ -69,6 +92,7 @@ def analizza(testo, out=print):
                 out(f"  {t:.1f}-{t2:.1f} s: da {c[3]} a {c2[3]} nodi ({c2[-1]})" + ("; vicino: " + " | ".join(vicini[:6]) if vicini else ""))
                 n_ral += 1; salta = t2 + 5; break
     if not n_ral: out("  nessuno")
+    avversari_res = avversari(rows, durata, out)
     out("Marcatori:" + ("" if marc else " nessuno"))
     for t, d in marc:
         out(f"  M{d.split(' ')[0]} a {mmss(t)} ({t:.1f} s). Dieci secondi prima e dopo:")
@@ -85,7 +109,7 @@ def analizza(testo, out=print):
     if g["marcatori"] != [f"M{d.split(' ')[0]}" for _, d in marc]: diff.append(f"marcatori: gioco {g['marcatori']} | righe {len(marc)}")
     out("\nConfronto con il riassunto del gioco: " + ("coincide" if not diff else "DIVERSO"))
     for d in diff: out("  " + d)
-    return {"eventi": ev, "msg": msg, "marcatori": marc, "pause": pause, "andT": andT, "rallentamenti": n_ral, "diff": diff, "stato": stato}
+    return {"eventi": ev, "msg": msg, "marcatori": marc, "pause": pause, "andT": andT, "rallentamenti": n_ral, "diff": diff, "stato": stato, "avversari": avversari_res}
 
 ESEMPIO = """# SCUOLA DI VELA - registrazione di sessione, formato 1
 # gioco 0.18 · inizio 2026-10-05 15:00 · durata 0:12 (in simulazione 0:12)
@@ -111,6 +135,26 @@ M 7.0 1 0 -5
 S 8.1 0 -6 -60 2.0 5 -60 10 -40 8 0 40 BL
 """
 
+ESEMPIO2 = """# SCUOLA DI VELA - registrazione di sessione, formato 2
+# gioco 1.0.52 · inizio 2026-10-26 21:00 · durata 0:12 (in simulazione 0:12)
+# impostazioni all'inizio: vento=0° 10kn
+# nota: (nessuna)
+# pause della registrazione (spenta e riaccesa): nessuna
+#  eventi: apre 1 · avv_fermo 1 · avv_riparte 1 · contatto_barche 1 · avv_penalita 1
+E 0.0 registrazione_accesa
+E 0.0 apre regata «Regata a bastone»
+S 1.0 0 0 45 3.4 8 45 10 30 8 0 30 BS
+B 1.0 Rossa 5.0 3.0 90 3.0 45 1 -
+B 1.0 Blu 8.0 3.0 90 3.0 45 1 cede:Rossa
+E 2.0 avv_fermo Blu lato 1 8.0 3.0
+B 2.0 Blu 8.0 3.0 90 0.1 45 1 cede:Rossa
+E 5.0 contatto_barche Blu Rossa
+Q 5.0 La Blu, contatto con la Rossa: era mure a sinistra e doveva lasciare strada a chi era mure a dritta.
+E 5.0 avv_penalita Blu +15s
+E 6.0 avv_riparte Blu
+B 6.0 Blu 8.0 3.0 90 2.0 45 1 -
+"""
+
 def prova():
     righe = []
     r = analizza(ESEMPIO, righe.append)
@@ -123,7 +167,13 @@ def prova():
     assert analizza(ESEMPIO.replace("70 s in", "60 s in"), righe.append)["diff"], "il totale delle pause sbagliato deve essere visto"
     r = analizza(ESEMPIO.replace("virata 1", "virata 2"), righe.append)
     assert r["diff"], "il confronto deve accorgersi di un riassunto sbagliato"
-    print("prova superata: eventi, marcatori, rallentamenti, tempo per andatura e confronto (anche quando è sbagliato)")
+    righe2 = []
+    r2 = analizza(ESEMPIO2, righe2.append)
+    assert r2["avversari"]["Blu"] == {"righe": 3, "ferma": 4.0, "contatti": 1, "penalita": 1, "cede": 2}, r2["avversari"]
+    assert r2["avversari"]["Rossa"]["righe"] == 1 and r2["avversari"]["Rossa"]["contatti"] == 1
+    assert not r2["diff"], r2["diff"]
+    assert analizza(ESEMPIO2.replace("contatto_barche 1", "contatto_barche 2"), righe2.append)["diff"], "il confronto deve accorgersi di un conteggio sbagliato nel formato 2"
+    print("prova superata (anche formato 2, righe B): eventi, marcatori, rallentamenti, tempo per andatura e confronto (anche quando è sbagliato)")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2: sys.exit(__doc__ or "uso: python analizza_sessione.py file.txt | --prova")

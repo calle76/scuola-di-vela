@@ -28,6 +28,43 @@
       set: sesSet(), hint: "", cand: "", candT: 0, rule: "", err: "", leg: null, fin: S && S.finished, cap: S && S.capsized, righting: S && S.righting };
     SES_CNT.forEach(([k]) => L[k] = S ? S[k] : 0);
   }
+  // ---- le altre barche della regata (1.0.52, docs/PROPOSTA-REGISTRATORE-TUTTE-LE-BARCHE.md) ----
+  // Solo lettura di R: una riga B al secondo per ogni avversario (insieme alla S del giocatore), e gli eventi avv_* e contatto_barche.
+  // Un contatto è un nuovo valore in R.contacts (la definizione del gioco); il motivo è la voce nuova di R.penList (righe Q).
+  // «Fermo»: sotto FERMO_KN per FERMO_S secondi di gioco dopo il via; «riparte» sopra RIPARTE_KN (ipotesi nostre, isteresi).
+  const FERMO_KN = 0.5, RIPARTE_KN = 1, FERMO_S = 5;
+  const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg === 1 && b.rnd < 0, still: 0, fermo: false });
+  function sesAltre(dSim, riga){
+    const L = ses.L;
+    if (mode !== "race" || !R){ L.AR = null; return; }
+    if (R !== L.AR){ L.AR = R; L.A = {}; R.boats.forEach(b => { if (!b.me) L.A[b.name] = sesAvv(b); }); L.ct = Object.assign({}, R.contacts); L.pl = R.penList.length; } // accesa a regata in corso: le voci già presenti non si scrivono
+    for (const b of R.boats){
+      if (b.me) continue;
+      const A = L.A[b.name], n = b.name, kn = Math.abs(b.S.u) * KN;
+      if (b.leg > A.leg) sesEv("avv_lato", n + " " + b.leg);
+      if (b.ocs && !A.ocs) sesEv("avv_ocs", n);
+      if (b.S.capsized && !A.cap) sesEv("avv_scuffia", n);
+      if (b.fin !== null && !A.fin) sesEv("avv_arrivo", n + " " + Math.round(b.fin) + "s");
+      if ((b.pen || 0) > A.pen) sesEv("avv_penalita", n + " +" + ((b.pen || 0) - A.pen) + "s");
+      if ((b.pp || 0) > A.pp) sesEv("avv_penalita", n + " +" + ((b.pp || 0) - A.pp) + "pt");
+      const sba = b.leg === 1 && b.rnd < 0;
+      if (sba && !A.sba) sesEv("avv_boa_lato_sbagliato", n);
+      if (dSim > 0 && R.t >= 0 && b.fin === null && !b.dnf){
+        if (!A.fermo){ A.still = kn < FERMO_KN ? A.still + dSim : 0;
+          if (A.still >= FERMO_S){ A.fermo = true; sesEv("avv_fermo", n + " lato " + b.leg + " " + b.S.x.toFixed(1) + " " + b.S.y.toFixed(1)); } }
+        else if (kn > RIPARTE_KN){ A.fermo = false; A.still = 0; sesEv("avv_riparte", n); }
+      }
+      Object.assign(A, { leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba });
+    }
+    for (const key in R.contacts) if (L.ct[key] !== R.contacts[key]){ const [i, j] = key.split("-"); sesEv("contatto_barche", R.boats[i].name + " " + R.boats[j].name); }
+    L.ct = Object.assign({}, R.contacts);
+    for (; L.pl < R.penList.length; L.pl++) sesLine("Q " + sesT() + " " + R.penList[L.pl]);
+    if (riga) for (const b of R.boats){
+      if (b.me) continue;
+      const st = [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + b.cedeA.name].filter(Boolean).join(",") || "-";
+      sesLine(["B", sesT(), b.name, b.S.x.toFixed(1), b.S.y.toFixed(1), Math.round(b.S.h), (b.S.u * KN).toFixed(1), Math.round(norm180(windAt(b.S.x, b.S.y).twd - b.S.h)), b.leg, st].join(" "));
+    }
+  }
   function sesTick(dt, noDraw){
     if (!ses.on) return;
     const L = ses.L; ses.t += dt;
@@ -89,15 +126,17 @@
     }
     // tempo per andatura e stato, solo mentre la simulazione avanza
     const dSim = simTime - L.sim; L.sim = simTime;
+    let riga = false;
     if (dSim > 0 && mode !== "menu"){
       const code = S.capsized ? "SC" : AND_CODE[andName(Math.abs(twa))];
       ses.andT[code] = (ses.andT[code] || 0) + dSim; ses.sim += dSim;
       if (ses.t >= ses.nextS){
-        ses.nextS = ses.t + 1;
+        ses.nextS = ses.t + 1; riga = true;
         sesLine(["S", sesT(), S.x.toFixed(1), S.y.toFixed(1), Math.round(S.h), (S.u * KN).toFixed(1), Math.round(S.heel), Math.round(twa), (local.tws * KN).toFixed(1),
           Math.round(info.awa), (info.aws * KN).toFixed(1), Math.round(ctl.tiller * 100), Math.round(ctl.sheet * 100), code].join(" "));
       }
     }
+    sesAltre(dSim, riga);
     // spia sullo schermo (sul mare, non nel pannello)
     if (!noDraw && mode !== "menu"){
       ses.flash = Math.max(0, ses.flash - dt);
@@ -122,7 +161,7 @@
     const and = ["AM", "BS", "BL", "TR", "LA", "GL", "PO", "SC"].filter(k => ses.andT[k]).map(k => k + " " + fmtClock(ses.andT[k])).join(" · ") || "nessuna";
     const msgs = Object.keys(ses.msgT).sort((a, b) => ses.msgT[b] - ses.msgT[a]).map(m => "#   «" + m + "» " + (ses.msgN[m] || 0) + "× · " + Math.round(ses.msgT[m]) + " s");
     return [
-      "# SCUOLA DI VELA - registrazione di sessione, formato 1",
+      "# SCUOLA DI VELA - registrazione di sessione, formato 2",
       "# gioco " + VERSIONE + " · inizio " + d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()) + " " + p2(d.getHours()) + ":" + p2(d.getMinutes()) +
         " · durata " + fmtClock(ses.t) + " (in simulazione " + fmtClock(ses.sim) + ")",
       "# impostazioni all'inizio: " + ses.set0,
@@ -145,6 +184,11 @@
       "#                       regata_in_corso lato N t=Ns: registrazione accesa a regata già partita (la partenza non è nel file);",
       "#                       contatto_senza_colpa +N: contatto che non conta negli errori (gli altri compaiono come «errore contactsPen +N»);",
       "#                       alla riaccensione «pausa Ns» = secondi veri passati a registrazione spenta; t non li conta)",
+      "#  B t nome x y prua nodi twa lato stato   un avversario, una riga al secondo insieme alla S (formato 2, dalla 1.0.52): lato 0 prima del via, 1 bolina, 2 poppa;",
+      "#    stato: - | ocs partenza anticipata | scuf scuffiata | arr arrivata | dnf non arrivata | via sta partendo | cede:Nome a chi sta lasciando strada (separati da virgole)",
+      "#  E avv_fermo/avv_riparte nome   sotto 0,5 nodi per 5 s di gioco dopo il via (con lato e posizione), poi sopra 1 nodo; avv_lato nome N; avv_arrivo nome Ns;",
+      "#    avv_ocs, avv_scuffia, avv_penalita nome +15s o +1pt, avv_boa_lato_sbagliato nome; contatto_barche nome1 nome2 (anche con «Tu»), uno per contatto",
+      "#  Q t testo   motivo di una penalità, la stessa voce dell'elenco a fine regata",
       "#  L t lezione.passo «titolo»   passo di lezione mostrato",
       "#  H t testo   suggerimento del pannello cambiato (rimasto almeno 0,3 s)",
       "#  T t testo   messaggio a comparsa sul mare",
