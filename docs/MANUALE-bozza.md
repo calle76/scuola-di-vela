@@ -22,7 +22,7 @@ Sei lezioni, cinque prove a tempo con medaglie, regate contro il computer, un re
 | Raddrizzare la barca dopo uno sbandamento forte | A (fino alla 1.0.26 era R) |
 | Pulsanti della lezione 1 | W e S (anche i tasti) |
 | Vista del percorso: tenuto premuto, sposta la barca verso il bordo dello schermo opposto all'arrivo o alla boa e, se serve, allontana l'inquadratura finché l'arrivo o la boa si vedono; al rilascio tornano posizione e zoom di prima (solo nelle prove e nelle regate) | Q |
-| Avvicinare e allontanare l'inquadratura | pulsanti + e − sul mare, rotellina del mouse (dalla 0.19.3 si allontana fino a circa 480 m di campo in altezza a 1360×650) |
+| Avvicinare e allontanare l'inquadratura | tasti 1 (avvicina) e 2 (allontana), rotellina del mouse (dalla 1.0.48 i pulsanti + e − non ci sono più) (dalla 0.19.3 si allontana fino a circa 480 m di campo in altezza a 1360×650) |
 
 **Cosa si vede sul mare** (scritto il 13 ottobre 2026 leggendo il codice del disegno, `drawBoat`, `drawWindArrows`, `drawSpeedArrow`, `drawTurnHint`; i colori sono quelli del gioco):
 

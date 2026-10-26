@@ -152,7 +152,7 @@ async def parte3(b):
     await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(500)
     try:
         await pg.evaluate("__sv.openItem(['m',0])")
-        for _ in range(4): await pg.click("#zOut")   # 1/1,25^4 = 0,41 (dalla 0.19.3 il minimo è 0,1)
+        for _ in range(4): await pg.keyboard.press("2")   # 1/1,25^4 = 0,41 (dalla 0.19.3 il minimo è 0,1)
         await pg.wait_for_timeout(2500)
         for vista in ["prua", "nord"]:
             await pg.evaluate(VISTA, vista); await pg.wait_for_timeout(300)
@@ -230,7 +230,7 @@ async def parte5(b):
                     esito("obiettivo sullo schermo con Q", bool(r and r["dentro"]), f"{W}x{H} {vista}, {nome}: {r}")
                     if r and r["zq"] is not None: zq.append(r["zq"])
                     await pg.wait_for_timeout(1000)
-                for _ in range(14): await pg.click("#zOut")
+                for _ in range(14): await pg.keyboard.press("2")
                 await pg.wait_for_timeout(2500)
                 for nome, apri in VOCI:   # (b) solo zoom minimo
                     await pg.evaluate(apri); await pg.wait_for_timeout(400); r = await pg.evaluate(DENTRO)
@@ -252,7 +252,7 @@ async def parte6(b):
         await pg.evaluate("__sv.openItem(['m',4]); __sv.fast(0)"); await pg.wait_for_timeout(500)
         med = lambda v: sorted(v)[len(v) // 2]
         t1 = med([await pg.evaluate(MISURA, 60) for _ in range(3)])
-        for _ in range(14): await pg.click("#zOut")
+        for _ in range(14): await pg.keyboard.press("2")
         await pg.wait_for_timeout(2500)
         tm = med([await pg.evaluate(MISURA, 60) for _ in range(3)])
         z = await pg.evaluate("__sv.camZoom")

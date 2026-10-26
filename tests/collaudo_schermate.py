@@ -39,11 +39,11 @@ async def main():
             await pg.goto("about:blank"); await pg.goto(URL); await pg.wait_for_timeout(600)   # pagina nuova: zoom di partenza 1
             await pg.evaluate(f"__sv.openItem(['m',{mi}])"); await pg.evaluate(VICINO)
             await pg.wait_for_timeout(2000); await foto(f"L_prova{mi+1}_zoom1.png")
-            for _ in range(4): await pg.click("#zIn")
+            for _ in range(4): await pg.keyboard.press("1")
             await pg.wait_for_timeout(2000); await foto(f"L_prova{mi+1}_zoom2.4.png")
-            for _ in range(7): await pg.click("#zOut")
+            for _ in range(7): await pg.keyboard.press("2")
             await pg.wait_for_timeout(2000); await foto(f"L_prova{mi+1}_zoom0.4.png")
-            for _ in range(8): await pg.click("#zOut")   # 0.19.3: zoom minimo 0,1
+            for _ in range(8): await pg.keyboard.press("2")   # 0.19.3: zoom minimo 0,1
             await pg.wait_for_timeout(2500); await foto(f"L_prova{mi+1}_zoom_minimo.png")
             # 0.19.3: alla partenza, a zoom 1, con Q tenuto (vista del percorso)
             await pg.goto("about:blank"); await pg.goto(URL); await pg.wait_for_timeout(600)

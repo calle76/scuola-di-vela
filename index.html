@@ -92,8 +92,6 @@ canvas:focus{outline:none}
 .overlay p{margin:0 0 10px;font-size:1.05rem;line-height:1.35}
 .overlay button{font:inherit;font-size:1.1rem;font-weight:700;border:none;border-radius:8px;padding:10px 20px;background:#F2C14E;color:#1C2B45;cursor:pointer}
 .focusTip{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(10,24,36,.7);color:#fff;border-radius:16px;padding:5px 14px;font-size:.95rem;pointer-events:none}
-.zoomBox{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:6px}
-.zoomBox button{width:40px;height:40px;border-radius:8px;border:none;background:rgba(10,24,36,.65);color:#fff;font-size:1.4rem;cursor:pointer}
 .panel{border-left:1px solid var(--line);overflow-y:auto;padding:6px 16px 6px;display:flex;flex-direction:column;gap:6px} /* 1.0.2: 8/8/7 px → 6/6/6, per far stare i passi di lezione completati in 650 px */
 /* prove, regate, navigazione libera: prima strumenti e comandi, poi stato, istruzioni in fondo */
 .panel.play > .topbar{order:0} .panel.play > #instr{order:1} .panel.play > #hint,.panel.play > #errBox{order:2}
@@ -336,7 +334,6 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
       <p class="bNote" id="bNote"></p>
       <button id="bGo">Parti</button>
     </div>
-    <div class="zoomBox"><button id="zIn" aria-label="Avvicina">+</button><button id="zOut" aria-label="Allontana">−</button></div>
     <div class="focusTip" id="focusTip" hidden>Clicca sul mare per usare la tastiera</div>
   </div>
   <aside class="panel">

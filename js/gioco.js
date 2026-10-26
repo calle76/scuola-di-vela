@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.47"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.48"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -606,6 +606,7 @@
       if (allowSem.length){ semPress(KEYSEM[k]); e.preventDefault(); return; }
       k = KEYARR[k];
     }
+    if (k === "1" || k === "2"){ if (!sesTyping()) userZoom = k === "1" ? Math.min(3, userZoom * 1.25) : Math.max(ZMIN, userZoom / 1.25); return; } // 1.0.48: zoom coi tasti vicini a Q, al posto dei pulsanti + e − (idea di Ale)
     if (k === "a"){ rightBoat(); return; } // 1.0.27: raddrizza con A (era R; R resta libero per le manovre dei livelli futuri, decisione di Ale)
     if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nell'1b la barra arriva fino a 45°
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
@@ -647,10 +648,8 @@
   $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
   $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
-  $("zIn").onclick = () => userZoom = Math.min(3, userZoom * 1.25);
   // zoom minimo 0,1 (0.19.3): a 1360x650 un obiettivo a 300 m resta sullo schermo con la barca al margine (vedi CHANGELOG)
   const ZMIN = 0.1;
-  $("zOut").onclick = () => userZoom = Math.max(ZMIN, userZoom / 1.25);
   canvas.addEventListener("wheel", e => { e.preventDefault(); userZoom = clamp(userZoom * (e.deltaY > 0 ? 0.9 : 1.1), ZMIN, 3); }, { passive: false });
   canvas.addEventListener("pointerdown", () => canvas.focus());
   const updFocus = () => $("focusTip").hidden = mode === "menu" || document.hasFocus();

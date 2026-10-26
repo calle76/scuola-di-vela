@@ -259,9 +259,11 @@
     if (opt.dead && !(st && (st.pause || st.rose || !st.hud))) drawDeadRose(heelG ? 196 : 84);
     if (mode === "race") drawRaceScreen(v);
     drawHelmLegend();
-    if (qOnSea && fontsOk){ // ripiego se la riga dei tasti nel pannello si taglierebbe: sopra i pulsanti + e −
-      ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-      ctx.fillStyle = "rgba(255,255,255,.8)"; ctx.fillText("Q vista", W - 34, H - 108); ctx.restore();
+    if (fontsOk){ // 1.0.48: lo zoom è sui tasti 1 e 2 (i pulsanti + e − non ci sono più); «Q vista» sopra, se la riga dei tasti nel pannello si taglierebbe
+      ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "right"; ctx.textBaseline = "alphabetic"; ctx.fillStyle = "rgba(255,255,255,.8)";
+      ctx.fillText("1 / 2 zoom", W - 16, H - 18);
+      if (qOnSea) ctx.fillText("Q vista", W - 16, H - 38);
+      ctx.restore();
     }
     if (S.toast) drawToast();
   }
@@ -694,10 +696,10 @@
     ctx.fillText(inDead ? "nell'angolo morto" : "prua e vento", 0, -r - 12);
     ctx.restore();
   }
-  // 1.0.38: vento e bussola nello stesso angolo (in alto a destra, sotto la bussola); la versione sul mare non c'è più (sta nel menu), l'angolo in alto a sinistra è libero
+  // 1.0.38: vento e bussola nello stesso angolo (in alto a destra, sotto la bussola); la versione sul mare non c'è più (sta nel menu), l'angolo in alto a sinistra è libero; 1.0.48: riga più corta, senza «Vento reale» (check di Ale)
   function drawWindBox(v){
     ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
-    ctx.fillText("Vento reale da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", W - 16, 96);
+    ctx.fillText("da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", W - 16, 96);
     ctx.restore();
   }
 

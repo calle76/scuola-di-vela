@@ -117,7 +117,7 @@
       done: "In poppa la vela è aperta al massimo e il vento la spinge da dietro. Sembra strano, ma non è l'andatura più veloce: il traverso e il lasco lo sono di più." },
     { title: "Le mure e le precedenze", ...PAUSE, zoom: 2, rose: true, labels: ["sopravento", "boma"],
       text: ["Se il vento arriva sul lato sinistro della barca si naviga <em>mure a sinistra</em>; se arriva sul lato destro, <em>mure a dritta</em>. Il boma sta sempre dal lato opposto alle mure. Questa barca ha il vento da sinistra: è mure a sinistra.",
-             "Le mure decidono la <em>precedenza</em>, cioè chi deve lasciare strada. Con mure diverse cede la barca mure a sinistra. Con le stesse mure, se le barche sono affiancate, cede quella <em>sopravento</em>, la più vicina al vento. Chi non lascia strada e provoca un contatto prende una penalità: nelle regate di questo gioco 15 secondi (in mare si fanno due giri su se stessi)."] },
+             "Le mure decidono la <em>precedenza</em>, cioè chi deve lasciare strada. Con mure diverse cede la barca mure a sinistra. Con le stesse mure, se le barche sono affiancate, cede quella <em>sopravento</em>, la più vicina al vento. Chi non lascia strada e provoca un contatto prende una penalità: nelle regate di questo livello 15 secondi (in mare si fanno due giri su se stessi)."] },
     { title: "I filetti", ...PAUSE, zoom: 3.2, labels: ["filetti"],
       text: ["Sulla randa ci sono due nastrini, i <em>filetti</em>: rosso sul lato sinistro della vela, verde sul lato destro. Mostrano come scorre l'aria.",
              "Entrambi dritti verso il boma: vela regolata. Si agita quello <em>sopravento</em>: vela troppo lascata, cazza. Si agita quello <em>sottovento</em>: vela troppo cazzata, lasca."] },
