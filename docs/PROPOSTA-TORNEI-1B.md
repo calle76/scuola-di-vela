@@ -157,3 +157,51 @@ Semi da 1 a 20 per tarare, da 101 a 120 (mai guardati) per la conferma. Ogni cri
 - **Difetto trovato fuori dal torneo:** nelle regate dell'1a, all'arrivo, il pannello sfora di 48 px con errori normali (153 con tutti gli errori), perché il risultato ripete errori e distacchi. Mai misurato in quello stato. L'1a è congelata: da decidere con Ale.
 
 **T2 (triangolo) aspetta la barca dell'1b congelata.**
+
+## 8. T2, fermata 1 aggiornata (27 ottobre 2026) — nessun codice toccato
+
+Le due condizioni di §2.5 ci sono: la barca dell'1b è congelata (23 ottobre) e gli avversari dell'1b sono rifatti (1.0.49). Questa sezione dice come far diventare il percorso del torneo un **triangolo equilatero** (decisione (d) di §5, F36) e come misurarlo. §2.3 resta valida per la forma; qui c'è il lavoro sul codice letto oggi.
+
+### 8.1 Cosa c'è oggi nel codice (`js/regate.js`)
+
+Il percorso è una sola boa in `R.mark` (0, −`R.up`) e tre «lati» (`leg` 0 = prima della partenza, 1 = bolina, 2 = poppa verso l'arrivo). Lo presuppongono: `targetOf` (punti di passaggio degli avversari solo per la boa di bolina), `raceLegs` (un solo `roundCheck`, `b.rnd`), `strada` (percorso = 2·`R.up`), `distacco`, `ranking` (usa `leg` e la distanza dal bersaglio), il disegno e le frecce, e il registratore (evento `lato N`).
+
+### 8.2 Modello più semplice plausibile
+
+- **Il percorso diventa una lista di boe**: il bastone ha 1 boa, il triangolo 2. I lati valgono 1 = verso la boa 1, 2 = verso la boa 2 (**nuovo**), 3 = verso l'arrivo. Con una sola boa tutto resta com'è.
+- **Geometria** (coordinate del vento, linea al centro in (0, 0)): boa 1 in (0, −L); boa 2 in (∓0,866·L, −0,5·L), a sinistra guardando il vento, così il lato fra le due boe e quello verso l'arrivo sono a 120° dal vento. Tutte le boe si lasciano a sinistra, come nella prova 5 dell'1a.
+- **Giro della boa 2**: lo stesso `roundCheck` della boa 1 con un secondo contatore (`rnd2`). Dal lato sbagliato vale come oggi: si rigira, e si conta in `wrongMarks`.
+- **Avversari**: gli stessi tre punti di passaggio di §`targetOf`, riportati sulla boa 2 (ipotesi nostra: stessa forma, già misurata sulla boa 1 nelle 1.0.42 e 1.0.49).
+- **Strada e distacchi**: `strada` diventa la somma dei lati già fatti più la proiezione sul lato corrente (lunghezza totale = L + L + L). Il resto di `distacco` non cambia.
+- **Solo nel torneo dell'1b.** Le regate dell'1a e la «Regata nei salti di vento» restano a bastone.
+
+### 8.3 Costanti nuove (ipotesi nostre)
+
+- **L**, lunghezza del lato. Si ricava dalla barca, non si scrive a mano: si prova L = 140, 170, 200, 230 m e si prende la più piccola per cui la mediana del pilota sta in 4-5,5 minuti (C8), scelta sui semi 1-20 e confermata sui semi 21-40 (regola dei semi).
+- Raggio entro cui un avversario considera «raggiunto» un punto di passaggio alla boa 2: lo stesso della boa 1.
+
+### 8.4 Criteri (scritti prima di misurare; C8 e C9 sono quelli di §4)
+
+| | Criterio | Soglia |
+| --- | --- | --- |
+| C8 | Durata: regata del pilota sul triangolo | mediana fra 4 e 5,5 minuti, su 40 regate |
+| C9 | Avversari: arrivano e girano la boa 2 dal lato giusto | almeno il 97% delle barche arriva; i giri sbagliati si dichiarano |
+| T2a | Non regressione: regate dell'1a e salti di vento, stessi arrivi al bit; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici | identici |
+| T2b | Distacchi sul triangolo: `collaudo_distacchi.py` esteso, segno e valore coerenti su tutti e tre i lati | 100% dei confronti, con il numero dei confronti stampato (non vale «nessun errore» a zero) |
+| T2c | Il pilota gira la boa 2 dal lato giusto | almeno il 97% su 40 regate |
+| T2d | Torneo intero: C1-C11 di `collaudo_torneo.py` ancora verdi (R7 resta il limite noto) | OK |
+| T2e | Pannello a 1360×650 e disegno: due boe sul mare, quella giusta evidenziata | 0 px di eccesso; boe contate dai tratti disegnati |
+| T2f | Registratore: `lato 3` nel file e nell'analizzatore | file letto senza errori |
+
+### 8.5 Rischi
+
+- **Il lavoro più grosso è il passaggio da «una boa» a «lista di boe»**: tocca `targetOf`, `raceLegs`, `strada`, `ranking`, disegno e registratore. Per questo T2a (identità al bit sul bastone) è un criterio e non un'attenzione.
+- **Penalità alla boa 2**: tre barche che arrivano insieme sulla boa 2 si urtano come sulla boa 1; la regola 18 (spazio alla boa) è del livello 2 e qui non c'è. Atteso più contatti del bastone: si misura e si riporta, senza tarare.
+- **Salvataggi del torneo** a metà: se cambia il percorso, il torneo salvato si chiude con un avviso (già previsto in §6).
+- **Salti di vento**: con boe fissate al vento di partenza un salto persistente cambia gli angoli dei lati al lasco; si dichiara, come nel bastone.
+
+### 8.6 Da decidere
+
+**Tutte e 4 le regate del torneo a triangolo** (consigliato, come dice la visione: «il triangolo nell'1b») **oppure** alternate bastone e triangolo? Il consiglio è tutte e 4, perché il punteggio resta confrontabile fra regate dello stesso formato.
+
+**Dopo il via di Ale:** versione 1.0.55 (o 1.0.54 se i distacchi vengono dopo), con Sonnet per il codice; la lettura critica di questa sezione è meglio con Opus.
