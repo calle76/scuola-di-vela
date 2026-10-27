@@ -54,6 +54,7 @@ Costo di cambiamento:
 | Replay e «regata come fonte» solo nella parte «b» dei livelli | 20 ott | medio | Registrazione e istantanee | `PROPOSTA-REGATA-COME-FONTE.md` §9.7 |
 | Vela di portanza del livello 4: gennaker asimmetrico [da verificare su fonti] | ott | medio | Fisica del livello 4, non ancora scritta | memoria del progetto |
 | **Modalità coach**: in ogni regata il registratore parte da solo e si spegne all'arrivo (un file per regata, M sempre possibile); nella navigazione libera, nelle prove e nelle lezioni non registra, salvo registrazione forzata a mano. La registrazione serve al coach (rivivere una situazione, «perché la Rossa ha preso la penalità?») e al debugging | 27 ott | medio | Registratore, memoria del browser o cartella, replay e domande dei livelli futuri | `PROPOSTA-REGATA-COME-FONTE.md` §10 (fermata 1 da scrivere) |
+| Torneo dell'1b con percorsi misti, come nelle serie vere (regola 27.1: il percorso lo sceglie il comitato): regata 1 bastone, 2 triangolo, 3 bastone coi salti di vento, 4 triangolo | 27 ott | medio | Percorso, guida degli avversari, distacchi, disegno | `PROPOSTA-TORNEI-1B.md` §8.6 |
 | Soglia di 2 s per uscire dal menu a metà regata del torneo (collaudo C11 R7, 2,71 s il 27 ott): non si inseguono i decimi, basta che funzioni | 27 ott | basso | Solo il collaudo | `CHANGELOG.md` 1.0.50 |
 
 ## Carriera, meriti, salvataggi

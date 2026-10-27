@@ -200,8 +200,31 @@ Il percorso è una sola boa in `R.mark` (0, −`R.up`) e tre «lati» (`leg` 0 =
 - **Salvataggi del torneo** a metà: se cambia il percorso, il torneo salvato si chiude con un avviso (già previsto in §6).
 - **Salti di vento**: con boe fissate al vento di partenza un salto persistente cambia gli angoli dei lati al lasco; si dichiara, come nel bastone.
 
-### 8.6 Da decidere
+### 8.6 Deciso (Ale, 27 ottobre 2026: «si era scelto di seguire le regole ufficiali, quindi percorsi misti»)
 
-**Tutte e 4 le regate del torneo a triangolo** (consigliato, come dice la visione: «il triangolo nell'1b») **oppure** alternate bastone e triangolo? Il consiglio è tutte e 4, perché il punteggio resta confrontabile fra regate dello stesso formato.
+**Percorsi misti:** regata 1 bastone (10 nodi), regata 2 triangolo (raffiche), regata 3 bastone (salti di vento), regata 4 triangolo (condizione sorteggiata). Perché: in una serie vera il percorso lo sceglie il comitato (F39, regola 27.1); i salti di vento restano sul bastone, dove si impara a virare sugli scarsi, e non deformano i lati al lasco; le regate 1 e 3 restano quelle di oggi, quindi si possono confrontare al bit (§8.7, punto 7). Scartato: tutte e 4 a triangolo. Il percorso dipende solo dal numero della regata: nessun numero a caso in più. Caso da dichiarare: la regata 4 sorteggia i salti una volta su tre, e allora sono salti sul triangolo.
 
-**Dopo il via di Ale:** versione 1.0.55 (o 1.0.54 se i distacchi vengono dopo), con Sonnet per il codice; la lettura critica di questa sezione è meglio con Opus.
+**Dopo il via di Ale:** versione 1.0.55, con Sonnet per il codice.
+
+### 8.7 Correzioni dopo la lettura del codice (27 ottobre 2026, Opus)
+
+1. **Il metro del «prima e dopo» non misura i tornei.** In `tests/arrivi_regate.py` (riga 36) il clic su «Corri la regata» è finito dentro un commento: le 4 righe di ogni torneo riportano tutte la stessa regata a bastone dell'1a (stessi tempi, «Vento da nord», nessuna penalità sul punteggio). Quindi «2 tornei identici» del commit `8cf6f47` non è stato misurato. Prima di T2: correggere la riga, aggiungere un controllo che le 4 regate siano davvero del torneo (titolo «Torneo, regata k di 4», 4 regate diverse, giocatore arrivato o ritirato), rifare il confronto fra `05ec528` (prima della pulizia) e `8cf6f47`, e solo allora fare il file «prima» di T2.
+2. **Geometria, un segno solo.** In coordinate del vento (verso il vento = −y, sinistra guardando il vento = −x, come il punto 1 di `targetOf`): boa 2 in (−0,866·L, −0,5·L). La semiretta del giro (`out` di `roundCheck`) della boa 2 punta fuori dal percorso, a sinistra guardando il vento: `out` = vento − 90°. Con questi segni il giro giusto (boa a sinistra) conta +1, come alla boa 1.
+3. **Contatore del giro:** invece di un secondo contatore `rnd2`, al cambio di lato si azzerano `rnd`, `rndA` e `rp`, come fanno già le prove (`gioco.js`, riga 775). `legName` e il registratore («boa girata dal lato sbagliato», `sba`) guardano «lato di una boa» invece di `leg === 1`. Sul bastone l'azzeramento cade nel lato verso l'arrivo, dove quei campi non servono.
+4. **Punti di passaggio alla boa 2:** quelli della boa 1 ruotati di 90° attorno alla boa. Non è la stessa situazione già misurata: alla boa 1 si arriva di bolina, alla boa 2 al lasco e si stramba, e il tratto fra il punto 0 e il punto 1 diventa una poppa piena, dove la guida fa bordi con abbattute. Ipotesi più debole di come era scritta: C9 deve contare anche i giri sbagliati con una soglia (criterio T2g).
+5. **Strada per i distacchi:** sul bastone resta la formula di oggi, scritta uguale (una formula generale darebbe numeri diversi nell'ultima cifra). Sul triangolo la strada si misura **lungo il lato** e non più nella direzione del vento (sui lati al lasco la direzione del vento ne vedrebbe metà), limitata fra 0 e L.
+6. **T2c non è un metro a sé:** il pilota dei collaudi è la guida degli avversari principianti (`avvio.js`, `pilota`), quindi T2c misura la stessa cosa di C9. Si tiene come riga di C9, non come prova indipendente; il giro della boa 2 si prova anche con scenari fissi (T2h).
+7. **T2a precisato:** identiche al bit le 20 regate e le 9 introduzioni di `arrivi_regate.py`; con i percorsi misti anche le regate 1 e 3 di ogni torneo (bastone); le regate 2 e 4 cambiano per costruzione.
+8. **Durata, numeri di oggi** (`arrivi_regate.py`, 27 ottobre, pilota, tempo senza penalità): bastone a 140 m con la barca dell'1a da 173 a 232 s (circa 3,4 minuti), salti di vento a 300 m con la barca dell'1b da 401 a 468 s. Le regate a bastone del torneo stanno quindi **sotto** i 4-5 minuti di `VISIONE` §7, contro quello che dice §7 (misura del torneo da rifare col metro corretto). Stima per il triangolo (bolina circa 0,8 s/m, lasco circa 0,35 s/m): durata ≈ 1,5·L s, quindi 140 m ≈ 3,5 minuti, 170 m ≈ 4,3, 200 m ≈ 5. Si sceglie con C8 come scritto; il bastone del torneo resta a 140 m (consiglio: non toccarlo ora, così le regate 1 e 3 restano confrontabili al bit).
+9. **Semi:** i semi 1-40 sono già stati guardati per gli avversari. Taratura di L sui semi 1-20, conferma sui **61-80**.
+10. **C9 senza finestra d'arrivo:** nel torneo chi arriva dopo 1,5 volte il tempo del primo non arriva per regola. C9 si misura fuori dalla finestra: barca arrivata entro `R.t` = 1500 s.
+11. **Nome della boa 2:** a schermo «Boa 2 · lasciala a sinistra», senza «boa di poppa» o «di strambata» finché il nome italiano non è in una fonte (`CONTENUTI-DA-VERIFICARE.md`). Da riscrivere anche i testi che dicono «quattro regate a bastone» e «girare la boa gialla e tornare a tagliare la linea» nel torneo.
+
+Criteri in più (scritti ora, prima di misurare):
+
+| | Criterio | Soglia |
+| --- | --- | --- |
+| T2g | Giri sbagliati alla boa 2 (avversari e pilota, 40 regate) | al massimo il 5% dei passaggi; il numero dei passaggi stampato |
+| T2h | Scenari fissi del giro della boa 2: barca che la lascia a sinistra (+1) e a destra (−1), da 4 direzioni del vento | 8 casi su 8 |
+| T2i | Il metro dei tornei (`arrivi_regate.py` corretto): 4 regate diverse per torneo, tutte con titolo del torneo | 8 regate su 8 |
+| — | Penalità per regata sul triangolo contro il bastone | si riporta, senza soglia (§8.5) |
