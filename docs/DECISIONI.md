@@ -53,6 +53,8 @@ Costo di cambiamento:
 | Nessun numero fisso di novità per livello | 4 ott | basso | — | `VISIONE-LIVELLI-E-CARRIERA.md` §1 |
 | Replay e «regata come fonte» solo nella parte «b» dei livelli | 20 ott | medio | Registrazione e istantanee | `PROPOSTA-REGATA-COME-FONTE.md` §9.7 |
 | Vela di portanza del livello 4: gennaker asimmetrico [da verificare su fonti] | ott | medio | Fisica del livello 4, non ancora scritta | memoria del progetto |
+| **Modalità coach**: in ogni regata il registratore parte da solo e si spegne all'arrivo (un file per regata, M sempre possibile); nella navigazione libera, nelle prove e nelle lezioni non registra, salvo registrazione forzata a mano. La registrazione serve al coach (rivivere una situazione, «perché la Rossa ha preso la penalità?») e al debugging | 27 ott | medio | Registratore, memoria del browser o cartella, replay e domande dei livelli futuri | `PROPOSTA-REGATA-COME-FONTE.md` §10 (fermata 1 da scrivere) |
+| Soglia di 2 s per uscire dal menu a metà regata del torneo (collaudo C11 R7, 2,71 s il 27 ott): non si inseguono i decimi, basta che funzioni | 27 ott | basso | Solo il collaudo | `CHANGELOG.md` 1.0.50 |
 
 ## Carriera, meriti, salvataggi
 

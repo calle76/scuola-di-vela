@@ -303,3 +303,10 @@ I testi delle lezioni brevi si scrivono a parte, senza toccare il motore.
 - S8: caso peggiore dei testi.
 
 **Da decidere con la proposta dei tornei:** quante regate si tengono (l'ultima o tutte e quattro); replay nei tornei del gioco libero o solo in carriera; punti dalle domande e dalle ripetizioni (§9.6), insieme ai meriti del torneo.
+
+## 10. Modalità coach e registratore (decisione di Ale, 27 ottobre 2026)
+
+**[deciso]** «Modalità coach» è il nome di tutto ciò che usa le regate registrate: momenti chiave, ripeti da qui, domande («perché la Rossa ha preso la penalità?») e analisi per il debugging. Il registratore parte da solo all'inizio di ogni regata e si spegne all'arrivo; il file contiene solo quella regata (oggi, con l'interruttore a mano, il file successivo contiene anche il precedente). Il tasto M resta. Nella navigazione libera, nelle prove e nelle lezioni non si registra niente, salvo registrazione forzata a mano.
+
+**[aperto]** Dove stanno i file: memoria del browser (IndexedDB, ovunque, invisibile) per le ultime regate del coach, e una cartella scelta da Ale (File System Access, solo Chrome ed Edge, conferma a ogni sessione; da provare se funziona da file locale) come archivio per il debugging. Privacy: si registra sempre ma solo nel browser, da dichiarare con una riga. Da scrivere come fermata 1, con criterio di collaudo: 20 regate, nessun byte della regata precedente nel file successivo.
+

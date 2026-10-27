@@ -19,7 +19,7 @@
     " fantasma=" + (opt.ghost ? "sì" : "no") + " vento=" + Math.round(env.twd) + "° " + Math.round(env.tws * KN) + "kn raffiche=" + gustLevel + " avversari=" + opt.aiLevel + " preparazione=" + opt.countdown + "s" + (LAB ? labSet() : "");
   const sesMode = () => mode + (mode === "lesson" ? lessonIdx : mode === "mission" ? missionIdx : mode === "race" ? raceIdx : "");
   const sesModeName = () => mode === "lesson" ? "lezione " + (lessonIdx + 1) + " «" + LESSONS[lessonIdx].title + "»" : mode === "mission" ? "«" + $("mTitle").textContent + "»"
-    : mode === "race" ? "regata «" + $("rTitle").textContent + "»" : mode === "free" ? "navigazione libera" : "menu";
+    : mode === "race" ? "regata «" + $("rTitle").textContent + "»" + (R ? " (barca " + (R.lv2 ? "1b" : "1a") + ")" : "") : mode === "free" ? "navigazione libera" : "menu";
   const sesKeys = () => [...keys, ...semHeld].filter(k => SES_KEY[k]);
   const sesDlg = () => ({ impostazioni: $("setDlg").open, glossario: $("gloss").open, quiz: $("quiz").open, istruzioni: briefing });
   const sesHint = () => mode !== "menu" && !$("hint").hidden && $("hint").textContent !== "—" ? $("hint").textContent : "";
@@ -182,6 +182,7 @@
       "#                       partito, lato, passo_completato, errore, contatto_senza_colpa, regata_in_corso, dialogo, registrazione_accesa/spenta;",
       "#                       arrivo Ns: nelle prove i secondi di gioco, nelle regate il tempo netto con le penalità, una volta sola per regata;",
       "#                       regata_in_corso lato N t=Ns: registrazione accesa a regata già partita (la partenza non è nel file);",
+      "#                       apre regata «titolo» (barca 1a|1b): 1b = barca completa, regole 10-13 con «(regola N)», semaforo possibile;",
       "#                       contatto_senza_colpa +N: contatto che non conta negli errori (gli altri compaiono come «errore contactsPen +N»);",
       "#                       alla riaccensione «pausa Ns» = secondi veri passati a registrazione spenta; t non li conta)",
       "#  B t nome x y prua nodi twa lato stato   un avversario, una riga al secondo insieme alla S (formato 2, dalla 1.0.52): lato 0 prima del via, 1 bolina, 2 poppa;",
