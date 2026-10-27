@@ -130,7 +130,7 @@ async def parte2(b):
     pg = await b.new_page(viewport={"width": 900, "height": 500}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.add_init_script(SEME)
     async def corsa(it, seme, q, banco):   # ogni corsa in una pagina appena caricata: niente stato rimasto dalla corsa prima
-        await pg.goto("about:blank"); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
+        await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
         await pg.evaluate(APRI, [it, seme])
         if q: await pg.keyboard.down("q")
         r = await pg.evaluate(CORSA, [it, seme, banco])

@@ -17,7 +17,7 @@ def check(ok, testo):
     if not ok: falliti.append(testo)
 
 async def apri(pg, kn, lv):
-    await pg.goto("about:blank"); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(200)
+    await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(200)
     await pg.evaluate("__sv.openItem('free')")
     await pg.evaluate("""([k, lv]) => { for (const [id, v] of [['wSpd', k], ['gustSel', '0'], ['wDir', '0'], ['boatLv', lv]]){
         const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); } }""", [str(kn), str(lv)])
@@ -76,7 +76,7 @@ async def main():
         check("Boma spinto" in pan[0] and pan[1] <= 0, f"pannello a 1360×650 col suggerimento del boma spinto: eccesso {pan[1]} px")
 
         # 3: pagina come la carica un giocatore
-        await pg.goto("about:blank"); await pg.goto(BASE); await pg.wait_for_timeout(400)
+        await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
         await pg.click("#goFree"); await pg.wait_for_timeout(200)
         await pg.evaluate("document.getElementById('setDlg').showModal()")
         await pg.select_option("#boatLv", "2"); await pg.evaluate("document.getElementById('setDlg').close()")

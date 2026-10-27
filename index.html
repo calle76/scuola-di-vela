@@ -296,22 +296,22 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
           <p class="keys" style="margin-top:6px">Con «prua in alto» la barca resta ferma sullo schermo e ruota il mare: quando la barca gira a destra, il mare sembra girare a sinistra. Con «nord in alto» è la barca a girare.</p></div>
         <div id="freeOpts" class="opts" style="margin-top:0">
           <div class="optrow"><span>Vento da</span>
-            <select id="wDir"><option value="0">nord</option><option value="45">nord-est</option><option value="90">est</option><option value="135">sud-est</option><option value="180">sud</option><option value="225">sud-ovest</option><option value="270">ovest</option><option value="315">nord-ovest</option></select></div>
+            <select autocomplete="off" id="wDir"><option value="0">nord</option><option value="45">nord-est</option><option value="90">est</option><option value="135">sud-est</option><option value="180">sud</option><option value="225">sud-ovest</option><option value="270">ovest</option><option value="315">nord-ovest</option></select></div>
           <div class="optrow"><span>Intensità</span>
-            <select id="wSpd"><option value="6">6 nodi, brezza leggera</option><option value="10" selected>10 nodi, brezza tesa</option><option value="15">15 nodi, vento fresco</option></select></div>
+            <select autocomplete="off" id="wSpd"><option value="6">6 nodi, brezza leggera</option><option value="10" selected>10 nodi, brezza tesa</option><option value="15">15 nodi, vento fresco</option></select></div>
           <div class="optrow"><span>Raffiche</span>
-            <select id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
+            <select autocomplete="off" id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
           <div class="optrow"><span>Barca</span>
-            <select id="boatLv" title="Barca dell'1b: la barra arriva fino a 45° e la pala può stallare; la freccia porta la barra fino a 35°, Maiusc + freccia fino in fondo; Z tenuto premuto spinge il boma fuori"><option value="1" selected>1a</option><option value="2">1b</option></select></div>
+            <select autocomplete="off" id="boatLv" title="Barca dell'1b: la barra arriva fino a 45° e la pala può stallare; la freccia porta la barra fino a 35°, Maiusc + freccia fino in fondo; Z tenuto premuto spinge il boma fuori"><option value="1" selected>1a</option><option value="2">1b</option></select></div>
         </div>
-        <label class="check"><input type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (vale per la modalità in corso: nelle prove e nelle regate parte spenta)</label>
-        <label class="check"><input type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
-        <label class="check"><input type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente e della velocità</label>
-        <label class="check"><input type="checkbox" id="showDead" checked> Rosa dell'angolo morto, in basso a sinistra</label>
-        <label class="check" title="Rosso: devi lasciare strada. Verde: hai la precedenza, non il permesso di urtare. Solo nelle regate dell'1b: «Regata nei salti di vento» e torneo."><input type="checkbox" id="showSem"> Semaforo di precedenza sullo scafo (solo regate 1b)</label>
-        <label class="check"><input type="checkbox" id="allInstr"> Numeri di vento, sbandamento e scarroccio nel pannello, sempre</label>
-        <label class="check"><input type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
-        <label class="check"><input type="checkbox" id="sesOn"> Registra la sessione (il tasto M segna un momento)</label>
+        <label class="check"><input autocomplete="off" type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (vale per la modalità in corso: nelle prove e nelle regate parte spenta)</label>
+        <label class="check"><input autocomplete="off" type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
+        <label class="check"><input autocomplete="off" type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente e della velocità</label>
+        <label class="check"><input autocomplete="off" type="checkbox" id="showDead" checked> Rosa dell'angolo morto, in basso a sinistra</label>
+        <label class="check" title="Rosso: devi lasciare strada. Verde: hai la precedenza, non il permesso di urtare. Solo nelle regate dell'1b: «Regata nei salti di vento» e torneo."><input autocomplete="off" type="checkbox" id="showSem"> Semaforo di precedenza sullo scafo (solo regate 1b)</label>
+        <label class="check"><input autocomplete="off" type="checkbox" id="allInstr"> Numeri di vento, sbandamento e scarroccio nel pannello, sempre</label>
+        <label class="check"><input autocomplete="off" type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
+        <label class="check"><input autocomplete="off" type="checkbox" id="sesOn"> Registra la sessione (il tasto M segna un momento)</label>
         <div id="sesBox" hidden><textarea id="sesNote" rows="1" maxlength="2000" placeholder="Nota facoltativa. Il file resta sul tuo computer." aria-label="Nota per la registrazione"></textarea><button id="sesGet">Scarica</button></div>
         <p class="keys" id="sesMarks" hidden></p>
       </div>
@@ -328,8 +328,8 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
       <p id="bText"></p>
       <div id="bRaceOpts">
         <div class="opts-inline">
-        <label>Avversari <select id="aiLevel"><option value="principianti">principianti</option><option value="esperti">esperti</option><option value="nessuno">nessuno, solo il fantasma</option></select></label>
-        <label style="display:flex;gap:6px;align-items:center">Preparazione <select id="cdSel"><option value="60">1 minuto</option><option value="180" selected>3 minuti</option><option value="300">5 minuti</option></select></label>
+        <label>Avversari <select autocomplete="off" id="aiLevel"><option value="principianti">principianti</option><option value="esperti">esperti</option><option value="nessuno">nessuno, solo il fantasma</option></select></label>
+        <label style="display:flex;gap:6px;align-items:center">Preparazione <select autocomplete="off" id="cdSel"><option value="60">1 minuto</option><option value="180" selected>3 minuti</option><option value="300">5 minuti</option></select></label>
       </div>
       </div>
       <p class="bNote" id="bNote"></p>
@@ -402,12 +402,12 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
     <div id="direct">
       <section class="ctl" id="ctlTiller">
         <label for="tiller"><span>Barra del timone</span><b id="vTil">al centro</b></label>
-        <input id="tiller" type="range" min="-100" max="100" value="0">
+        <input autocomplete="off" id="tiller" type="range" min="-100" max="100" value="0">
         <div class="ends"><span>verso sinistra</span><span>verso dritta</span></div>
       </section>
       <section class="ctl" id="ctlSheet">
         <label for="sheet"><span>Scotta della randa</span><b id="vSh">—</b></label>
-        <input id="sheet" type="range" min="0" max="100" value="40">
+        <input autocomplete="off" id="sheet" type="range" min="0" max="100" value="40">
         <div class="ends"><span>cazzata</span><span>lascata</span></div>
       </section>
       <p class="keys"><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>↑</kbd> cazza &nbsp;<kbd>↓</kbd> lasca &nbsp;<kbd>Spazio</kbd> centra la barra<span id="kQ" hidden> &nbsp;<kbd>Q</kbd> vista</span></p>

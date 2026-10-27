@@ -220,7 +220,7 @@ AVANTI = """([sec, esci]) => { const sv = __sv, dt = 1 / 60; document.getElement
   if (esci === "menu") document.getElementById("toMenu").click(); else if (esci === "pagehide") dispatchEvent(new Event("pagehide"));
   return performance.now() - t0; }"""
 async def chiudi(pg):  # la pagina viene lasciata: pagehide parte (misurato: con page.close() da solo, anche run_before_unload, NON parte in Chromium headless)
-    await pg.goto("about:blank"); await pg.close()  # limite: la chiusura vera della scheda nel browser di Ale non si può provare qui
+    await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.close()  # limite: la chiusura vera della scheda nel browser di Ale non si può provare qui
 async def stato(pg):
     return await pg.evaluate("s => { try { return JSON.parse(localStorage.getItem(s)); } catch(e){ return null; } }", "scuolaVelaSim.v1")
 

@@ -61,7 +61,7 @@ async def main():
               return { prima, dopo: s.capsized, twa: twa ?? 0, lv: s.lv || 1 }; }""", [regata, att])
             check(r["prima"] and not r["dopo"] and abs(abs(r["twa"]) - ang) <= 5,
                   f"avversario, livello {r['lv']}: rovesciato a {att - 0.5} s, dritto a {att + 0.5} s, {abs(r['twa']):.0f}° dal vento (atteso {ang})")
-        await pg.goto("about:blank"); await pg.goto(BASE); await pg.wait_for_timeout(400)
+        await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
         await pg.click("#goFree"); await pg.wait_for_timeout(300)
         check(not errori, f"nessun errore della pagina ({errori[:2]})")
         await b.close()

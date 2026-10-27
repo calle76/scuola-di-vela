@@ -96,7 +96,7 @@ async def main():
         b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(300)
-        await pg.evaluate("localStorage.clear()"); await pg.goto("about:blank"); await pg.goto(URL); await pg.wait_for_timeout(300)
+        await pg.evaluate("localStorage.clear()"); await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(URL); await pg.wait_for_timeout(300)
 
         if "a" in casi:  # prova 1 guidata dal pilota: nessun errore, stella salvata e mostrata nel menu
             await pg.evaluate("__sv.openItem(['m',0])"); await pg.evaluate("__sv.startMission(0, 0)"); await pg.evaluate("__sv.fast(8)"); await pg.evaluate(PILOTA, [])

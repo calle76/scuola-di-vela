@@ -68,7 +68,7 @@ async def main():
         await pg.evaluate("""document.querySelector('#modoSel [data-v="libero"]').click()""")
 
         # pagina come la carica un giocatore
-        await pg.goto("about:blank"); await pg.goto(BASE); await pg.wait_for_timeout(400)
+        await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
         await pg.click('button[data-r="2"]'); await pg.wait_for_timeout(500)
         tit = await pg.text_content("#rTitle"); check("salti di vento" in tit, f"senza #collaudo: la regata si apre ({tit.strip()})")
         check(not errori, f"nessun errore della pagina ({errori[:2]})")

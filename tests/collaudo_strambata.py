@@ -9,7 +9,7 @@ OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=Tru
 KICK=sys.argv[3] if len(sys.argv)>3 else "260"
 URL = BASE + "#collaudo"
 async def trial(pg, kn):
-    await pg.goto("about:blank"); await pg.goto(URL); await pg.wait_for_timeout(250)
+    await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(URL); await pg.wait_for_timeout(250)
     await pg.evaluate("__sv.openItem('free')")
     await pg.evaluate("""(k)=>{ for (const [id,v] of [['wSpd',k],['gustSel','0']]){ const e=document.getElementById(id); e.value=v; e.dispatchEvent(new Event('change')); } }""", kn)
     await pg.wait_for_timeout(100)

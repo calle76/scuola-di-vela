@@ -91,6 +91,7 @@ TESTS=(
     "collaudo_aggressiva.py|py|chiaro|0||collaudo_aggressiva.py"
     "collaudo_contatto_senza_colpa.py|py|chiaro|0||collaudo_contatto_senza_colpa.py"
     "collaudo_pulsanti.py|py|chiaro|0||collaudo_pulsanti.py"
+    "collaudo_ricarica.py|py|chiaro|0||collaudo_ricarica.py"
     "collaudo_versione.py|py|chiaro|0||collaudo_versione.py"
     "collaudo_linea.py|py|chiaro|0||collaudo_linea.py"
     "collaudo_vista.py|py|chiaro|0||collaudo_vista.py"
