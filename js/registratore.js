@@ -33,7 +33,7 @@
   // Un contatto è un nuovo valore in R.contacts (la definizione del gioco); il motivo è la voce nuova di R.penList (righe Q).
   // «Fermo»: sotto FERMO_KN per FERMO_S secondi di gioco dopo il via; «riparte» sopra RIPARTE_KN (ipotesi nostre, isteresi).
   const FERMO_KN = 0.5, RIPARTE_KN = 1, FERMO_S = 5;
-  const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg === 1 && b.rnd < 0, still: 0, fermo: false });
+  const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0, still: 0, fermo: false });
   function sesAltre(dSim, riga){
     const L = ses.L;
     if (mode !== "race" || !R){ L.AR = null; return; }
@@ -47,7 +47,7 @@
       if (b.fin !== null && !A.fin) sesEv("avv_arrivo", n + " " + Math.round(b.fin) + "s");
       if ((b.pen || 0) > A.pen) sesEv("avv_penalita", n + " +" + ((b.pen || 0) - A.pen) + "s");
       if ((b.pp || 0) > A.pp) sesEv("avv_penalita", n + " +" + ((b.pp || 0) - A.pp) + "pt");
-      const sba = b.leg === 1 && b.rnd < 0;
+      const sba = b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0;
       if (sba && !A.sba) sesEv("avv_boa_lato_sbagliato", n);
       if (dSim > 0 && R.t >= 0 && b.fin === null && !b.dnf){
         if (!A.fermo){ A.still = kn < FERMO_KN ? A.still + dSim : 0;

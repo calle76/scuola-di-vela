@@ -62,6 +62,7 @@
   ];
   const RACES1 = RACES.filter(rc => !rc.lv2); // le regate dell'1a (stessi indici: quelle dell'1b, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;
+  let TRI_L = 140; // 1.0.55: lato del triangolo del torneo, in metri: il più piccolo con la mediana del pilota fra 4 e 5,5 minuti (C8: 4,03 sui semi 1-20, 4,16 sui 61-80); __sv.triL serve alla misura
   const FLEET_LOOK = [
     { name: "Rossa", hull: "#E9E4DF", sail: "#F6D5D0", sailor: "#C7362F" },
     { name: "Verde", hull: "#E3EAE4", sail: "#D6EEDC", sailor: "#1F8A4C" },
@@ -133,10 +134,12 @@
     setGusts(rc.gusts, !!rc.tor);
     if (rc.lv2) S.lv = 2;
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
-    const up = rc.up || MARK_UP;
+    const up = rc.up || MARK_UP, tri = !!rc.tri; // tri: triangolo equilatero di lato up, due boe (1.0.55)
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { t: -opt.countdown, phase: "pre", up, lv2: !!rc.lv2, tor: !!rc.tor, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
+    R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
+    if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
     const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: spots[0].y };
     R.boats.push(me);
     const slots = [-24, 2, 24].sort(() => Math.random() - 0.5);
@@ -167,7 +170,7 @@
   function introRegata(rc, liv){
     let t = (rc.tor ? torBrief() : "") + "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
       (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.lv2 ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Barca dell'1b, boa a 300 m" : "") +
-      ". Partenza tra la barca giuria e la boa arancione, girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea. Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
+      ". Partenza tra la barca giuria e la boa arancione, " + (rc.tri ? "girare la boa 1 e poi la boa 2, tutte e due lasciandole a sinistra, e tornare a tagliare la stessa linea" : "girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea") + ". Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
@@ -193,16 +196,20 @@
       }
       const [x, y] = fromWF(b.me ? 0 : b.startX, 0); return { x, y, kind: "line" };
     }
-    if (b.leg === 1){
-      if (b.me) return { ...R.mark, kind: "mark" };
+    if (b.leg <= R.marks.length){
+      if (b.me) return { ...R.marks[b.leg - 1], kind: "mark" };
       // avversari: tre punti di passaggio per lasciare la boa a sinistra (coordinate del vento, boa in (0, -R.up))
       // 0: poco sotto e a destra della boa; 1: oltre la boa, verso sinistra (qui si attraversa la semiretta e la boa è girata);
       // 2: solo se la boa è stata girata male o mancata: si torna sotto e a sinistra, per riprovare dal punto 0 passando sotto la boa
-      const [wx, wy] = toWF(b.S.x, b.S.y), o = b.rOff, P = [[9 + o, -R.up - 3], [-16 - o, -R.up - 10 - o * 0.5], [-10, -R.up + 14]];
+      // alla boa 2 (1.0.55) gli stessi punti ruotati di 90° attorno alla boa: lo «sopra» della boa 1 diventa il lato esterno a sinistra (ipotesi nostra, §8.7 punto 4)
+      const [wx, wy] = toWF(b.S.x, b.S.y), o = b.rOff, due = b.leg === 2, [mx, my] = due ? toWF(R.marks[1].x, R.marks[1].y) : [0, -R.up];
+      const P = due ? [[-3, -9 - o], [-10 - o * 0.5, 16 + o], [14, 10]].map(([dx, dy]) => [mx + dx, my + dy])
+                    : [[9 + o, -R.up - 3], [-16 - o, -R.up - 10 - o * 0.5], [-10, -R.up + 14]];
       const near = (k, r) => Math.hypot(wx - P[k][0], wy - P[k][1]) < r;
       // il punto 1 si punta solo da sopra la boa: da più in basso la bolina porterebbe la barca proprio sopra la boa
-      if (!b.rp && (near(0, 4) || (wy < -R.up - 2 && wx > 3))) b.rp = 1;
-      else if (b.rp === 1 && ((wx < -8 && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
+      const sopra = due ? wx - mx < -2 && wy - my < -3 : wy < -R.up - 2 && wx > 3, oltre = due ? wy - my > 8 : wx < -8;
+      if (!b.rp && (near(0, 4) || sopra)) b.rp = 1;
+      else if (b.rp === 1 && ((oltre && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
       else if (b.rp === 2 && near(2, 8)) b.rp = 0;
       const [x, y] = fromWF(P[b.rp || 0][0], P[b.rp || 0][1]); return { x, y, kind: "mark" };
     }
@@ -437,13 +444,16 @@
         else if (prev > 0 && wy <= 0 && !onLine){ b.ocs = true; if (b.me) regAdd("outLine"); if (b.me) toast("Sei passato fuori dalla linea: torna dietro e passa tra giuria e boa"); }
         else if (wy < -5 && !b.ocs){ b.ocs = true; if (b.me) regAdd("outLine"); } // oltre la linea senza averla tagliata: deve tornare indietro
       }
-    } else if (b.leg === 1){
-      const k = roundCheck(b, s.x, s.y, R.mark);
+    } else if (b.leg <= R.marks.length){ // 1.0.55: una boa (bastone) o due (triangolo); al cambio di lato il giro riparte da zero, come nelle prove (gioco.js)
+      const k = roundCheck(b, s.x, s.y, R.marks[b.leg - 1]), ultima = b.leg === R.marks.length;
       if (k < 0){ b.wrongMarks = (b.wrongMarks || 0) + 1; if (b.me) regAdd("wrongMarks"); }
-      if (b.rnd >= 1){ b.leg = 2; if (b.me) toast("Boa girata: ora all'arrivo"); }
+      if (b.rnd >= 1){
+        if (b.me) toast(!R.tri ? "Boa girata: ora all'arrivo" : ultima ? "Boa 2 girata: ora all'arrivo" : "Boa 1 girata: ora la boa 2");
+        b.leg++; b.rnd = 0; b.rndA = undefined; b.rp = 0;
+      }
       else if (k < 0 && b.me) roundToast(-1);
       else if (k > 0 && b.me) toast("Hai rimediato: ora girala lasciandola a sinistra");
-    } else if (b.leg === 2){
+    } else if (b.leg === R.marks.length + 1){
       if (prev < 0 && wy >= 0 && onLine){ b.fin = R.t + b.pen; if (b.me) toast("Arrivato!"); }
     }
   }
@@ -631,10 +641,19 @@
   // centro della linea: chi tagliava l'arrivo a 15 m dal centro sembrava indietro. Ogni barca se la ricorda ogni 0,5 s; il distacco è
   // da quanti secondi la barca davanti aveva la strada che ho fatto io: un tempo vero, senza le penalità.
   function strada(b){
-    if (b.fin !== null) return 2 * R.up;
+    if (b.fin !== null) return (R.tri ? 3 : 2) * R.up;
     if (b.leg === 0 || b.ocs) return null;
+    if (R.tri) return stradaTri(b);
     const wy = toWF(b.S.x, b.S.y)[1];
     return b.leg === 1 ? Math.min(R.up, -wy) : 2 * R.up + Math.min(0, wy);
+  }
+  // sul triangolo (1.0.55) la strada si misura lungo il lato, da 0 a L: la direzione del vento ne vedrebbe la metà sui lati al lasco (§8.7 punto 5).
+  // L'ultimo lato no: la linea d'arrivo è orizzontale e il lato la taglia a 30°, quindi la proiezione sul lato arrivava a L fino a 8 s prima del traguardo
+  // (D1 sul triangolo: 5 regate su 13 entro 3 s); lì conta la strada che manca alla linea in direzione del vento, portata a L (la linea vale esattamente L)
+  function stradaTri(b){
+    const [wx, wy] = toWF(b.S.x, b.S.y), L = R.up, c = 0.866, lato = [[0, 0, 0, -1], [0, -L, -c, 0.5]][b.leg - 1];
+    if (b.leg === 3) return 2 * L + clamp(L + 2 * wy, 0, L);
+    return (b.leg - 1) * L + clamp((wx - lato[0]) * lato[2] + (wy - lato[1]) * lato[3], 0, L);
   }
   function quando(b, p){ // primo istante in cui la barca b ha avuto la strada p (interpolato), null se mai
     const h = b.hist || [];
@@ -675,8 +694,8 @@
     if (b.dnf) return b.me && b.ret ? "ritirata" : "non arrivata";
     if (b.S.capsized) return "scuffiata!";
     if (b.ocs) return "partenza anticipata";
-    if (b.leg === 1 && b.rnd < 0) return "boa girata dal lato sbagliato";
-    return ["prima della partenza", "di bolina", "verso l'arrivo"][b.leg];
+    if (b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0) return "boa girata dal lato sbagliato";
+    return (R.tri ? ["prima della partenza", "di bolina", "verso la boa 2", "verso l'arrivo"] : ["prima della partenza", "di bolina", "verso l'arrivo"])[b.leg];
   }
   function racePanel(){
     if (!R) return;
@@ -701,7 +720,7 @@
   $("finRestart").onclick = () => $("rRestart").click(); $("finWind").onclick = () => $("rWind").click(); $("finTor").onclick = () => $("rTor").click();
 
   // ---- torneo dell'1b (1.0.34, tappa T1 di docs/PROPOSTA-TORNEI-1B.md) ----
-  // Serie di 4 regate a bastone con la barca dell'1b contro gli stessi tre avversari, con lo stesso carattere. Punteggio di F15,
+  // Serie di 4 regate (1 e 3 a bastone, 2 e 4 a triangolo dalla 1.0.55) con la barca dell'1b contro gli stessi tre avversari, con lo stesso carattere. Punteggio di F15,
   // appendice A: punti bassi (A4), chi non arriva o si ritira prende iscritti + 1 (A5.2), uno scarto (A2.1) dopo la quarta regata,
   // parità con A8; un contatto con colpa è una penalità sul punteggio (44.3(c)), non 15 s. Finestra d'arrivo (appendice S, 12.3):
   // chi non arriva entro TOR_FIN volte il tempo della prima non arriva. Il torneo si salva in progress.torneo dopo ogni regata;
@@ -709,7 +728,8 @@
   const TOR_N = 4, TOR_FIN = 0.5; // TOR_FIN: ipotesi nostra, la finestra la scrivono le istruzioni di regata
   const TOR_COND = [{ nome: "10 nodi costanti", tws: 10, gusts: 0 }, { nome: "raffiche", tws: 12, gusts: 1 }, { nome: "salti di vento", tws: 10, gusts: 0, shifts: true }];
   let tor = null; // il torneo in corso: lo stesso oggetto di progress.torneo
-  const torNome = k => "regata " + (k + 1) + " di " + TOR_N + " (" + TOR_COND[tor.regate[k].c].nome + ")";
+  const torTri = k => k % 2 === 1; // percorsi misti (1.0.55, DECISIONI 27 ottobre 2026): dipende solo dal numero della regata, nessun numero a caso in più
+  const torNome = k => "regata " + (k + 1) + " di " + TOR_N + " (" + TOR_COND[tor.regate[k].c].nome + (torTri(k) ? ", triangolo" : "") + ")";
   const fmtPt = v => String(Math.round(v * 10) / 10).replace(".", ",");
   function torNuovo(){
     const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv);
@@ -718,7 +738,7 @@
   }
   function torRc(){
     const k = tor.ris.length, g = tor.regate[k], c = TOR_COND[g.c];
-    return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: c.tws, gusts: c.gusts, shifts: c.shifts, lv2: true, tor: true };
+    return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: c.tws, gusts: c.gusts, shifts: c.shifts, lv2: true, tor: true, tri: torTri(k), up: torTri(k) ? TRI_L : undefined };
   }
   const torBrief = () => "Torneo dell'1b, " + torNome(tor.ris.length) + ", con la barca completa dell'1b. Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
     (FLEET_LOOK.length + 2) + ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3). Chi non arriva entro metà del tempo della prima, dopo il suo arrivo, non arriva. ";
@@ -801,7 +821,7 @@
     const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + CHAR_TEXT[a.char]).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
     const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione dell'1b: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
-    const testa = !k ? `<p>Quattro regate a bastone con la barca completa dell'1b, contro gli stessi tre avversari (${T.liv}): ${car}. Vento: ${T.regate.map((g, j) => (j + 1) + ") " + TOR_COND[g.c].nome).join(", ")}.</p>
+    const testa = !k ? `<p>Quattro regate, due a bastone e due a triangolo, con la barca completa dell'1b, contro gli stessi tre avversari (${T.liv}): ${car}. Vento: ${T.regate.map((g, j) => (j + 1) + ") " + TOR_COND[g.c].nome + (torTri(j) ? " (triangolo)" : " (bastone)")).join(", ")}.</p>
       <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Un contatto con colpa vale 1 punto in più nella regata. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Torneo dell'1b</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
@@ -836,9 +856,13 @@
     ctx.fillStyle = "#9AA7B0"; ctx.fillRect(-1, -0.5, 2, 2.4);
     ctx.fillStyle = R.t < 0 ? "#F2C14E" : "#2B5DB8"; ctx.fillRect(0.2, -3.2, 1.2, 0.8);
     ctx.restore();
-    // boa di bolina
-    ctx.fillStyle = "#F2D43C"; ctx.beginPath(); ctx.arc(R.mark.x, R.mark.y, Math.max(0.9, 3 / v.ppm), 0, Math.PI * 2); ctx.fill();
-    drawRoundArrow(R.mark, 7, "rgba(255,226,122,.9)");
+    // boa di bolina; sul triangolo due boe, e quella da girare ora ha un anello
+    const next = R.tri ? R.boats[0].leg : 0;
+    R.marks.forEach((mk, k) => {
+      ctx.fillStyle = "#F2D43C"; ctx.beginPath(); ctx.arc(mk.x, mk.y, Math.max(0.9, 3 / v.ppm), 0, Math.PI * 2); ctx.fill();
+      if (next === k + 1){ ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 0.2; ctx.beginPath(); ctx.arc(mk.x, mk.y, Math.max(1.8, 6 / v.ppm), 0, Math.PI * 2); ctx.stroke(); }
+      drawRoundArrow(mk, 7, "rgba(255,226,122,.9)");
+    });
     // avversari
     for (const b of R.boats){ if (b.me) continue; drawWakeOf(b.wake, b.S.u); drawOther(b.S, b.info, b.ctl.tiller, 1); }
   }
@@ -868,7 +892,7 @@
     if (!R) return;
     ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (const b of R.boats){ if (b.me) continue; const [sx, sy] = toScreen(v, b.S.x, b.S.y); ctx.fillStyle = "rgba(10,24,36,.6)"; const w = ctx.measureText(b.name).width + 10; ctx.fillRect(sx - w / 2, sy - 58, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(b.name, sx, sy - 49); }
-    const [gx, gy] = toScreen(v, R.mark.x, R.mark.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText("Boa di bolina · lasciala a sinistra", gx + 10, gy - 10);
+    R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + 10, gy - 10); });
     drawOrologio(R.boats[0], ranking());
     ctx.restore();
     const g = goal(); // dopo l'arrivo niente freccia

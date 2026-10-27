@@ -228,3 +228,18 @@ Criteri in più (scritti ora, prima di misurare):
 | T2h | Scenari fissi del giro della boa 2: barca che la lascia a sinistra (+1) e a destra (−1), da 4 direzioni del vento | 8 casi su 8 |
 | T2i | Il metro dei tornei (`arrivi_regate.py` corretto): 4 regate diverse per torneo, tutte con titolo del torneo | 8 regate su 8 |
 | — | Penalità per regata sul triangolo contro il bastone | si riporta, senza soglia (§8.5) |
+
+### 8.8 Fermata 2 (1.0.55, 28 ottobre 2026): misure
+
+**L = 140 m.** Regola scritta prima (la più piccola con la mediana del pilota fra 4 e 5,5 minuti), 20 regate per lato sui semi 1-20, condizioni costante/raffiche/salti a rotazione: L=140 **4,03 min** (3,33-4,57), 170 4,82, 200 5,42, 230 6,19. Conferma sui semi 61-80 (mai guardati): L=140 **4,16 min** (3,18-5,37), L=170 4,74. La mediana a 140 sta a 2 secondi dal limite basso: non è un margine largo. Il triangolo ha lo stesso lato del bastone, così le quattro regate hanno scale simili.
+
+**C9 e T2g (senza finestra d'arrivo, `R.tor` spento nella misura):** semi 1-20 e 61-80 a L=140: 160 barche su 160 arrivate; giri sbagliati 1 su 161 passaggi (0,6%) e 0 su 160. Il pilota: 0 giri sbagliati su 40 regate; l'unico sbagliato è della Blu, seme 20. I passaggi sono quelli giusti (2 per barca arrivata) più i sbagliati.
+
+**Strada dell'ultimo lato (cambiata rispetto al punto 5):** la proiezione sul lato dava D1 sul triangolo 5 regate su 13 (peggiore 9,5 s), perché la linea d'arrivo è orizzontale e il lato la taglia a 30°; ora l'ultimo lato misura la strada che manca alla linea in direzione del vento, portata a L: D1 16 su 16 (peggiore 1,8 s). I primi due lati restano lungo il lato.
+
+**T2b come l'avevo scritto (100% a ogni boa) non regge:** letture a 10 s dal giro dell'ultima delle due barche contro la differenza dei tempi di giro: dopo il via 39 su 60 entro 3 s (il lato 1 è quello del bastone: non l'ho misurato a bastone, quindi non so se è lo stesso), dopo la boa 1 60 su 60, dopo la boa 2 30 su 48; segno giusto 160 su 168; errore massimo 15,9 s. Causa nota: fra il momento in cui una barca è alla pari con la boa e quello in cui finisce di girarla la strada resta ferma (circa 9 s alla boa 2, perché l'uscita verso sud-est comincia dopo l'arco a ovest); il distacco in quegli istanti dice «da quando avevi questa strada», non «da quando hai girato». Non ho cambiato la soglia: riportato com'è. Decide Ale se tenere così (come al bastone, dove l'effetto c'è ma non era misurato) o aggiungere alla strada un termine d'arco (più codice).
+
+**Disegno e pannello (T2e):** 2 boe gialle sul triangolo e 1 sul bastone, un anello solo sulla boa da girare; pannello 0 px di eccesso in 60 misure fino all'arrivo a 1360×650. Il riquadro delle istruzioni del torneo scorre già a bastone (overlay con `overflow-y: auto`, dalla 1.0.34); sul triangolo è più lungo di una riga, «Parti» resta a 604 px su 650.
+
+**T2h:** 16 casi su 16. **T2f:** «lato 2» e «lato 3» nel file, `analizza_sessione.py` senza errori. **T2i:** 8 regate su 8.
+
