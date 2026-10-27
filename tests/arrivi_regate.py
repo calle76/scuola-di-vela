@@ -2,6 +2,7 @@
 # a seme fisso e con il pilota sostituto alla guida, per confrontare il file di PRIMA con quello di DOPO (diff): devono essere identici.
 # Per ogni regata: tempo d'arrivo di ogni barca (a piena precisione), penalità, partenze anticipate, boe sbagliate, elenco delle penalità
 # col motivo, introduzione, testo del risultato, classifica e dati salvati. Per i tornei: HTML del pannello a ogni regata.
+# T2i: stampa «regate del torneo valide N su 8» (titolo «Torneo…, regata k di 4», 4 titoli diversi, giocatore arrivato o ritirato).
 # Uso: python tests/arrivi_regate.py <file di uscita>
 #   regate: bastone (7), raffiche (7) e salti di vento dell'1b (6); semi 1-N, i primi principianti, gli ultimi esperti; poi 9 introduzioni
 #   (3 regate × 3 livelli) e 2 tornei da 4 regate.
@@ -33,7 +34,8 @@ INTRO = """async ([i, liv]) => {
   return sv.R.brief;
 }"""
 TORNEO_RUN = """seme => {
-  const sv = __sv, dt = 1 / 60; sv.simTime = 0; __seed(seme);   // il seme a ogni regata: i fotogrammi fra una chiamata e l'altra consumano numeri a caso document.getElementById("torGo").click();
+  const sv = __sv, dt = 1 / 60; sv.simTime = 0; __seed(seme);   // il seme a ogni regata: i fotogrammi fra una chiamata e l'altra consumano numeri a caso
+  document.getElementById("torGo").click();   // corre davvero la regata del torneo (fino al 27 ottobre era dentro il commento qui sopra)
   const R = sv.R, me = R.boats[0];
   while (R.t < 1500 && me.fin === null && !me.dnf){ sv.pilota(dt); sv.run(dt, 1); }
   const brief = R.brief;
@@ -44,7 +46,7 @@ TORNEO_RUN = """seme => {
 }""" % SCHEDA
 
 async def main(uscita):
-    righe = []; barche = 0; penal = 0; con_contatti = 0; errori = []
+    righe = []; tornei_ok = 0; barche = 0; penal = 0; con_contatti = 0; errori = []
     async with async_playwright() as p:
         b = await p.chromium.launch()
         async def pagina():
@@ -70,12 +72,16 @@ async def main(uscita):
             ctx, pg = await pagina()
             await pg.evaluate("([s, l]) => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; const e = document.getElementById('aiLevel'); e.value = l; e.dispatchEvent(new Event('change')); __sv.torApri(); }", [500 + t, liv])
             righe.append("torneo %d inizio %s" % (t, await pg.evaluate("document.getElementById('torBody').innerHTML")))
+            titoli = []
             for k in range(4):
                 r = await pg.evaluate(TORNEO_RUN, 900 + 10 * t + k)
+                titoli.append(r["brief"])
+                if ("regata %d di 4" % (k + 1)) in r["brief"] and r["brief"].startswith("Torneo") and (r["boats"][0]["fin"] is not None or r["boats"][0]["dnf"]): tornei_ok += 1   # T2i
                 righe.append("torneo %d regata %d %s" % (t, k, json.dumps(r, sort_keys=True, ensure_ascii=False)))
                 barche += len(r["boats"]); penal += len(r["pen"]); con_contatti += 1 if r["pen"] else 0
+            if len(set(titoli)) != 4: tornei_ok -= 4   # 4 regate uguali: il torneo non è stato corso
             await ctx.close()
         await b.close()
     pathlib.Path(uscita).write_text("\n".join(righe) + "\n")
-    print(f"righe {len(righe)}, barche {barche}, penalità con motivo {penal}, regate con almeno un contatto {con_contatti}, errori della pagina {errori[:2]}")
+    print(f"T2i regate del torneo valide {tornei_ok} su 8 ({'OK' if tornei_ok == 8 else 'FALLITO'}); righe {len(righe)}, barche {barche}, penalità con motivo {penal}, regate con almeno un contatto {con_contatti}, errori della pagina {errori[:2]}")
 asyncio.run(main(sys.argv[1]))
