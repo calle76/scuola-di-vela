@@ -40,6 +40,8 @@
 5. **Boe dal lato sbagliato della guida automatica (1a; Ale il 26 ottobre: l'1a resta così)** (23 ottobre 2026, `tests/misura_boe.py`): se la barca si trova di fianco alla boa dal lato sinistro, la guida degli avversari (che è anche il pilota dei collaudi) risale sopra la boa verso il suo primo punto e la passa dal lato sbagliato, poi la rigira. Stessi semi 1-40, 160 corse dell'1a col pilota: 0 nella 1.0.41, **7 dalla 1.0.42** (dove gli scafi dopo il contatto si spingono fuori: in 6 casi su 7 c'è un contatto vicino alla boa poco prima). Al giocatore non succede (la boa la gira lui); sugli avversari non misurato. Decisione di Ale: l'1a non si tocca ora, si corregge nel passo «avversari con la barca dell'1b», dove si decide anche se portare la correzione all'1a.
 6. **Semplificazioni:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio.
 
+**27 ottobre 2026, pulizia di `js/regate.js`** (senza nuova versione, `CHANGELOG.md`): funzioni più corte, mappa aggiornata, `cedeLv2` → `cedeAvv1b`; arrivi di 20 regate e 2 tornei identici al bit (`tests/arrivi_regate.py`). Prossimo: T2.
+
 ## Prossimo lavoro
 
 Ordine in `ROADMAP.md`.
