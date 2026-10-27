@@ -146,7 +146,7 @@ async def gruppo(b, semi, liv, soglie, nome):
 
 async def parte1(veloce):
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         print("== «nessuno»: una regata a bastone, seme 1: niente piazzamento salvato", flush=True)
         r = await corsa(b, 0, 1, "nessuno")
         print(f"  arrivato: {r['fin'] is not None}; chiavi di progress.race: {r['chiavi']}", flush=True)
@@ -259,7 +259,7 @@ async def regata_tastiera(b, liv):
 async def parte2():
     validi = True
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         esiti = await asyncio.gather(*(regata_tastiera(b, liv) for liv in ("principianti", "nessuno")))   # in parallelo: circa 10 minuti invece di 18
         for liv, (arrivato, store, stato, durata) in zip(("principianti", "nessuno"), esiti):
             race = store.get("race")

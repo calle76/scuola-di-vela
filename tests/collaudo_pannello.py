@@ -9,7 +9,7 @@ W, H = (int(sys.argv[1]), int(sys.argv[2])) if len(sys.argv) > 2 else (1360, 650
 PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clientHeight}"
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": W, "height": H}); errs = []
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": W, "height": H}); errs = []
         pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)
         # le misure di eccesso qui sotto valgono solo con i caratteri veri del gioco: con i font di sistema

@@ -68,7 +68,7 @@ async def clic(pg, sel):
 # ---------------------------------------------------------------- a
 async def parte_a(p):
     print("a) pagina vera, senza #collaudo", flush=True)
-    b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []
+    b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []
     pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(BASE); await pg.wait_for_timeout(500)
     esito("aggancio dei collaudi assente", await pg.evaluate("typeof window.__sv") == "undefined")
@@ -112,7 +112,7 @@ async def parte_a(p):
 NOTA = "m w s r mamma: la barca ha virato male (M1), poi ok"
 async def parte_b(p, n_sessioni=5):
     print(f"b) {n_sessioni} sessioni con il pilota", flush=True)
-    b = await p.chromium.launch(); casi = 0; pesi = []; caratteri_tutti = []; ecc_misure = []
+    b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); casi = 0; pesi = []; caratteri_tutti = []; ecc_misure = []
     for k in range(n_sessioni):
         vento = (k * 45 + 45) % 360; H = 650 if k % 2 == 0 else 768
         pg = await b.new_page(viewport={"width": 1360, "height": H}); errs = []
@@ -230,7 +230,7 @@ TRAIETTORIA = """
 }"""
 async def parte_c(p, semi=10):
     print(f"c) traiettoria identica al bit, {semi} semi", flush=True)
-    b = await p.chromium.launch(); ctx = await b.new_context(viewport={"width": 1360, "height": 650}); await ctx.add_init_script(SEME); errs = []
+    b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); ctx = await b.new_context(viewport={"width": 1360, "height": 650}); await ctx.add_init_script(SEME); errs = []
     casi = [(["m", 0], 0, 200, "prova 1"), (["m", 1], 90, 200, "prova 2"), (["m", 2], 225, 200, "prova 3"),
             ("free", "10", 150, "libera 10 nodi, raffiche forti"), ("free", "15", 150, "libera 15 nodi, raffiche forti")]
     # ogni corsa in una pagina nuova: con le raffiche il vento oscilla con simTime (index.html, windAt), che non si azzera fra una corsa e l'altra
@@ -266,7 +266,7 @@ async def parte_c(p, semi=10):
 # ---------------------------------------------------------------- d
 async def parte_d(p, rip=3):
     print("d) costo del registratore", flush=True)
-    b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
+    b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
     await pg.goto(URL); await pg.wait_for_timeout(300); await pg.evaluate("__sv.openItem('free')")
     await pg.click("#openSet"); await pg.select_option("#gustSel", "2"); await pg.click("#setClose")
     PASSO = "n => { const t0 = performance.now(); __sv.run(1 / 60, n); return (performance.now() - t0) / n * 1000; }"   # microsecondi per passo
@@ -314,7 +314,7 @@ REGATA_E = """([quando, seme]) => {
 
 async def parte_e(p):
     print("e) regate: arrivo, accensione a regata in corso, bit-identico", flush=True)
-    b = await p.chromium.launch(); res = {}
+    b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); res = {}
     for quando in ["inizio", "corso", "dopo", "mai", "riavvio"]:
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page(); await pg.add_init_script(SEME_E)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))

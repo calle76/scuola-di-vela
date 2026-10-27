@@ -161,12 +161,12 @@ async def pagina_vera(b):
 async def main():
     if '--solo-costruiti' in sys.argv:
         async with async_playwright() as p:
-            b = await p.chromium.launch(); await costruiti(b, 10); await b.close()
+            b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); await costruiti(b, 10); await b.close()
         print('ESITO: ' + ('OK' if not errori else 'FALLITO ' + '; '.join(errori[:5]))); sys.exit(1 if errori else 0)
     elenco = [(tipo, seme, "esperti" if seme % 2 else "principianti") for tipo in (0, 2) for seme in range(1, 8)] + [("t", seme, "esperti" if seme % 2 else "principianti") for seme in range(1, 7)]
     if VELOCE: elenco = [elenco[i] for i in (0, 7, 14, 1, 8, 15)]
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         await regate(b, elenco); await costruiti(b, 3 if VELOCE else 10); await pagina_vera(b)
         await b.close()
     esito = "FALLITO (" + str(len(errori)) + "): " + "; ".join(errori[:6]) if errori else ("NON VALIDO: " + "; ".join(non_validi) if non_validi else "OK")

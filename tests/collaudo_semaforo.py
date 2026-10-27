@@ -61,7 +61,7 @@ async def main():
         casi += 1
         if not ok: fail.append(msg); print("FALLITO:", msg)
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650}); await pg.add_init_script(SEME); await pg.add_init_script(HALO)
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650}); await pg.add_init_script(SEME); await pg.add_init_script(HALO)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_function("window.__sv")
         print("== parte 1: coerenza fra semaforo e penalità (1b)")

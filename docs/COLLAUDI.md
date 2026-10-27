@@ -100,6 +100,8 @@ Risultati attesi con il motore attuale, con 10 nodi: circa 3,4 nodi a 45°, 5,2 
 
 Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 
+**Chromium e Firefox (28 ottobre 2026).** Firefox è il browser di riferimento di Ale e Lucio (`DECISIONI.md`). Tutti i collaudi leggono la variabile `BROWSER` (predefinito `chromium`): `BROWSER=firefox .venv-collaudi/bin/python tests/collaudo_pannello.py`. Installazione una volta sola: `.venv-collaudi/bin/playwright install firefox`. Con Firefox le regate non escono uguali al bit a quelle di Chromium (le funzioni matematiche del browser differiscono negli ultimi bit e la regata diverge: su 20 regate la differenza del tempo del giocatore è in media 27 s, al massimo 58 s, nessuna barca arriva in un browser e non nell'altro): i confronti «identico prima e dopo» vanno fatti nello stesso browser, e `collaudo_impronta.py` tiene un riferimento per browser (`tests/output/impronta` per Chromium, `tests/output/impronta-firefox` per Firefox). I collaudi con soglie (pannello, triangolo, torneo…) valgono su tutti e due.
+
 | Script | Cosa verifica | Esito atteso |
 | --- | --- | --- |
 | `collaudo_schermate.py` | Apre ogni passo di ogni lezione, ogni prova e la navigazione libera. Dalla 0.19.2 salva anche le schermate della linea d'arrivo a 1360×650: `L_prova1..5_zoom1/zoom2.4/zoom0.4/zoom_minimo.png`, `L_prova1..5_partenza_con_Q.png`, `L_regata1_partenza.png`, `L_regata1_partenza_con_Q.png`, `L_regata1_arrivo.png` (l'aspetto si giudica guardandole) | `errori: []` e la riga `schermate della linea: …` |

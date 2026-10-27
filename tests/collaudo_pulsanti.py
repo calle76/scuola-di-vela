@@ -31,7 +31,7 @@ async def main():
     sbagliati = []
     n_clic_lasca = n_clic_cazza = 0
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         pg = await b.new_page(viewport={"width": W, "height": H})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)

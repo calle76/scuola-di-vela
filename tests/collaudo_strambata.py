@@ -28,7 +28,7 @@ async def trial(pg, kn):
     return await pg.evaluate("[__sv.S.gybesV, __sv.S.gybesC, __sv.S.capsizes, __sv.S.capCause || '']"), round(maxh)
 async def main(kn, n):
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width":1280,"height":800})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width":1280,"height":800})
         res=[await trial(pg, kn) for _ in range(n)]
         caps=sum(1 for r in res if r[0][2]>0); viol=sum(1 for r in res if r[0][0]>0)
         print(f"vento {kn} nodi: strambate violente {viol}/{n}, scuffie {caps}/{n}, sbandamento massimo {[r[1] for r in res]}, cause {[r[0][3] for r in res]}", flush=True)

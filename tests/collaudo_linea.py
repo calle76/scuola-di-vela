@@ -179,7 +179,7 @@ async def parte2(b):
 async def main():
     print("file:", HTML)
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         conta, sbagli, e1 = await parte1(b)
         v, e2 = await parte2(b)
         c3, s3, e3 = await parte3(b)

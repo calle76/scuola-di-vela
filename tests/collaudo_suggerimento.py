@@ -161,7 +161,7 @@ async def leggi(pg, twa, sheet):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": W, "height": H})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": W, "height": H})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)
         # i margini del pannello (punto 4 sotto) valgono solo se i caratteri veri del gioco sono caricati:

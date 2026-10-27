@@ -48,7 +48,7 @@ CORSA = """
 """
 async def main(n, quali):
     async with async_playwright() as p:
-        b = await p.chromium.launch(); errs = []
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); errs = []
         for idx in quali:
             tempi = []; note = []
             for k in range(n * (3 if idx == 4 else 1)):

@@ -42,7 +42,7 @@ JS = """([race, seme, liv, senza]) => {
 async def main():
     race, senza, a, b_ = int(sys.argv[1]), sys.argv[2] == "senza", int(sys.argv[3]), int(sys.argv[4])
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width":1360,"height":650}); await pg.add_init_script(SEME)
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width":1360,"height":650}); await pg.add_init_script(SEME)
         errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
         for seme in range(a, b_ + 1):

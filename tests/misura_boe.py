@@ -31,7 +31,7 @@ CORSA = """([race, seme, liv]) => {
 }"""
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for seme, race, liv in CASI:
             pg = await b.new_page(); await pg.add_init_script(SEME)
             await pg.goto((ROOT / "index.html").as_uri() + "#collaudo"); await pg.wait_for_timeout(300)

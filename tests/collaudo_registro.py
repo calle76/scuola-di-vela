@@ -93,7 +93,7 @@ async def reg(pg): return await pg.evaluate("JSON.parse(JSON.stringify(__sv.reg)
 async def main():
     casi = sys.argv[1] if len(sys.argv) > 1 else "abcdefghi"
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(300)
         await pg.evaluate("localStorage.clear()"); await pg.goto("about:blank"); await pg.goto(URL); await pg.wait_for_timeout(300)

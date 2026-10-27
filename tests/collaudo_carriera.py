@@ -128,7 +128,7 @@ async def main():
     global QUIZ_JS
     QUIZ_JS = re.search(r"const QUIZ = \[.*?\n  \];", sorgente.testo(), re.S).group(0)
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         await k1(b); await k2_k4(b); await k5(b)
         await b.close()
     print(f"controlli: {casi}, falliti: {len(fail)}, corse K1 non valide: {nonvalide} su 6")

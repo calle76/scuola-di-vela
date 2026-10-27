@@ -25,7 +25,7 @@ CORSA = """([seme, L]) => {
 async def main(L, a, b, uscita):
     righe = []; errori = []
     async with async_playwright() as p:
-        br = await p.chromium.launch()
+        br = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for seme in range(a, b + 1):
             ctx = await br.new_context(viewport={"width": 1280, "height": 800}); await ctx.add_init_script(SEME)
             pg = await ctx.new_page(); pg.on("pageerror", lambda e: errori.append(str(e)))

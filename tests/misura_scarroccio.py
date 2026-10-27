@@ -30,7 +30,7 @@ CORRI = """() => { const sv = __sv, dt = 1 / 60;
 async def main():
     a, z = int(sys.argv[1]), int(sys.argv[2]); tempi = {"pilota": [], "avversari": []}; nonarr = wm = regate = pp = cap = 0
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for seme in range(a, z + 1):
             ctx, pg, errs = await pagina(b); await prepara(pg, seme)
             for k in range(4):

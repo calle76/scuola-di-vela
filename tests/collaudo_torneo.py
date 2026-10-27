@@ -403,7 +403,7 @@ async def giocatore(b):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         if "--giocatore" in sys.argv: await giocatore(b)
         else:
             ctx, pg, errs = await pagina(b); await c1(pg); await ctx.close()

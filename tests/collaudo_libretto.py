@@ -32,7 +32,7 @@ def prog(prove=(), pulite=(), ripassi=None, regate=None, lezioni=(), esame=None)
 
 async def main():
     async with async_playwright() as pw:
-        b = await pw.chromium.launch()
+        b = await getattr(pw, __import__("os").environ.get("BROWSER", "chromium")).launch()
         pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
         NQ = await pg.evaluate("s => new Function(s + ';return QUIZ')().map(q => q.length)", QUIZ_JS)

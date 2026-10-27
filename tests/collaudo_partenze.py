@@ -144,7 +144,7 @@ async def anticipi_allo_sparo(b):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         print(f"avversari: {LIV}; semi {SEMI_RIT[0]}-{SEMI_RIT[-1]} per tipo, passi fissi di 1/60 s, giocatore fermo")
         for cd in ["60", "180", "300"]:
             rit = []; anticipi = 0; dmin = []; cpa = []; err = []; coppie = []

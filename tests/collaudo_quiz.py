@@ -26,7 +26,7 @@ async def menu_best(pg, li):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width":1360,"height":650})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width":1360,"height":650})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE); await pg.wait_for_timeout(400)
         # QUIZ è privato nel gioco: lo si ricostruisce dal testo di index.html senza toccare il gioco

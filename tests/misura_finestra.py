@@ -32,7 +32,7 @@ JS = """([seme, liv, T]) => {
 async def main():
     a, z = int(sys.argv[1]), int(sys.argv[2]); T = float(sys.argv[3]) if len(sys.argv) > 3 else 5.2
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width":1360,"height":650}); await pg.add_init_script(SEME)
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width":1360,"height":650}); await pg.add_init_script(SEME)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_function("window.__sv")
         v = []; sola = []

@@ -27,7 +27,7 @@ CORSA = """([seme, limite]) => {
 }"""
 async def main(semi, race):
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         arrivi = []; bloccate = 0; errori = []
         print(f"regata {race + 1}: semi {semi[0]}-{semi[-1]}, passi fissi di 1/60 s, al massimo {LIMITE} s simulati per corsa", flush=True)
         for seme in semi:

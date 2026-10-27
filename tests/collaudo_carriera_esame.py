@@ -63,7 +63,7 @@ async def chiudi_quiz(pg): await pg.click("#qzClose"); await pg.wait_for_timeout
 
 async def main():
     async with async_playwright() as pw:
-        b = await pw.chromium.launch()
+        b = await getattr(pw, __import__("os").environ.get("BROWSER", "chromium")).launch()
         q0 = await b.new_page(); await q0.goto(BASE)
         NQ.extend(await q0.evaluate("s => new Function(s + ';return QUIZ')().map(q => q.length)", BANCHE)); await q0.close()
         print("domande dei ripassi:", NQ)

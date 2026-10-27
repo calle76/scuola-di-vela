@@ -27,7 +27,7 @@ async def apri(pg, kn, lv):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
         errori = []; pg.on("pageerror", lambda e: errori.append(str(e)))
 
         # 1: livello 1

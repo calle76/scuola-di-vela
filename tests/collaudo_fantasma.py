@@ -9,7 +9,7 @@ OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=Tru
 URL = BASE + "#collaudo"
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for run in range(3):
             pg = await b.new_page(viewport={"width":1280,"height":800})
             await pg.goto(URL); await pg.wait_for_timeout(300)

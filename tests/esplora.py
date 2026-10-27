@@ -159,7 +159,7 @@ async def main():
         px_prima = {(c["seme"], c["race"], c["liv"]): c.get("pannelloPx", 0) for c in vecchie if "race" in c}
         sfora, ctrl = rigioca(vecchie)
         async with async_playwright() as p:
-            b = await p.chromium.launch(); nuove = await parte1(b, [], sfora + ctrl); await b.close()
+            b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); nuove = await parte1(b, [], sfora + ctrl); await b.close()
         ns = {(c["seme"], c["race"], c["liv"]): c for c in nuove}
         print(f"\n===== RIGIOCATE: {len(sfora)} che sforavano + {len(ctrl)} di controllo")
         print("sforanti: prima -> ora (px)", [(k, px_prima[k], ns[k].get("pannelloPx")) for k in sfora if k in ns])
@@ -174,7 +174,7 @@ async def main():
     semi = list(range(int(args[0]), int(args[1]) + 1)) if len(args) >= 2 else ([] if sc else [1, 2, 3])
     t0 = time.time()
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         corse = await parte1(b, semi) if semi else []
         scim = await parte2(b, sc, semi[0] if semi else int(time.time()) % 100000) if sc else None
         await b.close()

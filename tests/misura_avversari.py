@@ -54,7 +54,7 @@ ALTRA = "l'altra"
 async def main():
     righe = []
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for race in REG:
             for liv in ("principianti", "esperti"):
                 for seme in range(S0, S1 + 1):

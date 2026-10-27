@@ -52,7 +52,7 @@ async def main(a, b, RIT=10):
     def esito(nome, ok, dett=""):
         nonlocal ok_tot; ok_tot = ok_tot and ok; print(("OK       " if ok else "FALLITO  ") + nome + (" — " + dett if dett else ""))
     async with async_playwright() as p:
-        br = await p.chromium.launch()
+        br = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         async def pagina(w=1280, h=800):
             ctx = await br.new_context(viewport={"width": w, "height": h}); await ctx.add_init_script(SEME)
             pg = await ctx.new_page(); pg.on("pageerror", lambda e: errori.append(str(e))); pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))

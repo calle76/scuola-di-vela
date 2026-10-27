@@ -35,7 +35,7 @@ async def nuova(b):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         # P1: valori imposti
         ctx, pg, errs = await nuova(b)
         await pg.evaluate("() => { __sv.fast(0); __sv.openItem(['r', 0]); }")

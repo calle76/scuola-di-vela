@@ -8,6 +8,7 @@
 #  - il menu del gioco libero e della carriera (in una pagina nuova), i meriti, un'estrazione dell'esame;
 #  - l'immagine del mare (canvas) in 21 momenti, con il ciclo del browser fermo (altrimenti increspature e zoom seguono l'orologio).
 # Da ogni scena legge stato delle barche, registro, testi del pannello e dei riquadri, e ne fa un'impronta.
+# Con BROWSER=firefox il riferimento sta in tests/output/impronta-firefox (uno per browser).
 # Uso: python collaudo_impronta.py riferimento          salva tests/output/impronta/riferimento.json (sul codice da conservare)
 #      python collaudo_impronta.py                      salva dopo.json e lo confronta col riferimento: uguali al bit, o FALLITO
 #      python collaudo_impronta.py NOME --pagina FILE   impronta di un'altra pagina (per la contro-prova: una costante cambiata apposta)
@@ -16,7 +17,8 @@ import asyncio, hashlib, json, pathlib, re, sys
 from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-OUT = ROOT / "tests" / "output" / "impronta"
+BROWSER = __import__("os").environ.get("BROWSER", "chromium")   # ogni browser ha il suo riferimento: le funzioni matematiche non danno gli stessi ultimi bit
+OUT = ROOT / "tests" / "output" / ("impronta" if BROWSER == "chromium" else "impronta-" + BROWSER)
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();
@@ -148,7 +150,7 @@ async def impronta(pagina, nome):
     url = sorgente.copia(OUT / f"pagina-{nome}", [(m.group(0), 'const VERSIONE = "impronta"')], pagina).as_uri() + "#collaudo"
     imp, errs = {}, []
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         async def nuova():   # una pagina nuova (e un localStorage vuoto) per ogni gruppo di scene: nessuno stato passa da una scena all'altra
             ctx = await b.new_context(viewport={"width": 1360, "height": 650})
             pg = await ctx.new_page(); pg.on("pageerror", lambda e: errs.append(str(e)))

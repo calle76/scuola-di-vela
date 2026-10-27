@@ -32,7 +32,7 @@ def periodo(v):  # secondi fra due passaggi per la media nello stesso verso
 async def main():
     errs, quadri, ris = [], 0, {}
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
         pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.add_init_script("window.requestAnimationFrame = () => 0;")
         await pg.goto(URL); await pg.wait_for_timeout(500)

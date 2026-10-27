@@ -33,7 +33,7 @@ REGATA = """([liv, seme]) => { const sv = __sv; sv.fast(0); sv.openItem(['r', 2]
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
         await pg.add_init_script(SEME)
         errori = []; pg.on("pageerror", lambda e: errori.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)

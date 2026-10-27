@@ -110,7 +110,7 @@ async def costruito(b, tipo, seme, finisci, rec):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         print("== A. COSTRUITO: barche messe a mano, un passo fa scattare contacts() ==", flush=True)
         esito = {}
         for tipo in ["avv", "mia", "sopra", "sotto"]:

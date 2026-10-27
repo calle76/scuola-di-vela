@@ -15,7 +15,7 @@ LEGGI = "(() => { const e = document.getElementById('briefOv'); const t = e.inne
 async def main():
     res, errs = [], []
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for seme in range(1, N + 1):
             pg = await b.new_page(viewport={"width": W, "height": H}); pg.on("pageerror", lambda e: errs.append(str(e)))
             await pg.add_init_script(SEME % seme)

@@ -21,7 +21,7 @@ def esito(nome, ok, det=""):
 async def main():
     errs = []
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         async def pagina(hash, seme=True):
             ctx = await b.new_context(viewport={"width": 1360, "height": 650})
             pg = await ctx.new_page(); pg.on("pageerror", lambda e: errs.append(f"{hash}: {e}"))

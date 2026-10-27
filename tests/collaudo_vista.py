@@ -270,7 +270,7 @@ tempi = []; zq = []; zmin = []
 async def main():
     print("file:", HTML)
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         e = await parte1(b) + await parte2(b) + await parte3(b) + await parte4(b) + await parte5(b) + await parte6(b)
         await b.close()
     if tempi: print(f"ritorno sotto 2 px: da {min(tempi):.0f} a {max(tempi):.0f} ms su {len(tempi)} rilasci")

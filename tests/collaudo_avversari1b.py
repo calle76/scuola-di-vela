@@ -65,7 +65,7 @@ def buono(sc, r):
 async def main():
     fall = []
     async with async_playwright() as p:
-        b = await p.chromium.launch(); errs = []
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); errs = []
         for sc in ([int(sys.argv[1])] if len(sys.argv) > 1 else range(1, 6)): # uno scenario solo: python collaudo_avversari1b.py 4
             ok = 0
             for v in range(10):

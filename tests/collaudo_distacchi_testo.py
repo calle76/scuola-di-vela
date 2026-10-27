@@ -52,7 +52,7 @@ CORSA = """() => { const sv = __sv, R = sv.R, me = R.boats[0], out = []; let ult
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for reg in (0, 1, 2):
             for seme in range(1, 7):
                 ctx, pg, errs = await nuova(b)

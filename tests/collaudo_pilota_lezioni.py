@@ -284,7 +284,7 @@ async def corse(pagina, semi, lezioni):
     url = pathlib.Path(pagina).resolve().as_uri() + "#collaudo"
     ris, errs = [], []
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for s in semi:
             ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page()
             pg.on("pageerror", lambda e: errs.append(str(e)))
@@ -325,7 +325,7 @@ async def reale(n=3):
     # Superata = entrambi i passi completati in 3 tentativi su 3 (criterio scritto prima, sezione 5 della proposta).
     url = (ROOT / "index.html").as_uri(); ok = 0
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         for t in range(n):
             pg = await b.new_page(viewport={"width": 1360, "height": 768}); await pg.goto(url); await pg.wait_for_timeout(600)
             await pg.click("button.item[data-k='1']"); await pg.wait_for_timeout(300)

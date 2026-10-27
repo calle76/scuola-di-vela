@@ -57,7 +57,7 @@ async def prova(pg, idx, plan, nome):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width": 1280, "height": 800})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1280, "height": 800})
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(300)
         giusto = [60, 0, -60]          # attorno alla boa in senso antiorario: lasciata a sinistra

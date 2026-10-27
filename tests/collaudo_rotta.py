@@ -48,7 +48,7 @@ PILOTA = """(secs) => {           // come una persona: piccoli colpi di barra, e
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width":1280,"height":800})
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width":1280,"height":800})
         errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(300)
         # a mani ferme: l'orziera di 3°/s deve vincere sulle spinte delle onde (3-6°/s per 0,8 s)

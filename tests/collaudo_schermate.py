@@ -8,7 +8,7 @@ OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=Tru
 URL = BASE + "#collaudo"
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         pg = await b.new_page(viewport={"width":1280,"height":800})
         errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)))
         pg.on("console", lambda m: errs.append("console:"+m.text) if m.type=="error" and "Failed to load" not in m.text else None)

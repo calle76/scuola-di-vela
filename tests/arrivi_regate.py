@@ -48,7 +48,7 @@ TORNEO_RUN = """seme => {
 async def main(uscita):
     righe = []; tornei_ok = 0; barche = 0; penal = 0; con_contatti = 0; errori = []
     async with async_playwright() as p:
-        b = await p.chromium.launch()
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         async def pagina():
             ctx = await b.new_context(viewport={"width": 1280, "height": 800}); await ctx.add_init_script(SEME)
             pg = await ctx.new_page(); pg.on("pageerror", lambda e: errori.append(str(e)))

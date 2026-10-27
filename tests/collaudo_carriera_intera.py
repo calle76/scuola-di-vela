@@ -36,7 +36,7 @@ def chk(parte, c, m):
 async def main():
     t_inizio = time.time()
     async with async_playwright() as pw:
-        b = await pw.chromium.launch()
+        b = await getattr(pw, __import__("os").environ.get("BROWSER", "chromium")).launch()
         pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.add_init_script(SEME); await pg.goto(URL); await pg.wait_for_timeout(300)
         await pg.evaluate("() => localStorage.clear()"); await pg.reload(); await pg.wait_for_timeout(300)

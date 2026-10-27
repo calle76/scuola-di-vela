@@ -105,7 +105,7 @@ async def incontro(b, spawn, seme, foto=None):
 
 async def main():
     async with async_playwright() as p:
-        b = await p.chromium.launch(); esiti_dist = []
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); esiti_dist = []
         print(f"incontri {INCONTRI[0]}-{INCONTRI[-1]} per distanza, seme = distanza × 100 + incontro", flush=True)
         for spawn in [18, 24, 30, 38]:
             print(f"--- il giocatore compare a {spawn} m dalla prua dell'aggressiva, mure a sinistra ---", flush=True)

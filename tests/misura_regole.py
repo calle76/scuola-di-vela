@@ -28,7 +28,7 @@ JS = """([seme, liv]) => {
 async def main():
     a, z = int(sys.argv[1]), int(sys.argv[2])
     async with async_playwright() as p:
-        b = await p.chromium.launch(); pg = await b.new_page(viewport={"width":1360,"height":650}); await pg.add_init_script(SEME)
+        b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width":1360,"height":650}); await pg.add_init_script(SEME)
         errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_function("window.__sv")
         tot = Counter(); reg = Counter(); camb = Counter(); pen = [0, 0, 0, 0]; n = 0; vec = [0, 0, 0, 0]; nuo = [0, 0, 0, 0]
