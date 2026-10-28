@@ -16,6 +16,7 @@ Costo di cambiamento:
 | Gioco nel browser: `index.html` più `js/`, script classici e non moduli, si apre con un doppio clic | 16 ott (1.0.3) | alto | Tutti i collaudi e la pubblicazione ci si appoggiano | `archivio/PROPOSTA-DIVISIONE-CODICE.md` |
 | Solo computer con tastiera | inizio | alto | Comandi, pannello e lezioni sono pensati per la tastiera | `PROGETTO.md` |
 | Browser di riferimento: Firefox, per Ale e per Lucio (decisione di Ale, 28 ott 2026). Niente funzioni solo-Chrome (File System Access, ecc.); i file del registratore si salvano con lo scarico del browser e con IndexedDB | 28 ott | medio | Da qui in poi si progetta e si prova su Firefox; i collaudi automatici oggi girano su Chromium e vanno affiancati da Firefox (`playwright install firefox`) | `PROPOSTA-REGATA-COME-FONTE.md` §10 |
+| Percorso a triangolo e linea d'arrivo del torneo 1b: restano come sono (linea di partenza e arrivo da 70 m, senza fonte, dichiarata come semplificazione). Dal livello 2 le regate si rendono più realistiche (decisione di Ale, 28 ott 2026) | 28 ott | basso | Solo `LINE_HALF` e i testi | `OSSERVAZIONI-GIOCANDO.md` 65 |
 | Pubblicazione su GitHub Pages da `main` (attiva, verificata da Ale il 26 ott: https://calle76.github.io/scuola-di-vela/) | set | medio | Cambia solo come arriva il gioco a chi gioca | `README.md` |
 | Pannello senza eccedenze a 1360×650 | ott | medio | Ogni testo nuovo va misurato | `CLAUDE.md` |
 
