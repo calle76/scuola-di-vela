@@ -2,7 +2,7 @@
 
 Nessun codice. Riunisce e sostituisce `PROPOSTA-MOVIOLA.md` (ritirata come proposta a sé: la moviola è una parte del coach) e dà seguito a `PROPOSTA-REGATA-COME-FONTE.md` §10 e a `DECISIONI.md` («Modalità coach», 27 ottobre). Idea di Ale del 29 ottobre: la modalità coach serve a più cose, tutte costruite sulle regate registrate.
 
-> **Stato (29 ottobre 2026):** per decisione di Ale («se non costa nulla falla») la parte «rivedere» è già fatta nella 1.0.58 in forma ridotta: tasto M o contatto → spezzone di 18 s in memoria → «Rivedi» a fine regata. Restano le fasi 1 (registrazione ricca nel file), 3 e 4, e il momento clou automatico.
+> **Stato (29 ottobre 2026):** per decisione di Ale («se non costa nulla falla») la parte «rivedere» è già fatta nella 1.0.58 in forma ridotta: tasto O o contatto → spezzone di 18 s in memoria → «Rivedi» a fine regata. Restano le fasi 1 (registrazione ricca nel file), 3 e 4, e il momento clou automatico.
 
 ## A cosa serve (parole di Ale, 29 ottobre 2026)
 1. **Il momento clou** della regata: una scena carina da rivedere a fine regata (sorpasso, contatto, giro di boa).

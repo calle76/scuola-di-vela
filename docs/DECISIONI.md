@@ -40,6 +40,7 @@ Costo di cambiamento:
 | Barra su ← →; comando principale di ogni ruolo su W S; secondo comando su E D; Q vista; A raddrizza; Z spingi il boma; R libero | 7 e 17 ott | alto | Abitudini di chi gioca, testi delle lezioni, domande, collaudi da tastiera | `VISIONE-LIVELLI-E-CARRIERA.md` §12 |
 | Dal livello 2 in poi i tasti non si stravolgono a ogni livello | 6 ott | alto | — | memoria del progetto |
 | Zoom sui tasti 1 e 2, senza pulsanti sul mare | 26 ott (1.0.48) | basso | — | `CHANGELOG.md` |
+| Moviola («Rivedi») sul tasto **O**; **M** resta al marcatore del registratore. I tasti della mano sinistra (W S A Q Z 1 2, E D riservati) non si toccano | 29 ott (1.0.59) | basso | Un solo punto in `moviola.js` e nei testi | `CHANGELOG.md` |
 | Si lavora su `main`, senza rami; tag solo all'uscita di un livello | 26 ott | basso | — | `METODO.md` §6 |
 
 ## Livelli e ruoli

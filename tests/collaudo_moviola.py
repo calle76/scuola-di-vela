@@ -6,7 +6,7 @@ ROOT = pathlib.Path("/home/callle/scuola-di-vela")
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
-# regata del torneo col pilota; premi M (se il gioco ha la moviola) a 40 s e a 90 s; ritorna esito e, se c'è, la verifica della riproduzione
+# regata del torneo col pilota; premi O (se il gioco ha la moviola) a 40 s e a 90 s; ritorna esito e, se c'è, la verifica della riproduzione
 RUN = """async ([seme, conMov]) => {
   const sv = __sv, dt = 1 / 60; sv.simTime = 0; __seed(seme);
   document.getElementById("torGo").click();
@@ -14,7 +14,7 @@ RUN = """async ([seme, conMov]) => {
   while (R.t < 1500 && me.fin === null && !me.dnf){
     sv.pilota(dt); sv.run(dt, 1); n++;
     if (R.t > 0 && n % 60 === 0) truth.push([R.t, R.boats.map(b => [b.S.x, b.S.y, b.S.h])]);
-    if (conMov && R.phase === "race" && (Math.abs(R.t - 40) < dt / 2 || Math.abs(R.t - 90) < dt / 2)) window.dispatchEvent(new KeyboardEvent("keydown", { key: "m" }));
+    if (conMov && R.phase === "race" && (Math.abs(R.t - 40) < dt / 2 || Math.abs(R.t - 90) < dt / 2)) window.dispatchEvent(new KeyboardEvent("keydown", { key: "o" }));
   }
   const ms = performance.now() - t0;
   const out = { fin: R.boats.map(b => b.fin), pen: R.penList.length, pp: R.boats.map(b => b.pp || 0), fine: R.boats.map(b => [Math.round(b.S.x * 1000), Math.round(b.S.y * 1000), Math.round(b.S.h * 1000)]), ms, passi: n };
@@ -62,7 +62,7 @@ async def main():
         if not ok: bad.append(nome)
     chk("nessun errore di pagina", all(not r["errori_pagina"] for r in nuovo), str([r["errori_pagina"] for r in nuovo if r["errori_pagina"]][:2]))
     con = [r for r in nuovo if r["spezzoni"] > 0]
-    chk("spezzoni presenti in tutte le regate (2 segni M a 40 e 90 s)", len(con) == len(nuovo) and all(r["spezzoni"] >= 2 for r in nuovo), "spezzoni per regata: " + str([r["spezzoni"] for r in nuovo]))
+    chk("spezzoni presenti in tutte le regate (2 segni O a 40 e 90 s)", len(con) == len(nuovo) and all(r["spezzoni"] >= 2 for r in nuovo), "spezzoni per regata: " + str([r["spezzoni"] for r in nuovo]))
     chk("pulsante Rivedi visibile a fine regata", all(r["bottone"] for r in nuovo))
     chk("moviola si apre, schermata finale nascosta, barra visibile", all(r["aperta"] and r["finOvNascosta"] and r["barra"] for r in nuovo))
     chk("fedeltà: posizione entro 0,5 m e prua entro 5° (confronti %d)" % sum(r["confronti"] for r in nuovo), sum(r["confronti"] for r in nuovo) > 0 and max(r["errPos"] for r in nuovo) <= 0.5 and max(r["errH"] for r in nuovo) <= 5,

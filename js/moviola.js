@@ -1,4 +1,4 @@
-// Scuola di vela, moviola.js — «Rivedi»: spezzoni di regata registrati in memoria (tasto M o contatto) e riproduzione a fine gara (1.0.58).
+// Scuola di vela, moviola.js — «Rivedi»: spezzoni di regata registrati in memoria (tasto O o contatto) e riproduzione a fine gara (1.0.58).
 // Dalla 1.0.3 il gioco è diviso in file caricati in ordine da index.html (script classici, variabili condivise): vedi docs/archivio/PROPOSTA-DIVISIONE-CODICE.md.
 
   // ======================================================================
@@ -35,7 +35,7 @@
     return true;
   }
   addEventListener("keydown", e => {
-    if (riv.on || e.repeat || e.key.toLowerCase() !== "m" || e.ctrlKey || e.metaKey || e.altKey || mode !== "race" || sesTyping()) return;
+    if (riv.on || e.repeat || e.key.toLowerCase() !== "o" || e.ctrlKey || e.metaKey || e.altKey || mode !== "race" || sesTyping()) return;
     if (rivMark("Il tuo segno n. " + (riv.nMan + 1) + ", a " + rivTempo(R ? R.t : 0), false)) toast("Momento segnato: lo rivedi a fine regata");
   });
 
