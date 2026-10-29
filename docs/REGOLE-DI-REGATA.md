@@ -85,3 +85,8 @@ Proposta di priorità, da decidere:
 - **`FONTI-PUBBLICHE.md`, F14** diceva che la bandiera X resta esposta «al massimo 2 minuti»: era il testo di un'istruzione di regata locale. Il regolamento dice **4 minuti** (o un minuto prima di una partenza successiva). Corretto il 13 ottobre 2026.
 - **`CONTENUTI-DA-VERIFICARE.md`:** le righe sulla partenza anticipata e sul richiamo individuale ora si appoggiano al testo ufficiale (F15).
 - **Il dubbio sul prolungamento della linea si chiude solo in parte:** per *tornare* basta essere dalla parte di pre-partenza della linea o dei suoi prolungamenti (29.1). Se allo sparo conti anche chi è oltre il prolungamento, fuori dagli estremi, il testo non lo dice in modo esplicito: resta aperto.
+
+## Le mure col vento esattamente dietro (osservazione 70, verificato il 29 ottobre 2026)
+
+F15, definizioni: *Tack, Starboard or Port*: la barca è sulle mure corrispondenti al suo lato sopravento. *Leeward and Windward*: il lato sottovento è quello lontano dal vento; **solo** navigando «by the lee» (con il vento dal lato del boma) o esattamente in poppa è il lato su cui sta la randa. Quindi a 7° dalla poppa piena (come la Rossa a twa −173°) il vento viene ancora da un lato preciso: sono mure a sinistra, e la randa sta a destra. `tackOf` (`js/regate.js`, segno di `vento − prua`) dà proprio questo, e la penalità alla Rossa del 28 ottobre era giusta. Il caso non coperto è il *by the lee* (boma dal lato da cui viene il vento) e la poppa esattamente piena (twa = ±180°): lì le RRS guardano il lato della randa, il gioco guarda ancora il vento. Capita solo per pochi gradi e per brevi istanti; non cambia nessun risultato misurato. Resta una semplificazione da dichiarare (non applicata al codice).
+
