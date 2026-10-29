@@ -10,13 +10,13 @@ RUN = """seme => {
   document.getElementById("torGo").click();
   const R = sv.R, me = R.boats[0], D = Math.PI / 180;
   const wf = (x, y) => { const a = sv.twd * D; return [x * Math.sin(a) - y * Math.cos(a), x * Math.cos(a) + y * Math.sin(a)]; }; // [su, q]
-  const o = R.boats.slice(1), out = { tri: !!R.tri, gunQ: null, crossQ: {}, ocs: 0, lenti: {}, tmax: 0 };
+  const o = R.boats.slice(1), out = { tri: !!R.tri, gunQ: null, gunU: null, crossQ: {}, crossT: {}, ocs: 0, lenti: {}, tmax: 0 };
   const prevUp = {}; let gun = false, n = 0;
   while (R.t < 1500 && me.fin === null && !me.dnf){
     sv.pilota(dt); sv.run(dt, 1); n++;
-    if (!gun && R.t >= 0){ gun = true; out.gunQ = o.map(b => Math.round(wf(b.S.x, b.S.y)[1])); o.forEach(b => prevUp[b.name] = wf(b.S.x, b.S.y)[0]); }
+    if (!gun && R.t >= 0){ gun = true; out.gunQ = o.map(b => Math.round(wf(b.S.x, b.S.y)[1])); out.gunU = o.map(b => Math.round(wf(b.S.x, b.S.y)[0] * 10) / 10); o.forEach(b => prevUp[b.name] = wf(b.S.x, b.S.y)[0]); }
     if (gun && R.t < 90){ for (const b of o){ const [u, q] = wf(b.S.x, b.S.y);
-        if (!(b.name in out.crossQ) && prevUp[b.name] < 0 && u >= 0) out.crossQ[b.name] = Math.round(q);
+        if (!(b.name in out.crossQ) && prevUp[b.name] < 0 && u >= 0) { out.crossQ[b.name] = Math.round(q); out.crossT[b.name] = Math.round(R.t * 10) / 10; }
         prevUp[b.name] = u; } }
     if (n % 6 === 0 && gun){ const m = R.marks[0];
       for (const b of o){ if (b.leg !== 1) continue; const d = Math.hypot(b.S.x - m.x, b.S.y - m.y); const v = Math.abs(b.S.u || 0) * 1.944;
