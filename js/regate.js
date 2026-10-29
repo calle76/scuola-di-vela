@@ -157,7 +157,7 @@
       b.info = step(bs, b.ctl, env, 0); bs.dispBoom = bs.boomSide * bs.boom;
       R.boats.push(b);
     });
-    recStart(recK("r" + i) + "b");
+    recStart(recK("r" + i) + "b"); rivReset();
     $("rTitle").textContent = rc.title;
     R.brief = introRegata(rc, liv);
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();
@@ -572,6 +572,7 @@
       // 1.0.49 (docs/PROPOSTA-AVVERSARI-1B.md, punto C): ogni penalità col motivo, per l'elenco a fine regata; nell'1b anche un messaggio quando si toccano due avversari
       const altra = guilty === A ? B : A;
       R.penList.push((guilty.me ? "Tu" : "La " + guilty.name) + ", contatto con " + (altra.me ? "te" : "la " + altra.name) + ": " + why + ".");
+      rivMark("Contatto a " + rivTempo(R.t) + ". " + R.penList[R.penList.length - 1], true);
       if (R.lv2 && !A.me && !B.me) toast("Contatto fra " + A.name + " e " + B.name + ": penalità alla " + guilty.name);
       if (A.me || B.me){
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
@@ -608,7 +609,7 @@
     if (R.lv2) semaforo();
     if (R.t >= 0 && Math.floor(R.t * 2) !== Math.floor(prevT * 2)) for (const b of R.boats){ // strada fatta ogni 0,5 s, per i distacchi
       const p = b.fin === null ? strada(b) : null; if (p !== null) (b.hist = b.hist || []).push([R.t, p]); }
-    recSample(R.t, dt);
+    recSample(R.t, dt); rivCapture(R.t, dt);
     const me = R.boats[0];
     if (R.tor) torFinestra();
     if (R.tor && (me.fin !== null || me.dnf) && R.phase !== "done"){ R.phase = "done"; R.doneAt = R.t; torArrivo(); }
@@ -714,7 +715,7 @@
     if (!on) return void ($("finOv").hidden = true);
     $("finText").textContent = $("rDoneText").textContent; $("finList").innerHTML = $("standings").innerHTML;
     $("finPen").hidden = !R.penList.length; $("finPen").innerHTML = R.penList.length ? "<b>Penalità</b><br>" + R.penList.join("<br>") : ""; // 1.0.49: tutte le penalità col motivo (richiesta di Ale)
-    $("finTor").hidden = $("rTor").hidden; $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
+    $("finTor").hidden = $("rTor").hidden; $("finRev").hidden = !rivCount(); $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
     if ($("finOv").hidden){ $("finOv").hidden = false; releaseKeys(); setTimeout(() => (!$("finRestart").hidden ? $("finRestart") : $("finTor")).focus(), 0); }
   }
   $("finRestart").onclick = () => $("rRestart").click(); $("finWind").onclick = () => $("rWind").click(); $("finTor").onclick = () => $("rTor").click();

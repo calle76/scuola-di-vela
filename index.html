@@ -105,6 +105,7 @@ canvas:focus{outline:none}
 .overlay.finOv{top:50%;transform:translate(-50%,-50%);max-width:min(540px,90%);max-height:92%;overflow-y:auto;text-align:left;padding:16px 20px}
 .finOv .standings{margin:0 0 12px;font-size:1rem}.finOv .standings span{color:#cfe0ee}.finOv .standings li.me b{color:#F2C14E}
 .finBtns{display:flex;gap:10px;flex-wrap:wrap}
+.overlay.movBar{top:auto;bottom:3%;max-width:min(640px,94%);padding:10px 14px}.movBar p{margin:0 0 6px;font-size:.95rem}.movBar .movKeys{color:#cfe0ee;font-size:.8rem}.movBar input{width:100%}.movBar .finBtns{justify-content:center}.movBar button{font-size:.95rem;padding:6px 12px}.movBar button:disabled{opacity:.4;cursor:default}
 .finPen{margin:0 0 12px;font-size:.85rem;color:#cfe0ee}
 .panel.fin > #status,.panel.fin > #rDone,.panel.fin > #rRow{display:none}
 .overlay.briefOv{top:50%;transform:translate(-50%,-50%);max-width:min(540px,90%);max-height:92%;overflow-y:auto;text-align:left;padding:18px 22px 20px}
@@ -321,7 +322,8 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
 <div class="layout" id="game" hidden>
   <div class="stage">
     <canvas id="c" tabindex="0" aria-label="Vista dall'alto della deriva sul mare. Clicca qui per usare la tastiera."></canvas>
-    <div class="overlay finOv" id="finOv" hidden role="dialog" aria-labelledby="finText"><p id="finText"></p><ol class="standings" id="finList"></ol><p class="finPen" id="finPen" hidden></p><div class="finBtns"><button id="finRestart">Ricomincia</button><button id="finWind">Cambia vento</button><button id="finTor" hidden>Classifica del torneo</button></div></div>
+    <div class="overlay finOv" id="finOv" hidden role="dialog" aria-labelledby="finText"><p id="finText"></p><ol class="standings" id="finList"></ol><p class="finPen" id="finPen" hidden></p><div class="finBtns"><button id="finRestart">Ricomincia</button><button id="finWind">Cambia vento</button><button id="finTor" hidden>Classifica del torneo</button><button id="finRev" hidden>Rivedi</button></div></div>
+    <div class="overlay movBar" id="movBar" hidden role="region" aria-label="Moviola"><p id="movTit"></p><input type="range" id="movPos" min="0" max="1000" value="0" aria-label="Posizione nello spezzone"><p class="movKeys"><span id="movT"></span> · frecce: cambia momento · spazio: pausa · 1 2 3: velocità · Esc: chiudi</p><div class="finBtns"><button id="movPrev">◀ Prima</button><button id="movPlay">Pausa</button><button id="movSpd">1×</button><button id="movNext">Dopo ▶</button><button id="movEsc">Chiudi</button></div></div>
     <div class="overlay" id="capOverlay" hidden><p id="capText">Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.</p><button id="capBtn">Raddrizza la barca</button></div>
     <div class="overlay briefOv" id="briefOv" hidden role="dialog" aria-labelledby="bTitle">
       <h2 id="bTitle"></h2>
@@ -426,6 +428,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
 <script src="js/regate.js"></script>
 <script src="js/disegno.js"></script>
 <script src="js/registratore.js"></script>
+<script src="js/moviola.js"></script>
 <script src="js/avvio.js"></script>
 <script src="js/laboratorio.js"></script>
 

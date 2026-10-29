@@ -12,6 +12,7 @@
   function tick(now){
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (mode === "menu") return;
+    if (riv.on){ rivTick(dt); draw(0.016); return; } // moviola: gioco fermo, né registratore né pannello
     const st = curStep(), paused = (st && st.pause) || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || $("torDlg").open;
     if (!paused){ for (let k = 0; k < timeScale; k++){ simulate(dt, st); simTime += dt; } }
     else { if (st && st.pause) ctl.sheet = autoSheet(); info = step(S, ctl, local, 0); S.dispBoom = S.boomSide * S.boom; }
