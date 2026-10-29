@@ -186,8 +186,9 @@ select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6
 /* ---- glossario ---- */
 dialog#quiz{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
 dialog#quiz[open]{display:flex;flex-direction:column} /* 0.19.5: riquadro a colonna: intestazione e messaggio fissi, elenco che scorre, pulsanti sempre dentro */
-dialog#quiz::backdrop,dialog#torDlg::backdrop{background:rgba(13,25,36,.5)}
-dialog#torDlg{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
+dialog#quiz::backdrop,dialog#torDlg::backdrop,dialog#regDlg::backdrop{background:rgba(13,25,36,.5)}
+#regInfo{font-size:.9rem;color:var(--ink-soft);margin:0 0 10px} #regBox select{flex:1;min-width:0}
+dialog#torDlg,dialog#regDlg{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
 table.tor{border-collapse:collapse;width:100%;margin:8px 0 2px;font-variant-numeric:tabular-nums}
 table.tor th,table.tor td{padding:4px 8px;border-bottom:1px solid var(--line);text-align:right}
 table.tor th:nth-child(2),table.tor td:nth-child(2){text-align:left}
@@ -277,6 +278,9 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
 
 <dialog id="attest" aria-labelledby="atTitle"><div class="att" id="atBody"></div></dialog>
 <dialog id="torDlg" aria-labelledby="torTitle"><div class="qz" id="torBody"></div></dialog>
+<dialog id="regDlg" aria-labelledby="regTitle"><div class="qz"><div class="qz-top"><h2 id="regTitle">Regate registrate</h2><button id="regClose" class="linkish">Chiudi</button></div>
+  <p id="regInfo">In regata il gioco registra da solo, dal conto alla rovescia all'arrivo, a pezzi di 5 minuti. Restano in questo browser (le ultime 5 regate), senza nessuna connessione. Scarica un pezzo alla volta.</p>
+  <div class="optrow" id="regBox"><select autocomplete="off" aria-label="Pezzi di regata registrati"></select><button id="regGet">Scarica</button><button id="regDel">Cancella tutte</button></div></div></dialog>
 
 <dialog id="gloss" aria-labelledby="glTitle">
   <div class="gl-head">

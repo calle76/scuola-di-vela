@@ -9,9 +9,12 @@
   const AND_CODE = { "Angolo morto": "AM", "Bolina stretta": "BS", "Bolina larga": "BL", "Traverso": "TR", "Lasco": "LA", "Gran lasco": "GL", "Poppa": "PO" };
   const SES_KEY = { ArrowLeft: "←", ArrowRight: "→", ArrowUp: "↑", ArrowDown: "↓", " ": "spazio", cazza: "W(cazza)", lasca: "S(lasca)", q: "Q(vista)" }; // solo i tasti del gioco
   const SES_CNT = [["tacks", "virata"], ["gybesC", "strambata"], ["gybesV", "strambata_vela_aperta"], ["capsizes", "scuffia"], ["markIdx", "boa"]];
-  const ses = { on: false, offAt: null, pause: 0, start: null, set0: "", lines: [], t: 0, sim: 0, nextS: 0, dirty: false, flash: 0, marks: [], cnt: {}, andT: {}, msgN: {}, msgT: {}, stepT: {}, stepName: {}, L: null };
-  const sesT = () => ses.t.toFixed(1);
-  const sesLine = s => { ses.lines.push(s); ses.dirty = true; };
+  const sesNuova = () => ({ on: false, offAt: null, pause: 0, start: null, set0: "", lines: [], t: 0, sim: 0, nextS: 0, dirty: false, flash: 0, marks: [], cnt: {}, andT: {}, msgN: {}, msgT: {}, stepT: {}, stepName: {}, L: null,
+    auto: false, taglio: 0, pz: 0, p0: 0, ult: 0, nome: "", quando: "", sit: "" }); // da auto in poi: registrazione automatica di regata (1.0.60)
+  const ses = sesNuova();
+  const sesTs = () => ses.auto && R ? R.t : ses.t; // registrazione automatica: t = secondi di regata (negativi prima del via)
+  const sesT = () => sesTs().toFixed(ses.auto ? 2 : 1); // automatica: centesimi, perché le righe sono 10 al secondo
+  const sesLine = s => { ses.lines.push(s); ses.dirty = !ses.auto; };
   const sesEv = (type, det) => { ses.cnt[type] = (ses.cnt[type] || 0) + 1; sesLine("E " + sesT() + " " + type + (det ? " " + det : "")); };
   const sesTyping = () => { const a = document.activeElement; return !!a && (a.tagName === "TEXTAREA" || a.isContentEditable || (a.tagName === "INPUT" && !["checkbox", "radio", "range", "button"].includes(a.type))); };
   const sesSet = () => "frecce=" + opt.helm + " vista=" + opt.view + " barra_al_centro=" + (opt.autoCenter ? "sì" : "no") + " barra_al_centro_prove=" + (opt.autoCenterComp ? "sì" : "no") +
@@ -33,6 +36,7 @@
   // Un contatto è un nuovo valore in R.contacts (la definizione del gioco); il motivo è la voce nuova di R.penList (righe Q).
   // «Fermo»: sotto FERMO_KN per FERMO_S secondi di gioco dopo il via; «riparte» sopra RIPARTE_KN (ipotesi nostre, isteresi).
   const FERMO_KN = 0.5, RIPARTE_KN = 1, FERMO_S = 5;
+  const sesStato = b => [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + b.cedeA.name].filter(Boolean).join(",") || "-";
   const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0, still: 0, fermo: false });
   function sesAltre(dSim, riga){
     const L = ses.L;
@@ -61,13 +65,17 @@
     for (; L.pl < R.penList.length; L.pl++) sesLine("Q " + sesT() + " " + R.penList[L.pl]);
     if (riga) for (const b of R.boats){
       if (b.me) continue;
-      const st = [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + b.cedeA.name].filter(Boolean).join(",") || "-";
+      const st = sesStato(b);
       sesLine(["B", sesT(), b.name, b.S.x.toFixed(1), b.S.y.toFixed(1), Math.round(b.S.h), (b.S.u * KN).toFixed(1), Math.round(norm180(windAt(b.S.x, b.S.y).twd - b.S.h)), b.leg, st].join(" "));
     }
   }
   function sesTick(dt, noDraw){
+    if (ses.auto && (mode !== "race" || R !== sesAutoR)) sesChiudi("interrotta");
+    if (!ses.on && mode === "race" && R && R !== sesAutoR && R.t < 2 - opt.countdown) sesApri(); // solo all'inizio del conto alla rovescia: spegnere la registrazione a mano a regata in corso non ne apre una a metà
     if (!ses.on) return;
     const L = ses.L; ses.t += dt;
+    const n0 = ses.lines.length;
+    if (ses.auto && R.t >= ses.taglio) ses.nextS = 0; // le righe di questo istante chiudono il pezzo e aprono il successivo
     // schermata, ricomincia, passo di lezione
     const mk = sesMode(), sk = mode === "lesson" ? (lessonIdx + 1) + "." + (stepIdx + 1) : null;
     if (mk !== L.mode){ L.mode = mk; sesEv("apre", sesModeName());
@@ -130,13 +138,18 @@
     if (dSim > 0 && mode !== "menu"){
       const code = S.capsized ? "SC" : AND_CODE[andName(Math.abs(twa))];
       ses.andT[code] = (ses.andT[code] || 0) + dSim; ses.sim += dSim;
-      if (ses.t >= ses.nextS){
-        ses.nextS = ses.t + 1; riga = true;
+      if (ses.t >= ses.nextS - (ses.auto ? 1e-6 : 0)){
+        ses.nextS = ses.auto ? (ses.t - ses.nextS < 1 / REG_HZ ? ses.nextS : ses.t) + 1 / REG_HZ : ses.t + 1; riga = true; // automatica: griglia fissa (un passo ogni 6 fotogrammi a 60 al secondo, senza deriva)
         sesLine(["S", sesT(), S.x.toFixed(1), S.y.toFixed(1), Math.round(S.h), (S.u * KN).toFixed(1), Math.round(S.heel), Math.round(twa), (local.tws * KN).toFixed(1),
           Math.round(info.awa), (info.aws * KN).toFixed(1), Math.round(ctl.tiller * 100), Math.round(ctl.sheet * 100), code].join(" "));
       }
     }
     sesAltre(dSim, riga);
+    if (ses.auto){
+      ses.ult = R.t;
+      if (R.phase === "done"){ sesChiudi("arrivo"); return; }
+      if (R.t >= ses.taglio && ses.lines.length > n0) regTaglia(n0);
+    }
     // spia sullo schermo (sul mare, non nel pannello)
     if (!noDraw && mode !== "menu"){
       ses.flash = Math.max(0, ses.flash - dt);
@@ -145,6 +158,7 @@
     }
   }
   function sesToggle(on){
+    if (on && ses.auto) sesChiudi("manuale");
     if (on && !ses.start){ ses.start = new Date(); ses.set0 = sesSet(); }
     if (on) sesBase();
     // secondi veri di pausa (orologio del computer, non tempo di gioco): scritti alla riaccensione e sommati nel riassunto
@@ -154,6 +168,33 @@
     ses.on = on; sesLine("E " + sesT() + " registrazione_" + (on ? "accesa" : "spenta") + det);
     $("sesBox").hidden = false;
   }
+  const SES_LEGENDA = [
+  "# LEGENDA (t = secondi dall'inizio della registrazione, tempo vero di gioco; il menu non conta)",
+  "#  S t x y prua nodi sbandamento twa tws awa aws barra% scotta% andatura   stato, una riga al secondo mentre la barca naviga",
+  "#    x verso est e y verso sud, in metri; prua in gradi da nord; twa e awa con segno (+ mure a dritta, − mure a sinistra);",
+  "#    tws e aws in nodi; barra −100 a sinistra, +100 a dritta; scotta 0 cazzata, 100 lascata;",
+  "#    andatura AM angolo morto, BS bolina stretta, BL bolina larga, TR traverso, LA lasco, GL gran lasco, PO poppa, SC scuffiata",
+  "#  E t tipo dettagli   evento (apre, ricomincia, virata, strambata, strambata_vela_aperta, scuffia, raddrizza, raddrizzata, boa, arrivo,",
+  "#                       partito, lato, passo_completato, errore, contatto_senza_colpa, regata_in_corso, dialogo, registrazione_accesa/spenta;",
+  "#                       arrivo Ns: nelle prove i secondi di gioco, nelle regate il tempo netto con le penalità, una volta sola per regata;",
+  "#                       regata_in_corso lato N t=Ns: registrazione accesa a regata già partita (la partenza non è nel file);",
+  "#                       apre regata «titolo» (barca 1a|1b): 1b = barca completa, regole 10-13 con «(regola N)», semaforo possibile;",
+  "#                       contatto_senza_colpa +N: contatto che non conta negli errori (gli altri compaiono come «errore contactsPen +N»);",
+  "#                       alla riaccensione «pausa Ns» = secondi veri passati a registrazione spenta; t non li conta)",
+  "#  B t nome x y prua nodi twa lato stato   un avversario, una riga al secondo insieme alla S (formato 2, dalla 1.0.52): lato 0 prima del via, 1 bolina, 2 poppa;",
+  "#    stato: - | ocs partenza anticipata | scuf scuffiata | arr arrivata | dnf non arrivata | via sta partendo | cede:Nome a chi sta lasciando strada (separati da virgole)",
+  "#  E avv_fermo/avv_riparte nome   sotto 0,5 nodi per 5 s di gioco dopo il via (con lato e posizione), poi sopra 1 nodo; avv_lato nome N; avv_arrivo nome Ns;",
+  "#    avv_ocs, avv_scuffia, avv_penalita nome +15s o +1pt, avv_boa_lato_sbagliato nome; contatto_barche nome1 nome2 (anche con «Tu»), uno per contatto",
+  "#  Q t testo   motivo di una penalità, la stessa voce dell'elenco a fine regata",
+  "#  L t lezione.passo «titolo»   passo di lezione mostrato",
+  "#  H t testo   suggerimento del pannello cambiato (rimasto almeno 0,3 s)",
+  "#  T t testo   messaggio a comparsa sul mare",
+  "#  P t testo   regola della regata nel pannello",
+  "#  X t testo   errore interno del gioco",
+  "#  K t tasto giù/su   tasti del gioco (frecce, spazio, W, S, Q vista)",
+  "#  M t n x y   marcatore premuto col tasto M (n = numero; x y = posizione della barca)",
+  "#  C t impostazioni   impostazioni o vento cambiati",
+  ];
   function sesText(){
     const d = ses.start;
     const note = $("sesNote").value.replace(/\s+/g, " ").trim().slice(0, 2000);
@@ -173,48 +214,110 @@
       "#  suggerimenti mostrati (volte nel file · secondi a schermo, anche i passaggi sotto 0,3 s):", ...(msgs.length ? msgs : ["#   nessuno"]),
       "#  passi di lezione (tempo, pause di lettura comprese): " + list(ses.stepT, k => k + " «" + ses.stepName[k] + "» " + fmtClock(ses.stepT[k])),
       "#  marcatori: " + (ses.marks.map(m => "M" + m.n + " a " + fmtClock(m.t)).join(" · ") || "nessuno"),
-      "# LEGENDA (t = secondi dall'inizio della registrazione, tempo vero di gioco; il menu non conta)",
-      "#  S t x y prua nodi sbandamento twa tws awa aws barra% scotta% andatura   stato, una riga al secondo mentre la barca naviga",
-      "#    x verso est e y verso sud, in metri; prua in gradi da nord; twa e awa con segno (+ mure a dritta, − mure a sinistra);",
-      "#    tws e aws in nodi; barra −100 a sinistra, +100 a dritta; scotta 0 cazzata, 100 lascata;",
-      "#    andatura AM angolo morto, BS bolina stretta, BL bolina larga, TR traverso, LA lasco, GL gran lasco, PO poppa, SC scuffiata",
-      "#  E t tipo dettagli   evento (apre, ricomincia, virata, strambata, strambata_vela_aperta, scuffia, raddrizza, raddrizzata, boa, arrivo,",
-      "#                       partito, lato, passo_completato, errore, contatto_senza_colpa, regata_in_corso, dialogo, registrazione_accesa/spenta;",
-      "#                       arrivo Ns: nelle prove i secondi di gioco, nelle regate il tempo netto con le penalità, una volta sola per regata;",
-      "#                       regata_in_corso lato N t=Ns: registrazione accesa a regata già partita (la partenza non è nel file);",
-      "#                       apre regata «titolo» (barca 1a|1b): 1b = barca completa, regole 10-13 con «(regola N)», semaforo possibile;",
-      "#                       contatto_senza_colpa +N: contatto che non conta negli errori (gli altri compaiono come «errore contactsPen +N»);",
-      "#                       alla riaccensione «pausa Ns» = secondi veri passati a registrazione spenta; t non li conta)",
-      "#  B t nome x y prua nodi twa lato stato   un avversario, una riga al secondo insieme alla S (formato 2, dalla 1.0.52): lato 0 prima del via, 1 bolina, 2 poppa;",
-      "#    stato: - | ocs partenza anticipata | scuf scuffiata | arr arrivata | dnf non arrivata | via sta partendo | cede:Nome a chi sta lasciando strada (separati da virgole)",
-      "#  E avv_fermo/avv_riparte nome   sotto 0,5 nodi per 5 s di gioco dopo il via (con lato e posizione), poi sopra 1 nodo; avv_lato nome N; avv_arrivo nome Ns;",
-      "#    avv_ocs, avv_scuffia, avv_penalita nome +15s o +1pt, avv_boa_lato_sbagliato nome; contatto_barche nome1 nome2 (anche con «Tu»), uno per contatto",
-      "#  Q t testo   motivo di una penalità, la stessa voce dell'elenco a fine regata",
-      "#  L t lezione.passo «titolo»   passo di lezione mostrato",
-      "#  H t testo   suggerimento del pannello cambiato (rimasto almeno 0,3 s)",
-      "#  T t testo   messaggio a comparsa sul mare",
-      "#  P t testo   regola della regata nel pannello",
-      "#  X t testo   errore interno del gioco",
-      "#  K t tasto giù/su   tasti del gioco (frecce, spazio, W, S, Q vista)",
-      "#  M t n x y   marcatore premuto col tasto M (n = numero; x y = posizione della barca)",
-      "#  C t impostazioni   impostazioni o vento cambiati",
+      ...SES_LEGENDA,
       ...ses.lines, ""].join("\n");
+  }
+  function sesFile(nome, testo){
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([testo], { type: "text/plain;charset=utf-8" }));
+    a.download = nome;
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
   function sesDownload(){
     const d = ses.start || new Date();
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([sesText()], { type: "text/plain;charset=utf-8" }));
-    a.download = "sessione-" + d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + "-" + p2(d.getHours()) + p2(d.getMinutes()) + ".txt";
-    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    sesFile("sessione-" + d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + "-" + p2(d.getHours()) + p2(d.getMinutes()) + ".txt", sesText());
     ses.dirty = false;
   }
   $("sesOn").onchange = e => sesToggle(e.target.checked);
   $("sesGet").onclick = () => { if (ses.start) sesDownload(); };
+  const regClock = t => (t < 0 ? "-" : "") + fmtClock(Math.abs(t));
+  const sesMarksUi = () => { const e = $("sesMarks"); e.hidden = !ses.marks.length; e.title = e.textContent = ses.marks.length ? "Marcatori: " + ses.marks.map(m => "M" + m.n + " a " + regClock(m.t)).join(", ") + ". Scrivi nella nota a quale ti riferisci." : ""; };
   addEventListener("keydown", e => { // marcatore: mai mentre si scrive in un campo di testo
     if (!ses.on || e.repeat || e.key.toLowerCase() !== "m" || sesTyping()) return;
-    const n = ses.marks.length + 1; ses.marks.push({ n, t: ses.t }); ses.flash = 1.5;
+    const n = ses.marks.length + 1; ses.marks.push({ n, t: sesTs() }); ses.flash = 1.5;
     sesLine("M " + sesT() + " " + n + (S ? " " + S.x.toFixed(1) + " " + S.y.toFixed(1) : ""));
-    $("sesMarks").hidden = false; $("sesMarks").title = $("sesMarks").textContent = "Marcatori: " + ses.marks.map(m => "M" + m.n + " a " + fmtClock(m.t)).join(", ") + ". Scrivi nella nota a quale ti riferisci.";
+    sesMarksUi();
   });
+  // ---- registrazione automatica delle regate (1.0.60, docs/PROPOSTA-COACH-REGISTRATORE.md) ----
+  // In ogni regata il registratore parte da solo col conto alla rovescia e si chiude all'arrivo; il file è a pezzi, salvati in IndexedDB (le ultime REG_MAX regate).
+  // Solo lettura come il resto: non tocca il motore né Math.random. Se la registrazione a mano è già accesa, quella ha la precedenza; se la si accende a regata in corso, l'automatica si chiude.
+  const REG_HZ = 10, PEZZO_0 = 120, PEZZO_S = 300, REG_MAX = 5; // ipotesi nostre: righe S e B al secondo; fine del primo pezzo e durata degli altri (secondi di regata); regate tenute
+  const REG_LEGENDA = [
+    "#  REGISTRAZIONE AUTOMATICA DI REGATA (formato 3, dalla 1.0.60): come il formato 2, con queste differenze",
+    "#   t = secondi di regata: negativi prima del via, 0 allo sparo; le righe S e B sono " + REG_HZ + " al secondo (nel formato 2 una al secondo);",
+    "#   il file è un pezzo: il primo va dall'inizio del conto alla rovescia a t=" + PEZZO_0 + ", gli altri durano " + PEZZO_S + " s; le prime righe S e B di ogni pezzo sono le ultime del pezzo prima (un fotogramma in comune) e danno le posizioni di tutte le barche;",
+    "#   F t nome posto tempo pen_s pen_pt stato   riga di controllo, una per barca, alla chiusura (posto e tempo solo per chi ha già tagliato l'arrivo, altrimenti «-»);",
+    "#   E registrazione_chiusa arrivo|interrotta|manuale|pagina_chiusa   fine del file; E segno_rivedi n   segno n del giocatore (tasto O) per «Rivedi»",
+  ];
+  const regPezzi = []; // {id, reg, n, fine, quando, nome, file, testo}: in memoria e in IndexedDB
+  let sesAutoR = null, sesSalva = null;
+  function regIdb(modo, f){ // senza IndexedDB (finestra privata) i pezzi restano in memoria finché la pagina è aperta
+    try {
+      const o = indexedDB.open("scuolaVelaReg", 1);
+      o.onupgradeneeded = () => o.result.createObjectStore("pezzi", { keyPath: "id" });
+      o.onsuccess = () => { try { const t = o.result.transaction("pezzi", modo); f(t.objectStore("pezzi")); t.oncomplete = t.onerror = t.onabort = () => o.result.close(); } catch (e) { o.result.close(); } };
+    } catch (e) {}
+  }
+  function regUi(){
+    const s = document.querySelector("#regBox select"), v = s.value;
+    regPezzi.sort((a, b) => b.reg - a.reg || a.n - b.n);
+    s.innerHTML = "";
+    for (const p of regPezzi){ const o = document.createElement("option"); o.value = p.id; o.textContent = p.quando + " · " + p.nome + " · pezzo " + p.n + (p.fine ? " (" + p.fine + ")" : "") + " · " + Math.round(p.testo.length / 1024) + " KB"; s.appendChild(o); }
+    if (!regPezzi.length){ const o = document.createElement("option"); o.textContent = "nessuna regata registrata"; s.appendChild(o); }
+    else if (regPezzi.some(p => p.id === v)) s.value = v; // la scelta resta solo se quel pezzo c'è ancora
+    $("regGet").disabled = $("regDel").disabled = !regPezzi.length;
+  }
+  function regAggiungi(rec){
+    regPezzi.push(rec);
+    const vecchie = [...new Set(regPezzi.map(p => p.reg))].sort((a, b) => b - a).slice(REG_MAX);
+    const via = regPezzi.filter(p => vecchie.includes(p.reg));
+    via.forEach(p => regPezzi.splice(regPezzi.indexOf(p), 1));
+    regIdb("readwrite", st => { st.put(rec); via.forEach(p => st.delete(p.id)); });
+    regUi();
+  }
+  function regSigilla(fine){ // chiude il pezzo in corso: testo con intestazione, salvato
+    const d = ses.start, file = d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + "-" + p2(d.getHours()) + p2(d.getMinutes());
+    const testo = ["# SCUOLA DI VELA - registrazione di regata, formato 3",
+      "# gioco " + VERSIONE + " · " + ses.nome + " · inizio " + ses.quando + " · pezzo " + ses.pz + (fine ? " (" + fine + ")" : "") + " · da t=" + ses.p0.toFixed(1) + " a t=" + ses.ult.toFixed(1) + " (secondi di regata)",
+      "# impostazioni all'inizio: " + ses.set0, "# " + ses.sit,
+      "# marcatori fin qui: " + (ses.marks.map(m => "M" + m.n + " a " + regClock(m.t)).join(" · ") || "nessuno"),
+      ...SES_LEGENDA, ...REG_LEGENDA, ...ses.lines, ""].join("\n");
+    regAggiungi({ id: ses.start.getTime() + "-" + ses.pz, reg: ses.start.getTime(), n: ses.pz, fine, quando: ses.quando, nome: ses.nome, file, testo });
+  }
+  function regTaglia(n0){ // un fotogramma in comune: le righe di questo istante chiudono il pezzo e aprono il successivo
+    const snap = ses.lines.slice(n0);
+    regSigilla("");
+    ses.pz++; ses.p0 = R.t; ses.taglio += PEZZO_S; ses.lines = snap;
+  }
+  function sesApri(){
+    sesAutoR = R; sesSalva = Object.assign({}, ses);
+    Object.assign(ses, sesNuova());
+    const d = ses.start = new Date();
+    Object.assign(ses, { auto: true, set0: sesSet(), taglio: PEZZO_0, pz: 1, p0: R.t, ult: R.t, nome: sesModeName(), quando: p2(d.getDate()) + "/" + p2(d.getMonth() + 1) + " " + p2(d.getHours()) + ":" + p2(d.getMinutes()),
+      sit: "barche: " + R.boats.map(b => b.name + (b.char ? " (" + b.char + ")" : "")).join(", ") });
+    sesBase(); ses.on = true; sesEv("registrazione_automatica"); sesMarksUi();
+  }
+  function sesChiudi(motivo){
+    if (!ses.auto) return;
+    const t = ses.ult.toFixed(1);
+    sesLine("E " + t + " registrazione_chiusa " + motivo);
+    if (motivo === "arrivo" || motivo === "interrotta"){ // riga di controllo: classifica secondo il gioco, per chi ha già tagliato l'arrivo
+      const arr = sesAutoR.boats.filter(b => b.fin !== null).sort((a, b) => a.fin - b.fin);
+      for (const b of sesAutoR.boats) sesLine(["F", t, b.name, b.fin !== null ? arr.indexOf(b) + 1 : "-", b.fin !== null ? b.fin.toFixed(1) : "-", b.pen || 0, b.pp || 0, sesStato(b)].join(" "));
+    }
+    regSigilla(motivo === "arrivo" ? "ultimo" : "interrotto");
+    Object.assign(ses, sesSalva); sesSalva = null; sesMarksUi();
+  }
+  $("regGet").onclick = () => { const p = regPezzi.find(x => x.id === document.querySelector("#regBox select").value); if (p) sesFile("regata-" + p.file + "-pezzo-" + p.n + ".txt", p.testo); };
+  addEventListener("click", e => { if (e.target.id === "regOpen") $("regDlg").showModal(); }); // il link sta nel menu, che si ridisegna a ogni apertura
+  $("regClose").onclick = () => $("regDlg").close();
+  $("regDel").onclick = () => {
+    const n = new Set(regPezzi.map(p => p.reg)).size;
+    if (!n || !confirm("Cancellare le " + n + " regate registrate?")) return;
+    regPezzi.length = 0; regIdb("readwrite", st => st.clear()); regUi();
+  };
+  addEventListener("pagehide", () => sesChiudi("pagina_chiusa"));
+  regIdb("readonly", st => { const q = st.getAll(); q.onsuccess = () => { q.result.forEach(p => { if (!regPezzi.some(x => x.id === p.id)) regPezzi.push(p); }); regUi(); }; });
+  regUi();
   addEventListener("beforeunload", e => { if (ses.dirty){ e.preventDefault(); e.returnValue = ""; } }); // registrazione non scaricata
 

@@ -296,7 +296,7 @@ REGATA_E = """([quando, seme]) => {
   __seed(seme);
   const R = sv.R, me = R.boats[0]; let n = 0;
   while (me.fin === null && R.t < 900 && n < 60 * 1200) {
-    if (quando === 'corso' && R.t >= 40 && !sv.ses.on) on();
+    if (quando === 'corso' && R.t >= 40 && (!sv.ses.on || sv.ses.auto)) on(); /* 1.0.60: ses.on è già vero per la registrazione automatica; accendere a mano la chiude */
     sv.pilota(dt); sv.run(dt, 1); n++;
   }
   let fin2 = null, ric = 0;

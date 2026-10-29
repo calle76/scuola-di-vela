@@ -36,7 +36,7 @@
   }
   addEventListener("keydown", e => {
     if (riv.on || e.repeat || e.key.toLowerCase() !== "o" || e.ctrlKey || e.metaKey || e.altKey || mode !== "race" || sesTyping()) return;
-    if (rivMark("Il tuo segno n. " + (riv.nMan + 1) + ", a " + rivTempo(R ? R.t : 0), false)) toast("Momento segnato: lo rivedi a fine regata");
+    if (rivMark("Il tuo segno n. " + (riv.nMan + 1) + ", a " + rivTempo(R ? R.t : 0), false)){ toast("Momento segnato: lo rivedi a fine regata"); if (ses.on) sesEv("segno_rivedi", String(riv.nMan)); } // 1.0.60: lo stesso numero sta nel file della registrazione
   });
 
   // ---- riproduzione ----
@@ -85,7 +85,7 @@
   const rivVel = v => { riv.speed = v; rivMostra(); };
   $("finRev").onclick = rivApri; $("movEsc").onclick = rivChiudi; $("movPrev").onclick = () => rivVai(-1); $("movNext").onclick = () => rivVai(1);
   $("movPlay").onclick = rivPausa; $("movSpd").onclick = () => rivVel(riv.speed === 1 ? 0.5 : riv.speed === 0.5 ? 0.25 : 1);
-  $("movPos").oninput = e => { riv.playing = false; riv.pos = e.target.value / 1000 * rivDur(); rivMostra(); };
+  $("movPos").oninput = e => { if (!riv.on) return; /* 1.0.60: a moviola chiusa il cursore non fa niente (collaudo_ricarica lo sposta lo stesso) */ riv.playing = false; riv.pos = e.target.value / 1000 * rivDur(); rivMostra(); };
   addEventListener("keydown", e => { // durante la moviola i tasti sono solo suoi: la barca non si guida
     if (!riv.on) return;
     e.stopPropagation();
