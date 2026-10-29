@@ -1,5 +1,7 @@
 # Proposta: moviola delle regate (osservazione 71, 29 ottobre 2026)
 
+> **Ritirata come proposta a sé il 29 ottobre 2026:** la moviola è una parte della modalità coach, vedi `PROPOSTA-COACH-REGISTRATORE.md`. Resta come riferimento per rischi e criteri.
+
 Fermata 1: nessun codice scritto. Idea di Ale: «ci vuole la moviola». Motivo concreto: il 28 ottobre Ale non era sicuro di una penalità (70) e di un giro di boa (69), e il registro dice i numeri ma non fa *vedere* cosa è successo.
 
 ## Cosa serve a chi gioca
