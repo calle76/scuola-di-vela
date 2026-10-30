@@ -64,6 +64,9 @@ Costo di cambiamento:
 | Torneo dell'1b con percorsi misti, come nelle serie vere (regola 27.1: il percorso lo sceglie il comitato): regata 1 bastone, 2 triangolo, 3 bastone coi salti di vento, 4 triangolo | 27 ott | medio | Percorso, guida degli avversari, distacchi, disegno | `PROPOSTA-TORNEI-1B.md` §8.6 |
 | `collaudo_contatto_vero.py` fuori soglia su Firefox nell'1a (0,29 m contro 0,25 m): si lascia com'è, l'1a non si tocca (l'1b è a posto) | 27 ott | basso | Solo il collaudo | `CHANGELOG.md` 1.0.56 |
 | Soglia di 2 s per uscire dal menu a metà regata del torneo (collaudo C11 R7, 2,71 s il 27 ott): non si inseguono i decimi, basta che funzioni | 27 ott | basso | Solo il collaudo | `CHANGELOG.md` 1.0.50 |
+| Completare l'1b (30 ott, Ale): brevetto **strada A** (si tiene il «Brevetto di livello 1» dell'1a e se ne aggiunge uno, «Regatante», alla fine dell'1b; «attestato di partecipazione» già scartato); replay dell'1b = «Rivedi» com'è; nessuna medaglia nell'1b; sette lezioni brevi confermate | 30 ott | medio | Menu, meriti, esame, carriera | `PROPOSTA-COMPLETAMENTO-1B.md` |
+| Promemoria di Ale (30 ott): nell'1b anche gli avversari devono fare i giri di penalità (oggi +15 s, `PROPOSTA-LIVELLO-2A.md`); le lezioni sulle precedenze si completano col livello 2, stessa barca | 30 ott | medio | Guida degli avversari (in comune con l'1a congelata) | `PROPOSTA-LIVELLO-2A.md` |
+| Medaglie solo nella parte «a» di ogni livello (idea di coerenza di Ale, 30 ott): da confermare nel livello 2 | 30 ott | basso | Dove stanno le prove | — |
 
 ## Carriera, meriti, salvataggi
 
