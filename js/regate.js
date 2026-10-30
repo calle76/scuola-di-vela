@@ -60,7 +60,7 @@
     // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): barca dell'1b, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
     { title: "Regata nei salti di vento", where: "salti di vento", desc: "Barca dell'1b, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true },
     // 1.0.61 (docs/PROPOSTA-LIVELLO-2A.md, fetta 1): livello 2a, due giri al posto dei 15 s per il giocatore; resta fuori da meriti e carriera
-    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: se lasci male la strada, due giri come nelle regate vere, ciascuno con una virata e una strambata.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true }
+    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: se lasci male la strada, due giri come nelle regate vere, ciascuno con una virata e una strambata; se tocchi una boa, un giro.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true }
   ];
   const RACES1 = RACES.filter(rc => !rc.lv2); // le regate dell'1a (stessi indici: quelle dell'1b, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;
@@ -530,7 +530,7 @@
   const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_MAX_S = 20, GIRO_SEC = 15; // ipotesi nostre: isteresi del verso (disturbo delle onde), tempo massimo di un giro, ripiego per giro non fatto
   function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, cum: 0, buf: [], last: -1e9 }; }
   function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata."; }
-  function giriDebito(){ R.need += 2; giroVia(); giriMsg(); } // la finestra riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
+  function giriDebito(n){ R.need += n === undefined ? 2 : n; giroVia(); giriMsg(); } // la finestra riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
   function giriPenalita(){
     const me = R.boats[0], S = me.S, g = R.giro;
     if (!g || R.need <= R.done || me.fin !== null || me.dnf) return;
@@ -552,6 +552,46 @@
     const m = R.need - R.done; if (m <= 0) return;
     b.pen += GIRO_SEC * m; R.done = R.need;
     R.penList.push("Tu, giri di penalità non fatti (" + m + "): +" + GIRO_SEC * m + " s al tempo.");
+  }
+
+  // ---- boa toccata (livello 2a, 1.0.62, docs/PROPOSTA-LIVELLO-2A.md fetta 2; F15 31 e 44.1) ----
+  // Nelle regate con R.giri e solo per il giocatore: toccare una boa che conta ora costa UN giro (giriDebito(1)). Le boe non sono ostacolo: il tocco è solo la penalità.
+  // Contano la linea (spillo e comitato) fino al via e sull'ultimo lato, la boa del lato in corso e, dal secondo lato, quella da cui il lato parte. Un tocco vale una volta
+  // finché lo scafo non si allontana di BOA_LIBERA m dal bordo.
+  const BOA_R = 0.9, CB_R = 2.0, BOA_LIBERA = 3; // m: raggio come disegnata, mezza barca del comitato, distanza per poter rifare un tocco; ipotesi nostre
+  function distScafoPunto(S, px, py){ // distanza dal contorno dello scafo (convesso) a un punto; 0 se il punto è dentro
+    const P = hullWorld(S); let dentro = true, best = 1e9;
+    for (let i = 0; i < P.length; i++){
+      const [x0, y0] = P[i], [x1, y1] = P[(i + 1) % P.length], ex = x1 - x0, ey = y1 - y0, l2 = ex * ex + ey * ey;
+      if (ex * (py - y0) - ey * (px - x0) < 0) dentro = false;
+      const t = l2 > 1e-12 ? Math.max(0, Math.min(1, ((px - x0) * ex + (py - y0) * ey) / l2)) : 0;
+      best = Math.min(best, Math.hypot(px - x0 - t * ex, py - y0 - t * ey));
+    }
+    return dentro ? 0 : best;
+  }
+  function boeCheConta(me){
+    const L = me.leg, out = [], linea = () => { out.push(["pin", R.pin, BOA_R]); out.push(["cb", R.cb, CB_R]); };
+    if (L === 0) linea();
+    else if (L <= R.marks.length) out.push(["m" + (L - 1), R.marks[L - 1], BOA_R]);
+    else linea();
+    if (L >= 2 && L <= R.marks.length + 1) out.push(["m" + (L - 2), R.marks[L - 2], BOA_R]);
+    return out;
+  }
+  function boeToccate(){
+    const me = R.boats[0];
+    if (me.fin !== null || me.dnf) return;
+    R.boaTocc = R.boaTocc || {};
+    for (const [key, mk, r] of boeCheConta(me)){
+      const d = distScafoPunto(me.S, mk.x, mk.y);
+      if (R.boaTocc[key]){ if (d > r + BOA_LIBERA) delete R.boaTocc[key]; continue; }
+      if (d > r) continue;
+      R.boaTocc[key] = R.t; R.nBoa = (R.nBoa || 0) + 1; giriDebito(1);
+      const nome = key === "pin" ? "la boa dello spillo" : key === "cb" ? "la barca del comitato" : "la boa";
+      R.penList.push("Tu, hai toccato " + nome + ": un giro di penalità (regola 31).");
+      R.lastRule = "Hai toccato " + nome + " (regola 31): un giro di penalità, con una virata e una strambata. " + (R.need - R.done === 1 ? "Ti manca un giro." : "Ti mancano " + (R.need - R.done) + " giri.");
+      toast("Hai toccato " + nome + "! Un giro di penalità");
+      rivMark("Boa toccata a " + rivTempo(R.t) + ". " + R.penList[R.penList.length - 1], true);
+    }
   }
 
   // ---- semaforo e contatti ----
@@ -639,7 +679,7 @@
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
     if (R.lv2) aggiornaVirate();
     contacts();
-    if (R.giri) giriPenalita();
+    if (R.giri){ boeToccate(); giriPenalita(); }
     if (R.lv2) semaforo();
     if (R.t >= 0 && Math.floor(R.t * 2) !== Math.floor(prevT * 2)) for (const b of R.boats){ // strada fatta ogni 0,5 s, per i distacchi
       const p = b.fin === null ? strada(b) : null; if (p !== null) (b.hist = b.hist || []).push([R.t, p]); }

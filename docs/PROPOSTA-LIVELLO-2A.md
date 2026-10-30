@@ -55,6 +55,30 @@ Pilota di prova che esegue le manovre al comando, a passi fissi con semi fissi (
 
 Fatta e misurata: vedi `CHANGELOG.md`. Cambiamenti rispetto a questa proposta, dichiarati: i criteri 1-3 e 6 sono misurati senza avversari; il criterio 4 ha 0 casi possibili; aggiunto il criterio K (nessun giro riconosciuto dopo il debito) e poi corretto perché contava giri veri fatti prima; D misura gli incrementi. Costo dei due giri: mediana 17,5 s (16,8-18,4). Le soglie non sono state cambiate.
 
+## Fetta 2: un giro per la boa toccata (31 e 44.1) — scritta il 30 ottobre 2026 prima di toccare il codice
+
+**Regola (parafrasi, F15 31 e 44.1):** in regata non si tocca una boa di partenza prima di partire, una boa che inizia, delimita o chiude il lato su cui si sta navigando, né una boa d'arrivo dopo l'arrivo. Chi la tocca sconta **un giro** (non due), con le stesse regole di 44.2.
+
+**Modello più semplice.** Solo nella regata dei giri (`R.giri`) e solo per il giocatore (come la fetta 1). Le boe restano **non ostacolo** (la barca ci passa attraverso, come oggi): il tocco è solo la penalità. La boa è un cerchio di raggio `BOA_R` = 0,9 m (il raggio con cui è disegnata); la barca di comitato un cerchio di `CB_R` = 2,0 m; il tocco è la distanza fra il contorno dello scafo (lo stesso poligono dei contatti) e il centro ≤ raggio. Boe che contano: durante il conto alla rovescia e fino al via le due della linea (spillo e comitato); sul lato k la boa k e, dal secondo lato in poi, quella da cui il lato parte; sull'ultimo lato la boa lasciata e la linea d'arrivo. Il tocco conta **una volta** finché la barca non si allontana di `BOA_LIBERA` = 3 m dal bordo (altrimenti una strisciata darebbe dieci penalità). Il debito sale di **1** (`giriDebito(1)`), il resto del meccanismo è quello della fetta 1.
+
+**Costanti, tutte ipotesi nostre:** `BOA_R`, `CB_R`, `BOA_LIBERA`; l'elenco delle boe che contano per lato (RRS 31 lo dice a parole, la geometria è nostra). Nessuna fonte numerica: la regola non dà dimensioni.
+
+**Criteri (soglie scritte prima di misurare; prove con semi fissi, senza avversari salvo dove detto):**
+1. Scafo messo a toccare la boa del lato in corso: il debito sale esattamente di 1 in 30 prove su 30 (15 con la boa 1 e 15 con la linea d'arrivo nel bastone).
+2. Scafo a 0,5 m dal bordo (non tocca): debito invariato, 30 su 30; e almeno una prova di controllo con tocco vero per dimostrare che il metro misura.
+3. Un tocco continuato (scafo fermo sulla boa per 5 s) dà **un solo** giro, 30 su 30; dopo essersi allontanato oltre 3 m e aver toccato di nuovo, +1 (altri 30).
+4. Una boa che non conta in quel momento (per esempio la boa 2 del triangolo mentre si va alla 1, o la linea mentre si sale alla boa 1): tocco senza effetto, 30 su 30.
+5. Un giro basta a scontarlo (pilota che gira un giro nel verso): debito estinto in 30 prove su 30.
+6. **Quanto spesso il pilota di prova tocca da solo una boa** (60 regate, flotta e vento 10 nodi): si riporta il numero senza soglia, è l'informazione sul rischio per chi gioca.
+7. Non-regressione: le altre regate (1a e 1b) identiche al bit alla 1.0.61 su 20 regate; `polare.js` e `raffiche_e_virate.js` invariati; `collaudo_giri.py` (fetta 1) ancora verde.
+8. Registratore: evento `boa_toccata`; pagina senza `#collaudo`: nessun errore.
+
+**Rischi.** (a) Il giocatore principiante tocca spesso la boa girandola stretta: va guardato giocando. (b) Le boe non sono ostacolo: toccarla non frena. (c) Gli avversari non toccano boe (non è punito per loro).
+
+## Esito della fetta 2 (30 ottobre 2026, 1.0.62)
+
+Fatta e misurata: vedi `CHANGELOG.md` e `tests/collaudo_boa.py`. Soglie non cambiate. Il criterio 3 aggiunge il caso «fermo 5 s», il criterio 4 è provato sul bastone (nessuna prova sul triangolo, che la regata dei giri non usa). Dopo aver visto i risultati ho corretto solo il collaudo (il primo tentativo metteva lo scafo a 0,5 m dal *centro* e non dal bordo della boa, e la teletrasportata sulla linea contava come arrivo), non il codice né le soglie.
+
 ## Cosa non c'è in questa fetta
 
-Giri degli avversari, un giro per la boa toccata, regola 21.2, bandiere, lezioni, interruttore a tempo per chi comincia.
+Giri degli avversari, regola 21.2, bandiere, lezioni, interruttore a tempo per chi comincia.

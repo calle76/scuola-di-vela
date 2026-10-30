@@ -97,7 +97,7 @@
     const leg = mode === "race" && R && R.boats[0] ? R.boats[0].leg : null;
     if (leg !== null && L.leg !== null && leg > L.leg) sesEv(leg === 1 ? "partito" : "lato", String(leg));
     L.leg = leg;
-    if (mode === "race" && R && R.giri){ if (R !== L.RG){ L.RG = R; L.gd = R.done; } else if (R.done > L.gd){ sesEv("giro_penalita", R.done + "/" + R.need); L.gd = R.done; } } // 1.0.61: giri di penalità fatti
+    if (mode === "race" && R && R.giri){ if (R !== L.RG){ L.RG = R; L.gd = R.done; L.nb = 0; } else { if (R.done > L.gd){ sesEv("giro_penalita", R.done + "/" + R.need); L.gd = R.done; } if ((R.nBoa || 0) > L.nb){ sesEv("boa_toccata", R.need - R.done + " giri da fare"); L.nb = R.nBoa; } } } // 1.0.61: giri di penalità fatti
     // 0.21.2: arrivo in regata = tempo netto (fin, penalità comprese), una volta sola per regata; a registrazione accesa dopo l'arrivo non si scrive
     const rf = mode === "race" && R && R.boats[0] ? R.boats[0].fin : null;
     if (R !== L.R){ L.R = R; L.rfin = rf !== null; }
@@ -250,6 +250,7 @@
     "#   F t nome posto tempo pen_s pen_pt stato   riga di controllo, una per barca, alla chiusura (posto e tempo solo per chi ha già tagliato l'arrivo, altrimenti «-»);",
     "#   E registrazione_chiusa arrivo|interrotta|manuale|pagina_chiusa   fine del file; E segno_rivedi n   segno n del giocatore (tasto O) per «Rivedi»;",
     "#   E giro_penalita fatti/dovuti   un giro di penalità riconosciuto (regata dei giri, 1.0.61); la riga Q «penalità scontata» chiude il debito",
+    "#   E boa_toccata N giri da fare   una boa toccata (regata dei giri, 1.0.62, regola 31): un giro in più di debito",
   ];
   const regPezzi = []; // {id, reg, n, fine, quando, nome, file, testo}: in memoria e in IndexedDB
   let sesAutoR = null, sesSalva = null;
