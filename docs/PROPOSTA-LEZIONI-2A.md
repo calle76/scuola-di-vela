@@ -2,7 +2,23 @@
 
 31 ottobre 2026. **Fermata 1: solo documento, nessun codice, nessun testo di lezione.** Le fette 1-5 del 2a hanno messo nel motore (solo nella «Regata con i giri di penalità») i giri di penalità, la boa toccata, le bandiere, la 21.1/21.2 e i giri degli avversari. Questa proposta dice **cosa deve insegnare la scuola** su quel materiale, da dove vengono le affermazioni e come si verifica che la lezione funzioni. Rinvia al `PROPOSTA-RIORGANIZZAZIONE.md` per il dove: tutte le lezioni vanno nella **scuola** (livello 0), con la barca dell'1b, e si scrivono quando la scuola si riscrive (§5 passo 3), non prima: scriverle ora sulla struttura vecchia (1a/1b, sei lezioni) vorrebbe dire riscriverle.
 
-## 1. Cosa insegnare (sette lezioni brevi)
+## 0. Il quadro completo delle lezioni della scuola (correzione di Ale, 31 ottobre 2026)
+
+La prima stesura di questo documento parlava solo di regolamento. **Le lezioni della scuola sono più di quelle sul regolamento.** Tutto l'elenco, come risulta da `PROPOSTA-RIORGANIZZAZIONE.md` §3 e da `PROPOSTA-COMPLETAMENTO-1B.md` §1:
+
+| Gruppo | Lezioni | Stato |
+|---|---|---|
+| **A. Le sei di oggi, riscritte per la barca dell'1b** | La barca; dritta e sinistra; timone; andature; filetti; il vento a bordo (`js/contenuti.js`) | Testi e quiz esistono (si tengono); i passi pratici vanno percorsi di nuovo dal pilota con la barca nuova |
+| **B. La fisica dell'1b (le «sette brevi» dell'1b, senza le ultime due)** | 1 timone che stalla (freccia e Maiusc); 2 **spingi il boma (tasto Z)** per uscire dall'angolo morto; 3 salti di vento (virare sugli scarsi); 4 raddrizzata lunga (tasto A); 5 barca che orza sbandando | Mai scritte (proposta `PROPOSTA-COMPLETAMENTO-1B.md`, superata solo nella struttura: i contenuti restano). Fonti già citate lì |
+| **C. Partenza e tecnica** (nuova, dalla visione del 2a) | La partenza: la linea, l'avvicinamento, partire a piena velocità, il blocco in attesa | Da scrivere; il motore c'è |
+| **D. Il regolamento (2a)** | Le sette di §1 qui sotto | Da scrivere; il motore c'è |
+| **E. Poppa e strambata** | Il boma e la strambata con il vento dietro | **Dopo** la correzione del boma in poppa (`PROPOSTA-BOMA-IN-POPPA.md`) |
+
+Le lezioni 6 (contatto vero e chi cede) e 7 (come funziona il torneo) delle «sette brevi» dell'1b **non sono un gruppo a sé**: la 6 entra nelle sette del regolamento (D), la 7 passa al livello Deriva (tornei) perché la scuola non ha tornei. Totale proposto: 6 (A) + 5 (B) + 1 (C) + 7 (D) + 1 (E) = **20 lezioni**, ciascuna di 2-4 passi con un solo passo pratico e un quiz di 4 domande (il modello di `PROPOSTA-COMPLETAMENTO-1B.md`). Troppe per un giocatore nuovo? È il rischio principale (§4): per questo l'ordine della scuola mette A e B prima, il regolamento (D) dopo.
+
+Il resto di questo documento tratta il gruppo D; per il gruppo B valgono i criteri di `PROPOSTA-COMPLETAMENTO-1B.md` §«Criteri», da riscrivere sulla scuola quando si comincia.
+
+## 1. Cosa insegnare nel regolamento (sette lezioni brevi, gruppo D)
 
 Ogni lezione: una pagina di teoria con il disegno (come «Le mure e le precedenze» di oggi, lezione 3) e, dove serve, una prova pratica. Le regole si **parafrasano** e si cita il numero (principio 5); il testo di ogni lezione si scrive solo dopo aver riletto la regola nel PDF (`fonti-pdf/RRS-2025-2028-World-Sailing.pdf`, F15), come da `CLAUDE.md`.
 
