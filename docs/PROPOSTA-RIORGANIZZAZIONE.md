@@ -80,9 +80,11 @@ Ogni passo è una o più versioni con collaudi verdi e commit a sé. Il gioco **
 - **Documenti vecchi** (`VISIONE`, `ROADMAP`, `CLAUDE.md`, vecchi nomi 1a/1b) restano incoerenti finché il passo 7 non è fatto.
 - **Prototipo del fiocco** (`sperimentale/`) nato da una copia di `index.html` con la 1a: non lo tocca questa riorganizzazione, ma la sua regola di non-regressione («la barca senza fiocco identica a quella del gioco») va riscritta sulla barca nuova.
 
-## 8. Decisioni per Ale
+## 8. Decisioni di Ale (30 ottobre 2026, sera)
 
-1. **Nomi e numeri.** «Scuola» = livello 0 e «Livello 1» è giusto? Fiocco e gennaker diventano 2 e 3 (oggi 3 e 4)? Si può decidere più avanti, ma i documenti nuovi li devono già usare.
-2. **Niente brevetto al livello 1:** il passaggio al livello dopo è solo «aver superato la soglia», oppure una schermata a fine torneo («livello superato») senza il nome «brevetto»?
-3. **Il passo 0** (misura del principiante, nessun cambio al gioco): lo faccio subito o dopo il 2a?
-4. **Momento clou** nel livello 1: ne parliamo in questo giro o resta alla fase 2 del coach?
+1. **Nomi:** la scuola è il livello 0, «La scuola»; il livello 1 si chiama **«Deriva»**; poi «Fiocco» e gli altri (i nomi al posto dei numeri).
+2. **Niente più brevetti** (nemmeno un livello 1 «superato» con quel nome): i livelli successivi si aprono se la carriera lo permette (soglia del torneo). L'attestato resta uno solo, quello della scuola.
+3. **Principiante:** non preoccupa. È una scuola, si impara e si gareggia contro avversari deboli. La misura M1 non è più una condizione per partire (resta come numero da riportare, non come porta). **Idea nuova:** la vela che si manovra da sola come **opzione** (il gioco ha già `autoTrim` in alcuni passi delle lezioni: da vedere cosa serve per farne un'opzione vera).
+4. **Momento clou:** quando decide Claude, nel coach.
+
+Da fare quando si riprende: aggiornare M1 (non più porta), scrivere la fermata 1 della vela automatica come opzione, poi il 2a nel motore (passo 1 dell'ordine in §5).
