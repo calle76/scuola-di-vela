@@ -555,7 +555,7 @@
   }
 
   // ---- boa toccata (livello 2a, 1.0.62, docs/PROPOSTA-LIVELLO-2A.md fetta 2; F15 31 e 44.1) ----
-  // Nelle regate con R.giri e solo per il giocatore: toccare una boa che conta ora costa UN giro (giriDebito(1)). Le boe non sono ostacolo: il tocco è solo la penalità.
+  // Nelle regate con R.giri e solo per il giocatore: toccare una boa che conta ora costa UN giro (giriDebito(1)). Dalla 1.0.63 le boe sono anche ostacoli fermi (boeUrto).
   // Contano la linea (spillo e comitato) fino al via e sull'ultimo lato, la boa del lato in corso e, dal secondo lato, quella da cui il lato parte. Un tocco vale una volta
   // finché lo scafo non si allontana di BOA_LIBERA m dal bordo.
   const BOA_R = 0.9, CB_R = 2.0, BOA_LIBERA = 3; // m: raggio come disegnata, mezza barca del comitato, distanza per poter rifare un tocco; ipotesi nostre
@@ -577,20 +577,39 @@
     if (L >= 2 && L <= R.marks.length + 1) out.push(["m" + (L - 2), R.marks[L - 2], BOA_R]);
     return out;
   }
+  // 1.0.63 (fetta 2b): per il giocatore ogni oggetto del percorso (spillo, comitato, boe) è anche un ostacolo fermo: lo scafo che entra nel raggio viene spinto fuori
+  // lungo la retta centro-oggetto-centro-barca (a ogni passo, fino a 0,05 m oltre il raggio) e al primo passo del tocco perde il 40% della velocità, come nei contatti fra barche.
+  // La penalità spetta solo alle boe che contano ora (boeCheConta). Gli avversari non si respingono.
+  function boeUrto(me, mk, r, key){
+    const S = me.S; let d = distScafoPunto(S, mk.x, mk.y); if (d >= r) return;
+    R.boaUrto = R.boaUrto || {};
+    if (!R.boaUrto[key]){ R.boaUrto[key] = true; S.u *= 0.6; }
+    for (let k = 0; k < 12 && d < r + 0.05; k++){
+      let nx = S.x - mk.x, ny = S.y - mk.y; const l = Math.hypot(nx, ny);
+      if (l < 1e-6){ const h = S.h * D2R; nx = -Math.sin(h); ny = Math.cos(h); } else { nx /= l; ny /= l; }
+      const m = Math.max(0.05, r + 0.05 - d); S.x += nx * m; S.y += ny * m; d = distScafoPunto(S, mk.x, mk.y);
+    }
+  }
   function boeToccate(){
     const me = R.boats[0];
     if (me.fin !== null || me.dnf) return;
-    R.boaTocc = R.boaTocc || {};
-    for (const [key, mk, r] of boeCheConta(me)){
+    R.boaTocc = R.boaTocc || {}; R.boaUrto = R.boaUrto || {};
+    const contano = new Set(boeCheConta(me).map(e => e[0]));
+    const tutte = [["pin", R.pin, BOA_R], ["cb", R.cb, CB_R]]; R.marks.forEach((mk, k) => tutte.push(["m" + k, mk, BOA_R]));
+    for (const [key, mk, r] of tutte){
+      if (Math.hypot(me.S.x - mk.x, me.S.y - mk.y) > r + 8) { if (R.boaUrto[key]) delete R.boaUrto[key]; if (R.boaTocc[key]) delete R.boaTocc[key]; continue; } // lontano: nessun controllo, e il tocco si può rifare
       const d = distScafoPunto(me.S, mk.x, mk.y);
-      if (R.boaTocc[key]){ if (d > r + BOA_LIBERA) delete R.boaTocc[key]; continue; }
-      if (d > r) continue;
-      R.boaTocc[key] = R.t; R.nBoa = (R.nBoa || 0) + 1; giriDebito(1);
-      const nome = key === "pin" ? "la boa dello spillo" : key === "cb" ? "la barca del comitato" : "la boa";
-      R.penList.push("Tu, hai toccato " + nome + ": un giro di penalità (regola 31).");
-      R.lastRule = "Hai toccato " + nome + " (regola 31): un giro di penalità, con una virata e una strambata. " + (R.need - R.done === 1 ? "Ti manca un giro." : "Ti mancano " + (R.need - R.done) + " giri.");
-      toast("Hai toccato " + nome + "! Un giro di penalità");
-      rivMark("Boa toccata a " + rivTempo(R.t) + ". " + R.penList[R.penList.length - 1], true);
+      if (R.boaUrto[key] && d > r + 0.3) delete R.boaUrto[key];
+      if (R.boaTocc[key]){ if (d > r + BOA_LIBERA) delete R.boaTocc[key]; }
+      else if (d <= r && contano.has(key)){
+        R.boaTocc[key] = R.t; R.nBoa = (R.nBoa || 0) + 1; giriDebito(1);
+        const nome = key === "pin" ? "la boa dello spillo" : key === "cb" ? "la barca del comitato" : "la boa";
+        R.penList.push("Tu, hai toccato " + nome + ": un giro di penalità (regola 31).");
+        R.lastRule = "Hai toccato " + nome + " (regola 31): un giro di penalità, con una virata e una strambata. " + (R.need - R.done === 1 ? "Ti manca un giro." : "Ti mancano " + (R.need - R.done) + " giri.");
+        toast("Hai toccato " + nome + "! Un giro di penalità");
+        rivMark("Boa toccata a " + rivTempo(R.t) + ". " + R.penList[R.penList.length - 1], true);
+      }
+      boeUrto(me, mk, r, key);
     }
   }
 

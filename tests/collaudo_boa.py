@@ -1,7 +1,7 @@
-# Collaudo della boa toccata (1.0.62, docs/PROPOSTA-LIVELLO-2A.md, fetta 2: regola 31, un giro). Soglie scritte nella proposta prima di misurare.
-# Uso: .venv-collaudi/bin/python tests/collaudo_boa.py [prove=30] [cartella di una copia di riferimento (1.0.61), per il confronto al bit delle altre regate]
+# Collaudo della boa toccata (1.0.62, regola 31, un giro) e delle boe come ostacoli (1.0.63, fetta 2b). Soglie scritte nella proposta (PROPOSTA-LIVELLO-2A.md) prima di misurare.
+# Uso: .venv-collaudi/bin/python tests/collaudo_boa.py [prove=30] [cartella di una copia di riferimento (1.0.62), per il confronto al bit delle altre regate e dei tempi del pilota]
 # Parti: A) tocco della boa del lato (e della linea d'arrivo): debito +1; B) a 0,5 m dal bordo niente; C) tocco continuato = un solo giro, poi allontanarsi e toccare = +1;
-#        D) boe che non contano in quel momento; E) un giro basta; F) quanto tocca da solo il pilota; G) altre regate identiche al bit; H) registratore e pagina senza #collaudo.
+#        I) (1.0.63) respinto fuori dal raggio, velocità al 60%, mai attraversata, avversari non respinti, tempi del pilota; D) boe che non contano in quel momento; E) un giro basta; F) quanto tocca da solo il pilota; G) altre regate identiche al bit; H) registratore e pagina senza #collaudo.
 import asyncio, pathlib, sys, os, statistics
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -26,6 +26,15 @@ PROVA = """async ([caso, seme, leg, ogg, dist]) => {
   if (caso === 'giro'){ ferma(3); out.dopoTocco = R.need - need0; sv.S.x = (ogg === 'pin' ? R.pin : ogg === 'cb' ? R.cb : R.marks[0]).x + 40; sv.S.y = (ogg === 'pin' ? R.pin : ogg === 'cb' ? R.cb : R.marks[0]).y; let cap = false; const t0 = R.t; sv.S.u = 3;
     while (R.t < t0 + 60 && R.done < R.need && !cap){ sv.ctl.tiller = 1; sv.ctl.sheet = sv.autoSheet(); sv.run(dt, 1); if (sv.S.capsized) cap = true; } out.cap = cap; out.done = R.done; }
   out.inc = R.need - need0; out.pen = me.pen - pen0; out.voci = R.penList.slice(lista0); out.regola = R.lastRule; out.nBoa = R.nBoa || 0; return out;
+}""" % (PIAZZA, SETUP)
+# 1.0.63: ostacolo. caso 'sopra': scafo messo sopra l'oggetto, velocita prima/dopo il primo passo e distanza dopo 3 passi; 'lancio': scafo lanciato contro l'oggetto da 12 m con una direzione e una velocita, distanza minima a fine passo
+OSTACOLO = """async ([caso, seme, leg, ogg, ang, vel]) => {
+  const sv = __sv, dt = 1 / 60; const piazza = %s; const setup = %s; const me = setup(sv, seme, leg); const R = sv.R;
+  const o = ogg === 'pin' ? R.pin : ogg === 'cb' ? R.cb : R.marks[0], r = ogg === 'cb' ? 2.0 : 0.9; const need0 = R.need;
+  if (caso === 'sopra'){ piazza(sv, ogg, 0, 0.3 + (seme %% 5) * 0.1); sv.S.u = 3; const u0 = sv.S.u; sv.ctl.tiller = 0; sv.run(dt, 1); const u1 = sv.S.u; sv.run(dt, 2); return { r, d: distScafoPunto(sv.S, o.x, o.y), rapporto: u1 / u0, inc: R.need - need0 }; }
+  if (caso === 'lancio'){ const a = ang * Math.PI / 180; sv.S.x = o.x + 12 * Math.cos(a); sv.S.y = o.y + 12 * Math.sin(a); sv.S.h = Math.atan2(o.x - sv.S.x, -(o.y - sv.S.y)) * 180 / Math.PI; sv.S.u = vel;
+    let dmin = 1e9; for (let k = 0; k < 60 * 7; k++){ sv.ctl.tiller = 0; sv.run(dt, 1); dmin = Math.min(dmin, distScafoPunto(sv.S, o.x, o.y)); } return { r, dmin, inc: R.need - need0 }; }
+  if (caso === 'avversario'){ const a = R.boats[1]; a.S.x = o.x; a.S.y = o.y; a.S.u = 0; sv.run(dt, 1); return { r, d: distScafoPunto(a.S, o.x, o.y) }; }
 }""" % (PIAZZA, SETUP)
 # il pilota tocca da solo? regata dei giri con la flotta, vento 10 nodi, fino all'arrivo del giocatore
 SOLO = """async ([seme]) => {
@@ -93,12 +102,38 @@ async def main():
         E = [await run(pg, "giro", 700 + k, 1, "m0", 0) for k in semi]
         chk("E1 dopo il tocco un giro estingue il debito (%d prove su %d, senza scuffie nel %d)" % (n, n, sum(1 for r in E if not r["cap"])), all(r["dopoTocco"] == 1 and r["inc"] == 1 and r["done"] >= 1 for r in E) and len(E) == n,
             "estinti %d su %d" % (sum(1 for r in E if r["done"] >= 1), n))
+        # ---- I (1.0.63) ----
+        OGG = [("m0", 1), ("pin", 1), ("cb", 1), ("pin", 0), ("cb", 2)]  # (oggetto, lato): boa del lato, spillo e comitato sia dove contano sia dove no
+        I1 = {(o, l): [await pg.evaluate(OSTACOLO, ["sopra", 1000 + k, l, o, 0, 0]) for k in semi] for o, l in OGG}
+        for (o, l), rr in I1.items():
+            chk("I1 %s sul lato %d: lo scafo messo sopra viene respinto fuori dal raggio (%d prove, distanza minima %.2f m, raggio %.1f m)" % (o, l, n, min(r["d"] for r in rr), rr[0]["r"]), all(r["d"] >= r["r"] - 1e-9 for r in rr) and len(rr) == n)
+        tutti = [r for rr in I1.values() for r in rr]
+        print("     I velocita dopo il primo passo / prima: mediana %.3f, minimo %.3f, massimo %.3f su %d casi (atteso 0,60 piu il passo)" % (statistics.median(r["rapporto"] for r in tutti), min(r["rapporto"] for r in tutti), max(r["rapporto"] for r in tutti), len(tutti)), flush=True)
+        chk("I2 al primo passo del tocco la velocita vale al piu il 61%% di quella di prima (%d casi)" % len(tutti), all(0 < r["rapporto"] <= 0.61 for r in tutti) and len(tutti) == 5 * n)
+        chk("I3 il respingimento non cambia la penalita: spillo sul lato 1 e comitato sul lato 1 non danno debito, gli altri si (%d prove ciascuno)" % n,
+            all(r["inc"] == 0 for k in (("pin", 1), ("cb", 1)) for r in I1[k]) and all(r["inc"] == 1 for k in (("m0", 1), ("pin", 0), ("cb", 2)) for r in I1[k]) )
+        L = [(o, a, v) for o in ("m0", "pin", "cb") for a in range(0, 360, 30) for v in (3.0, 5.0)]
+        I4 = [await pg.evaluate(OSTACOLO, ["lancio", 1100 + i, 1, o, a, v]) for i, (o, a, v) in enumerate(L)]
+        chk("I4 scafo lanciato contro l'oggetto da 12 m a 3 e 5 m/s da 12 direzioni (%d lanci, 3 oggetti): non lo attraversa mai (distanza minima %.2f m)" % (len(L), min(r["dmin"] for r in I4)), all(r["dmin"] >= r["r"] - 1e-9 for r in I4) and len(I4) == 72)
+        ctxA, pgA, errsA = await pagina(b, ROOT)
+        I6 = []
+        for o in ("m0", "pin", "cb"):
+            I6.append(await pgA.evaluate("""async ([o]) => { const sv = __sv, dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change')); __seed(7); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
+              const R = sv.R; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); } const m = o === 'pin' ? R.pin : o === 'cb' ? R.cb : R.marks[0], a = R.boats[1]; a.S.x = m.x; a.S.y = m.y; a.S.u = 0; sv.run(dt, 1); return { r: o === 'cb' ? 2 : 0.9, d: distScafoPunto(a.S, m.x, m.y) }; }""", [o]))
+        chk("I6 gli avversari non sono respinti: un avversario messo sopra spillo, comitato e boa resta dentro il raggio (3 prove)", all(r["d"] < r["r"] for r in I6), str([round(r["d"], 2) for r in I6]))
+        await ctxA.close()
         # ---- F ----
         nreg = int(os.environ.get("REGATE", "60"))
         F = [await pg.evaluate(SOLO, [900 + k]) for k in range(nreg)]
         arr = [r for r in F if r["fin"] is not None]
         print("     F pilota di prova, %d regate con la flotta a 10 nodi: tocchi totali %d, regate con almeno un tocco %d (arrivate %d); tocchi per regata: %s; primo tocco (lato): %s" % (nreg, sum(r["nBoa"] for r in F), sum(1 for r in F if r["nBoa"]), len(arr), sorted({r["nBoa"] for r in F}), {l: sum(1 for r in F if r["primo"] and r["primo"][1] == l) for l in range(0, 4)}), flush=True)
         print("     F oggetti toccati (regate): %s; tempo del primo tocco (s di regata, negativo = prima del via): minimo %s, mediana %s, massimo %s" % ({k: sum(1 for r in F for v in r["voci"] if t in v) for k, t in (("spillo", "spillo"), ("comitato", "comitato"), ("boa 1", "toccato la boa:"))}, min((r["primo"][0] for r in F if r["primo"]), default=None), statistics.median([r["primo"][0] for r in F if r["primo"]] or [0]), max((r["primo"][0] for r in F if r["primo"]), default=None)), flush=True)
+        if rif and os.environ.get("TEMPI"):  # confronto dei tempi del pilota con la 1.0.62: raddoppia la durata (circa 15 minuti con 60 regate), si chiede a parte con TEMPI=1
+            ctxR, pgR, errsR = await pagina(b, pathlib.Path(rif)); Fr = [await pgR.evaluate(SOLO, [900 + k]) for k in range(nreg)]; await ctxR.close()
+            fa = [r["fin"] for r in F if r["fin"] is not None]; fr = [r["fin"] for r in Fr if r["fin"] is not None]
+            diff = [a["fin"] - c["fin"] for a, c in zip(F, Fr) if a["fin"] is not None and c["fin"] is not None]
+            print("     I7 pilota di prova, %d regate: arrivate %d (senza ostacolo %d); tempo mediano %.1f s (senza ostacolo %.1f s), differenza %.1f s; regate con tempo diverso %d, differenza massima %.1f s" % (nreg, len(fa), len(fr), statistics.median(fa), statistics.median(fr), statistics.median(fa) - statistics.median(fr), sum(1 for d in diff if abs(d) > 1e-6), max((abs(d) for d in diff), default=0)), flush=True)
+            chk("I7 tutte le regate del pilota arrivano (nessuna incastrata) e la differenza del tempo mediano e entro 3 s (atteso, stima nostra)", len(fa) == nreg and abs(statistics.median(fa) - statistics.median(fr)) <= 3)
         chk("F0 il metro ha misurato davvero: tutte le regate hanno una nBoa numerica e %d su %d sono arrivate" % (len(arr), nreg), all(isinstance(r["nBoa"], int) for r in F) and len(arr) >= nreg * 0.9)
         # ---- H ----
         G = await pg.evaluate(REGISTRATA, [800])
@@ -110,7 +145,7 @@ async def main():
         ctx, pg, errs = await pagina(b, ROOT); nuovo = await pg.evaluate(ALTRE, [20, 100]); await ctx.close()
         if rif:
             ctx, pg, errs = await pagina(b, pathlib.Path(rif)); vecchio = await pg.evaluate(ALTRE, [20, 100]); await ctx.close()
-            chk("G1 regate dell'1a e dell'1b: arrivi, penalità e posizioni finali identici al bit alla 1.0.61 su 20 regate", nuovo == vecchio and len(nuovo) == 20)
+            chk("G1 regate dell'1a e dell'1b: arrivi, penalità e posizioni finali identici al bit alla 1.0.62 su 20 regate", nuovo == vecchio and len(nuovo) == 20)
         else: print("     G1 saltato: manca la cartella di riferimento")
         ctx, pg, errs = await pagina(b, ROOT, "")
         await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)

@@ -40,6 +40,8 @@
 5. **Boe dal lato sbagliato della guida automatica (1a; Ale il 26 ottobre: l'1a resta così)** (23 ottobre 2026, `tests/misura_boe.py`): se la barca si trova di fianco alla boa dal lato sinistro, la guida degli avversari (che è anche il pilota dei collaudi) risale sopra la boa verso il suo primo punto e la passa dal lato sbagliato, poi la rigira. Stessi semi 1-40, 160 corse dell'1a col pilota: 0 nella 1.0.41, **7 dalla 1.0.42** (dove gli scafi dopo il contatto si spingono fuori: in 6 casi su 7 c'è un contatto vicino alla boa poco prima). Al giocatore non succede (la boa la gira lui); sugli avversari non misurato. Decisione di Ale: l'1a non si tocca ora, si corregge nel passo «avversari con la barca dell'1b», dove si decide anche se portare la correzione all'1a.
 6. **Semplificazioni:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio.
 
+**30 ottobre 2026, 1.0.63 (livello 2a, fetta 2b):** boe, spillo e barca dei giudici sono ostacoli per il giocatore nella regata dei giri (respinto e frenato del 40%); avversari ancora no.
+
 **30 ottobre 2026, 1.0.62 (livello 2a, fetta 2):** un giro di penalità per la boa toccata (RRS 31), nella regata dei giri (`collaudo_boa.py`). Prossime fette: regole 11-13 nella colpa, 21.2, segnali e bandiere, giri degli avversari, lezioni.
 
 **30 ottobre 2026, 1.0.61 (livello 2a, fetta 1):** giri di penalità al posto dei 15 s per il giocatore, in una regata nuova (`PROPOSTA-LIVELLO-2A.md`, `collaudo_giri.py`); i due giri costano 17,5 s; gli avversari restano a +15 s. Prossime fette del 2a: regole 11-13 nella colpa, 21.2, segnali e bandiere, lezioni.

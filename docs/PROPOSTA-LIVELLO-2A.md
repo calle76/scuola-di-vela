@@ -75,9 +75,31 @@ Fatta e misurata: vedi `CHANGELOG.md`. Cambiamenti rispetto a questa proposta, d
 
 **Rischi.** (a) Il giocatore principiante tocca spesso la boa girandola stretta: va guardato giocando. (b) Le boe non sono ostacolo: toccarla non frena. (c) Gli avversari non toccano boe (non è punito per loro).
 
+## Fetta 2b: boe e comitato diventano ostacoli per il giocatore — scritta il 30 ottobre 2026 prima di toccare il codice
+
+**Perché.** Dopo la fetta 2 una boa o la barca dei giudici toccate costano un giro ma la barca ci passa attraverso. Ale lo ha notato (30 ottobre): se tocco, devo scontrarmi.
+
+**Modello più semplice.** Solo regata dei giri (`R.giri`), solo il giocatore. Per **tutti** gli oggetti della linea e del percorso (spillo, comitato, boe), non solo per quelli che in quel momento contano per la penalità: se il contorno dello scafo entra nel raggio (`BOA_R` 0,9 m, `CB_R` 2,0 m), la barca viene spinta fuori lungo la retta centro-oggetto-centro-barca fino a 0,05 m oltre il raggio, a ogni passo; al **primo** passo di un tocco la velocità si riduce al 60%, come nel contatto fra barche. La penalità resta quella della fetta 2 (si assegna prima della spinta, solo per le boe che contano). L'oggetto non si muove (ipotesi nostra: la boa è ancorata e il comitato è ormeggiato). Nessuna costante nuova (il 60% è quello dei contatti già nel gioco).
+
+**Criteri (soglie scritte prima; 30 prove per caso):**
+1. Scafo messo sopra lo spillo, il comitato o la boa del lato: dopo 3 passi il contorno è fuori dal raggio, 30 su 30 per ciascuno dei tre oggetti.
+2. Lo stesso per una boa che in quel momento non conta (linea sul lato 1): respinto, ma debito invariato, 30 su 30.
+3. Al primo passo del tocco la velocità vale al più il 61% di quella di prima (60% più il passo di integrazione), 30 su 30; nei passi seguenti nessun'altra riduzione brusca oltre al normale.
+4. Barca lanciata contro la boa a 3-5 m/s da lati diversi: non la attraversa mai (contorno fuori dal raggio a fine di ogni passo), 30 su 30.
+5. I criteri A-E della fetta 2 restano tutti verdi con le stesse soglie.
+6. Gli avversari non sono respinti: un avversario messo sopra una boa non si sposta (1 prova per oggetto, la differenza dichiarata).
+7. Il pilota di prova su 60 regate con la flotta (stessi semi della fetta 2): tutte arrivano (60 su 60); si riporta la differenza del tempo mediano d'arrivo rispetto alla 1.0.62 (atteso, stima nostra: entro 3 s) e quante regate restano incastrate (nessuna).
+8. Le altre regate (1a e 1b) identiche al bit alla 1.0.62; `polare.js` e `raffiche_e_virate.js` invariati.
+
+**Rischi.** Il pilota di prova che gira attorno allo spillo dopo una partenza anticipata viene frenato e spinto: può perdere secondi. Un giocatore che ha toccato la boa girandola stretta viene respinto fuori dalla traiettoria. Il comitato è un cerchio, ma disegnato è una barca lunga 8 m: il tocco di prua o di poppa non coincide con la forma.
+
 ## Esito della fetta 2 (30 ottobre 2026, 1.0.62)
 
 Fatta e misurata: vedi `CHANGELOG.md` e `tests/collaudo_boa.py`. Soglie non cambiate. Il criterio 3 aggiunge il caso «fermo 5 s», il criterio 4 è provato sul bastone (nessuna prova sul triangolo, che la regata dei giri non usa). Dopo aver visto i risultati ho corretto solo il collaudo (il primo tentativo metteva lo scafo a 0,5 m dal *centro* e non dal bordo della boa, e la teletrasportata sulla linea contava come arrivo), non il codice né le soglie.
+
+## Esito della fetta 2b (30 ottobre 2026, 1.0.63)
+
+Fatta e misurata: vedi `CHANGELOG.md`. Soglie non cambiate. Un difetto del mio collaudo (velocità azzerata dal posizionamento, controllo passato a vuoto) trovato e corretto; il criterio 7 (tempo mediano del pilota entro 3 s) è passato: +0,9 s su 60 regate.
 
 ## Cosa non c'è in questa fetta
 
