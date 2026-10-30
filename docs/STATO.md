@@ -42,6 +42,8 @@
 5. **Boe dal lato sbagliato della guida automatica (1a; Ale il 26 ottobre: l'1a resta così)** (23 ottobre 2026, `tests/misura_boe.py`): se la barca si trova di fianco alla boa dal lato sinistro, la guida degli avversari (che è anche il pilota dei collaudi) risale sopra la boa verso il suo primo punto e la passa dal lato sbagliato, poi la rigira. Stessi semi 1-40, 160 corse dell'1a col pilota: 0 nella 1.0.41, **7 dalla 1.0.42** (dove gli scafi dopo il contatto si spingono fuori: in 6 casi su 7 c'è un contatto vicino alla boa poco prima). Al giocatore non succede (la boa la gira lui); sugli avversari non misurato. Decisione di Ale: l'1a non si tocca ora, si corregge nel passo «avversari con la barca dell'1b», dove si decide anche se portare la correzione all'1a.
 6. **Semplificazioni:** la massa non entra nella resistenza dello scafo; la linea di partenza è sempre perpendicolare al vento medio.
 
+**31 ottobre 2026, 1.0.66 (livello 2a, fetta 4):** regola 21.2 (chi sconta i giri lascia strada, da 120° di rotazione) e 21.1 (chi torna dopo il via anticipato lascia strada), nella regata dei giri, avversari compresi per la 21.1 (`collaudo_regola21.py`). Prossimo: giri anche per gli avversari, lezioni del 2a, poi rimettere a posto il gioco.
+
 **31 ottobre 2026, 1.0.65 (livello 2a, fetta 3):** bandiere della partenza (classe, P, X, blu) sulla barca giuria, solo nella regata dei giri (`collaudo_segnali.py`). Prossimo: 21.2, poi i giri degli avversari, poi le lezioni.
 
 **31 ottobre 2026, 1.0.64:** la barca dei giudici ha la forma con cui è disegnata (la 1.0.63 la trattava come un cerchio da 2 m e a prua e a poppa Ale ci passava attraverso).

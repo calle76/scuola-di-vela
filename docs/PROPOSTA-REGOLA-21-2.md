@@ -48,6 +48,10 @@
 1. **21.1** (chi torna dietro la linea dopo un via anticipato lascia strada, anche ai compagni): va dentro questa fetta o dopo? Ha senso farla insieme, perché si usa lo stesso punto di `chiCede`. Tocca anche gli avversari che tornano (loro sì: qui `b.ocs` c'è già).
 2. **120°** come soglia: va bene, o preferisci un giro intero (360°, il giocatore cede solo dopo aver fatto il primo)?
 
+## Esito (31 ottobre 2026, 1.0.66)
+
+Decisioni di Ale: 21.1 insieme, 120°. Fatta e misurata, vedi `CHANGELOG.md`. Soglie non cambiate; K6: 30 su 30 estinti, 0,47 giri in più (atteso meno di 0,5: appena dentro). Due difetti del mio collaudo corretti prima dell'esito.
+
 ## Dopo il 2a: rimettere a posto il gioco (promemoria di Ale, 31 ottobre 2026)
 
 Ale: «di congelato c'è poco; finite le aggiunte e le correzioni il gioco va rimesso a posto». Elenco di partenza, da rivedere a fine 2a (non ora):

@@ -511,12 +511,18 @@
   // spostamento laterale di B rispetto alla prua di A (positivo a dritta della prua di A); la barca più sopravento è quella con y minore
   const latDi = (A, B) => { const h = A.S.h * D2R; return (B.S.x - A.S.x) * Math.cos(h) + (B.S.y - A.S.y) * Math.sin(h); };
   const piuSopravento = (A, B) => toWF(A.S.x, A.S.y)[1] < toWF(B.S.x, B.S.y)[1] ? A : B;
-  // ritorna { cede: la barca che deve cedere, regola: 10-13 }
+  // 21.2: sta scontando (solo il giocatore, giriPenalita); 21.1: dopo lo sparo è ancora oltre la linea e deve tornare (b.ocs). 0 se nessuna delle due
+  const subordinata = b => b.sconta ? 21.2 : (R.t >= 0 && b.ocs && b.fin === null && !b.dnf) ? 21.1 : 0;
+  // ritorna { cede: la barca che deve cedere, regola: 10-13, 21.1 o 21.2 }
   function chiCede(A, B){
     const tA = tackOf(A), tB = tackOf(B);
     if (!R.lv2){ // 1a: come prima della 1.0.40
       if (tA !== tB) return { cede: tA < 0 ? A : B, regola: 10 };
       return { cede: piuSopravento(A, B), regola: 11 };
+    }
+    if (R.giri){ // 1.0.66 (docs/PROPOSTA-REGOLA-21-2.md): 21.1 chi torna dietro la linea dopo la partenza anticipata e 21.2 chi sconta una penalità lasciano strada a chi non lo fa; fra le due la Sezione A non vale
+      const sa = subordinata(A), sb = subordinata(B);
+      if ((sa !== 0) !== (sb !== 0)) return { cede: sa ? A : B, regola: sa || sb };
     }
     if (A.virando !== B.virando) return { cede: A.virando ? A : B, regola: 13 };                 // 13: chi vira cede a chi non vira
     if (A.virando) return { cede: latDi(A, B) < 0 ? B : A, regola: 13 };                           // entrambe in virata: cede quella a sinistra dell'altra, o quella dietro
@@ -531,24 +537,26 @@
   // Solo nelle regate con R.giri e solo per il giocatore. Ogni contatto con colpa dà un debito di due giri (R.need). Un giro è fatto quando, negli ultimi GIRO_MAX_S secondi,
   // la prua ha ruotato di almeno GIRO_GRADI nello stesso verso (senza tornare indietro di più di GIRO_VERSO gradi dal picco) e ci sono state almeno una virata e una strambata.
   // Un giro nel verso opposto al precedente fa ricominciare il conto (R.done = 1). All'arrivo ogni giro mancante costa GIRO_SEC secondi (ripiego dichiarato: niente squalifica).
-  const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_MAX_S = 20, GIRO_SEC = 15; // ipotesi nostre: isteresi del verso (disturbo delle onde), tempo massimo di un giro, ripiego per giro non fatto
+  const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_MAX_S = 20, GIRO_SEC = 15, GIRO_INIZIO = 120; // ipotesi nostre (GIRO_INIZIO, 1.0.66: gradi in GIRO_MAX_S secondi da cui si sta scontando la penalità, regola 21.2): isteresi del verso (disturbo delle onde), tempo massimo di un giro, ripiego per giro non fatto
   function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, cum: 0, buf: [], last: -1e9 }; }
   function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata."; }
-  function giriDebito(n){ R.need += n === undefined ? 2 : n; giroVia(); giriMsg(); } // la finestra riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
+  function giriDebito(n){ R.need += n === undefined ? 2 : n; giroVia(); giriMsg(); if (R.boats[0].sconta) R.boats[0].scontaT = R.t; } // la finestra riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
   function giriPenalita(){
     const me = R.boats[0], S = me.S, g = R.giro;
-    if (!g || R.need <= R.done || me.fin !== null || me.dnf) return;
-    if (S.capsized){ giroVia(); return; }
+    if (!g || R.need <= R.done || me.fin !== null || me.dnf){ me.sconta = false; return; }
+    if (S.capsized){ giroVia(); me.sconta = false; return; }
     g.cum += norm180(S.h - g.h); g.h = S.h;
     const gy = S.gybesC + S.gybesV;
     if (R.t - g.last >= 0.5){ g.buf.push([R.t, g.cum, S.tacks, gy]); g.last = R.t; while (g.buf.length && R.t - g.buf[0][0] > GIRO_MAX_S) g.buf.shift(); }
     const o = g.buf[0], net = o ? g.cum - o[1] : 0;
+    if (me.sconta){ if (R.t - me.scontaT > GIRO_MAX_S){ me.sconta = false; giroVia(); } } // 21.2: venti secondi senza finire un giro e non si sta più scontando
+    else if (Math.abs(net) >= GIRO_INIZIO){ me.sconta = true; me.scontaT = R.t; }
     if (!o || Math.abs(net) < GIRO_GRADI || S.tacks <= o[2] || gy <= o[3]) return;
     const v = Math.sign(net); let pk = 0;
     for (const e of g.buf){ const x = (e[1] - o[1]) * v; if (x > pk) pk = x; else if (pk - x > GIRO_VERSO) return; } // il verso è cambiato
     if (pk - net * v > GIRO_VERSO) return;
     R.done = R.giroDir && v !== R.giroDir ? 1 : R.done + 1; R.giroDir = v;
-    giroVia(); giriMsg();
+    giroVia(); giriMsg(); me.scontaT = R.t; if (R.done >= R.need) me.sconta = false;
     toast(R.done >= R.need ? "Penalità scontata" : "Giro fatto: ne manca ancora " + (R.need - R.done));
     if (R.done >= R.need) R.penList.push("Tu, penalità scontata: " + R.need + (R.need === 1 ? " giro" : " giri") + ".");
   }
@@ -646,7 +654,9 @@
     return ({ 10: v("eri", "era") + " mure a sinistra e " + v("dovevi", "doveva") + " lasciare strada a chi era mure a dritta",
               11: v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano",
               12: v("eri", "era") + " dietro, con le stesse mure e senza essere affiancat" + v("o", "a") + ": " + v("dovevi", "doveva") + " lasciare strada a chi stava davanti",
-              13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non " + v("eri", "era") + " di nuovo di bolina" })[cc.regola] + (R.lv2 ? " (regola " + cc.regola + ")" : "");
+              13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non " + v("eri", "era") + " di nuovo di bolina",
+              21.1: v("stavi", "stava") + " tornando dietro la linea dopo una partenza anticipata e " + v("dovevi", "doveva") + " lasciare strada a chi non lo faceva",
+              21.2: v("stavi", "stava") + " scontando una penalità e " + v("dovevi", "doveva") + " lasciare strada a chi non la scontava" })[cc.regola] + (R.lv2 ? " (regola " + cc.regola + ")" : "");
   }
   function contacts(){
     const bs = R.boats;
