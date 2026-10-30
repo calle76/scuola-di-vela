@@ -47,7 +47,7 @@ MANO = """async (primaDelVia) => {
   return { autoPrima: a, onPrima: o1, autoDopo: ses.auto, onDopo: ses.on, righe: ses.lines.length, haRegata: ses.lines.some(l => / registrazione_automatica/.test(l)),
     nuovi: regPezzi.filter(p => !vecchi.includes(p.id)).map(p => ({ n: p.n, fine: p.fine })) };
 }"""
-# costo (metodo del 29 ottobre 2026, secondo tentativo: i rapporti per coppia variavano da −5% a +37% sulla stessa regata): stessa regata e stesso seme in ogni corsa, 10 ripetizioni per modalità alternate nella stessa pagina, rapporto fra le mediane; «spenta» = la registrazione automatica crede di aver già registrato quella regata (sesAutoR = R)
+# costo (metodo del 29 ottobre 2026, secondo tentativo: i rapporti per coppia variavano da −5% a +37% sulla stessa regata): stessa regata e stesso seme in ogni corsa, 20 ripetizioni per modalità (erano 10: un giro di Ale del 30 ottobre diede +8,4% con la macchina occupata, altre 5 misure da 0,0% a +2,2%) alternate nella stessa pagina, rapporto fra le mediane; «spenta» = la registrazione automatica crede di aver già registrato quella regata (sesAutoR = R)
 COSTO = """async ([giri]) => { const sv = __sv, dt = 1 / 60, out = [];
   for (let g = 0; g < giri; g++){ const c = {};
     for (const modo of (g % 2 ? ["on", "off"] : ["off", "on"])){
@@ -157,7 +157,7 @@ async def main():
         await b.close()
     async with async_playwright() as p:
         b = await getattr(p, os.environ.get("BROWSER", "chromium")).launch()
-        ctx, pg, errs = await pagina(b); C = await pg.evaluate(COSTO, [10]); await ctx.close(); await b.close()
+        ctx, pg, errs = await pagina(b); C = await pg.evaluate(COSTO, [20]); await ctx.close(); await b.close()
     on, off = statistics.median(c["on"] for c in C), statistics.median(c["off"] for c in C)
     chk("E2 passo di simulazione al massimo +3%%: mediane di %d corse per modalità, accesa %.0f µs, spenta %.0f µs per passo (%+.1f%%; minimi %.0f e %.0f µs, %+.1f%%)" % (
         len(C), on, off, 100 * (on / off - 1), min(c["on"] for c in C), min(c["off"] for c in C), 100 * (min(c["on"] for c in C) / min(c["off"] for c in C) - 1)), on <= off * 1.03)

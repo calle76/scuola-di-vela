@@ -113,6 +113,7 @@ async def k5(b):
         if url == BASE: tiles = re.sub(r"⚑\nRegata nei salti di vento\nDa fare\n+[^\n]*\n", "", tiles)  # 1.0.28: riquadro voluto del livello 2, nel menu del gioco libero
         if url == BASE: tiles = tiles.replace("Andature, mure e precedenze", "Andature e filetti").replace("le mure e chi lascia strada;", "le mure;")  # 1.0.37: titolo e descrizione della lezione 3, voluti
         if url == BASE: tiles = re.sub(r"Tornei\n⚑\nTorneo dell'1b\nDa fare\n", "", tiles).replace("Altri tipi di barca.", "I tornei, altri tipi di barca.")  # 1.0.34: torneo dell'1b, voluto
+        if url == BASE: foot = re.sub(r"Regate registrate\s+", "", foot)  # 1.0.60: link voluto «Regate registrate» nel piede del menu
         if url != BASE:
             tiles = re.sub(r"Lezione (\d): ", r"Ripasso \1 · ", tiles)
             tiles = tiles.replace("Ripasso 5 · Virata e strambata\n5 domande", "Ripasso 5 · Virata e strambata\n6 domande")
@@ -122,7 +123,7 @@ async def k5(b):
             chk(await modo(pg) == "libero", "K5: senza chiavi si parte in gioco libero")
             chk(MODO not in await pg.evaluate(LEGGI), "K5: aprire il menu non scrive la modalità")
         await ctx.close()
-    chk(testi[0] == testi[1], "K5: riquadri e piede del menu uguali alla 1.0.1 (salvo i due testi voluti della 1.0.2, il ripasso 5 con 6 domande della 1.0.20 e i riquadri voluti della 1.0.28, 1.0.34 e 1.0.37)")
+    chk(testi[0] == testi[1], "K5: riquadri e piede del menu uguali alla 1.0.1 (salvo i due testi voluti della 1.0.2, il ripasso 5 con 6 domande della 1.0.20 e i riquadri voluti della 1.0.28, 1.0.34 e 1.0.37 e il link della 1.0.60)")
 
 async def main():
     global QUIZ_JS
