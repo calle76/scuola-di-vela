@@ -1,0 +1,48 @@
+# Proposta: le lezioni del 2a (regolamento, segnali, giri di penalità)
+
+31 ottobre 2026. **Fermata 1: solo documento, nessun codice, nessun testo di lezione.** Le fette 1-5 del 2a hanno messo nel motore (solo nella «Regata con i giri di penalità») i giri di penalità, la boa toccata, le bandiere, la 21.1/21.2 e i giri degli avversari. Questa proposta dice **cosa deve insegnare la scuola** su quel materiale, da dove vengono le affermazioni e come si verifica che la lezione funzioni. Rinvia al `PROPOSTA-RIORGANIZZAZIONE.md` per il dove: tutte le lezioni vanno nella **scuola** (livello 0), con la barca dell'1b, e si scrivono quando la scuola si riscrive (§5 passo 3), non prima: scriverle ora sulla struttura vecchia (1a/1b, sei lezioni) vorrebbe dire riscriverle.
+
+## 1. Cosa insegnare (sette lezioni brevi)
+
+Ogni lezione: una pagina di teoria con il disegno (come «Le mure e le precedenze» di oggi, lezione 3) e, dove serve, una prova pratica. Le regole si **parafrasano** e si cita il numero (principio 5); il testo di ogni lezione si scrive solo dopo aver riletto la regola nel PDF (`fonti-pdf/RRS-2025-2028-World-Sailing.pdf`, F15), come da `CLAUDE.md`.
+
+| # | Lezione | Regole F15 | Che cosa vede/fa il giocatore | Il motore c'è? |
+|---|---|---|---|---|
+| 1 | Mure opposte: chi ha la precedenza | 10 | Disegno con due barche; poi regata con il semaforo acceso (rosso/verde) | Sì (1.0.40, `chiCede`) |
+| 2 | Stesse mure: sovrapposte e libere dietro | 11, 12 | Disegno con la linea al traverso della poppa; semaforo in regata | Sì |
+| 3 | Chi vira lascia strada | 13 | Disegno; regata con avversari che virano vicino | Sì |
+| 4 | Evitare il contatto e non togliere spazio | 14, 15, 16 | **Solo teoria** (nel gioco non c'è la penalità a chi aveva ragione ma poteva evitare) | Dichiarato: no |
+| 5 | I segnali di partenza | 26, 29.1 | Disegno delle bandiere (classe, P, X, blu) e prova: una partenza con 5 minuti e la barca giuria in vista, poi un quiz | Sì (1.0.65) |
+| 6 | La partenza anticipata | 29.1, 21.1 | Prova: partire in anticipo di proposito, tornare dietro la linea, lasciare strada | Sì (1.0.65, 1.0.66) |
+| 7 | Toccare una boa e i giri di penalità | 31, 44.1, 44.2, 21.2 | Prova: toccare la boa, fare i giri nello stesso verso con virata e strambata; poi vedere che chi gira lascia strada | Sì (1.0.61-1.0.67) |
+
+**Non si insegna (e il perché):** spazio alla boa (18) e penalità di partenza I, Z, U, nera (30) non sono nel motore e `REGOLE-DI-REGATA.md` le dà come «da rimandare»; la 17 e la 23 sono marginali per questo gioco. Insegnare una regola che il gioco poi non applica sarebbe una promessa non mantenuta (principio 4): se si vuole citarle, una riga di glossario «esiste, non è nel gioco».
+
+## 2. Come si fanno le prove senza una barca di scena
+
+Il gioco non ha una barca ferma in un punto, fatta apposta per una lezione: l'unico modo di avere altre barche è la regata. Quindi le prove delle lezioni 1-3 e 7 usano la **regata con gli avversari e il semaforo acceso**, con un obiettivo da leggere nel pannello («passa 3 volte da mure a dritta lasciando strada»), non una scena costruita. Costa poco e si basa su ciò che c'è; il limite è che la situazione non si ripete a comando. Una barca di scena sarebbe una funzione nuova (e collaudi nuovi): **non la propongo ora**, la tengo come ipotesi se le prove in regata non bastano.
+
+## 3. Criteri (soglie scritte prima, attese nostre)
+
+- **L1, le fonti:** per ogni lezione, prima del testo, una riga con la regola e il paragrafo del PDF letto. 7 lezioni su 7. Dove la regola ha eccezioni che il gioco non applica (per esempio la 18 nella 10-12 alla boa) si scrive.
+- **L2, la lezione dice quello che fa il gioco:** per ogni frase della teoria che descrive una situazione del gioco, un collaudo con il pilota che la provoca e controlla il messaggio del gioco (come `collaudo_regola21.py`): **100%** delle frasi coperte, e se non si può provocare la frase si toglie.
+- **L3, le prove sono raggiungibili:** il pilota di prova completa ogni prova pratica: **almeno 25 su 30 semi**; dove il pilota non basta (precedenze con avversari) si usa il metro di `collaudo_regola21.py` sul semaforo.
+- **L4, pagina senza `#collaudo`:** ogni lezione si apre e si finisce da menu come la carica un giocatore, senza errori di pagina, anche con Firefox.
+- **L5, pannello** a 1360×650 senza pixel di eccesso con il testo più lungo.
+- **L6, il testo è leggibile:** frasi corte; ogni termine nuovo (sopravento, sottovento, sovrapposta, libera dietro) nel glossario, 100%.
+
+## 4. Rischi
+
+- **Troppa teoria in una volta** (già segnalato nella riorganizzazione): sette lezioni brevi, una pagina ciascuna.
+- **Le prove in regata sono lunghe** e le situazioni non si ripetono: il giocatore potrebbe non vedere mai la situazione che la lezione spiega. Rimedio: obiettivi di conteggio sul pannello, e se non bastano la barca di scena.
+- **Le fonti sono in inglese** e la traduzione italiana ufficiale non c'è: i termini italiani (mure, sopravento, «libera dietro») sono quelli del glossario del gioco; la corrispondenza con le definizioni F15 si scrive nelle note, non nella lezione.
+- **Le regole nel gioco sono più semplici del regolamento** (14, 15, 16, 18, 30): ogni lezione dichiara cosa il gioco fa e cosa no.
+
+## 5. Quando
+
+Dopo la pulizia del codice e prima delle medaglie (`PROPOSTA-RIORGANIZZAZIONE.md` §5, passo 3). Prima servono le tre cose decise da Ale il 31 ottobre: giocare e dare i test, l'elenco di ciò che manca alla Scuola e a Deriva, la pulizia del codice.
+
+## 6. Da decidere (Ale)
+
+1. Le sette lezioni vanno bene come elenco, o ne togli/aggiungi? In particolare la 4 (solo teoria, dichiarata).
+2. Prove in regata con il semaforo (senza barca di scena) per cominciare: va bene?
