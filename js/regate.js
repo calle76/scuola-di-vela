@@ -575,7 +575,7 @@
   // (e lontano da boe e linea d'arrivo) gira: la sequenza di prue sta in giroAI. Se una barca arriva a meno di GIRO_AI_STOP lunghezze il giro si sospende e riparte da zero. Mentre gira
   // b.sconta è vero, quindi vale per lui la 21.2 (chiCede). Un giro è fatto con 360° nello stesso verso, una virata e una strambata (come per il giocatore). Semplificazione dichiarata: i giri
   // cominciano solo dopo lo sparo (il regolamento li vuole «appena possibile», anche prima).
-  const GIRO_AI_VIA = 4, GIRO_AI_STOP = 2, GIRO_AI_ERR = 12, GIRO_AI_LONTANO = 25; // lunghezze, lunghezze, gradi (anticipo sulla prua successiva), metri da boe e arrivo: ipotesi nostre
+  const GIRO_AI_VIA = 4, GIRO_AI_STOP = 2, GIRO_AI_ERR = 12, GIRO_AI_LONTANO = 25, GIRO_AI_LARGA = 80, GIRO_AI_LENTA = 1.5; // lunghezze, lunghezze, gradi (anticipo sulla prua successiva), metri da boe e arrivo, gradi dal vento e m/s sotto i quali si poggia per prima: ipotesi nostre
   function giroLibero(b, lung){ // nessun'altra barca (ancora in regata, non scuffiata) entro lung lunghezze
     for (const o of R.boats) if (o !== b && o.fin === null && !o.dnf && !o.S.capsized && Math.hypot(o.S.x - b.S.x, o.S.y - b.S.y) < lung * BOAT.length) return false;
     return true;
@@ -589,10 +589,12 @@
     if (!(b.gDebt > 0) || b.fin !== null || b.dnf || R.t < 0 || b.leg < 1 || b.ocs){ if (b.gCum != null){ b.gCum = null; b.sconta = false; } return null; }
     if (b.gCum == null){ // non sta girando: comincia solo se la via è libera
       if (!giroLibero(b, GIRO_AI_VIA) || !giroLontano(b)) return null;
-      b.gV = b.gV || (sgn(norm180(twd - s.h)) || b.side); // il verso è quello che si ottiene orzando, lo stesso per tutta la penalità
+      const sd = sgn(norm180(twd - s.h)) || b.side; // 1.0.68: il verso lo sceglie la barca all'inizio e resta lo stesso per tutta la penalità (44.2 non dice quale): da un'andatura larga o con poca velocità poggia per prima (strambata, poi virata: prende velocità), altrimenti orza per prima (virata, poi strambata)
+      b.gV = b.gV || (Math.abs(norm180(twd - s.h)) >= GIRO_AI_LARGA || s.u < GIRO_AI_LENTA ? -sd : sd);
       b.gCum = 0; b.gH = s.h; b.gTk = 0; b.gGy = 0; b.gS = sgn(norm180(twd - s.h)); b.sconta = true;
     } else if (!giroLibero(b, GIRO_AI_STOP)){ b.gCum = null; b.sconta = false; return null; }
     b.gCum += norm180(s.h - b.gH) * b.gV; b.gH = s.h;
+    if (s.u < 0.6) return null; // 1.0.68: quasi ferma il timone non governa: la guida normale la fa ripartire, poi il giro riprende (visto in collaudo: 26 s fermi a 44° dal vento)
     const sg = sgn(norm180(twd - s.h)); // gli avversari non hanno i contatori di virate e strambate del giocatore: si contano qui, dal cambio di mura (con il vento davanti: virata, dietro: strambata)
     if (sg !== 0 && b.gS !== 0 && sg !== b.gS){ if (Math.abs(norm180(twd - s.h)) < 90) b.gTk++; else b.gGy++; }
     if (sg !== 0) b.gS = sg;

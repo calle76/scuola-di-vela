@@ -63,3 +63,7 @@ Se mi dici «come proponi», parto dalla fermata 2 con la sequenza di prue sopra
 ## Esito (31 ottobre 2026, 1.0.67)
 
 Decisioni di Ale: dopo lo sparo, «semplificata e dichiarata» (il regolamento li vuole «appena possibile», anche prima del via: F15 44.1 e 44.2 letti nel PDF); procedi. Fatta e misurata, vedi `CHANGELOG.md`. Soglie non cambiate; cambiati nel collaudo, dichiarato: G10b (stessa regata, uguale al bit fino al primo giro di un avversario, perché 18 regate su 20 hanno un debito) e la tolleranza di campionamento del metro di G1 (5°, dopo aver visto 31 giri su 134 a 356,9-360°). G2 95% (soglia 80%), G4 mediana 22,2 s (fascia 12-30 s), tutto il resto entro soglia. Due precisazioni al testo sopra: gli avversari contano da soli virate e strambate (non hanno i contatori del giocatore) e la distanza «ben lontano» per cominciare vale anche rispetto alle boe e alla linea d'arrivo (25 m).
+
+## Aggiornamento 1.0.68 (31 ottobre 2026)
+
+Il punto 3 («sempre orzando per prima») è sostituito: il verso lo sceglie l'avversario (poggia per prima da andature larghe o a poca velocità), perché la 44.2 non lo prescrive. Vedi `CHANGELOG.md`, 1.0.68.

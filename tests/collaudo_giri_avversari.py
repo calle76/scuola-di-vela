@@ -32,12 +32,12 @@ GRIGLIA = """async ([seme, quale]) => { const sv = __sv; __seed(seme); sv.simTim
     me.sconta = quale === 'entrambe'; ai.sconta = true; const r = chiCede(me, ai); ai.sconta = false; me.sconta = false; const r0 = chiCede(me, ai);
     out.push({ cede: r.cede === me ? 'me' : 'ai', regola: r.regola, senza: r0.cede === me ? 'me' : 'ai', regola0: r0.regola }); }
   return out; }"""
-ARRIVO = """async ([seme]) => { const sv = __sv, dt = 1 / 60; __seed(seme); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]); const R = sv.R, me = R.boats[0], b = R.boats[1]; let dato = false, pen0 = null;
+ARRIVO = """async ([seme]) => { const sv = __sv, dt = 1 / 60; __seed(seme); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]); const R = sv.R, me = R.boats[0], b = R.boats[1]; let dato = false, pen0 = null, f0 = 0;
   while (R.t < 1500 && b.fin === null && !b.dnf){
     if (me.fin === null && !me.dnf) sv.pilota(dt); else sv.ctl.tiller = 0;
-    if (!dato && b.leg === R.marks.length + 1){ const y = toWF(b.S.x, b.S.y)[1]; if (y < 0 && y > -22){ b.gDebt = 2; pen0 = b.pen; dato = true; } }
+    if (!dato && b.leg === R.marks.length + 1){ const y = toWF(b.S.x, b.S.y)[1]; if (y < 0 && y > -22){ b.gDebt = 2; pen0 = b.pen; f0 = b.gFatti || 0; dato = true; } }
     sv.run(dt, 1); }
-  return { dato, fin: b.fin !== null, dpen: b.pen - (pen0 === null ? 0 : pen0), voce: R.penList.filter(x => x.startsWith('La ' + b.name + ', giri di penalità non fatti (2): +30')).length, debito: b.gDebt || 0 }; }"""
+  return { dato, fin: b.fin !== null, dpen: b.pen - (pen0 === null ? 0 : pen0), voce: R.penList.filter(x => x.startsWith('La ' + b.name + ', giri di penalità non fatti (2): +30')).length, debito: b.gDebt || 0, fatti: (b.gFatti || 0) - f0 }; }"""
 # per la regata dei giri: istantanee ogni 5 s di tutte le barche, e l'istante del primo giro di un avversario (sconta)
 SNAP = """async ([n, seme0]) => {
   const sv = __sv, dt = 1 / 60, out = [];
@@ -169,6 +169,23 @@ async def main():
         chk("G5 segmenti con un avversario fermo (u < 0,3) per più di 10 s: %d su %d (soglia 5%%)" % (pianta, nseg), nseg >= 20 and pianta <= 0.05 * nseg)
         scuff = sum(1 for k, s in A if s["scuff"])
         chk("G6 segmenti con scuffia: %d su %d (soglia 5%%)" % (scuff, nseg), nseg >= 20 and scuff <= 0.05 * nseg)
+        # G12: il verso scelto. Dai campioni: all'inizio del segmento |twa| e u; dopo 1 s |twa| è cresciuto (poggia) o calato (orza)
+        seg = []; ripresi = 0; vicini = 0
+        for k, r in enumerate(R):
+            for i, log in enumerate(r["log"]):
+                m = 0; fine_prec = None
+                while m < len(log):
+                    if not log[m][4]: m += 1; continue
+                    a_ = m
+                    while m < len(log) and log[m][4]: m += 1
+                    cont = fine_prec is not None and all(log[x][5] > 0 for x in range(fine_prec, a_ + 1))  # il debito non si è mai azzerato dall'ultimo segmento: il verso è quello già scelto (44.2)
+                    fine_prec = m
+                    if cont: ripresi += 1
+                    elif abs(log[a_][2]) > 160: vicini += 1  # partenza vicino alla poppa: l'angolo cresce e poi cala per la strambata, il metro non decide
+                    elif m - a_ > 10 and abs(log[a_][2]) >= 30: seg.append((log, a_))  # niente partenze a meno di 30° dal vento: nel tempo della finestra (1 s) la prua l'ha già passato e l'angolo ricomincia a crescere
+        larga = [(abs(l[a_][2]) >= 80 or l[a_][6] < 1.5, abs(l[a_ + 10][2]) - abs(l[a_][2])) for l, a_ in seg]
+        ok12 = sum(1 for lg, d in larga if (d > 0) == lg)
+        chk("G12 il verso scelto: dall'andatura larga (>= 80° dal vento) o con poca velocità (< 1,5 m/s) l'angolo dal vento cresce nel primo secondo (si poggia), altrimenti cala (si orza): %d segmenti su %d (di cui poggiando %d; esclusi %d segmenti ripresi nel verso già scelto e %d partiti a più di 160° dal vento)" % (ok12, len(larga), sum(1 for lg, d in larga if lg), ripresi, vicini), len(larga) >= 20 and ok12 == len(larga), "non tornano (twa iniziale, u iniziale, variazione): %s" % [(round(l[a_][2]), round(l[a_][6], 2), round(abs(l[a_ + 10][2]) - abs(l[a_][2]), 1)) for (l, a_), (lg, d) in zip(seg, larga) if (d > 0) != lg])
         durante = sum(1 for r in R for i in range(3) for e in r["inc"][i] if e[2])
         extra = sum(e[1] for r in R for i in range(3) for e in r["inc"][i] if e[2])
         chk("G7 giri durante i quali l'avversario prende un altro debito: %d segmenti su %d (soglia 15%%), giri di debito in più %.2f a regata (soglia 0,3)" % (durante, nseg, extra / n), nseg >= 20 and durante <= 0.15 * nseg and extra / n < 0.3)
@@ -181,8 +198,8 @@ async def main():
         chk("G8b scontano tutti e due: valgono le regole 10-13 (%d posizioni)" % sum(len(g) for g in G8b), all(10 <= c["regola"] <= 13 for g in G8b for c in g))
         # ---- G9 ----
         G9 = [await pg.evaluate(ARRIVO, [900 + k]) for k in range(10)]
-        val = [g for g in G9 if g["dato"] and g["fin"]]
-        chk("G9 avversario che arriva con due giri da fare: +30 s e voce nell'elenco in %d casi su %d possibili (10 prove)" % (sum(1 for g in val if g["dpen"] == 30 and g["voce"] == 1 and g["debito"] == 0), len(val)), len(val) >= 7 and all(g["dpen"] == 30 and g["voce"] == 1 for g in val))
+        val = [g for g in G9 if g["dato"] and g["fin"] and g["fatti"] == 0]  # chi ha fatto i giri prima di arrivare (la rotta lo ha riportato a più di 25 m dalla linea) non è un caso di giri mancanti
+        chk("G9 avversario che arriva con due giri da fare: +30 s e voce nell'elenco in %d casi su %d possibili (10 prove)" % (sum(1 for g in val if g["dpen"] == 30 and g["voce"] == 1 and g["debito"] == 0), len(val)), len(val) >= 7 and all(g["dpen"] == 30 and g["voce"] == 1 for g in val), "non validi: %s" % [(i, g) for i, g in enumerate(G9) if g not in val or g["dpen"] != 30 or g["voce"] != 1])
         chk("A0 nessun errore di pagina", not errs, str(errs[:2]))
         await ctx.close()
         # ---- G10 ----
