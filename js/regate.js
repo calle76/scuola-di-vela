@@ -58,7 +58,9 @@
     { title: "Regata a bastone", desc: "Tre avversari, vento costante: partenza, bolina, poppa, arrivo.", wind: 0, tws: 10, gusts: 0 },
     { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 },
     // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): barca dell'1b, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
-    { title: "Regata nei salti di vento", where: "salti di vento", desc: "Barca dell'1b, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true }
+    { title: "Regata nei salti di vento", where: "salti di vento", desc: "Barca dell'1b, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true },
+    // 1.0.61 (docs/PROPOSTA-LIVELLO-2A.md, fetta 1): livello 2a, due giri al posto dei 15 s per il giocatore; resta fuori da meriti e carriera
+    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: se lasci male la strada, due giri come nelle regate vere, ciascuno con una virata e una strambata.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true }
   ];
   const RACES1 = RACES.filter(rc => !rc.lv2); // le regate dell'1a (stessi indici: quelle dell'1b, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;
@@ -136,7 +138,7 @@
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const up = rc.up || MARK_UP, tri = !!rc.tri; // tri: triangolo equilatero di lato up, due boe (1.0.55)
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, giri: !!rc.giri, need: 0, done: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -454,7 +456,7 @@
       else if (k < 0 && b.me) roundToast(-1);
       else if (k > 0 && b.me) toast("Hai rimediato: ora girala lasciandola a sinistra");
     } else if (b.leg === R.marks.length + 1){
-      if (prev < 0 && wy >= 0 && onLine){ b.fin = R.t + b.pen; if (b.me) toast("Arrivato!"); }
+      if (prev < 0 && wy >= 0 && onLine){ if (b.me && R.giri) giriMancanti(b); b.fin = R.t + b.pen; if (b.me) toast("Arrivato!"); }
     }
   }
 
@@ -521,6 +523,37 @@
     if (lat === 0) return { cede: piuSopravento(A, B), regola: 11 };
     return { cede: lat * tA > 0 ? B : A, regola: 11 };                                             // B sta dal lato delle mure di A: B è sopravento
   }
+  // ---- giri di penalità (livello 2a, 1.0.61, docs/PROPOSTA-LIVELLO-2A.md; F15 44.1 e 44.2) ----
+  // Solo nelle regate con R.giri e solo per il giocatore. Ogni contatto con colpa dà un debito di due giri (R.need). Un giro è fatto quando, negli ultimi GIRO_MAX_S secondi,
+  // la prua ha ruotato di almeno GIRO_GRADI nello stesso verso (senza tornare indietro di più di GIRO_VERSO gradi dal picco) e ci sono state almeno una virata e una strambata.
+  // Un giro nel verso opposto al precedente fa ricominciare il conto (R.done = 1). All'arrivo ogni giro mancante costa GIRO_SEC secondi (ripiego dichiarato: niente squalifica).
+  const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_MAX_S = 20, GIRO_SEC = 15; // ipotesi nostre: isteresi del verso (disturbo delle onde), tempo massimo di un giro, ripiego per giro non fatto
+  function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, cum: 0, buf: [], last: -1e9 }; }
+  function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata."; }
+  function giriDebito(){ R.need += 2; giroVia(); giriMsg(); } // la finestra riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
+  function giriPenalita(){
+    const me = R.boats[0], S = me.S, g = R.giro;
+    if (!g || R.need <= R.done || me.fin !== null || me.dnf) return;
+    if (S.capsized){ giroVia(); return; }
+    g.cum += norm180(S.h - g.h); g.h = S.h;
+    const gy = S.gybesC + S.gybesV;
+    if (R.t - g.last >= 0.5){ g.buf.push([R.t, g.cum, S.tacks, gy]); g.last = R.t; while (g.buf.length && R.t - g.buf[0][0] > GIRO_MAX_S) g.buf.shift(); }
+    const o = g.buf[0], net = o ? g.cum - o[1] : 0;
+    if (!o || Math.abs(net) < GIRO_GRADI || S.tacks <= o[2] || gy <= o[3]) return;
+    const v = Math.sign(net); let pk = 0;
+    for (const e of g.buf){ const x = (e[1] - o[1]) * v; if (x > pk) pk = x; else if (pk - x > GIRO_VERSO) return; } // il verso è cambiato
+    if (pk - net * v > GIRO_VERSO) return;
+    R.done = R.giroDir && v !== R.giroDir ? 1 : R.done + 1; R.giroDir = v;
+    giroVia(); giriMsg();
+    toast(R.done >= R.need ? "Penalità scontata" : "Giro fatto: ne manca ancora " + (R.need - R.done));
+    if (R.done >= R.need) R.penList.push("Tu, penalità scontata: " + R.need + (R.need === 1 ? " giro" : " giri") + ".");
+  }
+  function giriMancanti(b){ // il giocatore taglia l'arrivo con il debito aperto
+    const m = R.need - R.done; if (m <= 0) return;
+    b.pen += GIRO_SEC * m; R.done = R.need;
+    R.penList.push("Tu, giri di penalità non fatti (" + m + "): +" + GIRO_SEC * m + " s al tempo.");
+  }
+
   // ---- semaforo e contatti ----
   // semaforo di precedenza sullo scafo del giocatore (facoltativo, solo 1b): R.sem = "rosso" (devi lasciare strada), "verde" (hai la precedenza) o null.
   // Compare con un'altra barca (non finita né scuffiata) entro SEM_ON m che si avvicina; resta SEM_TENUTA s dopo l'ultimo avvicinamento, fino a SEM_OFF m.
@@ -564,7 +597,7 @@
       // mure di ciascuna col vento nel suo punto (1b; nell'1a, difetto noto dalla 1.0.1, col vento del giocatore)
       const cc = chiCede(A, B), guilty = cc.cede;
       const why = motivoContatto(cc, guilty);
-      if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo
+      if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri && guilty.me) giriDebito(); else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
       for (const o of [A, B]){ o.S.u *= 0.6; }
       const dx = mtv ? mtv.nx : (A.S.x - B.S.x) / (d || 1), dy = mtv ? mtv.ny : (A.S.y - B.S.y) / (d || 1);
       const push = mtv ? mtv.pen / 2 + 0.15 : (4.6 - d) / 2 + 0.3; // 1b: si separano di 0,3 m fra gli scafi
@@ -577,8 +610,8 @@
       if (A.me || B.me){
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
-        toast(guilty.me ? "Contatto! Penalità " + (R.tor ? "+1 punto" : "+15 s") : "Contatto: penalità a " + other.name);
-        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.tor ? ". Penalità di 1 punto sul punteggio della regata." : ". Penalità di 15 secondi.");
+        toast(guilty.me ? "Contatto! Penalità " + (R.tor ? "+1 punto" : R.giri ? "due giri" : "+15 s") : "Contatto: penalità a " + other.name);
+        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.tor ? ". Penalità di 1 punto sul punteggio della regata." : R.giri && guilty.me ? ". Penalità: due giri nello stesso verso, ciascuno con una virata e una strambata." : ". Penalità di 15 secondi.");
       }
     }
   }
@@ -606,6 +639,7 @@
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
     if (R.lv2) aggiornaVirate();
     contacts();
+    if (R.giri) giriPenalita();
     if (R.lv2) semaforo();
     if (R.t >= 0 && Math.floor(R.t * 2) !== Math.floor(prevT * 2)) for (const b of R.boats){ // strada fatta ogni 0,5 s, per i distacchi
       const p = b.fin === null ? strada(b) : null; if (p !== null) (b.hist = b.hist || []).push([R.t, p]); }
