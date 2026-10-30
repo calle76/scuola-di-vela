@@ -38,7 +38,7 @@ Ogni riga: cosa dice la regola (parafrasi), cosa fa il gioco oggi (con il punto 
 | **15, 16** Acquisire la precedenza, cambiare rotta | Chi acquisisce la precedenza o cambia rotta deve lasciare all'altra lo spazio per scansarsi | L'aggressiva smette di stringere sotto 15 m (`AGGRO_OFF`): «lo spirito delle regole 14 e 16» (`PROGETTO.md`) | — |
 | **18** Spazio alla boa | Nella zona (3 lunghezze), chi è all'esterno lascia spazio a chi è all'interno; ci sono eccezioni (per esempio di bolina fra mure opposte) | Non esiste | Complessa: da rimandare |
 | **21.1** Chi torna dopo una partenza anticipata | Lascia strada a chi non lo sta facendo, finché non è tornata | 1.0.66: nella regata dei giri, anche per gli avversari | — |
-| **21.2** Chi sconta una penalità | Lascia strada a chi non la sta scontando | 1.0.66: nella regata dei giri, da 120° di rotazione con debito aperto | Per gli avversari (non fanno giri) |
+| **21.2** Chi sconta una penalità | Lascia strada a chi non la sta scontando | 1.0.66: nella regata dei giri, da 120° di rotazione con debito aperto | Per gli avversari: dalla 1.0.67 nella regata dei giri anche loro scontano e cedono (`PROPOSTA-GIRI-AVVERSARI.md`) |
 | **22** Barca scuffiata | Se possibile, le altre la evitano | I contatti con barche scuffiate non si contano (`contacts()`) | — |
 | **23.1** Chi non è in regata | Se ragionevolmente possibile, non intralcia chi è in regata | Zona di sosta dopo l'arrivo (0.21.4) | — |
 

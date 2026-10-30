@@ -27,9 +27,9 @@ PROVA = """async ([caso, dir, seme]) => {
 CONTATTO = """async ([lato, seme]) => {
   const sv = __sv, dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change')); __seed(seme); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
   const R = sv.R, me = R.boats[0], o = R.boats[1]; while (R.t < 30){ sv.pilota(dt); sv.run(dt, 1); }
-  const needPrima = R.need, penMePrima = me.pen, penOPrima = o.pen, listaPrima = R.penList.length; o.S.h = me.S.h; o.S.u = me.S.u; o.S.x = me.S.x + lato; o.S.y = me.S.y;   // lato: ±1,2 m in x (scafi affiancati e che si toccano)
+  const needPrima = R.need, penMePrima = me.pen, penOPrima = o.pen, debOPrima = o.gDebt || 0, listaPrima = R.penList.length; o.S.h = me.S.h; o.S.u = me.S.u; o.S.x = me.S.x + lato; o.S.y = me.S.y;   // lato: ±1,2 m in x (scafi affiancati e che si toccano)
   for (let k = 0; k < 3; k++){ sv.pilota(dt); sv.run(dt, 1); }
-  return { inc: R.need - needPrima, incPenMe: me.pen - penMePrima, incPenO: o.pen - penOPrima, lista: R.penList.slice(listaPrima), regola: R.lastRule, contatti: Object.keys(R.contacts).length };
+  return { inc: R.need - needPrima, incPenMe: me.pen - penMePrima, incPenO: o.pen - penOPrima, incDebO: (o.gDebt || 0) - debOPrima, lista: R.penList.slice(listaPrima), regola: R.lastRule, contatti: Object.keys(R.contacts).length };
 }"""
 # arrivo: pilota fino all'arrivo con un debito di due giri aperto (aperto = true) o già scontato (aperto = false)
 ARRIVO = """async ([aperto, seme, solo]) => {
@@ -98,7 +98,7 @@ async def main():
         chk("D1 contatto vero con colpa del giocatore: debito di due giri e nessun +15 s (casi con colpa del giocatore %d su %d, con la flotta)" % (len(colpa), len(D)),
             len(colpa) > 0 and all(r["incPenMe"] == 0 and any("Tu, contatto" in x for x in r["lista"]) and "due giri" in (r["regola"] or "") for l, r in colpa), "lati con colpa: %s" % sorted({l for l, r in colpa}))
         senza = [(l, r) for l, r in D if r["inc"] == 0 and r["contatti"]]
-        chk("D2 contatto con colpa dell'avversaria: nessun debito per il giocatore e +15 s all'avversaria (casi %d)" % len(senza), len(senza) > 0 and all(r["incPenO"] == 15 and r["incPenMe"] == 0 for l, r in senza))
+        chk("D2 contatto con colpa dell'avversaria: nessun debito per il giocatore e, dalla 1.0.67, due giri di debito all'avversaria e nessun +15 s (prima: +15 s) (casi %d)" % len(senza), len(senza) > 0 and all(r["incDebO"] == 2 and r["incPenO"] == 0 and r["incPenMe"] == 0 and r["inc"] == 0 for l, r in senza))
         chk("D3 ogni contatto dà al massimo un debito di due giri (nessun incremento diverso da 0 o 2)", all(r["inc"] in (0, 2) for l, r in D), str(sorted({r["inc"] for l, r in D})))
         # ---- E ----
         E1 = [await pg.evaluate(ARRIVO, [True, 500 + k, True]) for k in range(1, 7)]; E0 = [await pg.evaluate(ARRIVO, [False, 600 + k, True]) for k in range(1, 7)]

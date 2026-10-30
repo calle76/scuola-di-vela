@@ -12,7 +12,7 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
 PREP = """async (sv, caso, dir, seme) => {
   const dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change')); __seed(seme); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
   const R = sv.R, me = R.boats[0]; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); }
-  R.need = 0; R.done = 0; R.giroDir = 0; me.sconta = false; // partenza pulita: le colpe del pilota nei primi 25 s e le sue virate non devono confondere il caso (in K6 invece restano)
+  R.need = 0; R.done = 0; R.giroDir = 0; me.sconta = false; for (const o of R.boats) if (!o.me){ o.gDebt = 0; o.sconta = false; o.gCum = null; } // 1.0.67: anche gli avversari possono avere un debito e stare girando, e allora vale la 21.2 per loro (collaudo_giri_avversari.py); qui si parte puliti. Partenza pulita: le colpe del pilota nei primi 25 s e le sue virate non devono confondere il caso (in K6 invece restano)
   giriDebito(); const gira = d => { sv.ctl.tiller = d; sv.ctl.sheet = sv.autoSheet(); sv.run(dt, 1); };
   if (caso === 'gira'){ let n = 0; while (!me.sconta && n++ < 60 * 25 && !sv.S.capsized) gira(dir); }
   if (caso === 'fermo'){ for (let k = 0; k < 60 * 3; k++){ sv.ctl.tiller = 0; sv.ctl.sheet = sv.autoSheet(); sv.run(dt, 1); } }

@@ -10,7 +10,7 @@ Il 2a è grande: bandiere e segnali, tecnica di partenza, precedenze 14-17, 21, 
 2. Un giro per la boa toccata (31, 44.1): richiede boe che si toccano.
 3. Regole 11, 12, 13 nella colpa dei contatti (sovrapposizione, chi è libero dietro, chi sta virando): **già fatte** dalla 1.0.40 (`chiCede`) e dalla 1.0.49 (avversari); l'elenco era rimasto indietro.
 4. Procedura di partenza 5-4-1-0 con le bandiere (26) e bandiera X (29.1): **fatta nella 1.0.65** (fetta 3, solo nella regata dei giri; le lezioni dopo).
-5. Dopo: 21.2 (chi sconta lascia strada) e 21.1: **fatte nella 1.0.66**; poi i giri degli avversari, 18, 30, 14 e le lezioni del 2a.
+5. Dopo: 21.2 (chi sconta lascia strada) e 21.1: **fatte nella 1.0.66**; i giri degli avversari: **fatti nella 1.0.67**; poi 18, 30, 14 e le lezioni del 2a.
 
 ## Fetta 1: i giri di penalità
 

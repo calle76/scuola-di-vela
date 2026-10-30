@@ -322,20 +322,23 @@
       const relB = norm180(bearingTo(s, o.S) - s.h); if (Math.abs(relB) > 90) continue; // 1.0.17: era 60°; i contatti misurati hanno le prue a 93°, cioè l'altra arriva di fianco
       desired -= (relB >= 0 ? 1 : -1) * 35 * (1 - d / avoidR + 0.3); avoiding = true; break;
     }
+    // 1.0.67 (docs/PROPOSTA-GIRI-AVVERSARI.md): chi ha un debito di giri e la via libera segue la sequenza dei giri al posto della rotta; le tre regole qui sotto (angolo morto, abbrivio, piantata) non valgono
+    const gm = R.giri ? giroAI(b, dt, twd, ai) : null;
+    if (gm !== null) desired = gm;
     // la prua desiderata non deve mai finire nell'angolo morto (tranne durante una virata voluta)
     const dTwa = norm180(twd - desired);
     const wantsTack = !hold && Math.abs(rel) < ai.up && sgn(dTwa) !== side;
-    if (!wantsTack && !avoiding && Math.abs(dTwa) < ai.up - 2) desired = twd - (sgn(dTwa) || side) * (ai.up - 2); // 1.0.17: chi evita può orzare oltre, e perde velocità come nella realtà
+    if (gm === null && !wantsTack && !avoiding && Math.abs(dTwa) < ai.up - 2) desired = twd - (sgn(dTwa) || side) * (ai.up - 2); // 1.0.17: chi evita può orzare oltre, e perde velocità come nella realtà
     // se per arrivare alla rotta voluta bisogna attraversare il vento e manca velocità: prima poggia e prendi abbrivio
     const turn = norm180(desired - s.h), toWind = norm180(twd - s.h);
     // (vale solo prima di iniziare: a virata in corso la velocità cala per forza, e non va interrotta)
     // 0.21.3: stessa soglia della regola «piantata» qui sotto (era 44° fisso): in partenza, fra 40° e 44°, nessuna delle due agiva e una barca
     // lenta che voleva virare oscillava per minuti attorno a 40° senza partire (collaudo_regate.py, regata nelle raffiche, seme 17)
     const ironsA = b.leg === 0 && !b.ocs ? 40 : 44;
-    if (sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) >= ironsA && s.u < 1.1) desired = twd - side * 95;
+    if (gm === null && sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) >= ironsA && s.u < 1.1) desired = twd - side * 95;
     // piantata nell'angolo morto: poggia e lascia sbattere la vela finché riparte
     const irons = A < ironsA && s.u < 0.6; // 44°: tra 40° e 44° una barca ferma restava sospesa senza ripartire; in partenza resta 40° (con 44° poggia troppo presto vicino alla linea), salvo chi torna dietro la linea dopo una partenza anticipata
-    if (irons) desired = twd - side * 80;
+    if (irons && gm === null) desired = twd - side * 80;
     muoviTimone(b.ctl, s, desired, ai, dt);
     let sheet = sheetFor(b.info, ai);
     if (hold || irons) sheet = 1;
@@ -419,6 +422,7 @@
     const s = b.S;
     if (s.capsized){
       s.capT += dt; s.u = 0;
+      if (R.giri){ b.gCum = null; b.sconta = false; } // 1.0.67: scuffia durante i giri: il giro in corso si perde, il debito resta
       const b1 = s.lv === 2; // 1.0.32: l'1b si raddrizza più lenta e al traverso del vento vero (coi salti, env.twd è il medio)
       if (s.capT > (b1 ? RADD2.tAI : 5)){
         s.capsized = false; s.capT = 0; s.heel = 0; s.heelRate = 0;
@@ -457,7 +461,7 @@
       else if (k < 0 && b.me) roundToast(-1);
       else if (k > 0 && b.me) toast("Hai rimediato: ora girala lasciandola a sinistra");
     } else if (b.leg === R.marks.length + 1){
-      if (prev < 0 && wy >= 0 && onLine){ if (b.me && R.giri) giriMancanti(b); b.fin = R.t + b.pen; if (b.me) toast("Arrivato!"); }
+      if (prev < 0 && wy >= 0 && onLine){ if (R.giri){ if (b.me) giriMancanti(b); else giriMancantiAI(b); } b.fin = R.t + b.pen; if (b.me) toast("Arrivato!"); }
     }
   }
 
@@ -564,6 +568,47 @@
     const m = R.need - R.done; if (m <= 0) return;
     b.pen += GIRO_SEC * m; R.done = R.need;
     R.penList.push("Tu, giri di penalità non fatti (" + m + "): +" + GIRO_SEC * m + " s al tempo.");
+  }
+
+  // ---- giri di penalità degli avversari (livello 2a, 1.0.67, docs/PROPOSTA-GIRI-AVVERSARI.md; F15 44.1 e 44.2) ----
+  // Solo nelle regate con R.giri. Un avversario colpevole di un contatto ha un debito (b.gDebt, due giri). Dopo lo sparo, in regata e con nessuna barca a meno di GIRO_AI_VIA lunghezze
+  // (e lontano da boe e linea d'arrivo) gira: la sequenza di prue sta in giroAI. Se una barca arriva a meno di GIRO_AI_STOP lunghezze il giro si sospende e riparte da zero. Mentre gira
+  // b.sconta è vero, quindi vale per lui la 21.2 (chiCede). Un giro è fatto con 360° nello stesso verso, una virata e una strambata (come per il giocatore). Semplificazione dichiarata: i giri
+  // cominciano solo dopo lo sparo (il regolamento li vuole «appena possibile», anche prima).
+  const GIRO_AI_VIA = 4, GIRO_AI_STOP = 2, GIRO_AI_ERR = 12, GIRO_AI_LONTANO = 25; // lunghezze, lunghezze, gradi (anticipo sulla prua successiva), metri da boe e arrivo: ipotesi nostre
+  function giroLibero(b, lung){ // nessun'altra barca (ancora in regata, non scuffiata) entro lung lunghezze
+    for (const o of R.boats) if (o !== b && o.fin === null && !o.dnf && !o.S.capsized && Math.hypot(o.S.x - b.S.x, o.S.y - b.S.y) < lung * BOAT.length) return false;
+    return true;
+  }
+  function giroLontano(b){ // non vicino a una boa del percorso né, sull'ultimo lato, alla linea d'arrivo
+    for (const m of R.marks) if (Math.hypot(m.x - b.S.x, m.y - b.S.y) < GIRO_AI_LONTANO) return false;
+    return !(b.leg === R.marks.length + 1 && Math.abs(toWF(b.S.x, b.S.y)[1]) < GIRO_AI_LONTANO);
+  }
+  function giroAI(b, dt, twd, ai){ // la prua voluta per i giri, o null se la barca non sta girando
+    const s = b.S;
+    if (!(b.gDebt > 0) || b.fin !== null || b.dnf || R.t < 0 || b.leg < 1 || b.ocs){ if (b.gCum != null){ b.gCum = null; b.sconta = false; } return null; }
+    if (b.gCum == null){ // non sta girando: comincia solo se la via è libera
+      if (!giroLibero(b, GIRO_AI_VIA) || !giroLontano(b)) return null;
+      b.gV = b.gV || (sgn(norm180(twd - s.h)) || b.side); // il verso è quello che si ottiene orzando, lo stesso per tutta la penalità
+      b.gCum = 0; b.gH = s.h; b.gTk = 0; b.gGy = 0; b.gS = sgn(norm180(twd - s.h)); b.sconta = true;
+    } else if (!giroLibero(b, GIRO_AI_STOP)){ b.gCum = null; b.sconta = false; return null; }
+    b.gCum += norm180(s.h - b.gH) * b.gV; b.gH = s.h;
+    const sg = sgn(norm180(twd - s.h)); // gli avversari non hanno i contatori di virate e strambate del giocatore: si contano qui, dal cambio di mura (con il vento davanti: virata, dietro: strambata)
+    if (sg !== 0 && b.gS !== 0 && sg !== b.gS){ if (Math.abs(norm180(twd - s.h)) < 90) b.gTk++; else b.gGy++; }
+    if (sg !== 0) b.gS = sg;
+    if (b.gCum >= 360 && b.gTk > 0 && b.gGy > 0){ // un giro fatto
+      b.gDebt--; b.gFatti = (b.gFatti || 0) + 1; b.gCum = 0; b.gTk = 0; b.gGy = 0;
+      if (b.gDebt <= 0){ b.gCum = null; b.sconta = false; b.gV = 0; b.boardT = 0; R.penList.push("La " + b.name + ", penalità scontata: i giri sono fatti."); return null; }
+    }
+    // la sequenza, nel senso del giro: prua a 'U' dal vento, dall'altra parte del vento 'U', 'D' (poppa larga), dall'altra parte 'D' passando dalla poppa; q = angolo dal vento visto nel verso del giro
+    const q = norm180(twd - s.h) * b.gV, U = ai.up, D = ai.down, x = q > D + GIRO_AI_ERR ? q - 360 : q;
+    const t = x > U + GIRO_AI_ERR ? U : x > -U + GIRO_AI_ERR ? -U : x > -D + GIRO_AI_ERR ? -D : D - 360;
+    return twd - b.gV * t;
+  }
+  function giriMancantiAI(b){ // un avversario taglia l'arrivo con il debito aperto: come il giocatore, +GIRO_SEC s per giro
+    const m = b.gDebt; if (!(m > 0)) return;
+    b.pen += GIRO_SEC * m; b.gDebt = 0; b.gCum = null; b.sconta = false;
+    R.penList.push("La " + b.name + ", giri di penalità non fatti (" + m + "): +" + GIRO_SEC * m + " s al tempo.");
   }
 
   // ---- boa toccata (livello 2a, 1.0.62, docs/PROPOSTA-LIVELLO-2A.md fetta 2; F15 31 e 44.1) ----
@@ -676,7 +721,7 @@
       // mure di ciascuna col vento nel suo punto (1b; nell'1a, difetto noto dalla 1.0.1, col vento del giocatore)
       const cc = chiCede(A, B), guilty = cc.cede;
       const why = motivoContatto(cc, guilty);
-      if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri && guilty.me) giriDebito(); else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
+      if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri){ if (guilty.me) giriDebito(); else guilty.gDebt = (guilty.gDebt || 0) + 2; } else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
       for (const o of [A, B]){ o.S.u *= 0.6; }
       const dx = mtv ? mtv.nx : (A.S.x - B.S.x) / (d || 1), dy = mtv ? mtv.ny : (A.S.y - B.S.y) / (d || 1);
       const push = mtv ? mtv.pen / 2 + 0.15 : (4.6 - d) / 2 + 0.3; // 1b: si separano di 0,3 m fra gli scafi
@@ -690,7 +735,7 @@
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
         toast(guilty.me ? "Contatto! Penalità " + (R.tor ? "+1 punto" : R.giri ? "due giri" : "+15 s") : "Contatto: penalità a " + other.name);
-        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.tor ? ". Penalità di 1 punto sul punteggio della regata." : R.giri && guilty.me ? ". Penalità: due giri nello stesso verso, ciascuno con una virata e una strambata." : ". Penalità di 15 secondi.");
+        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.tor ? ". Penalità di 1 punto sul punteggio della regata." : R.giri && guilty.me ? ". Penalità: due giri nello stesso verso, ciascuno con una virata e una strambata." : R.giri ? ". Penalità alla " + guilty.name + ": due giri." : ". Penalità di 15 secondi.");
       }
     }
   }

@@ -59,3 +59,7 @@ Collaudo con la regata dei giri, avversari guidati dal gioco, **40 regate a semi
 2. **+15 s sparisce per gli avversari in questa regata.** Resta l'unica penalità a tempo (+15 s per giro non fatto all'arrivo). Va bene?
 
 Se mi dici «come proponi», parto dalla fermata 2 con la sequenza di prue sopra. La fermata 2 si ferma di nuovo alla fine (misure, difetti, esito).
+
+## Esito (31 ottobre 2026, 1.0.67)
+
+Decisioni di Ale: dopo lo sparo, «semplificata e dichiarata» (il regolamento li vuole «appena possibile», anche prima del via: F15 44.1 e 44.2 letti nel PDF); procedi. Fatta e misurata, vedi `CHANGELOG.md`. Soglie non cambiate; cambiati nel collaudo, dichiarato: G10b (stessa regata, uguale al bit fino al primo giro di un avversario, perché 18 regate su 20 hanno un debito) e la tolleranza di campionamento del metro di G1 (5°, dopo aver visto 31 giri su 134 a 356,9-360°). G2 95% (soglia 80%), G4 mediana 22,2 s (fascia 12-30 s), tutto il resto entro soglia. Due precisazioni al testo sopra: gli avversari contano da soli virate e strambate (non hanno i contatori del giocatore) e la distanza «ben lontano» per cominciare vale anche rispetto alle boe e alla linea d'arrivo (25 m).

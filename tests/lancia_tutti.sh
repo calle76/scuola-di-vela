@@ -69,6 +69,7 @@ TESTS=(
     "collaudo_boa.py (12 prove)|py|chiaro|0||collaudo_boa.py 12"
     "collaudo_segnali.py|py|chiaro|0||collaudo_segnali.py"
     "collaudo_regola21.py (12 prove)|py|chiaro|0||collaudo_regola21.py 12"
+    "collaudo_giri_avversari.py (40 regate)|py|chiaro|0||collaudo_giri_avversari.py 40"
     "collaudo_regole.py|py|chiaro|0||collaudo_regole.py"
     "collaudo_semaforo.py|py|chiaro|0||collaudo_semaforo.py"
     "collaudo_torneo.py (veloce)|py|chiaro|0||collaudo_torneo.py --veloce"
