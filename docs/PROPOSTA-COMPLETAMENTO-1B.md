@@ -1,5 +1,7 @@
 # Proposta: completare il livello 1b (lezioni brevi, replay, menu, esame e brevetto)
 
+> **In attesa di essere superata** da `PROPOSTA-RIORGANIZZAZIONE.md` (30 ottobre 2026): se Ale approva la scuola e il livello 1, le sette lezioni si fondono nella scuola e menu, meriti e brevetto dell'1b non si fanno. Le decisioni prese su questa proposta restano in `DECISIONI.md`, ma quelle su brevetto e menu decadono.
+
 30 ottobre 2026. **Fermata 1: nessun codice.** Punto di partenza: `VISIONE-LIVELLI-E-CARRIERA.md` §2 e §6, `ROADMAP.md` (ordine), `STATO.md` «Prossimo lavoro» punti 4 e 5, `PROPOSTA-TORNEI-1B.md`, `PROPOSTA-REGATA-COME-FONTE.md` §9-10. La barca dell'1b è congelata (23 ottobre): questa proposta **non tocca il motore**.
 
 ## Cosa c'è e cosa manca (letto nei documenti)
