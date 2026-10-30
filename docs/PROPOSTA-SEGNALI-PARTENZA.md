@@ -63,3 +63,28 @@ F15, regola 26 e «Race Signals» (copia locale, edizione 2025-2028), parafrasat
 
 1. La lezione nuova è la **7 «La regata»** (che poi avrà anche precedenze e penalità), o i segnali vanno dentro una lezione esistente?
 2. Le sequenze brevi per 3 e 1 minuto, come sopra, vanno bene?
+
+## Fetta 3 del 2a (31 ottobre 2026): le bandiere nella regata dei giri — scritta prima di toccare il codice
+
+Per decisione di Ale (30-31 ottobre, autonomia sul 2a) questa è la prima parte della proposta di sopra, senza le lezioni (vengono dopo, dentro «La scuola»). Vale **solo nella «Regata con i giri di penalità»** (flag `segnali`), come le fette 1-2: le altre regate, 1a compresa, e le loro schermate non cambiano e l'impronta resta com'è. Ale (19 ottobre) aveva detto «le bandiere nelle regate del livello 2»: l'estensione alle altre regate dell'1b si decide quando il 2a diventa la regola.
+
+**Modello più semplice.** Una funzione sola, `bandiere(t)`, dice quali bandiere sono su: classe, P, X, blu. Messaggi e disegno la leggono, il collaudo la confronta con una tabella scritta a parte.
+- Preparazione **5 min:** classe da −300, P da −240, P giù a −60, classe giù a 0 (sequenza 5-4-1-0 del regolamento). **3 min:** classe da −180, P da −120, P giù a −60 («sequenza breve», ipotesi nostra, come nella proposta di sopra). **1 min:** solo classe da −60 (avviso e preparatorio già fatti, ipotesi nostra).
+- Dopo il via: **blu** (la linea ora è d'arrivo, come oggi la bandierina blu). **X** esposta se al via c'era almeno una barca oltre la linea (richiamo individuale, 29.1): resta finché una di quelle barche non è tornata dietro la linea o arrivata o ritirata, e **al massimo 240 s** dallo sparo.
+- Disegno sulla barca giuria: fino a quattro bandierine sul ponte, leggibili a ogni zoom (misura minima in pixel). La bandiera di classe è nostra (nessun marchio): bianca con una vela blu. P = blu con riquadro bianco, X = bianca con croce blu (bandiere internazionali di segnalazione, non marchi); blu = campo blu.
+- Messaggi: «Avviso: alzata la bandiera di classe, partenza tra N minuti», «Preparatorio: alzata la bandiera P», «Un minuto: ammainata la P», e come oggi «30 secondi», «10 secondi», «Partenza!». I tempi contano sulle bandiere; il gioco non ha suoni (dichiarato).
+- Registratore: evento `bandiere` a ogni cambio.
+
+**Costanti, ipotesi nostre:** le sequenze di 3 e 1 minuto, le misure e le posizioni delle bandiere. 4 minuti di X e le sequenze di 5 minuti vengono dal regolamento.
+
+**Criteri (soglie scritte prima; il metro è una tabella indipendente nel collaudo):**
+1. **G1** con preparazione di 1, 3 e 5 minuti, 3 regate ciascuna (semi fissi), le bandiere esposte a ogni decimo di secondo da −preparazione a +5 s coincidono con la tabella: 0 errori su tutti i controlli (se ne riporta il numero: devono essere almeno 5000).
+2. **G2** X esposta solo con almeno una barca richiamata: almeno 5 regate con richiamo (si porta un avversario oltre la linea poco prima dello sparo) e 5 senza; con richiamo X si alza allo sparo e si abbassa quando l'ultima barca è tornata, o a 240 s se nessuna torna; senza richiamo non compare mai.
+3. **G3** i messaggi di avviso, preparatorio e un minuto compaiono ciascuno una volta e solo per i tempi dovuti, per 1, 3 e 5 minuti.
+4. **G4** disegno: nelle altre regate (1a e 1b) la schermata a −30 s è identica al pixel alla 1.0.64; nella regata dei giri le bandiere si vedono (pixel diversi sulla barca giuria) e la schermata si guarda a occhio.
+5. **G5** non-regressione: 20 regate dell'1a e dell'1b identiche al bit alla 1.0.64; `polare.js` e `raffiche_e_virate.js` invariati; `collaudo_giri.py` e `collaudo_boa.py` verdi.
+6. **G6** registratore (evento `bandiere`) e pagina senza `#collaudo`: la regata si apre, le bandiere ci sono, nessun errore di pagina; pannello a 1360×650 senza pixel di eccesso.
+
+**Rischi.** Bandiere piccole sul mare: si giudica giocando. L'X sulla barca giuria può restare su più del necessario se una barca richiamata resta ferma oltre la linea (limite del regolamento: 4 minuti).
+
+**Esito (31 ottobre 2026, 1.0.65):** fatta e misurata, vedi `CHANGELOG.md`. Soglie non cambiate; quattro difetti del mio collaudo corretti prima di dichiarare l'esito. La lezione e l'estensione alle altre regate dell'1b restano da fare.

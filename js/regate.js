@@ -60,7 +60,7 @@
     // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): barca dell'1b, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
     { title: "Regata nei salti di vento", where: "salti di vento", desc: "Barca dell'1b, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true },
     // 1.0.61 (docs/PROPOSTA-LIVELLO-2A.md, fetta 1): livello 2a, due giri al posto dei 15 s per il giocatore; resta fuori da meriti e carriera
-    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: se lasci male la strada, due giri come nelle regate vere, ciascuno con una virata e una strambata; se tocchi una boa, un giro.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true }
+    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: se lasci male la strada, due giri come nelle regate vere, ciascuno con una virata e una strambata; se tocchi una boa, un giro; le bandiere della partenza sulla barca giuria.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true, segnali: true }
   ];
   const RACES1 = RACES.filter(rc => !rc.lv2); // le regate dell'1a (stessi indici: quelle dell'1b, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;
@@ -138,7 +138,7 @@
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const up = rc.up || MARK_UP, tri = !!rc.tri; // tri: triangolo equilatero di lato up, due boe (1.0.55)
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, giri: !!rc.giri, need: 0, done: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd: opt.countdown, t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -176,6 +176,7 @@
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
+    if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. Il gioco non ha suoni: i tempi contano sulle bandiere.";
     if (rc.lv2) t += " Da questo livello i contatti sono quelli veri, scafo contro scafo. Prima avevi imparato a stare lontano perché il contatto scattava prima del contatto vero." +
       " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
     return t;
@@ -684,20 +685,57 @@
     }
   }
 
+  // ---- bandiere della partenza (livello 2a, 1.0.65, docs/PROPOSTA-SEGNALI-PARTENZA.md, fetta 3; F15 26 e 29.1) ----
+  // Solo nelle regate con R.segnali. Sequenza del regolamento con 5 minuti (classe a -300, P a -240, P giù a -60, classe giù al via); con 3 minuti la sequenza breve
+  // (classe a -180, P a -120); con 1 minuto solo la classe (ipotesi nostre per 3 e 1). Dopo il via la linea è d'arrivo (blu). La X (richiamo individuale) sale allo sparo se una barca
+  // è oltre la linea e resta finché quelle barche non sono tornate, al massimo X_MAX s.
+  const X_MAX = 240; // s dallo sparo (F15 29.1)
+  function bandiereAl(t, cd){ // classe, P e blu a un dato istante di regata (la X dipende dalle barche: bandiereR)
+    const b = { classe: false, P: false, X: false, blu: false };
+    if (t >= 0) b.blu = true;
+    else { b.classe = t >= -cd; b.P = cd >= 180 && t >= -(cd - 60) && t < -60; }
+    return b;
+  }
+  function bandiereR(){
+    const b = bandiereAl(R.t, R.cd);
+    b.X = R.t >= 0 && R.t < X_MAX && !!R.xSet && R.xSet.some(o => o.ocs && o.fin === null && !o.dnf);
+    return b;
+  }
+  function drawBandiere(ppm){ // dentro il translate e il rotate della barca giuria; ogni bandiera nel suo posto (due file da due), con misura minima in pixel
+    const f = bandiereR(), k = Math.min(1.1, Math.max(1, 12 / (1.5 * ppm))), w = 1.5 * k, h = 1.0 * k, BL = "#1F4FA3", yA = -0.7, yB = 0.6;
+    ctx.lineWidth = 0.07; ctx.strokeStyle = "#33414A";
+    const box = (cx, cy, col) => { ctx.fillStyle = col; ctx.fillRect(cx - w / 2, cy - h / 2, w, h); ctx.strokeRect(cx - w / 2, cy - h / 2, w, h); };
+    if (f.classe){ box(-0.8, yA, "#FFFFFF"); ctx.fillStyle = BL; ctx.beginPath(); ctx.moveTo(-0.8, yA - h * 0.35); ctx.lineTo(-0.8 + w * 0.25, yA + h * 0.35); ctx.lineTo(-0.8 - w * 0.25, yA + h * 0.35); ctx.closePath(); ctx.fill(); }
+    if (f.P){ box(0.8, yA, BL); ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0.8 - w * 0.25, yA - h * 0.25, w * 0.5, h * 0.5); }
+    if (f.X){ box(-0.8, yB, "#FFFFFF"); ctx.fillStyle = BL; ctx.fillRect(-0.8 - w * 0.07, yB - h / 2, w * 0.14, h); ctx.fillRect(-0.8 - w / 2, yB - h * 0.09, w, h * 0.18); }
+    if (f.blu) box(0.8, yB, BL);
+  }
+  const bandiereTesto = f => ["classe", "P", "X", "blu"].filter(k => f[k]).join("+") || "nessuna";
+
   // ---- svolgimento: updateRace, arrivo del giocatore e record ----
   function updateRace(dt){
     if (!R) return;
     const prevT = R.t; R.t += dt;
     // segnali di partenza (versione accorciata a un minuto)
     const sig = (at, text) => { if (prevT < at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
+    if (R.segnali){ // 1.0.65: i messaggi seguono le bandiere (le soglie con <=, perché il primo passo parte esattamente dal tempo dell'avviso)
+      const sigB = (at, text) => { if (prevT <= at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
+      if (R.cd >= 180){
+        sigB(-R.cd, "Avviso: alzata la bandiera di classe, partenza tra " + Math.round(R.cd / 60) + " minuti");
+        sigB(-(R.cd - 60), "Preparatorio: alzata la bandiera P");
+        sigB(-60, "Un minuto: ammainata la P");
+      } else sigB(-R.cd, "Un minuto: resta la bandiera di classe, partenza tra un minuto");
+    } else {
     sig(-opt.countdown, "Segnale di avviso: partenza tra " + Math.round(opt.countdown / 60) + (opt.countdown >= 120 ? " minuti" : " minuto"));
     if (opt.countdown > 60) sig(-60, "Un minuto");
+    }
     sig(-30, "30 secondi");
     sig(-10, "10 secondi");
     if (prevT < 0 && R.t >= 0){
       R.phase = "race";
       for (const b of R.boats){ const wy = toWF(b.S.x, b.S.y)[1]; if (wy <= 0) b.ocs = true; }
       if (R.boats[0].ocs) regAdd("ocs");
+      if (R.segnali) R.xSet = R.boats.filter(b => b.ocs); // richiamo individuale: la X sale per queste barche
       // 0.21.5: richiamo individuale anche per gli avversari (regola 29.1 del regolamento di regata: chi è oltre la linea allo sparo
       // deve tornare dietro e ripartire, e il ritorno è la penalità). Prima il messaggio parlava solo del giocatore
       const ant = R.boats.filter(b => !b.me && b.ocs).map(b => b.name), chi = ant.length > 1 ? ant.slice(0, -1).join(", ") + " e " + ant[ant.length - 1] : ant[0];
@@ -957,7 +995,8 @@
     ctx.fillStyle = "#DADFE2"; ctx.strokeStyle = "#5E6A72"; ctx.lineWidth = 0.08;
     ctx.beginPath(); ctx.moveTo(0, -4); ctx.lineTo(1.6, -1.5); ctx.lineTo(1.5, 4); ctx.lineTo(-1.5, 4); ctx.lineTo(-1.6, -1.5); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.fillStyle = "#9AA7B0"; ctx.fillRect(-1, -0.5, 2, 2.4);
-    ctx.fillStyle = R.t < 0 ? "#F2C14E" : "#2B5DB8"; ctx.fillRect(0.2, -3.2, 1.2, 0.8);
+    if (R.segnali) drawBandiere(v.ppm);
+    else { ctx.fillStyle = R.t < 0 ? "#F2C14E" : "#2B5DB8"; ctx.fillRect(0.2, -3.2, 1.2, 0.8); }
     ctx.restore();
     // boa di bolina; sul triangolo due boe, e quella da girare ora ha un anello
     const next = R.tri ? R.boats[0].leg : 0;

@@ -50,7 +50,7 @@ Ogni riga: cosa dice la regola (parafrasi), cosa fa il gioco oggi (con il punto 
 | **28** Fare il percorso | La barca deve fare il percorso, e può correggere un errore finché non è arrivata | Boa dal lato sbagliato: si rimedia girandola di nuovo (`roundCheck`) | — |
 | **29.1** Richiamo individuale | Se allo sparo una parte dello scafo è dalla parte del percorso, il comitato espone subito la **bandiera X** con un suono; resta esposta finché le barche sono tornate dalla parte di pre-partenza della linea **o dei suoi prolungamenti**, ma **al massimo 4 minuti** dopo lo sparo | Messaggio con i nomi (0.21.5); la barca torna e riparte | Bandiera X disegnata (facoltativa) |
 | **30** Penalità di partenza (bandiere I, Z, U, nera) | Regole più severe nell'ultimo minuto: giro attorno a un'estremità, 20% di penalità sul punteggio, squalifica | Non esistono | Da rimandare |
-| **31** Toccare una boa | In regata non si tocca la boa del lato che si sta facendo (né quella di partenza prima di partire, né quella d'arrivo dopo l'arrivo) | Toccare la boa non è punito | **Un giro di penalità** |
+| **31** Toccare una boa | In regata non si tocca la boa del lato che si sta facendo (né quella di partenza prima di partire, né quella d'arrivo dopo l'arrivo) | 1.0.62-1.0.64: un giro e boe ostacolo, solo nella regata dei giri | Nelle altre regate resta non punito |
 
 ### Penalità (parte 4)
 
@@ -70,7 +70,7 @@ Proposta di priorità, da decidere:
    - **Se il giocatore non sconta i giri:** nella realtà rischia la protesta e la squalifica. Nel gioco, per esempio, «squalificato» all'arrivo, oppure i 15 s come ripiego. Da decidere.
    - **Aiuti disattivabili (principio 3):** tenere la penalità a tempo come aiuto per chi inizia.
 2. **Un giro per aver toccato la boa** (31, 44.1): il gioco deve prima sapere quando la boa è toccata (oggi le boe non fanno da ostacolo).
-3. **Regole 11, 12 e 13 nella colpa dei contatti:** distinguere sovrapposte e libere dietro, e chi sta virando. Tocca `contacts()` e il comportamento degli avversari.
+3. **Regole 11, 12 e 13 nella colpa dei contatti** (già fatte nella 1.0.40 e 1.0.49; voce rimasta indietro): distinguere sovrapposte e libere dietro, e chi sta virando. Tocca `contacts()` e il comportamento degli avversari.
 4. **Procedura 5-4-1-0 con le bandiere** (26), ed eventualmente la bandiera X disegnata (29.1).
 5. **Dopo:** spazio alla boa (18), penalità di partenza (30), evitare il contatto anche con ragione (14).
 
