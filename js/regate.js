@@ -469,21 +469,24 @@
     return [[0, -2.1], ...bez([0, -2.1], [0.55, -1.5], [0.72, -0.2], [0.68, 0.7]), [0.56, 2.1], [-0.56, 2.1], [-0.68, 0.7], ...bez([-0.68, 0.7], [-0.72, -0.2], [-0.55, -1.5], [0, -2.1])];
   })();
   const hullWorld = S => { const h = S.h * D2R, c = Math.cos(h), s = Math.sin(h); return HULL_PTS.map(([x, y]) => [S.x + x * c - y * s, S.y + x * s + y * c]); };
-  // sovrapposizione di due poligoni convessi (assi separatori): { pen, nx, ny } con la normale da B ad A, oppure null se non si toccano
-  function hullOverlap(A, B){
-    const pa = hullWorld(A), pb = hullWorld(B); let best = null;
+  // separazione di due poligoni convessi (assi separatori): { pen, nx, ny } con pen = sovrapposizione minima sugli assi (positiva se si toccano, negativa: la distanza è almeno -pen)
+  // e la normale da B ad A orientata dai centri (ax, ay) e (bx, by)
+  function polySep(pa, pb, ax, ay, bx, by){
+    let best = null;
     for (const poly of [pa, pb]) for (let i = 0; i < poly.length; i++){
       const [x0, y0] = poly[i], [x1, y1] = poly[(i + 1) % poly.length], l = Math.hypot(x1 - x0, y1 - y0), nx = (y1 - y0) / l, ny = -(x1 - x0) / l;
       if (l < 1e-9) continue; // l'ultimo punto del contorno è uguale al primo: lato di lunghezza zero, senza asse
       let a0 = 1e9, a1 = -1e9, b0 = 1e9, b1 = -1e9;
       for (const [x, y] of pa){ const d = x * nx + y * ny; if (d < a0) a0 = d; if (d > a1) a1 = d; }
       for (const [x, y] of pb){ const d = x * nx + y * ny; if (d < b0) b0 = d; if (d > b1) b1 = d; }
-      const pen = Math.min(a1, b1) - Math.max(a0, b0); if (pen <= 0) return null;
+      const pen = Math.min(a1, b1) - Math.max(a0, b0);
       if (!best || pen < best.pen) best = { pen, nx, ny };
     }
-    if (best.nx * (A.x - B.x) + best.ny * (A.y - B.y) < 0){ best.nx = -best.nx; best.ny = -best.ny; }
+    if (best.nx * (ax - bx) + best.ny * (ay - by) < 0){ best.nx = -best.nx; best.ny = -best.ny; }
     return best;
   }
+  // sovrapposizione dei contorni di due scafi: { pen, nx, ny } con la normale da B ad A, oppure null se non si toccano
+  function hullOverlap(A, B){ const m = polySep(hullWorld(A), hullWorld(B), A.x, A.y, B.x, B.y); return m.pen > 0 ? m : null; }
   // ---- chi cede (1.0.40, docs/PROPOSTA-REGOLE-PRECEDENZA-1B.md) ----
   // Una sola funzione per penalità, testo di fine regata e semaforo. Nell'1a (!R.lv2) le regole sono quelle di sempre (10, e le stesse
   // mure col più sopravento in y), identiche al bit; nell'1b valgono 10, 11, 12 e 13 di F15, con le definizioni sui contorni degli scafi.
@@ -558,7 +561,7 @@
   // Nelle regate con R.giri e solo per il giocatore: toccare una boa che conta ora costa UN giro (giriDebito(1)). Dalla 1.0.63 le boe sono anche ostacoli fermi (boeUrto).
   // Contano la linea (spillo e comitato) fino al via e sull'ultimo lato, la boa del lato in corso e, dal secondo lato, quella da cui il lato parte. Un tocco vale una volta
   // finché lo scafo non si allontana di BOA_LIBERA m dal bordo.
-  const BOA_R = 0.9, CB_R = 2.0, BOA_LIBERA = 3; // m: raggio come disegnata, mezza barca del comitato, distanza per poter rifare un tocco; ipotesi nostre
+  const BOA_R = 0.9, BOA_LIBERA = 3; // m: raggio della boa come disegnata, distanza dal bordo per poter rifare un tocco; ipotesi nostre
   function distScafoPunto(S, px, py){ // distanza dal contorno dello scafo (convesso) a un punto; 0 se il punto è dentro
     const P = hullWorld(S); let dentro = true, best = 1e9;
     for (let i = 0; i < P.length; i++){
@@ -570,38 +573,44 @@
     return dentro ? 0 : best;
   }
   function boeCheConta(me){
-    const L = me.leg, out = [], linea = () => { out.push(["pin", R.pin, BOA_R]); out.push(["cb", R.cb, CB_R]); };
+    const L = me.leg, out = [], linea = () => { out.push(["pin", R.pin, BOA_R]); out.push(["cb", R.cb, 0]); };
     if (L === 0) linea();
     else if (L <= R.marks.length) out.push(["m" + (L - 1), R.marks[L - 1], BOA_R]);
     else linea();
     if (L >= 2 && L <= R.marks.length + 1) out.push(["m" + (L - 2), R.marks[L - 2], BOA_R]);
     return out;
   }
-  // 1.0.63 (fetta 2b): per il giocatore ogni oggetto del percorso (spillo, comitato, boe) è anche un ostacolo fermo: lo scafo che entra nel raggio viene spinto fuori
-  // lungo la retta centro-oggetto-centro-barca (a ogni passo, fino a 0,05 m oltre il raggio) e al primo passo del tocco perde il 40% della velocità, come nei contatti fra barche.
-  // La penalità spetta solo alle boe che contano ora (boeCheConta). Gli avversari non si respingono.
+  // 1.0.63 (fetta 2b): per il giocatore ogni oggetto del percorso (spillo, comitato, boe) è anche un ostacolo fermo: lo scafo che lo tocca viene spinto fuori
+  // (a ogni passo, fino a 0,05 m oltre) e al primo passo del tocco perde il 40% della velocità, come nei contatti fra barche. La penalità spetta solo alle boe che contano ora
+  // (boeCheConta). Gli avversari non si respingono. Spillo e boe sono cerchi; 1.0.64: la barca del comitato è il suo scafo, lo stesso poligono con cui è disegnata
+  // (drawRace), perché con un cerchio di 2 m a prua e a poppa lo scafo disegnato si attraversava.
+  const CB_PTS = [[0, -4], [1.6, -1.5], [1.5, 4], [-1.5, 4], [-1.6, -1.5]]; // gli stessi punti di drawRace, in metri attorno a R.cb, con la prua verso il vento
+  const cbWorld = () => { const h = env.twd * D2R, c = Math.cos(h), s = Math.sin(h); return CB_PTS.map(([x, y]) => [R.cb.x + x * c - y * s, R.cb.y + x * s + y * c]); };
+  // com'è messo lo scafo S rispetto all'oggetto: d = distanza dal bordo (0 se si toccano), tocca, urta (penetra), e la direzione per uscirne
+  function statoOggetto(S, key, mk, r){
+    if (key === "cb"){ const m = polySep(hullWorld(S), cbWorld(), S.x, S.y, R.cb.x, R.cb.y); return { d: m.pen > 0 ? 0 : -m.pen, tocca: m.pen > 0, urta: m.pen > 0, push: m.pen + 0.05, nx: m.nx, ny: m.ny }; }
+    const d = distScafoPunto(S, mk.x, mk.y); let nx = S.x - mk.x, ny = S.y - mk.y; const l = Math.hypot(nx, ny);
+    if (l < 1e-6){ const h = S.h * D2R; nx = -Math.sin(h); ny = Math.cos(h); } else { nx /= l; ny /= l; }
+    return { d, tocca: d <= r, urta: d < r, push: Math.max(0.05, r + 0.05 - d), nx, ny };
+  }
   function boeUrto(me, mk, r, key){
-    const S = me.S; let d = distScafoPunto(S, mk.x, mk.y); if (d >= r) return;
+    const S = me.S; let st = statoOggetto(S, key, mk, r); if (!st.urta) return;
     R.boaUrto = R.boaUrto || {};
     if (!R.boaUrto[key]){ R.boaUrto[key] = true; S.u *= 0.6; }
-    for (let k = 0; k < 12 && d < r + 0.05; k++){
-      let nx = S.x - mk.x, ny = S.y - mk.y; const l = Math.hypot(nx, ny);
-      if (l < 1e-6){ const h = S.h * D2R; nx = -Math.sin(h); ny = Math.cos(h); } else { nx /= l; ny /= l; }
-      const m = Math.max(0.05, r + 0.05 - d); S.x += nx * m; S.y += ny * m; d = distScafoPunto(S, mk.x, mk.y);
-    }
+    for (let k = 0; k < 12 && st.urta; k++){ S.x += st.nx * st.push; S.y += st.ny * st.push; st = statoOggetto(S, key, mk, r); }
   }
   function boeToccate(){
     const me = R.boats[0];
     if (me.fin !== null || me.dnf) return;
     R.boaTocc = R.boaTocc || {}; R.boaUrto = R.boaUrto || {};
     const contano = new Set(boeCheConta(me).map(e => e[0]));
-    const tutte = [["pin", R.pin, BOA_R], ["cb", R.cb, CB_R]]; R.marks.forEach((mk, k) => tutte.push(["m" + k, mk, BOA_R]));
+    const tutte = [["pin", R.pin, BOA_R], ["cb", R.cb, 0], ...R.marks.map((mk, k) => ["m" + k, mk, BOA_R])]; // r = 0 per il comitato: ha la sua forma
     for (const [key, mk, r] of tutte){
-      if (Math.hypot(me.S.x - mk.x, me.S.y - mk.y) > r + 8) { if (R.boaUrto[key]) delete R.boaUrto[key]; if (R.boaTocc[key]) delete R.boaTocc[key]; continue; } // lontano: nessun controllo, e il tocco si può rifare
-      const d = distScafoPunto(me.S, mk.x, mk.y);
-      if (R.boaUrto[key] && d > r + 0.3) delete R.boaUrto[key];
-      if (R.boaTocc[key]){ if (d > r + BOA_LIBERA) delete R.boaTocc[key]; }
-      else if (d <= r && contano.has(key)){
+      if (Math.hypot(me.S.x - mk.x, me.S.y - mk.y) > r + 8){ delete R.boaUrto[key]; delete R.boaTocc[key]; continue; } // lontano: nessun controllo, e il tocco si può rifare
+      const st = statoOggetto(me.S, key, mk, r);
+      if (R.boaUrto[key] && st.d > r + 0.3) delete R.boaUrto[key];
+      if (R.boaTocc[key]){ if (st.d > r + BOA_LIBERA) delete R.boaTocc[key]; }
+      else if (st.tocca && contano.has(key)){
         R.boaTocc[key] = R.t; R.nBoa = (R.nBoa || 0) + 1; giriDebito(1);
         const nome = key === "pin" ? "la boa dello spillo" : key === "cb" ? "la barca del comitato" : "la boa";
         R.penList.push("Tu, hai toccato " + nome + ": un giro di penalità (regola 31).");

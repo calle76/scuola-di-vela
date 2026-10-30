@@ -10,9 +10,9 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
   window.__seed = v => { s = v; }; })();"""
 # regata dei giri senza avversari, pilota fino a 25 s; poi lo scafo viene messo a una distanza dal bordo (m) dall'oggetto scelto e si fanno 3 passi.
 # lato = (leg, oggetto): oggetto "m0" boa 1, "pin", "cb". dist = distanza dal contorno dello scafo al centro dell'oggetto (0 = sopra).
-PIAZZA = """(sv, ogg, dist, off) => { const R = sv.R, S = sv.S; const o = ogg === 'pin' ? R.pin : ogg === 'cb' ? R.cb : R.marks[0];
+PIAZZA = """(sv, ogg, dist, off) => { const R = sv.R, S = sv.S; const o = ogg === 'pin' ? R.pin : ogg.startsWith('cb') ? R.cb : R.marks[0];
   S.h = 0; S.u = 0; let lo = 0, hi = 6; S.y = o.y; // si sposta lo scafo di lato (x) finché il contorno è alla distanza voluta
-  if (dist <= 0){ S.x = o.x + off; S.y = o.y; return distScafoPunto(S, o.x, o.y); }
+  if (dist <= 0){ S.x = o.x + off; S.y = o.y + (ogg === 'cbprua' ? -3.2 : ogg === 'cbpoppa' ? 3.2 : 0); return distScafoPunto(S, o.x, o.y); }
   for (let k = 0; k < 40; k++){ const m = (lo + hi) / 2; S.x = o.x + m; if (distScafoPunto(S, o.x, o.y) > dist) hi = m; else lo = m; } return distScafoPunto(S, o.x, o.y); }"""
 SETUP = """(sv, seme, leg) => { const dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'nessuno'; lv.dispatchEvent(new Event('change')); __seed(seme); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
   const R = sv.R, me = R.boats[0]; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); } if (leg !== null){ me.leg = leg; me.prevWY = leg === 0 ? -1e3 : 1; } return me; }"""
@@ -30,11 +30,11 @@ PROVA = """async ([caso, seme, leg, ogg, dist]) => {
 # 1.0.63: ostacolo. caso 'sopra': scafo messo sopra l'oggetto, velocita prima/dopo il primo passo e distanza dopo 3 passi; 'lancio': scafo lanciato contro l'oggetto da 12 m con una direzione e una velocita, distanza minima a fine passo
 OSTACOLO = """async ([caso, seme, leg, ogg, ang, vel]) => {
   const sv = __sv, dt = 1 / 60; const piazza = %s; const setup = %s; const me = setup(sv, seme, leg); const R = sv.R;
-  const o = ogg === 'pin' ? R.pin : ogg === 'cb' ? R.cb : R.marks[0], r = ogg === 'cb' ? 2.0 : 0.9; const need0 = R.need;
-  if (caso === 'sopra'){ piazza(sv, ogg, 0, 0.3 + (seme %% 5) * 0.1); sv.S.u = 3; const u0 = sv.S.u; sv.ctl.tiller = 0; sv.run(dt, 1); const u1 = sv.S.u; sv.run(dt, 2); return { r, d: distScafoPunto(sv.S, o.x, o.y), rapporto: u1 / u0, inc: R.need - need0 }; }
+  const cb = ogg.startsWith('cb'); const o = ogg === 'pin' ? R.pin : cb ? R.cb : R.marks[0]; const need0 = R.need;
+  const marg = S => cb ? -polySep(hullWorld(S), cbWorld(), S.x, S.y, R.cb.x, R.cb.y).pen : distScafoPunto(S, o.x, o.y) - 0.9; // metri fuori dall'oggetto (negativo: dentro)
+  if (caso === 'sopra'){ piazza(sv, ogg, 0, 0.3 + (seme %% 5) * 0.1); const m0 = marg(sv.S); sv.S.u = 3; const u0 = sv.S.u; sv.ctl.tiller = 0; sv.run(dt, 1); const u1 = sv.S.u; sv.run(dt, 2); return { m0, marg: marg(sv.S), rapporto: u1 / u0, inc: R.need - need0 }; }
   if (caso === 'lancio'){ const a = ang * Math.PI / 180; sv.S.x = o.x + 12 * Math.cos(a); sv.S.y = o.y + 12 * Math.sin(a); sv.S.h = Math.atan2(o.x - sv.S.x, -(o.y - sv.S.y)) * 180 / Math.PI; sv.S.u = vel;
-    let dmin = 1e9; for (let k = 0; k < 60 * 7; k++){ sv.ctl.tiller = 0; sv.run(dt, 1); dmin = Math.min(dmin, distScafoPunto(sv.S, o.x, o.y)); } return { r, dmin, inc: R.need - need0 }; }
-  if (caso === 'avversario'){ const a = R.boats[1]; a.S.x = o.x; a.S.y = o.y; a.S.u = 0; sv.run(dt, 1); return { r, d: distScafoPunto(a.S, o.x, o.y) }; }
+    let mmin = 1e9; for (let k = 0; k < 60 * 7; k++){ sv.ctl.tiller = 0; sv.run(dt, 1); mmin = Math.min(mmin, marg(sv.S)); } return { mmin, inc: R.need - need0 }; }
 }""" % (PIAZZA, SETUP)
 # il pilota tocca da solo? regata dei giri con la flotta, vento 10 nodi, fino all'arrivo del giocatore
 SOLO = """async ([seme]) => {
@@ -103,24 +103,24 @@ async def main():
         chk("E1 dopo il tocco un giro estingue il debito (%d prove su %d, senza scuffie nel %d)" % (n, n, sum(1 for r in E if not r["cap"])), all(r["dopoTocco"] == 1 and r["inc"] == 1 and r["done"] >= 1 for r in E) and len(E) == n,
             "estinti %d su %d" % (sum(1 for r in E if r["done"] >= 1), n))
         # ---- I (1.0.63) ----
-        OGG = [("m0", 1), ("pin", 1), ("cb", 1), ("pin", 0), ("cb", 2)]  # (oggetto, lato): boa del lato, spillo e comitato sia dove contano sia dove no
+        OGG = [("m0", 1), ("pin", 1), ("cb", 1), ("pin", 0), ("cb", 2), ("cbprua", 1), ("cbpoppa", 1), ("cbprua", 2), ("cbpoppa", 2)]  # (oggetto, lato): boa del lato, spillo e comitato (al centro, a prua e a poppa) sia dove contano sia dove no
         I1 = {(o, l): [await pg.evaluate(OSTACOLO, ["sopra", 1000 + k, l, o, 0, 0]) for k in semi] for o, l in OGG}
         for (o, l), rr in I1.items():
-            chk("I1 %s sul lato %d: lo scafo messo sopra viene respinto fuori dal raggio (%d prove, distanza minima %.2f m, raggio %.1f m)" % (o, l, n, min(r["d"] for r in rr), rr[0]["r"]), all(r["d"] >= r["r"] - 1e-9 for r in rr) and len(rr) == n)
+            chk("I1 %s sul lato %d: lo scafo messo sopra viene respinto fuori dall'oggetto (%d prove, dentro all'inizio in tutte, margine minimo dopo %.2f m)" % (o, l, n, min(r["marg"] for r in rr)), all(r["marg"] >= -1e-9 and r["m0"] < 0 for r in rr) and len(rr) == n)
         tutti = [r for rr in I1.values() for r in rr]
         print("     I velocita dopo il primo passo / prima: mediana %.3f, minimo %.3f, massimo %.3f su %d casi (atteso 0,60 piu il passo)" % (statistics.median(r["rapporto"] for r in tutti), min(r["rapporto"] for r in tutti), max(r["rapporto"] for r in tutti), len(tutti)), flush=True)
-        chk("I2 al primo passo del tocco la velocita vale al piu il 61%% di quella di prima (%d casi)" % len(tutti), all(0 < r["rapporto"] <= 0.61 for r in tutti) and len(tutti) == 5 * n)
+        chk("I2 al primo passo del tocco la velocita vale al piu il 61%% di quella di prima (%d casi)" % len(tutti), all(0 < r["rapporto"] <= 0.61 for r in tutti) and len(tutti) == len(OGG) * n)
         chk("I3 il respingimento non cambia la penalita: spillo sul lato 1 e comitato sul lato 1 non danno debito, gli altri si (%d prove ciascuno)" % n,
-            all(r["inc"] == 0 for k in (("pin", 1), ("cb", 1)) for r in I1[k]) and all(r["inc"] == 1 for k in (("m0", 1), ("pin", 0), ("cb", 2)) for r in I1[k]) )
+            all(r["inc"] == 0 for k in (("pin", 1), ("cb", 1), ("cbprua", 1), ("cbpoppa", 1)) for r in I1[k]) and all(r["inc"] == 1 for k in (("m0", 1), ("pin", 0), ("cb", 2), ("cbprua", 2), ("cbpoppa", 2)) for r in I1[k]) )
         L = [(o, a, v) for o in ("m0", "pin", "cb") for a in range(0, 360, 30) for v in (3.0, 5.0)]
         I4 = [await pg.evaluate(OSTACOLO, ["lancio", 1100 + i, 1, o, a, v]) for i, (o, a, v) in enumerate(L)]
-        chk("I4 scafo lanciato contro l'oggetto da 12 m a 3 e 5 m/s da 12 direzioni (%d lanci, 3 oggetti): non lo attraversa mai (distanza minima %.2f m)" % (len(L), min(r["dmin"] for r in I4)), all(r["dmin"] >= r["r"] - 1e-9 for r in I4) and len(I4) == 72)
+        chk("I4 scafo lanciato contro l'oggetto da 12 m a 3 e 5 m/s da 12 direzioni (%d lanci, 3 oggetti): non lo attraversa mai (margine minimo %.2f m)" % (len(L), min(r["mmin"] for r in I4)), all(r["mmin"] >= -1e-9 for r in I4) and len(I4) == 72)
         ctxA, pgA, errsA = await pagina(b, ROOT)
         I6 = []
         for o in ("m0", "pin", "cb"):
             I6.append(await pgA.evaluate("""async ([o]) => { const sv = __sv, dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change')); __seed(7); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
-              const R = sv.R; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); } const m = o === 'pin' ? R.pin : o === 'cb' ? R.cb : R.marks[0], a = R.boats[1]; a.S.x = m.x; a.S.y = m.y; a.S.u = 0; sv.run(dt, 1); return { r: o === 'cb' ? 2 : 0.9, d: distScafoPunto(a.S, m.x, m.y) }; }""", [o]))
-        chk("I6 gli avversari non sono respinti: un avversario messo sopra spillo, comitato e boa resta dentro il raggio (3 prove)", all(r["d"] < r["r"] for r in I6), str([round(r["d"], 2) for r in I6]))
+              const R = sv.R; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); } const m = o === 'pin' ? R.pin : o === 'cb' ? R.cb : R.marks[0], a = R.boats[1]; a.S.x = m.x; a.S.y = m.y; a.S.u = 0; sv.run(dt, 1); return { dentro: o === 'cb' ? polySep(hullWorld(a.S), cbWorld(), a.S.x, a.S.y, R.cb.x, R.cb.y).pen > 0 : distScafoPunto(a.S, m.x, m.y) < 0.9 }; }""", [o]))
+        chk("I6 gli avversari non sono respinti: un avversario messo sopra spillo, comitato e boa resta dentro il raggio (3 prove)", all(r["dentro"] for r in I6), str([r["dentro"] for r in I6]))
         await ctxA.close()
         # ---- F ----
         nreg = int(os.environ.get("REGATE", "60"))

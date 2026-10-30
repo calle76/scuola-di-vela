@@ -99,7 +99,7 @@ Fatta e misurata: vedi `CHANGELOG.md` e `tests/collaudo_boa.py`. Soglie non camb
 
 ## Esito della fetta 2b (30 ottobre 2026, 1.0.63)
 
-Fatta e misurata: vedi `CHANGELOG.md`. Soglie non cambiate. Un difetto del mio collaudo (velocità azzerata dal posizionamento, controllo passato a vuoto) trovato e corretto; il criterio 7 (tempo mediano del pilota entro 3 s) è passato: +0,9 s su 60 regate.
+Fatta e misurata: vedi `CHANGELOG.md`. Soglie non cambiate. Un difetto del mio collaudo (velocità azzerata dal posizionamento, controllo passato a vuoto) trovato e corretto; il comitato come cerchio di 2 m era sbagliato (Ale, 31 ottobre): dalla 1.0.64 è il poligono con cui è disegnato. il criterio 7 (tempo mediano del pilota entro 3 s) è passato: +0,9 s su 60 regate.
 
 ## Cosa non c'è in questa fetta
 
