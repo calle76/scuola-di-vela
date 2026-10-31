@@ -643,7 +643,8 @@
     ctx.restore();
   }
   function drawCompass(v){
-    const r = 26, cx = W - r - 16, cy = r + 22, a = v.rot;
+    const r = 26, a = v.rot; ctx.save(); ctx.font = font(600, 14); const tw = ctx.measureText(windTesto()).width; ctx.restore(); // 1.0.70: la bussola sta in basso a destra, sopra la scritta del vento e al suo centro (era in alto a destra)
+    const cx = W - 16 - tw / 2, cy = H - 18 - 16 - r - 4;
     ctx.save(); ctx.translate(cx, cy);
     ctx.fillStyle = "rgba(0,0,0,.22)"; ctx.beginPath(); ctx.arc(0, 0, r + 4, 0, Math.PI * 2); ctx.fill();
     ctx.rotate(a); ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.fillStyle = "#fff"; ctx.lineWidth = 1;
@@ -683,10 +684,11 @@
     ctx.restore();
   }
   // 1.0.38: vento e bussola nello stesso angolo (in alto a destra, sotto la bussola); la versione sul mare non c'è più (sta nel menu), l'angolo in alto a sinistra è libero; 1.0.48: riga più corta, senza «Vento reale» (check di Ale)
+  const windTesto = () => card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi";
   function drawWindBox(v){
     ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
-    const t = card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi";
-    ctx.fillText(t, W - 16, H - 18); windX = W - 16 - ctx.measureText(t).width; // 1.0.70: il vento sta in basso a destra, dove c'erano «Q vista» e «1 / 2 zoom» (tolte: sono comandi che si conoscono); «da» non c'è più, al suo posto la R rossa della registrazione (registratore.js)
+    const t = windTesto();
+    ctx.fillText(t, W - 16, H - 18); windX = W - 16 - ctx.measureText(t).width; // 1.0.70: il vento sta in basso a destra con la bussola sopra e la R a fianco, tutto in uno spazio raccolto, dove c'erano «Q vista» e «1 / 2 zoom» (tolte: sono comandi che si conoscono); «da» non c'è più, al suo posto la R rossa della registrazione (registratore.js)
     ctx.restore();
   }
 

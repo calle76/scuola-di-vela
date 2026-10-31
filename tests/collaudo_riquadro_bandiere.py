@@ -196,23 +196,26 @@ async def main():
         ctxp, pgp, _ = await pagina(b, ROOT)
         diff = await pgp.evaluate("""async ([a0, a2, b0, b2]) => {
           const carica = u => new Promise(r => { const i = new Image(); i.onload = () => { const c = document.createElement('canvas'); c.width = i.width; c.height = i.height; const g = c.getContext('2d'); g.drawImage(i, 0, 0); r(g.getImageData(0, 0, c.width, c.height)); }; i.src = u; });
-          const conf = async (u, v) => { const A = await carica(u), B = await carica(v); let fuori = 0, dentro = 0; for (let y = 0; y < A.height; y++) for (let x = 0; x < A.width; x++){ const k = 4 * (y * A.width + x); if (A.data[k] !== B.data[k] || A.data[k + 1] !== B.data[k + 1] || A.data[k + 2] !== B.data[k + 2]){ const zona = (x > A.width - 330 && y > A.height - 50) || (x < 130 && y > 30 && y < 56) || (x > A.width - 260 && y > 80 && y < 104) || (Math.abs(x - A.width / 2) < 250 && y > 230 && y < 540); if (zona) dentro++; else fuori++; } } return [fuori, dentro]; };
+          const conf = async (u, v) => { const A = await carica(u), B = await carica(v); let fuori = 0, dentro = 0; for (let y = 0; y < A.height; y++) for (let x = 0; x < A.width; x++){ const k = 4 * (y * A.width + x); if (A.data[k] !== B.data[k] || A.data[k + 1] !== B.data[k + 1] || A.data[k + 2] !== B.data[k + 2]){ const zona = (x > A.width - 330 && y > A.height - 130) || (x > A.width - 100 && y < 90) || (x < 130 && y > 30 && y < 56) || (x > A.width - 260 && y > 80 && y < 104) || (Math.abs(x - A.width / 2) < 250 && y > 230 && y < 540); if (zona) dentro++; else fuori++; } } return [fuori, dentro]; };
           return [await conf(a0, b0), await conf(a2, b2)]; }""", [sn[0], sn[2], sv_[0], sv_[2]])
         await ctxp.close()
         chk("Q6b la schermata a -30 s della regata 1a e della 1b è identica al pixel alla 1.0.69 fuori dalle zone del vento (in basso a destra, dov'è ora; in alto a destra, dov'era), delle vecchie scritte «Q vista» e «1 / 2 zoom» della vecchia spia in alto a sinistra e dell'area attorno alla barca (frecce senza nomi, senza banderuola) (pixel diversi fuori / dentro quelle zone: 1a %s, 1b %s; il metro deve vedere almeno una differenza nelle zone)" % (diff[0], diff[1]), diff[0][0] == 0 and diff[1][0] == 0 and diff[0][1] > 0 and diff[1][1] > 0)
         # ---- Q7 ----
-        ctx, pg, errs = await pagina(b, ROOT)
-        c = await pg.evaluate(COSTO)
-        if "errore" in c: chk("Q7 costo del disegno", False, c["errore"])
+        # 1.0.70: una sola misura era troppo rumorosa (0,05 / 0,06 / -0,08 / 0,345 ms in quattro giri, rumore fra blocchi 6 ms): ora 5 ripetizioni in pagine nuove e conta la MEDIANA delle differenze; le soglie (0,2 ms o 3%) non sono cambiate
+        diffs = []; pct = []; mns = []; err7 = None
+        for rip in range(5):
+            ctx, pg, errs = await pagina(b, ROOT); c = await pg.evaluate(COSTO); await ctx.close()
+            if "errore" in c: err7 = c["errore"]; break
+            mv, mn = statistics.median(c["vis"]), statistics.median(c["nasc"]); diffs.append(mv - mn); pct.append(100 * (mv - mn) / mn); mns.append(mn)
+        if err7: chk("Q7 costo del disegno", False, err7)
         else:
-            mv, mn = statistics.median(c["vis"]), statistics.median(c["nasc"]); diff = mv - mn
-            chk("Q7 costo del disegno con riquadro (mediana %.3f ms) contro senza (%.3f ms): differenza %.3f ms, %.1f%% (soglie: 0,2 ms e 3%%; 6 blocchi da 100 fotogrammi per parte, alternati)" % (mv, mn, diff, 100 * diff / mn if mn else 0), diff <= 0.2 or diff / mn <= 0.03, "(il rumore fra blocchi è %.3f ms)" % (max(c["vis"] + c["nasc"]) - min(c["vis"] + c["nasc"])))
-        await ctx.close()
+            md, mp = statistics.median(diffs), statistics.median(pct)
+            chk("Q7 costo del disegno con riquadro contro senza, mediana di 5 ripetizioni (6 blocchi da 100 fotogrammi per parte, alternati): %.3f ms, %.1f%% (singole: %s ms; soglie 0,2 ms o 3%%, invariate)" % (md, mp, ", ".join("%.3f" % d for d in diffs)), md <= 0.2 or mp <= 3)
         # ---- Q8 ----
         for vp in ((1360, 650), (1360, 768)):
             ctx, pg, errs = await pagina(b, ROOT, vp=vp); pz = await pg.evaluate(POSTO, vp[1]); await ctx.close()
             Wc, Hc = pz["W"], pz["H"]; probl = []
-            ostacoli = {"bussola": [Wc - 26 - 16 - 30, 18, 60, 62], "orologio (e la riga «non sei partito»)": [Wc / 2 - 250, 0, 500, 100], "messaggio al centro (fino a 500 px)": [Wc / 2 - 250, 100, 500, 36], "vento e R in basso a destra": [Wc - 260, Hc - 40, 260, 40], "indicatori in basso a sinistra": [0, Hc - 110, 260, 110]}
+            ostacoli = {"bussola, vento e R in basso a destra": [Wc - 190, Hc - 115, 190, 115], "orologio (e la riga «non sei partito»)": [Wc / 2 - 250, 0, 500, 100], "messaggio al centro (fino a 500 px)": [Wc / 2 - 250, 100, 500, 36], "indicatori in basso a sinistra": [0, Hc - 110, 260, 110]}
             for nome_s, rr in (("prima dello sparo", pz["pre"]), ("dopo lo sparo", pz["post"])):
                 for rect in solo_pezzi(rr):
                     x, y, w, h = rect

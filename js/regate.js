@@ -779,12 +779,12 @@
   const bandiereTesto = f => ["classe", "P", "X", "blu"].filter(k => f[k]).join("+") || "nessuna";
 
   // ---- riquadro delle bandiere e delle penalità (livello 2a, 1.0.70, docs/PROPOSTA-RIQUADRO-BANDIERE.md) ----
-  // Solo nelle regate con R.segnali. Due pezzi in alto ai lati del mare, dove prima c'erano la spia della registrazione (a sinistra) e il vento (a destra, sotto la bussola); orologio e messaggio stanno al centro:
+  // Solo nelle regate con R.segnali. Due pezzi in alto ai lati del mare, dove prima c'erano la spia della registrazione (a sinistra) e il vento con la bussola (a destra); orologio e messaggio stanno al centro:
   // a sinistra le bandiere esposte in grande con una riga che dice cosa significano; a destra la X, le penalità e l'avviso «sei oltre la linea» (questo solo con i Suggerimenti
   // accesi; il test è quello che decide la X allo sparo: centro della barca oltre la linea). Le bandiere si vedono per RQ_PERM s dopo ogni cambio (la X finché c'è); a destra solo se c'è qualcosa da dire.
   const RQ_PERM = 10, RQ_SCONTATA = 6, RQ_LAMPO = 1.5, RQ_X = 16, RQ_BW = 44, RQ_BH = 30; // secondi e pixel: ipotesi nostre
   const RQ_NOMI = { classe: "Classe", P: "P", X: "X", blu: "Blu" }, rqMis = new Map();
-  const RQ_YS = 10, RQ_YD = 86; // altezza del pezzo di sinistra e di quello di destra (sotto la bussola)
+  const RQ_YS = 10, RQ_YD = 10; // altezza dei due pezzi (la bussola e il vento stanno in basso a destra)
   function rqAggiorna(){ // a ogni passo: quando cambia l'insieme delle bandiere, e quando un debito di giri si chiude
     const k = bandiereTesto(bandiereR()); if (k !== R.rqKey){ R.rqKey = k; R.rqT = R.t; }
     const deb = R.need > R.done; if (R.rqDeb && !deb) R.rqScont = R.t; R.rqDeb = deb;
