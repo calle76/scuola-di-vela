@@ -57,4 +57,10 @@ async def main():
         print("schermate della linea:", " ".join(nomi))
         print("errori:", errs[:5])
         await b.close()
+        # 1 novembre 2026 («test dei test»): da «ambiguo» a «chiaro» per la parte automatica (nessun errore JavaScript,
+        # tutte le schermate scritte); le schermate stesse si guardano ancora a occhio.
+        mancano = [n for n in nomi if not (OUT / n).is_file()]
+        cade = (["errori JavaScript: %d" % len(errs)] if errs else []) + (["nessuna schermata"] if not nomi else []) + (["schermate non scritte: %s" % mancano] if mancano else [])
+        print("ESITO:", "OK (%d schermate da guardare a occhio)" % len(nomi) if not cade else "FALLITO, " + "; ".join(cade))
+        if cade: __import__("sys").exit(1)
 asyncio.run(main())

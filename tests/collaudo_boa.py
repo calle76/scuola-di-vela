@@ -3,6 +3,7 @@
 # Parti: A) tocco della boa del lato (e della linea d'arrivo): debito +1; B) a 0,5 m dal bordo niente; C) tocco continuato = un solo giro, poi allontanarsi e toccare = +1;
 #        I) (1.0.63) respinto fuori dal raggio, velocità al 60%, mai attraversata, avversari non respinti, tempi del pilota; D) boe che non contano in quel momento; E) un giro basta; F) quanto tocca da solo il pilota; G) altre regate identiche al bit; H) registratore e pagina senza #collaudo.
 import asyncio, pathlib, sys, os, statistics
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -81,46 +82,46 @@ async def main():
         # ---- A ----
         A = [await run(pg, "semplice", 100 + k, 1 if k % 2 else 2, "m0" if k % 2 else ("pin" if k % 4 == 0 else "cb"), 0) for k in semi]
         chk("A1 scafo sulla boa del lato (%d prove: boa 1 sul lato 1, linea d'arrivo sull'ultimo lato): il debito sale esattamente di 1, nessun +15 s" % n,
-            all(r["inc"] == 1 and r["pen"] == 0 and r["nBoa"] == 1 for r in A) and len(A) == n, "incrementi: %s" % sorted({r["inc"] for r in A}))
-        chk("A2 la voce nell'elenco e la riga delle regole citano la regola 31", all(any("regola 31" in v for v in r["voci"]) and "regola 31" in (r["regola"] or "") for r in A))
+            metro.tutti(r["inc"] == 1 and r["pen"] == 0 and r["nBoa"] == 1 for r in A) and len(A) == n, "incrementi: %s" % sorted({r["inc"] for r in A}))
+        chk("A2 la voce nell'elenco e la riga delle regole citano la regola 31", metro.tutti(any("regola 31" in v for v in r["voci"]) and "regola 31" in (r["regola"] or "") for r in A))
         # ---- B ----
         B = [await run(pg, "semplice", 200 + k, 1, "m0", 1.4) for k in semi]; B0 = [await run(pg, "semplice", 200 + k, 1, "m0", 0) for k in semi]
         chk("B1 a 0,5 m dal bordo della boa (%d prove, distanza scafo-centro 1,4 m con boa di 0,9 m: misurata fra 1,3 e 1,5): debito invariato; controllo: con tocco vero stesse prove +1 (%d su %d)" % (n, sum(1 for r in B0 if r["inc"] == 1), n),
-            all(r["inc"] == 0 and 1.3 <= r["dReale"] <= 1.5 for r in B) and all(r["inc"] == 1 for r in B0))
+            metro.tutti(r["inc"] == 0 and 1.3 <= r["dReale"] <= 1.5 for r in B) and metro.tutti(r["inc"] == 1 for r in B0))
         # ---- C ----
         C = [await run(pg, "continuo", 300 + k, 1, "m0", 0) for k in semi]
         chk("C1 scafo fermo sulla boa per 5 s: un solo giro (%d prove); allontanato oltre 3 m dal bordo, nessun giro nuovo; toccando di nuovo, +1 (totale 2)" % n,
-            all(r["dopoFermo"] == 1 and r["dopoLontano"] == 1 and r["inc"] == 2 for r in C) and len(C) == n, "dopo 5 s: %s, dopo l'allontanamento: %s, totale: %s" % (sorted({r["dopoFermo"] for r in C}), sorted({r["dopoLontano"] for r in C}), sorted({r["inc"] for r in C})))
+            metro.tutti(r["dopoFermo"] == 1 and r["dopoLontano"] == 1 and r["inc"] == 2 for r in C) and len(C) == n, "dopo 5 s: %s, dopo l'allontanamento: %s, totale: %s" % (sorted({r["dopoFermo"] for r in C}), sorted({r["dopoLontano"] for r in C}), sorted({r["inc"] for r in C})))
         # ---- D ----
         D1 = [await run(pg, "semplice", 400 + k, 1, "pin" if k % 2 else "cb", 0) for k in semi]
         D2 = [await run(pg, "semplice", 500 + k, 2, "m0", 0) for k in semi]
         D3 = [await run(pg, "semplice", 600 + k, 0, "m0", 0) for k in semi]
-        chk("D1 sul lato 1 la linea non conta: tocco senza effetto (%d prove)" % n, all(r["inc"] == 0 for r in D1) and len(D1) == n)
-        chk("D2 sull'ultimo lato la boa lasciata conta ancora (%d prove, +1)" % n, all(r["inc"] == 1 for r in D2) and len(D2) == n)
-        chk("D3 prima del via la boa di bolina non conta (%d prove, 0)" % n, all(r["inc"] == 0 for r in D3) and len(D3) == n)
+        chk("D1 sul lato 1 la linea non conta: tocco senza effetto (%d prove)" % n, metro.tutti(r["inc"] == 0 for r in D1) and len(D1) == n)
+        chk("D2 sull'ultimo lato la boa lasciata conta ancora (%d prove, +1)" % n, metro.tutti(r["inc"] == 1 for r in D2) and len(D2) == n)
+        chk("D3 prima del via la boa di bolina non conta (%d prove, 0)" % n, metro.tutti(r["inc"] == 0 for r in D3) and len(D3) == n)
         # ---- E ----
         E = [await run(pg, "giro", 700 + k, 1, "m0", 0) for k in semi]
-        chk("E1 dopo il tocco un giro estingue il debito (%d prove su %d, senza scuffie nel %d)" % (n, n, sum(1 for r in E if not r["cap"])), all(r["dopoTocco"] == 1 and r["inc"] == 1 and r["done"] >= 1 for r in E) and len(E) == n,
+        chk("E1 dopo il tocco un giro estingue il debito (%d prove su %d, senza scuffie nel %d)" % (n, n, sum(1 for r in E if not r["cap"])), metro.tutti(r["dopoTocco"] == 1 and r["inc"] == 1 and r["done"] >= 1 for r in E) and len(E) == n,
             "estinti %d su %d" % (sum(1 for r in E if r["done"] >= 1), n))
         # ---- I (1.0.63) ----
         OGG = [("m0", 1), ("pin", 1), ("cb", 1), ("pin", 0), ("cb", 2), ("cbprua", 1), ("cbpoppa", 1), ("cbprua", 2), ("cbpoppa", 2)]  # (oggetto, lato): boa del lato, spillo e comitato (al centro, a prua e a poppa) sia dove contano sia dove no
         I1 = {(o, l): [await pg.evaluate(OSTACOLO, ["sopra", 1000 + k, l, o, 0, 0]) for k in semi] for o, l in OGG}
         for (o, l), rr in I1.items():
-            chk("I1 %s sul lato %d: lo scafo messo sopra viene respinto fuori dall'oggetto (%d prove, dentro all'inizio in tutte, margine minimo dopo %.2f m)" % (o, l, n, min(r["marg"] for r in rr)), all(r["marg"] >= -1e-9 and r["m0"] < 0 for r in rr) and len(rr) == n)
+            chk("I1 %s sul lato %d: lo scafo messo sopra viene respinto fuori dall'oggetto (%d prove, dentro all'inizio in tutte, margine minimo dopo %.2f m)" % (o, l, n, min(r["marg"] for r in rr)), metro.tutti(r["marg"] >= -1e-9 and r["m0"] < 0 for r in rr) and len(rr) == n)
         tutti = [r for rr in I1.values() for r in rr]
         print("     I velocita dopo il primo passo / prima: mediana %.3f, minimo %.3f, massimo %.3f su %d casi (atteso 0,60 piu il passo)" % (statistics.median(r["rapporto"] for r in tutti), min(r["rapporto"] for r in tutti), max(r["rapporto"] for r in tutti), len(tutti)), flush=True)
-        chk("I2 al primo passo del tocco la velocita vale al piu il 61%% di quella di prima (%d casi)" % len(tutti), all(0 < r["rapporto"] <= 0.61 for r in tutti) and len(tutti) == len(OGG) * n)
+        chk("I2 al primo passo del tocco la velocita vale al piu il 61%% di quella di prima (%d casi)" % len(tutti), metro.tutti(0 < r["rapporto"] <= 0.61 for r in tutti) and len(tutti) == len(OGG) * n)
         chk("I3 il respingimento non cambia la penalita: spillo sul lato 1 e comitato sul lato 1 non danno debito, gli altri si (%d prove ciascuno)" % n,
-            all(r["inc"] == 0 for k in (("pin", 1), ("cb", 1), ("cbprua", 1), ("cbpoppa", 1)) for r in I1[k]) and all(r["inc"] == 1 for k in (("m0", 1), ("pin", 0), ("cb", 2), ("cbprua", 2), ("cbpoppa", 2)) for r in I1[k]) )
+            metro.tutti(r["inc"] == 0 for k in (("pin", 1), ("cb", 1), ("cbprua", 1), ("cbpoppa", 1)) for r in I1[k]) and metro.tutti(r["inc"] == 1 for k in (("m0", 1), ("pin", 0), ("cb", 2), ("cbprua", 2), ("cbpoppa", 2)) for r in I1[k]) )
         L = [(o, a, v) for o in ("m0", "pin", "cb") for a in range(0, 360, 30) for v in (3.0, 5.0)]
         I4 = [await pg.evaluate(OSTACOLO, ["lancio", 1100 + i, 1, o, a, v]) for i, (o, a, v) in enumerate(L)]
-        chk("I4 scafo lanciato contro l'oggetto da 12 m a 3 e 5 m/s da 12 direzioni (%d lanci, 3 oggetti): non lo attraversa mai (margine minimo %.2f m)" % (len(L), min(r["mmin"] for r in I4)), all(r["mmin"] >= -1e-9 for r in I4) and len(I4) == 72)
+        chk("I4 scafo lanciato contro l'oggetto da 12 m a 3 e 5 m/s da 12 direzioni (%d lanci, 3 oggetti): non lo attraversa mai (margine minimo %.2f m)" % (len(L), min(r["mmin"] for r in I4)), metro.tutti(r["mmin"] >= -1e-9 for r in I4) and len(I4) == 72)
         ctxA, pgA, errsA = await pagina(b, ROOT)
         I6 = []
         for o in ("m0", "pin", "cb"):
             I6.append(await pgA.evaluate("""async ([o]) => { const sv = __sv, dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change')); __seed(7); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
               const R = sv.R; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); } const m = o === 'pin' ? R.pin : o === 'cb' ? R.cb : R.marks[0], a = R.boats[1]; a.S.x = m.x; a.S.y = m.y; a.S.u = 0; sv.run(dt, 1); return { dentro: o === 'cb' ? polySep(hullWorld(a.S), cbWorld(), a.S.x, a.S.y, R.cb.x, R.cb.y).pen > 0 : distScafoPunto(a.S, m.x, m.y) < 0.9 }; }""", [o]))
-        chk("I6 gli avversari non sono respinti: un avversario messo sopra spillo, comitato e boa resta dentro il raggio (3 prove)", all(r["dentro"] for r in I6), str([r["dentro"] for r in I6]))
+        chk("I6 gli avversari non sono respinti: un avversario messo sopra spillo, comitato e boa resta dentro il raggio (3 prove)", metro.tutti(r["dentro"] for r in I6), str([r["dentro"] for r in I6]))
         await ctxA.close()
         # ---- F ----
         nreg = int(os.environ.get("REGATE", "60"))
@@ -134,7 +135,7 @@ async def main():
             diff = [a["fin"] - c["fin"] for a, c in zip(F, Fr) if a["fin"] is not None and c["fin"] is not None]
             print("     I7 pilota di prova, %d regate: arrivate %d (senza ostacolo %d); tempo mediano %.1f s (senza ostacolo %.1f s), differenza %.1f s; regate con tempo diverso %d, differenza massima %.1f s" % (nreg, len(fa), len(fr), statistics.median(fa), statistics.median(fr), statistics.median(fa) - statistics.median(fr), sum(1 for d in diff if abs(d) > 1e-6), max((abs(d) for d in diff), default=0)), flush=True)
             chk("I7 tutte le regate del pilota arrivano (nessuna incastrata) e la differenza del tempo mediano e entro 3 s (atteso, stima nostra)", len(fa) == nreg and abs(statistics.median(fa) - statistics.median(fr)) <= 3)
-        chk("F0 il metro ha misurato davvero: tutte le regate hanno una nBoa numerica e %d su %d sono arrivate" % (len(arr), nreg), all(isinstance(r["nBoa"], int) for r in F) and len(arr) >= nreg * 0.9)
+        chk("F0 il metro ha misurato davvero: tutte le regate hanno una nBoa numerica e %d su %d sono arrivate" % (len(arr), nreg), metro.tutti(isinstance(r["nBoa"], int) for r in F) and len(arr) >= nreg * 0.9)
         # ---- H ----
         G = await pg.evaluate(REGISTRATA, [800])
         t = G["testo"] + G["testoLive"]

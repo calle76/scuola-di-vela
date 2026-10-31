@@ -4,6 +4,7 @@
 #        G4 quanto costano; G5 non si piantano; G6 non scuffiano; G7 spirale; G8 la 21.2 vale anche per loro; G9 arrivo con giri mancanti; G10 altre regate identiche al bit;
 #        G11 pagina senza #collaudo. Le soglie sono nella proposta, scritte prima di misurare.
 import asyncio, pathlib, sys, os, statistics, json
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -178,7 +179,7 @@ async def main():
                     if not log[m][4]: m += 1; continue
                     a_ = m
                     while m < len(log) and log[m][4]: m += 1
-                    cont = fine_prec is not None and all(log[x][5] > 0 for x in range(fine_prec, a_ + 1))  # il debito non si è mai azzerato dall'ultimo segmento: il verso è quello già scelto (44.2)
+                    cont = fine_prec is not None and metro.tutti(log[x][5] > 0 for x in range(fine_prec, a_ + 1))  # il debito non si è mai azzerato dall'ultimo segmento: il verso è quello già scelto (44.2)
                     fine_prec = m
                     if cont: ripresi += 1
                     elif abs(log[a_][2]) > 160: vicini += 1  # partenza vicino alla poppa: l'angolo cresce e poi cala per la strambata, il metro non decide
@@ -195,11 +196,11 @@ async def main():
         camb = sum(1 for g in G8 for c in g if c["senza"] == "me")
         chk("G8 l'avversario che sconta cede con la 21.2 al giocatore che non sconta: %d su %d posizioni (in %d il giocatore avrebbe ceduto senza la regola)" % (ok8, t8, camb), ok8 == t8 and camb >= 10)
         G8b = [await pg.evaluate(GRIGLIA, [820 + k, "entrambe"]) for k in range(2)]
-        chk("G8b scontano tutti e due: valgono le regole 10-13 (%d posizioni)" % sum(len(g) for g in G8b), all(10 <= c["regola"] <= 13 for g in G8b for c in g))
+        chk("G8b scontano tutti e due: valgono le regole 10-13 (%d posizioni)" % sum(len(g) for g in G8b), metro.tutti(10 <= c["regola"] <= 13 for g in G8b for c in g))
         # ---- G9 ----
         G9 = [await pg.evaluate(ARRIVO, [900 + k]) for k in range(10)]
         val = [g for g in G9 if g["dato"] and g["fin"] and g["fatti"] == 0]  # chi ha fatto i giri prima di arrivare (la rotta lo ha riportato a più di 25 m dalla linea) non è un caso di giri mancanti
-        chk("G9 avversario che arriva con due giri da fare: +30 s e voce nell'elenco in %d casi su %d possibili (10 prove)" % (sum(1 for g in val if g["dpen"] == 30 and g["voce"] == 1 and g["debito"] == 0), len(val)), len(val) >= 7 and all(g["dpen"] == 30 and g["voce"] == 1 for g in val), "non validi: %s" % [(i, g) for i, g in enumerate(G9) if g not in val or g["dpen"] != 30 or g["voce"] != 1])
+        chk("G9 avversario che arriva con due giri da fare: +30 s e voce nell'elenco in %d casi su %d possibili (10 prove)" % (sum(1 for g in val if g["dpen"] == 30 and g["voce"] == 1 and g["debito"] == 0), len(val)), len(val) >= 7 and metro.tutti(g["dpen"] == 30 and g["voce"] == 1 for g in val), "non validi: %s" % [(i, g) for i, g in enumerate(G9) if g not in val or g["dpen"] != 30 or g["voce"] != 1])
         chk("A0 nessun errore di pagina", not errs, str(errs[:2]))
         await ctx.close()
         # ---- G10 ----

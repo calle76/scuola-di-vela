@@ -214,5 +214,8 @@ async def main():
         print("errori JavaScript:", errs)
         print("ESITO:", f"{sum(esiti)} su {len(esiti)} verifiche riuscite")
         await b.close()
+        # 1 novembre 2026 («test dei test»): da «ambiguo» a «chiaro». Atteso di docs/COLLAUDI.md: 15 su 15; cade anche con
+        # meno di 15 verifiche (una parte saltata) o con errori JavaScript.
+        if errs or len(esiti) < 15 or not all(esiti): sys.exit(1)
 if __name__ == "__main__":
     asyncio.run(main())

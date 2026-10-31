@@ -6,6 +6,7 @@
 #  Q3 avviso «oltre la linea» (solo con i Suggerimenti), mai in contraddizione con la X; Q4 penalità: giri da fare, fatti, scontata, motivo del contatto, giro nel verso opposto;
 #  Q5 sparisce; Q6 le altre regate identiche al bit e la regata dei giri identica nella fisica (alla 1.0.69); Q7 costo del disegno; Q8 posto a 1360x650 e 1360x768; Q9 pagina senza #collaudo.
 import asyncio, pathlib, sys, os, subprocess, tempfile, statistics
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RIF = "c90725d"  # 1.0.69, l'ultima versione senza riquadro
@@ -126,7 +127,7 @@ async def main():
                     # con la barca dietro la linea e senza debiti la sola ragione per vedere il riquadro sono le bandiere cambiate da meno di 10 s
                     if nomi and ult is not None and t - ult < 9.8:
                         nvis += 1
-                        if not s["vis"] or s["flag"] != nomi or [x[0] for x in s["pix"]] != nomi or not all(x[1] for x in s["pix"]): nerr += 1; dett.append((cd, round(t, 2), nomi, s["flag"], s["pix"]))
+                        if not s["vis"] or s["flag"] != nomi or [x[0] for x in s["pix"]] != nomi or not metro.tutti(x[1] for x in s["pix"]): nerr += 1; dett.append((cd, round(t, 2), nomi, s["flag"], s["pix"]))
                         else: npix += len(s["pix"]); tipi.update(nomi)
                     elif ult is None or t - ult > 10.3:
                         if s["vis"]: nerr += 1; dett.append((cd, round(t, 2), "riquadro dopo 10 s", s["righe"], s["flag"]))
@@ -145,7 +146,7 @@ async def main():
         for k in range(20):  # B: si passa la linea a -9,5...-0,5 s e si resta oltre (partenza anticipata vera); a +12 s si torna dietro
             t_in = -9.5 + 0.45 * k; r = await pg.evaluate(SCENA, [60, 200 + k, True, [[-1e9, 12], [t_in, -6], [12, 8]], 18, True]); nB += 1
             dopo = [s for s in r["out"] if 0.3 <= s["t"] <= 11.7]; fuori = [s for s in r["out"] if s["t"] >= 12.6]
-            if not dopo or not all(s["X"] and "X" in s["flag"] and all(x[1] for x in s["pix"]) and any(x.startswith("X: ") for x in s["righe"]) for s in dopo): errB.append((k, "X mancante dopo lo sparo"))
+            if not dopo or not metro.tutti(s["X"] and "X" in s["flag"] and metro.tutti(x[1] for x in s["pix"]) and any(x.startswith("X: ") for x in s["righe"]) for s in dopo): errB.append((k, "X mancante dopo lo sparo"))
             if any(s["X"] or "X" in s["flag"] for s in fuori): errB.append((k, "X ancora su dopo il ritorno"))
             pre = [s for s in r["out"] if -1 < s["t"] < 0]
             if any(any(x.startswith("Oltre la linea") for x in s["righe"]) for s in r["out"] if s["t"] >= 0.2): errC.append((k, "avviso dopo lo sparo"))
@@ -164,19 +165,19 @@ async def main():
         primi = [any(x.startswith("Penalità: 2 giri da fare") for s in testi(r) for x in s["righe"]) for r in due if not r["cap"]]
         sec = [any(x.startswith("Penalità: 1 giro da fare · fatti 1") for s in testi(r) for x in s["righe"]) for r in due if not r["cap"]]
         scon = [any(x == "Penalità scontata" for s in testi(r) for x in s["righe"]) for r in due if not r["cap"]]
-        dopo = [all(not any(x == "Penalità scontata" for x in (s["righe"] or [])) for s in r["out"] if s["t"] > r["out"][-1]["t"] - 2) for r in due if not r["cap"]]
+        dopo = [metro.tutti(not any(x == "Penalità scontata" for x in (s["righe"] or [])) for s in r["out"] if s["t"] > r["out"][-1]["t"] - 2) for r in due if not r["cap"]]
         mai_scont = [not any(x == "Penalità scontata" for s in testi(r) for x in s["righe"]) for r in opp if not r["cap"]]
-        chk("Q4a debito di due giri: il riquadro dice «2 giri da fare», poi «1 giro da fare · fatti 1», poi «Penalità scontata» (%d prove senza scuffia)" % len(primi), len(primi) >= 4 and all(primi) and all(sec) and all(scon), str((primi, sec, scon)))
-        chk("Q4b la scritta «Penalità scontata» sparisce entro 6 s dopo averla mostrata (negli ultimi 2 s delle prove non c'è)", len(dopo) >= 4 and all(dopo))
-        chk("Q4c un giro in un verso e una rotazione di 400° nell'altro: mai «Penalità scontata» (%d prove senza scuffia)" % len(mai_scont), len(mai_scont) >= 3 and all(mai_scont))
+        chk("Q4a debito di due giri: il riquadro dice «2 giri da fare», poi «1 giro da fare · fatti 1», poi «Penalità scontata» (%d prove senza scuffia)" % len(primi), len(primi) >= 4 and metro.tutti(primi) and metro.tutti(sec) and metro.tutti(scon), str((primi, sec, scon)))
+        chk("Q4b la scritta «Penalità scontata» sparisce entro 6 s dopo averla mostrata (negli ultimi 2 s delle prove non c'è)", len(dopo) >= 4 and metro.tutti(dopo))
+        chk("Q4c un giro in un verso e una rotazione di 400° nell'altro: mai «Penalità scontata» (%d prove senza scuffia)" % len(mai_scont), len(mai_scont) >= 3 and metro.tutti(mai_scont))
         mot = []
         for lato in (1.2, -1.2):
             for seme in range(1, 11):
                 r = await pg.evaluate(CONTATTO, [lato, seme]); mot.append(r)
         conc = [r for r in mot if r["inc"] >= 1]
-        chk("Q4d contatto con colpa del giocatore (debito di due giri): il riquadro dice il motivo «Per: contatto con la …» (%d casi con colpa su %d)" % (len(conc), len(mot)), len(conc) >= 2 and all(r["righe"] and any(x.startswith("Per: contatto con la ") for x in r["righe"]) for r in conc), str(mot[:2]))
+        chk("Q4d contatto con colpa del giocatore (debito di due giri): il riquadro dice il motivo «Per: contatto con la …» (%d casi con colpa su %d)" % (len(conc), len(mot)), len(conc) >= 2 and metro.tutti(r["righe"] and any(x.startswith("Per: contatto con la ") for x in r["righe"]) for r in conc), str(mot[:2]))
         senza = [r for r in mot if r["inc"] == 0 and r["deb0"] == 0]
-        chk("Q4e quando la colpa non è del giocatore e non c'è debito, il riquadro non parla di penalità (%d casi su %d; ne servono almeno 2, se no il metro non ha misurato)" % (len(senza), len(mot)), len(senza) >= 2 and all(not r["righe"] or not any(x.startswith("Penalità") for x in r["righe"]) for r in senza))
+        chk("Q4e quando la colpa non è del giocatore e non c'è debito, il riquadro non parla di penalità (%d casi su %d; ne servono almeno 2, se no il metro non ha misurato)" % (len(senza), len(mot)), len(senza) >= 2 and metro.tutti(not r["righe"] or not any(x.startswith("Penalità") for x in r["righe"]) for r in senza))
         # ---- Q5 ----
         r = await pg.evaluate(SCENA, [60, 7, True, [[-1e9, 12]], 30, True])
         dopo10 = [s for s in r["out"] if s["t"] > -60 + 10.4 and s["t"] < -0.5]; dopo10b = [s for s in r["out"] if s["t"] > 10.4]

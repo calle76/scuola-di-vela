@@ -3,6 +3,7 @@
 # Parti: G1 bandiere giuste a ogni decimo di secondo (1, 3 e 5 minuti, tabella scritta qui, indipendente dal gioco); G2 la X con e senza richiamo (la posizione delle barche, non i campi del gioco);
 #        G3 i messaggi, una volta e al tempo giusto; G4 le altre regate identiche al pixel e al bit, nella regata dei giri le bandiere si vedono; G5 registratore e pagina senza #collaudo.
 import asyncio, pathlib, sys, os
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / "tests" / "output"; OUT.mkdir(exist_ok=True)
@@ -106,8 +107,8 @@ async def main():
                     if not con and X: errX.append((caso, i, round(t, 2), "X senza richiamo"))
         resta = casi["resta"]
         chk("G2 la X sale con un richiamo e scende quando l'ultima barca è tornata (guardando le posizioni, non i campi del gioco); mai senza richiamo (%d regate con richiamo, %d senza; errori %d)" % (n_con, n_senza, len(errX)), n_con >= 5 and n_senza >= 5 and not errX, str(errX[:3]))
-        chk("G2b una barca tenuta oltre la linea: la X resta su fino a 240 s e poi si abbassa (%d regate)" % len(resta), len(resta) >= 5 and all(any(X for t, X, a in r["out"] if 200 < t < 239) and not any(X for t, X, a in r["out"] if t > 241) for r in resta if r["recall"]))
-        chk("G2c il metro ha misurato davvero: nelle regate con richiamo la X compare almeno una volta", all(any(X for t, X, a in r["out"]) for r in casi["torna"] + casi["resta"] if r["recall"]) and any(r["recall"] for r in casi["torna"]), "richiami: torna %d su 6, resta %d su 6" % (sum(1 for r in casi["torna"] if r["recall"]), sum(1 for r in resta if r["recall"])))
+        chk("G2b una barca tenuta oltre la linea: la X resta su fino a 240 s e poi si abbassa (%d regate)" % len(resta), len(resta) >= 5 and metro.tutti(any(X for t, X, a in r["out"] if 200 < t < 239) and not any(X for t, X, a in r["out"] if t > 241) for r in resta if r["recall"]))
+        chk("G2c il metro ha misurato davvero: nelle regate con richiamo la X compare almeno una volta", metro.tutti(any(X for t, X, a in r["out"]) for r in casi["torna"] + casi["resta"] if r["recall"]) and any(r["recall"] for r in casi["torna"]), "richiami: torna %d su 6, resta %d su 6" % (sum(1 for r in casi["torna"] if r["recall"]), sum(1 for r in resta if r["recall"])))
         chk("A0 nessun errore di pagina", not errs, str(errs[:2]))
         # ---- G4/G5: registratore ----
         reg = await pg.evaluate("""async () => { const sv = __sv, dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'nessuno'; lv.dispatchEvent(new Event('change')); __seed(5); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]); const sel = document.getElementById('cdSel'); sel.value = '180'; sel.dispatchEvent(new Event('change')); __seed(5);

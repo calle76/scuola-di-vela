@@ -6,6 +6,7 @@
 # Lo spazio (L4) vale solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).
 # Fallisce se una parte misura zero casi. Uso: python collaudo_libretto.py
 import asyncio, json, pathlib, re, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; BASE = INDEX.as_uri()
 import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
@@ -149,11 +150,11 @@ async def main():
             ctx, q, e = await menu(H, peggio)
             car = await q.evaluate("""() => [document.fonts.check('700 16px "Barlow Semi Condensed"'), document.fonts.check('400 16px "Source Serif 4"'),
                 [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"), [...document.fonts].some(f => f.family.includes("Source Serif") && f.status === "loaded")]""")
-            veri = veri and all(car)
+            veri = veri and metro.tutti(car)
             r = await q.evaluate("""() => ({ pagina: document.documentElement.scrollHeight - innerHeight, piede: document.querySelector('.menu-foot').getBoundingClientRect().bottom,
                 H: innerHeight, tiles: [...document.querySelectorAll('.tile')].map(t => Math.round(t.getBoundingClientRect().height)), riga: document.getElementById('libManca').innerText })""")
             chk("L4", r["pagina"] <= 0 and r["piede"] <= r["H"], f"L4 1360x{H}: eccesso {r['pagina']} px, piede a {r['piede']:.0f} su {r['H']}")
-            print(f"L4 1360x{H}: eccesso {r['pagina']} px, piede a {r['piede']:.0f} su {r['H']}, riquadri {r['tiles']}, riga «{r['riga']}», caratteri veri {all(car)}")
+            print(f"L4 1360x{H}: eccesso {r['pagina']} px, piede a {r['piede']:.0f} su {r['H']}, riquadri {r['tiles']}, riga «{r['riga']}», caratteri veri {metro.tutti(car)}")
             await ctx.close()
         await b.close()
     print("casi per parte:", casi)

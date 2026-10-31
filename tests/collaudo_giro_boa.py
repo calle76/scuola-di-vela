@@ -41,6 +41,7 @@ PILOTA = """
 }
 """
 
+ESITI = []
 async def prova(pg, idx, plan, nome):
     await pg.evaluate(f"__sv.startMission({idx}, 0)")   # vento da nord: coordinate semplici
     await pg.evaluate("__sv.fast(8)")
@@ -53,6 +54,7 @@ async def prova(pg, idx, plan, nome):
     dist = await pg.evaluate("(() => { const m = __sv.marks, l = m[m.length - 1]; return Math.round(Math.hypot(__sv.S.x - l.x, __sv.S.y - l.y)); })()")
     print(f"prova {idx+1}, {nome}: finita={r[0]} tempo={r[1]} s boe girate={r[2]} giri sbagliati={r[3]} scuffie={r[5]} posizione finale={r[6]} fine pilota={r[7]} distanza dal punto d'arrivo={dist} m")
     for t, msg, mi, rnd in r[4]: print(f"    {t:4d} s  boa {mi}  conto {rnd:+d}  «{msg}»")
+    ESITI.append((nome, r[0], r[3]))
     return r
 
 async def main():
@@ -74,5 +76,15 @@ async def main():
         if "e" in casi: await prova(pg, 4, [[0, giusto], [1, sbagliato]], "triangolo, boa 2 a dritta (deve NON finire)")
         await pg.screenshot(path=str(OUT / "giro_boa.png"))
         print("errori:", errs); await b.close()
+        # 1 novembre 2026 («test dei test»): da «ambiguo» a «chiaro» con l'atteso di docs/COLLAUDI.md: finisce solo girando
+        # dal lato giusto; nei casi sbagliati «giri sbagliati» è 1; nei casi giusti 0. Cade anche se un caso chiesto manca.
+        attesi = {"boa a sinistra": (True, 0), "boa a dritta (deve NON finire)": (False, 1), "sbaglia e rimedia": (True, 1),
+                  "triangolo, boe a sinistra": (True, 0), "linea d'arrivo": (True, 0), "triangolo, boa 2 a dritta (deve NON finire)": (False, 1)}
+        cade = ["%s: finita=%s giri sbagliati=%s, atteso %s %s" % (n, f, w, *attesi[n]) for n, f, w in ESITI if (f, w) != attesi[n]]
+        chiesti = sum({"a": 1, "b": 1, "c": 1, "d": 1, "e": 1, "f": 3}[c] for c in casi if c in "abcdef")
+        if len(ESITI) != chiesti or not ESITI: cade.append("casi misurati %d su %d" % (len(ESITI), chiesti))
+        if errs: cade.append("errori JavaScript")
+        print("ESITO:", "OK (%d casi)" % len(ESITI) if not cade else "FALLITO, " + "; ".join(cade))
+        if cade: sys.exit(1)
 if __name__ == "__main__":
     asyncio.run(main())

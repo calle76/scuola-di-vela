@@ -5,6 +5,7 @@
 #   tutto = B1-B6 (B2 e B3 dopo la modifica, B4 con la copia di riferimento di git, B5, B6)
 # Il pilota tiene la prua a 180° dal vento VERO (segue il vento anche con i salti), 60 s per prova, i primi 5 s non contano; onde, raffiche spente, salti di vento come da barca.
 import asyncio, pathlib, sys, os, statistics, subprocess, tempfile
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RIF = "cb36473"  # ultima versione prima della modifica del boma (1.0.70 senza isteresi)
@@ -95,9 +96,9 @@ async def main():
                     print("  barca %s, %2d nodi, salti %-3s: %2d prove (%d scuffie), cambi di lato in 60 s: mediana %s, massimo %s, al più 1 cambio in %d su %d; strambate vere contate %d; scarto massimo della prua %s°" % ("1b" if lv == 2 else "1a", kn, "sì" if salti else "no", n, nc, med, mx, le1, n, gy, md), flush=True)
         if modo == "base": await ctx.close(); await b.close(); return
         n1b = [tab[k] for k in tab if k[0] == 2]
-        chk("B1 il metro ha misurato: almeno 10 prove valide (senza scuffia) in ognuno dei 6 casi della 1b (%d prove valide; con i salti di vento a 15 nodi la barca scuffia in circa metà delle prove, sono escluse: metro cambiato dopo averlo visto, dichiarato)" % sum(t[0] for t in n1b), all(t[0] >= 10 for t in n1b) and len(n1b) == 6)
-        chk("B2 con l'isteresi: al più 1 cambio di lato in 60 s in almeno il 95%% delle prove, in tutti e tre i venti (1b, con e senza salti)", all(t[4] >= 0.95 * t[0] for t in n1b), str([(k, tab[k][4], tab[k][0]) for k in tab if k[0] == 2 and tab[k][4] < 0.95 * tab[k][0]]))
-        chk("B2b stessa soglia per la 1a (stesso motore)", all(tab[k][4] >= 0.95 * tab[k][0] for k in tab if k[0] == 1))
+        chk("B1 il metro ha misurato: almeno 10 prove valide (senza scuffia) in ognuno dei 6 casi della 1b (%d prove valide; con i salti di vento a 15 nodi la barca scuffia in circa metà delle prove, sono escluse: metro cambiato dopo averlo visto, dichiarato)" % sum(t[0] for t in n1b), metro.tutti(t[0] >= 10 for t in n1b) and len(n1b) == 6)
+        chk("B2 con l'isteresi: al più 1 cambio di lato in 60 s in almeno il 95%% delle prove, in tutti e tre i venti (1b, con e senza salti)", metro.tutti(t[4] >= 0.95 * t[0] for t in n1b), str([(k, tab[k][4], tab[k][0]) for k in tab if k[0] == 2 and tab[k][4] < 0.95 * tab[k][0]]))
+        chk("B2b stessa soglia per la 1a (stesso motore)", metro.tutti(tab[k][4] >= 0.95 * tab[k][0] for k in tab if k[0] == 1))
         # ---- B3: la strambata vera non si perde ----
         bb = []; nb = 0; scuf = []
         for kn in (6, 10, 15):

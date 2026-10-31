@@ -124,5 +124,12 @@ async def main():
         if not riquadri: errs2.append("riquadro delle istruzioni mai misurato")
         print("errori:", errs + errs2)
         await b.close()
-        if not caratteri_ok: sys.exit(1)
+        # 1 novembre 2026 («test dei test», docs/PROPOSTA-TEST-DEI-TEST.md): da «ambiguo» a «chiaro». CLAUDE.md chiede il pannello
+        # senza pixel di eccesso: cade se un pannello o il riquadro eccedono, se ci sono errori o se le misure sono vuote.
+        cade = [] if caratteri_ok else ["caratteri del gioco non caricati"]
+        if eccede: cade.append("pannello che eccede: %d casi" % len(eccede))
+        if errs or errs2: cade.append("errori: %d" % len(errs + errs2))
+        if len(misure) < sum([13, 7, 13, 5, 9, 5]): cade.append("misure del pannello %d, meno dei passi delle lezioni" % len(misure))
+        print("ESITO:", "OK (%d misure del pannello, %d del riquadro)" % (len(misure), len(riquadri)) if not cade else "FALLITO, " + "; ".join(cade))
+        sys.exit(1 if cade else 0)
 asyncio.run(main())

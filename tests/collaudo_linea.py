@@ -15,6 +15,7 @@
 # Uso: python collaudo_linea.py [file html]   (predefinito: index.html del progetto). Esce con 1 se un caso è sbagliato
 # o se un tipo di caso ha zero misure.
 import asyncio, json, pathlib, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 HTML = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else pathlib.Path(__file__).resolve().parent.parent / "index.html"
 BASE = HTML.as_uri()
@@ -189,7 +190,7 @@ async def main():
     for s in sbagli[:20]: print("  SBAGLIATO:", s)
     if len(sbagli) > 20: print(f"  ... e altri {len(sbagli) - 20}")
     print("errori della pagina:", e1 + e2)
-    ok = not sbagli and not zero and all(v.values()) and not (e1 + e2)
+    ok = not sbagli and not zero and metro.tutti(v.values()) and not (e1 + e2)
     print(f"casi misurati: {sum(conta.values())}; sbagliati: {len(sbagli)}; tipi con zero casi: {zero or 'nessuno'}; verifiche pagina vera: {sum(v.values())} su {len(v)}")
     print("esito:", "tutto OK" if ok else "FALLITO")
     sys.exit(0 if ok else 1)

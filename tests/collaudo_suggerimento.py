@@ -19,6 +19,7 @@
 # Uso: python collaudo_suggerimento.py [larghezza altezza] [--lungo] [--html=file]   (predefinito 1360 650, veloce: semi 1-2;
 # --lungo: semi 1-20; --html: un altro index.html, per le contro-prove)
 import asyncio, pathlib, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
 LUNGO = "--lungo" in sys.argv
@@ -173,7 +174,7 @@ async def main():
             "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
             "facce Barlow presenti e caricate (check() da solo dà vero anche senza)": [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"),
         })""")
-        caratteri_ok = all(caratteri.values())
+        caratteri_ok = metro.tutti(caratteri.values())
         print("caratteri del gioco caricati:", caratteri_ok, caratteri)
         print(f"versione {'lunga, semi 1-20' if LUNGO else 'veloce, semi 1-2'}; pagina {HTML.name}")
         # la prova 2 ha vento costante: nessuna raffica che copra il suggerimento

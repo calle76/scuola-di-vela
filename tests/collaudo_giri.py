@@ -4,6 +4,7 @@
 #        D) contatto vero con colpa: debito di due giri e niente +15 s; E) arrivo con il debito aperto: +15 s per giro; F) le altre regate non cambiano;
 #        G) registratore: evento giro_penalita; H) pagina come la carica un giocatore (senza #collaudo).
 import asyncio, pathlib, sys, os, statistics
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -80,15 +81,15 @@ async def main():
         # ---- A ----
         A = [await pg.evaluate(PROVA, ["due", 1 if k % 2 else -1, 100 + k]) for k in semi]
         chk("A1 due giri nello stesso verso estinguono il debito (%d prove senza avversari, %d a destra e %d a sinistra), con debito di partenza di 2 in tutte" % (n, sum(1 for k in semi if k % 2), sum(1 for k in semi if not k % 2)),
-            all(r["need0"] == 0 and r["need"] == 2 and r["done"] >= r["need"] for r in A) and len(A) == n, "estinti %d su %d, scuffie %d" % (sum(1 for r in A if r["done"] >= r["need"]), n, sum(1 for r in A if r["cap"])))
+            metro.tutti(r["need0"] == 0 and r["need"] == 2 and r["done"] >= r["need"] for r in A) and len(A) == n, "estinti %d su %d, scuffie %d" % (sum(1 for r in A if r["done"] >= r["need"]), n, sum(1 for r in A if r["cap"])))
         costi = [r["costo"] for r in A if r["done"] >= r["need"]]
         print("     costo dei due giri (s): mediana %.1f, minimo %.1f, massimo %.1f su %d prove (atteso, stima: 15-25)" % (statistics.median(costi), min(costi), max(costi), len(costi)) if costi else "     nessun costo misurabile")
         # ---- B ----
         B = [await pg.evaluate(PROVA, ["uno", 1 if k % 2 else -1, 200 + k]) for k in semi]
-        chk("B1 un giro solo non estingue il debito (%d prove senza avversari, debito di partenza 2)" % n, all(r["need0"] == 0 and r["need"] == 2 and r["done1"] == 1 and r["done"] == 1 for r in B) and len(B) == n, "a debito di uno: %d su %d" % (sum(1 for r in B if r["done"] == 1), n))
+        chk("B1 un giro solo non estingue il debito (%d prove senza avversari, debito di partenza 2)" % n, metro.tutti(r["need0"] == 0 and r["need"] == 2 and r["done1"] == 1 and r["done"] == 1 for r in B) and len(B) == n, "a debito di uno: %d su %d" % (sum(1 for r in B if r["done"] == 1), n))
         # ---- C ----
         C = [await pg.evaluate(PROVA, ["opposto", 1 if k % 2 else -1, 300 + k]) for k in semi]
-        chk("C1 un giro in un verso e uno nell'altro non estinguono il debito (%d prove senza avversari)" % n, all(r["done1"] == 1 and r["done"] <= 1 and abs(r["ruotato"]) >= 400 for r in C) and len(C) == n, "ancora a debito: %d su %d; rotazione nel verso opposto media %d°" % (sum(1 for r in C if r["done"] <= 1), n, statistics.mean(abs(r["ruotato"]) for r in C)))
+        chk("C1 un giro in un verso e uno nell'altro non estinguono il debito (%d prove senza avversari)" % n, metro.tutti(r["done1"] == 1 and r["done"] <= 1 and abs(r["ruotato"]) >= 400 for r in C) and len(C) == n, "ancora a debito: %d su %d; rotazione nel verso opposto media %d°" % (sum(1 for r in C if r["done"] <= 1), n, statistics.mean(abs(r["ruotato"]) for r in C)))
         chk("D0 rotazione di 360° senza virata e senza strambata: non esiste (la prua che fa il giro passa dal vento e da poppa); il criterio 4 della proposta ha 0 casi possibili", True, "dichiarato, non misurabile")
         # ---- D ----
         D = []
@@ -96,17 +97,17 @@ async def main():
             for k in range(1, 6): D.append((lato, await pg.evaluate(CONTATTO, [lato, 400 + k])))
         colpa = [(l, r) for l, r in D if r["inc"] == 2]
         chk("D1 contatto vero con colpa del giocatore: debito di due giri e nessun +15 s (casi con colpa del giocatore %d su %d, con la flotta)" % (len(colpa), len(D)),
-            len(colpa) > 0 and all(r["incPenMe"] == 0 and any("Tu, contatto" in x for x in r["lista"]) and "due giri" in (r["regola"] or "") for l, r in colpa), "lati con colpa: %s" % sorted({l for l, r in colpa}))
+            len(colpa) > 0 and metro.tutti(r["incPenMe"] == 0 and any("Tu, contatto" in x for x in r["lista"]) and "due giri" in (r["regola"] or "") for l, r in colpa), "lati con colpa: %s" % sorted({l for l, r in colpa}))
         senza = [(l, r) for l, r in D if r["inc"] == 0 and r["contatti"]]
-        chk("D2 contatto con colpa dell'avversaria: nessun debito per il giocatore e, dalla 1.0.67, due giri di debito all'avversaria e nessun +15 s (prima: +15 s) (casi %d)" % len(senza), len(senza) > 0 and all(r["incDebO"] == 2 and r["incPenO"] == 0 and r["incPenMe"] == 0 and r["inc"] == 0 for l, r in senza))
-        chk("D3 ogni contatto dà al massimo un debito di due giri (nessun incremento diverso da 0 o 2)", all(r["inc"] in (0, 2) for l, r in D), str(sorted({r["inc"] for l, r in D})))
+        chk("D2 contatto con colpa dell'avversaria: nessun debito per il giocatore e, dalla 1.0.67, due giri di debito all'avversaria e nessun +15 s (prima: +15 s) (casi %d)" % len(senza), len(senza) > 0 and metro.tutti(r["incDebO"] == 2 and r["incPenO"] == 0 and r["incPenMe"] == 0 and r["inc"] == 0 for l, r in senza))
+        chk("D3 ogni contatto dà al massimo un debito di due giri (nessun incremento diverso da 0 o 2)", metro.tutti(r["inc"] in (0, 2) for l, r in D), str(sorted({r["inc"] for l, r in D})))
         # ---- E ----
         E1 = [await pg.evaluate(ARRIVO, [True, 500 + k, True]) for k in range(1, 7)]; E0 = [await pg.evaluate(ARRIVO, [False, 600 + k, True]) for k in range(1, 7)]
-        chk("E1 arrivo senza avversari con il debito di due giri aperto: +30 s e la voce nell'elenco (6 regate)", all(r["fin"] is not None and r["need0"] == 0 and r["pen"] - r["penPrima"] == 30 and any("giri di penalità non fatti (2)" in x for x in r["lista"]) for r in E1))
-        chk("E2 arrivo con il debito già scontato: nessun secondo in più (6 regate)", all(r["fin"] is not None and r["pen"] == r["penPrima"] and not any("non fatti" in x for x in r["lista"]) for r in E0))
+        chk("E1 arrivo senza avversari con il debito di due giri aperto: +30 s e la voce nell'elenco (6 regate)", metro.tutti(r["fin"] is not None and r["need0"] == 0 and r["pen"] - r["penPrima"] == 30 and any("giri di penalità non fatti (2)" in x for x in r["lista"]) for r in E1))
+        chk("E2 arrivo con il debito già scontato: nessun secondo in più (6 regate)", metro.tutti(r["fin"] is not None and r["pen"] == r["penPrima"] and not any("non fatti" in x for x in r["lista"]) for r in E0))
         # 1.0.64: il pilota di prova, partito in anticipo, può restare incastrato contro il comitato (ostacolo): K1 accetta al più una regata su dieci non arrivata, contata a parte
         K = [await pg.evaluate(ARRIVO, [True, 800 + k, False]) for k in range(1, n + 1)]
-        chk("K1 nessun giro spurio: con il debito aperto e il pilota che non fa giri a posta, in %d regate con la flotta nessun giro viene riconosciuto DOPO il debito e prima dell'arrivo" % n, len(K) == n and sum(1 for r in K if r["fin"] is not None) >= n - max(1, n // 10) and all(r["need"] >= 2 for r in K) and all(r["maxDone"] - r["doneAntes"] == 0 for r in K), "regate non arrivate (pilota incastrato contro il comitato): %d su %d; giri spuri dopo il debito: %d regate su %d; giri veri già fatti dal pilota prima del debito (colpa nel conto alla rovescia e girata su se stesso): %d regate su %d" % (sum(1 for r in K if r["fin"] is None), n, sum(1 for r in K if r["maxDone"] - r["doneAntes"] > 0), n, sum(1 for r in K if r["doneAntes"] > 0), n))
+        chk("K1 nessun giro spurio: con il debito aperto e il pilota che non fa giri a posta, in %d regate con la flotta nessun giro viene riconosciuto DOPO il debito e prima dell'arrivo" % n, len(K) == n and sum(1 for r in K if r["fin"] is not None) >= n - max(1, n // 10) and metro.tutti(r["need"] >= 2 for r in K) and metro.tutti(r["maxDone"] - r["doneAntes"] == 0 for r in K), "regate non arrivate (pilota incastrato contro il comitato): %d su %d; giri spuri dopo il debito: %d regate su %d; giri veri già fatti dal pilota prima del debito (colpa nel conto alla rovescia e girata su se stesso): %d regate su %d" % (sum(1 for r in K if r["fin"] is None), n, sum(1 for r in K if r["maxDone"] - r["doneAntes"] > 0), n, sum(1 for r in K if r["doneAntes"] > 0), n))
         # ---- G ----
         G = await pg.evaluate(REGISTRATA, [700])
         chk("G1 registratore: giro_penalita 1/2 e 2/2 e la riga «penalità scontata» nel file", G["done"] >= G["need"] and "giro_penalita 1/2" in (G["testo"] + G["testoLive"]) and "giro_penalita 2/2" in (G["testo"] + G["testoLive"]) and "penalità scontata" in (G["testo"] + G["testoLive"]),

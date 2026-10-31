@@ -16,6 +16,7 @@
 # Un controllo con zero casi FALLISCE (metro di misura): i casi ottenuti sono stampati.
 # Uso: python collaudo_contatto_senza_colpa.py [semi guidati, predefinito 30]
 import asyncio, pathlib, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 URL = BASE + "#collaudo"
@@ -122,7 +123,7 @@ async def main():
         ok("con colpa: 1 contatto, 1 penalità, totale errori 1, riga rossa", (m["contatti"], m["pen"], m["tot"], m["rosso"]) == (1, 1, 1, True))
         ok("con colpa: il testo dice «con penalità» e non «non conta»", "con penalità" in m["testo"] and "non conta" not in m["testo"], m["testo"])
         s = [esito["sopra"]["r2"]["pen"], esito["sotto"]["r2"]["pen"]]
-        ok("stesse mure: la colpa è di uno solo dei due (sopravento/sottovento)", sorted(s) == [0, 1] and all(esito[t]["r2"]["contatti"] == 1 for t in ("sopra", "sotto")), f"penalità giocatore sopravento {s[0]}, sottovento {s[1]}")
+        ok("stesse mure: la colpa è di uno solo dei due (sopravento/sottovento)", sorted(s) == [0, 1] and metro.tutti(esito[t]["r2"]["contatti"] == 1 for t in ("sopra", "sotto")), f"penalità giocatore sopravento {s[0]}, sottovento {s[1]}")
         sl = esito["avv"]["ses"]; ml = esito["mia"]["ses"]
         ok("registratore, senza colpa: riga contatto_senza_colpa +1 e nessun «errore contacts»", any("contatto_senza_colpa +1" in l for l in sl) and not any("errore contacts" in l for l in sl), "; ".join(sl))
         ok("registratore, con colpa: errore contactsPen +1 e nessun «errore contacts»", any("errore contactsPen +1" in l for l in ml) and not any("errore contacts " in l or "contatto_senza_colpa" in l for l in ml), "; ".join(ml))

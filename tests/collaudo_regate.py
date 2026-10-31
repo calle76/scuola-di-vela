@@ -47,5 +47,10 @@ async def main(semi, race):
         print(f"riepilogo regata {race+1}: corse {len(semi)}, arrivi di avversari {len(arrivi)} su {3 * len(semi)}, BLOCCATA {bloccate}"
               + (f", mediana d'arrivo {statistics.median(arrivi):.1f} s (minimo {min(arrivi)}, massimo {max(arrivi)})" if arrivi else "")
               + f"; errori della pagina {errori[:1]}", flush=True)
+        # 1 novembre 2026 («test dei test»): da «ambiguo» a «chiaro» per l'atteso di docs/COLLAUDI.md (nessun avversario
+        # «BLOCCATA», nessun errore della pagina, tutte le corse misurate); la mediana d'arrivo resta una misura da confrontare.
+        cade = (["BLOCCATA %d" % bloccate] if bloccate else []) + (["errori della pagina"] if errori else []) + ([] if len(arrivi) + bloccate == 3 * len(semi) and semi else ["barche misurate %d su %d" % (len(arrivi) + bloccate, 3 * len(semi))])
+        print("ESITO:", "OK (%d arrivi)" % len(arrivi) if not cade else "FALLITO, " + "; ".join(cade))
+        if cade: sys.exit(1)
 semi = list(range(7, 31)) if LUNGO else list(range(1, int(ARG[0]) + 1))
 asyncio.run(main(semi, int(ARG[1])))

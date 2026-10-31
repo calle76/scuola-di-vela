@@ -8,6 +8,7 @@
 # Uso con un'altra cartella del gioco (per esempio il motore di prima): GIOCO=/percorso/index.html Semi 1-20 da guardare, 21-60 di conferma, principianti ed esperti.
 # Uso: collaudo_virate2.py [primo ultimo]   Esce con 1 se nella conferma più del 5% delle virate va oltre, o se non ne misura nessuna.
 import asyncio, pathlib, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -39,7 +40,7 @@ async def main():
         gruppi = {"guardati (semi 1-20)": [], "conferma (semi 21-60)": []}; arrivi = n = 0
         for seme in range(primo, ultimo + 1):
             for liv in ("principianti", "esperti"):
-                r = await pg.evaluate(REGATA, [liv, seme]); n += 1; arrivi += all(f is not None for f in r["fin"])
+                r = await pg.evaluate(REGATA, [liv, seme]); n += 1; arrivi += metro.tutti(f is not None for f in r["fin"])
                 gruppi["guardati (semi 1-20)" if seme <= 20 else "conferma (semi 21-60)"] += r["v"]
                 oltre = [round(pk) for pk, up, _ in r["v"] if pk > up + 15]
                 print(f"  seme {seme} {liv}: {len(r['v'])} virate ({r['scartate']} scartate al giro di boa), oltre la bolina + 15°: {len(oltre)} {oltre}, durata {r['t']:.0f} s", flush=True)

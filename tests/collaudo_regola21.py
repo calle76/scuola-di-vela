@@ -3,6 +3,7 @@
 # Parti: K1 la precedenza passa a chi non sconta; K2 con debito ma senza giri non cambia nulla; K3 a debito estinto si torna a 10-13; K4 contatto mentre sconta; M 21.1;
 #        K5 il metro (si sconta davvero al momento del confronto); K6 quanto pesa (30 regate con la flotta, solo riportato con l'atteso); K7 altre regate identiche al bit; K8 registratore e pagina senza #collaudo.
 import asyncio, pathlib, sys, os, statistics
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -76,32 +77,32 @@ async def main():
         tot = sum(len(r["con"]) for r in K1); pass1 = sum(1 for r in K1 for c in r["con"] if c["cede"] == "me" and c["regola"] == 21.2)
         camb = sum(1 for r in K1 for c, s in zip(r["con"], r["senza"]) if s["cede"] == "ai")
         chk("K1 giocatore che sta scontando: in %d posizioni (%d partenze x 30) cede sempre lui con la regola 21.2 (%d su %d); in %d casi senza la 21.2 avrebbe ceduto l'altro (cioè è quello che cambia)" % (tot, len(K1), pass1, tot, camb), pass1 == tot and camb >= 10 * len(K1) // 3, "")
-        chk("K5 il metro ha misurato davvero: in tutte le %d posizioni il giocatore stava scontando (flag acceso) e si era arrivati lì ruotando (debito aperto)" % tot, all(c["sconta"] for r in K1 for c in r["con"]) and all(r["need"] > r["done"] for r in K1))
+        chk("K5 il metro ha misurato davvero: in tutte le %d posizioni il giocatore stava scontando (flag acceso) e si era arrivati lì ruotando (debito aperto)" % tot, metro.tutti(c["sconta"] for r in K1 for c in r["con"]) and metro.tutti(r["need"] > r["done"] for r in K1))
         # ---- K2 ----
         K2 = [await pg.evaluate(CASO, ["fermo", 1, 200 + k]) for k in range(1, 5)]
         tot2 = sum(len(r["con"]) for r in K2)
-        ok2 = all(not r["sconta"] and r["need"] > r["done"] for r in K2) and all(c["cede"] == s["cede"] and c["regola"] == s["regola"] and 10 <= c["regola"] <= 13 for r in K2 for c, s in zip(r["con"], r["senza"]))
+        ok2 = metro.tutti(not r["sconta"] and r["need"] > r["done"] for r in K2) and metro.tutti(c["cede"] == s["cede"] and c["regola"] == s["regola"] and 10 <= c["regola"] <= 13 for r in K2 for c, s in zip(r["con"], r["senza"]))
         chk("K2 debito aperto ma senza girare: non si sta scontando e chiCede è quello di prima (regole 10-13) in tutte le %d posizioni" % tot2, ok2)
         # ---- K3 ----
         K3 = [await pg.evaluate(CASO, ["finito", 1 if k % 2 else -1, 300 + k]) for k in range(1, 5)]
         tot3 = sum(len(r["con"]) for r in K3)
-        chk("K3 debito estinto: non si sconta più e valgono di nuovo le regole 10-13 in tutte le %d posizioni" % tot3, all(not r["sconta"] and r["done"] >= r["need"] for r in K3) and all(10 <= c["regola"] <= 13 for r in K3 for c in r["con"]), "estinti %d su %d" % (sum(1 for r in K3 if r["done"] >= r["need"]), len(K3)))
+        chk("K3 debito estinto: non si sconta più e valgono di nuovo le regole 10-13 in tutte le %d posizioni" % tot3, metro.tutti(not r["sconta"] and r["done"] >= r["need"] for r in K3) and metro.tutti(10 <= c["regola"] <= 13 for r in K3 for c in r["con"]), "estinti %d su %d" % (sum(1 for r in K3 if r["done"] >= r["need"]), len(K3)))
         # ---- K4 ----
         K4 = [await pg.evaluate(CONTATTO, [lato, 400 + k]) for lato in (1.2, -1.2) for k in range(1, 6)]
-        chk("K4 contatto vero mentre il giocatore sconta: debito +2 e la regola 21.2 nel motivo (%d casi, di cui con colpa 21.2 %d)" % (len(K4), sum(1 for r in K4 if any("regola 21.2" in v for v in r["voci"]))), all(r["scont"] for r in K4) and all(r["inc"] == 2 and any("regola 21.2" in v for v in r["voci"]) for r in K4 if r["voci"]) and sum(1 for r in K4 if r["voci"]) >= 8, "incrementi: %s" % sorted({r["inc"] for r in K4}))
+        chk("K4 contatto vero mentre il giocatore sconta: debito +2 e la regola 21.2 nel motivo (%d casi, di cui con colpa 21.2 %d)" % (len(K4), sum(1 for r in K4 if any("regola 21.2" in v for v in r["voci"]))), metro.tutti(r["scont"] for r in K4) and metro.tutti(r["inc"] == 2 and any("regola 21.2" in v for v in r["voci"]) for r in K4 if r["voci"]) and sum(1 for r in K4 if r["voci"]) >= 8, "incrementi: %s" % sorted({r["inc"] for r in K4}))
         # ---- M (21.1) ----
         M = {q: [await pg.evaluate(CASO21_1, [q, 500 + k]) for k in range(1, 4)] for q in ("ai", "entrambe", "io", "sconta_e_ocs")}
-        ok = all(c["cede"] == "ai" and c["regola"] == 21.1 for r in M["ai"] for c in r["con"])
+        ok = metro.tutti(c["cede"] == "ai" and c["regola"] == 21.1 for r in M["ai"] for c in r["con"])
         chk("M1 un avversario oltre la linea dopo lo sparo (deve tornare) e il giocatore no: cede sempre l'avversario con la 21.1 (%d posizioni)" % sum(len(r["con"]) for r in M["ai"]), ok, "casi in cui prima avrebbe ceduto il giocatore: %d" % sum(1 for r in M["ai"] for c, s in zip(r["con"], r["base"]) if s["cede"] == "me"))
-        chk("M2 il giocatore oltre la linea e l'avversario no: cede il giocatore con la 21.1 (%d posizioni)" % sum(len(r["con"]) for r in M["io"]), all(c["cede"] == "me" and c["regola"] == 21.1 for r in M["io"] for c in r["con"]))
-        chk("M3 entrambe oltre la linea: la 21 non vale, tornano le regole 10-13 (%d posizioni)" % sum(len(r["con"]) for r in M["entrambe"]), all(10 <= c["regola"] <= 13 for r in M["entrambe"] for c in r["con"]))
-        chk("M4 il giocatore che sconta e l'avversario che torna: nessuno è «quello che non lo fa», valgono le regole 10-13 (%d posizioni)" % sum(len(r["con"]) for r in M["sconta_e_ocs"]), all(10 <= c["regola"] <= 13 for r in M["sconta_e_ocs"] for c in r["con"]) and all(c["sconta"] for r in M["sconta_e_ocs"] for c in r["con"]))
+        chk("M2 il giocatore oltre la linea e l'avversario no: cede il giocatore con la 21.1 (%d posizioni)" % sum(len(r["con"]) for r in M["io"]), metro.tutti(c["cede"] == "me" and c["regola"] == 21.1 for r in M["io"] for c in r["con"]))
+        chk("M3 entrambe oltre la linea: la 21 non vale, tornano le regole 10-13 (%d posizioni)" % sum(len(r["con"]) for r in M["entrambe"]), metro.tutti(10 <= c["regola"] <= 13 for r in M["entrambe"] for c in r["con"]))
+        chk("M4 il giocatore che sconta e l'avversario che torna: nessuno è «quello che non lo fa», valgono le regole 10-13 (%d posizioni)" % sum(len(r["con"]) for r in M["sconta_e_ocs"]), metro.tutti(10 <= c["regola"] <= 13 for r in M["sconta_e_ocs"] for c in r["con"]) and metro.tutti(c["sconta"] for r in M["sconta_e_ocs"] for c in r["con"]))
         # ---- K6 ----
         nreg = int(os.environ.get("REGATE", "30"))
         K6 = [await pg.evaluate(PESO, [900 + k, 1 if k % 2 else -1]) for k in range(nreg)]
         est = sum(1 for r in K6 if r["estinto"]); ex = statistics.mean(r["extra"] for r in K6); mie = statistics.mean(r["mie"] for r in K6)
         print("     K6 (solo riportato, atteso nostro: almeno 24 su 30 estinti e meno di 0,5 giri in più): %d regate, debito estinto in %d, giri di debito in più in media %.2f (massimo %d), contatti con colpa del giocatore durante i giri in media %.2f, di cui regola 21: %d in tutto, scuffie %d" % (nreg, est, ex, max(r["extra"] for r in K6), mie, sum(r["r21"] for r in K6), sum(1 for r in K6 if r["cap"])), flush=True)
-        chk("K6b il metro ha misurato davvero: in %d regate su %d il debito è partito da due giri e i giri sono stati tentati (almeno una rotazione, tempo > 5 s)" % (sum(1 for r in K6 if r["t"] > 5), nreg), all(r["t"] > 5 for r in K6))
+        chk("K6b il metro ha misurato davvero: in %d regate su %d il debito è partito da due giri e i giri sono stati tentati (almeno una rotazione, tempo > 5 s)" % (sum(1 for r in K6 if r["t"] > 5), nreg), metro.tutti(r["t"] > 5 for r in K6))
         # ---- registratore ----
         G = await pg.evaluate(REGISTRATA, [700]); t = G["testo"] + G["live"]
         chk("K8a registratore: eventi «sconta inizio» e «sconta fine»", "sconta inizio" in t and "sconta fine" in t, "debito %d/%d" % (G["done"], G["need"]))

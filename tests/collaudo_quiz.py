@@ -1,6 +1,7 @@
 # Collaudo del ripasso: risposte sbagliate apposta, elenco finale, "Ripassa solo le sbagliate", record solo con ripasso completo.
 # Fallisce se misura zero casi (ogni controllo conta quanti casi ha verificato).
 import asyncio, sys, pathlib
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=True)
@@ -92,8 +93,8 @@ async def main():
             "facce Barlow caricate": [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"),
             "facce Source Serif caricate": [...document.fonts].some(f => f.family.includes("Source Serif") && f.status === "loaded"),
         })""")
-        print("caratteri del gioco caricati:", all(car.values()), car)
-        if not all(car.values()):
+        print("caratteri del gioco caricati:", metro.tutti(car.values()), car)
+        if not metro.tutti(car.values()):
             print("MISURA DEL RIQUADRO NON VALIDA: mancano i caratteri veri (Barlow, Source Serif); i pixel di eccesso non dicono niente.")
             print("ESITO: NON VALIDA"); sys.exit(1)
         eccesso = 0
@@ -113,8 +114,8 @@ async def main():
                 ecc = max([b["b"] - r["bottom"] for b in r["bt"]] + [r["bottom"] - r["H"], -r["top"], r["right"] - r["W"], r["pagina"]])
                 eccesso = max(eccesso, ecc)
                 tag = f"1360x{H}, {errori} errori"
-                chk(len(r["bt"]) == (4 if errori else 2) and all(b["t"] for b in r["bt"]), f"{tag}: pulsanti trovati {len(r['bt'])}")
-                chk(all(b["b"] <= r["bottom"] + 0.5 for b in r["bt"]), f"{tag}: bordo inferiore dei pulsanti oltre il riquadro ({[round(b['b'] - r['bottom'], 1) for b in r['bt']]})")
+                chk(len(r["bt"]) == (4 if errori else 2) and metro.tutti(b["t"] for b in r["bt"]), f"{tag}: pulsanti trovati {len(r['bt'])}")
+                chk(metro.tutti(b["b"] <= r["bottom"] + 0.5 for b in r["bt"]), f"{tag}: bordo inferiore dei pulsanti oltre il riquadro ({[round(b['b'] - r['bottom'], 1) for b in r['bt']]})")
                 chk(r["top"] >= 0 and r["bottom"] <= r["H"] + 0.5, f"{tag}: riquadro fuori dalla finestra ({r['top']:.0f}..{r['bottom']:.0f} su {r['H']})")
                 chk(r["pagina"] <= 0, f"{tag}: la pagina dietro scorre di {r['pagina']} px")
                 if errori == 6: chk(r["scroll"], f"{tag}: l'elenco dovrebbe scorrere (contenuto {r['sh']} px in {r['ch']})")

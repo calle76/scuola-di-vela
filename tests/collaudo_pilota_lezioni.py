@@ -12,6 +12,7 @@
 # Uso: python collaudo_pilota_lezioni.py [--semi 1-20] [--solo 123456] [--pagina file.html] [--veloce] [--reale]
 #      --veloce = semi 1-3; --reale = solo la prova senza #collaudo (lezione 2, passi 2 e 3, in tempo reale, 3 tentativi)
 import asyncio, json, pathlib, statistics, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -341,7 +342,7 @@ async def reale(n=3):
                 fatti.append(fatto)
             hook = await pg.evaluate("typeof window.__sv")
             print(f"  tentativo {t + 1}: barra a sinistra {fatti[0]}, barra a dritta {fatti[1]}, __sv {hook}", flush=True)
-            ok += all(fatti) and hook == "undefined"
+            ok += metro.tutti(fatti) and hook == "undefined"
             await pg.close()
         await b.close()
     print(f"senza #collaudo: {ok} tentativi su {n} con entrambi i passi completati (superata se {n} su {n})")

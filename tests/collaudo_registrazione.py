@@ -3,6 +3,7 @@
 # Parti: A) regate di fila col pilota (un file per regata, pre-via, 10 al secondo, pezzi, riga di controllo, marcatori); B) regate lunghe lasciate a metà (pezzi da 300 s, «interrotto»);
 #        C) registrazione a mano: ha la precedenza; D) pagina come la carica un giocatore (senza #collaudo): parte da sola, si salva, si ricarica e si scarica.
 import asyncio, json, pathlib, sys, os, re, statistics
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -82,8 +83,8 @@ async def main():
         ctx, pg, errs = await pagina(b)
         A = await pg.evaluate(CORRI, [n, 100, True])
         chk("A0 nessun errore di pagina", not errs, str(errs[:2]))
-        chk("A1 20 regate di fila: ognuna ha il suo file (pezzi 1..k, l'ultimo «ultimo»), una sola apertura, nessun byte della regata prima", all(
-            [p["n"] for p in r["pezzi"]] == list(range(1, len(r["pezzi"]) + 1)) and r["pezzi"] and r["pezzi"][-1]["fine"] == "ultimo" and all(p["fine"] == "" for p in r["pezzi"][:-1])
+        chk("A1 20 regate di fila: ognuna ha il suo file (pezzi 1..k, l'ultimo «ultimo»), una sola apertura, nessun byte della regata prima", metro.tutti(
+            [p["n"] for p in r["pezzi"]] == list(range(1, len(r["pezzi"]) + 1)) and r["pezzi"] and r["pezzi"][-1]["fine"] == "ultimo" and metro.tutti(p["fine"] == "" for p in r["pezzi"][:-1])
             and len({p["reg"] for p in r["pezzi"]}) == 1 and sum(p["testo"].count(" registrazione_automatica") for p in r["pezzi"]) == 1 for r in A), "regate %d, pezzi per regata: %s" % (len(A), [len(r["pezzi"]) for r in A]))
         reg_ids = [r["pezzi"][0]["reg"] for r in A if r["pezzi"]]
         chk("A2 ogni regata è distinta dalla precedente (identificatori diversi, nessuna riga F della regata prima)", len(set(reg_ids)) == len(A), "")
@@ -97,19 +98,19 @@ async def main():
             for a, c in zip(pz, pz[1:]):
                 Sa, Sc = righe(a["testo"], "S"), righe(c["testo"], "S"); ovl.append(Sa[-1] == Sc[0])
             tt = [(re.search(r"da t=(-?[\d.]+) a t=(-?[\d.]+)", p["testo"])) for p in pz]
-            tag.append(all(abs(float(x.group(2)) - (120 + 300 * i)) <= 0.1 for i, x in enumerate(tt[:-1])) and all(float(a.group(2)) <= float(c.group(1)) + 0.1 for a, c in zip(tt, tt[1:])))
+            tag.append(metro.tutti(abs(float(x.group(2)) - (120 + 300 * i)) <= 0.1 for i, x in enumerate(tt[:-1])) and metro.tutti(float(a.group(2)) <= float(c.group(1)) + 0.1 for a, c in zip(tt, tt[1:])))
             F = righe(pz[-1]["testo"], "F"); fcount.append(len(F) == r["nbarche"])
             me = [x for x in F if x[2] == "Tu"]; fpos.append(bool(me) and int(me[0][3]) == r["pos"]); ffin.append(bool(me) and me[0][4] == r["finMe"] and int(me[0][5]) == r["penMe"] and int(me[0][6]) == r["ppMe"])
             m = [x for x in testo.split("\n") if x.startswith("M ")]; mm.append(len(m) == r["premi"] and [int(x.split(" ")[2]) for x in m] == list(range(1, r["premi"] + 1)))
             pesi += [len(p["testo"].encode("utf-8")) for p in pz]
-        chk("A3 il file parte col conto alla rovescia (prima riga S a −%s s) e ci sono righe B col tempo negativo" % A[0]["countdown"], all(a and b2 for a, b2 in pre))
+        chk("A3 il file parte col conto alla rovescia (prima riga S a −%s s) e ci sono righe B col tempo negativo" % A[0]["countdown"], metro.tutti(a and b2 for a, b2 in pre))
         chk("A4 righe S a 10 al secondo (tutte a 0,10 ± 0,01 s, salvo la giuntura del pezzo)", min(rate) >= 0.995, "minimo %.3f" % min(rate))
-        chk("A5 un fotogramma in comune fra un pezzo e il successivo (%d giunture)" % len(ovl), len(ovl) > 0 and all(ovl))
-        chk("A6 il primo pezzo chiude a 120 s di regata, gli altri ogni 300 s", all(tag))
-        chk("A7 riga di controllo: una F per barca, posto del giocatore uguale a quello del gioco, tempo e penalità uguali", all(fcount) and all(fpos) and all(ffin), "F %d/%d, posto %d/%d, tempo %d/%d" % (sum(fcount), n, sum(fpos), n, sum(ffin), n))
-        chk("A8 marcatori M numerati da 1 per ogni regata (premuti 1, 2 o 3 volte)", all(mm))
+        chk("A5 un fotogramma in comune fra un pezzo e il successivo (%d giunture)" % len(ovl), len(ovl) > 0 and metro.tutti(ovl))
+        chk("A6 il primo pezzo chiude a 120 s di regata, gli altri ogni 300 s", metro.tutti(tag))
+        chk("A7 riga di controllo: una F per barca, posto del giocatore uguale a quello del gioco, tempo e penalità uguali", metro.tutti(fcount) and metro.tutti(fpos) and metro.tutti(ffin), "F %d/%d, posto %d/%d, tempo %d/%d" % (sum(fcount), n, sum(fpos), n, sum(ffin), n))
+        chk("A8 marcatori M numerati da 1 per ogni regata (premuti 1, 2 o 3 volte)", metro.tutti(mm))
         chk("A9 peso di un pezzo sotto 2 MB", max(pesi) < 2e6, "massimo %.2f MB, medio %.2f MB, regate lunghe %d-%d s, pezzi %d" % (max(pesi) / 1e6, statistics.mean(pesi) / 1e6, min(r["tfin"] for r in A), max(r["tfin"] for r in A), len(pesi)))
-        chk("A10 registrazione chiusa all'arrivo (nessuna registrazione automatica ancora accesa)", all(r["autoOn"] is False for r in A))
+        chk("A10 registrazione chiusa all'arrivo (nessuna registrazione automatica ancora accesa)", metro.tutti(r["autoOn"] is False for r in A))
         # ---- B ----
         B1 = await pg.evaluate(META, [700, 5]); pz = B1["pezzi"]
         chk("B1 regata lunga lasciata a 700 s: tre pezzi, l'ultimo «interrotto», chiusa da sola, e la regata dopo ne apre una nuova", B1["prima"] and B1["dopo"] and [p["n"] for p in pz] == [1, 2, 3] and pz[-1]["fine"] == "interrotto" and "registrazione_chiusa interrotta" in pz[-1]["testo"], str([(p["n"], p["fine"]) for p in pz]))
@@ -145,7 +146,7 @@ async def main():
         chk("D6 nessun errore di pagina", not errs, str(errs[:2]))
         await ctx.close(); await b.close()
     # ---- E: il gioco non cambia ----
-    ugu = lambda N, V: len(N) == len(V) == n and all(a["fin"] == c["fin"] and a["pen"] == c["pen"] and a["pp"] == c["pp"] and a["fine"] == c["fine"] and a["passi"] == c["passi"] for a, c in zip(N, V))
+    ugu = lambda N, V: len(N) == len(V) == n and metro.tutti(a["fin"] == c["fin"] and a["pen"] == c["pen"] and a["pp"] == c["pp"] and a["fine"] == c["fine"] and a["passi"] == c["passi"] for a, c in zip(N, V))
     async with async_playwright() as p:
         b = await getattr(p, os.environ.get("BROWSER", "chromium")).launch()
         ctx, pg, errs = await pagina(b); N = await pg.evaluate(CORRI, [n, 100, False, False]); await ctx.close()

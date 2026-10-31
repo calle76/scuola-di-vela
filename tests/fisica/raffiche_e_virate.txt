@@ -1,0 +1,9 @@
+Virata partendo a 3.9 nodi: riuscita in 3.0 s
+Virata partendo a 1.9 nodi: riuscita in 6.6 s
+Virata partendo a 0.4 nodi: fallita (prua a 23°, velocità 0.4 nodi)
+Raffica da 10 a 16 nodi: senza reagire 38°, lascando 20°
+Raffica da 10 a 18 nodi: senza reagire 54°, lascando 29°
+Raffica da 10 a 20 nodi: senza reagire 67° (scuffia), lascando 39°
+Raffica da 10 a 16 nodi, boma a 21°: senza reagire 26°, lascando 15°
+Raffica da 10 a 18 nodi, boma a 21°: senza reagire 39°, lascando 22°
+Raffica da 10 a 20 nodi, boma a 21°: senza reagire 53°, lascando 30°

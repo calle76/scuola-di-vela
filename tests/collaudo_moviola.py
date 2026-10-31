@@ -1,6 +1,7 @@
 # Collaudo della moviola (1.0.58, docs/PROPOSTA-COACH-REGISTRATORE.md): fedeltà delle posizioni, gioco identico a prima, uscita pulita.
 # Uso: .venv-collaudi/bin/python tests/collaudo_moviola.py [semi=10] [cartella di una copia di riferimento senza moviola, per il confronto al bit]
 import asyncio, json, pathlib, sys, os, time
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path("/home/callle/scuola-di-vela")
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -60,19 +61,19 @@ async def main():
     def chk(nome, ok, extra=""):
         print(("OK   " if ok else "FALLITO ") + nome + (" " + extra if extra else "")); 
         if not ok: bad.append(nome)
-    chk("nessun errore di pagina", all(not r["errori_pagina"] for r in nuovo), str([r["errori_pagina"] for r in nuovo if r["errori_pagina"]][:2]))
+    chk("nessun errore di pagina", metro.tutti(not r["errori_pagina"] for r in nuovo), str([r["errori_pagina"] for r in nuovo if r["errori_pagina"]][:2]))
     con = [r for r in nuovo if r["spezzoni"] > 0]
-    chk("spezzoni presenti in tutte le regate (2 segni O a 40 e 90 s)", len(con) == len(nuovo) and all(r["spezzoni"] >= 2 for r in nuovo), "spezzoni per regata: " + str([r["spezzoni"] for r in nuovo]))
-    chk("pulsante Rivedi visibile a fine regata", all(r["bottone"] for r in nuovo))
-    chk("moviola si apre, schermata finale nascosta, barra visibile", all(r["aperta"] and r["finOvNascosta"] and r["barra"] for r in nuovo))
+    chk("spezzoni presenti in tutte le regate (2 segni O a 40 e 90 s)", len(con) == len(nuovo) and metro.tutti(r["spezzoni"] >= 2 for r in nuovo), "spezzoni per regata: " + str([r["spezzoni"] for r in nuovo]))
+    chk("pulsante Rivedi visibile a fine regata", metro.tutti(r["bottone"] for r in nuovo))
+    chk("moviola si apre, schermata finale nascosta, barra visibile", metro.tutti(r["aperta"] and r["finOvNascosta"] and r["barra"] for r in nuovo))
     chk("fedeltà: posizione entro 0,5 m e prua entro 5° (confronti %d)" % sum(r["confronti"] for r in nuovo), sum(r["confronti"] for r in nuovo) > 0 and max(r["errPos"] for r in nuovo) <= 0.5 and max(r["errH"] for r in nuovo) <= 5,
         "massimo %.3f m, %.2f°" % (max(r["errPos"] for r in nuovo), max(r["errH"] for r in nuovo)))
-    chk("freccia destra passa al momento dopo", all(r["dopoFreccia"] == min(1, r["spezzoni"] - 1) for r in nuovo))
-    chk("uscita pulita: stato e scie identici, schermata finale di nuovo visibile", all(r["chiusa"] and r["stessoStato"] and r["stesseScie"] and r["finOvDi_nuovo"] and r["barraNascosta"] for r in nuovo))
+    chk("freccia destra passa al momento dopo", metro.tutti(r["dopoFreccia"] == min(1, r["spezzoni"] - 1) for r in nuovo))
+    chk("uscita pulita: stato e scie identici, schermata finale di nuovo visibile", metro.tutti(r["chiusa"] and r["stessoStato"] and r["stesseScie"] and r["finOvDi_nuovo"] and r["barraNascosta"] for r in nuovo))
     print("contatti automatici negli spezzoni:", sum(r["auto"] for r in nuovo), "su", len(nuovo), "regate")
     if rif:
         vecchio = await gira(rif, semi, False)
-        uguali = all(a["fin"] == b["fin"] and a["pen"] == b["pen"] and a["pp"] == b["pp"] and a["fine"] == b["fine"] and a["passi"] == b["passi"] for a, b in zip(nuovo, vecchio))
+        uguali = metro.tutti(a["fin"] == b["fin"] and a["pen"] == b["pen"] and a["pp"] == b["pp"] and a["fine"] == b["fine"] and a["passi"] == b["passi"] for a, b in zip(nuovo, vecchio))
         chk("gioco identico al bit con la moviola (arrivi, penalità, posizioni finali) su %d regate" % len(nuovo), uguali)
         tn, tv = sum(r["ms"] for r in nuovo), sum(r["ms"] for r in vecchio)
         print("tempo di calcolo: con moviola %.1f s, senza %.1f s (%+.1f%%)" % (tn / 1000, tv / 1000, 100 * (tn - tv) / tv))

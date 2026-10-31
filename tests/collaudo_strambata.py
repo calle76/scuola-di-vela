@@ -33,4 +33,13 @@ async def main(kn, n):
         caps=sum(1 for r in res if r[0][2]>0); viol=sum(1 for r in res if r[0][0]>0)
         print(f"vento {kn} nodi: strambate violente {viol}/{n}, scuffie {caps}/{n}, sbandamento massimo {[r[1] for r in res]}, cause {[r[0][3] for r in res]}", flush=True)
         await b.close()
+    # 1 novembre 2026 («test dei test»): da «ambiguo» a «chiaro» con l'atteso di docs/COLLAUDI.md (6 nodi nessuna scuffia,
+    # 15 nodi scuffia sempre); il metro vuole almeno una strambata in ogni prova, altrimenti «nessuna scuffia» sarebbe vera a vuoto.
+    # Con altri venti è solo una misura ed esce con 0.
+    strambate = sum(1 for r in res if r[0][0] + r[0][1] > 0)
+    atteso = {"6": ("nessuna scuffia", caps == 0), "15": ("scuffia sempre", caps == n)}.get(str(kn))
+    if atteso is None: print("ESITO: misura (atteso scritto solo per 6 e 15 nodi)"); return
+    cade = ([] if atteso[1] else ["atteso «%s», scuffie %d su %d" % (atteso[0], caps, n)]) + ([] if strambate == n and n > 0 else ["prove con la strambata %d su %d" % (strambate, n)])
+    print("ESITO:", "OK (%s, %d strambate su %d prove)" % (atteso[0], strambate, n) if not cade else "FALLITO, " + "; ".join(cade))
+    if cade: sys.exit(1)
 asyncio.run(main(sys.argv[1], int(sys.argv[2])))

@@ -10,6 +10,7 @@
 #     accesa dopo l'arrivo (niente «arrivo»); stessa regata con registrazione accesa e spenta identica al bit; il file letto da analizza_sessione.py
 # Ogni parte dichiara quanti casi ha misurato e fallisce se sono zero. Esce con 1 se qualcosa non va.
 import asyncio, io, pathlib, sys, contextlib, statistics
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import analizza_sessione as AS
@@ -127,7 +128,7 @@ async def parte_b(p, n_sessioni=5):
             "source serif 400": document.fonts.check('400 16px "Source Serif 4"'),
             "facce Barlow presenti e caricate (check() da solo dà vero anche senza)": [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"),
         })""")
-        caratteri_tutti.append(all(caratteri.values()))
+        caratteri_tutti.append(metro.tutti(caratteri.values()))
         await pg.evaluate("__sv.openItem(['m',2])"); await pg.evaluate(f"__sv.startMission(2, {vento})"); await pg.evaluate("__sv.fast(0)")
         await clic(pg, SES_ON); await pg.wait_for_timeout(100)
         pos_m = []; tasti = []; ck = 0
@@ -188,7 +189,7 @@ async def parte_b(p, n_sessioni=5):
         casi += 1; await pg.close()
     kb_h = statistics.mean(by / t * 3600 / 1000 for by, t in pesi)
     print(f" peso medio: {kb_h:.0f} KB per un'ora di simulazione (stimato dalle sessioni, che contengono anche la lezione)")
-    caratteri_ok = all(caratteri_tutti)
+    caratteri_ok = metro.tutti(caratteri_tutti)
     print("caratteri del gioco caricati:", caratteri_ok)
     print(f"finestra delle impostazioni e pannello: eccesso massimo (pixel): {max(ecc_misure)}")
     if not caratteri_ok:
@@ -329,7 +330,7 @@ async def parte_e(p):
         esito(f"e/{quando}: nessun errore JS", not errs, f"{errs}"); await ctx.close()
     for quando, r in res.items():
         print(f"   {quando}: arrivo a {r['fin'] and round(r['fin'], 1)} s; eventi: " + " | ".join(x[2:] for x in r["righe"] if not x.split(" ")[2].startswith("registrazione_")), flush=True)
-    esito("e: tutte le regate sono arrivate (metro di misura)", all(r["fin"] is not None for r in res.values()), str({k: r["fin"] for k, r in res.items()}))
+    esito("e: tutte le regate sono arrivate (metro di misura)", metro.tutti(r["fin"] is not None for r in res.values()), str({k: r["fin"] for k, r in res.items()}))
     def conta(r, nome): return sum(x.split(" ")[2] == nome for x in r["righe"])
     ri = res["inizio"]; fin = f"{round(ri['fin'])}s"
     esito("e/inizio: un solo arrivo, col tempo netto (fin)", conta(ri, "arrivo") == 1 and any(x.endswith(" arrivo " + fin) for x in ri["righe"]), f"{[x for x in ri['righe'] if ' arrivo' in x]} (fin {fin})")

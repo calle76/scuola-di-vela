@@ -8,6 +8,7 @@
 #  9. pagina aperta come un giocatore (senza #collaudo), senza niente e con #lab: nessun errore, la finestra c'è solo con #lab, il tasto L la nasconde.
 # Uso: python collaudo_laboratorio.py        Esce con 1 se un criterio fallisce, 2 se ha misurato meno corse del previsto.
 import asyncio, json, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 from collaudo_impronta import ROOT, SEME, COMUNE, PROVA, REGATA
 
@@ -75,7 +76,7 @@ async def main():
           const e1 = labCarica(f("nonEsiste", 1)), e2 = labCarica(f("hullScale", 99)), e3 = labCarica({ id: "somma", nome: "somma", versione: "x", valori: { luffA0: { v: 33, fonte: "collaudo", stato: "ipotesi" }, luffW: { v: 8, fonte: "collaudo", stato: "ipotesi" } } }), invariata = JSON.stringify(BOAT) === prima;
           const e4 = labCarica(f("hullScale", 0.8)), giusto = BOAT.hullScale === 0.8; labCarica(LAB_OGGI);
           return [e1, e2, e3, invariata, e4, giusto]; }""")
-        esito("6. profili sbagliati non si caricano", all(sb[:3]) and sb[3], f"{sum(map(bool, sb[:3]))} su 3 rifiutati: «{sb[0]}», «{sb[1]}», «{sb[2]}»")
+        esito("6. profili sbagliati non si caricano", metro.tutti(sb[:3]) and sb[3], f"{sum(map(bool, sb[:3]))} su 3 rifiutati: «{sb[0]}», «{sb[1]}», «{sb[2]}»")
         esito("6. contro-prova: un profilo giusto si carica", sb[4] == "" and sb[5])
 
         # 7. esportazione e rilettura
@@ -87,7 +88,7 @@ async def main():
             const q = JSON.parse(txt.replace(/,\\s*$/, "")), e2 = labCarica(q);
             out.push([p.id, Object.keys(q.valori).length, e, e2, JSON.stringify(BOAT) === atteso]); labCarica(LAB_OGGI); }
           return out; }""")
-        esito("7. esportato e riletto", all(x[2] == "" and x[3] == "" and x[4] for x in es), "; ".join(f"{x[0]}: {x[1]} valori {'uguali' if x[4] else 'DIVERSI'}" for x in es))
+        esito("7. esportato e riletto", metro.tutti(x[2] == "" and x[3] == "" and x[4] for x in es), "; ".join(f"{x[0]}: {x[1]} valori {'uguali' if x[4] else 'DIVERSI'}" for x in es))
         mano = await pg.evaluate("""() => { const r = document.getElementById("labR_hullScale"); r.value = 0.7; r.dispatchEvent(new Event("input"));
           const q = JSON.parse(labEsporta().replace(/,\\s*$/, "")); labCarica(LAB_OGGI); return q.valori.hullScale; }""")
         esito("7. valore toccato a mano esce «non verificato»", mano == {"v": 0.7, "fonte": "prova a mano", "stato": "non verificato"}, json.dumps(mano, ensure_ascii=False))

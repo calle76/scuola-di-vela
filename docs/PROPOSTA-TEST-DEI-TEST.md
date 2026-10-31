@@ -121,3 +121,39 @@ pannello-neu     neutra   collaudo_pannello.py 1360 650            commento nell
 ```
 
 Cambi rispetto al §4, decisi prima di lanciare: T5 (tre corse con semi diversi) **non si applica** ai collaudi di questa fetta, che girano a passi fissi con semi fissati dentro lo script: ripeterli dà lo stesso risultato al bit, quindi una corsa sola. `collaudo_giri_avversari.py` nelle controprove gira con 12 regate invece di 40 (tempo). Le neutre sono 12 (una per collaudo), i mutanti 13 (due per `collaudo_regole.py`, regola 11 e regola 13).
+
+## 10. Proposte per trovare errori più piccoli (fermata 1, da fare dopo)
+
+Le controprove del §8 sono difetti **grossi** (regola spenta, colori scambiati). Un collaudo che li prende può non prendere uno sbaglio piccolo. Cinque proposte, in ordine di quanto rendono per quello che costano. Le soglie sono attese nostre.
+
+1. **Controprove sottili (fetta 2).** Le stesse 12 righe, ma con le «ipotesi nostre» spostate poco: `GIRO_GRADI` 360 → 330, `VIRATA_MIN` 42 → 38, `X_MAX` 240 → 200, `BOA_R` 0,9 → 0,7, `SEM_ON` 8 → 6, `GIRO_AI_VIA` 4 → 3, distanza di contatto dell'1a 4,2 → 4,0 m. Molte **non** verranno prese: per ognuna si decide se il collaudo va allargato (un caso al confine) o se la costante è libera e lo si dichiara. Criterio: un elenco completo «protetta / non protetta» per ogni costante dichiarata ipotesi nostra in `js/regate.js`. Costo: come la fetta 1, circa 1 ora di macchina.
+2. **Casi al confine.** Per ogni regola con una soglia, due casi messi a mano subito sotto e subito sopra (giro di 355° che non conta e di 361° che conta; X a 239 s su e a 241 s giù, già fatto in `collaudo_segnali.py`; boa toccata a 0,1 m e non toccata a 0,1 m oltre). È il modo più economico per proteggere una soglia: un caso al confine prende anche uno spostamento dell'1%.
+3. **Testi contro costanti.** Un collaudo veloce che legge i testi del gioco (`js/contenuti.js`, `js/regate.js`) e controlla che ogni numero detto al giocatore coincida con la costante del codice: «due giri» con il debito di 2, «+15 s» con `GIRO_SEC`, «4 minuti» con `X_MAX`, i nodi del menu con quelli delle prove. Gli sbagli di oggi nei metri (14 nodi inesistenti) erano di questo tipo. Costo: mezza sessione, un secondo di macchina.
+4. **Impronta delle regate.** Come `impronta1b.js` per la barca: 6 regate a passi fissi con semi fissi, e per ogni barca la posizione ogni 10 s salvata in git; a ogni versione si confronta al centimetro. Prende qualunque cambiamento nella guida degli avversari, anche piccolo, e obbliga a dire «è voluto». `collaudo_impronta.py` esiste già ma ha il riferimento vecchio: va rigenerato (è nell'elenco della pulizia del codice).
+5. **Controprove a tappeto (mutation testing).** Uno script che cambia da solo, una alla volta, ogni costante numerica di `js/regate.js` (±20%) e lancia il giro `--veloce`: la mappa di cosa nessun collaudo protegge. È il più completo ma costa decine di ore di macchina: solo se un giorno i collaudi girano su GitHub Actions, di notte, non sul PC di Ale.
+
+Consiglio: 3 e 2 subito dopo la pulizia del codice (poco costo, molti sbagli piccoli presi), poi 1; 4 con la pulizia; 5 solo con GitHub Actions.
+
+## 9. Esiti (1 novembre 2026, notte; fermata 2)
+
+**A — conteggio dei casi.** `tests/metro.py`; 97 `all(` in 25 collaudi chiari diventati `metro.tutti(` (un primo tentativo con il nome `tutti` si scontrava con una variabile di `collaudo_boa.py`: corretto in `metro.tutti`). I 15 `not any(` dei collaudi chiari rivisti a mano: tutti hanno accanto un conteggio o lavorano su elenchi fissi, nessuno cambiato. Giro dei 31 lanci toccati (3 alla volta, Chromium): 28 OK, 3 FALLITI noti con gli stessi numeri del giro del 30 ottobre (virate2 identico riga per riga; competizione misura con piccole differenze nei tempi dovute alle versioni 1.0.71-1.0.73, stesso esito). Nessun controllo sotto il minimo. **T1: 100%.**
+
+**T2, prova a vuoto** (`… 0`): giri, boa, giri_avversari, moviola, registrazione cadono (5 su 5; tre cadono con un errore Python invece che con un controllo, ma il codice d'uscita è 1 lo stesso). `collaudo_regola21.py 0` resta verde perché il numero non decide i casi (griglie fisse da 120 e 90 posizioni, 30 regate per K6 con la variabile `REGATE`): non è un buco, è un'etichetta.
+
+**B — chiari.** 59 su 64 (13 convertiti). Tutti verdi sul gioco vero: lezioni (18 passi), regate bastone e raffiche (18 arrivi ciascuna), strambata 6 nodi (nessuna scuffia, 10 strambate su 10) e 15 nodi (scuffia sempre), pannello 1360×650 e 1360×768 (89 misure), fantasma, registro (15 su 15), schermate (28), giro di boa (8 casi), polare e raffiche (identici). **Trovato in `collaudo_lezioni.py`:** passo 1.8 NON COMPLETATO dal 16 ottobre (vedi CHANGELOG), corretto nel collaudo.
+
+**C — controprove** (`tests/controprove.py`; uscite in `tests/output/controprove/`).
+
+| | Mutanti presi | Neutre verdi |
+|---|---|---|
+| Prima fetta (12 collaudi) | 13 su 13 | 11 su 12 (+1 con 40 regate: verde) |
+| Aggiunte per i collaudi convertiti (lezioni, giro di boa, strambata) | 2 su 3 | 3 su 3 |
+| **Totale** | **15 su 16 (94%)** | **15 su 16 al primo lancio; 16 su 16 con la riga corretta** |
+
+- **T3** (almeno 90% dei mutanti presi, con il controllo giusto): 15 su 16, **sì**. Il controllo che cade è quello della regola cambiata in tutti i casi guardati (regole: i casi 11 e 13; giri: B1; boa: A1; regola21: K1; giri_avversari: G2 e, a zero casi, G1 e G3-G7; segnali: G1; contatto: i casi «scafi a 3,0 m»; semaforo: 34 contatti col colore sbagliato; pannello: eccesso; lezioni: passo 1.8; giro di boa: «giri sbagliati=0»).
+- **Mutante non preso:** `strambata-mut`, soglia di scuffia `BOAT.capsizeAt` 60° → 90° nel ciclo del gioco. A 15 nodi la strambata violenta porta lo sbandamento oltre 90° comunque: il collaudo controlla l'esito («scuffia sempre»), non la soglia. Controllato a parte sulla stessa copia: `collaudo_registro.py` cade (14 su 15, «lezione 6, scuffia richiesta»), `collaudo_lezioni.py` e `raffiche_e_virate.js` no (la soglia non è nel motore che leggono i collaudi della fisica). Quindi la soglia **è** protetta nel giro, da un collaudo solo.
+- **T4** (zero falsi allarmi): **no al primo lancio**, 1 su 16: `giriavv-neu` a 12 regate cade per il minimo di casi di G4 (7 su 15). È il metro che funziona, con un numero di regate scelto male da me; la riga con 40 regate (aggiunta dopo, dichiarato) è verde.
+- **T5**: non applicato, dichiarato al §8 prima di lanciare (collaudi a passi fissi).
+- **T6**: gioco non toccato (`git status` pulito su `index.html` e `js/`); polare e raffiche identici.
+
+**Cosa resta debole** (in ordine di peso): (1) le soglie numeriche, come quella di scuffia, sono protette dall'esito e non dal valore: le proposte 1-2 del §10; (2) 5 collaudi restano ambigui; (3) tre collaudi a zero prove cadono con un errore Python invece che con un messaggio chiaro (non grave: cadono); (4) tutto misurato in Chromium; le controprove in Firefox non sono state lanciate.

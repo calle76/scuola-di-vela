@@ -7,6 +7,7 @@
 #  5. pagina senza #collaudo: la regata si apre, nessun errore della pagina.
 # Esce con 1 se un controllo fallisce.
 import asyncio, pathlib, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -47,11 +48,11 @@ async def main():
         for liv in ("principianti", "esperti"):
             for seme in range(1, 7):
                 r = await pg.evaluate(REGATA, [liv, seme]); n += 1
-                tutte = all(f is not None for f in r["fin"])
+                tutte = metro.tutti(f is not None for f in r["fin"])
                 arrivate += tutte
                 print(f"  regata {n} ({liv}, seme {seme}): boa a {r['up']:.0f} m, vento fra {r['lo']:.1f}° e {r['hi']:.1f}°, "
                       f"arrivi {[None if f is None else round(f) for f in r['fin']]} s, penalità {r['pen']}")
-                check(abs(r["up"] - 300) < 1 and all(v == 2 for v in r["lv"]) and r["hi"] - r["lo"] >= 8 and tutte,
+                check(abs(r["up"] - 300) < 1 and metro.tutti(v == 2 for v in r["lv"]) and r["hi"] - r["lo"] >= 8 and tutte,
                       f"regata {n}: boa a 300 m, barche del livello 2, il vento gira, arrivano tutte")
         print(f"S3: regate con tutte le barche arrivate {arrivate} su {n}")
         check("gira" in r["brief"], "le istruzioni della regata dicono che il vento gira")

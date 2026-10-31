@@ -4,6 +4,7 @@
 # Le misure del riquadro valgono solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).
 # Uso: python collaudo_esame.py
 import asyncio, sys, pathlib, re, shutil, subprocess, tempfile
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 HTML = ROOT / "index.html"; BASE = HTML.as_uri()
@@ -177,7 +178,7 @@ async def main():
             "facce Barlow caricate": [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"),
             "facce Source Serif caricate": [...document.fonts].some(f => f.family.includes("Source Serif") && f.status === "loaded"),
         })""")
-        veri = all(car.values())
+        veri = metro.tutti(car.values())
         print("caratteri del gioco caricati:", veri, car)
         eccesso = 0
         for H in (650, 768):
@@ -192,7 +193,7 @@ async def main():
             ecc = max([x - r["bottom"] for x in r["bt"]] + [r["bottom"] - r["H"], -r["top"], r["right"] - r["W"], r["pagina"]])
             eccesso = max(eccesso, ecc); tag = f"riquadro 1360x{H}"
             chk("riquadro", len(r["bt"]) == 2, f"{tag}: pulsanti trovati {len(r['bt'])}")
-            chk("riquadro", all(x <= r["bottom"] + 0.5 for x in r["bt"]), f"{tag}: pulsanti oltre il riquadro")
+            chk("riquadro", metro.tutti(x <= r["bottom"] + 0.5 for x in r["bt"]), f"{tag}: pulsanti oltre il riquadro")
             chk("riquadro", r["top"] >= 0 and r["bottom"] <= r["H"] + 0.5, f"{tag}: riquadro fuori dalla finestra")
             chk("riquadro", r["pagina"] <= 0, f"{tag}: la pagina dietro scorre di {r['pagina']} px")
             chk("riquadro", r["scroll"], f"{tag}: con 20 sbagliate l'elenco deve scorrere")

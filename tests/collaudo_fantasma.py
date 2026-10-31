@@ -1,6 +1,6 @@
 # Le opzioni di regata stanno nel riquadro delle istruzioni, che nei collaudi è saltato: si impostano direttamente.
 # Regate con avversari esperti, poi prova 1 completata da un pilota automatico: verifica che il fantasma venga salvato e mostrato.
-import asyncio
+import asyncio, sys
 from playwright.async_api import async_playwright
 import pathlib
 # percorsi relativi al repository: il gioco è ../index.html, le immagini vanno in tests/output/
@@ -10,6 +10,7 @@ URL = BASE + "#collaudo"
 async def main():
     async with async_playwright() as p:
         b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
+        bloccate = 0
         for run in range(3):
             pg = await b.new_page(viewport={"width":1280,"height":800})
             await pg.goto(URL); await pg.wait_for_timeout(300)
@@ -19,7 +20,9 @@ async def main():
             for i in range(24):
                 await pg.wait_for_timeout(1000)
                 if await pg.evaluate("__sv.R.boats.filter(b=>!b.me).every(b=>b.fin!==null)"): break
-            print("esperti corsa", run+1, await pg.evaluate("__sv.R.boats.filter(b=>!b.me).map(b=>[b.name, b.fin===null?('BLOCCATA '+b.leg):Math.round(b.fin), b.pen])"), flush=True)
+            corsa = await pg.evaluate("__sv.R.boats.filter(b=>!b.me).map(b=>[b.name, b.fin===null?('BLOCCATA '+b.leg):Math.round(b.fin), b.pen])")
+            bloccate += sum(1 for x in corsa if str(x[1]).startswith("BLOCCATA"))
+            print("esperti corsa", run+1, corsa, flush=True)
             await pg.close()
         # fantasma: prova 1 completata da un pilota automatico
         pg = await b.new_page(viewport={"width":1280,"height":800})
@@ -31,11 +34,18 @@ async def main():
         for i in range(20):
             await pg.wait_for_timeout(1000)
             if await pg.is_visible("#done"): break
-        print("prova 1 completata:", await pg.is_visible("#done"), "|", await pg.inner_text("#doneText") if await pg.is_visible("#done") else "")
+        fatta = await pg.is_visible("#done")
+        print("prova 1 completata:", fatta, "|", await pg.inner_text("#doneText") if await pg.is_visible("#done") else "")
         g = await pg.evaluate("Object.keys(__sv.ghosts()).map(k=>k+':'+__sv.ghosts()[k].length+' campioni')")
         print("fantasmi salvati:", g)
         await pg.evaluate("__sv.fast(1)"); await pg.click("#mRetry"); await pg.wait_for_timeout(4000)
         await pg.screenshot(path=str(OUT / "ghost.png"))
         print("errori:", errs[:2])
         await b.close()
+        # 1 novembre 2026 («test dei test»): da «ambiguo» a «chiaro». Atteso: prova completata, fantasma salvato con dei
+        # campioni, nessun errore; le tre corse degli esperti senza barche «BLOCCATA».
+        cade = ([] if fatta else ["prova 1 non completata"]) + ([] if g and all(int(x.split(":")[1].split()[0]) > 0 for x in g) else ["nessun fantasma salvato"]) \
+               + (["errori JavaScript"] if errs else []) + (["avversari bloccati: %d" % bloccate] if bloccate else [])
+        print("ESITO:", "OK" if not cade else "FALLITO, " + "; ".join(cade))
+        if cade: sys.exit(1)
 asyncio.run(main())

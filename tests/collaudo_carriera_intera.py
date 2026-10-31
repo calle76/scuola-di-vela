@@ -10,6 +10,7 @@
 #  - Ripassi ed esame: a clic, risposte giuste lette dalle banche nel testo di index.html.
 # Se una prova o una regata non arriva in fondo, l'esito è NON VALIDO, non FALLITO. Uso: python collaudo_carriera_intera.py
 import asyncio, json, pathlib, re, sys, time
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 QUI = pathlib.Path(__file__).resolve().parent; OUT = QUI / "output"; OUT.mkdir(exist_ok=True)
 INDEX = QUI.parent / "index.html"; import sorgente; SRC = sorgente.testo(); URL = INDEX.as_uri() + "#collaudo"   # SRC: dalla 1.0.3 index.html più js/
@@ -120,7 +121,7 @@ async def main():
         chk("I2", abil >= 8 and cono >= 6 and comp >= 3 and esp == 6 and abil + cono + comp + esp >= 29, f"I2: meriti sotto i minimi {abil}, {cono}, {comp}, {esp}")
         chk("I3", await pg.evaluate(f"localStorage.getItem('{LIB}')") is None, "I3: il gioco libero non è stato toccato")
         # I4: il metro ha misurato davvero
-        chk("I4", esp == 6 and all(p["done"].get(f"m{i}") for i in range(4)) and len(p.get("race", {})) >= 1, f"I4: completati dal gioco: lezioni {esp}, prove {[p['done'].get(f'm{i}') for i in range(4)]}, regate {list(p.get('race', {}))}")
+        chk("I4", esp == 6 and metro.tutti(p["done"].get(f"m{i}") for i in range(4)) and len(p.get("race", {})) >= 1, f"I4: completati dal gioco: lezioni {esp}, prove {[p['done'].get(f'm{i}') for i in range(4)]}, regate {list(p.get('race', {}))}")
         chk("I4", guidati + ignoti == 32 and forzati == 0, f"I4: passi pratici 32 attesi, il pilota ne guida {guidati} e non prevede {ignoti}; saltati con l'aggancio {forzati}")
         chk("I4", not errs, f"errori di pagina: {errs[:3]}")
         print(f"meriti: Abilità {abil}, Conoscenza {cono}, Competizione {comp}, Esperienza {esp}, totale {abil + cono + comp + esp}; "

@@ -28,6 +28,7 @@
 #      python collaudo_competizione.py --veloce     # semi 1-3, solo salvataggio, barra e «nessuno»: soglie non valutate
 #      python collaudo_competizione.py --tastiera   # parte 2 (circa 10 minuti: le due regate in parallelo)
 import asyncio, pathlib, sys, time
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
@@ -118,7 +119,7 @@ async def gruppo(b, semi, liv, soglie, nome):
         if soglie: esito.append((nome_c, ok))
     # C5 prima: senza regate o coppie gli altri criteri non hanno misurato niente
     coppie = len(semi)
-    crit("C5", tot_arr > 0 and coppie > 0 and all(res[r][s]["moved"] > 0 for r in (0, 1) for s in semi),
+    crit("C5", tot_arr > 0 and coppie > 0 and metro.tutti(res[r][s]["moved"] > 0 for r in (0, 1) for s in semi),
          f"regate arrivate {tot_arr}, coppie {coppie}, barra mossa in tutte le {2 * len(semi)} regate")
     c0 = [len(arr[r]) / len(semi) for r in (0, 1)]
     crit("C0", min(c0) >= 0.9, f"arrivate bastone {c0[0]:.0%}, raffiche {c0[1]:.0%} (soglia 90% per tipo)")
@@ -130,7 +131,7 @@ async def gruppo(b, semi, liv, soglie, nome):
     for r in (0, 1):
         pr = [res[r][s]["saved"]["pos"] for s in arr[r] if res[r][s]["saved"]]
         print(f"      regata {r + 1}: " + ", ".join(f"{p}° {pr.count(p)}" for p in (1, 2, 3, 4)) + f" su {len(pr)} arrivate", flush=True)
-    crit("C1", bool(pos) and all(0.10 <= q <= 0.40 for q in quote),
+    crit("C1", bool(pos) and metro.tutti(0.10 <= q <= 0.40 for q in quote),
          ", ".join(f"{p}° {pos.count(p)} ({q:.0%})" for p, q in zip((1, 2, 3, 4), quote)) + f" su {len(pos)} arrivate (fascia 10-40%)")
     P = {r: {s: punti(res[r][s]) for s in semi} for r in (0, 1)}
     somme = [P[0][s] + P[1][s] for s in semi]

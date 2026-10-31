@@ -26,12 +26,14 @@ ATTREZZI = """() => { const sv = __sv; sv.fast(0); let seme = 1;
   L.aspetta = maxs => { L.semina(); const t = L.avanza(maxs, () => sv.stepDone); return [sv.stepDone, t, L.leggi()]; };
   L.premi = (k, sec) => { L.semina(); L.tasto("keydown", k); L.avanza(sec); L.tasto("keyup", k); };
 }"""
+PASSI = []   # (nome, completato) di ogni passo guidato
 NUOVI = []   # controlli con esito vero/falso (1.0.2); gli altri sono tempi da leggere
 def chk_ok(ok, nome):
     NUOVI.append(bool(ok)); print(f"   {'OK ' if ok else 'NO '} {nome}", flush=True)
 def stampa(label, r):
     ok, t, I = r
     print(f"{label}: {'OK' if ok else 'NON COMPLETATO'} in {t:.1f}s  {I}", flush=True)
+    PASSI.append((label, bool(ok)))
     return ok
 async def hold_until(pg, key, maxs, label):
     return stampa(label, await pg.evaluate("([k, m]) => L.tieni(k, m)", [key, maxs]))
@@ -50,7 +52,11 @@ async def main():
         await pg.evaluate("__sv.openItem(['l',0])"); await pg.evaluate("__sv.showStep(6)")
         await hold_until(pg, "ArrowLeft", 12, "L1 poggiare")
         await pg.evaluate("__sv.showStep(7)")
-        await hold_until(pg, "ArrowRight", 25, "L1 orzare fino all'angolo morto")
+        # 1 novembre 2026 («test dei test»): dalla 1.0.12 il passo dice «quando la lancetta entra nel rosso, rilascia»; il
+        # collaudo teneva premuto fino a 25 s e il passo risultava NON COMPLETATO dal 16 ottobre senza che nessuno lo vedesse
+        # (collaudo «ambiguo»). Ora come il testo: tiene finché la prua è a meno di 40° dal vento, poi rilascia e aspetta.
+        await pg.evaluate('() => { L.semina(); L.tasto("keydown", "ArrowRight"); L.avanza(25, () => __sv.readI().twa < 40 || __sv.stepDone); L.tasto("keyup", "ArrowRight"); }')
+        await wait_until(pg, 20, "L1 orzare fino all'angolo morto")
         await pg.evaluate("__sv.showStep(8)")
         # come un giocatore: poggia finché il vento arriva di fianco, poi rilascia e aspetta che la barca riparta
         await pg.evaluate("""() => { L.semina(); L.tasto("keydown", "ArrowLeft"); L.avanza(25, () => __sv.readI().twa > 80); L.tasto("keyup", "ArrowLeft"); }""")
@@ -107,4 +113,12 @@ async def main():
         print(f"controlli vero/falso: {sum(NUOVI)} su {len(NUOVI)}" + ("" if all(NUOVI) and NUOVI else "  <-- DA CONTROLLARE"))
         print("errori:", errs[:5])
         await b.close()
+        # 1 novembre 2026 («test dei test»): da «ambiguo» a «chiaro». Atteso di docs/COLLAUDI.md: tutti i passi OK salvo
+        # «L1 cazzare (primo tratto)», che per costruzione si completa nell'attesa che segue; più i controlli vero/falso.
+        noti = {"L1 cazzare (primo tratto)"}
+        mancati = [l for l, ok in PASSI if not ok and l not in noti]
+        cade = ([] if len(PASSI) >= 18 else ["passi misurati %d, meno di 18" % len(PASSI)]) + (["non completati: %s" % mancati] if mancati else []) \
+               + ([] if NUOVI and all(NUOVI) else ["controlli vero/falso %d su %d" % (sum(NUOVI), len(NUOVI))]) + (["errori JavaScript"] if errs else [])
+        print("ESITO:", "OK (%d passi, %d controlli vero/falso)" % (len(PASSI), len(NUOVI)) if not cade else "FALLITO, " + "; ".join(cade))
+        if cade: __import__("sys").exit(1)
 asyncio.run(main())

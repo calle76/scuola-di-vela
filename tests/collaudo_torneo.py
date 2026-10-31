@@ -23,6 +23,7 @@
 #      python collaudo_torneo.py --veloce       # C1, C6, C3 e C4 su 2 tornei, C2 su 2 semi: soglie dei conteggi non valutate
 #      python collaudo_torneo.py --giocatore    # C7: pagina senza #collaudo, torneo intero dal menu con una chiusura in mezzo
 import asyncio, json, pathlib, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
@@ -175,7 +176,7 @@ async def c2(b, semi, carriera):
             pr = ultimo["prog"] or {}
             if "torneo" in pr: no(f"C2 seme {seme}: torneo finito ma ancora nel salvataggio")
             if carriera:
-                mer = [6, 4, 3, 2][pos - 1] + (1 if all(r[0]["pp"] == 0 for r in ris) else 0)
+                mer = [6, 4, 3, 2][pos - 1] + (1 if metro.tutti(r[0]["pp"] == 0 for r in ris) else 0)
                 if ultimo["meriti"] != f"Meriti di Competizione dell'1b: {mer}.": diff += 1; no(f"C2 seme {seme}: meriti del gioco «{ultimo['meriti']}», nostri {mer}")
                 if (pr.get("torneoFatto") or {}).get("mer", -1) < mer: no(f"C2 seme {seme}: torneoFatto {pr.get('torneoFatto')} con meriti {mer}")
             pp = sum(r[0]["pp"] for r in ris); na = sum(1 for r in ris for x in r if x["fin"] is None)
@@ -296,7 +297,7 @@ async def c4(b, n):
         await pg.evaluate("() => document.getElementById('torRit').click()")
         dopo = json.loads(await pg.evaluate("localStorage.getItem('scuolaVelaSim.v1')") or "{}")
         p0 = json.loads(prima or "{}") or {"done": {}, "best": {}, "clean": {}}
-        buono = "torneo" not in dopo and "torneoFatto" not in dopo and all(dopo.get(x, {}) == p0.get(x, {}) for x in ("done", "best", "clean", "race"))
+        buono = "torneo" not in dopo and "torneoFatto" not in dopo and metro.tutti(dopo.get(x, {}) == p0.get(x, {}) for x in ("done", "best", "clean", "race"))
         ok += buono
         print(f"  {'ok ' if buono else 'NO '} torneo {t + 1}, ritirato dopo {k} regate: chiavi del salvataggio {sorted(dopo)}", flush=True)
         if not buono: no(f"C4 torneo {t + 1}: dopo il ritiro {sorted(dopo)}")

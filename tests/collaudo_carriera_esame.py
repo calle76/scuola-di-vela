@@ -5,6 +5,7 @@
 # Lo spazio vale solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).
 # Fallisce se una parte misura zero casi. Uso: python collaudo_carriera_esame.py
 import asyncio, json, pathlib, re, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 QUI = pathlib.Path(__file__).resolve().parent; OUT = QUI / "output"; OUT.mkdir(exist_ok=True)
 INDEX = QUI.parent / "index.html"; BASE = INDEX.as_uri(); import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
@@ -121,7 +122,7 @@ async def main():
         menu_h = await pg.evaluate("() => [document.documentElement.scrollHeight - innerHeight, document.querySelector('.menu-foot').getBoundingClientRect().bottom]")
         chk("spazio", menu_h[0] <= 0, f"spazio: menu con il brevetto, eccesso {menu_h[0]} px, piede a {menu_h[1]:.0f}")
         car = await pg.evaluate("""() => [document.fonts.check('700 16px "Barlow Semi Condensed"'), [...document.fonts].some(f => f.family.includes("Barlow") && f.status === "loaded"), [...document.fonts].some(f => f.family.includes("Source Serif") && f.status === "loaded")]""")
-        print(f"spazio: attestato da {r[0]:.0f} a {r[1]:.0f} px su {r[2]}; menu con il brevetto, piede a {menu_h[1]:.0f}; caratteri veri {all(car)}")
+        print(f"spazio: attestato da {r[0]:.0f} a {r[1]:.0f} px su {r[2]}; menu con il brevetto, piede a {menu_h[1]:.0f}; caratteri veri {metro.tutti(car)}")
         chk("E2", not errs, f"E2-E3: errori {errs}"); await ctx.close()
 
         # ---- E4: l'ultima condizione è una regata (esame già superato); la scena compare una volta sola
@@ -157,6 +158,6 @@ async def main():
     print("casi per parte:", casi)
     if fail: print("ESITO: FALLITO"); sys.exit(1)
     if any(casi.get(k, 0) == 0 for k in ("E1", "E2", "E3", "E4", "E5", "E6", "spazio")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
-    if not all(car): print("MISURA DELLO SPAZIO NON VALIDA: mancano i caratteri veri (Barlow, Source Serif); il resto è OK."); print("ESITO: NON VALIDA"); sys.exit(1)
+    if not metro.tutti(car): print("MISURA DELLO SPAZIO NON VALIDA: mancano i caratteri veri (Barlow, Source Serif); il resto è OK."); print("ESITO: NON VALIDA"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

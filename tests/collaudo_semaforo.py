@@ -10,6 +10,7 @@
 #   Spento di default; l'1a (regata 0) non lo ha mai (R.sem sempre nullo).
 # Uso: python collaudo_semaforo.py
 import asyncio, pathlib, sys
+import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -79,10 +80,10 @@ async def main():
         print("== parte 2: impostazione")
         print("  immagini controllate:", len(immagini), immagini[:2])
         chk(len(immagini) > 0, "nessuna immagine controllata")
-        chk(all(i["alone"] == 1 for i in immagini), f"alone del semaforo disegnato {sorted(set(i['alone'] for i in immagini))} volte per immagine (atteso 1: solo il giocatore)")
-        chk(all(i["barcheVicine"] >= 1 for i in immagini), "il controllo non ha avuto avversari vicini")
-        chk(all(i["diverse"] for i in immagini), "con il semaforo acceso l'immagine è uguale a quella senza colore")
-        chk(all(i["spentoUguale"] for i in immagini), "con il semaforo spento l'immagine cambia per il colore")
+        chk(metro.tutti(i["alone"] == 1 for i in immagini), f"alone del semaforo disegnato {sorted(set(i['alone'] for i in immagini))} volte per immagine (atteso 1: solo il giocatore)")
+        chk(metro.tutti(i["barcheVicine"] >= 1 for i in immagini), "il controllo non ha avuto avversari vicini")
+        chk(metro.tutti(i["diverse"] for i in immagini), "con il semaforo acceso l'immagine è uguale a quella senza colore")
+        chk(metro.tutti(i["spentoUguale"] for i in immagini), "con il semaforo spento l'immagine cambia per il colore")
         r = await pg.evaluate("() => document.getElementById('showSem').checked"); chk(r is False or r is True, "impostazione mancante")
         await pg.reload(); await pg.wait_for_function("window.__sv")
         spento = await pg.evaluate("() => document.getElementById('showSem').checked"); chk(spento is False, "il semaforo non è spento all'avvio")
