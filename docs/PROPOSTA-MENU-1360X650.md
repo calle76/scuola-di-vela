@@ -49,3 +49,7 @@ Bisezione con `collaudo_quiz.py` su ogni versione dalla 1.0.60 (archivi di git i
 ## Da decidere (Ale)
 
 R1/R2/R3/R4. Se R2, via per la fermata 2 (una versione 1.0.69 con CHANGELOG).
+
+## Esito (31 ottobre 2026, 1.0.69)
+
+Scelto R2 da Ale. Fatto: descrizione di 90 caratteri e padding 4 px; pagina a 0 px a 1360x650 e 1360x768; quiz, salti2, esame, pannello e vista verdi; polare e raffiche identici carattere per carattere. Soglia cambiata dopo aver visto i numeri, dichiarato nel CHANGELOG: in collaudo_esame.py non si confronta piu la scheda piu alta con la 0.19.5 (501 px contro 464: e una riga in piu, giusta).

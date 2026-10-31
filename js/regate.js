@@ -60,7 +60,7 @@
     // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): barca dell'1b, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
     { title: "Regata nei salti di vento", where: "salti di vento", desc: "Barca dell'1b, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true },
     // 1.0.61 (docs/PROPOSTA-LIVELLO-2A.md, fetta 1): livello 2a, due giri al posto dei 15 s per il giocatore; resta fuori da meriti e carriera
-    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: se lasci male la strada, due giri come nelle regate vere, ciascuno con una virata e una strambata; se tocchi una boa, un giro; le bandiere della partenza sulla barca giuria.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true, segnali: true }
+    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: due giri se lasci male la strada, uno se tocchi una boa; bandiere sulla giuria.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true, segnali: true }
   ];
   const RACES1 = RACES.filter(rc => !rc.lv2); // le regate dell'1a (stessi indici: quelle dell'1b, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
   const LINE_HALF = 35, MARK_UP = 140;

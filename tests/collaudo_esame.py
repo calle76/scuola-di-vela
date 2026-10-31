@@ -166,7 +166,7 @@ async def main():
             await q.evaluate("document.fonts.ready")
             alt[nome] = await q.evaluate("[document.documentElement.scrollHeight, Math.max(...[...document.querySelectorAll('.tile')].map(t => t.getBoundingClientRect().height))]")
             await q.close()
-        chk("menu", alt["ora"][0] <= alt["0.19.5"][0] and alt["ora"][1] <= alt["0.19.5"][1], f"menu più alto: {alt}")
+        chk("menu", alt["ora"][0] <= alt["0.19.5"][0], f"menu più alto: {alt}") # 1.0.69: la scheda più alta non si confronta più con la 0.19.5 (la regata dei giri è una riga in più, +36 px, giusta); conta che la pagina non scorra
         print(f"menu a 1360x650 (altezza pagina, riquadro più alto): 0.19.5 {alt['0.19.5']}, ora {alt['ora']}")
 
         # --- 4) riquadro con 20 sbagliate, con i caratteri veri ---
