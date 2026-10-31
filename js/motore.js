@@ -65,6 +65,7 @@ const RUD2_SICURA = 35 / 45; // 1.0.25: nell'1b la sola freccia porta la barra f
 // come negli schemi di un video di allenamento (raddrizzare con la schiena al vento, 15-20 s in tutto). 1a: 3 s e 60°, come sempre.
 const RADD2 = { t: 10, tAI: 15, twa: 90 }; // secondi dal tasto A (giocatore), secondi dalla scuffia (avversari), gradi dal vento
 function raddT(S){ return S.lv === 2 ? RADD2.t : 3; }
+const BOOM_ISTERESI = 5; // 1.0.71: gradi da dietro (vento apparente a ±180°) entro i quali il boma tiene il lato che aveva; ipotesi nostra, nessuna fonte (docs/PROPOSTA-BOMA-IN-POPPA.md)
 // 1.0.26: «spingi il boma» dell'1b (docs/archivio/PROPOSTA-SPINGI-BOMA.md). Con C.push e S.lv === 2 il boma resta a BOMA2.angle dalla parte
 // dove si trovava quando si è cominciato a spingere; la vela è una piastra investita dal vento (forza normale CN = CL cos α + CD sin α)
 // applicata al centro velico lungo il boma, quindi spinge indietro, di lato e fa girare la prua verso il boma. Costanti: stime senza fonte.
@@ -202,7 +203,10 @@ function step(S, C, E, dt){
   }
   S.h = norm360(S.h + S.r * dt);
   S.x += bv[0] * dt; S.y += bv[1] * dt;
-  S.boomSide = push ? S.pushSide : awa >= 0 ? -1 : 1; // -1: boma a sinistra
+  // 1.0.71 (docs/PROPOSTA-BOMA-IN-POPPA.md, osservazione 63): con il vento apparente quasi esattamente da poppa il segno di awa oscilla (onde, assetto) e il boma saltellava da un lato all'altro;
+  // ora il lato cambia solo se il vento apparente è passato oltre BOOM_ISTERESI gradi da dietro. Il lato del boma non entra nelle forze (solo disegno, lato della scuffia, lato del peso dell'equipaggio).
+  const latoBoma = awa >= 0 ? -1 : 1; // -1: boma a sinistra
+  S.boomSide = push ? S.pushSide : (S.boomSide && latoBoma !== S.boomSide && A > 180 - BOOM_ISTERESI) ? S.boomSide : latoBoma;
   S.boom = push ? BOMA2.angle : boom;
   if (S.lv === 2) S.pushing = !!push;
   return { heel: S.heel, hike: S.hike, awa, aws, alpha, awFrom, drive, side, twa: norm180(E.twd - S.h), leeway: Math.atan2(S.vl, Math.max(0.3, Math.abs(S.u))) / D2R };

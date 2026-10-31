@@ -42,3 +42,7 @@ Pilota che tiene la prua fissa con il vento vero esattamente da poppa (twa 180°
 ## Da decidere (Ale)
 
 Il via per la fermata 2: B1 (misura, nessun cambio) e, se il difetto si riproduce, il cambio con B2-B6.
+
+## Esito (31 ottobre 2026, 1.0.71)
+
+Fatto con il via di Ale. Isteresi di 5° (`BOOM_ISTERESI`). B1: 18, 95 e 330 cambi in 60 s a 6, 10 e 15 nodi sulla 1b prima, 0 dopo (semi di scelta 1-20 e di conferma 101-120); sulla 1a il difetto non c'era. Metri cambiati dopo aver visto i numeri (14 nodi non esiste nel menu: si usa 15; scuffie escluse; scenario B3 allargato a ±30°): dettagli nel CHANGELOG 1.0.71. `impronta1b.txt` rigenerato (solo il lato del boma nelle strambate, verificato).
