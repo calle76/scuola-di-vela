@@ -76,6 +76,8 @@ Costo di cambiamento:
 | Boma in poppa: isteresi di 5° sul lato del boma, anche per la 1a (stesso motore, la 1a sparirà) | 31 ott (Ale: «fai il boma») | basso | Motore, solo lato del boma (non le forze) | `PROPOSTA-BOMA-IN-POPPA.md`, CHANGELOG 1.0.71 |
 | Principiante: non è una porta (scuola, si gareggia contro avversari deboli); idea: la vela che si manovra da sola come opzione | 30 ott | basso | Lezioni e comandi | `PROPOSTA-RIORGANIZZAZIONE.md` §8 |
 | Questa riorganizzazione **supera** la riga di oggi su brevetto «strada A» e menu dell'1b (`PROPOSTA-COMPLETAMENTO-1B.md`) | 30 ott | — | — | — |
+| Vela che si manovra da sola (attivabile) per la scuola: sì; si scrive prima delle lezioni (fermata 1). Regola 18 (spazio alla boa): **ultima fatica**, dopo il livello «Deriva»; la lezione si scrive prima come teoria dichiarata; poi taratura breve di torneo e misure con avversari. «Cambia vento»: solo nelle prove | 31 ott (Ale) | Basso (18: cambia il giro delle boe degli avversari, quindi le tarature con avversari) | messaggio di Ale del 31 ottobre |
+| Dopo il giro Chromium+Firefox del 31 ott: tre fallimenti stabili su Firefox (riquadro Q7 0,34 ms/4,2% contro 0,2 ms/3%; contatto_vero 0,29 m contro 0,25 m; giri_avversari G1 1 su 104) **accettati**, soglie invariate, si va avanti | 31 ott (Ale: «se non è indispensabile andrei oltre») | Nullo | CHANGELOG 1.0.72 |
 
 ## Carriera, meriti, salvataggi
 
