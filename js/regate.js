@@ -446,7 +446,7 @@
     if (b.fin !== null || b.dnf) return;
     if (b.leg === 0){
       if (R.t >= 0){
-        if (b.ocs){ if (wy > 0){ b.ocs = false; if (b.me) toast("Sei tornato dietro la linea: ora riparti"); } }
+        if (b.ocs){ if (wy > 0){ b.ocs = false; if (R.xSet) R.xSet = R.xSet.filter(o => o !== b); if (b.me) toast("Sei tornato dietro la linea: ora riparti"); } }
         else if (prev > 0 && wy <= 0 && onLine){ b.leg = 1; if (b.me) toast("Partito! Ora la boa di bolina"); }
         else if (prev > 0 && wy <= 0 && !onLine){ b.ocs = true; if (b.me) regAdd("outLine"); if (b.me) toast("Sei passato fuori dalla linea: torna dietro e passa tra giuria e boa"); }
         else if (wy < -5 && !b.ocs){ b.ocs = true; if (b.me) regAdd("outLine"); } // oltre la linea senza averla tagliata: deve tornare indietro
