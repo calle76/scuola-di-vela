@@ -87,3 +87,37 @@ Nessuna costante del gioco. Ipotesi: che un difetto «grosso» (regola spenta, s
 ## 7. Cosa serve da Ale
 
 Il via per la fermata 2, con l'ordine A → B → C (prima fetta). Se preferisce, si può fermare dopo A e B (circa metà del lavoro, il pezzo che rende di più per quello che costa) e decidere C dopo aver visto i numeri.
+
+## 8. Controprove scritte prima di lanciarle (1 novembre 2026, notte)
+
+Tabella in `tests/controprove.py` (la riga `--elenco` la stampa). Scritte tutte prima del primo lancio:
+
+```
+polare-mut       mutante  fisica/confronta.js polare.js            area della vela della 1a +10%
+polare-neu       neutra   fisica/confronta.js polare.js            commento nel motore
+raffiche-mut     mutante  fisica/confronta.js raffiche_e_virate.js massa della barca +10%
+raffiche-neu     neutra   fisica/confronta.js raffiche_e_virate.js commento nel motore
+impronta1b-mut   mutante  fisica/impronta1b.js                     barca dell'1b: acqua contro lo scafo che ruota 400 → 401 (la stessa di --cambia)
+impronta1b-neu   neutra   fisica/impronta1b.js                     commento nel motore
+regole-mut11     mutante  collaudo_regole.py                       regola 11 rovesciata: cede la barca sottovento invece della sopravento
+regole-mut13     mutante  collaudo_regole.py                       regola 13 spenta: chi vira non cede più
+regole-neu       neutra   collaudo_regole.py                       commento in regate.js
+giri-mut         mutante  collaudo_giri.py 12                      un giro solo estingue tutto il debito (la 44.2 ne vuole due)
+giri-neu         neutra   collaudo_giri.py 12                      commento in regate.js
+boa-mut          mutante  collaudo_boa.py 12                       toccare una boa non dà il giro di penalità (regola 31)
+boa-neu          neutra   collaudo_boa.py 12                       commento in regate.js
+regola21-mut     mutante  collaudo_regola21.py 12                  regole 21.1 e 21.2 spente: chi sconta o torna dietro la linea non cede
+regola21-neu     neutra   collaudo_regola21.py 12                  commento in regate.js
+giriavv-mut      mutante  collaudo_giri_avversari.py 12            gli avversari non fanno mai i giri (12 regate invece di 40, per il tempo)
+giriavv-neu      neutra   collaudo_giri_avversari.py 12            commento in regate.js (12 regate)
+segnali-mut      mutante  collaudo_segnali.py                      la X resta su anche quando le barche richiamate sono tornate (29.1)
+segnali-neu      neutra   collaudo_segnali.py                      commento in regate.js
+contatto-mut     mutante  collaudo_contatto_vero.py                nell'1b il contatto scatta a 4,4 m fra i centri anche senza scafi che si toccano
+contatto-neu     neutra   collaudo_contatto_vero.py                commento in regate.js
+semaforo-mut     mutante  collaudo_semaforo.py                     semaforo con i colori scambiati
+semaforo-neu     neutra   collaudo_semaforo.py                     commento in regate.js
+pannello-mut     mutante  collaudo_pannello.py 1360 650            40 px in più in cima al pannello
+pannello-neu     neutra   collaudo_pannello.py 1360 650            commento nella pagina
+```
+
+Cambi rispetto al §4, decisi prima di lanciare: T5 (tre corse con semi diversi) **non si applica** ai collaudi di questa fetta, che girano a passi fissi con semi fissati dentro lo script: ripeterli dà lo stesso risultato al bit, quindi una corsa sola. `collaudo_giri_avversari.py` nelle controprove gira con 12 regate invece di 40 (tempo). Le neutre sono 12 (una per collaudo), i mutanti 13 (due per `collaudo_regole.py`, regola 11 e regola 13).
