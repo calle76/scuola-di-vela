@@ -200,7 +200,7 @@ async def parte4(b):
         testi = await pg.evaluate(TESTI)
         legenda = await pg.evaluate("(() => { const k = document.getElementById('kQ'); return !!k && !k.hidden; })()")
         print(f"  «Q vista»: nella legenda del pannello {legenda}, sul mare {'Q vista' in testi}")
-        v["«Q vista» nella legenda o sul mare (una sola delle due)"] = legenda != ("Q vista" in testi)
+        v["«Q vista» non è più scritto sul mare (1.0.70: è un comando che si conosce; nella legenda del pannello resta se ci sta) e il metro ha letto dei testi"] = len(testi) > 0 and "Q vista" not in testi and "1 / 2 zoom" not in testi
         v["scritta «Arrivo» disegnata"] = "Arrivo" in testi
     except Exception as e: v["prova 1 aperta dal menu"] = False; print("  errore:", str(e)[:200])
     await pg.close()

@@ -156,8 +156,8 @@
     // spia sullo schermo (sul mare, non nel pannello)
     if (!noDraw && mode !== "menu"){
       ses.flash = Math.max(0, ses.flash - dt);
-      ctx.save(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = font(600, 13); ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
-      ctx.fillStyle = "rgba(255,120,110,.95)"; ctx.fillText("● REG" + (ses.flash > 0 ? " · M" + ses.marks.length : ""), 16, 46); ctx.restore();
+      ctx.save(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.font = font(700, 14); ctx.textAlign = "right"; ctx.textBaseline = "alphabetic"; // 1.0.70: la spia è una R rossa a sinistra del vento (in basso a destra), dove prima c'era «da»
+      ctx.fillStyle = "rgba(255,120,110,.95)"; ctx.fillText("R" + (ses.flash > 0 ? " · M" + ses.marks.length : ""), (windX === null ? W - 190 : windX) - 8, H - 18); ctx.restore();
     }
   }
   function sesToggle(on){

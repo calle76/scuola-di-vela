@@ -101,6 +101,7 @@ canvas:focus{outline:none}
 .panel.noends .ends{display:none} /* le scritte agli estremi dei cursori servono nelle lezioni 1 e 2 */
 .brief-line{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .brief-line h2{margin:0!important}
+#race.brief-line{justify-content:flex-end} /* 1.0.70: il titolo della regata non si ripete, resta il pulsante Istruzioni */
 .pillbtn{font:inherit;font-size:.92rem;border:1px solid var(--line);background:transparent;color:var(--ink);padding:3px 11px;border-radius:14px;cursor:pointer;white-space:nowrap}
 .overlay.finOv{top:50%;transform:translate(-50%,-50%);max-width:min(540px,90%);max-height:92%;overflow-y:auto;text-align:left;padding:16px 20px}
 .finOv .standings{margin:0 0 12px;font-size:1rem}.finOv .standings span{color:#cfe0ee}.finOv .standings li.me b{color:#F2C14E}
@@ -347,7 +348,6 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
     <div class="topbar">
       <button id="toMenu">Menu</button>
       <span class="where" id="where"></span>
-      <button id="openGloss">Glossario</button>
       <button id="openSet" aria-label="Impostazioni" title="Impostazioni">⚙</button>
     </div>
 
@@ -370,7 +370,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
       <div class="row"><button class="primary" id="mNext">Prosegui</button></div>
     </section>
 
-    <section class="card brief-line" id="race" hidden><h2 id="rTitle"></h2><button class="pillbtn" id="rBrief">Istruzioni</button></section>
+    <section class="card brief-line" id="race" hidden><h2 id="rTitle" hidden></h2><button class="pillbtn" id="rBrief">Istruzioni</button></section>
     <section class="status" id="status" hidden>
       <p class="clock" id="stClock"></p>
       <ol class="standings" id="standings"></ol>
@@ -379,7 +379,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
     </section>
     <div class="done" id="rDone" hidden><p id="rDoneText"></p>
       </div>
-    <div class="row" id="rRow" hidden><button id="rRestart">Ricomincia</button><button id="rWind">Cambia vento</button><button id="rRet" hidden>Ritirati dalla regata</button><button class="primary" id="rTor" hidden>Classifica del torneo</button></div>
+    <div class="row" id="rRow" hidden><button id="rRestart">Ricomincia</button><button id="rRet" hidden>Ritirati dalla regata</button><button class="primary" id="rTor" hidden>Classifica del torneo</button></div>
 
     <section class="card" id="free" hidden>
       <h2>Navigazione libera</h2>

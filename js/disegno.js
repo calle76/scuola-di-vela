@@ -14,7 +14,6 @@
     $("iBrg").textContent = mode === "lesson" || !mk ? "—" : deg3(bearingTo(S, mk));
     const kq = $("kQ"); kq.hidden = !viewOn(); // «Q vista» nella legenda solo se la riga non si taglia, altrimenti sul mare
     if (!kq.hidden && kq.parentNode.scrollWidth > kq.parentNode.clientWidth) kq.hidden = true;
-    qOnSea = viewOn() && kq.hidden;
     $("iHeel").textContent = S.capsized ? "scuffia" : Math.round(Math.abs(S.heel)) + "°";
     $("iLee").textContent = Math.abs(info.leeway || 0).toFixed(0) + "°";
     const t = ctl.tiller;
@@ -112,7 +111,7 @@
   const VIEW_SHIFT = 0.6, VIEW_K = 12, VIEW_ZK = 7.5, VIEW_M = 50; // VIEW_K, VIEW_ZK: 1/s, al 95% in 0,25 s e in 0,4 s
   let zoomQ = 1; // fattore di zoom del tasto vista (1 = nessun effetto)
   const RIP_Z0 = 0.35, RIP_Z1 = 0.5; // dissolvenza delle increspature fra questi due zoom (ipotesi nostra)
-  let viewOff = [0, 0], qOnSea = false, fontsOk = false, rippleCells = 0;
+  let viewOff = [0, 0], windX = null, fontsOk = false, rippleCells = 0;
   Promise.all(["600", "700"].map(w => document.fonts.load(w + ' 14px "Barlow Semi Condensed"'))).catch(() => {}).then(() => fontsOk = true);
   const font = (w, px) => `${w} ${px}px "Barlow Semi Condensed", sans-serif`; // caratteri del disegno sul mare
   const viewOn = () => mode === "mission" || mode === "race";
@@ -259,12 +258,6 @@
     if (opt.dead && !(st && (st.pause || st.rose || !st.hud))) drawDeadRose(heelG ? 196 : 84);
     if (mode === "race") drawRaceScreen(v);
     drawHelmLegend();
-    if (fontsOk){ // 1.0.48: lo zoom è sui tasti 1 e 2 (i pulsanti + e − non ci sono più); «Q vista» sopra, se la riga dei tasti nel pannello si taglierebbe
-      ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "right"; ctx.textBaseline = "alphabetic"; ctx.fillStyle = "rgba(255,255,255,.8)";
-      ctx.fillText("1 / 2 zoom", W - 16, H - 18);
-      if (qOnSea) ctx.fillText("Q vista", W - 16, H - 38);
-      ctx.restore();
-    }
     if (S.toast) drawToast();
   }
 
@@ -574,13 +567,7 @@
     const mastSeen = Math.hypot(hx, hy) > 0.25;
     if (mastSeen){ ctx.strokeStyle = colors.spar; ctx.lineWidth = 0.07; ctx.beginPath(); ctx.moveTo(0, mastY); ctx.lineTo(hx, hY); ctx.stroke(); }
     ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(0, mastY, 0.08, 0, Math.PI * 2); ctx.fill();
-    const awRel = info.awa * D2R; // da dove arriva, rispetto alla prua (+ dritta)
-    const vx = Math.sin(awRel), vy = -Math.cos(awRel);
-    ctx.strokeStyle = colors.app; ctx.fillStyle = colors.app; ctx.lineWidth = 0.06;
-    // 1.0.10: banderuola, la coda sta sottovento (docs/archivio/PROPOSTA-DISEGNO-VELA.md); 1.0.30: perno a 0,4 della lunghezza dalla punta (era 0,3)
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.4, hY + vy * 0.4); ctx.lineTo(hx - vx * 0.6, hY - vy * 0.6); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(hx + vx * 0.4, hY + vy * 0.4); ctx.lineTo(hx + vx * 0.15 - vy * 0.12, hY + vy * 0.15 + vx * 0.12); ctx.lineTo(hx + vx * 0.15 + vy * 0.12, hY + vy * 0.15 - vx * 0.12); ctx.closePath(); ctx.fill();
-    if (mastSeen){ ctx.fillStyle = colors.spar; ctx.beginPath(); ctx.arc(hx, hY, 0.07, 0, Math.PI * 2); ctx.fill(); } // perno del segnavento in testa d'albero
+    // 1.0.70: la banderuola in testa d'albero non c'è più (su richiesta di Ale: c'è la freccia del vento apparente); restano l'albero e il suo piede
     ctx.restore();
     geo = { mastY, ex, ey, rx: (hx + ex + lx) / 3, ry: (mastY + ey + ly) / 3, qx, qy, tau, hx, hY, sc: 1 + wv.heave }; // hx, hY: testa d'albero (collaudo_moto_mare.py)
   }
@@ -624,8 +611,7 @@
     const sx = x - dx * len, sy = y - dy * len;
     ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 3;
     shaftHead(sx, sy, x, y, dx, dy);
-    ctx.font = font(700, 13); ctx.textAlign = "center";
-    ctx.fillText(label, sx - dx * 12, sy - dy * 12 + 4);
+    // 1.0.70: niente nome accanto alla freccia («reale», «apparente»): restano i colori, spiegati nella lezione 4 (su richiesta di Ale)
   }
   // frecce che puntano verso la barca, dalla direzione da cui arriva ciascun vento
   function drawWindArrows(v, trueOnly){
@@ -699,7 +685,8 @@
   // 1.0.38: vento e bussola nello stesso angolo (in alto a destra, sotto la bussola); la versione sul mare non c'è più (sta nel menu), l'angolo in alto a sinistra è libero; 1.0.48: riga più corta, senza «Vento reale» (check di Ale)
   function drawWindBox(v){
     ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
-    ctx.fillText("da " + card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi", W - 16, 96);
+    const t = card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi";
+    ctx.fillText(t, W - 16, H - 18); windX = W - 16 - ctx.measureText(t).width; // 1.0.70: il vento sta in basso a destra, dove c'erano «Q vista» e «1 / 2 zoom» (tolte: sono comandi che si conoscono); «da» non c'è più, al suo posto la R rossa della registrazione (registratore.js)
     ctx.restore();
   }
 

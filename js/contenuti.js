@@ -148,7 +148,7 @@
   const L4 = [
     { title: "Il vento che senti a bordo", ...PAUSE, zoom: 1.4, arrows: true, hud: 2,
       text: ["Quando vai in bicicletta senti vento in faccia anche in una giornata calma: è il vento creato dal tuo movimento. In barca succede lo stesso.",
-             "Il vento che senti a bordo, e su cui lavora la vela, è il <em>vento apparente</em>: la somma del <em>vento reale</em> e del vento dovuto al moto della barca. Freccia bianca: reale. Freccia gialla, e segnavento in cima all'albero: apparente."] },
+             "Il vento che senti a bordo, e su cui lavora la vela, è il <em>vento apparente</em>: la somma del <em>vento reale</em> e del vento dovuto al moto della barca. Freccia bianca: reale. Freccia gialla: apparente."] },
     { title: "Da fermi", sheet: true, hud: 2, arrows: true, hintKind: "none",
       text: ["Lasca tutta la vela (freccia ↓) e aspetta che la barca rallenti sotto i 2,5 nodi. Guarda le due frecce e i numeri nel pannello."],
       cond: I => I.kn < 2.5, hold: 1.5, // 1.0.6: era 2 nodi; con la resistenza della vasca, vela tutta lascata al traverso, la barca si assesta a 2,1 nodi

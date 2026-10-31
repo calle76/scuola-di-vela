@@ -81,3 +81,7 @@ Versione prevista: **1.0.70** (la 1.0.69 è il menu, se si sceglie R2). Aggiorna
 ## Cosa resta fuori
 
 Altre bandiere (individuale «I», nera, richiamo generale, abbassamento…): non c'è nel regolamento la parte che servirebbe e non sono nel gioco. Le lezioni sui segnali (dentro «La scuola») useranno le stesse bandiere grandi: la funzione condivisa serve anche a quelle.
+
+## Esito (31 ottobre 2026, 1.0.70)
+
+Fatto con le correzioni di Ale: i due pezzi stanno in alto (sinistra: bandiere; destra sotto la bussola: X, penalità, avviso), il vento e la R rossa in basso a destra (via «Q vista» e «1 / 2 zoom» dal mare), via banderuola, nomi delle frecce, Glossario e titolo ripetuto dal pannello, via «Cambia vento» dal pannello della regata. Le quattro risposte della proposta sono: i messaggi al centro restano, il riquadro sparisce dopo 10 s, avviso dentro i Suggerimenti, posizione cambiata come sopra (le prime schermate provate in un angolo furono scartate da Ale). Numeri nel CHANGELOG.

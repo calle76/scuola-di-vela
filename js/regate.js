@@ -163,7 +163,7 @@
     $("rTitle").textContent = rc.title;
     R.brief = introRegata(rc, liv);
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();
-    $("rRestart").hidden = $("rWind").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
+    $("rRestart").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief(rc.title, R.brief, true);
   }
@@ -669,6 +669,7 @@
       else if (st.tocca && contano.has(key)){
         R.boaTocc[key] = R.t; R.nBoa = (R.nBoa || 0) + 1; giriDebito(1);
         const nome = key === "pin" ? "la boa dello spillo" : key === "cb" ? "la barca del comitato" : "la boa";
+        R.rqMotivo = "toccata " + nome;
         R.penList.push("Tu, hai toccato " + nome + ": un giro di penalità (regola 31).");
         R.lastRule = "Hai toccato " + nome + " (regola 31): un giro di penalità, con una virata e una strambata. " + (R.need - R.done === 1 ? "Ti manca un giro." : "Ti mancano " + (R.need - R.done) + " giri.");
         toast("Hai toccato " + nome + "! Un giro di penalità");
@@ -736,6 +737,7 @@
       if (A.me || B.me){
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
+        if (guilty.me) R.rqMotivo = "contatto con la " + other.name;
         toast(guilty.me ? "Contatto! Penalità " + (R.tor ? "+1 punto" : R.giri ? "due giri" : "+15 s") : "Contatto: penalità a " + other.name);
         R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.tor ? ". Penalità di 1 punto sul punteggio della regata." : R.giri && guilty.me ? ". Penalità: due giri nello stesso verso, ciascuno con una virata e una strambata." : R.giri ? ". Penalità alla " + guilty.name + ": due giri." : ". Penalità di 15 secondi.");
       }
@@ -758,21 +760,90 @@
     b.X = R.t >= 0 && R.t < X_MAX && !!R.xSet && R.xSet.some(o => o.ocs && o.fin === null && !o.dnf);
     return b;
   }
+  const BANDIERA_BLU = "#1F4FA3";
+  function drawBandiera(tipo, cx, cy, w, h){ // 1.0.70: una bandiera (classe, P, X o blu) centrata in (cx, cy); la usano la barca giuria e il riquadro; spessore e colore del bordo li sceglie chi chiama
+    ctx.fillStyle = tipo === "P" || tipo === "blu" ? BANDIERA_BLU : "#FFFFFF"; ctx.fillRect(cx - w / 2, cy - h / 2, w, h); ctx.strokeRect(cx - w / 2, cy - h / 2, w, h);
+    ctx.fillStyle = BANDIERA_BLU;
+    if (tipo === "classe"){ ctx.beginPath(); ctx.moveTo(cx, cy - h * 0.35); ctx.lineTo(cx + w * 0.25, cy + h * 0.35); ctx.lineTo(cx - w * 0.25, cy + h * 0.35); ctx.closePath(); ctx.fill(); }
+    else if (tipo === "P"){ ctx.fillStyle = "#FFFFFF"; ctx.fillRect(cx - w * 0.25, cy - h * 0.25, w * 0.5, h * 0.5); }
+    else if (tipo === "X"){ ctx.fillRect(cx - w * 0.07, cy - h / 2, w * 0.14, h); ctx.fillRect(cx - w / 2, cy - h * 0.09, w, h * 0.18); }
+  }
   function drawBandiere(ppm){ // dentro il translate e il rotate della barca giuria; ogni bandiera nel suo posto (due file da due), con misura minima in pixel
-    const f = bandiereR(), k = Math.min(1.1, Math.max(1, 12 / (1.5 * ppm))), w = 1.5 * k, h = 1.0 * k, BL = "#1F4FA3", yA = -0.7, yB = 0.6;
+    const f = bandiereR(), k = Math.min(1.1, Math.max(1, 12 / (1.5 * ppm))), w = 1.5 * k, h = 1.0 * k, yA = -0.7, yB = 0.6;
     ctx.lineWidth = 0.07; ctx.strokeStyle = "#33414A";
-    const box = (cx, cy, col) => { ctx.fillStyle = col; ctx.fillRect(cx - w / 2, cy - h / 2, w, h); ctx.strokeRect(cx - w / 2, cy - h / 2, w, h); };
-    if (f.classe){ box(-0.8, yA, "#FFFFFF"); ctx.fillStyle = BL; ctx.beginPath(); ctx.moveTo(-0.8, yA - h * 0.35); ctx.lineTo(-0.8 + w * 0.25, yA + h * 0.35); ctx.lineTo(-0.8 - w * 0.25, yA + h * 0.35); ctx.closePath(); ctx.fill(); }
-    if (f.P){ box(0.8, yA, BL); ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0.8 - w * 0.25, yA - h * 0.25, w * 0.5, h * 0.5); }
-    if (f.X){ box(-0.8, yB, "#FFFFFF"); ctx.fillStyle = BL; ctx.fillRect(-0.8 - w * 0.07, yB - h / 2, w * 0.14, h); ctx.fillRect(-0.8 - w / 2, yB - h * 0.09, w, h * 0.18); }
-    if (f.blu) box(0.8, yB, BL);
+    if (f.classe) drawBandiera("classe", -0.8, yA, w, h);
+    if (f.P) drawBandiera("P", 0.8, yA, w, h);
+    if (f.X) drawBandiera("X", -0.8, yB, w, h);
+    if (f.blu) drawBandiera("blu", 0.8, yB, w, h);
   }
   const bandiereTesto = f => ["classe", "P", "X", "blu"].filter(k => f[k]).join("+") || "nessuna";
+
+  // ---- riquadro delle bandiere e delle penalità (livello 2a, 1.0.70, docs/PROPOSTA-RIQUADRO-BANDIERE.md) ----
+  // Solo nelle regate con R.segnali. Due pezzi in alto ai lati del mare, dove prima c'erano la spia della registrazione (a sinistra) e il vento (a destra, sotto la bussola); orologio e messaggio stanno al centro:
+  // a sinistra le bandiere esposte in grande con una riga che dice cosa significano; a destra la X, le penalità e l'avviso «sei oltre la linea» (questo solo con i Suggerimenti
+  // accesi; il test è quello che decide la X allo sparo: centro della barca oltre la linea). Le bandiere si vedono per RQ_PERM s dopo ogni cambio (la X finché c'è); a destra solo se c'è qualcosa da dire.
+  const RQ_PERM = 10, RQ_SCONTATA = 6, RQ_LAMPO = 1.5, RQ_X = 16, RQ_BW = 44, RQ_BH = 30; // secondi e pixel: ipotesi nostre
+  const RQ_NOMI = { classe: "Classe", P: "P", X: "X", blu: "Blu" }, rqMis = new Map();
+  const RQ_YS = 10, RQ_YD = 86; // altezza del pezzo di sinistra e di quello di destra (sotto la bussola)
+  function rqAggiorna(){ // a ogni passo: quando cambia l'insieme delle bandiere, e quando un debito di giri si chiude
+    const k = bandiereTesto(bandiereR()); if (k !== R.rqKey){ R.rqKey = k; R.rqT = R.t; }
+    const deb = R.need > R.done; if (R.rqDeb && !deb) R.rqScont = R.t; R.rqDeb = deb;
+  }
+  function rqDati(){ // { flag, senso (riga di significato o null), righe: [[testo, colore, peso, px]], lampo }; flag vuoto = niente pezzo di sinistra, righe vuote = niente pezzo di destra; null se non si vede nulla
+    const me = R.boats[0], f = bandiereR(), flag = ["classe", "P", "X", "blu"].filter(k => f[k]), righe = [];
+    const recente = R.rqT != null && R.t - R.rqT < RQ_PERM, deb = R.need > R.done, scont = R.rqScont != null && R.t - R.rqScont < RQ_SCONTATA;
+    const oltre = opt.hint && R.t < 0 && me.fin === null && toWF(me.S.x, me.S.y)[1] <= 0;
+    if (f.X) righe.push([me.ocs ? "X: torna dietro la linea" : "X: richiamo per altre barche", "#FFD447", 700, 14]);
+    if (deb){
+      const m = R.need - R.done;
+      righe.push(["Penalità: " + m + (m === 1 ? " giro" : " giri") + " da fare" + (R.done ? " · fatti " + R.done : ""), "#FFFFFF", 700, 14]);
+      if (R.rqMotivo) righe.push(["Per: " + R.rqMotivo, "rgba(255,255,255,.75)", 600, 12]);
+      if (me.sconta) righe.push(["Stai scontando: lascia strada", "rgba(255,255,255,.75)", 600, 12]);
+    } else if (scont) righe.push(["Penalità scontata", "#7FD6A8", 700, 14]);
+    if (oltre) righe.push(["Oltre la linea: torna dietro", "#FFD447", 700, 14]);
+    const vediF = flag.length && (recente || f.X);
+    if (!vediF && !righe.length) return null;
+    const senso = vediF ? (f.blu ? "Partito: la linea ora è d'arrivo" : f.P ? "Preparatorio: bandiera P alzata" : R.t >= -60 ? (R.cd >= 180 ? "Un minuto: la P è ammainata" : "Un minuto: resta la bandiera di classe") : "Avviso: bandiera di classe alzata") : null;
+    return { flag: vediF ? flag : [], senso, righe, lampo: R.rqT != null && R.t - R.rqT < RQ_LAMPO };
+  }
+  function rqLarg(t, px, peso){ // la larghezza di un testo si misura una volta sola (e di nuovo quando i caratteri sono pronti)
+    const k = (fontsOk ? "1" : "0") + peso + "|" + px + "|" + t; let w = rqMis.get(k);
+    if (w === undefined){ ctx.font = font(peso, px); w = ctx.measureText(t).width; rqMis.set(k, w); }
+    return w;
+  }
+  function rqSfondo(x, y, w, h, lampo){
+    ctx.fillStyle = "rgba(10,24,36,.78)"; ctx.fillRect(x, y, w, h);
+    ctx.lineWidth = lampo ? 3 : 1; ctx.strokeStyle = lampo ? "#FFD447" : "rgba(255,255,255,.4)"; ctx.strokeRect(x, y, w, h);
+  }
+  function drawRiquadro(){
+    R.rqRect = null; R.rqRect2 = null; if (!R.segnali) return;
+    const d = rqDati(); if (!d) return;
+    const gap = 10, pad = 10; ctx.save(); ctx.textBaseline = "middle"; ctx.textAlign = "left";
+    const nf = d.flag.length;
+    if (nf){ // sinistra: le bandiere con il nome sotto e la riga di significato
+      const fw = nf * RQ_BW + (nf - 1) * gap, w = Math.max(fw, rqLarg(d.senso, 13, 600)) + 2 * pad, h = 2 * pad + RQ_BH + 18 + 21;
+      const y0 = RQ_YS; rqSfondo(RQ_X, y0, w, h, d.lampo);
+      ctx.lineWidth = 1; ctx.strokeStyle = "#33414A";
+      d.flag.forEach((k, i) => drawBandiera(k, RQ_X + pad + i * (RQ_BW + gap) + RQ_BW / 2, y0 + pad + RQ_BH / 2, RQ_BW, RQ_BH));
+      ctx.font = font(600, 12); ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.textAlign = "center";
+      d.flag.forEach((k, i) => ctx.fillText(RQ_NOMI[k], RQ_X + pad + i * (RQ_BW + gap) + RQ_BW / 2, y0 + pad + RQ_BH + 9));
+      ctx.textAlign = "left"; ctx.font = font(600, 13); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.fillText(d.senso, RQ_X + pad, y0 + pad + RQ_BH + 18 + 10);
+      R.rqRect = [RQ_X, y0, w, h];
+    }
+    if (d.righe.length){ // destra: X, penalità, avviso
+      let w = 0, h = 2 * pad; for (const [t, , peso, px] of d.righe){ w = Math.max(w, rqLarg(t, px, peso)); h += px + 8; }
+      w += 2 * pad; const x = W - 16 - w, y0 = RQ_YD; rqSfondo(x, y0, w, h, false);
+      let y = y0 + pad; for (const [t, col, peso, px] of d.righe){ ctx.font = font(peso, px); ctx.fillStyle = col; ctx.fillText(t, x + pad, y + (px + 8) / 2); y += px + 8; }
+      R.rqRect2 = [x, y0, w, h];
+    }
+    ctx.restore();
+  }
 
   // ---- svolgimento: updateRace, arrivo del giocatore e record ----
   function updateRace(dt){
     if (!R) return;
     const prevT = R.t; R.t += dt;
+    if (R.segnali) rqAggiorna();
     // segnali di partenza (versione accorciata a un minuto)
     const sig = (at, text) => { if (prevT < at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
     if (R.segnali){ // 1.0.65: i messaggi seguono le bandiere (le soglie con <=, perché il primo passo parte esattamente dal tempo dell'avviso)
@@ -915,7 +986,7 @@
     $("finTor").hidden = $("rTor").hidden; $("finRev").hidden = !rivCount(); $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
     if ($("finOv").hidden){ $("finOv").hidden = false; releaseKeys(); setTimeout(() => (!$("finRestart").hidden ? $("finRestart") : $("finTor")).focus(), 0); }
   }
-  $("finRestart").onclick = () => $("rRestart").click(); $("finWind").onclick = () => $("rWind").click(); $("finTor").onclick = () => $("rTor").click();
+  $("finRestart").onclick = () => $("rRestart").click(); $("finWind").onclick = () => startRace(raceIdx, otherWind()); $("finTor").onclick = () => $("rTor").click();
 
   // ---- torneo dell'1b (1.0.34, tappa T1 di docs/PROPOSTA-TORNEI-1B.md) ----
   // Serie di 4 regate (1 e 3 a bastone, 2 e 4 a triangolo dalla 1.0.55) con la barca dell'1b contro gli stessi tre avversari, con lo stesso carattere. Punteggio di F15,
@@ -1094,6 +1165,7 @@
     R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + 10, gy - 10); });
     drawOrologio(R.boats[0], ranking());
     ctx.restore();
+    drawRiquadro();
     const g = goal(); // dopo l'arrivo niente freccia
     if (g) offscreenArrow(v, g);
     linePill(v, R.pin, R.cb, R.t < 0 ? "Linea di partenza" : "Arrivo", g && g.kind !== "mark" ? g : null, 0, 4);

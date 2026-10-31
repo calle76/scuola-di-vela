@@ -69,7 +69,7 @@ async def main():
 
         await pg.click("#goFree"); await pg.wait_for_timeout(1200)
         testi_mare = await pg.evaluate("[...window.__testiCanvas]")
-        vento = any(t.startswith("da ") and t.endswith(" nodi") for t in testi_mare); versione = any(t.startswith("V. ") for t in testi_mare)  # 1.0.48: senza «Vento reale»
+        vento = any(t.endswith(" nodi") and "°)" in t and not t.startswith("da ") for t in testi_mare); versione = any(t.startswith("V. ") for t in testi_mare)  # 1.0.48: senza «Vento reale»; 1.0.70: il vento è in basso a destra e senza «da» (al suo posto c'è la R della registrazione)
         esito("sul mare c'è il vento e non c'è più la versione", vento and not versione and len(testi_mare) > 0, f"vento: {vento}; versione: {versione}; testi catturati: {len(testi_mare)}")
 
         print("errori pagina:", errs[:5])
