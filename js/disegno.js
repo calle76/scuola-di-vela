@@ -633,13 +633,7 @@
     const len = rr + 22 * sp, tx = bx + dx * len, ty = by + dy * len;
     ctx.save(); ctx.strokeStyle = ctx.fillStyle = colors.moto; ctx.lineWidth = 3;
     shaftHead(bx, by, tx, ty, dx, dy);
-    // scritta di fianco alla punta, dal lato opposto a quello da cui arriva il vento: così non si sovrappone alle frecce del vento
-    const wf = (local.twd + v.rot / D2R) * D2R; let nx = -dy, ny = dx;
-    if (nx * Math.sin(wf) - ny * Math.cos(wf) > 0){ nx = -nx; ny = -ny; }
-    const lx = tx - dx * 8 + nx * 10, ly = ty - dy * 8 + ny * 10;
-    ctx.font = font(700, 13); ctx.textAlign = nx >= 0 ? "left" : "right"; ctx.textBaseline = "middle";
-    ctx.fillStyle = "rgba(0,0,0,.35)"; ctx.fillText("velocità", lx + 1, ly + 1);
-    ctx.fillStyle = colors.moto; ctx.fillText("velocità", lx, ly);
+    // 1.0.70: niente scritta «velocità» accanto alla punta (su richiesta di Ale): resta la freccia verde
     ctx.restore();
   }
   function drawCompass(v){
