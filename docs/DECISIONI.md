@@ -78,6 +78,7 @@ Costo di cambiamento:
 | Questa riorganizzazione **supera** la riga di oggi su brevetto «strada A» e menu dell'1b (`PROPOSTA-COMPLETAMENTO-1B.md`) | 30 ott | — | — | — |
 | Vela che si manovra da sola (attivabile) per la scuola: sì; si scrive prima delle lezioni (fermata 1). Regola 18 (spazio alla boa): **ultima fatica**, dopo il livello «Deriva»; la lezione si scrive prima come teoria dichiarata; poi taratura breve di torneo e misure con avversari. «Cambia vento»: solo nelle prove | 31 ott (Ale) | Basso (18: cambia il giro delle boe degli avversari, quindi le tarature con avversari) | messaggio di Ale del 31 ottobre |
 | Dopo il giro Chromium+Firefox del 31 ott: tre fallimenti stabili su Firefox (riquadro Q7 0,34 ms/4,2% contro 0,2 ms/3%; contatto_vero 0,29 m contro 0,25 m; giri_avversari G1 1 su 104) **accettati**, soglie invariate, si va avanti | 31 ott (Ale: «se non è indispensabile andrei oltre») | Nullo | CHANGELOG 1.0.72 |
+| Scotta automatica (1.0.73): spenta all'inizio; vale in prove e navigazione libera (non in regata né torneo); una prova con l'aiuto non dà record, medaglia né stella; solo casella nelle impostazioni, nessun tasto; nelle lezioni nessun effetto (per ora) | 31 ott (Ale: «come consigli tu») | Basso | `PROPOSTA-SCOTTA-AUTOMATICA.md` |
 
 ## Carriera, meriti, salvataggi
 

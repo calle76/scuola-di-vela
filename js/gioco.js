@@ -9,11 +9,11 @@
   let gustLevel = 0, gustTimer = 0, gustAll = false; // gustAll: torneo dell'1b, le raffiche nascono attorno a tutte le barche
   const gusts = [], wake = [];
   const ctl = { sheet: 0.4, tiller: 0 };
-  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180 };
+  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.72"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.73"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -85,10 +85,15 @@
     return { twa: Math.abs(norm180(local.twd - S.h)), kn: S.u * KN, tt: ttState(), alpha: info.alpha, heel: S.heel, r: S.r,
              sheet: ctl.sheet, tiller: ctl.tiller, inGust: local.tws > env.tws * 1.12, gustK: local.tws / env.tws - 1 };
   }
-  function autoSheet(){
-    const A = Math.abs(info.awa), target = Math.max(BOAT.minBoom, A - 17);
+  // 1.0.73: scotta automatica come aiuto attivabile (docs/PROPOSTA-SCOTTA-AUTOMATICA.md). Le lezioni con autoTrim usano la regola semplice;
+  // con la casella delle impostazioni (solo prove e navigazione libera) si aggiunge una lasca in funzione della sbandata, per non scuffiare in raffica.
+  let AUTO_HEEL0 = 12, AUTO_K = 1.5; // ipotesi nostre: sbandata (gradi) da cui si lasca e gradi di boma per grado di sbandata in più
+  function autoSheet(sicura){
+    const A = Math.abs(info.awa), lasca = sicura ? AUTO_K * Math.max(0, Math.abs(S.heel) - AUTO_HEEL0) : 0, target = Math.max(BOAT.minBoom, A - 17) + lasca;
     return clamp((target - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1);
   }
+  const autoSheetAttiva = () => opt.autoSheet && (mode === "mission" || mode === "free") && !S.capsized;
+  function autoSheetSpegni(){ if (!opt.autoSheet) return; opt.autoSheet = false; $("autoSheetOpt").checked = false; toast("Scotta automatica spenta: la scotta è tua"); }
 
   // ======================================================================
   // MENU, PROGRESSI, GLOSSARIO
@@ -627,7 +632,7 @@
   });
   $("tiller").addEventListener("input", e => { if (S.lv === 2) tillerAim = e.target.value / 100; else ctl.tiller = e.target.value / 100; dragTiller = true; });
   ["pointerup","change","touchend"].forEach(ev => $("tiller").addEventListener(ev, () => dragTiller = false));
-  $("sheet").addEventListener("input", e => { ctl.sheet = e.target.value / 100; });
+  $("sheet").addEventListener("input", e => { autoSheetSpegni(); ctl.sheet = e.target.value / 100; });
   function seg(id, key){
     $(id).addEventListener("click", e => {
       const b = e.target.closest("button"); if (!b) return;
@@ -636,6 +641,7 @@
   }
   seg("helmMode", "helm"); seg("viewMode", "view");
   $("autoCenter").onchange = e => opt[centerKey()] = e.target.checked;
+  $("autoSheetOpt").onchange = e => { opt.autoSheet = e.target.checked; };
   $("showHint").onchange = e => { opt.hint = e.target.checked; if (mode !== "lesson") $("hint").hidden = !opt.hint; };
   $("showArrows").onchange = e => opt.arrows = e.target.checked;
   $("showDead").onchange = e => opt.dead = e.target.checked;
@@ -679,6 +685,7 @@
     if (!tillerInput && (opt[centerKey()] || quick) && !dragTiller){
       ctl.tiller *= Math.exp((quick ? -6 : -2.5) * dt); if (Math.abs(ctl.tiller) < 0.01) ctl.tiller = 0;
     }
+    if (autoSheetAttiva() && allowSheet && (keys.has("ArrowUp") || keys.has("ArrowDown"))) autoSheetSpegni(); // i tasti della scotta tolgono l'automatismo
     if ((allowSheet || allowSem.includes("cazza")) && keys.has("ArrowUp") || semHeld.has("cazza")) ctl.sheet = Math.max(0, ctl.sheet - 0.27 * dt);
     if ((allowSheet || allowSem.includes("lasca")) && keys.has("ArrowDown") || semHeld.has("lasca")) ctl.sheet = Math.min(1, ctl.sheet + 0.27 * dt);
   }
@@ -705,6 +712,7 @@
     const px0 = S.x, py0 = S.y; // posizione prima del passo: serve al taglio della linea d'arrivo
     applyInput(dt);
     if (st && st.autoTrim) ctl.sheet = autoSheet();
+    else if (autoSheetAttiva()){ ctl.sheet = autoSheet(true); S.autoUsed = true; } // la barca scuffiata non regola; il segno resta per la prova in corso
     if (st && st.yawNoise && !S.capsized){ // onde: spinte irregolari sulla prua
       S.noiseT = (S.noiseT || 0) - dt;
       if (S.noiseT <= 0){ S.noiseT = 1.8 + Math.random() * 1.6; S.noiseR = (Math.random() < 0.5 ? -1 : 1) * (3 + Math.random() * 3); S.noiseLeft = 0.8; }
@@ -784,9 +792,11 @@
         if (mk.fin){
           S.finished = true;
           const sec = Math.round(S.time), key = "m" + missionIdx, bk = recK(key), prev = progress.best[bk];
-          progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); }
-          const clean = regTotal() === 0; if (clean) progress.clean[bk] = true; saveProgress();
-          $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
+          const aiuto = !!S.autoUsed; // scotta automatica: la prova si fa ma non vale record, medaglia né stella (1.0.73)
+          if (!aiuto){ progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); } }
+          const clean = regTotal() === 0; if (clean && !aiuto) progress.clean[bk] = true; if (!aiuto) saveProgress();
+          if (aiuto) $("doneText").textContent = "Prova completata in " + fmtTime(sec) + " con la scotta automatica: così non vale record né medaglia. Spegnila nelle impostazioni (⚙) per far valere la prova.";
+          else $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
             (medalOf(missionIdx, sec) ? " Medaglia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Nessuna medaglia: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") +
             (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
           $("done").hidden = false; toast("Arrivato!");

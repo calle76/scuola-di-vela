@@ -181,7 +181,7 @@ dialog#setDlg::backdrop{background:rgba(13,25,36,.5)}
 select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .check{display:flex;gap:8px;align-items:center;font-size:.95rem;cursor:pointer}
 .check input{width:18px;height:18px;accent-color:var(--ink)}
-#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:4px} #freeOpts{flex-direction:row;flex-wrap:wrap;gap:4px 10px} #freeOpts .optrow{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza; 1.0.24: a capo, la scelta «Barca» sta su una riga sua */
+#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:2px} #freeOpts{flex-direction:row;flex-wrap:wrap;gap:4px 10px} #freeOpts .optrow{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza; 1.0.24: a capo, la scelta «Barca» sta su una riga sua */
 #sesBox{display:flex;gap:8px;align-items:center} #sesBox[hidden]{display:none} #sesNote{flex:1;font:inherit;font-size:.9rem;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);resize:none}
 
 /* ---- glossario ---- */
@@ -310,8 +310,9 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
           <div class="optrow"><span>Barca</span>
             <select autocomplete="off" id="boatLv" title="Barca dell'1b: la barra arriva fino a 45° e la pala può stallare; la freccia porta la barra fino a 35°, Maiusc + freccia fino in fondo; Z tenuto premuto spinge il boma fuori"><option value="1" selected>1a</option><option value="2">1b</option></select></div>
         </div>
-        <label class="check"><input autocomplete="off" type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (vale per la modalità in corso: nelle prove e nelle regate parte spenta)</label>
+        <label class="check" title="Vale per la modalità in corso: nelle prove e nelle regate parte spenta."><input autocomplete="off" type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (per la modalità in corso)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
+        <label class="check" title="La vela si regola da sola (prove e navigazione libera). Se la usi, la prova non vale record né medaglia. I tasti della scotta la spengono."><input autocomplete="off" type="checkbox" id="autoSheetOpt"> Scotta automatica (la prova non vale medaglia)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente e della velocità</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showDead" checked> Rosa dell'angolo morto, in basso a sinistra</label>
         <label class="check" title="Rosso: devi lasciare strada. Verde: hai la precedenza, non il permesso di urtare. Solo nelle regate dell'1b: «Regata nei salti di vento» e torneo."><input autocomplete="off" type="checkbox" id="showSem"> Semaforo di precedenza sullo scafo (solo regate 1b)</label>

@@ -70,6 +70,7 @@ TESTS=(
     "collaudo_segnali.py|py|chiaro|0||collaudo_segnali.py"
     "collaudo_riquadro_bandiere.py|py|chiaro|0||collaudo_riquadro_bandiere.py"
     "collaudo_boma_poppa.py|py|chiaro|0||collaudo_boma_poppa.py tutto 101-120"
+    "collaudo_scotta_automatica.py|py|chiaro|0||collaudo_scotta_automatica.py 101-120"
     "collaudo_regola21.py (12 prove)|py|chiaro|0||collaudo_regola21.py 12"
     "collaudo_giri_avversari.py (40 regate)|py|chiaro|0||collaudo_giri_avversari.py 40"
     "collaudo_regole.py|py|chiaro|0||collaudo_regole.py"

@@ -57,3 +57,7 @@ Prevista **1.0.73** dopo il via. Tocca `js/gioco.js` (autoSheet, impostazioni), 
 ## Cosa resta fuori
 
 Regolare anche il peso dell'equipaggio o la barra (sarebbe un pilota automatico vero, già presente solo nei collaudi); adattare la vela alla forma o al tempo; un livello di aiuto «progressivo» che si spegne da solo con l'esperienza.
+
+## Esito (31 ottobre 2026, 1.0.73)
+
+Fatto come proposto, con le risposte di Ale «come consigli tu»: medaglie e tornei non contano (la prova si completa senza record), vale in prove e navigazione libera (non in regata), solo casella (nessun tasto). Una differenza dichiarata: nelle lezioni l'opzione **non** ha effetto (restano le loro `autoTrim`), invece del «negli altri passi vale l'impostazione» della proposta, per non cambiare le 20 lezioni prima di riscriverle. Le costanti 12° e 1,5 sono quelle scritte prima di misurare e non sono state toccate. Numeri nel CHANGELOG.

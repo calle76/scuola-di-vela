@@ -18,7 +18,7 @@
   const sesEv = (type, det) => { ses.cnt[type] = (ses.cnt[type] || 0) + 1; sesLine("E " + sesT() + " " + type + (det ? " " + det : "")); };
   const sesTyping = () => { const a = document.activeElement; return !!a && (a.tagName === "TEXTAREA" || a.isContentEditable || (a.tagName === "INPUT" && !["checkbox", "radio", "range", "button"].includes(a.type))); };
   const sesSet = () => "frecce=" + opt.helm + " vista=" + opt.view + " barra_al_centro=" + (opt.autoCenter ? "sì" : "no") + " barra_al_centro_prove=" + (opt.autoCenterComp ? "sì" : "no") +
-    " suggerimenti=" + (opt.hint ? "sì" : "no") + " frecce_vento=" + (opt.arrows ? "sì" : "no") + " rosa_angolo_morto=" + (opt.dead ? "sì" : "no") + " tutti_strumenti=" + (opt.allInstr ? "sì" : "no") +
+    " scotta_automatica=" + (opt.autoSheet ? "sì" : "no") + " suggerimenti=" + (opt.hint ? "sì" : "no") + " frecce_vento=" + (opt.arrows ? "sì" : "no") + " rosa_angolo_morto=" + (opt.dead ? "sì" : "no") + " tutti_strumenti=" + (opt.allInstr ? "sì" : "no") +
     " fantasma=" + (opt.ghost ? "sì" : "no") + " vento=" + Math.round(env.twd) + "° " + Math.round(env.tws * KN) + "kn raffiche=" + gustLevel + " avversari=" + opt.aiLevel + " preparazione=" + opt.countdown + "s" + (LAB ? labSet() : "");
   const sesMode = () => mode + (mode === "lesson" ? lessonIdx : mode === "mission" ? missionIdx : mode === "race" ? raceIdx : "");
   const sesModeName = () => mode === "lesson" ? "lezione " + (lessonIdx + 1) + " «" + LESSONS[lessonIdx].title + "»" : mode === "mission" ? "«" + $("mTitle").textContent + "»"
