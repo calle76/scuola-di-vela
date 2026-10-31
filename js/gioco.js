@@ -644,7 +644,7 @@
   $("showGhost").onchange = e => opt.ghost = e.target.checked;
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
   $("rRestart").onclick = () => startRace(raceIdx, env.twd);
-  // 1.0.70: «Cambia vento» non c'è più nel pannello della regata; resta nella schermata finale (finWind, regate.js)
+  // 1.0.70: «Cambia vento» non c'è più nelle regate (né nel pannello né nella schermata finale: nelle gare ufficiali il vento non si sceglie); resta nelle prove (mWind)
   $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
   $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
