@@ -159,7 +159,7 @@ async def main():
         if "h" in casi:  # regata con avversari: punta la barca più vicina finché c'è un contatto
             await pg.evaluate(SET, ["#aiLevel", "principianti"]); await pg.evaluate(SET, ["#cdSel", "60"]); await pg.evaluate("__sv.openItem(['r',0])"); await pg.evaluate("__sv.fast(4)")
             await pg.evaluate("""() => { window.__ct = 0; let last = null; clearInterval(window.__ctw);
-              window.__ctw = setInterval(() => { const t = __sv.toast; if (t && t !== last && t.startsWith('Contatto')) window.__ct++; last = t; }, 20); }""")
+              window.__ctw = setInterval(() => { const t = __sv.toast; if (t && t !== last && t.startsWith('Contatto') && !t.startsWith('Contatto fra')) window.__ct++; last = t; }, 20); }   // 1.1.1: «Contatto fra X e Y» è fra due avversari (dalla 1.1.0 in tutte le regate), non del giocatore""")
             trovato = False
             for _ in range(240):   # 17 ottobre 2026: era 60 (30 s reali). Dalla 1.0.17 gli avversari si scansano meglio anche dal giocatore: inseguirne uno richiede più tempo.
                                    # 1.1.0: era 120. La regata 0 ha ora gli avversari dell'1b (cedono) e il contatto fra scafi: su GitHub 60 s veri non sono bastati
