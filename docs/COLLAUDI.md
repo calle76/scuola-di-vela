@@ -106,6 +106,12 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 
 **Su GitHub (1 novembre 2026).** `.github/workflows/collaudi.yml` lancia il giro completo su GitHub Actions di notte (circa alle 3 italiane, solo se nelle ultime 24 ore c'è stato un commit su `main`), con Chromium e Firefox, divisi in 4 pezzi per browser con `lancia_tutti.sh --parte K/N`. Si può lanciare anche a mano: scheda **Actions** → «Collaudi» → «Run workflow», scegliendo se fare solo il giro veloce. Per ogni pezzo il riepilogo compare nella pagina del giro, e le uscite complete si scaricano come allegato per 30 giorni. Finché i criteri G1-G6 di `PROPOSTA-COLLAUDI-SU-GITHUB.md` non sono passati, il riferimento resta il giro sul PC.
 
+**Esploratore su GitHub (1 novembre 2026).** `.github/workflows/esplora.yml` lancia `tests/esplora.py`, solo a mano: Actions → «Esploratore» → «Run workflow».
+- Le regate dei semi scelti si dividono in pezzi; i giri di scimmia, ciascuno con un seme dei tasti fisso (1001, 1002, …), girano in parallelo.
+- Un ultimo passo fa `esplora.py --riassumi` su tutti i pezzi e mette il risultato nella pagina del giro e nell'allegato `esplora-riepilogo`.
+- Non dà verde o rosso sul gioco: è rosso solo se un pezzo si rompe.
+- Consiglio: semi 1-100, 10 per pezzo, 4 giri di scimmia da 600 s per browser, entrambi i browser.
+
 **Fallimenti noti (1 novembre 2026).** `tests/fallimenti_noti.txt` elenca i fallimenti già noti e accettati, browser per browser, con le righe esatte che il collaudo stampa.
 - Se un collaudo fallisce esattamente così, `lancia_tutti.sh` lo mette fra i **NOTI** e il giro non esce con 1. Se un numero cambia, anche in meglio, o fallisce un controllo in più, torna **FALLITO** e dice cosa è cambiato. Si guarda, e solo dopo si aggiorna la voce, dicendolo.
 - Le voci `~~` sono misure di tempo: su GitHub vanno in DA CONTROLLARE, sul PC restano FALLITO.

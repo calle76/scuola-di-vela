@@ -11,7 +11,9 @@
 # Uso: python esplora.py <primo seme> <ultimo seme> [--scimmia SECONDI]
 #   es. python esplora.py 1 20            poi la volta dopo   python esplora.py 21 40 --scimmia 300
 #      python esplora.py --scimmia 800    solo la scimmia, con un seme dei tasti nuovo ogni volta (scritto nel file)
-#      python esplora.py --rigioca        rigioca le regate che avevano sforato il pannello + 100 di controllo, con il dettaglio dello sforamento\n#      python esplora.py --riassumi       riepilogo di TUTTI i file raccolti finora, diviso per versione del gioco
+#      python esplora.py --rigioca        rigioca le regate che avevano sforato il pannello + 100 di controllo, con il dettaglio dello sforamento
+#      python esplora.py --scimmia 600 --seme-scimmia 7   solo la scimmia, con il seme dei tasti scelto (per rifare un giro)
+#      python esplora.py --riassumi       riepilogo di TUTTI i file raccolti finora, diviso per versione del gioco
 # Uscite: tests/output/esplora/<data-ora>.jsonl (tutto) e il riepilogo a schermo.
 import asyncio, json, pathlib, random, statistics, sys, time
 from playwright.async_api import async_playwright
@@ -19,7 +21,7 @@ from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = (ROOT / "index.html").as_uri()
 OUT = ROOT / "tests" / "output" / "esplora"; OUT.mkdir(parents=True, exist_ok=True)
-FILE = OUT / (time.strftime("%Y%m%d-%H%M%S") + ".jsonl")
+FILE = OUT / (time.strftime("%Y%m%d-%H%M%S") + ("-" + __import__("os").environ["ESPLORA_NOME"] if __import__("os").environ.get("ESPLORA_NOME") else "") + ".jsonl")   # il nome distingue i pezzi di GitHub, che finiscono nella stessa cartella
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""   # lo stesso generatore di collaudo_competizione.py
@@ -57,6 +59,7 @@ CORSA = """([race, seme, liv]) => {
 }"""
 
 def scrivi(riga):
+    riga.setdefault("browser", __import__("os").environ.get("BROWSER", "chromium"))   # 1 nov 2026: per i giri su GitHub con due browser
     with open(FILE, "a", encoding="utf-8") as f: f.write(json.dumps(riga, ensure_ascii=False) + "\n")
 
 async def parte1(b, semi, casi=None):
@@ -116,8 +119,9 @@ async def parte2(b, secondi, seme):
 
 def riepilogo(righe):
     corse = [c for c in righe if "race" in c]; scim = [c for c in righe if "scimmia" in c]
-    for ver in sorted({c.get("versione") or "?" for c in righe}):
-        cv = [c for c in corse if (c.get("versione") or "?") == ver]; sv = [c for c in scim if (c.get("versione") or "?") == ver]
+    chiave = lambda c: (c.get("versione") or "?") + (" · " + c["browser"] if c.get("browser") else "")   # versione e browser (i file vecchi non hanno il browser)
+    for ver in sorted({chiave(c) for c in righe}):
+        cv = [c for c in corse if chiave(c) == ver]; sv = [c for c in scim if chiave(c) == ver]
         semi = sorted({c["seme"] for c in cv})
         print(f"\n--- versione {ver}: {len(cv)} corse" + (f", {len(semi)} semi ({semi[0]}-{semi[-1]})" if semi else "") + f", {len(sv)} giri di scimmia")
         for race in sorted({c["race"] for c in cv}):
@@ -170,14 +174,15 @@ async def main():
             c = ns.get(k, {}).get("pannelloCaso")
             if c: print(k, json.dumps(c, ensure_ascii=False))
         return
-    sc = 0
+    sc = 0; seme_sc = None
     if "--scimmia" in args: i = args.index("--scimmia"); sc = int(args[i + 1]); del args[i:i + 2]
+    if "--seme-scimmia" in args: i = args.index("--seme-scimmia"); seme_sc = int(args[i + 1]); del args[i:i + 2]   # 1 nov 2026: seme fisso, per rifare un giro di GitHub
     semi = list(range(int(args[0]), int(args[1]) + 1)) if len(args) >= 2 else ([] if sc else [1, 2, 3])
     t0 = time.time()
     async with async_playwright() as p:
         b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch()
         corse = await parte1(b, semi) if semi else []
-        scim = await parte2(b, sc, semi[0] if semi else int(time.time()) % 100000) if sc else None
+        scim = await parte2(b, sc, seme_sc if seme_sc is not None else semi[0] if semi else int(time.time()) % 100000) if sc else None
         await b.close()
     print(f"\n===== RIEPILOGO ESPLORA ({len(corse)} corse, {time.time() - t0:.0f} s reali) — dati in {FILE.relative_to(ROOT)}")
     riepilogo(corse + ([scim] if scim else []))

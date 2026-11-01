@@ -1,0 +1,161 @@
+# Esploratore su GitHub Actions (1 novembre 2026): tests/esplora.py diviso in pezzi che girano insieme, solo a mano.
+# Non promuove né boccia: raccoglie numeri (numeri non finiti, barche ferme, pannello che sfora, errori della pagina)
+# e alla fine li mette in UN riepilogo (passo «Riepilogo» e allegato esplora-riepilogo), da far leggere a Claude.
+# Scheda Actions → «Esploratore» → «Run workflow»: si scelgono semi, pezzi, scimmia e browser.
+name: Esploratore
+
+on:
+  workflow_dispatch:
+    inputs:
+      primo_seme:
+        description: "Primo seme delle regate"
+        default: "1"
+      ultimo_seme:
+        description: "Ultimo seme delle regate (0 = niente regate, solo scimmia)"
+        default: "100"
+      semi_per_pezzo:
+        description: "Semi per ogni pezzo (pezzi più piccoli = più computer insieme)"
+        default: "10"
+      scimmia_secondi:
+        description: "Secondi di scimmia per ogni giro (0 = niente scimmia)"
+        default: "600"
+      scimmie:
+        description: "Quanti giri di scimmia per browser, ognuno con un seme dei tasti diverso"
+        default: "4"
+      browser:
+        description: "Browser"
+        type: choice
+        options: [entrambi, firefox, chromium]
+        default: entrambi
+
+permissions:
+  contents: read
+
+jobs:
+  piano:
+    name: Piano dei pezzi
+    runs-on: ubuntu-24.04
+    outputs:
+      regate: ${{ steps.p.outputs.regate }}
+      scimmie: ${{ steps.p.outputs.scimmie }}
+    steps:
+      - id: p
+        env:
+          A: ${{ inputs.primo_seme }}
+          Z: ${{ inputs.ultimo_seme }}
+          K: ${{ inputs.semi_per_pezzo }}
+          S: ${{ inputs.scimmia_secondi }}
+          N: ${{ inputs.scimmie }}
+          B: ${{ inputs.browser }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          a, z, k, s, n = (int(os.environ[x]) for x in "AZKSN"); b = os.environ["B"]
+          br = ["chromium", "firefox"] if b == "entrambi" else [b]
+          reg = [{"browser": x, "primo": i, "ultimo": min(i + k - 1, z)} for x in br for i in range(a, z + 1, max(1, k))] if z >= a and z > 0 else []
+          sc = [{"browser": x, "seme": 1000 + j, "secondi": s} for x in br for j in range(1, n + 1)] if s > 0 and n > 0 else []
+          vuoto = [{"browser": "nessuno", "primo": 0, "ultimo": 0, "seme": 0, "secondi": 0}]
+          print("regate=" + json.dumps(reg or vuoto)); print("scimmie=" + json.dumps(sc or vuoto))
+          PY
+          cat "$GITHUB_OUTPUT"
+
+  regate:
+    name: regate ${{ matrix.browser }} ${{ matrix.primo }}-${{ matrix.ultimo }}
+    needs: piano
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.piano.outputs.regate) }}
+    steps:
+      - uses: actions/checkout@v4
+        if: matrix.browser != 'nessuno'
+      - uses: actions/setup-python@v5
+        if: matrix.browser != 'nessuno'
+        with:
+          python-version: "3.13"
+      - name: Playwright 1.60.0 e il browser
+        if: matrix.browser != 'nessuno'
+        run: |
+          python -m venv .venv-collaudi
+          .venv-collaudi/bin/pip install --quiet "playwright==1.60.0"
+          .venv-collaudi/bin/playwright install --with-deps ${{ matrix.browser }}
+      - name: Esplora
+        if: matrix.browser != 'nessuno'
+        env:
+          BROWSER: ${{ matrix.browser }}
+          ESPLORA_NOME: regate-${{ matrix.browser }}-${{ matrix.primo }}
+        run: .venv-collaudi/bin/python tests/esplora.py ${{ matrix.primo }} ${{ matrix.ultimo }}
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.browser != 'nessuno'
+        with:
+          name: esplora-regate-${{ matrix.browser }}-${{ matrix.primo }}
+          path: tests/output/esplora/*.jsonl
+          retention-days: 30
+
+  scimmia:
+    name: scimmia ${{ matrix.browser }} seme ${{ matrix.seme }}
+    needs: piano
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.piano.outputs.scimmie) }}
+    steps:
+      - uses: actions/checkout@v4
+        if: matrix.browser != 'nessuno'
+      - uses: actions/setup-python@v5
+        if: matrix.browser != 'nessuno'
+        with:
+          python-version: "3.13"
+      - name: Playwright 1.60.0 e il browser
+        if: matrix.browser != 'nessuno'
+        run: |
+          python -m venv .venv-collaudi
+          .venv-collaudi/bin/pip install --quiet "playwright==1.60.0"
+          .venv-collaudi/bin/playwright install --with-deps ${{ matrix.browser }}
+      - name: Scimmia
+        if: matrix.browser != 'nessuno'
+        env:
+          BROWSER: ${{ matrix.browser }}
+          ESPLORA_NOME: scimmia-${{ matrix.browser }}-${{ matrix.seme }}
+        run: .venv-collaudi/bin/python tests/esplora.py --scimmia ${{ matrix.secondi }} --seme-scimmia ${{ matrix.seme }}
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.browser != 'nessuno'
+        with:
+          name: esplora-scimmia-${{ matrix.browser }}-${{ matrix.seme }}
+          path: tests/output/esplora/*.jsonl
+          retention-days: 30
+
+  riepilogo:
+    name: Riepilogo
+    needs: [regate, scimmia]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Tutti i pezzi in una cartella
+        uses: actions/download-artifact@v4
+        with:
+          pattern: esplora-*
+          merge-multiple: true
+          path: tests/output/esplora
+      - name: Riepilogo di tutti i pezzi
+        run: |
+          python -m venv .venv-collaudi
+          .venv-collaudi/bin/pip install --quiet "playwright==1.60.0"
+          ls tests/output/esplora | wc -l
+          .venv-collaudi/bin/python tests/esplora.py --riassumi | tee riepilogo.txt
+          { echo '### Esploratore'; echo '```'; cat riepilogo.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: esplora-riepilogo
+          path: |
+            riepilogo.txt
+            tests/output/esplora/*.jsonl
+          retention-days: 30

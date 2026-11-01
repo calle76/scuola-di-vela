@@ -22,6 +22,12 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - `tests/esplora.py` girava solo le prime 3 regate: `range(3)` era fisso, quindi la regata dei giri (dalla 1.0.61) non è mai stata esplorata. Ora legge quante sono (`RACES.length`, oggi 4).
 - Provato sulla 1.0.76, semi 1 e 2: 14 corse, 0 numeri non finiti su 445.018 controllati, 0 barche non arrivate, 0 eccezioni, 0 errori della pagina, pannello 0 px. La scimmia, 30 s e 41 azioni: 0 errori, la pagina non scorre.
 - L'ultimo giro lungo dell'esploratore risaliva al 23 ottobre (1.0.45 circa).
+- **Esploratore su GitHub:** `.github/workflows/esplora.yml`, solo a mano: scheda Actions → «Esploratore» → «Run workflow».
+  - Si scelgono primo e ultimo seme, semi per pezzo, secondi e numero di giri della scimmia, e il browser.
+  - I pezzi girano insieme. Alla fine un passo «Riepilogo» unisce tutti i file in un solo riepilogo, che compare nella pagina del giro ed è nell'allegato `esplora-riepilogo`.
+- `esplora.py` scrive anche il browser in ogni riga, e il riepilogo divide per versione e browser.
+- Opzione nuova `--seme-scimmia N`, per rifare un giro di scimmia con gli stessi tasti.
+- Variabile `ESPLORA_NOME` nel nome del file, perché i file dei pezzi non si sovrascrivano.
 
 ## 1.0.76 — La moviola rivede tutta la regata, partenza compresa
 
