@@ -17,6 +17,43 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.0.76 — La moviola rivede tutta la regata, partenza compresa
+
+Da `docs/PROPOSTA-MOVIOLA-INTERA.md`, con il via di Ale del 1 novembre 2026 e i due consigli: partenza inclusa, ← → di 5 s. Osservazione 73.
+
+**Cosa cambia per chi gioca**
+- «Rivedi» mostra **tutta la regata**: dalle bandiere a −5 minuti all'arrivo o al ritiro. Fino alla 1.0.75 mostrava pezzi di 18 s, solo dopo lo sparo, al massimo 12.
+- Il tasto O, ogni contatto (anche fra avversari e anche prima del via) e ogni boa toccata mettono un **segno**. I segni sono tacche gialle sul cursore. Il limite dei 6 contatti automatici non c'è più.
+- In alto la barra dice «Tutta la regata», oppure «Segno 2 di 5 — …» nei 10 s prima e negli 8 s dopo un segno.
+- La riproduzione parte 10 s prima del primo segno, o 10 s prima dello sparo se non ci sono segni. Alla fine si ferma: non ricomincia più da capo.
+- **Tasti della moviola:**
+  - ← → spostano indietro e avanti di 5 s (fino alla 1.0.75 cambiavano pezzo);
+  - ↑ ↓ portano al segno prima o dopo, 10 s prima del segno;
+  - 1 2 3 4 5 danno le velocità 1×, ½×, ¼×, 4×, 8×;
+  - R torna all'inizio, spazio mette in pausa, Esc chiude;
+  - i pulsanti si chiamano «◀ Segno prima» e «Segno dopo ▶».
+- Aprendo la moviola il fuoco va su «Pausa». Prima andava su «Chiudi», e lo spazio chiudeva la moviola invece di metterla in pausa.
+- Il tetto è di 60 minuti di regata (36.000 copie): oltre si tengono gli ultimi 60 e la barra lo dice. Costanti ipotesi nostre.
+
+La moviola resta in memoria: lasciata la regata, si perde. La registrazione per il coach non cambia. Il gioco non cambia: la moviola legge e basta.
+
+**Misurato** con `tests/collaudo_moviola.py`, riscritto con i criteri V1-V10 della proposta. 12 regate del torneo col pilota per browser, confrontate con una copia della 1.0.75.
+
+| | Chromium | Firefox |
+|---|---|---|
+| V1 fedeltà (soglia 0,5 m e 5°) | 0,109 m e 0,25° su 4658 confronti, 2148 prima del via | 0,098 m e 0,31° su 4905, 2148 prima del via |
+| V2 gioco identico al bit alla 1.0.75 | 12 su 12 | 12 su 12 |
+| V3 copertura: scarto all'inizio / alla fine | 0,02 s / 0,00 s | 0,02 s / 0,00 s |
+| V4 segni, tutti al loro posto e con la tacca | 66 (42 automatici, 16 prima del via) | 72 (48 automatici, 20 prima del via) |
+| V7 costo (soglia +3%) | +0,3% | −0,1% |
+
+- **V5**, tutti i tasti premuti con la tastiera vera: OK in tutti e due i browser.
+- **V6**, uscita pulita: OK.
+- **V8**, tetto: riempita con 37.000 copie, si ferma a 36.000 e lo dice.
+- **V9**, barra a 1360×650: eccesso 0 px.
+- **V10**, pagina senza `#collaudo`: la regata si apre dal menu e la moviola copia durante il conto alla rovescia (29 e 28 copie in 3 s). È stata aperta chiamando `rivApri`, non dal pulsante: per arrivare al pulsante bisognerebbe finire la regata in tempo vero.
+- Al primo giro su 4 regate V5 e V10 erano caduti, per due errori corretti prima del giro vero. V5: con il fuoco su «Chiudi», lo spazio chiudeva. V10: il collaudo non chiudeva il riquadro delle istruzioni della regata. Le soglie non sono cambiate.
+
 ## 1.0.75 — «Cambia vento» di nuovo nelle regate (non nel torneo)
 
 Decisione di Ale del 1 novembre 2026 (osservazione 74): «rimetti "cambia vento" dove era, ma non deve essere un'opzione per i tornei». Cambia la decisione della 1.0.70 (`DECISIONI.md`).

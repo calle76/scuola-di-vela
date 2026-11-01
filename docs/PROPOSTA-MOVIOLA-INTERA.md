@@ -94,3 +94,28 @@ Si misura in Chromium e Firefox. `collaudo_moviola.py` si aggiorna, perché oggi
 2. Una scelta, se non va bene il consiglio:
    - **includere la partenza** (consiglio: sì, è dove capitano molti contatti);
    - **tasti ← → per spostarsi di 5 s** (consiglio: sì; in alternativa restano per i segni, e i 5 s si fanno con il mouse).
+
+## 7. E il coach? (domanda di Ale, 1 novembre 2026)
+
+Nel piano del coach (`PROPOSTA-COACH-REGISTRATORE.md`, fasi 2-4, che arrivano con il livello del fiocco), il coach sceglie **da solo** il momento da rivedere, fa domande sulle penalità e propone situazioni da ripetere. La moviola intera **è il primo pezzo** di quel piano, non un'altra strada:
+- il coach avrà bisogno di poter mostrare un momento qualunque, partenza compresa;
+- i segni (contatti, boe toccate, tasto O) sono già i candidati fra cui sceglierà.
+
+Resta valida la decisione del 29 ottobre: «la moviola non è una funzione a sé». È lo strumento con cui il coach fa rivedere.
+
+**Via di Ale: 1 novembre 2026 («via»), con i due consigli del §6** (partenza inclusa, ← → di 5 s).
+
+## 8. Fermata 2: fatto e misurato (1 novembre 2026, 1.0.76)
+
+Numeri completi in `CHANGELOG.md` 1.0.76. In breve: **V1-V10 tutti OK in Chromium e Firefox**, 12 regate per browser contro una copia della 1.0.75.
+- V1: fedeltà massima 0,109 m e 0,31°, soglia 0,5 m e 5°.
+- V2: gioco identico al bit, 12 su 12.
+- V7: costo +0,3% e −0,1%, soglia +3%.
+
+**Scelte non scritte prima:**
+- La riproduzione parte 10 s prima del primo segno (o dello sparo).
+- Alla fine si ferma invece di ricominciare.
+- Aprendo la moviola, il fuoco va su «Pausa».
+- La scritta «Segno N di M» resta per 10 s prima e 8 s dopo un segno, come i vecchi pezzi.
+
+**Adattato:** V10 apre la moviola chiamando `rivApri` a regata appena partita dal menu, e non con il pulsante a fine regata (vedi CHANGELOG).
