@@ -52,6 +52,7 @@ const PASSI = {
   "4:In poppa":                      { lim: 60,  f: C => guida(C, { twa: 172, centra: true, regola: true }) },
   "5:Prepararsi a virare":           { lim: 60,  aspetta: true, f: C => guida(C, { twa: 58, centra: true, regola: true, resta: true }) }, // «lascia che arrivi ad almeno 3,3 nodi»
   "5:Virare":                        { lim: 40,  f: C => virare(C) },
+  "7:Una virata con la barra in fondo": { lim: 40, f: C => virare(C, true) },                                       // 1.1.4, lezione B1: «vira tenendo Maiusc con la freccia verso il boma»
   "5:Una virata che non riesce":     { lim: 120, f: C => nonRiesce(C) },
   "5:Risalire il vento":             { lim: 180, f: C => bordeggia(C) },
   "5:Strambata violenta":            { lim: 60,  f: C => strambaAperta(C) },
@@ -160,14 +161,16 @@ function* rotta(C){                                                      // come
     } else yield 0.2;
   }
 }
-function* virare(C){                                                     // «barra sottovento con decisione, finché sei in bolina dall'altra parte; poi centra»
+function* virare(C, maiusc = false){                                     // «barra sottovento con decisione, finché sei in bolina dall'altra parte; poi centra»; maiusc: con Maiusc (lezione B1)
   if (kn() < 3){                                                          // «si vira sempre con la barca lanciata» (passo prima): se dopo l'attesa la barca è lenta,
     const g = guida(C, { twa: 58, centra: true, regola: true, resta: true }); let t = 0;   // prima riprende velocità in bolina (messa a punto, seme 3)
     for (const w of g){ yield w; t += w; if (kn() >= 3.3 || t > 25) break; }
     suTutti();
   }
   const l0 = lato(), k = versoBomaK();
+  if (maiusc) key("Shift", true);
   yield* tieni(C, k, () => lato() !== l0 && twaV(C) >= 50, 30);
+  if (maiusc) key("Shift", false);
   centra();
 }
 function* nonRiesce(C){                                                  // lezione 5, passo 4
@@ -244,7 +247,7 @@ window.__corsa = (li, imp, semeGioco, semePilota) => {
     if (traccia && Math.round(T * 60) % 30 === 0){ const I = sv.readI(); traccia.push([+T.toFixed(1), Math.round(n180(sv.twd - sv.S.h)), +I.kn.toFixed(1), I.tt, +I.sheet.toFixed(2), +I.tiller.toFixed(2), Math.round(sv.S.heel), +sv.S.r.toFixed(1), [...giu].join("+")]); }
     if (sv.stepDone) return true; } return sv.stepDone; };
   for (let passo = 0; passo < 40; passo++){
-    const titolo = $("lTitle").textContent, finale = !$("lQuiz").hidden, nx = $("lNext");
+    const titolo = $("lTitle").textContent, finale = !$("lQuiz").hidden || $("lNext").textContent !== "Avanti", nx = $("lNext");   // 1.1.4: le lezioni nascoste non hanno il pulsante del quiz
     if (finale) break;
     const pratico = nx.hidden || nx.classList.contains("pending");         // con una condizione: «Avanti» compare solo a passo completato
     if (!pratico){ nx.click(); continue; }
@@ -353,7 +356,7 @@ async def main():
     if "--reale" in a: sys.exit(0 if await reale() else 1)
     semi = range(1, 4) if "--veloce" in a else range(1, 21)
     if "--semi" in a: x, y = a[a.index("--semi") + 1].split("-"); semi = range(int(x), int(y) + 1)
-    lezioni = [int(c) - 1 for c in a[a.index("--solo") + 1]] if "--solo" in a else list(range(6))
+    lezioni = [int(c) - 1 for c in a[a.index("--solo") + 1]] if "--solo" in a else list(range(7))   # 1.1.4: la settima è la lezione B1 (nascosta nel menu)
     pagina = a[a.index("--pagina") + 1] if "--pagina" in a else str(ROOT / "index.html")
     ris, errs = await corse(pagina, semi, lezioni)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -364,7 +367,7 @@ async def main():
     print(f"\nmisurato: {len(passi)} passi pratici, {corse_mani} corse a mani ferme, errori della pagina {len(errs)} {errs[:2]}")
     print("da guardare:" if problemi else "da guardare: niente")
     for q in problemi: print("  - " + q)
-    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3)[l] for l in lezioni) and not errs
+    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1)[l] for l in lezioni) and not errs
     print("ESITO:", "NON VALIDO (passi mancanti o errori della pagina)" if not valido else ("OK" if not problemi else "DA GUARDARE"))
     sys.exit(2 if not valido else 0)   # i casi «da guardare» sono un rapporto, non un fallimento dello script: si leggono (lancia_tutti.sh li mostra)
 

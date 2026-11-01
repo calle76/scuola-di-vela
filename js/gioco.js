@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.1.3"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.1.4"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -128,7 +128,7 @@
       abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
       cono: QUIZ.reduce((a, q, i) => { const s = p.quiz?.["q" + i]; return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
       comp: RACES_CARRIERA.reduce((a, rc, i) => a + racePt(i), 0),
-      esp: LESSONS.filter((L, i) => p.done["l" + i]).length };
+      esp: LESSONS.filter((L, i) => !L.nascosta && p.done["l" + i]).length }; // 1.1.4: le lezioni nuove della scuola (nascosta) entrano nei meriti col menu nuovo
     const pulite = RACES_CARRIERA.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
     const totale = MERITI.reduce((a, [k]) => a + pt[k], 0), esame = !!p.exam?.superato;
     // 0.23, dopo la prova di Ale: una riga con tutto quello che manca, e un suggerimento concreto per ogni area che manca
@@ -139,7 +139,7 @@
       : totale < TOT_MIN ? (TOT_MIN - totale === 1 ? "Ti manca 1 punto" : "Ti mancano " + (TOT_MIN - totale) + " punti") + " al totale" + poi
       : !esame ? "Ti manca l'esame." : null;
     const voce = k => {
-      if (k === "esp"){ const i = LESSONS.findIndex((L, j) => !p.done["l" + j]); return i < 0 ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
+      if (k === "esp"){ const i = LESSONS.findIndex((L, j) => !L.nascosta && !p.done["l" + j]); return i < 0 ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
       if (k === "abil"){
         const fas = i => medalOf(i, p.best[recK("m" + i)]), tit = i => "Prova " + (i + 1) + ", " + MISSIONS[i].title;
         let i = MISSIONS.findIndex((m, j) => !fas(j)); if (i >= 0) return tit(i) + ".";
@@ -230,7 +230,7 @@
     const torBtn = (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
         const st = chiuso ? "dopo il brevetto di livello 1" : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
         return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo dell'1b</span><span class="state ${F ? "ok" : "todo"}">${st}</span></button>`; })(); // senza descrizione (la dà il riquadro che si apre); nel gioco libero sta nel terzo riquadro: in «Regate» il menu non stava in 1360x650
-    const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
+    const quiz = LESSONS.map((L, i) => { if (L.nascosta) return ""; const best = progress.quiz?.["q" + i];
       return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
       <header class="menu-head"><div><h1>Scuola di vela <span class="ver">V. ${VERSIONE}</span></h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
@@ -495,7 +495,7 @@
     $("lRetry").hidden = !!st.pause;
     $("lNext").classList.toggle("pending", semBtns && !!st.cond); $("lNext").hidden = !semBtns && !!st.cond;
     $("lNext").textContent = st.final ? nextLabel() : "Avanti";
-    $("lQuiz").hidden = !st.final;
+    $("lQuiz").hidden = !st.final || !!LESSONS[lessonIdx].nascosta; // 1.1.4: il quiz delle lezioni nuove arriva col menu nuovo
     if (st.final){ progress.done["l" + lessonIdx] = true; saveProgress(); }
     setControls(st.sem || [], !!st.tiller, !!st.sheet, st.turnHint);
     setHud(st.hud || 0);
@@ -779,7 +779,8 @@
     if (mode === "lesson" && st.cond && !stepDone){
       // 1.1.3 (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A): quello che il giocatore ha fatto nel passo, per i passi che la barca dell'1b farebbe da sola
       // (orza da sola sbandando, 1.0.46): base.barraLee = secondi con la barra verso il boma (barra sottovento), base.lasca = scotta lascata in raffica
-      if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.barraLee = (base.barraLee || 0) + dt; // solo la barra mossa adesso: quella rimasta dal passo prima non conta
+      if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.barraLee = (base.barraLee || 0) + dt;
+      if (S.tilAttivo && Math.abs(ctl.tiller) > 0.8) base.maiusc = (base.maiusc || 0) + dt; // 1.1.4: barra oltre 36°, cioè con Maiusc (la sola freccia si ferma a 35°) // solo la barra mossa adesso: quella rimasta dal passo prima non conta
       if (base.shPrev !== undefined && ctl.sheet > base.shPrev && local.tws > env.tws * 1.12) base.lasca = (base.lasca || 0) + ctl.sheet - base.shPrev;
       base.shPrev = ctl.sheet;
       if (st.cond(readI(), S, base)){ holdT += dt; if (holdT >= (st.hold || 0.3)) completeStep(); } else holdT = 0;

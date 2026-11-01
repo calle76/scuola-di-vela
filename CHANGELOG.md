@@ -17,6 +17,28 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.4 — Lezione B1 «Il timone che stalla» (nascosta nel menu, ramo `pulizia`)
+
+Prima lezione del gruppo B (`docs/PROPOSTA-LEZIONI-SCUOLA.md`). Come ha deciso Ale il 1 novembre, **non compare nel menu** finché non arriva il menu nuovo: nel gioco è la settima lezione (`LESSONS[6]`, `nascosta: true`). Il libretto, i meriti, il ripasso e il pulsante del quiz la ignorano. Quiz ed esame stanno nella lezione e si collegano col menu.
+
+**Fonti lette prima del testo** (`docs/archivio/PROPOSTA-STALLO-TIMONE.md` §1, §9, §10), e scritte nel codice sopra la lezione:
+- F4 (vasca, modellino del 470): la forza della pala cresce fino a circa 15° e poi resta uguale, mentre la resistenza continua a crescere. Nelle virate vere la barra arriva a 45°, e accompagnarla è il modo più ragionevole.
+- F35 (calcolo a grandezza vera): stallo a circa 30°.
+- Day 2017: l'angolo che la pala sente non è quello della barra.
+- Regole di questo gioco, dichiarate come tali nel testo: la sola freccia arriva a 35° (1.0.25), Maiusc a 45°.
+
+**La lezione:** due pagine di teoria («La pala è un'ala», «35° e 45°»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame; una voce aggiornata nel glossario no, perché «Stallo» c'è già (vela).
+- Il **passo pratico** è «Una virata con la barra in fondo»: virata riuscita, con la barra oltre 36° (cioè con Maiusc) per almeno 0,3 s in tutto. Il conteggio è nuovo (`base.maiusc`), con lo stesso metodo della barra sottovento della 1.1.3.
+- Un passo «fai stallare la pala» non c'è, perché **con i tasti la pala non stalla**. Misurato: 0 s di stallo in 6 prove, partendo da 2, 3 e 5,5 nodi, con 35° e con 45°. La barca comincia a girare prima che l'angolo diventi troppo grande (1.0.31). Il testo lo dice: «con i tasti la pala stalla di rado; se succede, il pannello lo dice».
+
+**Misurato:**
+- `collaudo_pilota_lezioni.py --solo 7` (pilota esteso: vira tenendo Maiusc): semi 1-10, guidando 10 su 10, a mani ferme 0 su 10, tempo medio 3,3 s. Semi 11-20: lo stesso.
+- Tutte le lezioni, semi 11-20: 32 passi 10 su 10 e il 6.3 9 su 9, come nella 1.1.3.
+- `collaudo_pannello_lezioni`: 56 passi su 56 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_intera`, `collaudo_carriera_esame`, `collaudo_libretto`, `collaudo_pannello`, `collaudo_schermate`, `collaudo_pulsanti`. Il menu non cambia.
+- Fisica identica al bit.
+- Il pilota riconosce l'ultimo passo anche dalla scritta del pulsante: le lezioni nascoste non hanno il pulsante del quiz, e senza questa correzione andava oltre la fine (720 errori della pagina nella prima prova).
+
 ## Collaudi: il giro mirato delle partenze sui semi 1-100 (1 novembre 2026, nessuna versione nuova)
 
 - Su GitHub, versione `97d3dde` (guida degli avversari della 1.1.2), `collaudo_non_partite` con i semi 1-100: in tutto 7200 barche per browser.

@@ -234,13 +234,48 @@
              "Esercitati, poi prova il percorso nelle raffiche."] }
   ];
 
+  // ---- lezioni nuove della scuola (1.1.4, docs/PROPOSTA-LEZIONI-SCUOLA.md): nascoste nel menu finché non arriva il menu nuovo ----
+  // B1, il timone che stalla. Fonti lette prima del testo (docs/archivio/PROPOSTA-STALLO-TIMONE.md §1, §9, §10):
+  // F4 (Masuyama e Ogihara 2020): in vasca, modellino 1:5 del 470, la forza della pala cresce fino a circa 15° e poi resta costante, mentre
+  //   la resistenza continua a crescere; nelle virate vere di un 470 la barra arriva a 45°; accompagnarla è il modo più ragionevole, sbatterla fa perdere più velocità.
+  // F35 (Proceedings MDPI 2018): calcolo a grandezza vera, stallo a circa 30° di barra (35° a 10 m/s).
+  // Day 2017 §3.3: l'angolo che la pala sente non è quello della barra. Gioco: freccia fino a 35° = regola del gioco senza fonte (1.0.25);
+  //   con i tasti la pala stalla di rado (misurato: 0 s di stallo in 6 prove da 2 a 5,5 nodi, 1 novembre 2026); con Maiusc la prua gira più in fretta
+  //   quando si centra la barra (PROPOSTA-STALLO-TIMONE §10: 26 contro 18 °/s con 10 nodi).
+  const LB1 = [
+    { title: "La pala è un'ala", ...PAUSE, zoom: 2.4,
+      text: ["La pala del timone lavora nell'acqua come un'ala: più angolo le dai, più spinge di lato la poppa, e la barca gira.",
+             "Oltre un certo angolo l'acqua non riesce più a seguirla e si stacca: la pala va <em>in stallo</em>. La spinta smette di crescere, ma la pala frena sempre di più. Su un 470, misurato in vasca e calcolato al computer, succede fra circa 15° e 30°.",
+             "Conta l'angolo che la pala sente, non quello della barra: quando la barca gira, l'acqua arriva sulla pala un po' di traverso, e l'angolo sentito è più piccolo."] },
+    { title: "35° e 45°", ...PAUSE, zoom: 2.4,
+      text: ["Con la sola freccia la barra arriva a 35°: è una regola di questo gioco, un angolo sicuro (una barca vera non ha un fermo, c'è la mano che sente la barra).",
+             "Con <em>Maiusc</em> più la freccia arriva a 45°, come nelle virate misurate su un 470 vero: la barca gira più stretta. Serve vicino a una boa, nei giri di penalità o quando la barca è lenta. Meglio accompagnare la barra che sbatterla.",
+             "Con i tasti la pala stalla di rado, perché la barca comincia a girare prima che l'angolo diventi troppo grande. Se succede, il pannello lo dice."] },
+    { title: "Una virata con la barra in fondo", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "tt",
+      text: ["Mettiti in bolina e vira tenendo <em>Maiusc</em> con la freccia verso il boma, finché la prua ha attraversato il vento. Poi centra la barra: con 45° la prua gira più in fretta, quindi centra un po' prima."],
+      cond: (I, S, B) => S.tacks > B.tacks && I.twa >= 40 && I.twa <= 78 && I.kn > 1.2 && (B.maiusc || 0) >= 0.3, hold: 0.8,
+      done: "Virata con la barra in fondo: la barca ha girato più stretta. Più barra vuol dire anche più controllo da tenere: centrando tardi la prua va oltre la bolina." },
+    { title: "Riepilogo", tiller: true, autoTrim: true, hud: 1, hintKind: "sail", final: true,
+      text: ["La pala è un'ala e oltre un certo angolo stalla. La sola freccia si ferma a 35°; <em>Maiusc</em> porta la barra a 45° quando serve girare stretto. Accompagna la barra e centrala per tempo."] }
+  ];
+
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
     { name: "Lezione 3", title: "Andature, mure e precedenze", steps: L3, desc: "Bolina, traverso, lasco, poppa; le mure e chi lascia strada; regolare la vela leggendo i filetti." },
     { name: "Lezione 4", title: "Vento reale e apparente", steps: L4, desc: "Perché andando veloci il vento sembra arrivare più da prua." },
     { name: "Lezione 5", title: "Virata e strambata", steps: L5, desc: "Cambiare mure, risalire il vento a zig-zag, strambare senza rischi." },
-    { name: "Lezione 6", title: "Raffiche e scuffia", steps: L6, desc: "Riconoscere le raffiche, tenere la barca piatta, scuffiare e raddrizzare." }
+    { name: "Lezione 6", title: "Raffiche e scuffia", steps: L6, desc: "Riconoscere le raffiche, tenere la barca piatta, scuffiare e raddrizzare." },
+    // dalla 1.1.4 le lezioni nuove della scuola, nascoste nel menu (nascosta: true) finché non arriva il menu nuovo; quiz ed esame stanno nella lezione
+    { name: "Lezione B1", title: "Il timone che stalla", steps: LB1, nascosta: true, gruppo: "B", desc: "La pala è un'ala e può stallare; la barra fino a 35° o, con Maiusc, a 45°.",
+      quiz: [["Che cosa succede alla pala del timone oltre un certo angolo?", "Va in stallo: la spinta non cresce più e frena di più", ["Si rompe", "Gira la barca più in fretta", "Non succede niente: più angolo, più spinta"], "Come un'ala, oltre un certo angolo l'acqua si stacca dalla pala: la spinta smette di crescere e la resistenza aumenta."],
+             ["Quando la barca sta già girando, l'angolo che la pala sente è…", "più piccolo di quello della barra", ["più grande di quello della barra", "uguale a quello della barra", "sempre zero"], "Girando, l'acqua arriva sulla pala un po' di traverso: l'angolo sentito è minore di quello della barra."],
+             ["In questo gioco, fino a che angolo porta la barra la sola freccia?", "35°", ["45°", "30°", "Fino in fondo"], "La sola freccia si ferma a 35°, un angolo sicuro: è una regola del gioco. Con Maiusc si arriva a 45°."],
+             ["Quando conviene la barra a 45° (Maiusc)?", "Per girare stretto: vicino a una boa, nei giri di penalità, con la barca lenta", ["Sempre, perché la barca va più veloce", "Mai: fa scuffiare", "Solo con il vento leggero"], "Con 45° la barca gira più stretta; serve quando bisogna girare in poco spazio o la barca è lenta. Va accompagnata e centrata per tempo."]],
+      esame: [["35° e 45°", "Devi girare attorno a una boa in poco spazio. Che cosa usi?", "Maiusc e la freccia: la barra arriva a 45°", ["La sola freccia: si ferma a 35°", "Lasco tutta la vela", "Spingo il boma con Z"], "Con Maiusc la barra arriva a 45° e la barca gira più stretta."],
+              ["La pala è un'ala", "Perché una pala girata troppo frena la barca?", "Va in stallo: l'acqua si stacca e la resistenza cresce", ["Perché tocca il fondo", "Perché fa sbandare la barca", "Perché sposta il vento"], "Oltre un certo angolo la pala stalla: la spinta non cresce più, la resistenza sì."],
+              ["Una virata con la barra in fondo", "Viri con la barra a 45°. Quando centri la barra?", "Un po' prima che con 35°, perché la prua gira più in fretta", ["Quando la barca si ferma", "Mai: la barra torna da sola", "Dopo che la prua ha superato la bolina di 30°"], "Con più barra la prua gira più in fretta: centrando tardi va oltre la bolina."],
+              ["La pala è un'ala", "Su un 470, misurato in vasca e calcolato al computer, la pala stalla fra circa…", "15° e 30°", ["2° e 5°", "60° e 90°", "Non stalla mai"], "Le misure in vasca di un modellino danno circa 15°, il calcolo a grandezza vera circa 30°."]] }
   ];
 
   // ---- prove ----
