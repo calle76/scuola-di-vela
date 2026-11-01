@@ -17,6 +17,33 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.1 — Gli avversari dell'1b partono (ramo `pulizia`)
+
+Da `docs/PROPOSTA-PARTENZE-1B.md`, con il via di Ale (scelta A, 1 novembre 2026). Si cambia solo la guida degli avversari, in `js/regate.js`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
+
+**Il difetto.** Con la 1.1.0 alcuni avversari non partivano entro 60 s dallo sparo (criterio (4) di `collaudo_partenze.py`). Misurato qui, in Chromium, sulle quattro regate: principianti ed esperti, 60/180/300 s di preparazione, semi 1-20, cioè 1440 barche. Le barche non partite erano **25 su 1440**: 6 nel bastone, 6 nelle raffiche, 5 nei salti, 8 nei giri. Sulla 1.0.78 bastone e raffiche avevano 0, ma la regata dei giri, già dell'1b, ne aveva già **8 su 360**: il difetto c'era da prima e nessun collaudo lo guardava.
+
+**Tre correzioni:**
+- **A. Si cede solo a chi si avvicina.** Due barche parallele alla stessa velocità, a meno di due lunghezze, risultavano «sul punto di toccarsi» a ogni passo. Così si cedevano a vicenda: tutte e due al traverso lungo la linea, tagliata poi fuori dagli estremi. Ora, con gli scafi a più di una lunghezza, una barca che si avvicina a meno di `V_AVV` = 0,1 m/s non conta. Chi sta già cedendo continua finché le barche si avvicinano. **Ipotesi nostra:**
+  - scelta sui semi 1-20: con 0,3 m/s le barche non partite erano 0, ma i contatti crescevano del 25%;
+  - senza questa correzione, nei salti restano 5 barche su 360 non partite.
+- **B1. Abbrivio prima di virare.** Per virare da quasi ferma, la barca poggiava finché superava 1,1 m/s, poi orzava, rallentava sotto 1,1 e poggiava di nuovo. Restava così per minuti a 2,1 nodi, in un caso fino a 250 m dal centro della linea. Ora continua a prendere abbrivio fino a `U_ABBRIVIO` = 1,6 m/s, circa 3,1 nodi (le virate dell'1b riescono da circa 2,9 nodi, 1.0.43), e intanto la vela si regola invece di sbattere. Ipotesi nostra.
+- **B2. Chi taglierebbe fuori lascia la prua di partenza.** Dopo lo sparo, una barca vicina alla boa che, tenendo la prua di partenza, taglierebbe la linea fuori dall'estremo (scivola di lato di tan(bolina + 4°) metri per metro) passa alla guida generale. Prima, nei 18 casi rimasti dopo A e B1, la barca girava attorno alla boa per tutto il minuto.
+- **Provate e tolte:**
+  - un punto di rientro dietro la linea per chi era fuori dagli estremi: creava proprio il giro attorno alla boa;
+  - cedere al lasco quando la guida chiede di andare sottovento, per chi torna dopo un richiamo: le barche non partite salivano a 18 su 1440 sui semi 1-20 e i contatti quasi raddoppiavano.
+
+**Misurato** (Chromium, 4 regate, 2 livelli, 3 preparazioni):
+- **P1/P2, semi 1-20 (scelta): 0 barche non partite su 1440.**
+- **Semi 21-40 (conferma, mai guardati): 1 su 1440.** È la regata dei salti, esperti, 60 s, seme 40, Verde: parte in anticipo e, mentre deve tornare, cede a Rossa che va di bolina e si allontana fino a 65 m oltre la linea. Con la 1.1.0 lo stesso seme partiva. **La soglia dichiarata (0) non è raggiunta sui semi di conferma**, e lo riporto così.
+- **P3, contatti in 80 regate intere** (bastone e raffiche, semi 1-40): 374 contro 332 della 1.1.0, cioè **+12,7%** (soglia 20%). Tutte le barche arrivano in 80 regate su 80.
+- **P4:** `collaudo_partenze.py` completo non sta nei 10 minuti di un comando qui. Il bastone è dentro tutte le soglie: richiami 0% e 1,7%, ritardo mediano 1,1-2,2 s, velocità mediana 4,8 e 4,6 nodi. Le raffiche si leggono nel giro su GitHub.
+- **P5:**
+  - `collaudo_avversari1b`: lo scenario 5 passa da 7 a **9 su 10** (soglia 9: verde), gli altri 10 su 10;
+  - verdi `collaudo_regole`, `collaudo_semaforo`, `collaudo_contatto_senza_colpa` (21 su 21) e `collaudo_regate` bastone e raffiche (18 arrivi su 18);
+  - non lanciati qui: `collaudo_giri_avversari` (40 regate) e i tornei.
+- Cambiano, come previsto, gli arrivi di tutte le regate e dei tornei: `arrivi_regate.py` non è più identico.
+
 ## Collaudi dopo il giro su GitHub della 1.1.0 (1 novembre 2026, ramo `pulizia`, nessuna versione nuova)
 
 Il primo giro completo su GitHub sul ramo `pulizia` (Chromium e Firefox, 65 collaudi per browser) ha dato più cadute di quelle che avevo lanciato in locale. Una per una:

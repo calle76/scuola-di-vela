@@ -242,7 +242,9 @@
     // l'avvicinamento resta alla logica generale, che sa fare i bordi.
     // 1.0.28: col vento girato la prua di partenza può portare fuori dall'estremo, e da lì non si rientrava più
     // (regata nei salti, seme 20): dopo il via chi è fuori dagli estremi usa la logica generale, che punta un punto dentro la linea
-    const fuori = R.t >= 0 && Math.abs(toWF(s.x, s.y)[0]) > LINE_HALF - 3;
+    // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B2): anche chi taglierebbe la linea fuori dagli estremi tenendo la prua di partenza (scivola di lato di
+    // tan(up + 4) metri per metro verso la linea, verso -x) lascia quella prua: vicino alla boa la barca dell'1b ci girava attorno per tutto il minuto
+    const [fx, fy] = toWF(s.x, s.y), fuori = R.t >= 0 && (Math.abs(fx) > LINE_HALF - 3 || (b.leg === 0 && fy > 0 && fx - Math.tan((ai.up + 4) * D2R) * fy < -(LINE_HALF - 2)));
     if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart) && !fuori){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
       const [bx, by] = toWF(s.x, s.y);
       const L = BOAT.length, lat = Math.tan((ai.up + 4) * D2R); // metri di lato per ogni metro guadagnato verso la linea, in bolina larga
@@ -316,13 +318,19 @@
     // 0.21.3: stessa soglia della regola «piantata» qui sotto (era 44° fisso): in partenza, fra 40° e 44°, nessuna delle due agiva e una barca
     // lenta che voleva virare oscillava per minuti attorno a 40° senza partire (collaudo_regate.py, regata nelle raffiche, seme 17)
     const ironsA = b.leg === 0 && !b.ocs ? 40 : 44;
-    if (gm === null && sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) >= ironsA && s.u < 1.1) desired = twd - side * 95;
+    // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B1): chi comincia a prendere abbrivio continua fino a U_ABBRIVIO. Con la soglia sola (1,1 m/s) la barca dell'1b
+    // poggiava, passava 1,1, orzava, rallentava sotto 1,1 e poggiava di nuovo, per minuti a 2,1 nodi: la sua virata riesce da circa 2,9 nodi (1.0.43)
+    const vuoleVirare = gm === null && sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) >= ironsA;
+    if (!vuoleVirare || s.u >= U_ABBRIVIO) b.abbrivio = false; else if (s.u < 1.1) b.abbrivio = true;
+    const abbrivio = !!b.abbrivio;
+    if (abbrivio) desired = twd - side * 95;
     // piantata nell'angolo morto: poggia e lascia sbattere la vela finché riparte
     const irons = A < ironsA && s.u < 0.6; // 44°: tra 40° e 44° una barca ferma restava sospesa senza ripartire; in partenza resta 40° (con 44° poggia troppo presto vicino alla linea), salvo chi torna dietro la linea dopo una partenza anticipata
     if (irons && gm === null) desired = twd - side * 80;
     muoviTimone(b.ctl, s, desired, ai, dt);
     let sheet = sheetFor(b.info, ai);
-    if (hold || irons) sheet = 1;
+    if ((hold && !abbrivio) || irons) sheet = 1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B1): per prendere abbrivio la vela si regola; con la vela che sbatte la barca dell'1b
+                                                  // non supera 2 nodi (sotto 1,1 m/s), non vira mai e scivolava al traverso per minuti, lontano dalla linea
     if (A > 158) sheet = Math.min(sheet, 0.42); // abbattuta controllata
     if (s.heel > 22) sheet = Math.min(1, sheet + 0.2);
     b.ctl.sheet += (sheet - b.ctl.sheet) * Math.min(1, dt * 3);
@@ -332,6 +340,8 @@
   // rotta e scarta solo all'ultimo; mai dentro l'angolo morto. Prima ogni avversario scartava qualsiasi barca davanti entro 14-22 m, anche
   // avendo la precedenza, orzando fin dentro l'angolo morto: 72 piantate su 124 avendo la precedenza (tests/misura_avversari.py, semi 1-20).
   const D_CEDE = 30, T_CEDE = 15, CEDE_A = 28, ULTIMO = 1.5; // ipotesi nostre: 30 m e 28° come la regola 10 degli avversari dell'1a; 15 s di preavviso
+  const U_ABBRIVIO = 1.6; // 1.1.1 (B1): m/s fino ai quali si prende abbrivio prima di virare (circa 3,1 nodi); ipotesi nostra
+  const V_AVV = 0.1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, A): m/s di avvicinamento sotto i quali, con gli scafi a più di una lunghezza, l'altra barca non è un pericolo; ipotesi nostra, scelta sui semi 1-20 (con 0,3: contatti +25%), confermata sui semi 21-40
   function cedeAvv1b(b, desired, twd, side, ai){
     const s = b.S, L = BOAT.length, vx = Math.sin(s.h * D2R) * s.u, vy = -Math.cos(s.h * D2R) * s.u;
     if (b.virando) return desired; // a virata in corso la si finisce
@@ -341,6 +351,7 @@
       const rx = o.S.x - s.x, ry = o.S.y - s.y, d = Math.hypot(rx, ry); if (d > D_CEDE) continue;
       const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
       const t = w2 > 1e-6 ? Math.max(0, -(rx * wx + ry * wy) / w2) : 0; // fra quanti secondi si è più vicini
+      if (d > L && -(rx * wx + ry * wy) / d < V_AVV && !(o === b.cedeA && t > 0)) continue; // 1.1.1: due barche che non si avvicinano (per esempio parallele alla stessa velocità) non si cedono: prima si cedevano a vicenda per sempre
       if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», torna su e urta
       bt = t; best = { o, d };
     }

@@ -59,3 +59,9 @@ La prima cosa della fermata 2 è misurarlo.
 - La guida degli avversari dell'1b vale in tutte le regate e nel torneo: **cambiano gli arrivi delle regate dei salti e dei giri e del torneo** (`arrivi_regate.py` non sarà più identico). È voluto, e si dichiara; la soglia del torneo si tara dopo (passo 4).
 - Cedere meno può portare più contatti fra avversari (P3).
 - B ha la causa ancora da trovare: se la correzione non è piccola, mi fermo e lo dico prima di scriverla.
+
+## 6. Fatto (1.1.1, 1 novembre 2026)
+
+Esito con i numeri nel `CHANGELOG.md`, alla voce 1.1.1. Sui semi 1-20 le barche non partite passano da 25 a 0 su 1440; sui semi 21-40 di conferma ne resta 1 su 1440, e la soglia 0 lì non è raggiunta. I contatti crescono del 12,7%, dentro la soglia del 20%.
+
+La correzione B è diversa da quella scritta al §3. La causa misurata non era la mira dopo il richiamo. Erano due cose: un'altalena attorno alla soglia di 1,1 m/s per prendere abbrivio (B1), e la prua di partenza che porta fuori dall'estremo vicino alla boa (B2). La versione del §3 l'ho provata e tolta: creava un giro attorno alla boa.
