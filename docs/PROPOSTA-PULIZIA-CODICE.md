@@ -98,3 +98,44 @@ Il risultato è quanti passi su 32 completa il pilota e con quanti semi, più i 
 1. **Dopo la pulizia, le lezioni e le prove possono restare per un po' più difficili o incomplete, finché non arriva il passo 3?** In pratica: si fa il push della versione pulita anche se, per esempio, 5 passi su 32 non si completano più sulla 1b, oppure lo si tiene fermo sul tuo PC finché le lezioni non sono riscritte? La misura 0 dirà quanti sono.
 
 Il resto (copia congelata della 1a, nomi senza «2», le due regate convertite e non buttate) lo propongo così come sta scritto. Se qualcosa non ti torna, dimmelo.
+
+**Risposta di Ale (1 novembre):** «non saprei, va bene come è più comodo per te». Scelta mia: il gioco online (GitHub Pages) viene da `main`, quindi se la pulizia rompe dei passi va in un **ramo a parte** e passa in `main` solo insieme alle lezioni riscritte (passo 3). La misura 0 dice che qualcosa si rompe (§7): quindi ramo a parte.
+
+## 7. Esito della misura 0 (1 novembre 2026)
+
+Come è stata fatta: una copia della pagina (`tests/sorgente.py`, `copia`) con una sola riga in più all'inizio di `step()`, `S.lv = 2`. Così ogni barca è quella dell'1b e il resto del gioco è identico. Il gioco vero non è stato toccato. Su questa copia ho lanciato gli stessi collaudi che uso sulla pagina di oggi, che ha la 1a; quella di oggi l'ho rilanciata per avere il confronto.
+
+**Pilota delle lezioni** (`collaudo_pilota_lezioni.py`, semi 1-10, 32 passi pratici, 640 corse a mani ferme, 0 errori della pagina):
+
+| | 1a (oggi) | 1b |
+|---|---|---|
+| Passi completati guidando 10 volte su 10 | 30 (più 5.8 9/10 e 6.3 4/4*) | 27 |
+| Passi mai completati guidando | 0 | **1**: 3.10 «Filetto sottovento», 0 su 10 |
+| Passi che si completano da soli, senza toccare niente (10 su 10) | 0 (6.3 6 su 10*) | **4**: 2.4 «Barra sottovento: si orza», 3.2 «Bolina», 5.2 «Prepararsi a virare», 6.2 «Assorbire una raffica» |
+
+\* Nella 6.3 «La scuffia» con la 1a la barca scuffia da sola 6 volte su 10, quindi il pilota guida solo nelle altre 4. Succede già oggi.
+
+Tempi medi dei passi con la 1b: quasi tutti simili, con qualche eccezione. «Raddrizzare» passa da 4,0 a 11,0 s, perché la raddrizzata dell'1b dura 10 s. «Risalire il vento» passa da 65 a 74 s.
+
+**Collaudo delle lezioni** (`collaudo_lezioni.py`, una corsa):
+- **1a:** OK, 18 passi; c'è un «non completato» nel primo tratto di «cazzare», già noto.
+- **1b:** FALLITO su 3 punti:
+  - «L5 prepararsi (bolina lanciata)»;
+  - «L6 raddrizzare» e «L6 raddrizzare partendo da dritta»: il collaudo aspetta 8 s, la raddrizzata dell'1b ne dura 10. È il collaudo che va adattato, non il gioco.
+
+**Prove con le medaglie** (`collaudo_fasce.py`; tempo mediano del pilota contro il limite dell'oro di oggi):
+
+| Prova | Oro oggi | 1a | 1b |
+|---|---|---|---|
+| 1 | 80 s | 79,0 | 79,2 |
+| 2 | 125 s | 124,5 | 124,4 |
+| 3 | 160 s | 156,8 | 158,7 |
+| 4 | 280 s | 276,0 | **285,8** (oro mancato; 1 angolo morto in ogni corsa) |
+| 5 | 300 s | 297,8 (24 su 24) | **302,4** (23 su 24: una non finita, 430 s nell'angolo morto col vento a 45°) |
+
+**Cosa vuol dire:**
+- Le lezioni restano quasi tutte percorribili.
+- Un passo si rompe (3.10) e quattro diventano banali.
+- Nelle prove 4 e 5 l'oro del pilota non basta più, e una corsa della 5 si blocca nell'angolo morto.
+
+Sono tutte cose del passo 3 (lezioni riscritte) e del passo 4 (medaglie). La pulizia non le corregge, ma le rende visibili a chi gioca: per questo la pulizia va nel ramo a parte. Le copie dei collaudi usate qui stanno nella cartella temporanea della sessione e non entrano nel repository.
