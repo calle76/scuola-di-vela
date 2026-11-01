@@ -334,6 +334,30 @@
       text: ["Non lasciare la barca, libera le scotte, raddrizza con le spalle al vento. La barca torna su di traverso con la vela che sbatte: cazza e riparti."] }
   ];
 
+  // B5, i salti di vento (1.1.8). Fonte riletta il 1 novembre 2026 (parafrasi): D. Dellenbaugh, «Windshift Rules of Thumb», Sailing World (colonna del giugno 1987,
+  //   ripubblicata in rete il 18 agosto 2020), https://www.sailingworld.com/how-to/windshift-rules-of-thumb/: di bolina, prima si capisce se il vento oscilla o gira
+  //   sempre dalla stessa parte; se oscilla si vira sugli scarsi e si resta sulle mure buone; prima della partenza si guarda con la bussola fra quali prue si oscilla
+  //   su ogni mura e se ne prende la media (esempio: 240-270°, media 255°; a 245° si è scarsi di 10° e si vira); se il vento gira sempre dalla stessa parte non si vira
+  //   sugli scarsi ma si va verso il salto; vicino alla boa, quando resta un solo salto (nell'esempio ogni oscillazione dura circa quattro minuti), lo si gioca come persistente.
+  //   Una sola fonte, di un allenatore, su una rivista: il testo lo dice. Non riletti (pagina rifiutata o non cercata): WindCheck, Raymarine (docs/archivio/PROPOSTA-SALTI-VENTO.md §1).
+  // Gioco: nel passo il vento oscilla come nelle regate (SALTI2, 1.0.28: 12-15° per parte, mezza oscillazione 60-75 s, periodi più corti delle fonti, dichiarato);
+  //   la scritta del vento sul mare dice il vento medio, la «Prua» del pannello la bussola. Il passo vale con due virate fatte da scarsi di almeno 7° (base.buone; con una sola chi virava a caso passava 6 volte su 10) e mai da buoni di 3° o più (base.daBuono: si ricomincia).
+  const LB5 = [
+    { title: "Il vento gira", ...PAUSE, zoom: 0.8,
+      text: ["Il vento non cambia solo forza: cambia anche direzione, spesso avanti e indietro. In un esempio di un allenatore, di bolina la prua va da 240° a 270° e ogni oscillazione dura circa quattro minuti. In questa lezione il vento oscilla di 12-15° per parte, più in fretta.",
+             "Se il vento gira verso la tua prua, per restare di bolina devi poggiare: sei <em>scarso</em>. Se gira verso poppa puoi orzare: sei <em>buono</em>. Lo stesso salto che è scarso su una mura è buono sull'altra."] },
+    { title: "Vira sugli scarsi", ...PAUSE, zoom: 0.8,
+      text: ["Se il vento oscilla, di bolina conviene <em>virare quando sei scarso</em>: sulle altre mure quel salto è buono, e la prua punta più verso il vento, cioè verso la boa.",
+             "Per accorgertene usa la bussola: la <em>Prua</em>, nel pannello. Tenendo la bolina guarda fra quali numeri va e prendine la media. Quando la prua si allontana dal vento della media di qualche grado (nell'esempio dell'allenatore, una decina) sei scarso: vira.",
+             "Due eccezioni. Se il vento gira sempre dalla stessa parte non si vira sugli scarsi: si va verso il salto. E vicino alla boa, quando resta un salto solo, si gioca come se il vento non dovesse più tornare."] },
+    { title: "Vira sullo scarso", tiller: true, autoTrim: true, hud: 3, shifts: "osc", rose: true, hintKind: "sail",
+      text: ["Il vento medio arriva da nord (lo dice la scritta del vento). Mettiti di bolina, guarda la Prua per un po', e quando sei scarso di quasi una decina di gradi rispetto alla media <em>vira</em>. Poi tieni la bolina sulle altre mure e aspetta il prossimo scarso: due virate così. Se viri da buono, si ricomincia. La vela si regola da sola."],
+      cond: (I, S, B) => (B.buone || 0) >= 2 && !B.daBuono && I.twa >= 35 && I.twa <= 75 && I.kn > 2, hold: 3,
+      done: "Due virate sugli scarsi: ogni volta, sulle altre mure, lo stesso salto ti ha fatto puntare più verso il vento." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 3, shifts: "osc", hintKind: "tt", final: true,
+      text: ["Il vento oscilla: con la bussola trova la prua media, vira quando sei scarso e resta sulle mure buone. Se il vento gira sempre dalla stessa parte, o vicino alla boa, si fa diverso."] }
+  ];
+
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -377,7 +401,16 @@
       esame: [["Spalle al vento", "Perché, raddrizzando, l'albero deve restare sottovento?", "Così la vela sbatte libera e il vento non ci entra sotto", ["Così la barca va più veloce", "Così la deriva non si rompe", "Non deve: va sopravento"], "Con l'albero sopravento il vento entra sotto la vela e la barca si rovescia di nuovo."],
               ["Spalle al vento", "Un allenatore dice che, fatta bene, dalla scuffia alla barca che naviga passano circa…", "15-20 secondi", ["2 secondi", "5 minuti", "Un'ora"], "Fatta bene, la manovra dura 15-20 secondi."],
               ["Raddrizza e riparti", "Hai raddrizzato: la barca è ferma di traverso e la vela sbatte. Che cosa fai?", "Cazzo e riparto", ["Premo di nuovo A", "Viro subito", "Lasco tutto"], "Al traverso, cazzando finché i filetti sono dritti, la barca riparte."],
-              ["Raddrizza e riparti", "In questo gioco, per raddrizzare la barca scuffiata…", "premo A e aspetto dieci secondi", ["premo Z", "cazzo tutta la vela", "aspetto senza toccare niente"], "Il tasto A raddrizza la barca in dieci secondi."]] }
+              ["Raddrizza e riparti", "In questo gioco, per raddrizzare la barca scuffiata…", "premo A e aspetto dieci secondi", ["premo Z", "cazzo tutta la vela", "aspetto senza toccare niente"], "Il tasto A raddrizza la barca in dieci secondi."]] },
+    { name: "Lezione B5", title: "I salti di vento", steps: LB5, nascosta: true, gruppo: "B", desc: "Il vento oscilla: con la bussola si vede quando si è scarsi, e di bolina si vira sugli scarsi.",
+      quiz: [["Di bolina il vento gira verso la tua prua e devi poggiare per tenere l'andatura. Come sei?", "Scarso", ["Buono", "In poppa", "Nell'angolo morto"], "Vento che gira verso la prua: per restare di bolina si poggia, si è scarsi."],
+             ["Il vento oscilla avanti e indietro. Di bolina quando conviene virare?", "Quando sei scarso", ["Quando sei buono", "Ogni dieci secondi", "Mai"], "Sulle altre mure lo stesso salto è buono: si vira sugli scarsi e si resta sulle mure buone."],
+             ["Con quale strumento ti accorgi di essere scarso?", "La bussola: la prua confrontata con la sua media", ["Il contachilometri", "La scotta", "Il filetto sopravento"], "Si guarda fra quali prue si oscilla su una mura e se ne prende la media: lontani dalla media verso il basso, si è scarsi."],
+             ["Il vento gira sempre dalla stessa parte. Che cosa fai?", "Non viro sugli scarsi: vado verso il salto", ["Viro a ogni scarso", "Vado dalla parte opposta al salto", "Mi fermo ad aspettare"], "Se il vento gira sempre dalla stessa parte non torna indietro: si va verso il salto."]],
+      esame: [["Il vento gira", "Lo stesso salto di vento, sulle altre mure, è…", "il contrario: scarso su una mura, buono sull'altra", ["uguale su tutte e due le mure", "sempre scarso", "sempre buono"], "Un salto che è scarso su una mura è buono sull'altra."],
+              ["Vira sugli scarsi", "Di bolina la prua oscilla fra 240° e 270° su una mura. Qual è la prua media?", "255°", ["240°", "270°", "300°"], "La media fra la prua più alta e la più bassa: 255°."],
+              ["Vira sullo scarso", "Il vento oscilla e sei scarso di una decina di gradi. Che cosa fai?", "Viro", ["Orzo fino all'angolo morto", "Lasco tutta la vela", "Continuo fino alla boa"], "Con il vento che oscilla si vira sugli scarsi: sulle altre mure il salto è buono."],
+              ["Vira sugli scarsi", "Sei vicino alla boa e resta un solo salto. Come lo giochi?", "Come se il vento non dovesse più tornare", ["Viro a ogni scarso", "Mi fermo", "Vado in poppa"], "Quando resta un salto solo, lo si gioca come un salto persistente."]] }
   ];
 
   // ---- prove ----

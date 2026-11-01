@@ -17,6 +17,37 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.8 — Lezione B5 «I salti di vento» (nascosta nel menu, ramo `pulizia`): il gruppo B è completo
+
+Quinta lezione del gruppo B, undicesima nel gioco (`LESSONS[10]`, `nascosta: true`).
+
+**Fonte, letta oggi prima del testo:** Dellenbaugh, «Windshift Rules of Thumb», *Sailing World* (nuova **F41**). La proposta delle lezioni diceva che per la B5 mancava una fonte sulla bolina nei salti, perché si citava F7, che parla delle andature portanti. In realtà quella fonte c'era già in `archivio/PROPOSTA-SALTI-VENTO.md`, senza numero: ora è riletta e numerata. È una sola fonte, di un allenatore su una rivista, e il testo lo dice («in un esempio di un allenatore»). Due fonti della stessa proposta non sono state rilette: WindCheck, che ha rifiutato la lettura, e la guida di Raymarine. Il testo non usa niente di loro.
+
+**La lezione:** due pagine di teoria («Il vento gira», «Vira sugli scarsi»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Campo nuovo dei passi, `shifts`:** accende i salti di vento delle regate dell'1b (`SALTI2`, 1.0.28: 12-15° per parte, una mezza oscillazione ogni 60-75 s). Il testo dice che nel gioco il vento oscilla più in fretta che nell'esempio della fonte.
+- **Passo pratico «Vira sullo scarso»:** il vento medio arriva da nord, come dice la scritta del vento, e lo scarso si legge con la «Prua» del pannello. La vela si regola da sola. Il passo vale con **due virate fatte da scarsi di almeno 7°**, poi 3 s di bolina sopra i 2 nodi. Una virata fatta da buoni di almeno 3° fa fallire il passo: compare un avviso e si preme Ricomincia. Contano solo le virate volute, cioè con la barra verso il boma negli ultimi 4 s, e partite da bolina, cioè fra 35° e 75° dal vento negli ultimi 4 s.
+
+**Come si è arrivati alla condizione (soglie cambiate dopo aver visto i numeri, ecco quali):**
+1. Prima stesura: una virata da scarsi di almeno 5°. Il pilota bravo passava 10 volte su 10, ma anche un pilota che vira a caso ogni 20 s passava 10 volte su 10: il passo non distingueva niente.
+2. Soglia a 7° e virata da buoni che fa fallire. Chi vira a caso passava ancora 6 volte su 10, e il pilota bravo passava solo 8 volte su 10. La causa era nel pilota: decideva prima di essere di bolina e virava su uno «scarso» letto male. È stato corretto, e ora decide dopo 3 s di bolina tenuta, come chiede il testo. Nello stesso giro sono state aggiunte le due regole «virata voluta» e «partita da bolina».
+3. Una virata non bastava ancora: chi vira a caso passava 6 volte su 10. Con **due virate** le attese erano state scritte prima di misurare: pilota bravo almeno 9 su 10, chi vira a caso molto sotto la metà.
+
+**Misurato (versione finale):**
+
+| Pilota | semi 1-10 | semi 11-20 (conferma) |
+|---|---|---|
+| bravo (vira quando legge 10° di scarso) | 10 su 10, in media 105,1 s | 10 su 10, 104,7 s |
+| a mani ferme, 30 s (collaudo) e 120 s | 0 su 10 | 0 su 10 |
+| vira a caso ogni 20 s | 0 su 10 | **1 su 10** |
+| vira quando è buono di 8° | 0 su 10 | 0 su 10 |
+
+- Il passo è lungo, circa due minuti, perché bisogna aspettare due scarsi.
+- Lasciata a sé per 120 s, la barca non vira mai da sola: 0 virate su 20 semi.
+- `collaudo_pilota_lezioni.py --solo 11` per l'undicesima lezione.
+- `collaudo_pannello_lezioni`: 72 passi su 72 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Fisica identica al bit. Le regate non cambiano: il campo `shifts` agisce solo nei passi delle lezioni.
+
 ## 1.1.7 — Lezione B4 «La raddrizzata lunga» (nascosta nel menu, ramo `pulizia`)
 
 Quarta lezione del gruppo B, decima nel gioco (`LESSONS[9]`, `nascosta: true`).

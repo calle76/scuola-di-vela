@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.1.7"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.1.8"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -477,6 +477,7 @@
     if (st.noRight && S.capsized) freshState(0, 0, 90, 0.4);
     // 1.1.5: la barca parte ferma nell'angolo morto, con la prua a 10° dal vento e la vela tutta lascata (lezione B2, spingere il boma)
     if (st.startIrons){ Object.assign(S, { h: norm360(env.twd + (S.boomSide < 0 ? 10 : -10)), u: 0, vl: 0, r: 0, heel: 0, heelRate: 0, capsized: false }); ctl.sheet = 1; ctl.tiller = 0; }
+    if (st.shifts) setShifts(st.shifts); // 1.1.8: salti di vento nel passo (lezione B5); freshState li spegne
     if (st.startCapsized && !S.capsized){ Object.assign(S, { capsized: true, indietro: 0, capCause: "heel", capSide: S.boomSide, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); }
     base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized };
     S.markReached = false;
@@ -784,6 +785,12 @@
       if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.barraLee = (base.barraLee || 0) + dt;
       if (S.tilAttivo && Math.abs(ctl.tiller) > 0.8) base.maiusc = (base.maiusc || 0) + dt;
       if (S.pushing) base.push = (base.push || 0) + dt; // 1.1.5: secondi col boma spinto (tasto Z) // 1.1.4: barra oltre 36°, cioè con Maiusc (la sola freccia si ferma a 35°) // solo la barra mossa adesso: quella rimasta dal passo prima non conta
+      if (shiftSt){ // 1.1.8 (lezione B5): base.scarso = di quanti gradi il vento è girato verso la prua rispetto al medio, letto l'ultima volta in bolina; base.buone = virate fatte da scarsi di almeno 7°; base.daBuono = una virata fatta da buoni di almeno 3°, che fa fallire il passo fino a Ricomincia; contano solo le virate cominciate da bolina (barca fra 35° e 75° dal vento negli ultimi 4 s) e volute (barra verso il boma negli ultimi 4 s: lasciata a sé, la barca orziera vira da sola) (misurato: senza, chi vira a caso completava 10 volte su 10)
+        const a = norm180(local.twd - S.h);
+        if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.tBarraLee = simTime;
+        if (Math.abs(a) >= 35 && Math.abs(a) <= 75){ base.scarso = -Math.sign(a) * norm180(local.twd - env.twd); base.tScarso = simTime; }
+        if (S.tacks > (base.tacksVisti ?? base.tacks)){ const sc = simTime - (base.tScarso ?? -1e9) < 4 && simTime - (base.tBarraLee ?? -1e9) < 4 ? base.scarso : 0; if (sc >= 7) base.buone = (base.buone || 0) + 1; else if (sc <= -3 && !base.daBuono){ base.daBuono = true; toast("Hai virato da buono: sulle altre mure ora sei scarso. Premi Ricomincia."); } base.tacksVisti = S.tacks; }
+      }
       if (base.shPrev !== undefined && ctl.sheet > base.shPrev && local.tws > env.tws * 1.12) base.lasca = (base.lasca || 0) + ctl.sheet - base.shPrev;
       base.shPrev = ctl.sheet;
       if (st.cond(readI(), S, base)){ holdT += dt; if (holdT >= (st.hold || 0.3)) completeStep(); } else holdT = 0;

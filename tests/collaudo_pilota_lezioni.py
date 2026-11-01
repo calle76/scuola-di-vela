@@ -55,6 +55,7 @@ const PASSI = {
   "7:Una virata con la barra in fondo": { lim: 40, f: C => virare(C, true) },
   "8:Spingi il boma e riparti":      { lim: 40,  f: C => spingiBoma(C) },
   "10:Raddrizza e riparti":          { lim: 60,  f: C => poi(premi(C, "a"), aspettaDritta(C), colpiScotta(C, "ok")) },   // 1.1.7, lezione B4: «premi A e aspetta; poi cazza finché i filetti sono dritti»
+  "11:Vira sullo scarso":            { lim: 300, aspetta: true, f: C => scarsi(C) },                                // 1.1.8, lezione B5: «quando sei scarso di quasi una decina di gradi rispetto alla media vira»: il pilota vira quando legge 10°
   "9:La rotta nella raffica":        { lim: 120, aspetta: true, f: C => rottaRaffica(C) },                          // 1.1.6, lezione B3: «tieni la rotta nella raffica: lasca un poco e piccoli colpi di barra; passata, cazza»                                          // 1.1.5, lezione B2: «Z e barra verso il boma; al traverso molla Z, centra e cazza»                                       // 1.1.4, lezione B1: «vira tenendo Maiusc con la freccia verso il boma»
   "5:Una virata che non riesce":     { lim: 120, f: C => nonRiesce(C) },
   "5:Risalire il vento":             { lim: 180, f: C => bordeggia(C) },
@@ -181,6 +182,15 @@ function* spingiBoma(C){                                                  // lez
   yield* tieni(C, k, () => twaV(C) >= 80, 30);
   key("z", false); centra();
   yield* guida(C, { twa: 90, centra: true, regola: true, resta: true });
+}
+function* scarsi(C){                                                     // lezione B5: bolina a 50° letti; vento medio da nord (scritto sul mare): scarso = prua oltre 50° dal nord
+  const inBolina = stabile(() => Math.abs(n180(prua(C, 50) - sv.S.h)) <= 4, 3);   // «mettiti di bolina, guarda la Prua per un po'»: decide solo dopo 3 s di bolina tenuta
+  for (let n = 0; n < 5000; n++){
+    sterza(C, prua(C, 50), 4);
+    const sc = Math.abs(n180(sv.S.h)) - 50 + C.bias;                      // quanto la prua è più lontana dal vento medio della prua media
+    if (inBolina() && sc >= 10 && kn() > 2 && Math.abs(sv.S.r) < 3){ suTutti(); yield* virare(C); continue; }
+    yield C.rt;
+  }
 }
 function* aspettaDritta(C){ while (sv.S.capsized) yield C.rt; }          // lezione B4: «aspetta che la barca torni dritta»
 function* rottaRaffica(C){                                                // lezione B3: la rotta del suggerimento, lascando quando sbanda e cazzando quando i filetti sbattono
@@ -379,7 +389,7 @@ async def main():
     semi = range(1, 4) if "--veloce" in a else range(1, 21)
     if "--semi" in a: x, y = a[a.index("--semi") + 1].split("-"); semi = range(int(x), int(y) + 1)
     so = a[a.index("--solo") + 1] if "--solo" in a else None   # 1.1.7: «--solo 10» o «--solo 1,10» per la decima; «--solo 123» resta una cifra per lezione
-    lezioni = ([int(c) - 1 for c in so.split(",")] if "," in so or so == "10" else [int(c) - 1 for c in so]) if so else list(range(10))   # 1.1.4-1.1.7: dalla settima alla decima le lezioni B1-B4 (nascoste nel menu)
+    lezioni = ([int(c) - 1 for c in so.split(",")] if "," in so or so in ("10", "11") else [int(c) - 1 for c in so]) if so else list(range(11))   # 1.1.4-1.1.8: dalla settima all'undicesima le lezioni B1-B5 (nascoste nel menu)
     pagina = a[a.index("--pagina") + 1] if "--pagina" in a else str(ROOT / "index.html")
     ris, errs = await corse(pagina, semi, lezioni)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -390,7 +400,7 @@ async def main():
     print(f"\nmisurato: {len(passi)} passi pratici, {corse_mani} corse a mani ferme, errori della pagina {len(errs)} {errs[:2]}")
     print("da guardare:" if problemi else "da guardare: niente")
     for q in problemi: print("  - " + q)
-    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1, 1, 1)[l] for l in lezioni) and not errs
+    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1, 1, 1, 1)[l] for l in lezioni) and not errs
     print("ESITO:", "NON VALIDO (passi mancanti o errori della pagina)" if not valido else ("OK" if not problemi else "DA GUARDARE"))
     sys.exit(2 if not valido else 0)   # i casi «da guardare» sono un rapporto, non un fallimento dello script: si leggono (lancia_tutti.sh li mostra)
 
