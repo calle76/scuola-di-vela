@@ -90,3 +90,29 @@ Scelta non scritta al §3: Node è fissato a 20.19.2 esatto e non a «20», per 
 - oppure a mano, con il pulsante.
 
 Le notti senza commit si fermano dopo il controllo, che dura pochi secondi. GitHub spegne i giri notturni se il repository resta fermo 60 giorni: si riaccendono dalla scheda Actions.
+
+## 9. Primo giro su GitHub (1 novembre 2026, lanciato a mano da Ale, commit 2cfdc06)
+
+Confronto con il giro completo di Ale sul PC: Chromium in `tests/output/lancia_tutti/20261101-031157`, Firefox in `20261101-041521`. Le uscite di GitHub sono negli allegati, scaricati da Ale.
+
+- **G5 durata: 23 minuti** dal via alla fine, i due browser insieme. I pezzi durano da 9 a 23 minuti. Soglia 60: rispettata.
+- **G2 fisica:** `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` OK in tutti e due i browser.
+- **G6:** passo verde in tutti gli 8 pezzi, quindi il giro non ha scritto nulla nel repository.
+- **G1 stessi esiti:** su 64 collaudi per browser, i fallimenti già noti cadono uguali su GitHub e sul PC:
+  - Chromium: avversari1b scenario 5 (7 su 10), partenze, virate2 e competizione misura;
+  - Firefox: gli stessi, più torneo misura, contatto_vero (0,29 m) e giri_avversari G1 (103 su 104).
+  - I numeri delle regate sono identici, per esempio partenze 6,7% / 5,0% in Chromium e 6,7% / 1,7% in Firefox su tutti e due i computer.
+
+  **Differenze: 4 collaudi su 64**, nessuna del gioco:
+  1. `collaudo_moviola.py` (tutti e due i browser): **errore del collaudo**. Apriva il gioco da un percorso fisso, `/home/callle/scuola-di-vela`, che su GitHub non esiste. Vuol dire anche che, lanciato da una copia (le controprove), collaudava il gioco originale. Corretto: ora il percorso parte dalla cartella del collaudo. Rilanciato qui: OK. Stesso difetto corretto in `misura_partenze_torneo.py`, che non è nel giro.
+  2. `collaudo_torneo.py (misura)` Chromium: fallito sul PC (C11, uscita dal menu 3,00 s contro 2 s), OK su GitHub.
+  3. `collaudo_registrazione.py` Firefox: E2 fallito su GitHub (+5,2% contro 3%), OK sul PC (+0,1%).
+  4. `collaudo_riquadro_bandiere.py` Firefox: Q7 fallito sul PC (0,330 ms, 3,8%), OK su GitHub (0,130 ms, 4,0%).
+
+  Le differenze 2-4 sono tutte **misure di tempo**: secondi dell'orologio vero o costo del calcolo. Dipendono dal carico del computer in quel momento, quindi cambiano da un giro all'altro su tutti e due i computer. Le soglie non sono state toccate.
+- **Altre differenze nelle uscite, con collaudi verdi:** 1-2 pixel nei riquadri del libretto (365 contro 363); tempi di gioco di 1 s nel giro di boa; qualche centesimo nel boma spinto; un byte nel file del registratore. Vengono da caratteri disegnati in modo leggermente diverso e da collaudi che misurano tempi veri. Nessuna è fuori soglia.
+- **G3 (tre giri uguali) e G4 (rosso su un errore messo apposta): non ancora fatti.**
+
+Proposta per la prossima fermata, da approvare: un elenco di «fallimenti noti», così il giro diventa rosso solo per un fallimento nuovo. I collaudi a misura di tempo (C11, E2, Q7 e simili), su GitHub, si segnano «da controllare» invece che «fallito», senza cambiare le soglie.
+
+Le azioni di GitHub (`checkout@v4` e le altre) danno un avviso: Node 20 è superato e GitHub le fa già girare con Node 24. Non le ho aggiornate: l'avviso non cambia gli esiti, e un numero di versione sbagliato fermerebbe il giro. Si aggiornano in una fermata a parte.

@@ -1,7 +1,7 @@
 # Misura osservazioni 59-62 (28 ott 2026): partenza fuori dagli estremi e avversari alla boa 1, nel torneo dell'1b col pilota.
 import asyncio, json, pathlib, sys, os, statistics
 from playwright.async_api import async_playwright
-BASE = (pathlib.Path("/home/callle/scuola-di-vela/index.html")).as_uri()
+BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
