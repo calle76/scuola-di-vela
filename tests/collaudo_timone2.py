@@ -59,6 +59,7 @@ async def main():
 
         # 1-2: velocità della barra
         await apri(pg, 10, 2)
+        await pg.evaluate("__sv.fast(0)")   # 1.1.0: fermo il ciclo vero del browser, così fra tasto premuto e passi non scorrono fotogrammi veri (su GitHub in Firefox la barra arrivava a 0,853 invece di 0,8)
         t2 = await tieni(pg, ["ArrowRight"], 1.0); check(abs(t2 - 35 / 45) < 0.001, f"livello 2, freccia per 1 s: barra {t2:.3f} (attesa {35/45:.3f}, cioè 35°: si ferma lì)")
         await pg.evaluate("__sv.ctl.tiller = 0")
         t3 = await tieni(pg, ["Shift", "ArrowRight"], 0.5); check(abs(t3 - 0.8) <= 1.6 / 60 + 0.005, f"livello 2, Maiusc + freccia per 0,5 s: barra {t3:.3f} (attesa 0,8)")

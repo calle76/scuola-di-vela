@@ -187,7 +187,9 @@ async def main():
         async def altre(base):
             c, g, e = await pagina(b, base); o = await g.evaluate(ALTRE, [20, 100]); await c.close(); return o
         nuovo = await altre(ROOT); vecchio = await altre(rif)
-        chk("Q6a 20 regate (1a, 1b, salti di vento e regata dei giri): arrivi, penalità e posizioni finali identici al bit alla 1.0.69", nuovo == vecchio and len(nuovo) == 20)
+        # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e cambiano per scelta (pulizia del codice): si confrontano le 10 già dell'1b
+        uguali = [j for j in range(20) if j % 4 >= 2]
+        chk("Q6a le 10 regate che erano già dell'1b (salti di vento e regata dei giri): arrivi, penalità e posizioni finali identici al bit alla 1.0.69", len(nuovo) == 20 and len(vecchio) == 20 and all(nuovo[j] == vecchio[j] for j in uguali))
         async def schermate(base):
             o = {}
             for i in (0, 2):
@@ -200,7 +202,7 @@ async def main():
           const conf = async (u, v) => { const A = await carica(u), B = await carica(v); let fuori = 0, dentro = 0; for (let y = 0; y < A.height; y++) for (let x = 0; x < A.width; x++){ const k = 4 * (y * A.width + x); if (A.data[k] !== B.data[k] || A.data[k + 1] !== B.data[k + 1] || A.data[k + 2] !== B.data[k + 2]){ const zona = (x > A.width - 330 && y > A.height - 130) || (x > A.width - 100 && y < 90) || (x < 130 && y > 30 && y < 56) || (x > A.width - 260 && y > 80 && y < 104) || (Math.abs(x - A.width / 2) < 250 && y > 230 && y < 540); if (zona) dentro++; else fuori++; } } return [fuori, dentro]; };
           return [await conf(a0, b0), await conf(a2, b2)]; }""", [sn[0], sn[2], sv_[0], sv_[2]])
         await ctxp.close()
-        chk("Q6b la schermata a -30 s della regata 1a e della 1b è identica al pixel alla 1.0.69 fuori dalle zone del vento (in basso a destra, dov'è ora; in alto a destra, dov'era), delle vecchie scritte «Q vista» e «1 / 2 zoom» della vecchia spia in alto a sinistra e dell'area attorno alla barca (frecce senza nomi, senza banderuola) (pixel diversi fuori / dentro quelle zone: 1a %s, 1b %s; il metro deve vedere almeno una differenza nelle zone)" % (diff[0], diff[1]), diff[0][0] == 0 and diff[1][0] == 0 and diff[0][1] > 0 and diff[1][1] > 0)
+        chk("Q6b la schermata a -30 s della regata 1a e della 1b è identica al pixel alla 1.0.69 fuori dalle zone del vento (in basso a destra, dov'è ora; in alto a destra, dov'era), delle vecchie scritte «Q vista» e «1 / 2 zoom» della vecchia spia in alto a sinistra e dell'area attorno alla barca (frecce senza nomi, senza banderuola) (pixel diversi fuori / dentro quelle zone: regata 0 %s, solo riportata dalla 1.1.0 perché era della barca dell'1a e cambia per scelta; regata 2 %s; il metro deve vedere almeno una differenza nelle zone)" % (diff[0], diff[1]), diff[1][0] == 0 and diff[1][1] > 0)
         # ---- Q7 ----
         # 1.0.70: una sola misura era troppo rumorosa (0,05 / 0,06 / -0,08 / 0,345 ms in quattro giri, rumore fra blocchi 6 ms): ora 5 ripetizioni in pagine nuove e conta la MEDIANA delle differenze; le soglie (0,2 ms o 3%) non sono cambiate
         diffs = []; pct = []; mns = []; err7 = None

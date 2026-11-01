@@ -153,7 +153,9 @@ async def main():
                 res = []
                 await pg.evaluate(PROVA, [10, 2, 1, 11, 90, "fisso:0.5", 10, None])   # corsa di riscaldamento scartata: la prima in una pagina nuova di Firefox differisce all'ultima cifra anche con lo stesso codice (visto: rif = ora2 ma ≠ ora)
                 for kn, ang in ((6, 45), (10, 90), (15, 135), (10, 150)):   # (10, 170) non è ripetibile in Firefox nemmeno con lo stesso codice: sostituito con 150, dichiarato
-                    res.append(await pg.evaluate(PROVA, [kn, 2, 1, 11, ang, "fisso:0.5", 40, None]))
+                    # 1.1.0: senza raffiche (prima 1). La navigazione libera accende sempre i salti di vento e i numeri casuali si consumano in un altro
+                    # ordine, quindi le raffiche nascono altrove: con le raffiche le corse differivano di poco, senza sono identiche al bit (misurato il 1 novembre)
+                    res.append(await pg.evaluate(PROVA, [kn, 2, 0, 11, ang, "fisso:0.5", 40, None]))
                 altre = await pg.evaluate(ALTRE, [5, 1])
                 res.append([o for j, o in enumerate(altre) if j % 4 >= 2])   # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e ora cambiano per scelta: si confrontano solo le altre due
                 r_[nome] = res; await ctx.close()

@@ -50,7 +50,7 @@ async def main():
         pg = await pagina("#collaudo-lab")
         # 4. un cursore cambia la barca: navigazione libera, prua tenuta al traverso, scotta automatica, stesso seme
         vel = """(k2) => { const r = document.getElementById("labR_hullScale"); r.value = k2; r.dispatchEvent(new Event("input"));
-          const sv = __sv; sv.fast(0); sv.openItem("free"); __seed(5); const S = sv.S; S.u = 1; S.vl = 0;
+          const sv = __sv; sv.fast(0); sv.openItem("free"); sv.setShifts(null); __seed(5); const S = sv.S;   // 1.1.0: la navigazione libera ha sempre i salti di vento, qui si misura a vento fermo S.u = 1; S.vl = 0;
           for (let n = 0; n < 60 * 30; n++){ S.h = (sv.twd + 90) % 360; S.r = 0; sv.ctl.tiller = 0; sv.ctl.sheet = sv.autoSheet(); sv.run(1 / 60, 1); }
           return [BOAT.hullScale, S.u * 1.943844]; }"""
         a, bb, c = [await pg.evaluate(vel, k) for k in (1, 0.5, 1)]

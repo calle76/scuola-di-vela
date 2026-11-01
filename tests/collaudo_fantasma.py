@@ -30,10 +30,11 @@ async def main():
         await pg.goto(URL); await pg.wait_for_timeout(300)
         await pg.evaluate("__sv.openItem(['m',0])"); await pg.click("#c")
         await pg.keyboard.down("ArrowDown"); await pg.wait_for_timeout(900); await pg.keyboard.up("ArrowDown")
-        await pg.evaluate("__sv.fast(10)")
-        for i in range(20):
-            await pg.wait_for_timeout(1000)
-            if await pg.is_visible("#done"): break
+        # 1.1.0: la barca dell'1b orza quando sbanda e, con la barra ferma, la prua gira piano e la barca non arriva più (prima, con l'1a, andava dritta
+        # da sola): il pilota tiene la prua di partenza con la barra, a passi fissi (fino a 300 s simulati)
+        await pg.evaluate("""() => { const sv = __sv; sv.fast(0); const h0 = sv.S.h; const done = document.getElementById('done');
+          for (let n = 0; n < 300 * 60 && done.hidden; n++){ const e = ((sv.S.h - h0 + 540) % 360) - 180; sv.ctl.tiller = Math.max(-1, Math.min(1, e / 20 + sv.S.r * 0.02)); sv.run(1 / 60, 1); if (n % 30 === 0) sv.panel && sv.panel(); } }""")
+        await pg.wait_for_timeout(500)
         fatta = await pg.is_visible("#done")
         print("prova 1 completata:", fatta, "|", await pg.inner_text("#doneText") if await pg.is_visible("#done") else "")
         g = await pg.evaluate("Object.keys(__sv.ghosts()).map(k=>k+':'+__sv.ghosts()[k].length+' campioni')")

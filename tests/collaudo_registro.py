@@ -161,7 +161,8 @@ async def main():
             await pg.evaluate("""() => { window.__ct = 0; let last = null; clearInterval(window.__ctw);
               window.__ctw = setInterval(() => { const t = __sv.toast; if (t && t !== last && t.startsWith('Contatto')) window.__ct++; last = t; }, 20); }""")
             trovato = False
-            for _ in range(120):   # 17 ottobre 2026: era 60 (30 s reali). Dalla 1.0.17 gli avversari si scansano meglio anche dal giocatore: inseguirne uno richiede più tempo
+            for _ in range(240):   # 17 ottobre 2026: era 60 (30 s reali). Dalla 1.0.17 gli avversari si scansano meglio anche dal giocatore: inseguirne uno richiede più tempo.
+                                   # 1.1.0: era 120. La regata 0 ha ora gli avversari dell'1b (cedono) e il contatto fra scafi: su GitHub 60 s veri non sono bastati
                 pos = await pg.evaluate("(() => { const me = __sv.R.boats[0].S; let best = null, d = 1e9; for (const o of __sv.R.boats.slice(1)){ const dd = Math.hypot(o.S.x - me.x, o.S.y - me.y); if (dd < d){ d = dd; best = [o.S.x, o.S.y]; } } return best; })()")
                 await pg.evaluate(VAI, [[pos], "free"]); await pg.wait_for_timeout(500)
                 if await pg.evaluate("__sv.reg.contacts > 0"): trovato = True; await pg.wait_for_timeout(1500); break
