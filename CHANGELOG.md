@@ -17,6 +17,26 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.7 — Lezione B4 «La raddrizzata lunga» (nascosta nel menu, ramo `pulizia`)
+
+Quarta lezione del gruppo B, decima nel gioco (`LESSONS[9]`, `nascosta: true`).
+
+**Fonti**, scritte nel codice sopra la lezione:
+- **Il video di un allenatore** (19 ottobre 2026) è l'unica fonte per la barca con una persona sola. È divulgativo e il testo lo dice («un allenatore, in un video»). **La trascrizione non è salvata nel progetto**: ho usato il riassunto di `docs/archivio/PROPOSTA-RADDRIZZATA.md`. Dice: schiena al vento, albero sottovento, vela che sale e sbatte libera, 15-20 s dalla scuffia alla barca che naviga.
+- **La dispensa di una scuola di vela** (`fonti-pdf/Dispensa-Scuola-Vela-2019.pdf`, pp. 24-25, riletta oggi): non si lascia la barca; con le vele cazzate la barca non si raddrizza; spalle al vento; piedi vicino allo scafo. Con l'equipaggio insegna anche a tenere la barca con la prua al vento. **Questo il gioco non lo fa, e il testo lo dice.** È una fonte informale: per decisione di Ale non diventa domande di quiz, e infatti quiz ed esame si reggono sul video e sul gioco.
+- W4 e W5 (`DUBBI-E-RICERCHE.md` §3), due fonti deboli: le scotte vanno libere.
+
+**La lezione:** due pagine di teoria («Prima di raddrizzare», «Spalle al vento»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Passo pratico:** «Raddrizza e riparti». La barca parte scuffiata, con 12 nodi e raffiche leggere. Il passo vale se la barca, dopo essere stata raddrizzata, va fra 60° e 120° dal vento ad almeno 2,5 nodi con i filetti dritti, per 1 s.
+- **Trovato misurando:** premendo solo A e poi più niente, con la vela che sbatte, la barca arriva da sola a 2,4-3,2 nodi in 30 s (semi 1-10). Per questo il passo chiede anche i filetti dritti, e una risposta sbagliata dell'esame, «aspetto che riparta da sola», è stata cambiata: nel gioco non era del tutto falsa.
+
+**Misurato:**
+- pilota delle lezioni esteso alla B4 (A, attesa, poi colpi di scotta guardando i filetti): semi 1-10, guidando 10 su 10 (in media 14,3 s), a mani ferme 0 su 10; semi 11-20 lo stesso. Premendo solo A: 0 su 10.
+- `collaudo_pilota_lezioni.py --solo 10` per la decima lezione (una cifra non bastava più; `--solo 1,10` per più lezioni).
+- `collaudo_pannello_lezioni`: 68 passi su 68 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Fisica identica al bit.
+
 ## 1.1.6 — Lezione B3 «La barca che orza sbandando» (nascosta nel menu, ramo `pulizia`)
 
 Terza lezione del gruppo B, nona nel gioco (`LESSONS[8]`, `nascosta: true`).

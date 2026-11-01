@@ -308,6 +308,32 @@
       text: ["Sbandando la barca orza. Nella raffica prima si raddrizza, lascando un poco, poi si corregge con poca barra. Passata la raffica, si cazza."] }
   ];
 
+  // B4, la raddrizzata lunga (1.1.7). Fonti (parafrasi; una sola per la barca in singolo, divulgativa, e il testo lo dice):
+  // video di un allenatore inglese (YouTube T7lUaEafLv8; trascrizione e fotogrammi forniti da Ale il 19 ottobre 2026, NON salvati nel progetto: si usa il riassunto
+  //   di docs/archivio/PROPOSTA-RADDRIZZATA.md): si tira con la schiena al vento, timoniere sopravento e albero sottovento, così la vela sale e sbatte libera;
+  //   al contrario il vento entra sotto la vela e la barca riscuffia; fatta bene, 15-20 s dalla scuffia alla barca che naviga; il traverso è letto dagli schemi.
+  // Dispensa di una scuola di vela (fonti-pdf/Dispensa-Scuola-Vela-2019.pdf, pp. 24-25, riletta il 1 novembre 2026; fonte informale, mai nel quiz, decisione di Ale):
+  //   scuffiare capita anche ai campioni; non si abbandona la barca; con le vele cazzate la barca non si raddrizza, le scotte vanno libere; spalle al vento,
+  //   leva sulla deriva, piedi vicino allo scafo per non romperla; CON L'EQUIPAGGIO si raddrizza e si tiene la barca con la prua al vento (diverso dal gioco: detto nel testo).
+  // W4 e W5 (DUBBI-E-RICERCHE §3, deboli): scotte libere mentre la barca torna su, se no riparte o riscuffia.
+  // Gioco: tasto A, 10 s (RADD2, 1.0.32), poi barca ferma al traverso con la vela tutta lascata. Misurato il 1 novembre 2026 (12 nodi, semi 1-10): senza toccare
+  //   più niente dopo A, con la vela che sbatte la barca arriva da sola a 2,4-3,2 nodi in 30 s; per questo il passo chiede anche i filetti dritti.
+  const LB4 = [
+    { title: "Prima di raddrizzare", ...PAUSE, zoom: 2.4,
+      text: ["Su una deriva scuffiare capita, anche ai più bravi. La prima regola: non lasciare mai la barca. Galleggia, ti regge quando sei stanco e da lontano si vede molto meglio di una testa in acqua.",
+             "Poi si liberano le scotte: con la vela cazzata la barca non torna su, oppure torna su, riparte da sola e si rovescia di nuovo. In questo gioco le scotte le libera il gioco."] },
+    { title: "Spalle al vento", ...PAUSE, zoom: 2.4,
+      text: ["Si sale sulla deriva con le <em>spalle al vento</em> e la si tira giù con il proprio peso, tenendo i piedi vicino allo scafo per non romperla. L'albero resta sottovento: tornando su, la vela sbatte libera e il vento non ci entra sotto. Al contrario, la barca si rovescerebbe di nuovo.",
+             "Qui tutto questo è il tasto <em>A</em>: dieci secondi. Un allenatore, in un video, dice che fatta bene, dalla scuffia alla barca che naviga, ne passano 15-20.",
+             "La barca torna dritta di traverso, con la vela che sbatte. Con l'equipaggio, le scuole insegnano anche a tenerla con la prua al vento finché tutti sono risaliti: questo gioco non lo fa."] },
+    { title: "Raddrizza e riparti", startCapsized: true, tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt",
+      text: ["Sei scuffiato. Premi <em>Raddrizza</em> (o il tasto A) e aspetta che la barca torni dritta. Poi cazza finché i filetti sono dritti e riparti al traverso."],
+      cond: (I, S, B) => B.cap0 && !S.capsized && I.twa >= 60 && I.twa <= 120 && I.kn >= 2.5 && I.tt === "ok", hold: 1,
+      done: "Raddrizzata e ripartita: la barca è tornata su di traverso, con la vela libera, e cazzando ha ripreso a navigare." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,
+      text: ["Non lasciare la barca, libera le scotte, raddrizza con le spalle al vento. La barca torna su di traverso con la vela che sbatte: cazza e riparti."] }
+  ];
+
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -342,7 +368,16 @@
       esame: [["Perché la barca orza", "Più la barca sbanda, più…", "orza", ["poggia", "accelera", "va dritta"], "Sbandando, la spinta della vela va sottovento e fa girare la prua verso il vento."],
               ["Nella raffica", "In raffica, con la barra sopravento…", "si poggia, ma se la barca resta sbandata serve molta barra", ["si orza", "la barca si raddrizza da sola", "si vira"], "La barra sopravento fa poggiare; con la barca sbandata il timone lavora molto."],
               ["La rotta nella raffica", "Sei al traverso, arriva una raffica e la prua sale. Che cosa fai?", "Lasco un poco e correggo con piccoli colpi di barra", ["Cazzo tutto", "Orzo fino alla bolina", "Spingo il boma con Z"], "Lascando la barca si raddrizza e orza meno; poi basta poca barra."],
-              ["Nella raffica", "Passata la raffica, che cosa fai con la scotta?", "La cazzo di nuovo", ["La lascio tutta lasca", "La lasco ancora", "Niente: si regola da sola"], "Passata la raffica la vela va regolata di nuovo: si cazza."]] }
+              ["Nella raffica", "Passata la raffica, che cosa fai con la scotta?", "La cazzo di nuovo", ["La lascio tutta lasca", "La lasco ancora", "Niente: si regola da sola"], "Passata la raffica la vela va regolata di nuovo: si cazza."]] },
+    { name: "Lezione B4", title: "La raddrizzata lunga", steps: LB4, nascosta: true, gruppo: "B", desc: "Dopo la scuffia: spalle al vento, A per dieci secondi, poi si cazza e si riparte al traverso.",
+      quiz: [["Mentre raddrizzi la barca, da che parte stai rispetto al vento?", "Con le spalle al vento, e l'albero resta sottovento", ["Con la faccia al vento, l'albero sopravento", "Non conta", "Sotto la vela"], "Con le spalle al vento la vela sale e sbatte libera; con l'albero sopravento il vento entra sotto la vela e la barca si rovescia di nuovo."],
+             ["In questo gioco, quanto dura la raddrizzata col tasto A?", "Dieci secondi", ["Un secondo", "Tre secondi", "Un minuto"], "Il tasto A raddrizza la barca in dieci secondi."],
+             ["Appena raddrizzata, nel gioco, come si trova la barca?", "Ferma, di traverso, con la vela che sbatte", ["Già in bolina, a vela cazzata", "In poppa, veloce", "Con la prua al vento e la barra all'orza"], "Torna dritta di traverso, ferma, con la vela tutta lascata."],
+             ["La barca è appena tornata dritta. Che cosa fai per ripartire?", "Cazzo finché i filetti sono dritti", ["Lasco ancora", "Premo di nuovo A", "Spingo il boma con Z"], "Al traverso basta cazzare finché i filetti sono dritti: la barca riprende a navigare."]],
+      esame: [["Spalle al vento", "Perché, raddrizzando, l'albero deve restare sottovento?", "Così la vela sbatte libera e il vento non ci entra sotto", ["Così la barca va più veloce", "Così la deriva non si rompe", "Non deve: va sopravento"], "Con l'albero sopravento il vento entra sotto la vela e la barca si rovescia di nuovo."],
+              ["Spalle al vento", "Un allenatore dice che, fatta bene, dalla scuffia alla barca che naviga passano circa…", "15-20 secondi", ["2 secondi", "5 minuti", "Un'ora"], "Fatta bene, la manovra dura 15-20 secondi."],
+              ["Raddrizza e riparti", "Hai raddrizzato: la barca è ferma di traverso e la vela sbatte. Che cosa fai?", "Cazzo e riparto", ["Premo di nuovo A", "Viro subito", "Lasco tutto"], "Al traverso, cazzando finché i filetti sono dritti, la barca riparte."],
+              ["Raddrizza e riparti", "In questo gioco, per raddrizzare la barca scuffiata…", "premo A e aspetto dieci secondi", ["premo Z", "cazzo tutta la vela", "aspetto senza toccare niente"], "Il tasto A raddrizza la barca in dieci secondi."]] }
   ];
 
   // ---- prove ----
