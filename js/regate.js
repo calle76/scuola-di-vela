@@ -163,7 +163,7 @@
     $("rTitle").textContent = rc.title;
     R.brief = introRegata(rc, liv);
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();
-    $("rRestart").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
+    $("rRestart").hidden = $("rWind").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief(rc.title, R.brief, true);
   }
@@ -985,10 +985,11 @@
     if (!on) return void ($("finOv").hidden = true);
     $("finText").textContent = $("rDoneText").textContent; $("finList").innerHTML = $("standings").innerHTML;
     $("finPen").hidden = !R.penList.length; $("finPen").innerHTML = R.penList.length ? "<b>Penalità</b><br>" + R.penList.join("<br>") : ""; // 1.0.49: tutte le penalità col motivo (richiesta di Ale)
-    $("finTor").hidden = $("rTor").hidden; $("finRev").hidden = !rivCount(); $("finRestart").hidden = $("rRestart").hidden;
+    $("finTor").hidden = $("rTor").hidden; $("finRev").hidden = !rivCount(); $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
     if ($("finOv").hidden){ $("finOv").hidden = false; releaseKeys(); setTimeout(() => (!$("finRestart").hidden ? $("finRestart") : $("finTor")).focus(), 0); }
   }
-  $("finRestart").onclick = () => $("rRestart").click(); $("finTor").onclick = () => $("rTor").click();
+  $("rWind").onclick = () => startRace(raceIdx, otherWind()); // 1.0.75: «Cambia vento» di nuovo nelle regate (Ale, 1 nov 2026), mai nel torneo (rc.tor)
+  $("finRestart").onclick = () => $("rRestart").click(); $("finWind").onclick = () => $("rWind").click(); $("finTor").onclick = () => $("rTor").click();
 
   // ---- torneo dell'1b (1.0.34, tappa T1 di docs/PROPOSTA-TORNEI-1B.md) ----
   // Serie di 4 regate (1 e 3 a bastone, 2 e 4 a triangolo dalla 1.0.55) con la barca dell'1b contro gli stessi tre avversari, con lo stesso carattere. Punteggio di F15,

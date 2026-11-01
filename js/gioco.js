@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.74"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.75"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -650,7 +650,7 @@
   $("showGhost").onchange = e => opt.ghost = e.target.checked;
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
   $("rRestart").onclick = () => startRace(raceIdx, env.twd);
-  // 1.0.70: «Cambia vento» non c'è più nelle regate (né nel pannello né nella schermata finale: nelle gare ufficiali il vento non si sceglie); resta nelle prove (mWind)
+  // 1.0.70: «Cambia vento» tolto dalle regate; 1.0.75: rimesso nel pannello e nella schermata finale delle regate (rWind, finWind in regate.js), mai nel torneo; nelle prove c'è sempre (mWind)
   $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
   $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
