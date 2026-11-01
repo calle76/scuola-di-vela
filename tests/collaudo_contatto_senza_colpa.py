@@ -46,7 +46,7 @@ COSTRUITO = """([tipo, finisci, seme]) => {
   const r1 = Object.assign({}, sv.reg), toast = sv.toast;
   sv.run(dt, 120); sv.panel();
   const err = document.getElementById("stErr");
-  const r2 = { contatti: r1.contacts - c0, pen: r1.contactsPen - p0, testo: err.textContent, rosso: err.classList.contains("some"),
+  const r2 = { contatti: r1.contacts - c0, pen: r1.contactsPen - p0, testo: err.title, corto: err.textContent, rosso: err.classList.contains("some"),   // 1.0.77: in regata la riga mostra solo il numero, l'elenco è nel title
                tot: r1.capsizes + r1.gybesV + r1.irons + r1.wrongMarks + r1.contactsPen + r1.ocs + r1.outLine };
   sv.run(dt, 300 - 121);                                  // posizione di tutte le barche al passo 300 dopo il contatto: impronta per il confronto registrazione sì/no
   const imp = R.boats.map(b => [b.S.x, b.S.y, b.S.h, b.S.u].map(v => v.toFixed(9)).join(",")).join(";");
@@ -122,6 +122,7 @@ async def main():
         ok("senza colpa: il testo dice «senza colpa, non conta»", "1 contatto senza colpa, non conta" in a["testo"] and a["testo"].startswith("Errori: nessuno"), a["testo"])
         ok("con colpa: 1 contatto, 1 penalità, totale errori 1, riga rossa", (m["contatti"], m["pen"], m["tot"], m["rosso"]) == (1, 1, 1, True))
         ok("con colpa: il testo dice «con penalità» e non «non conta»", "con penalità" in m["testo"] and "non conta" not in m["testo"], m["testo"])
+        ok("1.0.77, in regata la riga mostra solo il numero: «Errori: nessuno» senza colpa, «Errori: 1 (l'elenco a fine regata)» con colpa", a["corto"] == "Errori: nessuno" and m["corto"] == "Errori: 1 (l'elenco a fine regata)", f"«{a['corto']}» / «{m['corto']}»")
         s = [esito["sopra"]["r2"]["pen"], esito["sotto"]["r2"]["pen"]]
         ok("stesse mure: la colpa è di uno solo dei due (sopravento/sottovento)", sorted(s) == [0, 1] and metro.tutti(esito[t]["r2"]["contatti"] == 1 for t in ("sopra", "sotto")), f"penalità giocatore sopravento {s[0]}, sottovento {s[1]}")
         sl = esito["avv"]["ses"]; ml = esito["mia"]["ses"]
@@ -136,7 +137,7 @@ async def main():
                   ({"contacts": 1, "contactsPen": 1, "irons": 1, "ironsSec": 3}, None, True)]
         for vals, atteso, rosso in casi_t:
             r = await pg.evaluate("""(vals) => { const sv = __sv; for (const k in sv.reg) sv.reg[k] = 0; Object.assign(sv.reg, vals); sv.panel();
-              const e = document.getElementById('stErr'); return { testo: e.textContent, rosso: e.classList.contains('some') }; }""", vals)
+              const e = document.getElementById('stErr'); return { testo: e.title, rosso: e.classList.contains('some') }; }""", vals)   # 1.0.77: l'elenco intero è nel title (in regata la riga mostra il numero)
             if atteso: ok(f"testo {vals}", r["testo"] == atteso and r["rosso"] == rosso and (("senza colpa" not in r["testo"]) or vals["contacts"] > vals["contactsPen"]), f"«{r['testo']}» rossa {r['rosso']}")
             else: ok(f"testo {vals}: contiene «piantato» e «1 contatto con penalità»", "piantato" in r["testo"] and "1 contatto con penalità" in r["testo"] and r["rosso"] == rosso, f"«{r['testo']}» rossa {r['rosso']}")
         ok("testo: nessun errore nella pagina", not errs, str(errs)); await ctx.close()

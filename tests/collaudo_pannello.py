@@ -63,6 +63,16 @@ async def main():
         print(f"  regata dopo il via: riga dei tasti eccede di {r[0]} px, «Q vista» nella riga {r[1]}")
         if r[0] > 0: eccede.append(f"regata: riga dei tasti tagliata di {r[0]} px")
         await pg.screenshot(path=str(OUT / f"P_regata_{W}x{H}.png"))
+        # 1.0.77 (osservazione 78, esploratore seme 38): regata dei giri dopo il via, scuffiata per una strambata, regola 21.2 con le istruzioni
+        # dei giri e tutti i tipi di errore insieme. In Firefox sforava di 9 px; caso peggiore costruito a mano, più lungo di quello trovato
+        await pg.evaluate("__sv.openItem(['r', 3])"); await pg.evaluate("__sv.fast(10)"); await pg.wait_for_timeout(7000); await pg.evaluate("__sv.fast(1)")
+        await pg.evaluate("""()=>{ Object.assign(__sv.S,{capsized:true,capCause:'gybe',heel:90,u:0,vl:0,r:0,heelRate:0,righting:0});
+          __sv.R.lastRule='Contatto con Rossa: tu stavi scontando una penalità e dovevi lasciare strada a chi non la scontava (regola 21.2). Penalità: due giri nello stesso verso, ciascuno con una virata e una strambata.';
+          Object.assign(reg,{capsizes:3,gybesV:3,irons:2,ironsSec:40,wrongMarks:2,contactsPen:4,contacts:6,ocs:1,outLine:3}); __sv.panel(); }""")
+        await pg.wait_for_timeout(300); d = await pg.evaluate(PH); misure.append(d)
+        print(f"  regata dei giri, scuffiata, regola 21.2 e tutti gli errori: pannello oltre di {d} px")
+        if d > 0: eccede.append(f"regata dei giri scuffiata: +{d}")
+        await pg.screenshot(path=str(OUT / f"P_giri_scuffia_{W}x{H}.png"))
         print(f"finestra {W}x{H}: eccesso massimo del pannello (pixel): {max(misure)}; passi misurati anche da completati: {n_fatti}")
         if n_fatti == 0: eccede.append("nessun passo misurato da completato: misura vuota")
         print(f"finestra {W}x{H}: pannello che eccede:", eccede or "nessuno")

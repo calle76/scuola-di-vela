@@ -17,6 +17,28 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.0.77 — In regata la riga degli errori mostra solo il numero
+
+L'Esploratore su GitHub (osservazione 78) ha trovato il pannello che sforava di 9 px in Firefox: regata dei giri, seme 38, giocatore scuffiato con la regola 21.2 e un elenco lungo di errori. C'era già nella 1.0.74.
+
+**Scelta di Ale (A):** durante la regata la riga degli errori del pannello dice solo il numero, per esempio «Errori: 5 (l'elenco a fine regata)» oppure «Errori: nessuno». L'elenco completo resta:
+- al passaggio del mouse sulla riga;
+- nella schermata di fine regata.
+
+Prove e lezioni non cambiano. Provato e non adottato: accorciare il suggerimento della scuffia, che non serve perché quel riquadro è alto almeno 2 righe.
+
+Effetto collaterale, già nella scelta A: in regata la nota «N contatti senza colpa, non contano» non si vede più nella riga, ma resta nell'elenco al passaggio del mouse e a fine regata.
+
+**Misurato:**
+- **Caso peggiore nuovo in `collaudo_pannello.py`:** regata dei giri dopo il via, barca scuffiata per una strambata, regola 21.2 con le istruzioni dei giri, tutti i tipi di errore insieme. È scritto prima della correzione.
+  - Sulla 1.0.76: sfora di **29 px** in Chromium e in Firefox, e il collaudo cade.
+  - Sulla 1.0.77: **0 px** a 1360×650 e 1360×768, in tutti e due i browser.
+- **Le 100 regate dei giri con i principianti in Firefox,** rigiocate come l'Esploratore: 0 sforano (prima 1, il seme 38).
+- **`collaudo_contatto_senza_colpa.py`:** aggiornato, perché leggeva l'elenco nella riga. Ora lo legge al passaggio del mouse (`title`) e controlla anche la riga corta. Verde.
+- **`collaudo_registro.py`:** verde.
+- **Fisica:** identica.
+- `collaudo_impronta.py`, che non è nel giro, segnerà diversa la riga `stErr` delle regate: è voluto.
+
 ## Collaudi, 1 novembre 2026 — l'esploratore prova tutte le regate (nessuna versione nuova)
 
 - `tests/esplora.py` girava solo le prime 3 regate: `range(3)` era fisso, quindi la regata dei giri (dalla 1.0.61) non è mai stata esplorata. Ora legge quante sono (`RACES.length`, oggi 4).

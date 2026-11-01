@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.76"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.0.77"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -438,7 +438,9 @@
     const free = reg.contacts - reg.contactsPen, note = free ? n(free, "1 contatto senza colpa, non conta", "contatti senza colpa, non contano") : "";
     return parts.length ? "Errori: " + parts.join(", ") + (note ? " · " + note : "") : "Errori: nessuno" + (note ? " (" + note + ")" : "");
   }
-  function regShow(el){ const t = regText(); el.textContent = t; el.title = t; el.classList.toggle("some", regTotal() > 0); }
+  function regShow(el, corto){ // corto (1.0.77, regate in corso, osservazione 78): solo il numero; l'elenco resta al passaggio del mouse e a fine regata
+    const t = regText(), n = regTotal();
+    el.textContent = corto ? (n ? "Errori: " + n + " (l'elenco a fine regata)" : "Errori: nessuno") : t; el.title = t; el.classList.toggle("some", n > 0); }
 
   // ---- riquadro delle istruzioni ----
   // istruzioni di prove e regate: riquadro sul mare a gioco fermo; il tempo parte con «Parti»

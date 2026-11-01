@@ -77,7 +77,7 @@
     if (mode === "lesson" && stepDone && !(st.sem && st.sem.length) && !S.capsized && S.heel <= 25 && !back) $("hint").hidden = true;
     $("hint").className = "hint " + cls; $("hint").textContent = msg;
     if (mode === "race") racePanel();
-    if (mode === "mission" || mode === "race") regShow($("stErr"));
+    if (mode === "mission" || mode === "race") regShow($("stErr"), mode === "race");
     if (mode === "lesson"){ $("lErr").hidden = !!st.pause; regShow($("lErr")); }
     if (mode === "mission"){
       const prev = progress.best[recK("m" + missionIdx)];
