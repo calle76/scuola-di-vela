@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.1.4"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.1.5"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -475,6 +475,8 @@
     else if (!prev || prev.pause) { freshState(0, 0, 90, st.autoTrim ? 0.4 : 0.3); }
     // 1.0.2: «La scuffia» non fa raddrizzare (la barca resta rovesciata fino al passo dopo); «Raddrizzare» parte sempre con la barca rovesciata
     if (st.noRight && S.capsized) freshState(0, 0, 90, 0.4);
+    // 1.1.5: la barca parte ferma nell'angolo morto, con la prua a 10° dal vento e la vela tutta lascata (lezione B2, spingere il boma)
+    if (st.startIrons){ Object.assign(S, { h: norm360(env.twd + (S.boomSide < 0 ? 10 : -10)), u: 0, vl: 0, r: 0, heel: 0, heelRate: 0, capsized: false }); ctl.sheet = 1; ctl.tiller = 0; }
     if (st.startCapsized && !S.capsized){ Object.assign(S, { capsized: true, indietro: 0, capCause: "heel", capSide: S.boomSide, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); }
     base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized };
     S.markReached = false;
@@ -780,7 +782,8 @@
       // 1.1.3 (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A): quello che il giocatore ha fatto nel passo, per i passi che la barca dell'1b farebbe da sola
       // (orza da sola sbandando, 1.0.46): base.barraLee = secondi con la barra verso il boma (barra sottovento), base.lasca = scotta lascata in raffica
       if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.barraLee = (base.barraLee || 0) + dt;
-      if (S.tilAttivo && Math.abs(ctl.tiller) > 0.8) base.maiusc = (base.maiusc || 0) + dt; // 1.1.4: barra oltre 36°, cioè con Maiusc (la sola freccia si ferma a 35°) // solo la barra mossa adesso: quella rimasta dal passo prima non conta
+      if (S.tilAttivo && Math.abs(ctl.tiller) > 0.8) base.maiusc = (base.maiusc || 0) + dt;
+      if (S.pushing) base.push = (base.push || 0) + dt; // 1.1.5: secondi col boma spinto (tasto Z) // 1.1.4: barra oltre 36°, cioè con Maiusc (la sola freccia si ferma a 35°) // solo la barra mossa adesso: quella rimasta dal passo prima non conta
       if (base.shPrev !== undefined && ctl.sheet > base.shPrev && local.tws > env.tws * 1.12) base.lasca = (base.lasca || 0) + ctl.sheet - base.shPrev;
       base.shPrev = ctl.sheet;
       if (st.cond(readI(), S, base)){ holdT += dt; if (holdT >= (st.hold || 0.3)) completeStep(); } else holdT = 0;

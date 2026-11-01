@@ -52,7 +52,8 @@ const PASSI = {
   "4:In poppa":                      { lim: 60,  f: C => guida(C, { twa: 172, centra: true, regola: true }) },
   "5:Prepararsi a virare":           { lim: 60,  aspetta: true, f: C => guida(C, { twa: 58, centra: true, regola: true, resta: true }) }, // «lascia che arrivi ad almeno 3,3 nodi»
   "5:Virare":                        { lim: 40,  f: C => virare(C) },
-  "7:Una virata con la barra in fondo": { lim: 40, f: C => virare(C, true) },                                       // 1.1.4, lezione B1: «vira tenendo Maiusc con la freccia verso il boma»
+  "7:Una virata con la barra in fondo": { lim: 40, f: C => virare(C, true) },
+  "8:Spingi il boma e riparti":      { lim: 40,  f: C => spingiBoma(C) },                                          // 1.1.5, lezione B2: «Z e barra verso il boma; al traverso molla Z, centra e cazza»                                       // 1.1.4, lezione B1: «vira tenendo Maiusc con la freccia verso il boma»
   "5:Una virata che non riesce":     { lim: 120, f: C => nonRiesce(C) },
   "5:Risalire il vento":             { lim: 180, f: C => bordeggia(C) },
   "5:Strambata violenta":            { lim: 60,  f: C => strambaAperta(C) },
@@ -172,6 +173,12 @@ function* virare(C, maiusc = false){                                     // «ba
   yield* tieni(C, k, () => lato() !== l0 && twaV(C) >= 50, 30);
   if (maiusc) key("Shift", false);
   centra();
+}
+function* spingiBoma(C){                                                  // lezione B2: boma spinto (Z) e barra verso il boma fino al traverso, poi si riparte
+  const k = versoBomaK(); key("z", true);
+  yield* tieni(C, k, () => twaV(C) >= 80, 30);
+  key("z", false); centra();
+  yield* guida(C, { twa: 90, centra: true, regola: true, resta: true });
 }
 function* nonRiesce(C){                                                  // lezione 5, passo 4
   yield* tieni(C, lascaK(), () => sh() >= 0.995 || kn() < 1, 25);       // lasca finché la barca scende sotto 1 nodo
@@ -356,7 +363,7 @@ async def main():
     if "--reale" in a: sys.exit(0 if await reale() else 1)
     semi = range(1, 4) if "--veloce" in a else range(1, 21)
     if "--semi" in a: x, y = a[a.index("--semi") + 1].split("-"); semi = range(int(x), int(y) + 1)
-    lezioni = [int(c) - 1 for c in a[a.index("--solo") + 1]] if "--solo" in a else list(range(7))   # 1.1.4: la settima è la lezione B1 (nascosta nel menu)
+    lezioni = [int(c) - 1 for c in a[a.index("--solo") + 1]] if "--solo" in a else list(range(8))   # 1.1.4-1.1.5: la settima e l'ottava sono le lezioni B1 e B2 (nascoste nel menu)
     pagina = a[a.index("--pagina") + 1] if "--pagina" in a else str(ROOT / "index.html")
     ris, errs = await corse(pagina, semi, lezioni)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -367,7 +374,7 @@ async def main():
     print(f"\nmisurato: {len(passi)} passi pratici, {corse_mani} corse a mani ferme, errori della pagina {len(errs)} {errs[:2]}")
     print("da guardare:" if problemi else "da guardare: niente")
     for q in problemi: print("  - " + q)
-    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1)[l] for l in lezioni) and not errs
+    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1)[l] for l in lezioni) and not errs
     print("ESITO:", "NON VALIDO (passi mancanti o errori della pagina)" if not valido else ("OK" if not problemi else "DA GUARDARE"))
     sys.exit(2 if not valido else 0)   # i casi «da guardare» sono un rapporto, non un fallimento dello script: si leggono (lancia_tutti.sh li mostra)
 

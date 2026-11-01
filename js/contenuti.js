@@ -259,6 +259,30 @@
       text: ["La pala è un'ala e oltre un certo angolo stalla. La sola freccia si ferma a 35°; <em>Maiusc</em> porta la barra a 45° quando serve girare stretto. Accompagna la barra e centrala per tempo."] }
   ];
 
+  // B2, spingere il boma (1.1.5). Fonti (docs/archivio/PROPOSTA-SPINGI-BOMA.md §1, parafrasi): W1 US Sailing «Getting in and out of irons», W2 guida di un
+  // circolo per una deriva in singolo, Australian Sailing «Drills for Skills: Sailing Backwards»: barca ferma nel vento, boma spinto fuori da una parte e barra
+  // dalla stessa parte; la vela prende il vento al contrario, la barca va all'indietro e la prua gira verso il boma, lontano dal vento; al traverso si molla
+  // il boma, si centra la barra e si cazza. Un allenatore (The Final Beat): all'indietro si esce da un brutto posto sulla linea di partenza. Nessuna fonte dà numeri.
+  // Regolamento F15, regola 21.3 (riletta nel PDF il 1 novembre 2026): chi va all'indietro, o di lato verso il vento, spingendo una vela si tiene lontano da chi
+  // non lo fa. Il gioco non la applica: il testo lo dice. Gioco: Z tenuto premuto mette il boma a 80° (1.0.26, BOMA2).
+  // Misurato il 1 novembre 2026 (passo 3, prua a 10° dal vento, 10 nodi): a mani ferme in 30 s la prua arriva a 20° e la barca scivola all'indietro a 1,8 nodi;
+  // con Z e la barra verso il boma la barca arretra fino a 2,4 nodi, la prua gira verso il boma ed è al traverso in 2,7 s.
+  const LB2 = [
+    { title: "Fuori dall'angolo morto", ...PAUSE, zoom: 2.4,
+      text: ["Se la barca si ferma con la prua nel vento, la vela sbatte e il timone non serve: è l'<em>angolo morto</em>. Lasciata a sé, la barca resta lì a lungo e scivola all'indietro. Per uscirne c'è un modo, insegnato nelle scuole.",
+             "Tieni premuto <em>Z</em>: spingi il boma fuori, e metti la barra <em>dalla stessa parte del boma</em>. La vela prende il vento al contrario, la barca va all'indietro e la prua gira verso il boma, lontano dal vento.",
+             "Quando sei al traverso molla Z, centra la barra e cazza: la barca riparte in avanti."] },
+    { title: "All'indietro, apposta", ...PAUSE, zoom: 2.4,
+      text: ["Spingere il boma serve anche a frenare o ad arretrare apposta, per esempio per uscire da un brutto posto prima della partenza.",
+             "In regata chi va all'indietro spingendo la vela deve tenersi lontano da chi non lo fa (regola 21.3). In questo gioco la regola non è applicata."] },
+    { title: "Spingi il boma e riparti", startIrons: true, tiller: true, sheet: true, hud: 1, rose: true, hintKind: "tt",
+      text: ["Sei fermo nell'angolo morto. Tieni premuto <em>Z</em> e sposta la barra verso il boma; quando sei al traverso molla Z, centra la barra e cazza finché la barca riparte."],
+      cond: (I, S, B) => (B.push || 0) >= 0.5 && !S.pushing && S.u > 0 && I.twa >= 60 && I.twa <= 120 && I.kn >= 1.5, hold: 1,
+      done: "Fuori dall'angolo morto: all'indietro la prua è girata verso il boma, poi la vela ha ripreso a spingere in avanti." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 1, hintKind: "tt", final: true,
+      text: ["Fermo nel vento: <em>Z</em> per spingere il boma, barra verso il boma, la barca arretra e la prua gira. Al traverso molla Z, centra e cazza."] }
+  ];
+
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -275,7 +299,16 @@
       esame: [["35° e 45°", "Devi girare attorno a una boa in poco spazio. Che cosa usi?", "Maiusc e la freccia: la barra arriva a 45°", ["La sola freccia: si ferma a 35°", "Lasco tutta la vela", "Spingo il boma con Z"], "Con Maiusc la barra arriva a 45° e la barca gira più stretta."],
               ["La pala è un'ala", "Perché una pala girata troppo frena la barca?", "Va in stallo: l'acqua si stacca e la resistenza cresce", ["Perché tocca il fondo", "Perché fa sbandare la barca", "Perché sposta il vento"], "Oltre un certo angolo la pala stalla: la spinta non cresce più, la resistenza sì."],
               ["Una virata con la barra in fondo", "Viri con la barra a 45°. Quando centri la barra?", "Un po' prima che con 35°, perché la prua gira più in fretta", ["Quando la barca si ferma", "Mai: la barra torna da sola", "Dopo che la prua ha superato la bolina di 30°"], "Con più barra la prua gira più in fretta: centrando tardi va oltre la bolina."],
-              ["La pala è un'ala", "Su un 470, misurato in vasca e calcolato al computer, la pala stalla fra circa…", "15° e 30°", ["2° e 5°", "60° e 90°", "Non stalla mai"], "Le misure in vasca di un modellino danno circa 15°, il calcolo a grandezza vera circa 30°."]] }
+              ["La pala è un'ala", "Su un 470, misurato in vasca e calcolato al computer, la pala stalla fra circa…", "15° e 30°", ["2° e 5°", "60° e 90°", "Non stalla mai"], "Le misure in vasca di un modellino danno circa 15°, il calcolo a grandezza vera circa 30°."]] },
+    { name: "Lezione B2", title: "Spingere il boma", steps: LB2, nascosta: true, gruppo: "B", desc: "Fermo nell'angolo morto: Z spinge il boma, la barca arretra e gira; poi si riparte.",
+      quiz: [["Sei fermo con la prua nel vento. Che cosa fai con il boma e la barra?", "Spingo il boma fuori e metto la barra dalla stessa parte", ["Cazzo tutta la vela", "Metto la barra dalla parte opposta al boma", "Aspetto senza toccare niente"], "Boma e barra dalla stessa parte: la vela prende il vento al contrario, la barca arretra e la prua gira verso il boma."],
+             ["Con il boma spinto fuori, verso dove gira la prua?", "Verso il boma, cioè lontano dal vento", ["Verso il vento", "Non gira: la barca va solo all'indietro", "Dalla parte opposta al boma"], "La vela a collo spinge la barca all'indietro e fa girare la prua verso il boma."],
+             ["Quando molli il boma e riparti?", "Quando sei al traverso: molli, centri la barra e cazzi", ["Subito, appena la barca si muove", "Quando la prua è tornata nel vento", "Mai: si va all'indietro fino alla boa"], "Al traverso la vela può spingere in avanti: si molla il boma, si centra la barra e si cazza."],
+             ["In regata, chi va all'indietro spingendo la vela…", "deve tenersi lontano da chi non lo fa (regola 21.3)", ["ha sempre la precedenza", "deve fare due giri di penalità", "può farlo solo dopo la partenza"], "Regola 21.3: chi arretra spingendo una vela si tiene lontano dagli altri. In questo gioco la regola non è applicata."]],
+      esame: [["Fuori dall'angolo morto", "Per uscire dall'angolo morto con il boma spinto, la barra va…", "dalla stessa parte del boma", ["dalla parte opposta al boma", "al centro", "non importa"], "Boma e barra dalla stessa parte: la prua gira verso il boma, lontano dal vento."],
+              ["Fuori dall'angolo morto", "Con il boma spinto fuori, la barca…", "va all'indietro e la prua gira verso il boma", ["va avanti più veloce", "scuffia", "resta ferma"], "La vela prende il vento al contrario: la barca arretra e gira."],
+              ["Spingi il boma e riparti", "Sei al traverso dopo aver spinto il boma. Che cosa fai?", "Mollo il boma, centro la barra e cazzo", ["Continuo a spingere il boma", "Viro subito", "Lasco tutta la vela"], "Al traverso la vela torna a spingere in avanti: si molla, si centra e si cazza."],
+              ["All'indietro, apposta", "A che cosa serve, oltre a uscire dall'angolo morto, spingere il boma?", "A frenare o arretrare, per esempio prima della partenza", ["A sbandare di meno", "A girare attorno alla boa", "A prendere le raffiche"], "Spingendo il boma si può frenare o arretrare apposta, per esempio per uscire da un brutto posto sulla linea."]] }
   ];
 
   // ---- prove ----

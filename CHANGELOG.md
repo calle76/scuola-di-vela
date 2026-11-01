@@ -17,6 +17,26 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.5 — Lezione B2 «Spingere il boma» (nascosta nel menu, ramo `pulizia`)
+
+Seconda lezione del gruppo B, ottava nel gioco (`LESSONS[7]`, `nascosta: true`).
+
+**Fonti lette prima del testo**, scritte nel codice sopra la lezione:
+- `docs/archivio/PROPOSTA-SPINGI-BOMA.md` §1: US Sailing, la guida di un circolo per una deriva in singolo, Australian Sailing «Sailing Backwards», un allenatore di partenze. Tutte dicono boma spinto fuori, barra dalla stessa parte, la barca arretra e la prua gira verso il boma; al traverso si molla, si centra e si cazza. Nessuna dà numeri.
+- Regola 21.3 di F15, **riletta nel PDF**: chi va all'indietro, o di lato verso il vento, spingendo una vela si tiene lontano da chi non lo fa. **Il gioco non la applica, e il testo lo dice** (come deciso per le regole che il gioco non fa).
+
+**La lezione:** due pagine di teoria («Fuori dall'angolo morto», «All'indietro, apposta»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Passo pratico:** «Spingi il boma e riparti». La barca parte ferma nell'angolo morto (campo nuovo dei passi, `startIrons`: prua a 10° dal vento, ferma, vela lascata). Il passo vale se il boma è stato spinto (Z) per almeno 0,5 s in tutto e poi la barca va avanti al traverso, fra 60° e 120° dal vento, ad almeno 1,5 nodi, per 1 s.
+- **Il testo dice quello che il gioco fa** (misurato, 10 nodi):
+  - a mani ferme, in 30 s, la prua passa solo da 10° a 20° dal vento e la barca scivola all'indietro a 1,8 nodi. Per questo la prima stesura, «la barca prima o poi poggia da sola», è diventata «resta lì a lungo e scivola all'indietro»;
+  - con Z e la barra verso il boma la barca arretra fino a 2,4 nodi, la prua gira verso il boma ed è al traverso in 2,7 s.
+
+**Misurato:**
+- pilota delle lezioni esteso con Z: semi 1-10, guidando 10 su 10 (in media 6,7 s), a mani ferme 0 su 10. Semi 11-20: lo stesso (6,6 s).
+- `collaudo_pannello_lezioni`: 60 passi su 60 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`.
+- Fisica identica al bit.
+
 ## 1.1.4 — Lezione B1 «Il timone che stalla» (nascosta nel menu, ramo `pulizia`)
 
 Prima lezione del gruppo B (`docs/PROPOSTA-LEZIONI-SCUOLA.md`). Come ha deciso Ale il 1 novembre, **non compare nel menu** finché non arriva il menu nuovo: nel gioco è la settima lezione (`LESSONS[6]`, `nascosta: true`). Il libretto, i meriti, il ripasso e il pulsante del quiz la ignorano. Quiz ed esame stanno nella lezione e si collegano col menu.
@@ -27,7 +47,7 @@ Prima lezione del gruppo B (`docs/PROPOSTA-LEZIONI-SCUOLA.md`). Come ha deciso A
 - Day 2017: l'angolo che la pala sente non è quello della barra.
 - Regole di questo gioco, dichiarate come tali nel testo: la sola freccia arriva a 35° (1.0.25), Maiusc a 45°.
 
-**La lezione:** due pagine di teoria («La pala è un'ala», «35° e 45°»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame; una voce aggiornata nel glossario no, perché «Stallo» c'è già (vela).
+**La lezione:** due pagine di teoria («La pala è un'ala», «35° e 45°»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame. Nel glossario nessuna voce nuova: «Stallo» c'è già (per la vela).
 - Il **passo pratico** è «Una virata con la barra in fondo»: virata riuscita, con la barra oltre 36° (cioè con Maiusc) per almeno 0,3 s in tutto. Il conteggio è nuovo (`base.maiusc`), con lo stesso metodo della barra sottovento della 1.1.3.
 - Un passo «fai stallare la pala» non c'è, perché **con i tasti la pala non stalla**. Misurato: 0 s di stallo in 6 prove, partendo da 2, 3 e 5,5 nodi, con 35° e con 45°. La barca comincia a girare prima che l'angolo diventi troppo grande (1.0.31). Il testo lo dice: «con i tasti la pala stalla di rado; se succede, il pannello lo dice».
 
