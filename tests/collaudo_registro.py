@@ -161,9 +161,12 @@ async def main():
             await pg.evaluate("""() => { window.__ct = 0; let last = null; clearInterval(window.__ctw);
               window.__ctw = setInterval(() => { const t = __sv.toast; if (t && t !== last && t.startsWith('Contatto') && !t.startsWith('Contatto fra')) window.__ct++; last = t; }, 20); }   // 1.1.1: «Contatto fra X e Y» è fra due avversari (dalla 1.1.0 in tutte le regate), non del giocatore""")
             trovato = False
-            for _ in range(240):   # 17 ottobre 2026: era 60 (30 s reali). Dalla 1.0.17 gli avversari si scansano meglio anche dal giocatore: inseguirne uno richiede più tempo.
+            for _ in range(360):   # 2 novembre 2026: era 240 (Firefox su GitHub e qui: 1 prova su 14 senza contatto in 120 s veri). 17 ottobre 2026: era 60 (30 s reali). Dalla 1.0.17 gli avversari si scansano meglio anche dal giocatore: inseguirne uno richiede più tempo.
                                    # 1.1.0: era 120. La regata 0 ha ora gli avversari dell'1b (cedono) e il contatto fra scafi: su GitHub 60 s veri non sono bastati
-                pos = await pg.evaluate("(() => { const me = __sv.R.boats[0].S; let best = null, d = 1e9; for (const o of __sv.R.boats.slice(1)){ const dd = Math.hypot(o.S.x - me.x, o.S.y - me.y); if (dd < d){ d = dd; best = [o.S.x, o.S.y]; } } return best; })()")
+                pos = await pg.evaluate("""(() => { const me = __sv.R.boats[0].S; let best = null, d = 1e9; for (const o of __sv.R.boats.slice(1)){ const dd = Math.hypot(o.S.x - me.x, o.S.y - me.y); if (dd < d){ d = dd; best = [o.S.x, o.S.y]; } }
+                  if (!best) return best; const n = a => ((a + 180) % 360 + 360) % 360 - 180, brg = Math.atan2(best[0] - me.x, -(best[1] - me.y)) * 180 / Math.PI, rel = n(brg - __sv.twd);
+                  if (Math.abs(rel) >= 50) return best;   // 2 novembre 2026: bersaglio sopravento, oltre l'angolo morto: si punta a 50° dal vento dalla stessa parte (puntandolo dritto il pilota si piantava nel vento, 17 volte in una prova caduta)
+                  const h = (__sv.twd + (rel >= 0 ? 50 : -50)) * Math.PI / 180; return [me.x + Math.sin(h) * 40, me.y - Math.cos(h) * 40]; })()""")
                 await pg.evaluate(VAI, [[pos], "free"]); await pg.wait_for_timeout(500)
                 if await pg.evaluate("__sv.reg.contacts > 0"): trovato = True; await pg.wait_for_timeout(1500); break
             r = await reg(pg); s = await pg.evaluate("[window.__ct, __sv.R.boats[0].pen]")
