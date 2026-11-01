@@ -161,3 +161,13 @@ Restano da fare:
 - G4: rosso su un errore messo apposta, da lanciare a mano su un ramo di prova.
 
 Dopo, il giro sul PC diventa facoltativo (§7).
+
+## 12. G4: rosso su un errore messo apposta (1 novembre 2026)
+
+Ramo `prova-rosso` (commit cedf5e4), con un errore messo apposta in `js/regate.js`: `R.done = R.need`, cioè un giro solo estingue tutto il debito. Lanciato a mano da Ale.
+- **Rosso, e la mail è arrivata:** G4 passato.
+- Rossi i pezzi 1 e 4 in tutti e due i browser. Il pezzo 1 contiene `collaudo_giri.py`, il pezzo 4 `collaudo_riquadro_bandiere.py` (giri da fare e fatti). Verdi i pezzi 2 e 3. Quali collaudi siano caduti, uno per uno, si vede solo dagli allegati, che non ho letto.
+- La mail dà ai pezzi rossi durate di 1 h 16 - 1 h 23. Dalle date dei singoli passi, i collaudi sono durati 16-22 minuti e l'ultimo passo è finito alle 08:08:41 UTC. Il «completato» del pezzo intero dice 09:08:43, un'ora esatta dopo: è un'ora in più nella data di GitHub, non nel lavoro.
+- Il ramo locale è cancellato; quello su GitHub lo cancella Ale.
+
+Resta da fare G3 (tre giri uguali). Arriva con i giri notturni.
