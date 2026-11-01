@@ -17,6 +17,26 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.9 — Gruppo D, prima parte: lezioni D1-D4 sul regolamento (nascoste nel menu, ramo `pulizia`)
+
+Le prime quattro delle sette lezioni sul regolamento (`docs/PROPOSTA-LEZIONI-2A.md`, approvata il 31 ottobre): D1 «Mure opposte», D2 «Stesse mure», D3 «Chi vira cede», D4 «Evitare il contatto». Sono `LESSONS[11]`-`LESSONS[14]`, con `nascosta: true` e `gruppo: "D"`.
+
+**Fonti:** le regole 10-16, le definizioni (libera dietro e avanti, sovrapposte, sopravento e sottovento, tenersi lontano) e la regola 43.1(c), rilette oggi nel PDF di F15. Le regole sono parafrasate, con il numero.
+
+**Il testo dice quello che fa il gioco.** Il gioco applica le regole 10, 11, 12 e 13 (`chiCede`, 1.0.40, provate da `collaudo_regole.py` e `collaudo_semaforo.py`). Le regole 14, 15 e 16 non le applica, e non ci sono danni: la D4 lo dice. Le penalità scritte nella D1 (15 s, due giri, un punto nel torneo) sono quelle degli avvisi del gioco.
+
+**Campo nuovo delle pagine di teoria, `scena`:** barche ferme accanto a quella della lezione, disegnate con la funzione degli avversari (`drawOther`), con il colore dello scafo e una scritta sotto ciascuna. `scenaH` dà la prua della barca della lezione e `me` la sua scritta. Controllato con gli screenshot: nella prima stesura la barca rossa della D1 finiva sul bordo dello schermo, ed è stata avvicinata da 28 a 14 m.
+
+**Rimandato, ed ecco perché:**
+- **Gli esercizi pratici in regata** (proposta §2: «prove in regata con il semaforo»). Oggi una lezione non può aprire una regata. Lo stesso meccanismo serve alle partenze del gruppo C, quindi si fa una volta sola, insieme. Per ora le D1-D4 sono teoria, disegni, quiz (4 domande) ed esame (4 domande). La D4 doveva restare solo teoria comunque.
+- **La pagina sulle precedenze della lezione 3** resta finché le lezioni D sono nascoste. Se la togliessi adesso, chi gioca non troverebbe più le precedenze da nessuna parte. Si toglie insieme al menu nuovo, con il titolo «Andature e mure».
+
+**Misurato:**
+- `collaudo_pannello_lezioni`: 83 passi su 83 a 0 px, in Chromium e in Firefox. Pagina senza errori.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Il pilota delle lezioni percorre anche le D1-D4: 0 passi pratici, perché non ne hanno. Il numero atteso dei passi pratici per lezione è stato aggiornato, così il metro non dà per buono uno zero che non dovrebbe esserci.
+- Fisica identica al bit.
+
 ## 1.1.8 — Lezione B5 «I salti di vento» (nascosta nel menu, ramo `pulizia`): il gruppo B è completo
 
 Quinta lezione del gruppo B, undicesima nel gioco (`LESSONS[10]`, `nascosta: true`).

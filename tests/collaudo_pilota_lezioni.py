@@ -389,7 +389,7 @@ async def main():
     semi = range(1, 4) if "--veloce" in a else range(1, 21)
     if "--semi" in a: x, y = a[a.index("--semi") + 1].split("-"); semi = range(int(x), int(y) + 1)
     so = a[a.index("--solo") + 1] if "--solo" in a else None   # 1.1.7: «--solo 10» o «--solo 1,10» per la decima; «--solo 123» resta una cifra per lezione
-    lezioni = ([int(c) - 1 for c in so.split(",")] if "," in so or so in ("10", "11") else [int(c) - 1 for c in so]) if so else list(range(11))   # 1.1.4-1.1.8: dalla settima all'undicesima le lezioni B1-B5 (nascoste nel menu)
+    lezioni = ([int(c) - 1 for c in so.split(",")] if "," in so or so in ("10", "11", "12", "13", "14", "15") else [int(c) - 1 for c in so]) if so else list(range(15))   # 1.1.4-1.1.9: dalla settima all'undicesima le lezioni B1-B5, poi D1-D4 (nascoste; per ora senza passi pratici) (nascoste nel menu)
     pagina = a[a.index("--pagina") + 1] if "--pagina" in a else str(ROOT / "index.html")
     ris, errs = await corse(pagina, semi, lezioni)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -400,7 +400,7 @@ async def main():
     print(f"\nmisurato: {len(passi)} passi pratici, {corse_mani} corse a mani ferme, errori della pagina {len(errs)} {errs[:2]}")
     print("da guardare:" if problemi else "da guardare: niente")
     for q in problemi: print("  - " + q)
-    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1, 1, 1, 1)[l] for l in lezioni) and not errs
+    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1, 1, 1, 1, 0, 0, 0, 0)[l] for l in lezioni) and not errs
     print("ESITO:", "NON VALIDO (passi mancanti o errori della pagina)" if not valido else ("OK" if not problemi else "DA GUARDARE"))
     sys.exit(2 if not valido else 0)   # i casi «da guardare» sono un rapporto, non un fallimento dello script: si leggono (lancia_tutti.sh li mostra)
 

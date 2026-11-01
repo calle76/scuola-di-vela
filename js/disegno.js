@@ -235,6 +235,7 @@
     });
     if (mode === "race") drawRaceWorld(v);
     drawGhost();
+    if (mode === "lesson" && st && st.scena) scenaBarche(st).forEach(b => drawOther(b.S, { alpha: 17, awa: -b.S.boomSide * 40 }, 0, 1)); // 1.1.9: barche ferme di scena (lezioni D)
     drawBoat();
     drawTurnHint();
     ctx.restore();
@@ -250,6 +251,7 @@
     if (st && st.rose) drawRose(v, st.maneuvers, st.target);
     if (opt.arrows && (!st || st.arrows || st.hud >= 2 || (!st.pause && st.hud))) drawWindArrows(v, mode === "lesson" && lessonIdx < 3); // il vento apparente si spiega nella lezione 4
     if (st && st.labels) drawLabels(v, st.labels);
+    if (mode === "lesson" && st && st.scena) drawScenaScritte(v, st);
     drawCompass(v);
     drawWindBox(v);
     const heelG = !st || st.hud >= 3;
@@ -445,6 +447,20 @@
       pitch += s * 0.7 * Math.cos(rel); roll += s * Math.sin(rel); heave += Math.sin(ph) * ka;
     }
     return { roll, pitch, amp, heave: heave * 0.012 * Math.min(1, kn / 10) };
+  }
+  // 1.1.9 (lezioni D, regolamento): barche ferme accanto a quella della lezione, per le pagine di teoria. b.x, b.y in metri dalla barca, b.h prua, b.col colore dello scafo,
+  // b.label scritta; st.me è la scritta sulla barca della lezione. Vento da nord nelle lezioni: il boma sta dal lato opposto a quello da cui arriva il vento.
+  function scenaBarche(st){
+    return st.scena.map(b => { const twa = norm180(env.twd - b.h), side = twa >= 0 ? -1 : 1;
+      return { S: { x: S.x + b.x, y: S.y + b.y, h: b.h, u: 0, vl: 0, r: 0, heel: 0, hike: 0.5, boomSide: side, boom: 30, dispBoom: side * 30, capsized: false, hullColor: b.col }, label: b.label }; });
+  }
+  function drawScenaScritte(v, st){
+    ctx.save(); ctx.font = font(600, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const scritta = (x, y, txt) => { const [sx, sy] = toScreen(v, x, y), w = ctx.measureText(txt).width + 12;
+      ctx.fillStyle = "rgba(10,24,36,.75)"; ctx.fillRect(sx - w / 2, sy + 26, w, 20); ctx.fillStyle = "#fff"; ctx.fillText(txt, sx, sy + 36); };
+    scenaBarche(st).forEach(b => b.label && scritta(b.S.x, b.S.y, b.label));
+    if (st.me) scritta(S.x, S.y, st.me);
+    ctx.restore();
   }
   function drawBoat(){
     const t = simTime;

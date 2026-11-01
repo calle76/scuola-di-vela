@@ -65,3 +65,7 @@ Dopo la pulizia del codice e prima delle medaglie (`PROPOSTA-RIORGANIZZAZIONE.md
 
 1. Le sette lezioni vanno bene come elenco, o ne togli/aggiungi? In particolare la 4 (solo teoria, dichiarata).
 2. Prove in regata con il semaforo (senza barca di scena) per cominciare: va bene?
+
+## 7. Avanzamento
+
+- **1.1.9 (1 novembre 2026):** D1-D4 scritte (teoria con disegni di scena, quiz ed esame), nascoste nel menu. Gli esercizi in regata (§2) arrivano con il gruppo C, che ha bisogno dello stesso meccanismo (una lezione che apre una regata). La pagina sulle precedenze della lezione 3 si toglie insieme al menu nuovo. Restano D5 (segnali di partenza), D6 (partenza anticipata), D7 (boa toccata e giri).
