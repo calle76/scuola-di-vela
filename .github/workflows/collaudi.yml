@@ -15,6 +15,14 @@ on:
         description: "Solo il giro --veloce (salta i collaudi lunghi)"
         type: boolean
         default: false
+      solo:
+        description: "Solo i collaudi il cui nome contiene questo testo (per esempio: non_partite); vuoto = tutti"
+        type: string
+        default: ""
+      semi_partenze:
+        description: "Semi di collaudo_non_partite (per esempio 1-200); vuoto = 1-20"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -80,9 +88,13 @@ jobs:
       - name: Collaudi
         env:
           BROWSER: ${{ matrix.browser }}
+          SOLO: ${{ inputs.solo }}
+          SEMI_PARTENZE: ${{ inputs.semi_partenze }}
         run: |
           OPZ="--parte ${{ matrix.parte }}/4 --parallelo 2"
           if [ "${{ inputs.veloce }}" = "true" ]; then OPZ="$OPZ --veloce"; fi
+          if [ -n "$SOLO" ]; then OPZ="$OPZ --solo $SOLO"; fi
+          if [ -n "$SEMI_PARTENZE" ]; then export NONPARTITE_SEMI="$SEMI_PARTENZE"; fi
           set +e
           tests/lancia_tutti.sh $OPZ 2>&1 | tee riepilogo.txt
           esito=${PIPESTATUS[0]}
