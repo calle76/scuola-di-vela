@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.1.2"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.1.3"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -481,6 +481,7 @@
     // 0.20.2: il punto del passo è una linea d'arrivo (FIN_HALF m per lato), perpendicolare alla direzione dalla partenza del passo all'arrivo
     S.lessonMark = st.mark ? { x: S.x + st.mark[0], y: S.y + st.mark[1], label: "Arrivo", fin: true, nx: st.mark[0] / Math.hypot(...st.mark), ny: st.mark[1] / Math.hypot(...st.mark) } : null;
     if (st.course) S.course = Math.round(norm360(S.h) / 5) * 5;
+    S.rottaScuola = !st.tiller && !st.pause ? S.h : null; // 1.1.3: rotta tenuta dalla scuola nei passi senza barra (vedi applyInput)
     $("lStep").textContent = "Passo " + (i + 1) + " di " + steps.length;
     $("lTitle").textContent = st.title;
     $("lText").innerHTML = st.text.map(t => "<p>" + (typeof t === "function" ? t() : t) + "</p>").join("");
@@ -686,6 +687,10 @@
     if (!tillerInput && (opt[centerKey()] || quick) && !dragTiller){
       ctl.tiller *= Math.exp((quick ? -6 : -2.5) * dt); if (Math.abs(ctl.tiller) < 0.01) ctl.tiller = 0;
     }
+    // 1.1.3 (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A): nei passi delle lezioni senza barra la rotta la tiene la scuola, come la vela nei passi con autoTrim.
+    // La barca dell'1b orza da sola sbandando (1.0.46): a barra ferma nei passi sulla scotta finiva vicino all'angolo morto (passo 3.10: da 90° a 32° dal vento)
+    if (mode === "lesson" && S.rottaScuola != null && !allowTiller && !S.capsized && S.u > 0.3) ctl.tiller = clamp(norm180(S.h - S.rottaScuola) / 20 + S.r * 0.02, -0.6, 0.6);
+    S.tilAttivo = tillerInput; // 1.1.3: la barra si sta muovendo per mano del giocatore (tasti o cursore), per i passi che lo chiedono
     if (autoSheetAttiva() && allowSheet && (keys.has("ArrowUp") || keys.has("ArrowDown"))) autoSheetSpegni(); // i tasti della scotta tolgono l'automatismo
     if ((allowSheet || allowSem.includes("cazza")) && keys.has("ArrowUp") || semHeld.has("cazza")) ctl.sheet = Math.max(0, ctl.sheet - 0.27 * dt);
     if ((allowSheet || allowSem.includes("lasca")) && keys.has("ArrowDown") || semHeld.has("lasca")) ctl.sheet = Math.min(1, ctl.sheet + 0.27 * dt);
@@ -772,6 +777,11 @@
     }
     // obiettivi
     if (mode === "lesson" && st.cond && !stepDone){
+      // 1.1.3 (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A): quello che il giocatore ha fatto nel passo, per i passi che la barca dell'1b farebbe da sola
+      // (orza da sola sbandando, 1.0.46): base.barraLee = secondi con la barra verso il boma (barra sottovento), base.lasca = scotta lascata in raffica
+      if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.barraLee = (base.barraLee || 0) + dt; // solo la barra mossa adesso: quella rimasta dal passo prima non conta
+      if (base.shPrev !== undefined && ctl.sheet > base.shPrev && local.tws > env.tws * 1.12) base.lasca = (base.lasca || 0) + ctl.sheet - base.shPrev;
+      base.shPrev = ctl.sheet;
       if (st.cond(readI(), S, base)){ holdT += dt; if (holdT >= (st.hold || 0.3)) completeStep(); } else holdT = 0;
     }
     if ((mode === "mission" || mode === "free") && curMarks.length && !S.finished){

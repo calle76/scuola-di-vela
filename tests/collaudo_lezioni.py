@@ -80,7 +80,7 @@ async def main():
         await hold_until(pg, "ArrowUp", 10, "L3 filetto sottovento")
         # Lezione 5: virata lanciata (vento da nord, prua a est: barra sottovento = a dritta)
         await pg.evaluate("__sv.openItem(['l',4])"); await pg.evaluate("__sv.showStep(1)")
-        await premi(pg, "ArrowRight", 0.7); await premi(pg, "ArrowUp", 1.5)
+        await premi(pg, "ArrowRight", 0.7); await premi(pg, "ArrowUp", 1.0)   # 1.1.3: era 1,5 s, tarato sulla 1a; con la barca dell'1b la vela finiva troppo cazzata (filetto sottovento). Provati 1,0, 0,7 e 0,5 s: tutti OK
         await wait_until(pg, 12, "L5 prepararsi (bolina lanciata)")
         await pg.evaluate("__sv.showStep(2)")
         await hold_until(pg, "ArrowRight", 8, "L5 virata")

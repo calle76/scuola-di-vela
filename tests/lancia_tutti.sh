@@ -128,6 +128,7 @@ TESTS=(
     "collaudo_strambata.py (15 nodi)|py|chiaro|0||collaudo_strambata.py 15 10"
     "collaudo_suggerimento.py|py|chiaro|0||collaudo_suggerimento.py"
     "collaudo_pannello.py (1360x650)|py|chiaro|0||collaudo_pannello.py 1360 650"
+    "collaudo_pannello_lezioni.py|py|chiaro|0||collaudo_pannello_lezioni.py"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"
     "collaudo_fantasma.py|py|chiaro|0||collaudo_fantasma.py"

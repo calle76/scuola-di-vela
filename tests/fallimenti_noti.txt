@@ -36,14 +36,6 @@ E2 passo di simulazione
 ~~ collaudo_riquadro_bandiere.py | tutti | Q7: costo del disegno misurato con l'orologio (3,8% sul PC in Firefox, OK su GitHub)
 Q7 costo del disegno
 
-== collaudo_carriera_intera.py | chromium | dalla 1.1.0 il passo 3.10 «Filetto sottovento» non si completa con la barca dell'1b e si salta con l'aggancio: si sistema con le lezioni della scuola (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A)
-FALLITO: I4: passi pratici 32 attesi, il pilota ne guida 32 e non prevede 0; saltati con l'aggancio 1
-ESITO: FALLITO
-
-== collaudo_carriera_intera.py | firefox | dalla 1.1.0 il passo 3.10 «Filetto sottovento» non si completa con la barca dell'1b e si salta con l'aggancio: si sistema con le lezioni della scuola (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A)
-FALLITO: I4: passi pratici 32 attesi, il pilota ne guida 32 e non prevede 0; saltati con l'aggancio 1
-ESITO: FALLITO
-
 == collaudo_partenze.py | chromium | criterio (1) esperti non meno dei principianti, noto (COLLAUDI.md); dalla 1.1.0 con gli avversari dell'1b in bastone e raffiche anche (2): ritardo mediano con 300 s nelle raffiche circa 8 s (1.1.0: 12,4 s), difetto noto degli avversari dell'1b (CHANGELOG 1.1.2)
 criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 1.7% non meno dei principianti 0.0%', '(2) raffiche, 12 nodi principianti 300 s: ritardo mediano 7.9 s', '(2) raffiche, 12 nodi esperti 300 s: ritardo mediano 8.2 s', '(1) raffiche, 12 nodi: esperti 5.0% non meno dei principianti 0.0%']
 

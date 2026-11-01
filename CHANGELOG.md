@@ -17,6 +17,38 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.3 — Lezioni, gruppo A, prima parte: i cinque passi che la barca dell'1b rompeva (ramo `pulizia`)
+
+Prima fetta di `docs/PROPOSTA-LEZIONI-SCUOLA.md`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
+
+**La causa, misurata.** Dal traverso, con la barra al centro e la vela che si regola da sola, la barca dell'1b orza da sola di circa 0,8° al secondo, già con 4-6° di sbandamento. È la barca orziera della 1.0.46 (fonte F4). In 30 s passa da 90° a 67° dal vento:
+- nei passi 2.4 «Barra sottovento: si orza», 3.2 «Bolina» e 5.2 «Prepararsi a virare» entrava da sola nel settore della bolina;
+- nel 6.2 «Assorbire una raffica» la raffica la faceva sbandare (fino a 52°) e poi orzare fino a 40° dal vento, così la vela si scaricava da sola;
+- nel 3.10 «Filetto sottovento» il passo non ha la barra: la barca orzava fino a 32° dal vento, dove il filetto sottovento non si può agitare. In più la condizione chiedeva un angolo d'attacco oltre 29°, ma il filetto si agita già da 27°: chi si fermava appena lo vedeva agitarsi (come dice il testo) non arrivava mai alla soglia.
+
+**Correzioni, solo nelle lezioni:**
+- **2.4, 3.2, 5.2:** il passo vale solo se il giocatore ha **spostato davvero la barra verso il boma** (barra sottovento) per almeno 0,1 s in tutto. Conta solo la barra mossa in quel momento, con i tasti o il cursore: quella rimasta dal passo prima non vale.
+- **6.2:** il passo vale solo se il giocatore ha **lascato durante la raffica**, almeno 0,05 di scotta in tutto. È la tecnica che la lezione insegna.
+- **3.10:** la condizione è il filetto sottovento agitato, cioè quello che il giocatore vede, per 0,5 s. Prima chiedeva un angolo oltre 29° per 1 s.
+- **Nei passi senza barra (3.8-3.10, 4.2, 4.3) la rotta la tiene la scuola**, come la vela si regola da sola nei passi con `autoTrim`. È una semplificazione dichiarata e scritta nei testi dei passi 3.8 e 4.2. Con la 1a, a barra ferma, la rotta restava quella; con la barca orziera dell'1b no.
+- **6.4 «Raddrizzare»:** il testo dice che ci vogliono una decina di secondi e che la barca torna dritta al traverso, con la vela lascata. È il comportamento dell'1b (1.0.32).
+- **Soglie del gioco, scelte sui semi 1-10 e confermate sui semi 11-20:** 0,3 s di barra, poi 0,2 s, poi 0,1 s.
+  - Con 0,3 s, 3.2 e 5.2 si completavano guidando 6 volte su 10: dopo l'attesa a mani ferme la barca è già quasi in bolina e basta poca barra.
+  - Con 0,2 s, 3.2 era a 8 su 10.
+
+**Misurato** (`collaudo_pilota_lezioni.py`):
+- **Semi 1-10: 32 passi su 32 completati guidando 10 volte su 10, 0 passi che si completano da soli.** Con la 1.1.0: 27 su 32, il 3.10 mai completato, 4 passi completati da soli.
+- **Semi 11-20 (conferma):** 31 passi 10 su 10 e il 6.3 «La scuffia» 9 su 9. Il 6.3 si completa da solo 1 volta su 10: è noto e voluto dalla 1.0.15 (con la 1a succedeva 6 volte su 10), perché lì si scuffia apposta.
+- «Già fatto dopo un colpo lungo» 1 volta su 10 per 3.5 «Poppa» e per 6.3, il tipo già noto.
+
+**Collaudi:**
+- `collaudo_lezioni` verde in Chromium e Firefox (18 passi). Il colpo di scotta del suo «L5 prepararsi» passa da 1,5 a 1,0 s: era tarato sulla 1a e con l'1b la vela finiva troppo cazzata. Provati 1,0, 0,7 e 0,5 s, tutti OK.
+- `collaudo_carriera_intera` di nuovo verde: tolte le sue voci dai fallimenti noti.
+- Verdi anche `collaudo_registro` (15 su 15), `collaudo_suggerimento`, `collaudo_pannello` (Chromium e Firefox), `collaudo_quiz`, `collaudo_libretto`.
+- **Nuovo `collaudo_pannello_lezioni.py`** (nel giro): misura il pannello a 1360×650 in **tutti i 52 passi** delle lezioni, con il testo di fine passo. Ha trovato un difetto vecchio: il **6.4 sforava di 17 px** già prima, e nessun collaudo lo misurava. Con la prima versione del testo nuovo arrivava a 41 px; il testo accorciato lo porta a 0 px in Chromium e in Firefox. Sulla 1.1.2 la stessa misura trova i 17 px: il metro se ne accorge.
+
+**Ancora da fare nel gruppo A:** togliere le precedenze dalla lezione 3. Si fa insieme alle lezioni del gruppo D, così il contenuto non resta scoperto per un periodo. Poi il controllo frase per frase dei testi contro la barca dell'1b (criterio L2).
+
 ## Collaudi dopo il giro su GitHub della 1.1.2 (1 novembre 2026, nessuna versione nuova)
 
 - Giro completo su GitHub, Chromium e Firefox: **cadono solo `collaudo_lezioni`** (passo 5.2, va col gruppo A delle lezioni), **`collaudo_registro`** (Chromium) e una serie di fallimenti noti con i numeri cambiati.

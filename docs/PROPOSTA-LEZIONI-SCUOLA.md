@@ -105,3 +105,7 @@ Medaglie (passo 4) e menu (passo 5) vengono dopo, come deciso.
 ## 9. Da decidere (Ale), una cosa alla volta
 
 1. **L'ordine della §5 va bene?** In particolare: il regolamento prima delle partenze, e le cinque lezioni della barca dell'1b mescolate con quelle di oggi invece che tutte in fondo.
+
+## 10. Avanzamento
+
+- **1.1.3 (1 novembre 2026), fetta 1, prima parte:** i cinque passi della §1 sono a posto. Su 32 passi, 32 si completano guidando e nessuno si completa da solo (semi 1-10, conferma 11-20); i numeri sono nel `CHANGELOG.md`. Nei passi senza barra la rotta la tiene la scuola, una semplificazione nuova e dichiarata. Restano due cose: togliere le precedenze dalla lezione 3, da fare insieme al gruppo D; e il controllo dei testi frase per frase (L2).

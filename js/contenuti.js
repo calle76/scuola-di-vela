@@ -78,7 +78,7 @@
     { title: "Barra sottovento: si orza", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
       text: ["La regola che usano i velisti: <em>barra sottovento, la barca orza</em>; <em>barra sopravento, la barca poggia</em>. Il lato sottovento è quello dove sta il boma.",
              "Sposta la barra verso il boma e orza fino alla <em>bolina</em>, <em>a piccoli colpi</em> e non con un colpo lungo: fermati quando la lancetta della rosetta (in basso) è a un terzo della strada tra il rosso e l'orizzontale. Poi centra la barra."],
-      cond: I => I.twa >= 43 && I.twa <= 67 && Math.abs(I.r) < 4, hold: 1,
+      cond: (I, S, B) => I.twa >= 43 && I.twa <= 67 && Math.abs(I.r) < 4 && (B.barraLee || 0) >= 0.1, hold: 1, // 1.1.3: con la barca dell'1b, che orza da sola, serve anche la barra verso il boma
       done: "Esatto: barra verso il boma, cioè sottovento, e la prua è salita verso il vento." },
     { title: "Barra sopravento: si poggia", tiller: true, autoTrim: true, hud: 1, hintKind: "sail",
       text: ["Ora sposta la barra dalla parte opposta al boma e poggia fino al <em>lasco</em>, <em>a piccoli colpi</em>: fermati quando la lancetta è scesa un terzo della strada tra l'orizzontale e il basso. Poi centra la barra."],
@@ -101,7 +101,7 @@
              "La linea tratteggiata indica dove punta la prua: ora sei al <em>traverso</em>, con il vento di fianco."] },
     { title: "Bolina", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [1, 2],
       text: ["Orza fino alla <em>bolina</em> (il settore con il bordo tratteggiato nel cerchio), con il vento tra circa 45° e 75° dalla prua. La vela si regola da sola: guarda come si chiude il boma."],
-      cond: I => I.twa >= 43 && I.twa <= 72 && Math.abs(I.r) < 4, hold: 1,
+      cond: (I, S, B) => I.twa >= 43 && I.twa <= 72 && Math.abs(I.r) < 4 && (B.barraLee || 0) >= 0.1, hold: 1, // 1.1.3: come 2.4, la barca dell'1b orza da sola
       done: "Bolina: l'andatura più vicina al vento. <em>Bolina stretta</em> è il massimo che la barca riesce a stringere, <em>bolina larga</em> un po' più aperta. La vela sta molto cazzata." },
     { title: "Traverso", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [3],
       text: ["Poggia fino al <em>traverso</em> (il settore con il bordo tratteggiato), con il vento a circa 90°."],
@@ -122,7 +122,7 @@
       text: ["Sulla randa ci sono due nastrini, i <em>filetti</em>: rosso sul lato sinistro della vela, verde sul lato destro. Mostrano come scorre l'aria.",
              "Entrambi dritti verso il boma: vela regolata. Si agita quello <em>sopravento</em>: vela troppo lascata, cazza. Si agita quello <em>sottovento</em>: vela troppo cazzata, lasca."] },
     { title: "Filetto sopravento", sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
-      text: ["Da qui la vela la regoli tu. Lasca la scotta (freccia ↓) finché il filetto <em>sopravento</em> si agita chiaramente. Il suggerimento è spento: guarda i filetti."],
+      text: ["Da qui la vela la regoli tu; in questi passi la rotta la tiene la scuola. Lasca la scotta (freccia ↓) finché il filetto <em>sopravento</em> si agita chiaramente. Il suggerimento è spento: guarda i filetti."],
       cond: I => I.tt === "wind" && I.alpha < 6, hold: 1, // 1.0.37: 2° di margine dal confine (8°), altrimenti il passo dopo trova già vera la sua condizione
       done: "Il filetto sopravento si agita: la vela è troppo lascata e l'aria la prende di taglio." },
     { title: "Filetti dritti", sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
@@ -131,7 +131,7 @@
       done: "Vela regolata." },
     { title: "Filetto sottovento", sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
       text: ["Cazza ancora, troppo, finché si agita il filetto <em>sottovento</em>."],
-      cond: I => I.tt === "lee" && I.alpha > 29, hold: 1,
+      cond: I => I.tt === "lee", hold: 0.5, // 1.1.3: era anche alpha > 29 con hold 1; il filetto si agita da 27° (ttState): con la barca dell'1b, che orza, chi si fermava al filetto agitato non arrivava mai a 29°
       done: "Vela troppo cazzata: l'aria si stacca dal lato sottovento, la vela va in stallo e la barca rallenta." },
     { title: "Poggi e laschi", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Poggia fino al <em>lasco</em> e regola la vela finché i filetti sono dritti."],
@@ -150,7 +150,7 @@
       text: ["Quando vai in bicicletta senti vento in faccia anche in una giornata calma: è il vento creato dal tuo movimento. In barca succede lo stesso.",
              "Il vento che senti a bordo, e su cui lavora la vela, è il <em>vento apparente</em>: la somma del <em>vento reale</em> e del vento dovuto al moto della barca. Freccia bianca: reale. Freccia gialla: apparente."] },
     { title: "Da fermi", sheet: true, hud: 2, arrows: true, hintKind: "none",
-      text: ["Lasca tutta la vela (freccia ↓) e aspetta che la barca rallenti sotto i 2,5 nodi. Guarda le due frecce e i numeri nel pannello."],
+      text: ["Lasca tutta la vela (freccia ↓) e aspetta che la barca rallenti sotto i 2,5 nodi; la rotta la tiene la scuola. Guarda le due frecce e i numeri nel pannello."],
       cond: I => I.kn < 2.5, hold: 1.5, // 1.0.6: era 2 nodi; con la resistenza della vasca, vela tutta lascata al traverso, la barca si assesta a 2,1 nodi
       done: "Con la barca quasi ferma, vento apparente e vento reale quasi coincidono: direzione e forza simili. Da ferma sarebbero identici." },
     { title: "Accelerando", sheet: true, hud: 2, arrows: true, hintKind: "tt",
@@ -172,7 +172,7 @@
              "La <em>virata</em>: la prua attraversa il vento, cioè l'angolo morto. La <em>strambata</em> (detta anche abbattuta): è la poppa ad attraversare il vento. Si vira per risalire il vento, si stramba navigando col vento da dietro."] },
     { title: "Prepararsi a virare", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "tt",
       text: ["Mettiti in <em>bolina</em>, regola la vela e lascia che la barca arrivi ad almeno 3,3 nodi."],
-      cond: I => I.twa >= 43 && I.twa <= 72 && I.tt === "ok" && I.kn >= 3.3, hold: 1,
+      cond: (I, S, B) => I.twa >= 43 && I.twa <= 72 && I.tt === "ok" && I.kn >= 3.3 && (B.barraLee || 0) >= 0.1, hold: 1, // 1.1.3: come 2.4
       done: "Pronto. Durante la virata la prua attraversa l'angolo morto, dove la vela non spinge: la barca lo supera grazie all'<em>abbrivio</em>, la velocità che ha già." },
     { title: "Virare", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "tt",
       text: ["Sposta la barra <em>sottovento</em> (verso il boma) con decisione e tienila finché la prua ha attraversato il vento e sei in bolina sull'altro lato. Poi centra la barra.",
@@ -219,16 +219,16 @@
              "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo <em>sbandamento</em>, che vedi sull'indicatore in basso a sinistra. Il timoniere si sporge fuori bordo per contrastarlo, ma con un attimo di ritardo. Al traverso e al lasco, in raffica <em>poggia</em> anche un poco: orzare ti farebbe sbandare di più."] },
     { title: "Assorbire una raffica", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", bigGust: 0.45,
       text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco (e di bolina puoi anche <em>orzare</em> leggermente) per tenere lo sbandamento sotto i 20°. Passata la raffica, cazza di nuovo."],
-      cond: I => I.gustK > 0.3 && I.twa <= 75 && I.heel < 20 && I.kn > 2, hold: 3, // 1.0.15: nel cuore della raffica (+30%) e di bolina; prima bastava il bordo (+12%) e si completava da solo
+      cond: (I, S, B) => I.gustK > 0.3 && I.twa <= 75 && I.heel < 20 && I.kn > 2 && (B.lasca || 0) >= 0.05, hold: 3, // 1.1.3: anche lascare in raffica; la barca dell'1b orzava da sola e scaricava la vela // 1.0.15: nel cuore della raffica (+30%) e di bolina; prima bastava il bordo (+12%) e si completava da solo
       done: "Ben fatto. Lascare riduce la forza sulla vela; orzare di poco la scarica. È la tecnica principale per navigare con vento rafficato." },
     { title: "La scuffia", allow: ["capsizes"], noRight: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
       text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: vela tutta cazzata, e in raffica non lascare."],
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
       done: "Oltre circa 60° di sbandamento la barca si è rovesciata: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
     { title: "Raddrizzare", startCapsized: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",
-      text: ["Premi <em>Raddrizza</em> (o il tasto A). Nella realtà prima si lasciano libere le scotte, poi il timoniere sale sulla lama della deriva e fa leva con il proprio peso finché la barca torna dritta, e risale a bordo."],
+      text: ["Premi <em>Raddrizza</em> (o il tasto A): ci vogliono una decina di secondi. Nella realtà si liberano le scotte e il timoniere fa leva sulla deriva col proprio peso."],
       cond: (I, S, B) => B.cap0 && !S.capsized, hold: 1, // B.cap0: la barca era rovesciata all'inizio del passo (showStep la rovescia se serve)
-      done: "Barca dritta. Regola la vela con i filetti e riparti." },
+      done: "Barca dritta, al traverso, vela lascata: regola con i filetti e riparti." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,
       text: ["Guarda le raffiche arrivare, <em>lasca</em> quando entri, <em>cazza</em> quando escono. Oltre circa 60° di sbandamento si <em>scuffia</em>.",
              "Esercitati, poi prova il percorso nelle raffiche."] }
