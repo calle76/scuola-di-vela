@@ -116,3 +116,38 @@ Confronto con il giro completo di Ale sul PC: Chromium in `tests/output/lancia_t
 Proposta per la prossima fermata, da approvare: un elenco di «fallimenti noti», così il giro diventa rosso solo per un fallimento nuovo. I collaudi a misura di tempo (C11, E2, Q7 e simili), su GitHub, si segnano «da controllare» invece che «fallito», senza cambiare le soglie.
 
 Le azioni di GitHub (`checkout@v4` e le altre) danno un avviso: Node 20 è superato e GitHub le fa già girare con Node 24. Non le ho aggiornate: l'avviso non cambia gli esiti, e un numero di versione sbagliato fermerebbe il giro. Si aggiornano in una fermata a parte.
+
+## 10. Fallimenti noti (fermata 2, via di Ale: «via per i fallimenti noti», 1 novembre 2026)
+
+**Regola.** Un collaudo uscito con errore è **NOTO** solo se valgono tutte e due le condizioni:
+- la sua uscita contiene tutte le righe scritte per lui in `tests/fallimenti_noti.txt`, identiche, per quel browser;
+- non ha nessun'altra riga di fallimento: un controllo `NO` o `FALLITO`, un elenco di casi sbagliati non vuoto, `Traceback` o `…Error:`.
+
+Le regate girano a passi fissi con semi fissi, quindi gli stessi numeri escono uguali a ogni giro e su tutti e due i computer. Per virate2, che stampa solo «ESITO: FALLITO», la voce contiene anche le due righe della conferma con i numeri e la riga degli errori della pagina.
+
+**Misure di tempo (voci `~~`).** Un collaudo è «misura di tempo» se ogni controllo fallito contiene uno dei frammenti scritti: `C11 `, `E2 passo di simulazione`, `Q7 costo del disegno`. Solo con `GITHUB_ACTIONS=true` va in DA CONTROLLARE; sul PC resta FALLITO con la nota. Il riassunto (ESITO, casi sbagliati) non conta, perché ripete i controlli singoli.
+
+**L'elenco (dal giro di Ale sul PC, uguale a quello su GitHub).**
+- In Chromium e Firefox: avversari1b, partenze, virate2, competizione misura.
+- Solo Firefox: contatto_vero (0,29 m) e giri_avversari G1 (103 su 104).
+- Misure di tempo: torneo misura C11, registrazione E2, riquadro bandiere Q7.
+
+**Misurato.**
+- **Uscite vere del 1 novembre:** 26 su 26 classificate come atteso.
+  - 18 NOTI: 9 PC e 9 GitHub, cioè 4 collaudi in Chromium e 5 in Firefox (contatto_vero e giri_avversari solo in Firefox).
+  - 6 misure di tempo.
+  - 2 moviola su GitHub rimaste FALLITO («errore di Python»).
+- **5 uscite cambiate apposta:** tutte FALLITO, con il motivo giusto.
+  1. Un numero della conferma di virate2 cambiato (82 → 83).
+  2. Un `NO` in più.
+  3. L'uscita di Firefox letta come Chromium.
+  4. Torneo con C11 più un controllo C3 sbagliato.
+  5. Un collaudo che non è nell'elenco.
+- **Giro finto completo** (copia con collaudi che ristampano le uscite vere):
+  - virate2 e partenze NOTO, uscita 0;
+  - torneo FALLITO sul PC e DA CONTROLLARE con `GITHUB_ACTIONS=true`, uscita 0;
+  - moviola FALLITO, uscita 1;
+  - avversari1b fatto passare: OK, con la riga «ora passano».
+- **Collaudi vuoti:** anche uno script rotto (errore di sintassi) è stato preso come FALLITO.
+
+**Atteso al prossimo giro su GitHub, con la moviola corretta:** verde in tutti gli 8 pezzi, con i noti e le misure di tempo elencati. È un'attesa, non una misura. G3 (tre giri uguali) e G4 (rosso su un errore messo apposta) restano da fare.

@@ -9,6 +9,9 @@
 #   tests/lancia_tutti.sh --parte 2/4      # solo il pezzo 2 di 4 (per GitHub Actions, docs/PROPOSTA-COLLAUDI-SU-GITHUB.md):
 #                                          # i lunghi si distribuiscono a turno fra i pezzi, poi gli altri; i 4 pezzi insieme = tutti
 #
+# Fallimenti noti (1 novembre 2026): un collaudo che fallisce esattamente come scritto in tests/fallimenti_noti.txt
+# va fra i NOTI e non fa uscire con 1; le misure di tempo segnate lì, solo su GitHub, vanno in DA CONTROLLARE.
+#
 # L'uscita completa di ogni collaudo viene salvata in tests/output/lancia_tutti/<data-ora>/<nome>.txt
 # (cartella ignorata da git). Il riepilogo finale la richiama per i FALLITI (ultime 15 righe) e per i
 # DA CONTROLLARE (ultime 4 righe, i numeri da confrontare a mano con docs/COLLAUDI.md).
@@ -48,6 +51,9 @@ if [ ! -x "$VENV_PY" ]; then
     HAVE_VENV=0
     echo "venv dei collaudi non trovato: lancia prima tests/prepara_ambiente.sh (i collaudi Python saranno saltati)"
 fi
+BROWSER_NOME="${BROWSER:-chromium}"
+NOTI_PY="$VENV_PY"; [ -x "$NOTI_PY" ] || NOTI_PY=python3
+ORA_PASSA=()
 HAVE_NODE=1
 if ! command -v node >/dev/null 2>&1; then
     HAVE_NODE=0
@@ -264,12 +270,37 @@ collect() {
     DURATA[idx]="$durata"
     name="${NAME[idx]}"; esito="${ESITO[idx]}"
     if [ "$esito" = chiaro ]; then
-        if [ "$rc" = 0 ]; then STATUS[idx]=OK; echo "$name: OK ($durata)"
+        if [ "$rc" = 0 ]; then STATUS[idx]=OK; echo "$name: OK ($durata)"; ora_passa "$idx"
         elif [ "$rc" = 3 ]; then STATUS[idx]=NON_VALIDO; echo "$name: NON VALIDO (ambiente) ($durata)"   # codice 3: misura non valida per l'ambiente, per esempio caratteri mancanti
-        else STATUS[idx]=FALLITO; echo "$name: FALLITO ($durata)"; fi
+        else fallito "$idx"; fi
     else
-        if [ "$rc" = 0 ]; then STATUS[idx]=DA_CONTROLLARE; echo "$name: DA CONTROLLARE ($durata) — $(nota "$name")"
-        else STATUS[idx]=FALLITO; echo "$name: FALLITO ($durata)"; fi
+        if [ "$rc" = 0 ]; then STATUS[idx]=DA_CONTROLLARE; echo "$name: DA CONTROLLARE ($durata) — $(nota "$name")"; ora_passa "$idx"
+        else fallito "$idx"; fi
+    fi
+}
+
+# Un collaudo uscito con errore: NOTO se fallisce esattamente come in tests/fallimenti_noti.txt, altrimenti FALLITO.
+fallito() {
+    local idx=$1 name="${NAME[$1]}" r stato motivo
+    r=$("$NOTI_PY" "$REPO/tests/noti.py" esito "$name" "$BROWSER_NOME" "${OUTFILE[$1]}" 2>&1)
+    stato="${r%%$'\t'*}"; motivo="${r#*$'\t'}"
+    if [ "$stato" = NOTO ]; then
+        STATUS[idx]=NOTO; NOTE[idx]="$motivo"; echo "$name: NOTO ($durata) — $motivo"
+    elif [ "$stato" = TEMPO ] && [ "${GITHUB_ACTIONS:-}" = true ]; then
+        STATUS[idx]=DA_CONTROLLARE; NOTE[idx]="solo misure di tempo, su GitHub non fanno rosso: $motivo"; echo "$name: DA CONTROLLARE ($durata) — ${NOTE[idx]}"
+    else
+        STATUS[idx]=FALLITO
+        if [ "$stato" = TEMPO ]; then NOTE[idx]="solo misure di tempo (su GitHub sarebbe DA CONTROLLARE): $motivo"
+        elif [ "$stato" = NUOVO ] && [ "$motivo" != "non è nell'elenco dei fallimenti noti" ]; then NOTE[idx]="$motivo"
+        elif [ "$stato" != NUOVO ]; then NOTE[idx]="noti.py: $r"; fi
+        echo "$name: FALLITO ($durata)${NOTE[idx]:+ — ${NOTE[idx]}}"
+    fi
+}
+
+# Un collaudo passato che nell'elenco ha una voce «noto»: va detto, perché la voce è da togliere.
+ora_passa() {
+    if "$NOTI_PY" "$REPO/tests/noti.py" c-e "${NAME[$1]}" "$BROWSER_NOME" 2>/dev/null; then
+        ORA_PASSA+=("${NAME[$1]}")
     fi
 }
 
@@ -309,7 +340,7 @@ while [ "${#pending[@]}" -gt 0 ] || [ "$RUNNING" -gt 0 ]; do
 done
 T1=$(date +%s)
 
-OK=0; FALLITI=0; DA_CONTROLLARE=0; SALTATI=0; NON_VALIDI=0
+OK=0; FALLITI=0; DA_CONTROLLARE=0; SALTATI=0; NON_VALIDI=0; NOTI=0
 for ((i=0; i<M; i++)); do
     case "${STATUS[i]}" in
         OK) OK=$((OK+1)) ;;
@@ -317,6 +348,7 @@ for ((i=0; i<M; i++)); do
         DA_CONTROLLARE) DA_CONTROLLARE=$((DA_CONTROLLARE+1)) ;;
         SALTATO) SALTATI=$((SALTATI+1)) ;;
         NON_VALIDO) NON_VALIDI=$((NON_VALIDI+1)) ;;
+        NOTO) NOTI=$((NOTI+1)) ;;
     esac
 done
 
@@ -328,6 +360,7 @@ else
     for ((i=0; i<M; i++)); do
         [ "${STATUS[i]}" = FALLITO ] || continue
         echo "  - ${NAME[i]} — ${OUTFILE[i]#$REPO/}"
+        [ -n "${NOTE[i]:-}" ] && echo "      >> ${NOTE[i]}"
         tail -n 15 "${OUTFILE[i]}" | sed 's/^/      /'
     done
 fi
@@ -349,9 +382,25 @@ if [ "$DA_CONTROLLARE" = 0 ]; then
 else
     for ((i=0; i<M; i++)); do
         [ "${STATUS[i]}" = DA_CONTROLLARE ] || continue
-        echo "  - ${NAME[i]} — $(nota "${NAME[i]}")"
+        if [ -n "${NOTE[i]:-}" ]; then echo "  - ${NAME[i]} — ${NOTE[i]}"; else echo "  - ${NAME[i]} — $(nota "${NAME[i]}")"; fi
         tail -n 4 "${OUTFILE[i]}" | sed 's/^/      /'
     done
+fi
+
+echo
+echo "NOTI (falliti esattamente come già sappiamo, tests/fallimenti_noti.txt; non fanno diventare rosso il giro):"
+if [ "$NOTI" = 0 ]; then
+    echo "  nessuno"
+else
+    for ((i=0; i<M; i++)); do
+        [ "${STATUS[i]}" = NOTO ] || continue
+        echo "  - ${NAME[i]} — ${NOTE[i]}"
+    done
+fi
+if [ "${#ORA_PASSA[@]}" -gt 0 ]; then
+    echo
+    echo "ERANO FALLIMENTI NOTI E ORA PASSANO (togliere la voce da tests/fallimenti_noti.txt, dicendolo):"
+    for n in "${ORA_PASSA[@]}"; do echo "  - $n"; done
 fi
 
 echo
@@ -375,7 +424,7 @@ if [ "$SALTATI" -gt 0 ]; then
 fi
 
 echo
-echo "Riepilogo: $OK OK, $FALLITI falliti, $NON_VALIDI non validi per l'ambiente, $DA_CONTROLLARE da controllare, $SALTATI saltati. Tempo totale: $((T1-T0))s."
+echo "Riepilogo: $OK OK, $FALLITI falliti, $NOTI noti, $NON_VALIDI non validi per l'ambiente, $DA_CONTROLLARE da controllare, $SALTATI saltati. Tempo totale: $((T1-T0))s."
 echo "Uscita completa di ogni collaudo in: ${OUTDIR#$REPO/}/"
 
 if [ "$FALLITI" = 0 ]; then

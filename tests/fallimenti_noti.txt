@@ -1,0 +1,74 @@
+# Fallimenti noti dei collaudi (1 novembre 2026, docs/PROPOSTA-COLLAUDI-SU-GITHUB.md §10). Lo legge tests/noti.py.
+#
+# «== nome nel giro | browser | motivo»: fallimento noto. Vale solo se l'uscita contiene TUTTE le righe sotto, identiche,
+#   e nessun'altra riga di fallimento (NO, FALLITO, casi sbagliati, Traceback). Allora lancia_tutti.sh lo conta come NOTO e il
+#   giro non diventa rosso. Se un numero cambia, anche in meglio, torna FALLITO: si guarda e si aggiorna la voce dicendolo.
+# «~~ nome nel giro | browser | motivo»: misura di tempo. Le righe sotto sono frammenti: se OGNI controllo fallito ne contiene
+#   uno, solo su GitHub (GITHUB_ACTIONS=true) il collaudo va in DA CONTROLLARE invece che FALLITO. Sul PC resta FALLITO.
+# Le soglie dei collaudi non cambiano. Le righe sono state prese dal giro completo di Ale sul PC del 1 novembre 2026
+# (Chromium tests/output/lancia_tutti/20261101-031157, Firefox 20261101-041521) e coincidono con il giro su GitHub dello stesso giorno.
+# Per scrivere una voce nuova: .venv-collaudi/bin/python tests/noti.py righe <file di uscita>
+
+== collaudo_avversari1b.py | chromium | scenario 5 (tre barche alla boa) 7 su 10 contro 9, noto dalla 1.0.49 (COLLAUDI.md); gli altri scenari 10 su 10
+  scenario 5 variante 2: NO  contatti 1 (regola 13: 0), distanza minima A-B 4.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Blu, contatto con la Verde: era sopravento con le stesse mure e doveva stare lontano (regola 11).']
+  scenario 5 variante 3: NO  contatti 1 (regola 13: 0), distanza minima A-B 7.9 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Blu, contatto con la Verde: era sopravento con le stesse mure e doveva stare lontano (regola 11).']
+  scenario 5 variante 8: NO  contatti 0 (regola 13: 0), distanza minima A-B 3.3 m, deviazione 0°, velocità minima 1000000000, piantate 1, girate 3/3 []
+scenario 5 (tutte girano entro 60 s, nessuna piantata): 7 su 10 FALLITO
+ESITO: FALLITO (scenari [5])
+
+== collaudo_avversari1b.py | firefox | scenario 5 (tre barche alla boa) 7 su 10 contro 9, noto dalla 1.0.49 (COLLAUDI.md); gli altri scenari 10 su 10
+  scenario 5 variante 2: NO  contatti 1 (regola 13: 0), distanza minima A-B 2.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Verde, contatto con la Rossa: era mure a sinistra e doveva lasciare strada a chi era mure a dritta (regola 10).']
+  scenario 5 variante 3: NO  contatti 1 (regola 13: 0), distanza minima A-B 2.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Verde, contatto con la Rossa: era mure a sinistra e doveva lasciare strada a chi era mure a dritta (regola 10).']
+  scenario 5 variante 7: NO  contatti 0 (regola 13: 0), distanza minima A-B 7.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 []
+scenario 5 (tutte girano entro 60 s, nessuna piantata): 7 su 10 FALLITO
+ESITO: FALLITO (scenari [5])
+
+== collaudo_partenze.py | chromium | criterio (1) esperti non meno dei principianti, noto (COLLAUDI.md)
+criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 6.7% non meno dei principianti 5.0%']
+
+== collaudo_partenze.py | firefox | criterio (1) esperti non meno dei principianti, noto (COLLAUDI.md)
+criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 6.7% non meno dei principianti 1.7%', '(1) raffiche, 12 nodi: esperti 10.0% non meno dei principianti 3.3%']
+
+== collaudo_virate2.py | chromium | avversari oltre la bolina + 15° sopra la soglia del 5%, noto dalla 1.0.31 (quasi tutte manovre volute della guida)
+conferma (semi 21-60): 1076 virate misurate, oltre la bolina + 15°: 142 (13.2%), prua massima meno bolina: mediana -0.1°, 95° percentile 28.0°, massimo 70.4°
+   prua quando la rotazione si ferma, meno bolina: oltre + 15° 82 (7.6%), mediana -2.0°, 95° percentile 26.2°, massimo 66.2°
+regate con tutte le barche arrivate: 120 su 120; errori della pagina: []
+ESITO: FALLITO
+
+== collaudo_virate2.py | firefox | avversari oltre la bolina + 15° sopra la soglia del 5%, noto dalla 1.0.31 (quasi tutte manovre volute della guida)
+conferma (semi 21-60): 1043 virate misurate, oltre la bolina + 15°: 115 (11.0%), prua massima meno bolina: mediana -0.1°, 95° percentile 27.7°, massimo 86.4°
+   prua quando la rotazione si ferma, meno bolina: oltre + 15° 76 (7.3%), mediana -2.0°, 95° percentile 26.0°, massimo 64.7°
+regate con tutte le barche arrivate: 120 su 120; errori della pagina: []
+ESITO: FALLITO
+
+== collaudo_competizione.py (misura) | chromium | C1 piazzamenti fuori dalla fascia 10-40%, noto
+  NO  C1: 1° 15 (19%), 2° 18 (22%), 3° 14 (18%), 4° 33 (41%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 7 (9%), 2° 14 (18%), 3° 32 (40%), 4° 27 (34%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 4 (5%), 2° 15 (19%), 3° 24 (30%), 4° 37 (46%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 3 (4%), 2° 12 (15%), 3° 27 (34%), 4° 38 (48%) su 80 arrivate (fascia 10-40%)
+  misura C1: NO
+  conferma C1: NO
+ESITO: FALLITO
+
+== collaudo_competizione.py (misura) | firefox | C1 piazzamenti fuori dalla fascia 10-40%, noto
+  NO  C1: 1° 13 (16%), 2° 8 (10%), 3° 21 (26%), 4° 38 (48%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 7 (9%), 2° 20 (25%), 3° 25 (31%), 4° 28 (35%) su 80 arrivate (fascia 10-40%)
+  misura C1: NO
+ESITO: FALLITO
+
+== collaudo_contatto_vero.py | firefox | Firefox: penetrazione 0,29 m contro 0,25 nell'1a, accettato il 31 ottobre 2026
+FALLITO: 1a: scafi sovrapposti 0.01 s a regata e penetrazione massima 0.29 m (attesi al massimo 0,5 s e 0,25 m: la correzione vale anche nell'1a dalla 1.0.42; prima 2,8 s e 1,37 m)
+ESITO: FALLITO
+
+== collaudo_giri_avversari.py (40 regate) | firefox | Firefox: G1 103 su 104, accettato il 31 ottobre 2026
+FALLITO G1 ogni giro dichiarato ha almeno 360° (tolleranza di campionamento 5°) di rotazione, una virata e una strambata (dai campioni a 0,1 s): 103 su 104 segmenti di giri: 90; non validi: rotazione < 360 in 1 (minimo 357.5), senza virata 1, senza strambata 0
+casi sbagliati: ['G1 ogni giro dichiarato ha almeno 360° (tolleranza di campionamento 5°) di rotazione, una virata e una strambata (dai campioni a 0,1 s): 103 su 104']
+
+~~ collaudo_torneo.py (misura) | tutti | C11: tempi veri (uscita dal menu, chiusura del browser a metà torneo), dipendono dal carico del computer: sul PC fallisce o passa da un giro all'altro
+C11 
+
+~~ collaudo_registrazione.py (8 regate) | tutti | E2: costo del passo misurato con l'orologio (+5,2% su GitHub in Firefox, +0,1% sul PC)
+E2 passo di simulazione
+
+~~ collaudo_riquadro_bandiere.py | tutti | Q7: costo del disegno misurato con l'orologio (3,8% sul PC in Firefox, OK su GitHub)
+Q7 costo del disegno

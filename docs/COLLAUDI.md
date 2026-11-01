@@ -106,6 +106,12 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 
 **Su GitHub (1 novembre 2026).** `.github/workflows/collaudi.yml` lancia il giro completo su GitHub Actions di notte (circa alle 3 italiane, solo se nelle ultime 24 ore c'è stato un commit su `main`), con Chromium e Firefox, divisi in 4 pezzi per browser con `lancia_tutti.sh --parte K/N`. Si può lanciare anche a mano: scheda **Actions** → «Collaudi» → «Run workflow», scegliendo se fare solo il giro veloce. Per ogni pezzo il riepilogo compare nella pagina del giro, e le uscite complete si scaricano come allegato per 30 giorni. Finché i criteri G1-G6 di `PROPOSTA-COLLAUDI-SU-GITHUB.md` non sono passati, il riferimento resta il giro sul PC.
 
+**Fallimenti noti (1 novembre 2026).** `tests/fallimenti_noti.txt` elenca i fallimenti già noti e accettati, browser per browser, con le righe esatte che il collaudo stampa.
+- Se un collaudo fallisce esattamente così, `lancia_tutti.sh` lo mette fra i **NOTI** e il giro non esce con 1. Se un numero cambia, anche in meglio, o fallisce un controllo in più, torna **FALLITO** e dice cosa è cambiato. Si guarda, e solo dopo si aggiorna la voce, dicendolo.
+- Le voci `~~` sono misure di tempo: su GitHub vanno in DA CONTROLLARE, sul PC restano FALLITO.
+- I noti che ora passano compaiono in una riga a parte: la loro voce va tolta.
+- Per scrivere una voce nuova: `.venv-collaudi/bin/python tests/noti.py righe <file di uscita>`.
+
 **Proposta (31 ottobre 2026, da approvare, nessuna modifica a `lancia_tutti.sh`):** le «misure» lunghe (`torneo (misura)` 34 min, `distacchi` 18, `competizione (misura)` 15) si lanciano solo quando cambiano torneo, avversari o competizione; il giro di tutti i giorni è `--veloce --parallelo 3` (49 collaudi in 24 minuti, stessi esiti del sequenziale: `GIRO-30-OTT-1.0.68.md`); `collaudo_quiz.py` (9 s) dopo ogni modifica al menu o alle descrizioni delle regate.
 
 | Script | Cosa verifica | Esito atteso |
