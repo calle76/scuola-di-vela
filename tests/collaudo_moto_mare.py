@@ -14,7 +14,7 @@ import asyncio, pathlib, sys, statistics
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri() + "#collaudo"
 MISURA = """([kn, rel, k]) => {
-  __sv.openItem('free'); __sv.fast(0); env.twd = 0; env.tws = kn / KN;
+  __sv.openItem('free'); __sv.setShifts(null); __sv.fast(0); env.twd = 0; env.tws = kn / KN;   // 1.1.0: la navigazione libera ha sempre i salti di vento: qui si misura il moto con la prua fissa rispetto al vento
   S.x = 37 * k; S.y = -23 * k; S.h = rel; S.u = 1.5;
   const hx = [], hy = []; let ppm = 0;
   for (let n = 0; n < 1500; n++){

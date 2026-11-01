@@ -189,7 +189,7 @@ async def main():
         nuovo = await altre(ROOT); vecchio = await altre(rif)
         # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e cambiano per scelta (pulizia del codice): si confrontano le 10 già dell'1b
         uguali = [j for j in range(20) if j % 4 >= 2]
-        chk("Q6a le 10 regate che erano già dell'1b (salti di vento e regata dei giri): arrivi, penalità e posizioni finali identici al bit alla 1.0.69", len(nuovo) == 20 and len(vecchio) == 20 and all(nuovo[j] == vecchio[j] for j in uguali))
+        print("     Q6a (solo riportato dalla 1.1.1: la guida degli avversari è cambiata e nessuna regata può più essere identica alla 1.0.69; le regate si confrontano con tests/arrivi_regate.py) regate identiche: %d su %d" % (sum(1 for j in uguali if nuovo[j] == vecchio[j]), len(uguali)))
         async def schermate(base):
             o = {}
             for i in (0, 2):

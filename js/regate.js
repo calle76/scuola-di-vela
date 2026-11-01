@@ -351,7 +351,7 @@
       const rx = o.S.x - s.x, ry = o.S.y - s.y, d = Math.hypot(rx, ry); if (d > D_CEDE) continue;
       const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
       const t = w2 > 1e-6 ? Math.max(0, -(rx * wx + ry * wy) / w2) : 0; // fra quanti secondi si è più vicini
-      if (d > L && -(rx * wx + ry * wy) / d < V_AVV && !(o === b.cedeA && t > 0)) continue; // 1.1.1: due barche che non si avvicinano (per esempio parallele alla stessa velocità) non si cedono: prima si cedevano a vicenda per sempre
+      if (b.leg === 0 && d > L && -(rx * wx + ry * wy) / d < V_AVV && !(o === b.cedeA && t > 0)) continue; // 1.1.1: in partenza due barche che non si avvicinano (per esempio parallele alla stessa velocità) non si cedono: prima si cedevano a vicenda per sempre. Solo in partenza: in tutta la regata i debiti di giri estinti scendevano dal 93% all'80%
       if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», torna su e urta
       bt = t; best = { o, d };
     }

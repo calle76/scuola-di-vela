@@ -65,3 +65,7 @@ La prima cosa della fermata 2 è misurarlo.
 Esito con i numeri nel `CHANGELOG.md`, alla voce 1.1.1. Sui semi 1-20 le barche non partite passano da 25 a 0 su 1440; sui semi 21-40 di conferma ne resta 1 su 1440, e la soglia 0 lì non è raggiunta. I contatti crescono del 12,7%, dentro la soglia del 20%.
 
 La correzione B è diversa da quella scritta al §3. La causa misurata non era la mira dopo il richiamo. Erano due cose: un'altalena attorno alla soglia di 1,1 m/s per prendere abbrivio (B1), e la prua di partenza che porta fuori dall'estremo vicino alla boa (B2). La versione del §3 l'ho provata e tolta: creava un giro attorno alla boa.
+
+## 7. Dopo il giro della 1.1.1 (1.1.2)
+
+Con A applicata in tutta la regata, gli avversari estinguevano meno debiti di giri: 80% in Chromium e 74% in Firefox, contro il 93% della 1.1.0. Nella 1.1.2 A vale solo in partenza. Risultato: 0 barche non partite su 2880 (semi 1-40), contatti come nella 1.1.0 (333 contro 332), giri degli avversari al 92%. I dettagli sono nel `CHANGELOG.md`, alla voce 1.1.2.

@@ -156,10 +156,9 @@ async def main():
                     # 1.1.0: senza raffiche (prima 1). La navigazione libera accende sempre i salti di vento e i numeri casuali si consumano in un altro
                     # ordine, quindi le raffiche nascono altrove: con le raffiche le corse differivano di poco, senza sono identiche al bit (misurato il 1 novembre)
                     res.append(await pg.evaluate(PROVA, [kn, 2, 0, 11, ang, "fisso:0.5", 40, None]))
-                altre = await pg.evaluate(ALTRE, [5, 1])
-                res.append([o for j, o in enumerate(altre) if j % 4 >= 2])   # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e ora cambiano per scelta: si confrontano solo le altre due
+                # 1.1.1: niente più regate nel confronto (la guida degli avversari è cambiata: nessuna può essere identica alla 1.0.72; le regate si confrontano con tests/arrivi_regate.py)   # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e ora cambiano per scelta: si confrontano solo le altre due
                 r_[nome] = res; await ctx.close()
-            chk("A1 casella spenta: 4 corse a scotta fissa e 2 regate (dalla 1.1.0 solo quelle che erano già dell'1b) identiche alla 1.0.72, al bit", json.dumps(r_["ora"]) == json.dumps(r_["rif"]), "")
+            chk("A1 casella spenta: 4 corse a scotta fissa identiche alla 1.0.72, al bit (dalla 1.1.1 senza regate)", json.dumps(r_["ora"]) == json.dumps(r_["rif"]), "")
     print("\ncasi sbagliati:", bad if bad else "nessuno")
     sys.exit(1 if bad else 0)
 asyncio.run(main())

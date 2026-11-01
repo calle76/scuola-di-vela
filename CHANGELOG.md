@@ -17,6 +17,34 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.2 — Gli avversari cedono come prima dopo il via; collaudi sistemati dopo il giro della 1.1.1 (ramo `pulizia`)
+
+Il giro su GitHub della 1.1.1 ha trovato un peggioramento vero: con la correzione A (cedere solo a chi si avvicina) in tutta la regata, gli avversari estinguevano meno debiti di giri. `collaudo_giri_avversari` G2 era all'80% in Chromium e al 74% in Firefox, contro il 93% e il 91% della 1.1.0, con soglia 80%.
+
+**Correzione:** A vale solo in partenza, finché la barca non ha tagliato la linea (`b.leg === 0`). Dopo il via gli avversari cedono come nella 1.1.0. B1 e B2 restano come nella 1.1.1.
+
+**Prove senza ciascuna correzione** (G2, Chromium, 40 regate):
+- 1.1.1 così com'era: 80%;
+- senza A: 90%;
+- senza B1: 86%;
+- senza B2: 80%.
+
+**Misurato sulla 1.1.2:**
+- **Barche non partite:** semi 1-20, 0 su 1440; semi 21-40 (conferma), **0 su 1440**. Anche il caso del seme 40 che Ale aveva accettato ora parte. La scelta di limitare A alla partenza è venuta dopo aver visto i numeri della 1.1.1, e lo dico: i semi 21-40 erano già stati usati come conferma della 1.1.1.
+- **Contatti in 80 regate intere:** 333, contro 332 della 1.1.0 e 374 della 1.1.1.
+- **`collaudo_giri_avversari`:** verde, G2 **92%**, G1 102 su 102.
+- **`collaudo_avversari1b`, scenario 5:** di nuovo 7 su 10, come nella 1.1.0. Il 9 su 10 della 1.1.1 veniva da A in tutta la regata.
+- **Fisica:** `impronta1b.js` identica al bit.
+- **Partenze lente nelle raffiche** (criterio (2) di `collaudo_partenze`): non le ha portate la 1.1.1. Nel giro della 1.1.0 il ritardo mediano con 300 s era già di 12,4 s per i principianti e di 8,3 s per gli esperti, e con 180 s di 7,4 s; nella 1.1.1 è sceso a 7,9 s, 8,2 s e 2,3 s. Resta fuori soglia (3 s) da quando la regata nelle raffiche ha gli avversari dell'1b: difetto noto, da guardare con gli avversari.
+
+**Collaudi corretti** dopo il giro della 1.1.1:
+- `collaudo_regola21` (K2, K3): il caso costruito ora azzera i richiami (21.1) e i debiti degli avversari (21.2). Con la guida nuova il pilota a volte era ancora oltre la linea, o un avversario stava scontando, e la regola misurata era giustamente 21.1 o 21.2.
+- `collaudo_giri` E1: si aspetta 15 s per ogni giro non fatto, invece di 30 s fissi. In Firefox, seme 501, il pilota tocca anche la boa e i giri non fatti sono 3, +45 s, come deve essere.
+- `collaudo_moto_mare`: salti di vento spenti, perché misura il moto con la prua fissa rispetto al vento. Era rimasto indietro dalla 1.1.0.
+- `collaudo_boma_poppa` B4a, `collaudo_riquadro_bandiere` Q6a, `collaudo_scotta_automatica` A1: da quando cambia la guida degli avversari, nessuna regata può più essere identica alle versioni vecchie (1.0.69-1.0.72). Il confronto delle regate ora è **solo riportato**, e A1 confronta solo le corse a scotta fissa. Il controllo «la modifica non cambia le regate» lo fa `tests/arrivi_regate.py` a ogni modifica.
+- Verdi qui: `collaudo_regola21` (Chromium e Firefox), `collaudo_giri` (Chromium e Firefox), `collaudo_linea` (Firefox), `collaudo_moto_mare`, `collaudo_scotta_automatica`, `collaudo_semaforo`, `collaudo_regate` raffiche (18 su 18).
+- I fallimenti noti con numeri cambiati (`collaudo_virate2`, `collaudo_competizione`, `collaudo_partenze`, `collaudo_avversari1b` in Firefox) si aggiornano con le righe del prossimo giro.
+
 ## Collaudi: le partenze su tanti semi e i collaudi scelti su GitHub (1 novembre 2026, nessuna versione nuova)
 
 - **`tests/collaudo_non_partite.py`, nuovo.** Conta gli avversari non partiti entro 60 s in una delle quattro regate, con principianti ed esperti, 60/180/300 s di preparazione e semi 1-20 (si possono cambiare con `NONPARTITE_SEMI`). È la misura della 1.1.1 diventata collaudo: soglia 0, e il metro deve contare tutte le barche. Nel giro sono quattro voci lunghe, una per regata.

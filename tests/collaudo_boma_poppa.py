@@ -127,7 +127,7 @@ async def main():
         # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e cambiano per scelta (pulizia del codice): si confrontano le 10 che erano già dell'1b
         uguali = [j for j in range(20) if j % 4 >= 2]; diff = [j for j in uguali if nuovo[j] != vecchio[j]]
         print("  %d regate (salti, giri): %d identiche al bit alla %s, %d diverse: %s" % (len(uguali), len(uguali) - len(diff), RIF, len(diff), diff))
-        chk("B4a le 10 regate che erano già dell'1b (arrivi, penalità, posizioni finali) sono identiche al bit (il boma non entra nelle forze)", len(nuovo) == 20 and len(uguali) == 10 and not diff)
+        print("  B4a (solo riportato dalla 1.1.1: la guida degli avversari è cambiata, nessuna regata può più essere identica alla %s; le regate si confrontano con tests/arrivi_regate.py a ogni modifica) diverse %d su %d" % (RIF, len(diff), len(uguali)))
         # ---- B6: pagina come la carica un giocatore ----
         ctx, pg, errs = await pagina(b, ROOT, "")
         await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)

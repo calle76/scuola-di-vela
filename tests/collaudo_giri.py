@@ -120,7 +120,8 @@ async def main():
         chk("D3 ogni contatto dà al massimo un debito di due giri (nessun incremento diverso da 0 o 2)", metro.tutti(r["inc"] in (0, 2) for l, r in D), str(sorted({r["inc"] for l, r in D})))
         # ---- E ----
         E1 = [await pg.evaluate(ARRIVO, [True, 500 + k, True]) for k in range(1, 7)]; E0 = [await pg.evaluate(ARRIVO, [False, 600 + k, True]) for k in range(1, 7)]
-        chk("E1 arrivo senza avversari con il debito di due giri aperto: +30 s e la voce nell'elenco (6 regate)", metro.tutti(r["fin"] is not None and r["need0"] == 0 and r["pen"] - r["penPrima"] == 30 and any("giri di penalità non fatti (2)" in x for x in r["lista"]) for r in E1))
+        # 1.1.1: il pilota può prendere anche un giro per la boa toccata (regola 31) dopo il debito costruito (in Firefox, seme 501): 15 s per ogni giro non fatto, almeno i 2 del debito
+        chk("E1 arrivo senza avversari con il debito di due giri aperto: 15 s per ogni giro non fatto (almeno 2) e la voce nell'elenco (6 regate)", metro.tutti(r["fin"] is not None and r["need0"] == 0 and r["need"] - r["doneAntes"] >= 2 and r["maxDone"] == 0 and r["pen"] - r["penPrima"] == 15 * (r["need"] - r["doneAntes"]) and any(f"giri di penalità non fatti ({r['need'] - r['doneAntes']})" in x for x in r["lista"]) for r in E1))
         chk("E2 arrivo con il debito già scontato: nessun secondo in più (6 regate)", metro.tutti(r["fin"] is not None and r["pen"] == r["penPrima"] and not any("non fatti" in x for x in r["lista"]) for r in E0))
         # 1.0.64: il pilota di prova, partito in anticipo, può restare incastrato contro il comitato (ostacolo): K1 accetta al più una regata su dieci non arrivata, contata a parte
         K = [await pg.evaluate(ARRIVO, [True, 800 + k, False]) for k in range(1, n + 1)]
