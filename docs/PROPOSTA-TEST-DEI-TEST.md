@@ -132,7 +132,17 @@ Le controprove del §8 sono difetti **grossi** (regola spenta, colori scambiati)
 4. **Impronta delle regate.** Come `impronta1b.js` per la barca: 6 regate a passi fissi con semi fissi, e per ogni barca la posizione ogni 10 s salvata in git; a ogni versione si confronta al centimetro. Prende qualunque cambiamento nella guida degli avversari, anche piccolo, e obbliga a dire «è voluto». `collaudo_impronta.py` esiste già ma ha il riferimento vecchio: va rigenerato (è nell'elenco della pulizia del codice).
 5. **Controprove a tappeto (mutation testing).** Uno script che cambia da solo, una alla volta, ogni costante numerica di `js/regate.js` (±20%) e lancia il giro `--veloce`: la mappa di cosa nessun collaudo protegge. È il più completo ma costa decine di ore di macchina: solo se un giorno i collaudi girano su GitHub Actions, di notte, non sul PC di Ale.
 
-Consiglio: 3 e 2 subito dopo la pulizia del codice (poco costo, molti sbagli piccoli presi), poi 1; 4 con la pulizia; 5 solo con GitHub Actions.
+6. **Casi in fila (1 novembre 2026, DA FARE: Ale, «aggiungila all'elenco delle cose da fare»).** Nasce dal difetto dei giri della 1.0.74 (osservazione 72): il conto era giusto per una penalità sola e sbagliato quando le penalità si accumulavano con un cambio di verso. Il «test dei test» non poteva vederlo, perché controlla che un collaudo cada sul difetto per cui è scritto, non le situazioni che nessun collaudo prova. Per ogni **conto** del gioco, un collaudo che fa succedere le cose **due o tre volte di fila e in ordini diversi**:
+   - giri di penalità del giocatore (penalità, giri, penalità, giri nell'altro verso; boa toccata durante i giri; arrivo con una penalità a metà);
+   - debito degli avversari (`gDebt`): due contatti prima di finire i giri;
+   - tocchi di boa: la stessa boa due volte, due boe diverse;
+   - partenza anticipata: oltre, dietro, di nuovo oltre prima dello sparo;
+   - segni della moviola: O e contatti allo stesso istante, segni prima del via e dopo l'arrivo;
+   - marcatori M del registratore con pause della registrazione.
+
+   Per ognuno si scrivono **prima** i numeri attesi a mano, e si fa la controprova su un mutante che dimentica il caso precedente, come `R.done = 1`. Costo: poche ore. Quando: insieme alle proposte 2 e 3, dopo la pulizia del codice.
+
+Consiglio: 3, 2 e **6 (già decisa: da fare)** subito dopo la pulizia del codice (poco costo, molti sbagli piccoli presi), poi 1; 4 con la pulizia; 5 solo con GitHub Actions.
 
 ## 9. Esiti (1 novembre 2026, notte; fermata 2)
 
