@@ -68,5 +68,5 @@ Qui servono linea, conto alla rovescia, bandiere e boe, quindi la regata vera. I
 
 ## 8. Avanzamento
 
-- **Ale, 1 novembre 2026:** via a tutti e due i meccanismi. «La 1 è la simulazione di un evento, un copione»; la 2 sarà la base anche della modalità coach, per rivivere un episodio della regata e farlo meglio.
+- **Ale, 1 novembre 2026:** via a tutti e due i meccanismi. «La 1 è la simulazione di un evento, un copione»; per la 2, un'idea da verificare (Ale: «era solo un'idea»): usarla anche nella modalità coach, per rivivere un episodio della regata e farlo meglio.
 - **1.2.0:** meccanismo A ed esercizi D1-D3 fatti. Tutti e tre: guidando 10 su 10 sui semi 1-10 e 11-20, a mani ferme 0 su 10; nella D3, chi vira subito 0 su 10 (`CHANGELOG.md`).
