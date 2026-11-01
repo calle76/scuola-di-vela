@@ -1,12 +1,14 @@
 # Collaudi su GitHub Actions (docs/PROPOSTA-COLLAUDI-SU-GITHUB.md, 1 novembre 2026).
 # Lancia tests/lancia_tutti.sh con Chromium e Firefox, diviso in 4 pezzi per browser (8 computer insieme).
-# Parte a ogni push su main e a mano dalla scheda Actions («Run workflow», con la scelta del giro veloce).
+# Parte di notte (circa alle 3 italiane) solo se nelle ultime 24 ore c'è stato almeno un commit su main,
+# e a mano dalla scheda Actions («Run workflow», con la scelta del giro veloce). Non parte a ogni push:
+# in una sessione se ne fanno molti (Ale, 1 novembre 2026).
 # Non scrive niente nel repository e non usa chiavi né password.
 name: Collaudi
 
 on:
-  push:
-    branches: [main]
+  schedule:
+    - cron: "0 2 * * *"
   workflow_dispatch:
     inputs:
       veloce:
@@ -17,13 +19,34 @@ on:
 permissions:
   contents: read
 
-# Un push nuovo ferma il giro ancora in corso sullo stesso ramo.
+# Un giro lanciato a mano ferma quello ancora in corso sullo stesso ramo.
 concurrency:
   group: collaudi-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  serve:
+    name: Ci sono commit nuovi?
+    runs-on: ubuntu-24.04
+    outputs:
+      lancia: ${{ steps.conta.outputs.lancia }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: conta
+        run: |
+          n=$(git log --since="24 hours ago" --oneline | wc -l)
+          echo "commit nelle ultime 24 ore: $n"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$n" -gt 0 ]; then
+            echo "lancia=si" >> "$GITHUB_OUTPUT"
+          else
+            echo "lancia=no" >> "$GITHUB_OUTPUT"
+          fi
+
   collaudi:
+    needs: serve
+    if: needs.serve.outputs.lancia == 'si'
     name: ${{ matrix.browser }} ${{ matrix.parte }}/4
     runs-on: ubuntu-24.04
     timeout-minutes: 240

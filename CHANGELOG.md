@@ -19,9 +19,9 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## Collaudi, 1 novembre 2026 — i collaudi su GitHub Actions (nessuna versione nuova, il gioco non cambia)
 
-- Nuovo `.github/workflows/collaudi.yml` (`docs/PROPOSTA-COLLAUDI-SU-GITHUB.md`, fermata 2). A ogni push su `main`, o a mano dalla scheda Actions, lancia `tests/lancia_tutti.sh` con Chromium e Firefox in 8 pezzi che girano insieme: Node 20.19.2, Python 3.13 e Playwright 1.60.0, come sul PC.
+- Nuovo `.github/workflows/collaudi.yml` (`docs/PROPOSTA-COLLAUDI-SU-GITHUB.md`, fermata 2). Di notte (circa alle 3, solo se nelle ultime 24 ore c'è stato un commit su `main`) o a mano dalla scheda Actions, lancia `tests/lancia_tutti.sh` con Chromium e Firefox in 8 pezzi che girano insieme: Node 20.19.2, Python 3.13 e Playwright 1.60.0, come sul PC.
 - `tests/lancia_tutti.sh --parte K/N`: lancia solo un pezzo; i collaudi lunghi si distribuiscono a turno fra i pezzi. Provato con `--dry-run`: 4 pezzi da 16, che insieme danno esattamente i 64 collaudi. Senza l'opzione il giro è come prima.
-- Criteri G1-G6 ancora da misurare: serve il primo giro su GitHub, che parte dopo il push di Ale.
+- Criteri G1-G6 ancora da misurare: serve il primo giro su GitHub, che parte la notte dopo il push di Ale, oppure subito se lo lancia a mano.
 
 ## Collaudi, 1 novembre 2026 — il «test dei test» (nessuna versione nuova, il gioco non cambia)
 

@@ -84,3 +84,9 @@ Fatto:
 Non misurato: G1-G5. Da qui GitHub non si può lanciare: il primo giro parte dopo il `git push` di Ale. Le soglie restano quelle del §4.
 
 Scelta non scritta al §3: Node è fissato a 20.19.2 esatto e non a «20», per evitare il rischio 5. Python a 3.13, come il venv del PC (3.13.5).
+
+**Cambiato prima del primo push (Ale, 1 nov: «facciamo molti push a ogni sessione, non vorrei far partire i collaudi decine di volte»).** Niente più partenza a ogni push. Il giro parte:
+- di notte (cron 02:00 UTC, cioè le 3 italiane d'inverno e le 4 d'estate; GitHub può ritardarlo), solo se nelle ultime 24 ore c'è stato almeno un commit su `main`;
+- oppure a mano, con il pulsante.
+
+Le notti senza commit si fermano dopo il controllo, che dura pochi secondi. GitHub spegne i giri notturni se il repository resta fermo 60 giorni: si riaccendono dalla scheda Actions.
