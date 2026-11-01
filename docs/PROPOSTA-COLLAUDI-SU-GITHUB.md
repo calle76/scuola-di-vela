@@ -151,3 +151,13 @@ Le regate girano a passi fissi con semi fissi, quindi gli stessi numeri escono u
 - **Collaudi vuoti:** anche uno script rotto (errore di sintassi) è stato preso come FALLITO.
 
 **Atteso al prossimo giro su GitHub, con la moviola corretta:** verde in tutti gli 8 pezzi, con i noti e le misure di tempo elencati. È un'attesa, non una misura. G3 (tre giri uguali) e G4 (rosso su un errore messo apposta) restano da fare.
+
+## 11. Secondo giro su GitHub (1 novembre 2026, commit 22cd490, lanciato a mano da Ale)
+
+**Verde in tutti gli 8 pezzi**, come atteso al §10. Durata **23 minuti**, dalle 07:16 alle 07:39 UTC. I pezzi durano da 10 a 23 minuti. Gli esiti sono letti dall'elenco pubblico dei giri di GitHub. I riepiloghi con i noti e le misure di tempo non li ho letti: servono gli allegati.
+
+Restano da fare:
+- G3: tre giri uguali. Ne mancano uno o due, che arrivano da soli con i giri notturni.
+- G4: rosso su un errore messo apposta, da lanciare a mano su un ramo di prova.
+
+Dopo, il giro sul PC diventa facoltativo (§7).
