@@ -106,7 +106,10 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 
 **Su GitHub (1 novembre 2026).** `.github/workflows/collaudi.yml` lancia il giro completo su GitHub Actions di notte (circa alle 3 italiane, solo se nelle ultime 24 ore c'è stato un commit su `main`), con Chromium e Firefox, divisi in 4 pezzi per browser con `lancia_tutti.sh --parte K/N`. Si può lanciare anche a mano: scheda **Actions** → «Collaudi» → «Run workflow», scegliendo se fare solo il giro veloce. Per ogni pezzo il riepilogo compare nella pagina del giro, e le uscite complete si scaricano come allegato per 30 giorni. Finché i criteri G1-G6 di `PROPOSTA-COLLAUDI-SU-GITHUB.md` non sono passati, il riferimento resta il giro sul PC.
 
-**Esploratore su GitHub (1 novembre 2026).** `.github/workflows/esplora.yml` lancia `tests/esplora.py`, solo a mano: Actions → «Esploratore» → «Run workflow».
+**Esploratore su GitHub (1 novembre 2026).** `.github/workflows/esplora.yml` lancia `tests/esplora.py` a mano (Actions → «Esploratore» → «Run workflow») e **da solo ogni settimana**, il lunedì alle 03:00 UTC, cioè nella notte fra domenica e lunedì (Ale, 1 novembre 2026).
+- Nelle settimane pari usa i semi 1-100, per vedere se qualcosa è cambiato.
+- Nelle dispari usa un blocco nuovo: 501-600 il 2 novembre, poi 601-700, …, 901-1000, 101-200…
+- Gli altri valori sono quelli consigliati.
 - Le regate dei semi scelti si dividono in pezzi; i giri di scimmia, ciascuno con un seme dei tasti fisso (1001, 1002, …), girano in parallelo.
 - Un ultimo passo fa `esplora.py --riassumi` su tutti i pezzi e mette il risultato nella pagina del giro e nell'allegato `esplora-riepilogo`.
 - Non dà verde o rosso sul gioco: è rosso solo se un pezzo si rompe.

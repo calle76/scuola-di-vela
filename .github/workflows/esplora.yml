@@ -1,10 +1,15 @@
-# Esploratore su GitHub Actions (1 novembre 2026): tests/esplora.py diviso in pezzi che girano insieme, solo a mano.
+# Esploratore su GitHub Actions (1 novembre 2026): tests/esplora.py diviso in pezzi che girano insieme.
+# Parte a mano, e da solo ogni settimana nella notte fra domenica e lunedì (lunedì alle 03:00 UTC, dopo i collaudi delle 02:00):
+# nelle settimane pari i semi 1-100 (gli stessi di sempre: si vede se qualcosa è cambiato), nelle dispari un blocco nuovo
+# (101-200, 201-300, … fino a 901-1000, poi si ricomincia). Gli altri valori sono quelli consigliati (Ale, 1 novembre 2026).
 # Non promuove né boccia: raccoglie numeri (numeri non finiti, barche ferme, pannello che sfora, errori della pagina)
 # e alla fine li mette in UN riepilogo (passo «Riepilogo» e allegato esplora-riepilogo), da far leggere a Claude.
 # Scheda Actions → «Esploratore» → «Run workflow»: si scelgono semi, pezzi, scimmia e browser.
 name: Esploratore
 
 on:
+  schedule:
+    - cron: "0 3 * * 1"
   workflow_dispatch:
     inputs:
       primo_seme:
@@ -41,16 +46,21 @@ jobs:
     steps:
       - id: p
         env:
-          A: ${{ inputs.primo_seme }}
-          Z: ${{ inputs.ultimo_seme }}
-          K: ${{ inputs.semi_per_pezzo }}
-          S: ${{ inputs.scimmia_secondi }}
-          N: ${{ inputs.scimmie }}
-          B: ${{ inputs.browser }}
+          A: ${{ inputs.primo_seme || '1' }}
+          Z: ${{ inputs.ultimo_seme || '100' }}
+          K: ${{ inputs.semi_per_pezzo || '10' }}
+          S: ${{ inputs.scimmia_secondi || '600' }}
+          N: ${{ inputs.scimmie || '4' }}
+          B: ${{ inputs.browser || 'entrambi' }}
+          SETTIMANALE: ${{ github.event_name == 'schedule' }}
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json, os
           a, z, k, s, n = (int(os.environ[x]) for x in "AZKSN"); b = os.environ["B"]
+          if os.environ.get("SETTIMANALE") == "true":   # giro della domenica notte: settimane pari 1-100, dispari un blocco nuovo
+              import datetime; w = datetime.date.today().isocalendar()[1]
+              blocco = 0 if w % 2 == 0 else ((w - 1) // 2) % 9 + 1
+              a, z = 100 * blocco + 1, 100 * blocco + 100
           br = ["chromium", "firefox"] if b == "entrambi" else [b]
           reg = [{"browser": x, "primo": i, "ultimo": min(i + k - 1, z)} for x in br for i in range(a, z + 1, max(1, k))] if z >= a and z > 0 else []
           sc = [{"browser": x, "seme": 1000 + j, "secondi": s} for x in br for j in range(1, n + 1)] if s > 0 and n > 0 else []

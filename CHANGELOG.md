@@ -56,6 +56,7 @@ Effetto collaterale, già nella scelta A: in regata la nota «N contatti senza c
 - `esplora.py` scrive anche il browser in ogni riga, e il riepilogo divide per versione e browser.
 - Opzione nuova `--seme-scimmia N`, per rifare un giro di scimmia con gli stessi tasti.
 - Variabile `ESPLORA_NOME` nel nome del file, perché i file dei pezzi non si sovrascrivano.
+- **Esploratore anche ogni settimana** (Ale), nella notte fra domenica e lunedì (lunedì 03:00 UTC, dopo i collaudi). Nelle settimane pari i semi 1-100, nelle dispari un blocco nuovo di 100 semi, a giro fino a 1000.
 
 ## 1.0.76 — La moviola rivede tutta la regata, partenza compresa
 
