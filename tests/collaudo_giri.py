@@ -11,18 +11,26 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
 # regata dei giri (indice 3) col pilota fino a 25 s di regata; poi giriDebito() (debito di due giri) e si governa a mano: timone tutto da una parte, vela regolata dal gioco.
-# caso: "due" (finché il debito è estinto, massimo 90 s), "uno" (finché ne è fatto uno, poi 20 s di pilota), "opposto" (un giro in un verso, poi una rotazione di 400° nell'altro)
+# caso: "due" (finché il debito è estinto, massimo 90 s), "uno" (finché ne è fatto uno, poi 20 s di pilota), "opposto" (un giro in un verso, poi una rotazione di 400° nell'altro),
+#       "dopo" (1.0.74, osservazione 72: prima penalità scontata in un verso, poi una seconda penalità e i suoi giri nel verso opposto)
 PROVA = """async ([caso, dir, seme]) => {
   const sv = __sv, dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'nessuno'; lv.dispatchEvent(new Event('change')); __seed(seme); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
   const R = sv.R, me = R.boats[0]; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); }
   const need0 = R.need; giriDebito(); const t0 = R.t, h0 = sv.S.h; let cap = false, rot = 0, hp = sv.S.h;
   const gira = d => { sv.ctl.tiller = d; sv.ctl.sheet = sv.autoSheet(); sv.run(dt, 1); if (sv.S.capsized) cap = true; };
+  let prima = null, base = null, fatti0 = null, dopo1 = null;
   if (caso === 'due'){ while (R.t < t0 + 90 && R.done < R.need && !cap) gira(dir); }
+  else if (caso === 'dopo'){
+    while (R.t < t0 + 90 && R.done < R.need && !cap) gira(dir);
+    prima = R.done; giriDebito(); base = R.base; fatti0 = R.done - R.base; const t2 = R.t;
+    while (R.t < t2 + 60 && R.done === prima && !cap) gira(-dir); dopo1 = R.done;   // il conto dopo il PRIMO giro opposto
+    while (R.t < t2 + 120 && R.done < R.need && !cap) gira(-dir);
+  }
   else { while (R.t < t0 + 60 && R.done < 1 && !cap) gira(dir); }
   const t1 = R.t, done1 = R.done;
   if (caso === 'uno'){ for (let k = 0; k < 60 * 20; k++){ sv.pilota(dt); sv.run(dt, 1); } }
   if (caso === 'opposto'){ hp = sv.S.h; while (R.t < t1 + 60 && Math.abs(rot) < 400 && !cap){ gira(-dir); rot += norm180(sv.S.h - hp); hp = sv.S.h; } }
-  return { need0, need: R.need, done: R.done, done1, costo: t1 - t0, cap, giroDir: R.giroDir, pen: me.pen, ruotato: Math.round(rot) };
+  return { need0, need: R.need, done: R.done, done1, costo: t1 - t0, cap, giroDir: R.giroDir, pen: me.pen, ruotato: Math.round(rot), prima, base, fatti0, dopo1, lista: R.penList.slice() };
 }"""
 # contatto vero: l'avversaria 1 messa a distanza di 3 m, a sopravento o a sottovento del giocatore; contacts() decide la colpa con le regole del gioco
 CONTATTO = """async ([lato, seme]) => {
@@ -87,6 +95,15 @@ async def main():
         # ---- B ----
         B = [await pg.evaluate(PROVA, ["uno", 1 if k % 2 else -1, 200 + k]) for k in semi]
         chk("B1 un giro solo non estingue il debito (%d prove senza avversari, debito di partenza 2)" % n, metro.tutti(r["need0"] == 0 and r["need"] == 2 and r["done1"] == 1 and r["done"] == 1 for r in B) and len(B) == n, "a debito di uno: %d su %d" % (sum(1 for r in B if r["done"] == 1), n))
+        # ---- P (1.0.74, osservazione 72) ----
+        # criterio scritto prima di misurare: in tutte le prove, prima penalità scontata (2 giri), seconda penalità: debito 4, base 2, «fatti» 0;
+        # il primo giro nel verso opposto lascia 1 giro (fatti 3), il secondo la sconta (fatti 4); l'elenco dice «penalità scontata: 2 giri» due volte
+        P = [await pg.evaluate(PROVA, ["dopo", 1 if k % 2 else -1, 500 + k]) for k in semi]
+        chk("P1 penalità nuova dopo una scontata, giri nel verso opposto: il conto non torna a 1 (%d prove senza avversari)" % n,
+            metro.tutti(r["prima"] == 2 and r["need"] == 4 and r["base"] == 2 and r["fatti0"] == 0 and r["dopo1"] == 3 and r["done"] == 4 and not r["cap"] for r in P) and len(P) == n,
+            "giusti %d su %d; dopo il primo giro opposto: %s; scuffie %d" % (sum(1 for r in P if r["dopo1"] == 3 and r["done"] == 4), n, sorted({r["dopo1"] for r in P}), sum(1 for r in P if r["cap"])))
+        chk("P2 l'elenco di fine regata dice due volte «penalità scontata: 2 giri» (non «4 giri») (%d prove)" % n,
+            metro.tutti([x for x in r["lista"] if x.startswith("Tu, penalità scontata")] == ["Tu, penalità scontata: 2 giri."] * 2 for r in P) and len(P) == n)
         # ---- C ----
         C = [await pg.evaluate(PROVA, ["opposto", 1 if k % 2 else -1, 300 + k]) for k in semi]
         chk("C1 un giro in un verso e uno nell'altro non estinguono il debito (%d prove senza avversari)" % n, metro.tutti(r["done1"] == 1 and r["done"] <= 1 and abs(r["ruotato"]) >= 400 for r in C) and len(C) == n, "ancora a debito: %d su %d; rotazione nel verso opposto media %d°" % (sum(1 for r in C if r["done"] <= 1), n, statistics.mean(abs(r["ruotato"]) for r in C)))

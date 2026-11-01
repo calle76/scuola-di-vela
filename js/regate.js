@@ -138,7 +138,7 @@
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const up = rc.up || MARK_UP, tri = !!rc.tri; // tri: triangolo equilatero di lato up, due boe (1.0.55)
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { cd: opt.countdown, t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd: opt.countdown, t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -540,7 +540,8 @@
   // ---- giri di penalità (livello 2a, 1.0.61, docs/PROPOSTA-LIVELLO-2A.md; F15 44.1 e 44.2) ----
   // Solo nelle regate con R.giri e solo per il giocatore. Ogni contatto con colpa dà un debito di due giri (R.need). Un giro è fatto quando, negli ultimi GIRO_MAX_S secondi,
   // la prua ha ruotato di almeno GIRO_GRADI nello stesso verso (senza tornare indietro di più di GIRO_VERSO gradi dal picco) e ci sono state almeno una virata e una strambata.
-  // Un giro nel verso opposto al precedente fa ricominciare il conto (R.done = 1). All'arrivo ogni giro mancante costa GIRO_SEC secondi (ripiego dichiarato: niente squalifica).
+  // Un giro nel verso opposto al precedente fa ricominciare il conto della penalità in corso (R.done = R.base + 1: dalla 1.0.74 i giri delle penalità già scontate
+  // restano, R.base; prima tornava a 1 e il debito risaliva, osservazione 72). Scontata la penalità il verso è di nuovo libero (44.2: lo stesso verso vale per ogni penalità). All'arrivo ogni giro mancante costa GIRO_SEC secondi (ripiego dichiarato: niente squalifica).
   const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_MAX_S = 20, GIRO_SEC = 15, GIRO_INIZIO = 120; // ipotesi nostre (GIRO_INIZIO, 1.0.66: gradi in GIRO_MAX_S secondi da cui si sta scontando la penalità, regola 21.2): isteresi del verso (disturbo delle onde), tempo massimo di un giro, ripiego per giro non fatto
   function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, cum: 0, buf: [], last: -1e9 }; }
   function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata."; }
@@ -559,10 +560,10 @@
     const v = Math.sign(net); let pk = 0;
     for (const e of g.buf){ const x = (e[1] - o[1]) * v; if (x > pk) pk = x; else if (pk - x > GIRO_VERSO) return; } // il verso è cambiato
     if (pk - net * v > GIRO_VERSO) return;
-    R.done = R.giroDir && v !== R.giroDir ? 1 : R.done + 1; R.giroDir = v;
+    R.done = R.giroDir && v !== R.giroDir ? R.base + 1 : R.done + 1; R.giroDir = v;
     giroVia(); giriMsg(); me.scontaT = R.t; if (R.done >= R.need) me.sconta = false;
     toast(R.done >= R.need ? "Penalità scontata" : "Giro fatto: ne manca ancora " + (R.need - R.done));
-    if (R.done >= R.need) R.penList.push("Tu, penalità scontata: " + R.need + (R.need === 1 ? " giro" : " giri") + ".");
+    if (R.done >= R.need){ const k = R.need - R.base; R.penList.push("Tu, penalità scontata: " + k + (k === 1 ? " giro" : " giri") + "."); R.base = R.need; R.giroDir = 0; }
   }
   function giriMancanti(b){ // il giocatore taglia l'arrivo con il debito aperto
     const m = R.need - R.done; if (m <= 0) return;
@@ -796,7 +797,8 @@
     if (f.X) righe.push([me.ocs ? "X: torna dietro la linea" : "X: richiamo per altre barche", "#FFD447", 700, 14]);
     if (deb){
       const m = R.need - R.done;
-      righe.push(["Penalità: " + m + (m === 1 ? " giro" : " giri") + " da fare" + (R.done ? " · fatti " + R.done : ""), "#FFFFFF", 700, 14]);
+      const fatti = R.done - R.base;   // 1.0.74: solo i giri della penalità aperta (prima anche quelli delle penalità già scontate, osservazione 72)
+      righe.push(["Penalità: " + m + (m === 1 ? " giro" : " giri") + " da fare" + (fatti ? " · fatti " + fatti : ""), "#FFFFFF", 700, 14]);
       if (R.rqMotivo) righe.push(["Per: " + R.rqMotivo, "rgba(255,255,255,.75)", 600, 12]);
       if (me.sconta) righe.push(["Stai scontando: lascia strada", "rgba(255,255,255,.75)", 600, 12]);
     } else if (scont) righe.push(["Penalità scontata", "#7FD6A8", 700, 14]);
