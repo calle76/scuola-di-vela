@@ -245,11 +245,11 @@
   const LB1 = [
     { title: "La pala è un'ala", ...PAUSE, zoom: 2.4,
       text: ["La pala del timone lavora nell'acqua come un'ala: più angolo le dai, più spinge di lato la poppa, e la barca gira.",
-             "Oltre un certo angolo l'acqua non riesce più a seguirla e si stacca: la pala va <em>in stallo</em>. La spinta smette di crescere, ma la pala frena sempre di più. Su un 470, misurato in vasca e calcolato al computer, succede fra circa 15° e 30°.",
+             "Oltre un certo angolo l'acqua non riesce più a seguirla e si stacca: la pala va <em>in stallo</em>. La spinta smette di crescere, ma la pala frena sempre di più. Su una deriva da regata, misurato in vasca e calcolato al computer, succede fra circa 15° e 30°.",
              "Conta l'angolo che la pala sente, non quello della barra: quando la barca gira, l'acqua arriva sulla pala un po' di traverso, e l'angolo sentito è più piccolo."] },
     { title: "35° e 45°", ...PAUSE, zoom: 2.4,
       text: ["Con la sola freccia la barra arriva a 35°: è una regola di questo gioco, un angolo sicuro (una barca vera non ha un fermo, c'è la mano che sente la barra).",
-             "Con <em>Maiusc</em> più la freccia arriva a 45°, come nelle virate misurate su un 470 vero: la barca gira più stretta. Serve vicino a una boa, nei giri di penalità o quando la barca è lenta. Meglio accompagnare la barra che sbatterla.",
+             "Con <em>Maiusc</em> più la freccia arriva a 45°, come nelle virate misurate su una deriva da regata vera: la barca gira più stretta. Serve vicino a una boa, nei giri di penalità o quando la barca è lenta. Meglio accompagnare la barra che sbatterla.",
              "Con i tasti la pala stalla di rado, perché la barca comincia a girare prima che l'angolo diventi troppo grande. Se succede, il pannello lo dice."] },
     { title: "Una virata con la barra in fondo", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "tt",
       text: ["Mettiti in bolina e vira tenendo <em>Maiusc</em> con la freccia verso il boma, finché la prua ha attraversato il vento. Poi centra la barra: con 45° la prua gira più in fretta, quindi centra un po' prima."],
@@ -283,6 +283,31 @@
       text: ["Fermo nel vento: <em>Z</em> per spingere il boma, barra verso il boma, la barca arretra e la prua gira. Al traverso molla Z, centra e cazza."] }
   ];
 
+  // B3, la barca che orza sbandando (1.1.6). Fonti rilette nei PDF il 1 novembre 2026 (parafrasi):
+  // F4 (Masuyama e Ogihara 2020, fonti-pdf/sname-jst-2020-05.pdf) p. 28 e fig. 13: di bolina, deriva tutta giù e barca dritta, centro velico e punto di spinta
+  //   dello scafo quasi coincidono, barra circa al centro; p. 32 eq. 6: sbandando il centro velico va sottovento e il momento orziero cresce con
+  //   spinta × altezza del centro velico × seno dello sbandamento (galleria del vento, verificata a 20°); p. 33: anche lo scafo sbandato orza da solo, senza numeri.
+  // F38 (manuale di classe, fonti-pdf/HANDBOOK_2025.pdf, pagina «Rudder and Tiller»): sbandata sottovento la barca diventa molto orziera; poggiare sbandati
+  //   carica molto pala e barra (è così che si rompono, nei pochi casi visti); prima si raddrizza, sporgendosi di più o lascando la scotta.
+  // Gioco: solo il termine della vela (eq. 6, 1.0.46), niente scafo: il testo lo dice. Misurato il 1 novembre 2026 (motore, 12 nodi al traverso, raffica +45% per 6 s,
+  //   vela regolata): barra al centro la prua sale di 19° (5° senza raffica); tenendo la prua con la sola barra servono 2,5° di barra e la barca sbanda a 22°;
+  //   lascando di 0,15 bastano 1,1° e sbanda a 11,5°.
+  const LB3 = [
+    { title: "Perché la barca orza", ...PAUSE, zoom: 2.4,
+      text: ["Quando la barca sbanda, la vela si inclina sottovento: il vento non la spinge più sopra la barca, ma fuori, dalla parte del boma. Spinta così, di lato, la barca gira la prua verso il vento: è <em>orziera</em>. Più sbanda, più orza.",
+             "Di bolina, con la barca dritta e la vela regolata, la barra sta quasi al centro: lo dicono le misure su una deriva da regata. Anche lo scafo sbandato fa orzare la barca per conto suo; in questo gioco conta solo la vela."] },
+    { title: "Nella raffica", ...PAUSE, zoom: 2.4,
+      text: ["In una raffica la barca sbanda di più e la prua sale di colpo verso il vento. Per tenere la rotta ci sono due modi, e si usano insieme.",
+             "Con la <em>barra sopravento</em> si poggia (lezione 2). Ma se la barca resta sbandata, poggiare carica molto la pala e la barra: un manuale di classe racconta che è proprio così che si rompono.",
+             "Per questo prima si <em>raddrizza</em> la barca: ci si sporge di più (qui lo fa il timoniere da solo) e si <em>lasca</em> un poco. Raddrizzata, la barca orza meno e basta poca barra."] },
+    { title: "La rotta nella raffica", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", bigGust: 0.45, course: true,
+      text: ["Sei al traverso. Tieni la rotta indicata sopra i comandi mentre passi in una raffica: quando la barca sbanda e la prua sale, <em>lasca</em> un poco e correggi con piccoli colpi di barra. Passata la raffica, cazza di nuovo."],
+      cond: (I, S) => I.gustK > 0.3 && Math.abs(norm180(S.h - S.course)) < 6 && I.heel < 15 && I.kn > 2, hold: 2,
+      done: "Rotta tenuta nella raffica: lascando la barca si è raddrizzata, e alla barra è bastato poco." },
+    { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,
+      text: ["Sbandando la barca orza. Nella raffica prima si raddrizza, lascando un poco, poi si corregge con poca barra. Passata la raffica, si cazza."] }
+  ];
+
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -299,7 +324,7 @@
       esame: [["35° e 45°", "Devi girare attorno a una boa in poco spazio. Che cosa usi?", "Maiusc e la freccia: la barra arriva a 45°", ["La sola freccia: si ferma a 35°", "Lasco tutta la vela", "Spingo il boma con Z"], "Con Maiusc la barra arriva a 45° e la barca gira più stretta."],
               ["La pala è un'ala", "Perché una pala girata troppo frena la barca?", "Va in stallo: l'acqua si stacca e la resistenza cresce", ["Perché tocca il fondo", "Perché fa sbandare la barca", "Perché sposta il vento"], "Oltre un certo angolo la pala stalla: la spinta non cresce più, la resistenza sì."],
               ["Una virata con la barra in fondo", "Viri con la barra a 45°. Quando centri la barra?", "Un po' prima che con 35°, perché la prua gira più in fretta", ["Quando la barca si ferma", "Mai: la barra torna da sola", "Dopo che la prua ha superato la bolina di 30°"], "Con più barra la prua gira più in fretta: centrando tardi va oltre la bolina."],
-              ["La pala è un'ala", "Su un 470, misurato in vasca e calcolato al computer, la pala stalla fra circa…", "15° e 30°", ["2° e 5°", "60° e 90°", "Non stalla mai"], "Le misure in vasca di un modellino danno circa 15°, il calcolo a grandezza vera circa 30°."]] },
+              ["La pala è un'ala", "Su una deriva da regata, misurato in vasca e calcolato al computer, la pala stalla fra circa…", "15° e 30°", ["2° e 5°", "60° e 90°", "Non stalla mai"], "Le misure in vasca di un modellino danno circa 15°, il calcolo a grandezza vera circa 30°."]] },
     { name: "Lezione B2", title: "Spingere il boma", steps: LB2, nascosta: true, gruppo: "B", desc: "Fermo nell'angolo morto: Z spinge il boma, la barca arretra e gira; poi si riparte.",
       quiz: [["Sei fermo con la prua nel vento. Che cosa fai con il boma e la barra?", "Spingo il boma fuori e metto la barra dalla stessa parte", ["Cazzo tutta la vela", "Metto la barra dalla parte opposta al boma", "Aspetto senza toccare niente"], "Boma e barra dalla stessa parte: la vela prende il vento al contrario, la barca arretra e la prua gira verso il boma."],
              ["Con il boma spinto fuori, verso dove gira la prua?", "Verso il boma, cioè lontano dal vento", ["Verso il vento", "Non gira: la barca va solo all'indietro", "Dalla parte opposta al boma"], "La vela a collo spinge la barca all'indietro e fa girare la prua verso il boma."],
@@ -308,7 +333,16 @@
       esame: [["Fuori dall'angolo morto", "Per uscire dall'angolo morto con il boma spinto, la barra va…", "dalla stessa parte del boma", ["dalla parte opposta al boma", "al centro", "non importa"], "Boma e barra dalla stessa parte: la prua gira verso il boma, lontano dal vento."],
               ["Fuori dall'angolo morto", "Con il boma spinto fuori, la barca…", "va all'indietro e la prua gira verso il boma", ["va avanti più veloce", "scuffia", "resta ferma"], "La vela prende il vento al contrario: la barca arretra e gira."],
               ["Spingi il boma e riparti", "Sei al traverso dopo aver spinto il boma. Che cosa fai?", "Mollo il boma, centro la barra e cazzo", ["Continuo a spingere il boma", "Viro subito", "Lasco tutta la vela"], "Al traverso la vela torna a spingere in avanti: si molla, si centra e si cazza."],
-              ["All'indietro, apposta", "A che cosa serve, oltre a uscire dall'angolo morto, spingere il boma?", "A frenare o arretrare, per esempio prima della partenza", ["A sbandare di meno", "A girare attorno alla boa", "A prendere le raffiche"], "Spingendo il boma si può frenare o arretrare apposta, per esempio per uscire da un brutto posto sulla linea."]] }
+              ["All'indietro, apposta", "A che cosa serve, oltre a uscire dall'angolo morto, spingere il boma?", "A frenare o arretrare, per esempio prima della partenza", ["A sbandare di meno", "A girare attorno alla boa", "A prendere le raffiche"], "Spingendo il boma si può frenare o arretrare apposta, per esempio per uscire da un brutto posto sulla linea."]] },
+    { name: "Lezione B3", title: "La barca che orza sbandando", steps: LB3, nascosta: true, gruppo: "B", desc: "Sbandando la prua sale verso il vento; nella raffica si lasca e si corregge con poca barra.",
+      quiz: [["Perché una barca sbandata orza?", "La vela inclinata spinge fuori, dalla parte del boma, e la prua gira verso il vento", ["Perché la deriva esce dall'acqua", "Perché il vento gira", "Non orza: poggia"], "Sbandando, la spinta della vela arriva fuori dalla barca, sottovento: la prua gira verso il vento."],
+             ["In una raffica la barca sbanda e la prua sale. Che cosa fai per prima cosa?", "Raddrizzo la barca: mi sporgo e lasco un poco", ["Metto tutta la barra sopravento", "Cazzo tutta la vela", "Non faccio niente"], "Prima si raddrizza, lascando e sporgendosi: poi basta poca barra."],
+             ["Perché poggiare con la barca molto sbandata è un rischio?", "Carica molto la pala e la barra", ["Fa scuffiare sopravento", "Fa virare la barca", "Non è un rischio"], "Sbandata, la barca orza forte: per poggiare serve molta forza sul timone, ed è così che pala e barra si rompono."],
+             ["Barca dritta, di bolina, vela regolata: dove sta la barra?", "Quasi al centro", ["Tutta sopravento", "Tutta sottovento", "Dipende dal vento"], "Con la barca dritta il centro velico e lo scafo quasi si equilibrano: la barra sta quasi al centro."]],
+      esame: [["Perché la barca orza", "Più la barca sbanda, più…", "orza", ["poggia", "accelera", "va dritta"], "Sbandando, la spinta della vela va sottovento e fa girare la prua verso il vento."],
+              ["Nella raffica", "In raffica, con la barra sopravento…", "si poggia, ma se la barca resta sbandata serve molta barra", ["si orza", "la barca si raddrizza da sola", "si vira"], "La barra sopravento fa poggiare; con la barca sbandata il timone lavora molto."],
+              ["La rotta nella raffica", "Sei al traverso, arriva una raffica e la prua sale. Che cosa fai?", "Lasco un poco e correggo con piccoli colpi di barra", ["Cazzo tutto", "Orzo fino alla bolina", "Spingo il boma con Z"], "Lascando la barca si raddrizza e orza meno; poi basta poca barra."],
+              ["Nella raffica", "Passata la raffica, che cosa fai con la scotta?", "La cazzo di nuovo", ["La lascio tutta lasca", "La lasco ancora", "Niente: si regola da sola"], "Passata la raffica la vela va regolata di nuovo: si cazza."]] }
   ];
 
   // ---- prove ----

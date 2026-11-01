@@ -17,6 +17,31 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.6 — Lezione B3 «La barca che orza sbandando» (nascosta nel menu, ramo `pulizia`)
+
+Terza lezione del gruppo B, nona nel gioco (`LESSONS[8]`, `nascosta: true`).
+
+**Fonti rilette nei PDF prima del testo**, scritte nel codice sopra la lezione:
+- F4 (`fonti-pdf/sname-jst-2020-05.pdf`): p. 28 e fig. 13, di bolina con la barca dritta la barra sta circa al centro; p. 32, eq. 6, sbandando il centro velico va sottovento e la barca orza di più; p. 33, anche lo scafo sbandato orza da solo, senza numeri.
+- F38 (`fonti-pdf/HANDBOOK_2025.pdf`, pagina «Rudder and Tiller»): sbandata, la barca diventa molto orziera; poggiare sbandati carica molto pala e barra, ed è così che si rompono; prima si raddrizza, sporgendosi o lascando.
+- **Semplificazione detta nel testo:** nel gioco conta solo la vela (il termine della 1.0.46), lo scafo sbandato non fa orzare.
+
+**La lezione:** due pagine di teoria («Perché la barca orza», «Nella raffica»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Passo pratico:** «La rotta nella raffica». Al traverso, 12 nodi, una raffica media (+45%) che arriva da sola, come nella lezione 6. Il passo vale se nel cuore della raffica la prua resta entro 6° dalla rotta indicata, lo sbandamento sotto 15° e la velocità sopra 2 nodi, per 2 s di fila.
+- **Il testo dice quello che il gioco fa** (misurato sul motore, 12 nodi al traverso, raffica +45% per 6 s, vela regolata):
+  - con la barra al centro la prua sale di 19° (5° senza raffica);
+  - tenendo la prua con la sola barra servono 2,5° di barra e la barca sbanda fino a 22°;
+  - lascando un poco (0,15) bastano 1,1° di barra e la barca sbanda fino a 11,5°.
+  - Nel gioco, a mani ferme, in 30 s la barca passa dal traverso a circa 40° dal vento e sbanda fino a 39-51° (semi 1-10).
+
+**Corretto, trovato rileggendo:** i testi della lezione B1 (1.1.4) dicevano tre volte «470», il nome di una classe, contro il principio 5. Ora dicono «una deriva da regata». Il nome resta solo nei commenti del codice, che citano la fonte.
+
+**Misurato:**
+- pilota delle lezioni esteso alla B3: semi 1-10, guidando 10 su 10 (in media 17,1 s), a mani ferme 0 su 10. Semi 11-20: lo stesso (17,4 s).
+- `collaudo_pannello_lezioni`: 64 passi su 64 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Fisica identica al bit (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`).
+
 ## 1.1.5 — Lezione B2 «Spingere il boma» (nascosta nel menu, ramo `pulizia`)
 
 Seconda lezione del gruppo B, ottava nel gioco (`LESSONS[7]`, `nascosta: true`).

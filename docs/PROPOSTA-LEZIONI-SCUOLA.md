@@ -109,3 +109,4 @@ Medaglie (passo 4) e menu (passo 5) vengono dopo, come deciso.
 ## 10. Avanzamento
 
 - **1.1.3 (1 novembre 2026), fetta 1, prima parte:** i cinque passi della §1 sono a posto. Su 32 passi, 32 si completano guidando e nessuno si completa da solo (semi 1-10, conferma 11-20); i numeri sono nel `CHANGELOG.md`. Nei passi senza barra la rotta la tiene la scuola, una semplificazione nuova e dichiarata. Restano due cose: togliere le precedenze dalla lezione 3, da fare insieme al gruppo D; e il controllo dei testi frase per frase (L2).
+- **1.1.4-1.1.6 (1 novembre 2026), fetta 2:** lezioni B1 «Il timone che stalla», B2 «Spingere il boma» e B3 «La barca che orza sbandando», nascoste nel menu finché non arriva il menu nuovo. Ogni passo pratico: guidando 10 su 10 e a mani ferme 0 su 10, sui semi 1-10 e 11-20. Restano B4 (raddrizzata lunga) e B5 (salti di vento, fonte da cercare).
