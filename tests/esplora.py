@@ -64,7 +64,8 @@ async def parte1(b, semi, casi=None):
     errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
     corse = []
-    elenco = casi or [(seme, race, liv) for seme in semi for race in range(3) for liv in ("principianti", "esperti")]
+    n_regate = await pg.evaluate("RACES.length")   # 1 nov 2026: prima range(3) fisso, e la regata dei giri (dalla 1.0.61) non si esplorava mai
+    elenco = casi or [(seme, race, liv) for seme in semi for race in range(n_regate) for liv in ("principianti", "esperti")]
     for seme, race, liv in elenco:
         if True:
             if True:
@@ -119,7 +120,7 @@ def riepilogo(righe):
         cv = [c for c in corse if (c.get("versione") or "?") == ver]; sv = [c for c in scim if (c.get("versione") or "?") == ver]
         semi = sorted({c["seme"] for c in cv})
         print(f"\n--- versione {ver}: {len(cv)} corse" + (f", {len(semi)} semi ({semi[0]}-{semi[-1]})" if semi else "") + f", {len(sv)} giri di scimmia")
-        for race in range(3):
+        for race in sorted({c["race"] for c in cv}):
             for liv in ("principianti", "esperti"):
                 g = [c for c in cv if c["race"] == race and c["liv"] == liv and "eccezione" not in c]
                 if not g: continue
