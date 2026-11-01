@@ -55,6 +55,9 @@ const PASSI = {
   "7:Una virata con la barra in fondo": { lim: 40, f: C => virare(C, true) },
   "8:Spingi il boma e riparti":      { lim: 40,  f: C => spingiBoma(C) },
   "10:Raddrizza e riparti":          { lim: 60,  f: C => poi(premi(C, "a"), aspettaDritta(C), colpiScotta(C, "ok")) },   // 1.1.7, lezione B4: «premi A e aspetta; poi cazza finché i filetti sono dritti»
+  "12:Passale dietro":               { lim: 60,  riparti: true, f: C => passaDietro(C) },                                         // 1.2.0, D1: «poggia quanto basta per passarle dietro, poi torna di bolina»
+  "13:Sorpassa senza toccarla":      { lim: 90,  riparti: true, f: C => sorpassa(C) },                                            // 1.2.0, D2: «sposta un poco la prua da una parte, tieniti a un paio di metri e passa avanti»
+  "14:Vira dopo che è passata":      { lim: 60,  riparti: true, f: C => viraDopo(C) },                                            // 1.2.0, D3: «aspetta che sia passata e lontana, poi vira»
   "11:Vira sullo scarso":            { lim: 300, aspetta: true, f: C => scarsi(C) },                                // 1.1.8, lezione B5: «quando sei scarso di quasi una decina di gradi rispetto alla media vira»: il pilota vira quando legge 10°
   "9:La rotta nella raffica":        { lim: 120, aspetta: true, f: C => rottaRaffica(C) },                          // 1.1.6, lezione B3: «tieni la rotta nella raffica: lasca un poco e piccoli colpi di barra; passata, cazza»                                          // 1.1.5, lezione B2: «Z e barra verso il boma; al traverso molla Z, centra e cazza»                                       // 1.1.4, lezione B1: «vira tenendo Maiusc con la freccia verso il boma»
   "5:Una virata che non riesce":     { lim: 120, f: C => nonRiesce(C) },
@@ -192,6 +195,34 @@ function* scarsi(C){                                                     // lezi
     yield C.rt;
   }
 }
+// lezioni D (1.2.0): la barca di scena si vede; il pilota legge la sua posizione e la sua prua come le vede il giocatore
+const scena = () => sv.S.scenaMob && sv.S.scenaMob[0];
+const relScena = b => { const rx = sv.S.x - b.x, ry = sv.S.y - b.y, s = Math.sin(b.h * D), c = Math.cos(b.h * D); return { along: rx * s - ry * c, side: rx * c + ry * s }; };
+const verso = (x, y) => Math.atan2(x - sv.S.x, -(y - sv.S.y)) / D;
+function* passaDietro(C){                                                  // «poggia quanto basta per passarle dietro, poi torna di bolina»: poggiato a 100° finché
+  const s0 = Math.sign(relScena(scena()).side); let su = false;          // sei 7 m dietro la sua poppa (lungo la sua rotta), poi bolina: le attraversi la scia dietro
+  for (let n = 0; n < 5000; n++){
+    const r = relScena(scena());
+    if (!su && Math.sign(r.side) === s0 && r.along > -7) sterza(C, prua(C, 100), 4); else { su = true; sterza(C, prua(C, 50), 4); }
+    yield C.rt;
+  }
+}
+function* sorpassa(C){                                                     // 20° più poggiato della sua prua finché la tua poppa è avanti alla sua prua, poi la sua stessa prua
+  for (let n = 0; n < 5000; n++){
+    const b = scena(), r = relScena(b);
+    sterza(C, r.along > 8 ? prua(C, 50) : b.h + 20, 4);
+    yield C.rt;
+  }
+}
+function* viraDopo(C){                                                     // bolina; vira quando l'altra ha passato la prua (tu sei dietro di lei) ed è a più di 15 m e si allontana
+  let d0 = 1e9;
+  for (let n = 0; n < 5000; n++){
+    const b = scena(), d = Math.hypot(b.x - sv.S.x, b.y - sv.S.y);
+    if (d > 15 && d > d0 + 0.01 && relScena(b).along < 0){ suTutti(); yield* virare(C); break; }
+    d0 = d; sterza(C, prua(C, 50), 4); yield C.rt;
+  }
+  for (let n = 0; n < 5000; n++){ sterza(C, prua(C, 50), 4); yield C.rt; }
+}
 function* aspettaDritta(C){ while (sv.S.capsized) yield C.rt; }          // lezione B4: «aspetta che la barca torni dritta»
 function* rottaRaffica(C){                                                // lezione B3: la rotta del suggerimento, lascando quando sbanda e cazzando quando i filetti sbattono
   for (let n = 0; n < 5000; n++){
@@ -292,6 +323,7 @@ window.__corsa = (li, imp, semeGioco, semePilota) => {
     // 2) guidando
     r.guida = r.mani; r.tGuida = null; r.riprese = 0; r.forzato = false;
     if (!r.mani && voce){
+      if (voce.riparti){ suTutti(); $("lRetry").click(); }               // 1.2.0: barca di scena che si muove: dopo l'attesa il copione è finito, il giocatore preme Ricomincia
       const C = { imp, rt: 0.1 + rnd() * 0.3, extra: 0.3 + rnd() * 1.2, err, bias: (rnd() * 2 - 1) * err, riprese: 0, fermo: 0 };
       const t1 = T, g = voce.f(C);
       let fatto = false, finito = false;
@@ -400,7 +432,7 @@ async def main():
     print(f"\nmisurato: {len(passi)} passi pratici, {corse_mani} corse a mani ferme, errori della pagina {len(errs)} {errs[:2]}")
     print("da guardare:" if problemi else "da guardare: niente")
     for q in problemi: print("  - " + q)
-    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1, 1, 1, 1, 0, 0, 0, 0)[l] for l in lezioni) and not errs
+    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0)[l] for l in lezioni) and not errs
     print("ESITO:", "NON VALIDO (passi mancanti o errori della pagina)" if not valido else ("OK" if not problemi else "DA GUARDARE"))
     sys.exit(2 if not valido else 0)   # i casi «da guardare» sono un rapporto, non un fallimento dello script: si leggono (lancia_tutti.sh li mostra)
 

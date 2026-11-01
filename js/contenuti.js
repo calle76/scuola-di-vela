@@ -366,7 +366,7 @@
   //   può aspettare finché è chiaro che l'altra non si scansa), 15 chi acquista la precedenza dà all'inizio spazio (salvo se è per una manovra dell'altra), 16.1 chi
   //   ha la precedenza e cambia rotta dà spazio. 43.1(c): chi ha la precedenza è esonerato dalla 14 se il contatto non causa danni o lesioni.
   // Gioco (js/regate.js, chiCede, 1.0.40): applica 10, 11, 12 e 13 (collaudo_regole.py, collaudo_semaforo.py); 14, 15 e 16 no, e non ci sono danni: il testo lo dice.
-  // Penalità per un contatto con colpa: +15 s, due giri nella «Regata con i giri di penalità», +1 punto nel torneo (toast in js/regate.js). Gli esercizi in regata
+  // Dalla 1.2.0 un esercizio per D1-D3 con una barca di scena che si muove (meccanismo A, copione). Penalità per un contatto con colpa: +15 s, due giri nella «Regata con i giri di penalità», +1 punto nel torneo (toast in js/regate.js). Gli esercizi in regata
   // arrivano con il gruppo C (stesso meccanismo: una lezione che apre una regata); finché le lezioni D sono nascoste la lezione 3 tiene la sua pagina sulle precedenze.
   const LD1 = [
     { title: "Chi lascia strada", ...PAUSE, zoom: 1.4, scenaH: 45, me: "Tu: mure a sinistra",
@@ -376,6 +376,11 @@
     { title: "Penalità e semaforo", ...PAUSE, zoom: 2,
       text: ["Nelle regate di questo gioco chi non lascia strada e provoca un contatto prende una penalità: 15 secondi, due giri nella regata con i giri di penalità, un punto in più nel torneo.",
              "Nelle impostazioni puoi accendere il <em>semaforo di precedenza</em>: quando un'altra barca si avvicina, sul tuo scafo il rosso vuol dire che devi lasciare strada, il verde che hai la precedenza. Avere la precedenza non è il permesso di urtare."] },
+    { title: "Passale dietro", tiller: true, autoTrim: true, hud: 1, hintKind: "sail", scenaH: 45, me: "Tu",
+      scenaMobile: [{ x: 29.7, y: 1.5, h: 315, u: 2.2, col: "#C0392B", label: "Mure a dritta" }],
+      text: ["Sei di bolina mure a sinistra e da destra arriva una barca mure a dritta. Lasciale strada: poggia quanto basta per <em>passarle dietro</em>, poi torna di bolina. Lei non si sposta: se la tocchi, premi Ricomincia."],
+      cond: (I, S, B) => !B.contatto && B.dietro && B.gapMin >= 2 && I.kn > 1.5, hold: 1,
+      done: "Le sei passato dietro, e lei ha tenuto la sua rotta senza manovrare: così si lascia strada." },
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
       text: ["Mure diverse: lascia strada la barca mure a sinistra (regola 10). Chi non lo fa e provoca un contatto prende una penalità."] }
   ];
@@ -388,6 +393,11 @@
       scena: [{ x: 8.5, y: -8.5, h: 45, col: "#C0392B", label: "Libera avanti" }],
       text: ["Se invece una barca sta tutta dietro quella linea, è <em>libera dietro</em>, e lascia strada a quella <em>libera avanti</em>. È la regola 12.",
              "Qui tu sei libera dietro: se sei più veloce puoi passare, ma senza costringere l'altra a manovrare."] },
+    { title: "Sorpassa senza toccarla", tiller: true, autoTrim: true, hud: 1, hintKind: "sail", scenaH: 45, me: "Tu",
+      scenaMobile: [{ x: 8.5, y: -8.5, h: 45, u: 1.0, col: "#C0392B", label: "Libera avanti" }],
+      text: ["Davanti a te, con le tue stesse mure, c'è una barca più lenta: tu sei libera dietro e le lasci strada. Sorpassala senza costringerla a manovrare: sposta un poco la prua da una parte, tieniti ad almeno un paio di metri e passa avanti."],
+      cond: (I, S, B) => !B.contatto && B.davanti && B.gapMin >= 2, hold: 1,
+      done: "Sorpasso pulito: lei ha tenuto la sua rotta e tu sei passato a distanza." },
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
       text: ["Stesse mure: se sono affiancate lascia strada la sopravento (regola 11); se no, lascia strada quella libera dietro (regola 12)."] }
   ];
@@ -397,6 +407,11 @@
       text: ["Da quando la prua passa il vento finché la barca non è di bolina sulle nuove mure, chi vira lascia strada a tutte le altre. È la regola 13. In quei secondi, per lei, le regole 10, 11 e 12 non valgono.",
              "Se due barche virano insieme, lascia strada quella che sta alla sinistra dell'altra, o quella dietro.",
              "Quindi non virare proprio davanti a una barca vicina: anche se finisci mure a dritta, finché non sei di bolina lasci strada tu."] },
+    { title: "Vira dopo che è passata", tiller: true, autoTrim: true, hud: 1, hintKind: "sail", scenaH: 45, me: "Tu",
+      scenaMobile: [{ x: 13.2, y: -8.0, h: 315, u: 2.2, col: "#C0392B", label: "Mure a dritta" }],
+      text: ["Sei di bolina mure a sinistra e devi virare, ma una barca mure a dritta ti passa davanti. Aspetta che sia passata e lontana, poi vira: mentre viri lasci strada tu."],
+      cond: (I, S, B) => !B.contatto && S.tacks > B.tacks && B.gapVirata >= 10 && I.twa >= 35 && I.twa <= 75 && I.kn > 1.5, hold: 2,
+      done: "Virata fatta dopo che è passata: nessuno ha dovuto manovrare per evitarti." },
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
       text: ["Chi vira, dal vento fino alla bolina, lascia strada a tutte le altre (regola 13)."] }
   ];

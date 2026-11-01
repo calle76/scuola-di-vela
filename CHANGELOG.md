@@ -17,6 +17,41 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.0 — Barche di scena che si muovono: esercizi delle lezioni D1-D3 (ramo `pulizia`)
+
+Meccanismo A di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale: «la 1 è la simulazione di un evento, un copione».
+
+**Campo nuovo dei passi, `scenaMobile`:** barche che vanno dritte a velocità costante, oppure orzano piano in un momento scritto nel passo. Non hanno fisica né guida, e non si scansano mai. Il contatto si calcola sui contorni veri degli scafi, con la stessa funzione delle regate (`polySep`). Ricomincia rimette tutto com'era all'inizio. Le regate non sono toccate.
+
+**I tre esercizi** (barca di scena a 2,2 m/s, salvo la D2 a 1,0 m/s; vento 10 nodi; vela che si regola da sola):
+- **D1 «Passale dietro»:** sei di bolina mure a sinistra e arriva una barca mure a dritta. Il passo vale se le attraversi la rotta dietro la poppa con almeno 2 m di margine, senza mai avvicinarti a meno di 2 m e senza contatto.
+- **D2 «Sorpassa senza toccarla»:** sei libera dietro una barca più lenta. Il passo vale se la tua poppa arriva almeno 2 m davanti alla sua prua, senza mai avvicinarti a meno di 2 m.
+- **D3 «Vira dopo che è passata»:** il passo vale se viri e, mentre la tua prua è a meno di 30° dal vento, l'altra resta ad almeno 10 m.
+- Le distanze (2 m e 10 m) e le velocità sono ipotesi nostre.
+
+**Misurato** (pilota delle lezioni):
+
+| Esercizio | guidando, semi 1-10 | guidando, semi 11-20 | a mani ferme |
+|---|---|---|---|
+| D1 | 10 su 10 (11,8 s) | 10 su 10 | 0 su 10 |
+| D2 | 10 su 10 (14,3 s) | 10 su 10 | 0 su 10 |
+| D3 | 10 su 10 (12,9 s) | 10 su 10 | 0 su 10 |
+
+- Un pilota che nella D3 vira subito, senza aspettare: 0 su 10.
+- Nella D1 e nella D2, a mani ferme, si finisce addosso all'altra barca.
+
+**Corretto prima del risultato:**
+- Il collaudo faceva i 30 s a mani ferme e poi guidava senza ripartire, quando il copione era già finito. Ora in questi passi preme Ricomincia, come farebbe un giocatore.
+- Il pilota della D1 inseguiva un punto dietro la barca rossa, che però si spostava: finiva per salire nel vento e virare. Ora fa quello che dice il testo: poggia finché è passata, poi torna di bolina.
+- Il pilota della D3 aveva il segno sbagliato nel controllo «è passata».
+- Nel passo D3 la «distanza in virata» si misurava già sotto i 40° dal vento: chi stringe molto il vento veniva contato come se virasse. Ora si misura sotto i 30°.
+- La barca di scena della D3 passava a 2,8 m dalla prua del giocatore: ora parte 4 m più avanti.
+- La rosa grande delle andature copriva la scena (visto nello screenshot): è tolta da questi tre passi, e l'andatura resta scritta nel pannello.
+
+**Per i collaudi:** l'aggancio `#collaudo` espone anche `base`, le misure del passo in corso.
+
+**Controlli:** `collaudo_pannello_lezioni` 86 passi su 86 a 0 px, in Chromium e in Firefox. Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_intera`, `collaudo_libretto`. Fisica identica al bit.
+
 ## 1.1.9 — Gruppo D, prima parte: lezioni D1-D4 sul regolamento (nascoste nel menu, ramo `pulizia`)
 
 Le prime quattro delle sette lezioni sul regolamento (`docs/PROPOSTA-LEZIONI-2A.md`, approvata il 31 ottobre): D1 «Mure opposte», D2 «Stesse mure», D3 «Chi vira cede», D4 «Evitare il contatto». Sono `LESSONS[11]`-`LESSONS[14]`, con `nascosta: true` e `gruppo: "D"`.

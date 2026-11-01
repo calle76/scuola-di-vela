@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.1.9"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.0"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -476,11 +476,14 @@
     // 1.0.2: «La scuffia» non fa raddrizzare (la barca resta rovesciata fino al passo dopo); «Raddrizzare» parte sempre con la barca rovesciata
     if (st.noRight && S.capsized) freshState(0, 0, 90, 0.4);
     if (st.scenaH !== undefined) freshState(0, 0, st.scenaH, 0.4); // 1.1.9: la prua della barca nelle pagine con una scena (lezioni D, regolamento)
+    // 1.2.0 (docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md, meccanismo A): barche di scena che si muovono, un copione: vanno dritte a velocità costante
+    // (b.u m/s) e, se b.orza = [inizio s, gradi, durata s], orzano piano. Niente fisica e niente guida: non si scansano mai.
+    S.scenaMob = st.scenaMobile ? st.scenaMobile.map(b => ({ x: S.x + b.x, y: S.y + b.y, h: b.h, h0: b.h, u: b.u, orza: b.orza, t: 0, col: b.col, label: b.label })) : null;
     // 1.1.5: la barca parte ferma nell'angolo morto, con la prua a 10° dal vento e la vela tutta lascata (lezione B2, spingere il boma)
     if (st.startIrons){ Object.assign(S, { h: norm360(env.twd + (S.boomSide < 0 ? 10 : -10)), u: 0, vl: 0, r: 0, heel: 0, heelRate: 0, capsized: false }); ctl.sheet = 1; ctl.tiller = 0; }
     if (st.shifts) setShifts(st.shifts); // 1.1.8: salti di vento nel passo (lezione B5); freshState li spegne
     if (st.startCapsized && !S.capsized){ Object.assign(S, { capsized: true, indietro: 0, capCause: "heel", capSide: S.boomSide, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); }
-    base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized };
+    base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized, gapMin: 1e9, gapVirata: 1e9 };
     S.markReached = false;
     // 0.20.2: il punto del passo è una linea d'arrivo (FIN_HALF m per lato), perpendicolare alla direzione dalla partenza del passo all'arrivo
     S.lessonMark = st.mark ? { x: S.x + st.mark[0], y: S.y + st.mark[1], label: "Arrivo", fin: true, nx: st.mark[0] / Math.hypot(...st.mark), ny: st.mark[1] / Math.hypot(...st.mark) } : null;
@@ -504,6 +507,25 @@
     setControls(st.sem || [], !!st.tiller, !!st.sheet, st.turnHint);
     setHud(st.hud || 0);
     $("hint").hidden = st.pause || st.hintKind === "none" || !st.hud;
+  }
+  // muove le barche di scena e misura, rispetto alla prima: base.gapMin distanza minima fra gli scafi (m), base.contatto, base.dietro (le hai attraversato
+  // la rotta passando dietro la sua poppa di almeno 2 m), base.davanti (la tua poppa è almeno 2 m davanti alla sua prua), base.gapVirata (distanza minima mentre
+  // la tua prua è a meno di 30° dal vento, cioè durante la virata)
+  function scenaMuovi(dt){
+    S.scenaMob.forEach((b, i) => {
+      b.t += dt;
+      if (b.orza){ const k = clamp((b.t - b.orza[0]) / b.orza[2], 0, 1); b.h = norm360(b.h0 + sgn(norm180(env.twd - b.h0)) * b.orza[1] * k); }
+      b.x += Math.sin(b.h * D2R) * b.u * dt; b.y -= Math.cos(b.h * D2R) * b.u * dt;
+      if (i || S.capsized) return;
+      const gap = -polySep(hullWorld(S), hullWorld(b), S.x, S.y, b.x, b.y).pen;
+      base.gapMin = Math.min(base.gapMin, gap);
+      if (Math.abs(norm180(local.twd - S.h)) < 30) base.gapVirata = Math.min(base.gapVirata, gap);
+      if (gap <= 0 && !base.contatto){ base.contatto = true; toast("Contatto: dovevi lasciare strada. Premi Ricomincia."); }
+      const rx = S.x - b.x, ry = S.y - b.y, along = rx * Math.sin(b.h * D2R) - ry * Math.cos(b.h * D2R), side = rx * Math.cos(b.h * D2R) + ry * Math.sin(b.h * D2R);
+      if (base.latoScena !== undefined && Math.sign(side) !== Math.sign(base.latoScena) && along < -4.1) base.dietro = true; // poppa a -2,1 m, più 2 m
+      if (along > 6.2) base.davanti = true;                                                                              // sua prua a +2,1, tua poppa a 2,1 da te, più 2 m
+      base.latoScena = side;
+    });
   }
   function completeStep(){
     stepDone = true;
@@ -779,6 +801,7 @@
       const f = finCross(S.lessonMark, px0, py0, S.x, S.y);
       if (f >= 0) S.markReached = true; else if (f === -2) toast("Fuori dalla linea: passa tra le due boe");
     }
+    if (mode === "lesson" && S.scenaMob) scenaMuovi(dt);
     // obiettivi
     if (mode === "lesson" && st.cond && !stepDone){
       // 1.1.3 (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A): quello che il giocatore ha fatto nel passo, per i passi che la barca dell'1b farebbe da sola

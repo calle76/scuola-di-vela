@@ -235,7 +235,7 @@
     });
     if (mode === "race") drawRaceWorld(v);
     drawGhost();
-    if (mode === "lesson" && st && st.scena) scenaBarche(st).forEach(b => drawOther(b.S, { alpha: 17, awa: -b.S.boomSide * 40 }, 0, 1)); // 1.1.9: barche ferme di scena (lezioni D)
+    if (mode === "lesson" && st) scenaBarche(st).forEach(b => drawOther(b.S, { alpha: 17, awa: -b.S.boomSide * 40 }, 0, 1)); // 1.1.9: barche di scena (lezioni D), ferme o in movimento (1.2.0)
     drawBoat();
     drawTurnHint();
     ctx.restore();
@@ -251,7 +251,7 @@
     if (st && st.rose) drawRose(v, st.maneuvers, st.target);
     if (opt.arrows && (!st || st.arrows || st.hud >= 2 || (!st.pause && st.hud))) drawWindArrows(v, mode === "lesson" && lessonIdx < 3); // il vento apparente si spiega nella lezione 4
     if (st && st.labels) drawLabels(v, st.labels);
-    if (mode === "lesson" && st && st.scena) drawScenaScritte(v, st);
+    if (mode === "lesson" && st && (st.scena || S.scenaMob)) drawScenaScritte(v, st);
     drawCompass(v);
     drawWindBox(v);
     const heelG = !st || st.hud >= 3;
@@ -451,8 +451,9 @@
   // 1.1.9 (lezioni D, regolamento): barche ferme accanto a quella della lezione, per le pagine di teoria. b.x, b.y in metri dalla barca, b.h prua, b.col colore dello scafo,
   // b.label scritta; st.me è la scritta sulla barca della lezione. Vento da nord nelle lezioni: il boma sta dal lato opposto a quello da cui arriva il vento.
   function scenaBarche(st){
-    return st.scena.map(b => { const twa = norm180(env.twd - b.h), side = twa >= 0 ? -1 : 1;
-      return { S: { x: S.x + b.x, y: S.y + b.y, h: b.h, u: 0, vl: 0, r: 0, heel: 0, hike: 0.5, boomSide: side, boom: 30, dispBoom: side * 30, capsized: false, hullColor: b.col }, label: b.label }; });
+    const tutte = [...(st.scena || []).map(b => ({ ...b, x: S.x + b.x, y: S.y + b.y })), ...(S.scenaMob || [])];
+    return tutte.map(b => { const twa = norm180(env.twd - b.h), side = twa >= 0 ? -1 : 1;
+      return { S: { x: b.x, y: b.y, h: b.h, u: b.u || 0, vl: 0, r: 0, heel: 0, hike: 0.5, boomSide: side, boom: 30, dispBoom: side * 30, capsized: false, hullColor: b.col }, label: b.label }; });
   }
   function drawScenaScritte(v, st){
     ctx.save(); ctx.font = font(600, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
