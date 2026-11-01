@@ -40,7 +40,10 @@ COSTRUITO = """([tipo, finisci, seme]) => {
   S.x = 0; S.y = 0; S.u = 2; S.vl = 0; S.r = 0; O.u = 2; O.vl = 0; O.r = 0;
   if (tipo === "avv"){ S.h = hDritta; O.h = hSin; O.x = 3; O.y = 0; }
   else if (tipo === "mia"){ S.h = hSin; O.h = hDritta; O.x = 3; O.y = 0; }
-  else { S.h = hDritta; O.h = hDritta; const sg = tipo === "sopra" ? 1 : -1; O.x = -sg * 3 * su[0]; O.y = -sg * 3 * su[1]; }
+  // 1.1.0: la regata 0 ha il contatto fra gli scafi (prima un cerchio di 4,2 m): affiancate a 3 m fra i centri non si toccano (scafi larghi 1,4 m), quindi 1,2 m
+  else { S.h = hDritta; O.h = hDritta; const sg = tipo === "sopra" ? 1 : -1; O.x = -sg * 1.2 * su[0]; O.y = -sg * 1.2 * su[1]; }
+  // 1.1.0: la regata 0 ha la regola 13 (chi vira cede); spostare a mano le prue sembrerebbe una virata: le due barche partono «non in virata»
+  for (const b of [me, o]){ b.virando = false; b.sgV = undefined; }
   const c0 = sv.reg.contacts, p0 = sv.reg.contactsPen;
   sv.run(dt, 1);
   const r1 = Object.assign({}, sv.reg), toast = sv.toast;

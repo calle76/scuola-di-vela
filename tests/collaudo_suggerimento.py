@@ -47,7 +47,7 @@ ATTREZZI = """()=>{ const sv=__sv, T={};
  T.r2=x=>x===null?null:+x.toFixed(2);
  T.prova=(seme,dove,twa,kn,sh)=>{
   (s=>{Math.random=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}})(seme);
-  T.su(); if(dove==="free") sv.openItem("free"); else { sv.openItem(["l",4]); sv.showStep(3); }
+  T.su(); if(dove==="free"){ sv.openItem("free"); sv.setShifts(null); } else { sv.openItem(["l",4]); sv.showStep(3); }
   sv.simTime=0; T.capRisc=false;
   // 0.20.3, riscaldamento (60 s simulati, fissato prima dei risultati): nel gioco libero le raffiche nascono in posizioni casuali e
   // passano sulla barca. Senza, le 4 raffiche iniziali (posizioni fisse, index.html:904) non la raggiungono mai durante la prova

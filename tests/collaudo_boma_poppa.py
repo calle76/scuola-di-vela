@@ -16,7 +16,7 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
 PROVA = """async ([kn, lv, salti, seme, twa, durata]) => {
   const sv = __sv, dt = 1 / 60; __seed(seme);
   sv.openItem('free');
-  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', '0'], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); }
+  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', '0'], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); }
   sv.openItem('free'); if (!salti) sv.setShifts(null);
   const S = sv.S, ctl = sv.ctl; S.u = 2.5; S.vl = 0; S.r = 0; S.h = (sv.twd + 180 + twa + 360) % 360; ctl.tiller = 0; ctl.sheet = sv.autoSheet();
   let ultimo = null, cambi = 0, t = 0, maxdev = 0, gy0 = null, gy = 0, awaMin = 999, awaMax = -999; const lati = [];
@@ -35,7 +35,7 @@ PROVA = """async ([kn, lv, salti, seme, twa, durata]) => {
 STRAMBATA = """async ([kn, dir, seme, scotta]) => {
   const sv = __sv, dt = 1 / 60; __seed(seme);
   sv.openItem('free');
-  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', '0'], ['wDir', '0'], ['boatLv', '2']]){ const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); }
+  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', '0'], ['wDir', '0'], ['boatLv', '2']]){ const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); }
   sv.openItem('free'); sv.setShifts(null);
   const S = sv.S, ctl = sv.ctl; S.u = 2.5; S.vl = 0; S.r = 0; ctl.tiller = 0; ctl.sheet = scotta;
   let h = (sv.twd + 180 - dir * 30 + 360) % 360, t = 0, ult = null, cambi = [], tp = null, prec = null, awMin = 999;
@@ -88,7 +88,7 @@ async def main():
         # ---- B1 / B2: quanti cambi di lato in 60 s con la prua a 180° dal vento vero ----
         print("semi %d-%d (%d)" % (ss[0], ss[-1], len(ss)))
         tab = {}
-        for lv, salti_l in ((2, (False, True)), (1, (False,))):
+        for lv, salti_l in ((2, (False, True)),):  # dalla 1.1.0 (pulizia del codice) la barca dell'1a non c'è più
             for kn in (6, 10, 15):
                 for salti in salti_l:
                     r = await serie(pg, lv, kn, salti, ss); tab[(lv, kn, salti)] = riassumi(r)
@@ -98,7 +98,6 @@ async def main():
         n1b = [tab[k] for k in tab if k[0] == 2]
         chk("B1 il metro ha misurato: almeno 10 prove valide (senza scuffia) in ognuno dei 6 casi della 1b (%d prove valide; con i salti di vento a 15 nodi la barca scuffia in circa metà delle prove, sono escluse: metro cambiato dopo averlo visto, dichiarato)" % sum(t[0] for t in n1b), metro.tutti(t[0] >= 10 for t in n1b) and len(n1b) == 6)
         chk("B2 con l'isteresi: al più 1 cambio di lato in 60 s in almeno il 95%% delle prove, in tutti e tre i venti (1b, con e senza salti)", metro.tutti(t[4] >= 0.95 * t[0] for t in n1b), str([(k, tab[k][4], tab[k][0]) for k in tab if k[0] == 2 and tab[k][4] < 0.95 * tab[k][0]]))
-        chk("B2b stessa soglia per la 1a (stesso motore)", metro.tutti(tab[k][4] >= 0.95 * tab[k][0] for k in tab if k[0] == 1))
         # ---- B3: la strambata vera non si perde ----
         bb = []; nb = 0; scuf = []
         for kn in (6, 10, 15):
@@ -125,9 +124,10 @@ async def main():
         async def altre(base):
             c, g, e = await pagina(b, base); o = await g.evaluate(ALTRE, [20, 100]); await c.close(); return o
         nuovo = await altre(ROOT); vecchio = await altre(rif)
-        diff = [j for j in range(20) if nuovo[j] != vecchio[j]]
-        print("  20 regate (1a, 1b, salti, giri): %d identiche al bit alla %s, %d diverse: %s" % (20 - len(diff), RIF, len(diff), diff))
-        chk("B4a le 20 regate (arrivi, penalità, posizioni finali) sono identiche al bit, oppure si riporta quante divergono e perché (il boma non entra nelle forze)", len(nuovo) == 20 and not diff)
+        # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e cambiano per scelta (pulizia del codice): si confrontano le 10 che erano già dell'1b
+        uguali = [j for j in range(20) if j % 4 >= 2]; diff = [j for j in uguali if nuovo[j] != vecchio[j]]
+        print("  %d regate (salti, giri): %d identiche al bit alla %s, %d diverse: %s" % (len(uguali), len(uguali) - len(diff), RIF, len(diff), diff))
+        chk("B4a le 10 regate che erano già dell'1b (arrivi, penalità, posizioni finali) sono identiche al bit (il boma non entra nelle forze)", len(nuovo) == 20 and len(uguali) == 10 and not diff)
         # ---- B6: pagina come la carica un giocatore ----
         ctx, pg, errs = await pagina(b, ROOT, "")
         await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)

@@ -12,8 +12,8 @@
   const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
-  const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.78"; // sola fonte: menu, mare e registratore la leggono da qui
+  const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
+  const VERSIONE = "1.1.0"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -127,9 +127,9 @@
     const pt = {
       abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
       cono: QUIZ.reduce((a, q, i) => { const s = p.quiz?.["q" + i]; return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
-      comp: RACES1.reduce((a, rc, i) => a + racePt(i), 0),
+      comp: RACES_CARRIERA.reduce((a, rc, i) => a + racePt(i), 0),
       esp: LESSONS.filter((L, i) => p.done["l" + i]).length };
-    const pulite = RACES1.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
+    const pulite = RACES_CARRIERA.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
     const totale = MERITI.reduce((a, [k]) => a + pt[k], 0), esame = !!p.exam?.superato;
     // 0.23, dopo la prova di Ale: una riga con tutto quello che manca, e un suggerimento concreto per ogni area che manca
     const sotto = MERITI.filter(([k, , , min]) => pt[k] < min);
@@ -146,8 +146,8 @@
         i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
         i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
       if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
-      const rp = RACES1.map((rc, i) => racePt(i));
-      const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES1[i].title + " (con avversari).";
+      const rp = RACES_CARRIERA.map((rc, i) => racePt(i));
+      const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES_CARRIERA[i].title + " (con avversari).";
     };
     const aree = sotto.length ? sotto : totale < TOT_MIN ? MERITI.filter(([k, , max]) => pt[k] < max) : [];
     const sugg = aree.map(([k]) => voce(k)).filter(Boolean);
@@ -160,7 +160,7 @@
     const rows = MERITI.map(([k, nome, max, min]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-m="${k}">${m.pt[k]} / ${max}</span> · <span class="${m.pt[k] >= min ? "ok" : "no"}">servono ${min}</span></span></div>`).join("");
     const sug = m.sugg.length ? m.sugg[giroSug++ % m.sugg.length] : null;
     return `<div><div class="part-head"><h2>Libretto</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
-      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES1.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Brevetto ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Attestato</button></p>`
+      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES_CARRIERA.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Brevetto ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Attestato</button></p>`
         : `<p class="manca" id="libManca">${m.superato ? "Livello 1 superato." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
   loadProgress();
@@ -225,7 +225,7 @@
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
-    const races = (modo === "carriera" ? RACES1 : RACES).map((rc, i) => { const b = progress.best[recK("r" + i)];
+    const races = (modo === "carriera" ? RACES_CARRIERA : RACES).map((rc, i) => { const b = progress.best[recK("r" + i)];
       return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
     const torBtn = (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
         const st = chiuso ? "dopo il brevetto di livello 1" : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
@@ -583,14 +583,13 @@
     env.twd = freeEnv.twd; env.tws = freeEnv.tws / KN;
     curMarks = [{ x: 0, y: -160, label: "Boa 1" }, { x: 110, y: -40, label: "Boa 2" }, { x: -110, y: -40, label: "Boa 3" }];
     freshState(0, 30, norm360(env.twd + 90), 0.3);
-    if (freeEnv.lv === 2){ S.lv = 2; setShifts("osc"); }
+    setShifts("osc"); // i salti di vento della barca dell'1b (1.0.28)
     setGusts(freeEnv.gusts);
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
   }
   $("wDir").onchange = e => { freeEnv.twd = +e.target.value; env.twd = freeEnv.twd; setGusts(gustLevel); };
   $("wSpd").onchange = e => { freeEnv.tws = +e.target.value; env.tws = freeEnv.tws / KN; };
   $("gustSel").onchange = e => { freeEnv.gusts = +e.target.value; setGusts(freeEnv.gusts); };
-  $("boatLv").onchange = e => { freeEnv.lv = +e.target.value; if (mode === "free"){ if (freeEnv.lv === 2){ S.lv = 2; setShifts("osc"); } else { delete S.lv; delete S.stall; setShifts(null); } } };
 
   // ======================================================================
   // INPUT
@@ -615,9 +614,9 @@
     }
     if (k === "1" || k === "2"){ if (!sesTyping()) userZoom = k === "1" ? Math.min(3, userZoom * 1.25) : Math.max(ZMIN, userZoom / 1.25); return; } // 1.0.48: zoom coi tasti vicini a Q, al posto dei pulsanti + e − (idea di Ale)
     if (k === "a"){ rightBoat(); return; } // 1.0.27: raddrizza con A (era R; R resta libero per le manovre dei livelli futuri, decisione di Ale)
-    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nell'1b la barra arriva fino a 45°
+    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, la barra arriva fino a 45°
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
-    if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto (solo la barca dell'1b)
+    if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
       if (e.target.tagName === "SELECT") return;
       e.preventDefault(); keys.add(k);
@@ -632,7 +631,7 @@
     ["pointerup","pointercancel","lostpointercapture"].forEach(ev => btn.addEventListener(ev, () => semRelease(a)));
     btn.addEventListener("contextmenu", e => e.preventDefault());
   });
-  $("tiller").addEventListener("input", e => { if (S.lv === 2) tillerAim = e.target.value / 100; else ctl.tiller = e.target.value / 100; dragTiller = true; });
+  $("tiller").addEventListener("input", e => { tillerAim = e.target.value / 100; dragTiller = true; });
   ["pointerup","change","touchend"].forEach(ev => $("tiller").addEventListener(ev, () => dragTiller = false));
   $("sheet").addEventListener("input", e => { autoSheetSpegni(); ctl.sheet = e.target.value / 100; });
   function seg(id, key){
@@ -667,8 +666,8 @@
 
   function applyInput(dt){
     let tillerInput = false;
-    ctl.push = S.lv === 2 && keys.has("z") && !S.capsized; // 1.0.26: boma spinto finché Z è premuto (docs/archivio/PROPOSTA-SPINGI-BOMA.md)
-    if (tillerAim !== null){ // 1b: il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
+    ctl.push = keys.has("z") && !S.capsized; // 1.0.26: boma spinto finché Z è premuto (docs/archivio/PROPOSTA-SPINGI-BOMA.md)
+    if (tillerAim !== null){ // il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
       const d = tillerAim - ctl.tiller, m = 1.6 * dt; ctl.tiller = Math.abs(d) <= m ? tillerAim : ctl.tiller + Math.sign(d) * m; tillerInput = true;
       if (!dragTiller && ctl.tiller === tillerAim) tillerAim = null;
     }
@@ -677,8 +676,8 @@
       if (l || r){
         let dir = (r ? 1 : 0) - (l ? 1 : 0);
         if (opt.helm === "prua") dir = -dir * (S.u < 0 ? -1 : 1);
-        // 1.0.25, 1b: la sola freccia porta la barra fino a 35° (RUD2_SICURA), Maiusc + freccia fino a 45°; sempre alla velocità dell'1a
-        const lim = S.lv === 2 && !keys.has("Shift") ? Math.max(RUD2_SICURA, Math.abs(ctl.tiller)) : 1;
+        // 1.0.25: la sola freccia porta la barra fino a 35° (RUD2_SICURA), Maiusc + freccia fino a 45°; sempre alla stessa velocità
+        const lim = !keys.has("Shift") ? Math.max(RUD2_SICURA, Math.abs(ctl.tiller)) : 1;
         ctl.tiller = clamp(ctl.tiller + dir * 1.6 * dt, -lim, lim); tillerInput = true;
       }
     }
@@ -749,10 +748,10 @@
       S.x += Math.sin(to) * 0.25 * dt; S.y -= Math.cos(to) * 0.25 * dt;
       if (S.righting){
         S.righting += dt;
-        if (S.righting > raddT(S)){
-          const side = S.capSide, lv2 = S.lv === 2; // 1b: al traverso, ferma, vela tutta lascata (RADD2)
-          S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = lv2 ? 0 : 0.3;
-          S.h = norm360(local.twd + side * (lv2 ? RADD2.twa : 60)); ctl.sheet = lv2 ? 1 : 0.8; ctl.tiller = 0;
+        if (S.righting > RADD2.t){
+          const side = S.capSide; // al traverso, ferma, vela tutta lascata (RADD2; fino alla 1.0.78 l'1a ripartiva a 60° con 0,3 m/s)
+          S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = 0;
+          S.h = norm360(local.twd + side * RADD2.twa); ctl.sheet = 1; ctl.tiller = 0;
           S.prevSide = sgn(norm180(local.twd - S.h));
         }
       }

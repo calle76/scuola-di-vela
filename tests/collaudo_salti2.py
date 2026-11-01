@@ -1,8 +1,8 @@
 # Salti di vento del livello 2 in prova (1.0.28, docs/archivio/PROPOSTA-SALTI-VENTO.md): pagina con #collaudo, passi di 1/60 s, Math.random a seme fisso.
-#  1. navigazione libera, barca del livello 1, senza raffiche: il vento non gira (240 s);
-#  2. navigazione libera, barca del livello 2: il vento gira di almeno 16° fra il minimo e il massimo in 240 s, e mai oltre 40°;
+#  1. (fino alla 1.0.78: con la barca dell'1a il vento della navigazione libera non girava; dalla 1.1.0 la barca è una sola: tolto)
+#  2. navigazione libera: il vento gira di almeno 16° fra il minimo e il massimo in 240 s, e mai oltre 40°;
 #  3. regata nei salti di vento (S3): 12 regate (semi 1-6, principianti ed esperti), giocatore guidato da __sv.pilota come nell'impronta:
-#     boa a 300 m, tutte le barche del livello 2, il vento gira, e tutte e quattro le barche arrivano entro 900 s;
+#     boa a 300 m, il vento gira, e tutte e quattro le barche arrivano entro 900 s;
 #  4. menu del gioco libero a 1360x650: la regata nuova c'è e il menu non va oltre la finestra; nella carriera non c'è;
 #  5. pagina senza #collaudo: la regata si apre, nessun errore della pagina.
 # Esce con 1 se un controllo fallisce.
@@ -20,7 +20,7 @@ def check(ok, testo):
     if not ok: falliti.append(testo)
 
 LIBERA = """([lv]) => { const sv = __sv; sv.fast(0); sv.openItem('free');
-  for (const [id, v] of [['wSpd', '10'], ['gustSel', '0'], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); }
+  for (const [id, v] of [['wSpd', '10'], ['gustSel', '0'], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); }
   sv.openItem('free'); let lo = 999, hi = -999;
   for (let i = 0; i < 240 * 60; i++){ sv.run(1 / 60, 1); const d = ((sv.twd - 0 + 540) % 360) - 180; lo = Math.min(lo, d); hi = Math.max(hi, d); }
   return [lo, hi, sv.S.lv]; }"""
@@ -39,10 +39,8 @@ async def main():
         errori = []; pg.on("pageerror", lambda e: errori.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
 
-        lo, hi, lv = await pg.evaluate(LIBERA, [1])
-        check(hi - lo < 0.001 and lv is None, f"libera, livello 1: il vento non gira (escursione {hi - lo:.3f}°)")
         lo, hi, lv = await pg.evaluate(LIBERA, [2])
-        check(lv == 2 and 16 <= hi - lo <= 40, f"libera, livello 2: il vento gira fra {lo:.1f}° e {hi:.1f}° (escursione fra 16 e 40)")
+        check(16 <= hi - lo <= 40, f"libera: il vento gira fra {lo:.1f}° e {hi:.1f}° (escursione fra 16 e 40)")
 
         n = arrivate = 0
         for liv in ("principianti", "esperti"):
@@ -52,8 +50,8 @@ async def main():
                 arrivate += tutte
                 print(f"  regata {n} ({liv}, seme {seme}): boa a {r['up']:.0f} m, vento fra {r['lo']:.1f}° e {r['hi']:.1f}°, "
                       f"arrivi {[None if f is None else round(f) for f in r['fin']]} s, penalità {r['pen']}")
-                check(abs(r["up"] - 300) < 1 and metro.tutti(v == 2 for v in r["lv"]) and r["hi"] - r["lo"] >= 8 and tutte,
-                      f"regata {n}: boa a 300 m, barche del livello 2, il vento gira, arrivano tutte")
+                check(abs(r["up"] - 300) < 1 and r["hi"] - r["lo"] >= 8 and tutte,
+                      f"regata {n}: boa a 300 m, il vento gira, arrivano tutte")
         print(f"S3: regate con tutte le barche arrivate {arrivate} su {n}")
         check("gira" in r["brief"], "le istruzioni della regata dicono che il vento gira")
 
@@ -65,7 +63,7 @@ async def main():
               f"menu del gioco libero: regata nuova presente, eccesso {mn['eccesso']} px / pagina {mn['alto']} px")
         await pg.evaluate("""document.querySelector('#modoSel [data-v="carriera"]').click()""")
         car = await pg.evaluate("[...document.querySelectorAll('#menu button[data-r]')].map(b => b.textContent)")
-        check(len(car) == 2 and not any("salti" in t for t in car), f"menu della carriera: solo le 2 regate del livello 1 ({len(car)})")
+        check(len(car) == 2 and not any("salti" in t for t in car), f"menu della carriera: solo le 2 regate a bastone e nelle raffiche ({len(car)})")
         await pg.evaluate("""document.querySelector('#modoSel [data-v="libero"]').click()""")
 
         # pagina come la carica un giocatore

@@ -137,8 +137,8 @@ TESTS=(
 # Cosa guardare per i collaudi "ambiguo" (una riga ciascuno, dal rapporto atteso in docs/COLLAUDI.md).
 nota() {
     case "$1" in
-        "polare.js") echo "confronta a mano con circa 4,7 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.11; 1.0.6-1.0.10 3,8 / 6,0 / 4,1)" ;;
-        "raffiche_e_virate.js") echo "virata riuscita in circa 3,0 s da 3,9 nodi e in circa 6,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 67° (scuffia) con la scotta fissa e circa 53° col boma a 21° (dalla 1.0.11)" ;;
+        "polare.js") echo "confronta a mano con circa 4,6 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.1.0, barca dell'1b; con l'1a 4,7 / 6,0 / 4,1)" ;;
+        "raffiche_e_virate.js") echo "virata riuscita in circa 3,9 s da 3,9 nodi e in circa 7,5 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 65° (scuffia) con la scotta fissa e circa 52° col boma a 21° (dalla 1.1.0, barca dell'1b; con l'1a 3,0 / 6,6 / 67° / 53°)" ;;
         "collaudo_regole.py") echo "riga «ESITO: OK» (regole 10, 11, 12 e 13 nell'1b: 24 casi a mano dal regolamento, virata, e le due regole di sempre nell'1a)" ;;
         "collaudo_semaforo.py") echo "riga «ESITO: OK» (semaforo di precedenza: 16 regate dell'1b, colore uguale alla penalità, impostazione spenta, 1a senza semaforo)" ;;
         "collaudo_contatto_vero.py") echo "riga «ESITO: OK» (contatto fra gli scafi nell'1b: 8 coppie a mano nei due livelli, 6 regate col pilota nell'1a e nell'1b, 0 sovrapposizioni senza contatto, nessun contatto con gli scafi a più di 5 cm)" ;;

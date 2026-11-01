@@ -1,7 +1,7 @@
 # Regole di precedenza dell'1b (1.0.40, docs/PROPOSTA-REGOLE-PRECEDENZA-1B.md): chi deve cedere, per le regole 10, 11, 12 e 13 di F15.
 # Casi scritti a mano dal testo del regolamento (non letti dal gioco): coppie di barche messe nella regata dei salti di vento (1b), senza salti di
 # vento; per ognuna la barca che deve cedere e la regola. Più i confini: dietro/affiancate per pochi centimetri, virata finita da poco.
-# L'1a (regata 0) deve dare le due regole di sempre (10; stesse mure col più sopravento): casi in fondo. Il metro non dipende dal gioco:
+# Fino alla 1.0.78 l'1a (regata 0) dava le due regole di sempre; dalla 1.1.0 (pulizia del codice) la regata 0 ha le regole 10-13 come le altre: casi in fondo. Il metro non dipende dal gioco:
 # la geometria (davanti, a sinistra) è calcolata qui con le formule dei casi. Il controllo deve aver visto casi di tutte le regole.
 # Uso: python collaudo_regole.py
 import asyncio, math, pathlib, sys
@@ -53,11 +53,12 @@ CASI = [
     ("13 entrambe in virata, B a sinistra di A: cede B", "p", "p", 0, -3, 1, 1, "B", 13),
     ("13 entrambe in virata, B a destra di A: cede A", "p", "p", 0, 3, 1, 1, "A", 13),
 ]
-# l'1a: stesse due regole di sempre (10; stesse mure: cede la più sopravento, cioè la y minore del vento)
+# la regata 0, che fino alla 1.0.78 era dell'1a (10; stesse mure: cedeva la più sopravento): dalla 1.1.0 le regole di F15 come nelle altre regate.
+# Attesi dalla regola, non dal gioco: in fila con le stesse mure cede quella dietro (12), non più la più sopravento (11).
 CASI_1A = [
-    ("1a mure opposte: cede quella a sinistra", "p", "s", 15, 8, 0, 0, "A", 10),
-    ("1a stesse mure in fila, B davanti (più sopravento): cede B, come sempre", "p", "p", 8, 0, 0, 0, "B", 11),
-    ("1a stesse mure in fila, B dietro (più sottovento): cede A, come sempre", "p", "p", -8, 0, 0, 0, "A", 11),
+    ("regata 0, mure opposte: cede quella a sinistra", "p", "s", 15, 8, 0, 0, "A", 10),
+    ("regata 0, stesse mure in fila, B davanti: cede A, che è dietro", "p", "p", 8, 0, 0, 0, "A", 12),
+    ("regata 0, stesse mure in fila, B dietro: cede B", "p", "p", -8, 0, 0, 0, "B", 12),
 ]
 
 # virate: la prua attraversa il vento, resta «in virata» finché non è a 42° dal vento o dopo 10 s
@@ -94,11 +95,11 @@ async def main():
         v = await pg.evaluate(VIRATA)
         for k, atteso in (("primaDelVento", False), ("attraversa", True), ("a41", True), ("a43", False), ("seIncrocia2", True), ("scade", False)):
             print(f"  {k}: {v[k]} (atteso {atteso})"); chk(v[k] == atteso, f"virata, {k}: {v[k]}, atteso {atteso}")
-        print("== 1a: le due regole di sempre")
+        print("== regata 0 (fino alla 1.0.78 della barca dell'1a): le regole di F15")
         for nome, ta, tb, av, la, va, vb, cede, reg in CASI_1A:
             r = await pg.evaluate(CASO, [0, 0, ta, tb, av, la, va, vb])
             print(f"  {'ok ' if r['cede'] == cede and r['regola'] == reg else 'NO '} {nome:70s} cede {r['cede']} (regola {r['regola']}), atteso {cede} ({reg})")
-            chk(r["cede"] == cede and r["regola"] == reg, f"1a, {nome}: cede {r['cede']} regola {r['regola']}, atteso {cede} regola {reg}")
+            chk(r["cede"] == cede and r["regola"] == reg, f"{nome}: cede {r['cede']} regola {r['regola']}, atteso {cede} regola {reg}")
         chk(regole == {10, 11, 12, 13}, f"il controllo non ha visto tutte le regole: {sorted(regole)}")
         chk(not errs, f"errori della pagina: {errs[:3]}")
         await b.close()

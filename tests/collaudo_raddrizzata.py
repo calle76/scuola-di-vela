@@ -18,7 +18,7 @@ def check(ok, testo):
     if not ok: falliti.append(testo)
 
 APRI = """([kn, lv, lato]) => { const sv = __sv; sv.fast(0); sv.openItem('free');
-  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', '0'], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); }
+  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', '0'], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); }
   sv.openItem('free'); if (sv.setShifts) sv.setShifts(null); const S = sv.S;
   Object.assign(S, { capsized: true, capSide: lato, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); sv.run(1 / 60, 30); return S.lv || 1; }"""
 GIRA = """s => { const sv = __sv, S = sv.S; let tDritta = null;
@@ -34,7 +34,7 @@ async def main():
         errori = []; pg.on("pageerror", lambda e: errori.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
         n = 0
-        for lv in (2, 1):
+        for lv in (2,):  # dalla 1.1.0 (pulizia del codice) c'è solo la barca dell'1b: il confronto con la 1a (3 s, 60°) è tolto
             for kn in (6, 10, 15, 20):
                 for lato in (1, -1):
                     lvv = await pg.evaluate(APRI, [kn, lv, lato]); n += 1
@@ -42,7 +42,7 @@ async def main():
                     att = 10 if lv == 2 else 3
                     r = await pg.evaluate(GIRA, att + 0.5)
                     ang = 90 if lv == 2 else 60
-                    ok1 = lvv == lv and r["tDritta"] is not None and abs(r["tDritta"] - att) < 0.2 and abs(abs(r["twa"]) - ang) <= 5 and \
+                    ok1 = r["tDritta"] is not None and abs(r["tDritta"] - att) < 0.2 and abs(abs(r["twa"]) - ang) <= 5 and \
                         (r["sheet"] == 1 and r["u"] < 0.05 if lv == 2 else True)
                     check(ok1, f"R1 livello {lv}, {kn} nodi, lato {lato:+d}: dritta dopo {r['tDritta']} s, {abs(r['twa']):.0f}° dal vento, "
                                f"{r['u'] * 1.944:.2f} nodi, scotta {r['sheet']:.2f}")
@@ -52,7 +52,7 @@ async def main():
                     t2 = await pg.evaluate(ATTENDI, tc)
                     print(f"  R3 livello {lv}, {kn} nodi, lato {lato:+d}: cazzata a {sh:.2f}, da ↑ a 2 nodi {t2 if t2 is None else round(t2, 1)} s")
         print(f"casi misurati: {n}")
-        for regata, att, ang in ((2, 15, 90), (0, 5, 60)):
+        for regata, att, ang in ((2, 15, 90), (0, 15, 90)):  # 1.1.0: anche la regata 1 è della barca dell'1b (prima 5 s e 60°)
             r = await pg.evaluate("""([i, att]) => { const sv = __sv; sv.fast(0); sv.openItem(['r', i]); const R = sv.R;
               while (R.t < 20) sv.run(1 / 60, 1);
               const b = R.boats.find(b => b.ai), s = b.S; s.capsized = true; s.capT = 0; s.capSide = 1; s.u = 0;

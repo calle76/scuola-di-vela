@@ -85,8 +85,9 @@ async def main():
         print("== parte 1: coppie a mano")
         for nome, hA, hB, bx, by, c1a, c1b in CASI:
             r1 = await pg.evaluate(MANO, [0, hA, hB, bx, by]); r2 = await pg.evaluate(MANO, [2, hA, hB, bx, by])
-            print(f"  {nome:58s} 1a: {r1} (atteso {c1a})  1b: {r2} (atteso {c1b})")
-            chk(r1 == c1a, f"1a, {nome}: contatti {r1}, attesi {c1a}"); chk(r2 == c1b, f"1b, {nome}: contatti {r2}, attesi {c1b}")
+            # 1.1.0 (pulizia del codice): anche la regata 0 ha il contatto fra gli scafi, quindi l'atteso è quello dell'1b (c1a resta per memoria)
+            print(f"  {nome:58s} regata 0: {r1} (atteso {c1b})  regata 2: {r2} (atteso {c1b})")
+            chk(r1 == c1b, f"regata 0, {nome}: contatti {r1}, attesi {c1b}"); chk(r2 == c1b, f"1b, {nome}: contatti {r2}, attesi {c1b}")
         print("== parte 2: regate intere (passi di 1/240 s)")
         tot = {0: [0, 0, 0, 0.0, 0, 0.0, 0.0], 2: [0, 0, 0, 0.0, 0, 0.0, 0.0]}  # contatti, sovrapposti, vicine, distanza max, corse, secondi sovrapposti, penetrazione max
         for race in (0, 2):
@@ -94,7 +95,7 @@ async def main():
                 for liv in ("principianti", "esperti"):
                     r = await pg.evaluate(SIM, [race, seme, liv]); t = tot[race]
                     t[0] += r["contatti"]; t[1] += r["sovrapposti"]; t[2] += r["vicine"]; t[3] = max(t[3], r["maxDist"]); t[4] += 1; t[5] += r["secSov"]; t[6] = max(t[6], r["maxPen"])
-        for race, nome in ((0, "1a (regata a bastone)"), (2, "1b (salti di vento)")):
+        for race, nome in ((0, "regata a bastone (fino alla 1.0.78 dell'1a)"), (2, "salti di vento")):
             c, s_, v, d, n, ss, mp = tot[race]
             print(f"  {nome}: {n} corse, contatti {c} ({c / n:.1f} a regata), istanti con barche entro 5 m {v}, sovrapposizioni senza contatto {s_}, distanza massima fra scafi al contatto {d:.3f} m, scafi sovrapposti {ss / n:.2f} s a regata, penetrazione massima {mp:.2f} m")
         c, s_, v, d, n, ss, mp = tot[2]

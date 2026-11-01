@@ -17,6 +17,69 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.1.0 — Pulizia del codice: resta solo la barca dell'1b (ramo `pulizia`)
+
+Primo passo della riorganizzazione in «La scuola» e «Deriva» (`docs/PROPOSTA-RIORGANIZZAZIONE.md` §5, passo 2; proposta e misura 0 in `docs/PROPOSTA-PULIZIA-CODICE.md`). **Sta nel ramo `pulizia`, non in `main`:** lezioni e prove sono state provate con la barca dell'1a, e con l'1b alcune cose non vanno (misura 0). Il ramo entra in `main` insieme alle lezioni riscritte (passo 3), così il gioco online non cambia prima.
+
+**Cosa cambia per chi gioca:**
+- Lezioni, prove, navigazione libera e tutte le regate usano la barca dell'1b: la barra arriva a 35° con la sola freccia e a 45° con Maiusc, la pala può stallare, Z spinge il boma, la raddrizzata dura 10 s.
+- La scelta «Barca» nelle impostazioni non c'è più. In navigazione libera il vento ha sempre i salti dell'1b.
+- «Regata a bastone» e «Regata nelle raffiche» ora sono della barca dell'1b: regole 10-13, contatto fra gli scafi, avversari dell'1b, semaforo. Carriera e meriti contano ancora queste due, come prima: menu e carriera si rifanno al passo 5.
+- Testi: tolta «Barca dell'1b» dove non c'è più una scelta. Dalle introduzioni delle regate è tolta la frase «Da questo livello i contatti sono quelli veri… Prima avevi imparato…», che parlava della 1a; resta la spiegazione di chi cede, ora in tutte le regate. Il semaforo nelle impostazioni dice «regate» e non più «solo regate 1b». I tasti Maiusc e Z sono spiegati al passaggio del mouse sulla riga dei tasti, perché l'unica spiegazione stava nella scelta «Barca», che non c'è più. La lezione vera arriva con il passo 3.
+- **Difetto corretto per strada:** dalla 1.0.61 l'introduzione della «Regata con i giri di penalità» diceva che il vento gira e che la boa è a 300 m. Non era vero: il testo seguiva la barca dell'1b e non la regata. Ora lo dice solo la regata nei salti di vento.
+- Il registratore non scrive più «(barca 1a|1b)» nell'intestazione della regata.
+
+**Codice:**
+- `js/motore.js`: quello che valeva con `S.lv === 2` vale sempre; tolti lo scarroccio dell'1a (`BOAT.foilK`) e `raddT`. Sotto 0,5 m/s e all'indietro resta il timone di prima, come già nell'1b.
+- `js/regate.js`: tolti la regola 10 propria degli avversari dell'1a, lo scarto da qualsiasi barca davanti, il contatto fra cerchi e le regole «10 e 11 semplificate». `RACES1` diventa `RACES_CARRIERA` (le regate col campo `scuola: false` ne restano fuori).
+- `js/gioco.js`, `js/disegno.js`, `js/registratore.js`, `index.html`: tolti selettore e rami dell'1a.
+- Le righe di codice in `index.html` e `js/` che contengono `S.lv`, `lv2`, `RACES1`, `boatLv` o `.lv` erano **46**, ora sono **0**. Le righe di solo commento non contano. Il comando, uguale prima (su `main`) e dopo: `cat index.html js/*.js | grep -E "S\.lv|lv2|RACES1|boatLv|\.lv\b" | grep -vE "^\s*//" | wc -l`.
+- I nomi `RUD2`, `RADD2`, `BOMA2`, `DERIVA2`, `SALTI2` restano: il cambio dei nomi previsto dalla proposta (§2.A) **non è fatto**. Tocca 20 script di collaudo e non cambia niente nel gioco: lo propongo per la pulizia finale, dopo le lezioni.
+
+**Collaudi della fisica e prototipo:**
+- Nuova copia congelata del motore della 1a, `tests/fisica/motore1a_sorgente.js`, letta da `tests/fisica/motore1a.js`; con `MOTORE=1a` la legge anche `tests/fisica/motore.js`. Il prototipo del fiocco (`sperimentale/misure_fiocco.js`) si confronta con questa: uscita identica carattere per carattere prima e dopo (136 righe). **Trovato:** già prima della pulizia, il prototipo «senza fiocco» non era più identico al gioco: 30 casi, scarto massimo 2,73 nodi a 15 nodi e 90°. La 1a del gioco era cambiata dopo la tappa C e il prototipo è rimasto indietro. La regola di `CLAUDE.md` sulla non-regressione va riscritta.
+- **P1:** `impronta1b.js` è identica al bit (25 corse, 51.802 passi).
+- **P2:** `MOTORE=1a node polare.js` e `MOTORE=1a node raffiche_e_virate.js` danno i riferimenti di prima, carattere per carattere.
+- **P3:** riferimenti nuovi di `polare.txt` e `raffiche_e_virate.txt`, rigenerati: ora misurano la barca dell'1b, perché il gioco ha solo quella. I valori nuovi sono identici carattere per carattere a quelli che la barca dell'1b dava già prima (stessi script con `lv: 2` sulla copia congelata). Polare con 10 nodi: 4,6 nodi a 45° (prima 4,7), 6,0 a 90°, 4,1 a 180°. Virata da 3,9 nodi in 3,9 s (prima 3,0), da 1,9 nodi in 7,5 s (prima 6,6). Raffica a 20 nodi senza reagire: 65°, scuffia (prima 67°).
+- `scarroccio1b.js` e `timone2.js` mettono ancora a confronto 1a e 1b, prendendo la 1a dalla copia congelata: uscite identiche a prima. `timone2.js` esce con «almeno un criterio FUORI soglia» come prima.
+- `bolina.js`, `retromarcia.js`, `angolo_morto.js`, `raffiche_portanti.js` e `virate2.js` misuravano la barca senza `lv` e ora misurano l'1b. Non sono nel giro e non li ho rilanciati.
+
+**Regate (P4, P5):**
+- **P4:** `tests/arrivi_regate.py`, con in più la regata dei giri (6 semi): le 28 righe di salti, giri e 2 tornei sono identiche al bit a `main`. Restano esclusi i testi di introduzione, cambiati come detto sopra.
+- **P5:** bastone e raffiche con gli avversari dell'1b, semi 1-20 principianti e 21-40 esperti. Arrivano tutte le barche in **80 regate su 80** (soglia 19 su 20 per regata e livello). Tempo medio di tutte le barche: bastone 225/221 s, raffiche 204/208 s (prima, con la 1a, sui 7 semi di `arrivi_regate.py`: 221/214 e 203/201). Barche con almeno una penalità: 49, 52, 49, 57 su 80 per gruppo, 61-71%. Con la 1a, sui 7 semi, erano 7/16, 8/12, 12/16, 7/12, cioè 44-75%.
+
+**Riquadro delle istruzioni a 1360×650** (misurato in tutte e quattro le regate, 3 livelli di avversari, Chromium e Firefox):
+- Bastone e raffiche: **0 px**, come prima. In una prima stesura avevo aggiunto anche lì la frase su chi cede: sforava di 35-88 px e `collaudo_pannello.py` l'ha preso. La frase ora c'è solo dove c'era già: salti, giri e torneo (campo `precedenze`).
+- **Difetto vecchio, trovato ora:** il riquadro di salti e giri sfora già su `main`. Su `main` 158-210 px per i salti e 354-406 px per i giri; ora 84-137 e 207-284, perché i testi sono più corti. Nessun collaudo lo vedeva: `collaudo_pannello.py` misura solo la prima regata. Da sistemare con i testi della scuola (passo 3), insieme a un collaudo che misuri tutte le regate.
+
+**Lezioni e prove sulla barca nuova (P7, solo numeri):** identici alla misura 0, carattere per carattere.
+- `collaudo_pilota_lezioni.py`, semi 1-10: 27 passi su 32 completati 10 volte su 10. 3.10 «Filetto sottovento» mai completato (0 su 10). Quattro passi si completano da soli, senza toccare niente: 2.4, 3.2, 5.2, 6.2.
+- `collaudo_fasce.py`: oro mancato nella prova 4 (285,8 s contro 280) e nella 5 (302,4 s contro 300, una corsa su 24 bloccata). Le prove 1-3 vanno come prima.
+- `collaudo_lezioni.py`: ESITO FALLITO solo per «L5 prepararsi (bolina lanciata)». Va col passo 3 e non l'ho aggiunto ai fallimenti noti. Ho portato l'attesa di «L6 raddrizzare» da 8 a 12 s, perché la raddrizzata dell'1b dura 10 s.
+
+**Pagina come la carica un giocatore (P8):** in Chromium e Firefox, senza `#collaudo`, si aprono lezione 1, prova 1, navigazione libera e le quattro regate: 7 su 7, 0 errori della pagina, pagina che non scorre (0 px).
+
+**Collaudi lanciati:**
+- **Verdi:** `collaudo_versione`, `collaudo_timone2`, `collaudo_boma2`, `collaudo_raddrizzata`, `collaudo_salti2`, `collaudo_pannello` (90 misure del pannello, 6 del riquadro), `collaudo_quiz`, `collaudo_regole` (35 controlli), `collaudo_semaforo`, `collaudo_carriera`, `collaudo_registratore`, `collaudo_registro` (15 su 15), `collaudo_libretto`, `collaudo_contatto_vero`, `collaudo_contatto_senza_colpa`, `collaudo_suggerimento`, `collaudo_regate` bastone e raffiche (6 corse ciascuna, 18 arrivi su 18, nessuna BLOCCATA), `collaudo_partenze`.
+- **Fallisce, come su `main`:** `collaudo_triangolo` T2b, 129 su 168 confronti dei distacchi; numeri identici a quelli di `main` rilanciato qui.
+
+**Collaudi cambiati,** perché misuravano la barca dell'1a o sceglievano la barca dal selettore «Barca». Ogni cambio è scritto nel file.
+- `collaudo_boma2`: tolto «nella 1a Z non fa niente».
+- `collaudo_timone2`: tolti i controlli sulla scelta «Barca» e sulla barra della 1a; ora controlla che la scelta «Barca» non ci sia più.
+- `collaudo_raddrizzata`: solo la 1b; la regata 0 si raddrizza ora in 15 s a 90°.
+- `collaudo_salti2`: tolto «nella libera dell'1a il vento non gira».
+- `collaudo_scotta_automatica`: solo la 1b; A1 confronta con la 1.0.72 solo le regate che erano già dell'1b.
+- `collaudo_boma_poppa`: tolta la 1a (B2b); B4a confronta solo le 10 regate già dell'1b.
+- `collaudo_regole`: la regata 0 ha gli attesi di F15. In fila con le stesse mure cede chi è dietro (12), non il più sopravento (11).
+- `collaudo_semaforo`: nella regata 0 il semaforo ora si deve vedere (1.824 passi).
+- `collaudo_contatto_vero`: la regata 0 ha gli attesi del contatto fra scafi.
+- `collaudo_contatto_senza_colpa`: barche affiancate a 1,2 m invece di 3 e «non in virata» all'inizio. Il caso costruito spostava le prue a mano e la regola 13 lo prendeva per una virata.
+- `collaudo_suggerimento`: salti di vento spenti nella navigazione libera, perché misura i tempi del suggerimento con il vento fermo.
+- `collaudo_lezioni`: attesa della raddrizzata (vedi sopra).
+- `collaudo_impronta`: solo la riga del selettore. Il riferimento resta vecchio, come prima.
+- `tests/lancia_tutti.sh`: i valori da confrontare a mano per `polare.js` e `raffiche_e_virate.js`.
+- **Non lanciati qui:** `collaudo_boma_poppa`, `collaudo_scotta_automatica`, `collaudo_impronta`, i collaudi della carriera intera e dell'esame, `collaudo_avversari1b`, `collaudo_giri*`, `collaudo_torneo`, `collaudo_moviola` e gli altri del giro. Li lancia `tests/lancia_tutti.sh`.
+
 ## 1.0.78 — Descrizione della regata dei giri: «per un contatto con colpa»
 
 La descrizione nel menu diceva «due giri se lasci male la strada», una frase mia della 1.0.69 che non vuol dire niente: segnalata da Ale il 1 novembre 2026. Ora dice: «Livello 2: due giri per un contatto con colpa, uno se tocchi una boa; bandiere sulla giuria.» È anche più precisa, perché nel gioco i due giri arrivano solo con un contatto in cui avevi la colpa.

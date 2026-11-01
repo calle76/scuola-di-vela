@@ -29,7 +29,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 - **Un solo tentativo non basta**, nemmeno per dire che una cosa non succede: molti tentativi con semi fissi, e dì quanti.
 - **Il metro di misura non deve dipendere da ciò che si misura.** Un controllo scritto come «nessun caso sbagliato» è vero anche con zero casi: verifica che abbia misurato davvero.
 - **Collauda guidando davvero la barca** (pilota automatico, aggancio `#collaudo`) e anche in una pagina caricata come la carica un giocatore, senza `#collaudo`.
-- **Non-regressione.** La barca senza fiocco deve restare identica a quella del gioco (30 casi di `polare.js`, uscite di `polare.js` e `raffiche_e_virate.js` carattere per carattere, prove 1-3).
+- **Non-regressione.** Dalla 1.1.0 (pulizia del codice, ramo `pulizia`) il gioco ha solo la barca dell'1b: `polare.js` e `raffiche_e_virate.js` (carattere per carattere col riferimento) e `impronta1b.js` (al bit) misurano quella. Il prototipo del fiocco si confronta con la barca a una vela della 1.0.78, congelata in `tests/fisica/motore1a.js` (`MOTORE=1a node polare.js` dà le uscite di prima): la sua barca senza fiocco deve restare identica a quella (oggi non lo è già più dalla tappa C: scarto fino a 2,73 nodi, `CHANGELOG.md` 1.1.0).
 - **Pannello** a 1360x650 senza pixel di eccesso, anche nel caso peggiore.
 - **A ogni versione del gioco aggiorna la costante `VERSIONE` (in `js/gioco.js`) e la voce del `CHANGELOG.md`**; `tests/collaudo_versione.py` controlla che coincidano.
 - **Ogni versione aggiorna `CHANGELOG.md`.** I prototipi non sono versioni: stanno in `sperimentale/`, non toccano `index.html` né `js/`, e vanno sotto «Sperimentale».

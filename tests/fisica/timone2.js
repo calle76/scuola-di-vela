@@ -6,14 +6,16 @@
 //      node timone2.js griglia                  taratura di yawG e yawRho sui soli venti di taratura
 // Esce con 1 se un criterio è fuori soglia (senza argomenti).
 const { step, norm180, RUD2, RUD2_SICURA } = require("./motore.js");
+const M1A = require("./motore1a.js"); // dalla pulizia del codice la barca dell'1a è solo nella copia congelata (docs/PROPOSTA-PULIZIA-CODICE.md)
+const passo = (S, C, E, dt) => (S.lv === 2 ? step : M1A.step)(S, C, E, dt);
 const SICURA = RUD2_SICURA, VELOCE = 1.6; // barra al secondo (frazione della corsa), come nel livello 1
 const arg = process.argv.slice(2);
 if (arg[0] === "stallo") RUD2.stallA = +arg[1];
 
 function bolina(kn, lv, frac = 1){ // barca a regime di bolina (prua tenuta a 45°), poi rallentata fino a frac della velocità
   const E = { twd: 0, tws: kn / 1.944 }, S = { x: 0, y: 0, h: 45, u: 1.5, vl: 0, r: 0, lv };
-  for (let t = 0; t < 40; t += 0.01){ S.h = 45; step(S, { sheet: 0.1, tiller: 0 }, E, 0.01); }
-  if (frac < 1){ const u = S.u * frac; while (S.u > u){ S.h = 45; step(S, { sheet: 1, tiller: 0 }, E, 0.01); } }
+  for (let t = 0; t < 40; t += 0.01){ S.h = 45; passo(S, { sheet: 0.1, tiller: 0 }, E, 0.01); }
+  if (frac < 1){ const u = S.u * frac; while (S.u > u){ S.h = 45; passo(S, { sheet: 1, tiller: 0 }, E, 0.01); } }
   return { S, E };
 }
 // virata: barra verso 'max' alla velocità 'rate'; con la prua oltre −40° la barra torna al centro in fretta (come in F4: la si molla, in tutte e due le virate).
@@ -23,7 +25,7 @@ function virata(kn, lv, rate, max = 1, frac = 1, pausa = null){ // pausa: second
   let b = 0, t0 = null, t1 = null, dist = 0, umin = S.u, lasciata = false, st = 0, stR = 0, tf = null, umin1 = S.u;
   for (let t = 0; t < 20; t += 0.01){
     if (!lasciata){ const lim = pausa !== null && t < SICURA / rate + pausa ? SICURA : max; b = Math.min(lim, b + rate * 0.01); } else b = Math.max(0, b - VELOCE * 0.01);
-    step(S, { sheet: 0.1, tiller: b }, E, 0.01);
+    passo(S, { sheet: 0.1, tiller: b }, E, 0.01);
     const a = norm180(S.h);
     if (S.stall){ if (lasciata) stR += 0.01; else st += 0.01; } // stallo mentre la prua gira (st) e mentre si molla la barra (stR)
     if (t0 === null && a < 40) t0 = t;
@@ -39,10 +41,10 @@ function virata(kn, lv, rate, max = 1, frac = 1, pausa = null){ // pausa: second
 }
 function strambata(kn, lv, rate, max = 1){
   const E = { twd: 0, tws: kn / 1.944 }, S = { x: 0, y: 0, h: 150, u: 1.5, vl: 0, r: 0, lv };
-  for (let t = 0; t < 40; t += 0.01){ S.h = 150; step(S, { sheet: 1, tiller: 0 }, E, 0.01); }
+  for (let t = 0; t < 40; t += 0.01){ S.h = 150; passo(S, { sheet: 1, tiller: 0 }, E, 0.01); }
   let b = 0;
   for (let t = 0; t < 20; t += 0.01){
-    b = Math.max(-max, b - rate * 0.01); step(S, { sheet: 1, tiller: b }, E, 0.01);
+    b = Math.max(-max, b - rate * 0.01); passo(S, { sheet: 1, tiller: b }, E, 0.01);
     if (S.capsized || Math.abs(S.heel) > 60) return null;
     if (norm180(S.h) < 0 && norm180(S.h) > -151) return t; // prua oltre 210°
   }
@@ -50,7 +52,7 @@ function strambata(kn, lv, rate, max = 1){
 }
 function risposta(kn){ // barra fissa a 5°: tempo per arrivare al 63% della rotazione che ha dopo 3 s
   const { S, E } = bolina(kn, 2), tl = 5 / RUD2.maxRudder, rs = [];
-  for (let t = 0; t < 3; t += 0.01){ step(S, { sheet: 0.1, tiller: tl }, E, 0.01); rs.push([t, Math.abs(S.r)]); }
+  for (let t = 0; t < 3; t += 0.01){ passo(S, { sheet: 0.1, tiller: tl }, E, 0.01); rs.push([t, Math.abs(S.r)]); }
   const fin = rs[rs.length - 1][1];
   return rs.find(([t, r]) => r >= 0.63 * fin)[0];
 }
@@ -59,7 +61,7 @@ function giro(kn, rate, max = 1){ // giro di penalità: 360° partendo di bolina
   for (let t = 0; t < 40; t += 0.01){
     b = Math.min(max, b + rate * 0.01);
     const twa = Math.abs(norm180(E.twd - S.h));
-    step(S, { sheet: Math.max(0.1, Math.min(1, (twa - 30) / 120)), tiller: b }, E, 0.01);
+    passo(S, { sheet: Math.max(0.1, Math.min(1, (twa - 30) / 120)), tiller: b }, E, 0.01);
     tot += Math.abs(norm180(S.h - prev)); prev = S.h;
     if (tot >= 360) return { t, u: S.u * 1.944 }; // nodi
   }

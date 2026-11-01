@@ -102,7 +102,7 @@ TORNEO = """([seme]) => {
 # 1b: gioco libero con la barca dell'1b, 10 nodi, tasti veri: ← e → (sola freccia e con Maiusc), Z tenuto, una scuffia e A; stato ogni 5 s
 LIBERA1B = """([seme]) => {
   const sv = __sv, I = __imp; sv.fast(0); __seed(seme); sv.openItem("free");
-  for (const [id, v] of [["wSpd", "10"], ["gustSel", "1"], ["wDir", "0"], ["boatLv", "2"]]){ const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event("change")); }
+  for (const [id, v] of [["wSpd", "10"], ["gustSel", "1"], ["wDir", "0"], ["boatLv", "2"]]){ const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event("change")); }
   sv.openItem("free"); const S = sv.S;
   const giu = k => dispatchEvent(new KeyboardEvent("keydown", { key: k })), su = k => dispatchEvent(new KeyboardEvent("keyup", { key: k }));
   const piano = [[5, giu, "ArrowLeft"], [6.5, su, "ArrowLeft"], [15, giu, "ArrowRight"], [17, su, "ArrowRight"], [30, giu, "Shift"], [30, giu, "ArrowLeft"], [31.5, su, "ArrowLeft"],
