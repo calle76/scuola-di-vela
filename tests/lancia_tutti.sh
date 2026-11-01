@@ -6,6 +6,8 @@
 #   tests/lancia_tutti.sh --dry-run        # stampa solo l'elenco con i comandi, senza lanciare niente
 #   tests/lancia_tutti.sh --solo pulsanti  # lancia solo i collaudi il cui nome contiene "pulsanti"
 #   tests/lancia_tutti.sh --parallelo 3    # fino a 3 collaudi insieme (default: 1, sequenziale)
+#   tests/lancia_tutti.sh --parte 2/4      # solo il pezzo 2 di 4 (per GitHub Actions, docs/PROPOSTA-COLLAUDI-SU-GITHUB.md):
+#                                          # i lunghi si distribuiscono a turno fra i pezzi, poi gli altri; i 4 pezzi insieme = tutti
 #
 # L'uscita completa di ogni collaudo viene salvata in tests/output/lancia_tutti/<data-ora>/<nome>.txt
 # (cartella ignorata da git). Il riepilogo finale la richiama per i FALLITI (ultime 15 righe) e per i
@@ -19,6 +21,7 @@ VELOCE=0
 DRY_RUN=0
 SOLO=""
 MAXJOBS=1
+PARTE=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --veloce) VELOCE=1; shift ;;
@@ -30,6 +33,11 @@ while [ $# -gt 0 ]; do
         --parallelo)
             MAXJOBS="${2:-}"
             [[ "$MAXJOBS" =~ ^[0-9]+$ ]] && [ "$MAXJOBS" -ge 1 ] || { echo "--parallelo richiede un numero intero >= 1" >&2; exit 2; }
+            shift 2 ;;
+        --parte)
+            PARTE="${2:-}"
+            [[ "$PARTE" =~ ^([0-9]+)/([0-9]+)$ ]] && [ "${BASH_REMATCH[1]}" -ge 1 ] && [ "${BASH_REMATCH[1]}" -le "${BASH_REMATCH[2]}" ] \
+                || { echo "--parte richiede K/N con 1 <= K <= N, per esempio 2/4" >&2; exit 2; }
             shift 2 ;;
         *) echo "opzione non riconosciuta: $1" >&2; exit 2 ;;
     esac
@@ -169,6 +177,27 @@ done
 if [ "${#FILTERED[@]}" = 0 ]; then
     echo "nessun collaudo corrisponde a --solo $SOLO" >&2
     exit 2
+fi
+
+# Con --parte K/N tiene un collaudo ogni N: prima i lunghi a turno, poi gli altri continuando il turno,
+# così i lunghi non finiscono tutti nello stesso pezzo. L'ordine dentro il pezzo resta quello della tabella.
+if [ -n "$PARTE" ]; then
+    K=${PARTE%/*}; N=${PARTE#*/}
+    declare -A TURNO
+    c=0
+    for pass in 1 0; do
+        for t in "${FILTERED[@]}"; do
+            IFS='|' read -r _n _r _e lungo _rest <<< "$t"
+            [ "$lungo" = "$pass" ] || continue
+            TURNO["$t"]=$(( c % N + 1 )); c=$((c+1))
+        done
+    done
+    PEZZO=()
+    for t in "${FILTERED[@]}"; do
+        [ "${TURNO[$t]}" = "$K" ] && PEZZO+=("$t")
+    done
+    echo "--parte $K/$N: ${#PEZZO[@]} collaudi su ${#FILTERED[@]}"
+    FILTERED=("${PEZZO[@]}")
 fi
 
 if [ "$DRY_RUN" = 1 ]; then

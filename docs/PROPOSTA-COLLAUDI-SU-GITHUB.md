@@ -71,3 +71,16 @@ G5 è la più incerta. Ieri ho stimato circa 3 ore per browser senza pezzi paral
 - Il giro sul PC diventa facoltativo. CLAUDE.md e `COLLAUDI.md` si aggiornano: «a fine lavoro: `git push`, poi guarda Actions».
 - Si apre la porta alla proposta 5 del test dei test (controprove a tappeto, decine di ore di macchina, `PROPOSTA-TEST-DEI-TEST.md` §10), come lavoro a parte lanciato a mano.
 - Si potrà aggiungere una partenza notturna, se serve.
+
+## 8. Fermata 2 (1 novembre 2026, via di Ale: «via, fai la fermata 2»)
+
+Fatto:
+- `.github/workflows/collaudi.yml`, come al §3: 2 browser × 4 pezzi, `--parallelo 2` per pezzo (i computer hanno 4 processori), limite di 4 ore per pezzo. Un push nuovo ferma il giro ancora in corso. G6 è un passo del giro stesso.
+- `tests/lancia_tutti.sh --parte K/N`, provato qui:
+  - con `--dry-run`, 4 pezzi da 16 collaudi che insieme coprono esattamente i 64 di oggi;
+  - `--parte 5/4` rifiutato con uscita 2;
+  - `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` OK.
+
+Non misurato: G1-G5. Da qui GitHub non si può lanciare: il primo giro parte dopo il `git push` di Ale. Le soglie restano quelle del §4.
+
+Scelta non scritta al §3: Node è fissato a 20.19.2 esatto e non a «20», per evitare il rischio 5. Python a 3.13, come il venv del PC (3.13.5).

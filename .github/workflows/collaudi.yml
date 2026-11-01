@@ -1,0 +1,90 @@
+# Collaudi su GitHub Actions (docs/PROPOSTA-COLLAUDI-SU-GITHUB.md, 1 novembre 2026).
+# Lancia tests/lancia_tutti.sh con Chromium e Firefox, diviso in 4 pezzi per browser (8 computer insieme).
+# Parte a ogni push su main e a mano dalla scheda Actions («Run workflow», con la scelta del giro veloce).
+# Non scrive niente nel repository e non usa chiavi né password.
+name: Collaudi
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      veloce:
+        description: "Solo il giro --veloce (salta i collaudi lunghi)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# Un push nuovo ferma il giro ancora in corso sullo stesso ramo.
+concurrency:
+  group: collaudi-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  collaudi:
+    name: ${{ matrix.browser }} ${{ matrix.parte }}/4
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox]
+        parte: [1, 2, 3, 4]
+    steps:
+      - name: Codice con tutta la storia (quattro collaudi confrontano con versioni vecchie)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node come sul PC (v20.19.2)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.2"
+
+      - name: Python come sul PC (3.13)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Playwright 1.60.0 e il browser (come tests/prepara_ambiente.sh)
+        run: |
+          python -m venv .venv-collaudi
+          .venv-collaudi/bin/pip install --quiet "playwright==1.60.0"
+          .venv-collaudi/bin/playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Collaudi
+        env:
+          BROWSER: ${{ matrix.browser }}
+        run: |
+          OPZ="--parte ${{ matrix.parte }}/4 --parallelo 2"
+          if [ "${{ inputs.veloce }}" = "true" ]; then OPZ="$OPZ --veloce"; fi
+          set +e
+          tests/lancia_tutti.sh $OPZ 2>&1 | tee riepilogo.txt
+          esito=${PIPESTATUS[0]}
+          {
+            echo "### ${{ matrix.browser }}, pezzo ${{ matrix.parte }}/4 (uscita $esito)"
+            echo '```'
+            sed -n '/^FALLITI:$/,$p' riepilogo.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $esito
+
+      - name: Niente scritto nel repository (criterio G6)
+        if: always()
+        run: |
+          git status --porcelain --untracked-files=all -- . ':!riepilogo.txt' > "$RUNNER_TEMP/cambiati.txt"
+          if [ -s "$RUNNER_TEMP/cambiati.txt" ]; then echo "File cambiati o nuovi dopo i collaudi:"; cat "$RUNNER_TEMP/cambiati.txt"; exit 1; fi
+          echo "nessun file cambiato"
+
+      - name: Uscite complete come allegato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: collaudi-${{ matrix.browser }}-${{ matrix.parte }}
+          path: |
+            riepilogo.txt
+            tests/output/
+          retention-days: 30
+          if-no-files-found: warn
