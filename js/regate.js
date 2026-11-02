@@ -189,7 +189,7 @@
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
-    if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. Il gioco non ha suoni: i tempi contano sulle bandiere.";
+    if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. I suoni della giuria accompagnano le bandiere, ma i tempi contano sulle bandiere (regola 26).";
     if (rc.precedenze) t += " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
     return t;
   }

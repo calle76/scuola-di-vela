@@ -74,3 +74,8 @@ Niente musica, niente voci: costano molto e allontanano dal simulatore.
 ## 7. Da decidere (Ale)
 
 1. **All'inizio i suoni sono accesi (volume basso) o spenti?** Io li accenderei bassi: chi gioca li scopre subito e li spegne con un clic.
+
+## 8. Avanzamento
+
+- **Ale, 2 novembre 2026:** «accesi bassi, vai avanti».
+- **1.2.5:** prima fetta fatta; S1-S6 verdi in Chromium e Firefox (`collaudo_suoni.py`), con il metodo di S4 cambiato dopo il primo giro (detto nel `CHANGELOG.md`). Non provata la finestra nascosta. Resta la seconda fetta (§4: gabbiani con licenza libera, sartiame, onde, scricchiolii, gorgoglio della pala).

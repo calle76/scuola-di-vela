@@ -17,6 +17,36 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.5 — I suoni (ramo `pulizia`)
+
+`docs/PROPOSTA-SUONI.md`, prima fetta; Ale, 2 novembre: «accesi bassi, vai avanti». Il gioco non è più muto.
+
+**Come:** i suoni li genera il browser (Web Audio), senza file. Un file nuovo, `js/suoni.js`, a ogni fotogramma **legge** lo stato del gioco e suona quando un numero cambia: non chiama la simulazione e non usa `Math.random` (ha un generatore suo). Partono dopo il primo tasto o clic, tacciono nel menu, nella moviola e con la finestra nascosta; in un browser senza audio si gioca muti.
+
+**Cosa suona:**
+- **sempre:** il vento, più forte e più acuto col vento apparente (sale quando la raffica arriva sulla barca, non prima: nessun aiuto nascosto); l'acqua sullo scafo, con la velocità;
+- **la vela che sbatte**, a colpi più fitti col vento forte, quando la vela fileggia (angolo morto o troppo lascata); un fruscio continuo col boma spinto (Z);
+- **manovre e incidenti:** virata (fruscio e tonfo morbido), strambata (colpo secco, più forte con più vento), scuffia (tonfo e spruzzo), raddrizzata (acqua che scola), contatto fra barche (colpo sordo), boa toccata (colpo cavo);
+- **la tromba della giuria** come la regola 26 (riletta nel PDF di F15): un suono all'avviso, uno al preparatorio, uno lungo a un minuto, uno al via, agli istanti in cui il gioco alza e ammaina le bandiere, in tutte le regate (anche dove le bandiere non si disegnano, perché il conto alla rovescia c'è); un suono con la X (regola 29.1);
+- **all'arrivo** un suono breve per ogni barca: non è nel regolamento, è una **scelta del gioco**;
+- un suono breve per un passo di lezione completato (anche un esercizio) e uno per una prova finita.
+- Forme, altezze e volumi sono **ipotesi nostre, fatte a orecchio**: giudicale tu giocando.
+
+**Impostazioni (⚙):** riga «Suoni», spenti / bassi / medi / alti; all'inizio **bassi**; la scelta resta nel browser.
+
+**Testo cambiato:** nella regata con le bandiere, «Il gioco non ha suoni: i tempi contano sulle bandiere» diventa «I suoni della giuria accompagnano le bandiere, ma i tempi contano sulle bandiere (regola 26)».
+
+**Misurato** (`tests/collaudo_suoni.py`, nuovo; criteri S1-S6 scritti prima; i computer dei collaudi non hanno casse, quindi si leggono il registro degli eventi suonati e i volumi calcolati):
+- **S1:** la stessa regata a seme fisso con e senza la lettura dei suoni: arrivi e barca identici al bit. `arrivi_regate.py` (20 regate e 2 tornei) identico alla 1.2.4, a parte il numero di versione che il torneo salva. `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **S2:** regata con i giri, preparazione di 3 minuti sui semi 1-10, 5 e 1 minuto sui semi 1-3. Ogni virata, strambata, contatto, boa toccata e arrivo ha il suo suono entro 0,1 s: 144 virate, 54 strambate, 63 contatti, 10 boe, 64 arrivi in Chromium (138, 52, 57, 6, 64 in Firefox). Le trombe agli istanti della regola 26 in tutte le 16 regate (con la X un suono in più allo zero). La X: in anticipo apposta due trombe allo zero, senza anticipo una. Una boa toccata nell'esercizio della lezione 20: un suono. Scuffia e raddrizzata: uno ciascuna. Passo completato e prova finita: uno ciascuno, provati mettendo lo stato a mano (si prova il collegamento). Controprova: barca ferma per un minuto, nessun suono.
+- **S3:** il volume del vento cresce sempre col vento apparente (1.320 letture da 0 a 20 nodi), quello dell'acqua con la velocità; la vela suona con la prua al vento e troppo lascata, non quando è regolata.
+- **S4:** la lettura dei suoni costa 12 µs per fotogramma con l'audio acceso, contro 18,5 ms del fotogramma: +0,07% (soglia 10%). **Cambiato il modo di misurare dopo il primo giro, lo dico:** alternando fotogrammi con e senza suoni usciva +23,5% anche ad audio spento, ma era rumore (60 fotogrammi passano da soli da 573 a 1.176 ms); ora la lettura dei suoni e il fotogramma si misurano a parte. In Firefox senza schermo l'audio resta sospeso, quindi lì il costo è misurato muto (0,7 µs).
+- **S5:** nessun audio prima del primo clic; «spenti» spegne e resta dopo il ricaricamento; un browser senza audio gioca muto, senza errori. Non provato: la finestra nascosta (il browser dei collaudi non la simula).
+- **S6:** impostazioni a 1360×650 dentro la finestra, senza scorrere (da 49 a 601 px; prima da 66 a 584).
+- **Corretto nel collaudo prima del risultato:** per sapere se al via c'era qualcuno in anticipo leggeva la lista della X a fine regata, quando è già vuota; due casi davano falso errore. Ora guarda la X durante la regata.
+- Verdi anche: `collaudo_pannello` (1360×650), `collaudo_lezioni`, `collaudo_versione`.
+- **Da sapere:** che il suono esca davvero in Firefox lo puoi verificare solo tu: nel Firefox dei collaudi, senza schermo, l'audio resta sospeso (il gioco funziona muto).
+
 ## 1.2.4 — Il menu nuovo: tutte le 20 lezioni, in tre gruppi (ramo `pulizia`)
 
 `docs/PROPOSTA-MENU.md`, bozza A scelta da Ale il 2 novembre («va bene la A»). **Da questa versione le 14 lezioni nuove si vedono**, e con loro l'esame da 34 domande e le 19 voci nuove del glossario.
