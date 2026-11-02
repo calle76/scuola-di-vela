@@ -17,6 +17,33 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.2 — Lezioni C1 e C2: le partenze, con l'esercizio in regata (ramo `pulizia`)
+
+Gruppo C di `docs/PROPOSTA-LEZIONI-SCUOLA.md` §4, con il meccanismo B della 1.2.1 (`docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, via di Ale del 1 novembre). Le lezioni restano nascoste nel menu, come le altre nuove.
+
+**Le due lezioni** (testi parafrasati; quiz ed esame di 4 domande come le altre):
+- **C1 «Partenza in velocità»:** si aspetta vicino alla linea, una o due lunghezze dietro, quasi fermi con la vela che sbatte e la prua appena sotto la bolina; negli ultimi secondi si cazza, per tagliare la linea subito dopo il via e già veloci. Cazzando troppo presto si è in anticipo (29.1), troppo tardi si parte lenti. Fonti: F25 (attesa quasi fermi e piena velocità allo zero), F27 (attesa appena sotto la bolina: la sola parte confermata, la parte sull'accelerazione non è letta e il testo non la usa), conferma di Ale del 17 ottobre (in questa classe si parte da fermi, non lanciati da lontano). Esercizio: regata a bastone da solo, un minuto di preparazione; vale se tagli la linea **entro 5 s dal via a più di 3,5 nodi**, senza anticipo (soglie della proposta, scritte prima).
+- **C2 «Partenza da fermi»:** da fermi servono secondi e metri per prendere velocità; come si riparte (prua appena sotto la bolina, cazzare, barca piatta, poi in bolina). Esercizio: barca **ferma 12 m dietro il centro della linea, a 60° dal vento, vela tutta lascata**, 10 s al via; vale se al via vai sotto 1 nodo, non sei in anticipo e tagli la linea **entro 25 s**.
+- Alla fine di tutti e due gli esercizi il messaggio dice dopo quanti secondi e a che velocità hai tagliato la linea (`def.misura`).
+- **Ipotesi nostre:** 12 m, 60°, 10 s, 1 nodo; il limite di 25 s della C2 con la regola scritta prima di misurare: il massimo del pilota sui semi 1-20 (16,0 s) arrotondato ai 5 s superiori, più 5 s.
+
+**Codice:** nell'esercizio un secondo stato di partenza, `def.linea` (punto dietro la linea, angolo dal vento, velocità; vela tutta lascata), accanto a `def.boa`. Le regate normali non lo toccano.
+
+**Misurato** (`tests/collaudo_esercizi_regata.py`, esteso a C1 e C2, con l'opzione nuova `--solo`):
+
+| Esercizio | guidando, semi 1-20 | guidando, semi 101-120 (conferma) | a mani ferme | chi sbaglia apposta |
+|---|---|---|---|---|
+| C1 | 20 su 20 (linea a 0,5-2,3 s dal via, 4,4-5,1 nodi) | 20 su 20 (0,2-2,3 s) | 0 su 20 (al via oltre la linea) | cazza solo al via: 0 su 20 (al via 0,1-0,4 nodi) |
+| C2 | 20 su 20 (linea a 13,0-16,0 s, circa 2,5 nodi) | 20 su 20 (13,0-15,9 s) | 0 su 20 (non parte) | cazza 8 s prima del via: 0 su 20 (al via 5,1 nodi) |
+
+- **Da sapere:** nella C2 la barca a mani ferme e quella che cazza prima non dipendono dal seme (niente raffiche né avversari): le 20 prove sono lo stesso caso ripetuto. Il pilota, invece, cambia a ogni seme.
+- D5, D6 e D7 sui semi 1-20, con il collaudo esteso: tutto come nella 1.2.1 (20 su 20 guidando, 0 a mani ferme e sbagliando).
+- **E3:** dopo cinque esercizi completati (D5-D7, C1, C2) localStorage e registrazioni identici a prima; la controprova li vede cambiare.
+- **E4:** `arrivi_regate.py` identico al bit fra 1.2.1 e 1.2.2; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **E5:** pannello a 1360×650 senza pixel di eccesso negli esercizi C1 e C2, prima e dopo il via; `collaudo_pannello_lezioni` 106 passi su 106.
+- **Firefox, semi 1-10:** C2 10 su 10; **C1 9 su 10**, alla soglia: nel seme 7 il pilota taglia la linea in tempo (1,8 s) ma rallentato a 3,2 nodi (al via andava a 4,5). È il pilota, che vicino alla linea manovra; la soglia resta quella. Mani ferme e chi sbaglia 0 su 10; pannello senza eccesso.
+- Altri collaudi rilanciati, verdi: `collaudo_pannello_lezioni` (106 passi), `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_pilota_lezioni --veloce` (40 passi; quelli con l'esercizio li salta), `collaudo_versione`.
+
 ## 1.2.1 — La regata come esercizio di una lezione: lezioni D5-D7 (ramo `pulizia`)
 
 Meccanismo B di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale il 1 novembre. Le lezioni restano nascoste nel menu, come le altre nuove.

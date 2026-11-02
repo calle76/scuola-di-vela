@@ -68,6 +68,7 @@ Qui servono linea, conto alla rovescia, bandiere e boe, quindi la regata vera. I
 
 ## 8. Avanzamento
 
+- **1.2.2:** gruppo C fatto con il meccanismo B: C1 (soglie 5 s e 3,5 nodi, come scritte qui) e C2 (ferma 12 m dietro la linea; limite 25 s, scelto col pilota sui semi 1-20 con una regola scritta prima). Guidando 20 su 20 sui semi 1-20 e 101-120, a mani ferme e sbagliando apposta 0 su 20; Firefox C1 9 su 10, C2 10 su 10 (`CHANGELOG.md`). Con questo la proposta è completa.
 - **Ale, 1 novembre 2026:** via a tutti e due i meccanismi. «La 1 è la simulazione di un evento, un copione»; per la 2, un'idea da verificare (Ale: «era solo un'idea»): usarla anche nella modalità coach, per rivivere un episodio della regata e farlo meglio.
 - **1.2.1:** meccanismo B ed esercizi D5-D7 fatti, con lo stato di partenza (regata, avversari, preparazione, o la barca già vicino alla boa) separato dall'obiettivo, come chiesto da Ale. Tutti e tre: guidando 10 su 10 sui semi 1-10 e 11-20, a mani ferme 0 su 10, chi sbaglia apposta 0 su 10; salvataggio identico; regate normali identiche al bit (`CHANGELOG.md`, `collaudo_esercizi_regata.py`). Resta il gruppo C (C1, C2) con lo stesso meccanismo.
 - **1.2.0:** meccanismo A ed esercizi D1-D3 fatti. Tutti e tre: guidando 10 su 10 sui semi 1-10 e 11-20, a mani ferme 0 su 10; nella D3, chi vira subito 0 su 10 (`CHANGELOG.md`).

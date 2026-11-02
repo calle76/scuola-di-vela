@@ -501,6 +501,66 @@
       text: ["Non si toccano le boe (regola 31). Boa toccata: un giro; contatto con colpa: due giri; subito, nello stesso verso, ognuno con una virata e una strambata (regole 44.1 e 44.2)."] }
   ];
 
+  // ---- gruppo C, le partenze (1.2.2, meccanismo B; docs/PROPOSTA-LEZIONI-SCUOLA.md §4, docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md) ----
+  // Fonti: F25 (aspettare quasi fermi vicino alla linea con la vela che sbatte, poi accelerare per essere a piena velocità allo zero), F27 (l'attesa appena sotto la bolina;
+  //   la parte sull'accelerazione non è letta: il testo non la usa), F15 26 e 29.1 (già nelle D5-D6). Ale, 17 ottobre 2026: in questa classe di barche si parte da fermi,
+  //   quasi fermi e poi accelerando, non lanciati da lontano. Ipotesi nostre: C1 entro 5 s dal via a più di 3,5 nodi (soglie della proposta, scritte prima);
+  //   C2 ferma 12 m dietro il centro della linea a 60° dal vento, 10 s di preparazione, «ferma» = sotto 1 nodo al via, limite di tempo ES_C2 (scelto col pilota sui semi 1-20).
+  const ES_C2 = 25; // s dal via per tagliare la linea partendo da fermi; ipotesi nostra, regola scritta prima: il massimo del pilota sui semi 1-20 (16,0 s), arrotondato ai 5 s superiori, più 5 s
+  const nodi = v => v.toFixed(1).replace(".", ",");
+  function esTaglio(R, me, es){ // al via: anticipo e velocità; al taglio della linea: quando e a che velocità
+    if (R.t >= 0 && es.ocs0 === undefined){ es.ocs0 = me.ocs; es.v0 = me.S.u * KN; }
+    if (me.leg >= 1 && !es.taglio) es.taglio = { t: R.t, v: me.S.u * KN };
+  }
+  const esMisura = es => es.taglio ? "Linea tagliata " + nodi(es.taglio.t) + " s dopo il via, a " + nodi(es.taglio.v) + " nodi." : "";
+  const LC1 = [
+    { title: "Aspettare vicino alla linea", ...PAUSE, zoom: 2,
+      text: ["In una partenza vince chi taglia la linea subito dopo il via e già veloce. Con barche piccole e leggere come questa non si arriva lanciati da lontano: si aspetta <em>vicino alla linea</em>, una o due lunghezze dietro, quasi fermi con la vela lascata che sbatte.",
+             "Si aspetta con la prua appena sotto la bolina: da lì basta cazzare per partire, senza dover prima poggiare.",
+             "Da fermi la barca non va alla linea: si può aspettare il momento giusto."] },
+    { title: "Cazzare al momento giusto", ...PAUSE, zoom: 2,
+      text: ["Negli ultimi secondi si cazza e la barca accelera. Se cazzi troppo presto arrivi alla linea prima del via e sei in anticipo: sale la X e devi tornare (regola 29.1). Se cazzi troppo tardi, al via sei ancora lento e le altre ti passano davanti.",
+             "Il momento giusto dipende da quanto sei lontano dalla linea e da quanto vento c'è: si impara provando, guardando il conto alla rovescia."] },
+    { title: "Parti veloce", ...PAUSE, zoom: 2,
+      esercizio: { regata: 0, cd: 60, avversari: "nessuno",
+        obiettivo: "Taglia la linea entro 5 s dal via, a più di 3,5 nodi",
+        brief: "Esercizio della lezione C1. Una partenza da solo con un minuto di preparazione, vento di 10 nodi. Avvicinati alla linea, fra la barca giuria e la boa arancione, aspetta lì quasi fermo con la vela lascata e cazza negli ultimi secondi: devi tagliare la linea entro cinque secondi dal via, a più di 3,5 nodi, senza anticipo. È un esercizio: non si salva niente.",
+        fatto: (R, me, es) => !!es.taglio && !es.ocs0 && es.taglio.t <= 5 && es.taglio.v > 3.5,
+        fallito: (R, me, es) => { esTaglio(R, me, es);
+          if (es.ocs0) return "Al via eri oltre la linea: partenza anticipata.";
+          if (es.taglio) return es.taglio.t > 5 ? "Hai tagliato la linea " + nodi(es.taglio.t) + " s dopo il via: tardi." : es.taglio.v <= 3.5 ? "Hai tagliato la linea a " + nodi(es.taglio.v) + " nodi: piano." : "";
+          return R.t > 5 ? "Sono passati cinque secondi dal via e non hai tagliato la linea." : ""; },
+        misura: esMisura },
+      text: ["Ora una partenza da solo, con un minuto di preparazione. Apri l'esercizio, aspetta vicino alla linea quasi fermo e cazza negli ultimi secondi: tagliala entro cinque secondi dal via, a più di 3,5 nodi.",
+             "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
+      done: "Partenza buona: al via eri vicino alla linea e già veloce." },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Aspetta quasi fermo una o due lunghezze dietro la linea, con la prua appena sotto la bolina. Cazza negli ultimi secondi, per tagliare la linea subito dopo il via e già veloce, senza anticipo."] }
+  ];
+  const LC2 = [
+    { title: "Partire da fermi", ...PAUSE, zoom: 2,
+      text: ["Una barca ferma, con la vela che sbatte, non riparte subito: cazzata la vela, servono alcuni secondi e qualche metro prima che arrivi alla sua velocità.",
+             "Per questo, in una partenza, chi è fermo al via perde sempre qualcosa su chi ha cazzato prima. Ma capita: se sei chiuso fra le altre barche, o se hai sbagliato i tempi, devi saper partire da fermo nel modo più rapido."] },
+    { title: "Come si riparte", ...PAUSE, zoom: 2,
+      text: ["Da fermo, con la prua appena sotto la bolina, cazza la vela finché i filetti sono dritti e tieni la barca piatta. Quando la barca ha preso velocità, porta la prua in bolina e vai alla linea.",
+             "Se la prua è troppo vicina al vento, la vela non porta e la barca non parte: poggia un poco prima di cazzare."] },
+    { title: "Parti da fermo", ...PAUSE, zoom: 2,
+      esercizio: { regata: 0, cd: 10, linea: [0, 12, 60, 0], avversari: "nessuno",
+        obiettivo: "Fermo fino al via, poi taglia la linea entro " + ES_C2 + " s",
+        brief: "Esercizio della lezione C2. Sei fermo dodici metri dietro la linea, con la vela tutta lascata, e mancano dieci secondi al via. Resta fermo fino al via: non cazzare prima. Al via cazza e parti, e taglia la linea fra la barca giuria e la boa arancione entro " + ES_C2 + " secondi. Alla fine vedi quanti secondi ti sono serviti. È un esercizio: non si salva niente.",
+        fatto: (R, me, es) => !!es.taglio && !es.ocs0 && es.v0 <= 1,
+        fallito: (R, me, es) => { esTaglio(R, me, es);
+          if (es.v0 > 1) return "Al via andavi già a " + nodi(es.v0) + " nodi: qui si parte da fermi.";
+          if (es.ocs0) return "Al via eri oltre la linea: partenza anticipata.";
+          return R.t > ES_C2 && !es.taglio ? "Sono passati " + ES_C2 + " secondi dal via e non hai tagliato la linea." : ""; },
+        misura: esMisura },
+      text: ["Ora prova. Apri l'esercizio: sei fermo dietro la linea con la vela lascata. Resta fermo fino al via, poi cazza, prendi velocità e taglia la linea entro " + ES_C2 + " secondi.",
+             "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
+      done: "Partito da fermo: hai visto quanti secondi servono per prendere velocità." },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Da fermo servono alcuni secondi e qualche metro per prendere velocità. Prua appena sotto la bolina, cazza, barca piatta; quando la barca va, porta la prua in bolina."] }
+  ];
+
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -593,6 +653,24 @@
               ["Non toccare le boe", "Prima della partenza, quali boe non devi toccare?", "Quelle della linea di partenza", ["Nessuna: la regola vale dopo il via", "Solo la boa di bolina", "Solo quelle dell'arrivo"], "Prima della partenza non si toccano le boe di partenza (regola 31)."],
               ["I giri di penalità", "Mentre sconti una penalità, chi lascia strada?", "Tu, alle barche che non stanno scontando", ["Le altre barche a te", "La barca mure a sinistra", "Nessuno"], "Regola 21.2: chi sconta una penalità lascia strada."],
               ["I giri di penalità", "Quando si fanno i giri di penalità?", "Subito, appena ci si è allontanati dalle altre barche", ["All'arrivo", "Alla boa successiva", "Quando si vuole"], "Regola 44.2: appena possibile dopo l'incidente, lontano dalle altre barche."]] },
+    { name: "Lezione C1", title: "Partenza in velocità", steps: LC1, nascosta: true, gruppo: "C", desc: "Aspettare quasi fermi vicino alla linea e cazzare negli ultimi secondi, per partire già veloci. Esercizio in regata.",
+      quiz: [["Prima del via, dove conviene aspettare con una barca come questa?", "Vicino alla linea, una o due lunghezze dietro, quasi fermo", ["Lontano dalla linea, per arrivare lanciato", "Già oltre la linea", "Vicino alla boa di bolina"], "Si aspetta vicino alla linea, quasi fermi con la vela lascata, e si accelera negli ultimi secondi."],
+             ["Con che prua conviene aspettare?", "Appena sotto la bolina", ["In poppa", "Con la prua nel vento", "Al lasco"], "Da appena sotto la bolina basta cazzare per partire."],
+             ["Cazzi troppo presto. Che cosa rischi?", "Di passare la linea prima del via: sale la X", ["Niente: più presto è meglio", "Di scuffiare", "Di dover fare due giri"], "Arrivi alla linea prima del via: partenza anticipata (regola 29.1)."],
+             ["Cazzi troppo tardi. Che cosa succede?", "Al via sei ancora lento", ["Sei in anticipo", "La barca si ferma", "Non succede niente"], "Se cazzi tardi la barca non ha ancora preso velocità quando la linea si apre."]],
+      esame: [["Aspettare vicino alla linea", "Mentre aspetti il via, come tieni la vela?", "Lascata, che sbatte: così la barca resta quasi ferma", ["Cazzata a ferro", "Regolata con i filetti dritti", "Spinta fuori con Z"], "Con la vela lascata la barca non avanza e si può aspettare il momento giusto."],
+              ["Aspettare vicino alla linea", "Quanto dietro la linea conviene aspettare?", "Una o due lunghezze", ["Cento metri", "Mezzo metro oltre", "Dietro la barca giuria"], "Vicino alla linea: una o due lunghezze dietro."],
+              ["Cazzare al momento giusto", "Da che cosa dipende il momento in cui cazzare?", "Da quanto sei lontano dalla linea e da quanto vento c'è", ["Solo dal colore della bandiera", "Da niente: sempre dieci secondi prima", "Dalla posizione della boa di bolina"], "Più sei lontano e meno vento c'è, prima devi cazzare."],
+              ["Parti veloce", "Che cos'è una buona partenza?", "Tagliare la linea subito dopo il via, già veloce e senza anticipo", ["Tagliare la linea prima del via", "Partire da fermo al via", "Partire per ultimo, per non rischiare"], "Al via vicino alla linea, già veloce, senza anticipo."]] },
+    { name: "Lezione C2", title: "Partenza da fermi", steps: LC2, nascosta: true, gruppo: "C", desc: "Da fermi servono secondi e metri per prendere velocità: come si riparte nel modo più rapido. Esercizio in regata.",
+      quiz: [["Una barca ferma con la vela che sbatte: appena cazzi, che cosa succede?", "Riparte, ma servono alcuni secondi e qualche metro per prendere velocità", ["È subito alla sua velocità", "Va all'indietro", "Non riparte più"], "La barca ha bisogno di tempo e strada per accelerare."],
+             ["Da fermo, con che prua conviene cazzare?", "Appena sotto la bolina", ["Con la prua nel vento", "In poppa", "Non conta"], "Con la prua troppo vicina al vento la vela non porta: da appena sotto la bolina la barca parte."],
+             ["Mentre la barca accelera, come la tieni?", "Piatta, con la vela regolata sui filetti", ["Molto sbandata", "Con la vela lascata", "Con la barra tutta da una parte"], "Piatta e con i filetti dritti, la barca accelera meglio."],
+             ["Quando porti la prua in bolina?", "Quando la barca ha preso velocità", ["Subito, prima di cazzare", "Mai", "Solo dopo la boa"], "Prima si prende velocità, poi si orza fino alla bolina."]],
+      esame: [["Partire da fermi", "Perché chi è fermo al via perde su chi ha cazzato prima?", "Perché gli servono secondi e metri per prendere velocità", ["Perché deve fare un giro di penalità", "Perché la linea si chiude", "Non perde niente"], "La barca ferma deve accelerare: chi ha cazzato prima al via è già veloce."],
+              ["Come si riparte", "La prua è quasi nel vento e la barca non parte. Che cosa fai?", "Poggio un poco e poi cazzo", ["Cazzo a ferro e aspetto", "Orzo ancora", "Lasco tutto"], "Con la prua troppo vicina al vento la vela non porta: si poggia un poco, poi si cazza."],
+              ["Come si riparte", "Da fermo hai cazzato e la barca accelera. Poi?", "Quando ha preso velocità porto la prua in bolina", ["Lasco di nuovo", "Viro subito", "Resto al traverso fino alla boa"], "Presa velocità, si orza fino alla bolina e si va verso la linea."],
+              ["Parti da fermo", "In regata, quando ti serve partire da fermo nel modo più rapido?", "Quando sei chiuso fra le altre barche o hai sbagliato i tempi", ["Mai", "Solo all'arrivo", "Solo con tanto vento"], "Capita quando non si è potuto accelerare prima: allora conta ripartire subito."]] },
   ];
 
   // ---- prove ----

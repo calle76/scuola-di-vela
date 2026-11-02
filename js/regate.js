@@ -130,7 +130,7 @@
   }
   // es (1.2.1, meccanismo B di docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md): la regata è l'esercizio di un passo di lezione. es = { def, lezione, passo, esito }:
   // def.regata (indice in RACES), def.cd (preparazione, s), def.avversari, def.boa (stato di partenza: [dx, dy, gradi dal vento] attorno alla boa, coordinate del vento,
-  // regata già partita), def.obiettivo (riga del pannello), def.brief, def.fatto(R, me) e def.fallito(R, me) (l'obiettivo, separato dallo stato di partenza).
+  // regata già partita), def.linea (1.2.2, stato di partenza: [dx, dy, gradi dal vento, velocità m/s] dal centro della linea, dy > 0 dietro; vela tutta lascata), def.obiettivo (riga del pannello), def.brief, def.fatto(R, me) e def.fallito(R, me) (l'obiettivo, separato dallo stato di partenza).
   // Un esercizio non salva niente: niente record, fantasma, piazzamenti, regate fatte né registrazioni automatiche.
   function startRace(i, wind, es){
     mode = "race"; raceIdx = i; showCards("race"); regReset();
@@ -142,8 +142,10 @@
     const spots = startSpots(liv === "nessuno" ? 1 : 1 + FLEET_LOOK.length, cd);
     const up = rc.up || MARK_UP, tri = !!rc.tri; // tri: triangolo equilatero di lato up, due boe (1.0.55)
     if (es && es.def.boa){ const [dx, dy, a] = es.def.boa; spots[0] = { x: dx, y: -up + dy, s: Math.sign(a), a: Math.abs(a) }; } // 1.2.1: si parte vicino alla boa, a regata già partita
+    if (es && es.def.linea){ const [dx, dy, a] = es.def.linea; spots[0] = { x: dx, y: dy, s: Math.sign(a), a: Math.abs(a) }; } // 1.2.2: si parte dietro la linea, in un punto dato
     const [px, py] = fromWF(spots[0].x, spots[0].y);
     freshState(px, py, norm360(env.twd + spots[0].s * (spots[0].a || 90)), 0.35);
+    if (es && es.def.linea){ S.u = es.def.linea[3]; ctl.sheet = 1; info = step(S, ctl, local, 0); } // 1.2.2 (C2): ferma, con la vela tutta lascata che sbatte
     setGusts(rc.gusts, !!rc.tor);
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
@@ -911,7 +913,7 @@
     if (es.esito) return;
     const f = es.def.fallito(R, me, es) || (me.fin !== null || me.dnf ? "Sei arrivato, ma l'obiettivo dell'esercizio non c'è." : "");
     if (f){ es.esito = "no"; toast(f + " Premi Ricomincia, oppure Torna alla lezione.", 6); return; }
-    if (es.def.fatto(R, me, es)){ es.esito = "ok"; es.okT = R.t; toast("Obiettivo raggiunto: si torna alla lezione.", ES_RITORNO + 1); }
+    if (es.def.fatto(R, me, es)){ es.esito = "ok"; es.okT = R.t; toast((es.def.misura ? es.def.misura(es) + " " : "") + "Obiettivo raggiunto: si torna alla lezione.", ES_RITORNO + 1); } // 1.2.2: def.misura, il risultato (C1, C2)
   }
   function apriEsercizio(li, si){ const def = LESSONS[li].steps[si].esercizio; startRace(def.regata, undefined, { def, lezione: li, passo: si, esito: null }); }
   $("rLez").onclick = () => { if (R && R.es) tornaLezione(R.es, false); };
