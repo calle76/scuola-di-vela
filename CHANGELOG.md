@@ -47,6 +47,12 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - Verdi anche: `collaudo_pannello` (1360×650), `collaudo_lezioni`, `collaudo_versione`.
 - **Da sapere:** che il suono esca davvero in Firefox lo puoi verificare solo tu: nel Firefox dei collaudi, senza schermo, l'audio resta sospeso (il gioco funziona muto).
 
+## Collaudi: il giro veloce su GitHub della 1.2.4 (2 novembre 2026, ramo `pulizia`, nessuna versione nuova)
+
+Lanciato a mano da Ale, Chromium e Firefox: **un solo fallito**, `collaudo_linea` in Chromium (caso «fuori», partenza +30 m mure a sinistra, nella lezione 6 «Risalire il vento»); il resto OK, noti o da controllare come sempre (`collaudo_partenze`, `collaudo_giri_avversari` Firefox, `collaudo_fasce`, `collaudo_pilota_lezioni --veloce`).
+- **La causa sta nel collaudo, non nel gioco.** Il collaudo non aveva un seme fisso: qui la stessa prova passava 2 volte su 3. Con il seme fisso il caso si riproduce col seme 5: tornando indietro dopo il taglio fuori il suo pilota strambava, la barca scuffiava e il pilota non sapeva raddrizzarla, quindi restava lì fino al limite di 600 s.
+- **Corretto:** seme fisso su tutte le pagine del collaudo (`--seme N`, 1 se non detto) e il pilota che raddrizza dopo 1 s, come quello delle regate. **Misurato:** semi 1-20 tutti OK in Chromium; Firefox col seme 1 OK.
+
 ## 1.2.4 — Il menu nuovo: tutte le 20 lezioni, in tre gruppi (ramo `pulizia`)
 
 `docs/PROPOSTA-MENU.md`, bozza A scelta da Ale il 2 novembre («va bene la A»). **Da questa versione le 14 lezioni nuove si vedono**, e con loro l'esame da 34 domande e le 19 voci nuove del glossario.

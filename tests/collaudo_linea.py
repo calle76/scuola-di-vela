@@ -2,6 +2,7 @@
 # Parte 1 (#collaudo): 5 prove x 8 venti. La barca viene messa vicino alla linea d'arrivo e poi naviga davvero
 # (fisica del gioco, passi fissi di 1/60 s con __sv.run). La geometria della linea (centro sull'ultima voce di marks,
 # perpendicolare all'ultimo lato, 12 m per lato) la ricalcola il collaudo per conto suo, senza leggere i campi del gioco.
+# Uso: python collaudo_linea.py [--seme N]   (dalla 1.2.5 a seme fisso, 1 se non detto)
 # Casi: taglio dal lato giusto; taglio al contrario; fuori dagli estremi (messaggio, poi rientro e arrivo); sopra una boa
 # (appena dentro l'estremo); appena fuori dall'estremo; prove 4 e 5 prima del giro di boa. Nel taglio giusto il tempo
 # d'arrivo deve essere l'istante interpolato del taglio.
@@ -17,7 +18,8 @@
 import asyncio, json, pathlib, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
-HTML = pathlib.Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else pathlib.Path(__file__).resolve().parent.parent / "index.html"
+_ARG = [x for i, x in enumerate(sys.argv[1:], 1) if x != "--seme" and sys.argv[i - 1] != "--seme"]   # il file della pagina, se dato (non il seme)
+HTML = pathlib.Path(_ARG[0]).resolve() if _ARG else pathlib.Path(__file__).resolve().parent.parent / "index.html"
 BASE = HTML.as_uri()
 HALF = 12  # metà larghezza della linea, m
 
@@ -58,8 +60,12 @@ CASO = """
 }
 """
 
+SEME_N = int(sys.argv[sys.argv.index("--seme") + 1]) if "--seme" in sys.argv else 1   # 1.2.5: seme fisso (prima nessuno: il caso «fuori» passava o falliva a caso)
+SEME_JS = """(() => { let s = %d; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; })();"""
+
 async def parte1(b):
-    pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+    pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); await pg.add_init_script(SEME_JS % SEME_N)
     await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(400)
     tipi = ["giusto", "contrario", "fuori", "boa", "oltre", "prima"]
     conta = {t: 0 for t in tipi}; sbagli = []; scarti = []; lati = []
@@ -101,7 +107,9 @@ CASO5 = """
   S.x = cx + dx; S.y = kind === "contrario" ? cy - 20 : cy + 110;
   S.h = kind === "contrario" ? 180 : (sv.twd + mura * 55 + 360) % 360; S.u = 2.5; S.r = 0; sv.ctl.tiller = 0; sv.ctl.sheet = sv.autoSheet();
   let mira = [cx + (kind === "fuori" ? 25 * mura : 0), kind === "contrario" ? cy + 40 : cy - 15], side = mura, x = null, fin2 = null, toast = "", tacks0 = S.tacks;
+  let capT = 0;
   for (let k = 0; k < 600 / dt; k++){
+    if (S.capsized){ capT += dt; if (capT >= 1) rightBoat(); sv.run(dt, 1); continue; } capT = 0;   // 1.2.5: scuffiato (strambata nel rientro, seme 5) raddrizza dopo 1 s, come il pilota delle regate
     const brg = Math.atan2(mira[0] - S.x, -(mira[1] - S.y)) / D, rel = n180(brg - sv.twd);
     let want = brg;
     if (Math.abs(rel) < 52){ if (Math.abs(rel) > 12) side = Math.sign(rel); want = sv.twd + side * 52; }
@@ -125,7 +133,7 @@ CASO5 = """
 """
 
 async def parte3(b):
-    pg = await b.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+    pg = await b.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); await pg.add_init_script(SEME_JS % SEME_N)
     await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
     conta = {"dentro": 0, "fuori": 0, "contrario": 0}; sbagli = []
     for kind in conta:
@@ -150,7 +158,7 @@ FILLTEXT = """(() => { window.__testi = []; const f = CanvasRenderingContext2D.p
 VECCHI = {"done": {"m0": True, "m3": True}, "best": {"m0": 80, "m1": 130, "m3.2": 300, "m4.3": 340, "m0.2": 90, "m3.4": 310, "r0.3": 210, "r0.4": 200}, "clean": {"m0": True, "m4.3": True, "r0.4": True}}
 
 async def parte2(b):
-    pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+    pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); await pg.add_init_script(SEME_JS % SEME_N)
     await pg.add_init_script(FILLTEXT)
     await pg.goto(BASE); await pg.wait_for_timeout(400)
     await pg.evaluate(f"""localStorage.setItem("scuolaVelaSim.v1", JSON.stringify({json.dumps(VECCHI)}));
