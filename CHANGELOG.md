@@ -17,6 +17,40 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.1 — La regata come esercizio di una lezione: lezioni D5-D7 (ramo `pulizia`)
+
+Meccanismo B di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale il 1 novembre. Le lezioni restano nascoste nel menu, come le altre nuove.
+
+**Il meccanismo.** Un passo di lezione con il campo `esercizio` mostra il pulsante «Apri l'esercizio», che apre una regata in modo «esercizio»:
+- **lo stato di partenza e l'obiettivo sono separati**, come chiesto da Ale (così il coach potrà riusarlo partendo da un'istantanea del registratore). Stato di partenza: regata, avversari, preparazione, e in più (`boa`) la barca messa vicino alla boa a regata già partita. Obiettivo: una frase nel pannello, `fatto` e `fallito`, letti a ogni passo;
+- **non salva niente**: niente record, fantasma, regata fatta, piazzamento, né registrazione automatica;
+- obiettivo raggiunto: «Obiettivo raggiunto», e dopo 2 s si torna al passo, fatto. Obiettivo mancato (o arrivo senza obiettivo): un messaggio, poi Ricomincia (rifà l'esercizio) o «Torna alla lezione» (passo da fare). Nell'esercizio non ci sono «Cambia vento» né la scelta di avversari e preparazione.
+- Il codice delle regate normali cambia solo dove leggeva la preparazione scelta nelle impostazioni: ora la legge dalla regata (`R.cd`), che nelle regate normali è la stessa.
+
+**Le tre lezioni** (regole rilette nel PDF di F15 il 2 novembre: 26, 29.1, 21.1, 21.2, 31, 44.1, 44.2; testi parafrasati, quiz e esame di 4 domande come le altre):
+- **D5 «I segnali di partenza»:** la sequenza (avviso 5 minuti con la bandiera di classe, P a 4, P giù a 1, classe giù al via; contano le bandiere, non i suoni) e la linea. Esercizio: partenza da solo con 5 minuti; vale se al via sei dietro la linea e la tagli entro un minuto.
+- **D6 «La partenza anticipata»:** la X del richiamo individuale e il ritorno dietro la linea lasciando strada (21.1). Il testo dice la semplificazione del gioco: la barca è tornata quando il suo centro è dietro la linea. Esercizio: preparazione di 1 minuto; vale se al via sei oltre la linea, torni e riparti.
+- **D7 «Boe e giri di penalità»:** quali boe non si toccano (31), un giro per la boa e due per un contatto (44.1), stesso verso, virata e strambata (44.2), chi sconta lascia strada (21.2); il testo dice cosa è del gioco (20 s per un giro, 15 s per giro mancante). Esercizio: di bolina con la boa a 32 m, un po' a destra della prua; vale se la tocchi e fai un giro.
+- **Ipotesi nostre:** un minuto (D5) e tre minuti (D6, D7) per completare, 2 s prima del ritorno alla lezione, la posizione di partenza della D7.
+
+**Misurato** (`tests/collaudo_esercizi_regata.py`, nuovo; soglie E1-E5 della proposta, scritte prima):
+
+| Esercizio | guidando, semi 1-10 | guidando, semi 11-20 | a mani ferme | chi sbaglia apposta |
+|---|---|---|---|---|
+| D5 | 10 su 10 (via tagliato in 3-4 s) | 10 su 10 | 0 su 10 | parte in anticipo: 0 su 10 |
+| D6 | 10 su 10 (14-18 s) | 10 su 10 | 0 su 10 | non torna: 0 su 10 |
+| D7 | 10 su 10 (34 s) | 10 su 10 | 0 su 10 | tocca e non gira: 0 su 10 |
+
+- Firefox, semi 1-10: gli stessi numeri, tutto verde.
+- **E3:** dopo tre esercizi completati, localStorage e registrazioni sono identici a prima. Controprova: una regata normale fino all'arrivo li cambia, quindi il controllo vede le differenze.
+- **E4:** `arrivi_regate.py` (20 regate e 2 tornei) identico al bit fra 1.2.0 e 1.2.1. La «Regata con i giri di penalità», l'unica che quel file non copre, l'ho confrontata a parte: 9 regate con 1, 3 e 5 minuti e i tre livelli, identiche (arrivi, penalità, messaggi, introduzione). `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **E5:** pannello a 1360×650 senza pixel di eccesso nell'esercizio, prima e dopo il via, in Chromium e Firefox; `collaudo_pannello_lezioni` 98 passi su 98, ora anche con il testo di fine passo degli esercizi. Pagina senza `#collaudo`: l'esercizio si apre dal passo, con le istruzioni, e si torna alla lezione senza errori.
+- Altri collaudi rilanciati: `collaudo_pilota_lezioni --veloce` (40 passi, OK; i passi con l'esercizio li salta), `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_segnali`: verdi.
+
+**Corretto nel collaudo prima del risultato:** il pilota «in anticipo» della D6 andava di bolina per tutto il minuto e finiva a 130 m di lato; tornando, la guida automatica si incastrava nel comitato (osservazione 79), 1 su 3. Ora aspetta come il pilota e va oltre la linea quando, di bolina, la passerebbe circa 10 s prima del via. Una prima versione (8 s fissi prima del via) non bastava: 0 su 10.
+
+**Corretto nel gioco prima del risultato:** la prima posizione di partenza della D7 era sotto la boa. Con la barca che orza sbandando, la rotta si sarebbe avvicinata alla boa anche a mani ferme. Ora la boa è a 32 m, 22° a destra della prua: orzando la si passa a 12 m sopravento.
+
 ## Collaudi: il giro notturno su GitHub della 1.2.0 (2 novembre 2026, ramo `pulizia`, nessuna versione nuova)
 
 Primo giro notturno partito da solo sul ramo `pulizia` (GitHub l'ha avviato alle 9:36 invece che alle 3: per i giri programmati l'orario non è garantito, e va bene così). Chromium e Firefox, 70 collaudi per browser: **0 falliti**.

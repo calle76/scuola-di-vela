@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.0"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.1"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -447,8 +447,8 @@
   let briefing = false, briefSkip = false; // briefSkip: solo per i collaudi automatici
   function showBrief(title, text, first){
     $("bTitle").textContent = title; $("bText").textContent = text;
-    $("bRaceOpts").hidden = mode !== "race" || !first;
-    $("bNote").textContent = !first ? "Il gioco è fermo finché non riprendi." : mode === "race" ? "Il conto alla rovescia parte quando premi Parti (o Invio)." : "Il cronometro parte quando premi Parti (o Invio).";
+    $("bRaceOpts").hidden = mode !== "race" || !first || !!R.es; // 1.2.1: l'esercizio di una lezione ha avversari e preparazione suoi
+    $("bNote").textContent = !first ? "Il gioco è fermo finché non riprendi." : mode === "race" ? (R.t < 0 ? "Il conto alla rovescia parte quando premi Parti (o Invio)." : "Il gioco parte quando premi Parti (o Invio).") : "Il cronometro parte quando premi Parti (o Invio).";
     $("bGo").textContent = first ? "Parti" : "Riprendi";
     releaseKeys();
     briefing = true; $("briefOv").hidden = false;
@@ -500,7 +500,8 @@
     $("lFeedback").classList.toggle("pending", semBtns); $("lFeedback").hidden = !semBtns;
     $("lBack").hidden = i === 0;
     $("lRetry").hidden = !!st.pause;
-    $("lNext").classList.toggle("pending", semBtns && !!st.cond); $("lNext").hidden = !semBtns && !!st.cond;
+    $("lNext").classList.toggle("pending", semBtns && !!st.cond); $("lNext").hidden = !semBtns && (!!st.cond || !!st.esercizio);
+    $("lEs").hidden = !st.esercizio; $("lEs").textContent = "Apri l'esercizio"; $("lEs").classList.add("primary"); // 1.2.1: il passo apre una regata (meccanismo B)
     $("lNext").textContent = st.final ? nextLabel() : "Avanti";
     $("lQuiz").hidden = !st.final || !!LESSONS[lessonIdx].nascosta; // 1.1.4: il quiz delle lezioni nuove arriva col menu nuovo
     if (st.final){ progress.done["l" + lessonIdx] = true; saveProgress(); }
@@ -527,6 +528,15 @@
       base.latoScena = side;
     });
   }
+  // 1.2.1 (meccanismo B): dall'esercizio si torna al suo passo, con la barca ferma come in ogni pagina; ok = obiettivo raggiunto
+  function tornaLezione(es, ok){
+    mode = "lesson"; lessonIdx = es.lezione; showCards("lesson"); regReset();
+    setWhere(LESSONS[es.lezione].name + ": " + LESSONS[es.lezione].title);
+    env.twd = 0; env.tws = 10 / KN; setGusts(0);
+    freshState(0, 0, 90, 0.4);
+    showStep(es.passo);
+    if (ok){ completeStep(); $("lEs").textContent = "Rifai l'esercizio"; $("lEs").classList.remove("primary"); }
+  }
   function completeStep(){
     stepDone = true;
     $("lFeedback").classList.remove("pending"); $("lFeedback").hidden = false;
@@ -535,6 +545,7 @@
   $("lNext").onclick = () => { const st = curStep(); if (st.final) return goNext(); showStep(Math.min(LESSONS[lessonIdx].steps.length - 1, stepIdx + 1)); };
   $("lBack").onclick = () => showStep(Math.max(0, stepIdx - 1));
   $("lQuiz").onclick = () => openQuiz(lessonIdx);
+  $("lEs").onclick = () => apriEsercizio(lessonIdx, stepIdx);
   $("lRetry").onclick = () => { freshState(0, 0, 90, curStep().autoTrim ? 0.4 : 0.3); showStep(stepIdx); };
 
   // ---- giro di boa (boe da lasciare a sinistra) ----
@@ -677,7 +688,7 @@
   $("allInstr").onchange = e => { opt.allInstr = e.target.checked; setHud(hudLevel); };
   $("showGhost").onchange = e => opt.ghost = e.target.checked;
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
-  $("rRestart").onclick = () => startRace(raceIdx, env.twd);
+  $("rRestart").onclick = () => R && R.es ? apriEsercizio(R.es.lezione, R.es.passo) : startRace(raceIdx, env.twd);
   // 1.0.70: «Cambia vento» tolto dalle regate; 1.0.75: rimesso nel pannello e nella schermata finale delle regate (rWind, finWind in regate.js), mai nel torneo; nelle prove c'è sempre (mWind)
   $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };

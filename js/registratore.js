@@ -71,7 +71,7 @@
   }
   function sesTick(dt, noDraw){
     if (ses.auto && (mode !== "race" || R !== sesAutoR)) sesChiudi("interrotta");
-    if (!ses.on && mode === "race" && R && R !== sesAutoR && R.t < 2 - opt.countdown) sesApri(); // solo all'inizio del conto alla rovescia: spegnere la registrazione a mano a regata in corso non ne apre una a metà
+    if (!ses.on && mode === "race" && R && !R.es && R !== sesAutoR && R.t < 2 - opt.countdown) sesApri(); // solo all'inizio del conto alla rovescia: spegnere la registrazione a mano a regata in corso non ne apre una a metà
     if (!ses.on) return;
     const L = ses.L; ses.t += dt;
     const n0 = ses.lines.length;

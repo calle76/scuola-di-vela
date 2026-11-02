@@ -69,3 +69,4 @@ Dopo la pulizia del codice e prima delle medaglie (`PROPOSTA-RIORGANIZZAZIONE.md
 ## 7. Avanzamento
 
 - **1.1.9 (1 novembre 2026):** D1-D4 scritte (teoria con disegni di scena, quiz ed esame), nascoste nel menu. Gli esercizi in regata (§2) arrivano con il gruppo C, che ha bisogno dello stesso meccanismo (una lezione che apre una regata). La pagina sulle precedenze della lezione 3 si toglie insieme al menu nuovo. Restano D5 (segnali di partenza), D6 (partenza anticipata), D7 (boa toccata e giri).
+- **1.2.1 (2 novembre 2026):** D5 (segnali di partenza), D6 (partenza anticipata) e D7 (boa toccata e giri) scritte, con le regole rilette nel PDF (26, 29.1, 21.1, 21.2, 31, 44.1, 44.2) e un esercizio in regata ciascuna (meccanismo B). Le sette lezioni del gruppo D ci sono tutte, nascoste nel menu.

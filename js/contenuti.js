@@ -366,8 +366,8 @@
   //   può aspettare finché è chiaro che l'altra non si scansa), 15 chi acquista la precedenza dà all'inizio spazio (salvo se è per una manovra dell'altra), 16.1 chi
   //   ha la precedenza e cambia rotta dà spazio. 43.1(c): chi ha la precedenza è esonerato dalla 14 se il contatto non causa danni o lesioni.
   // Gioco (js/regate.js, chiCede, 1.0.40): applica 10, 11, 12 e 13 (collaudo_regole.py, collaudo_semaforo.py); 14, 15 e 16 no, e non ci sono danni: il testo lo dice.
-  // Dalla 1.2.0 un esercizio per D1-D3 con una barca di scena che si muove (meccanismo A, copione). Penalità per un contatto con colpa: +15 s, due giri nella «Regata con i giri di penalità», +1 punto nel torneo (toast in js/regate.js). Gli esercizi in regata
-  // arrivano con il gruppo C (stesso meccanismo: una lezione che apre una regata); finché le lezioni D sono nascoste la lezione 3 tiene la sua pagina sulle precedenze.
+  // Dalla 1.2.0 un esercizio per D1-D3 con una barca di scena che si muove (meccanismo A, copione). Penalità per un contatto con colpa: +15 s, due giri nella «Regata con i giri di penalità», +1 punto nel torneo (toast in js/regate.js). Dalla 1.2.1 D5-D7 hanno un esercizio
+  // in regata (meccanismo B: una lezione che apre una regata), che servirà anche al gruppo C; finché le lezioni D sono nascoste la lezione 3 tiene la sua pagina sulle precedenze.
   const LD1 = [
     { title: "Chi lascia strada", ...PAUSE, zoom: 1.4, scenaH: 45, me: "Tu: mure a sinistra",
       scena: [{ x: 14, y: 0, h: 315, col: "#C0392B", label: "Mure a dritta" }],
@@ -426,6 +426,79 @@
              "Il gioco non controlla le regole 14, 15 e 16: in regata, sull'acqua, valgono."] },
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
       text: ["Evita sempre il contatto, anche quando hai la precedenza. Chi ottiene la precedenza o cambia rotta deve lasciare all'altra lo spazio per scansarsi."] }
+  ];
+
+  // ---- gruppo D, seconda parte: D5-D7 con un esercizio in regata (1.2.1, meccanismo B di docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md) ----
+  // Regole rilette nel PDF di F15 il 2 novembre 2026: 26 (avviso 5 minuti bandiera di classe, preparatorio 4 minuti P, un minuto P ammainata, partenza classe ammainata;
+  //   i tempi si prendono dai segnali visivi, un suono che manca non conta), 29.1 (scafo oltre la linea al segnale: X con un suono, esposta finché gli scafi di queste barche
+  //   non sono tutti dietro la linea o i suoi prolungamenti, al più 4 minuti dopo il segnale), 21.1 (chi torna dietro la linea dopo il segnale lascia strada a chi non lo fa,
+  //   finché lo scafo non è tutto dietro), 21.2 (chi sconta una penalità lascia strada), 31 (non toccare: prima della partenza le boe di partenza, la boa che apre,
+  //   delimita o chiude il lato in corso, dopo l'arrivo quelle d'arrivo), 44.1 (due giri per la Parte 2, un giro per la 31), 44.2 (allontanarsi dalle altre barche appena
+  //   possibile dopo l'incidente, poi subito i giri, tutti nello stesso verso, ognuno con una virata e una strambata).
+  // Gioco: sequenza intera con 5 minuti di preparazione, accorciata con 3 (avviso a 3, P a 2), con 1 minuto la sola bandiera di classe (bandiereAl); X per 240 s al più;
+  //   la barca è tornata quando il suo centro è dietro la linea (raceLegs: semplificazione, il testo lo dice); 21.1, 21.2, boa toccata e giri solo nella «Regata con i giri
+  //   di penalità» (RACES[3]), che è quella degli esercizi; un giro vale con 360° nello stesso verso in 20 s, una virata e una strambata; giro mancante all'arrivo +15 s.
+  // Esercizi: soglie (un minuto in D5, tre minuti in D6 e D7) ipotesi nostre.
+  const LD5 = [
+    { title: "La sequenza", ...PAUSE, zoom: 2,
+      text: ["Prima della partenza la barca giuria alza e ammaina delle bandiere, sempre nello stesso ordine (regola 26). A cinque minuti dal via sale la <em>bandiera di classe</em>: è l'avviso. A quattro minuti sale la <em>P</em>, blu con il quadrato bianco: è il preparatorio.",
+             "A un minuto dal via si ammaina la P. Al via si ammaina la bandiera di classe: è la partenza. Contano le bandiere, non i suoni: se un suono manca, vale la bandiera.",
+             "Nel gioco la sequenza è intera quando la preparazione è di cinque minuti. Con tre minuti è accorciata (avviso a tre, P a due); con un minuto c'è solo la bandiera di classe."] },
+    { title: "La linea", ...PAUSE, zoom: 2,
+      text: ["La linea di partenza va dalla barca giuria alla boa arancione. Al via devi essere dietro la linea, dalla parte da cui si parte; poi la tagli e vai verso la boa di bolina.",
+             "Conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare qualche secondo prima del via: così parti già lanciato."] },
+    { title: "Parti al segnale", ...PAUSE, zoom: 2,
+      esercizio: { regata: 3, cd: 300, avversari: "nessuno",
+        obiettivo: "Parti al via senza anticipo, entro un minuto",
+        brief: "Esercizio della lezione D5. Una partenza da solo con la sequenza di cinque minuti: guarda le bandiere sulla barca giuria e nel riquadro. Bandiera di classe: avviso, mancano cinque minuti. Bandiera P: preparatorio, quattro minuti. P ammainata: un minuto. Classe ammainata: partenza. Al via devi essere dietro la linea, fra la barca giuria e la boa arancione, e tagliarla entro un minuto. È un esercizio: non si salva niente.",
+        fatto: (R, me) => me.leg >= 1,
+        fallito: (R, me, es) => { if (R.t >= 0 && es.ocs0 === undefined) es.ocs0 = me.ocs;
+          return es.ocs0 ? "Al via eri oltre la linea: partenza anticipata." : R.t > 60 && me.leg === 0 ? "È passato un minuto dal via e non hai ancora tagliato la linea." : ""; } },
+      text: ["Ora una partenza vera, da solo, con la sequenza di cinque minuti. Apri l'esercizio, guarda le bandiere, fatti trovare dietro la linea al via e tagliala entro un minuto.",
+             "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
+      done: "Partenza regolare: al via eri dietro la linea e l'hai tagliata subito dopo." },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Avviso a cinque minuti (bandiera di classe), preparatorio a quattro (P), un minuto (giù la P), partenza (giù la classe). Contano le bandiere (regola 26)."] }
+  ];
+  const LD6 = [
+    { title: "Il richiamo individuale", ...PAUSE, zoom: 2,
+      text: ["Se al segnale di partenza una parte dello scafo è già oltre la linea, la barca è partita in anticipo. La giuria alza subito la <em>X</em>, bianca con la croce blu, con un suono: è il richiamo individuale (regola 29.1).",
+             "Chi è in anticipo deve tornare con lo scafo tutto dietro la linea e partire di nuovo. La X resta su finché tutte le barche in anticipo sono tornate, ma non più di quattro minuti dal via."] },
+    { title: "Tornare lasciando strada", ...PAUSE, zoom: 2,
+      text: ["Mentre torni verso la linea dopo il via, lasci strada a tutte le barche che non lo stanno facendo, finché lo scafo non è tutto dietro la linea (regola 21.1).",
+             "Nel gioco questa regola vale nella regata con i giri di penalità. Il gioco considera tornata la barca quando il suo centro è dietro la linea, non ogni punto dello scafo: è una semplificazione."] },
+    { title: "Parti in anticipo e torna", ...PAUSE, zoom: 2,
+      esercizio: { regata: 3, cd: 60, avversari: "nessuno",
+        obiettivo: "Al via sii oltre la linea, poi torna dietro e riparti",
+        brief: "Esercizio della lezione D6. Una partenza da solo con un minuto di preparazione: c'è solo la bandiera di classe, che si ammaina al via. Questa volta, apposta, al via fatti trovare oltre la linea: sale la X. Poi torna dietro la linea e riparti tagliandola fra la barca giuria e la boa arancione. È un esercizio: non si salva niente.",
+        fatto: (R, me, es) => !!es.ocs0 && me.leg >= 1,
+        fallito: (R, me, es) => { if (R.t >= 0 && es.ocs0 === undefined) es.ocs0 = me.ocs;
+          return es.ocs0 === false ? "Al via eri dietro la linea: qui devi partire in anticipo apposta." : R.t > 180 && me.leg === 0 ? "Sono passati tre minuti dal via e non sei ancora ripartito." : ""; } },
+      text: ["Ora provala apposta. Apri l'esercizio: al via fatti trovare oltre la linea, guarda salire la X, torna dietro la linea e riparti.",
+             "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
+      done: "Sei tornato dietro la linea e sei ripartito: ora la tua partenza vale." },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Oltre la linea al via: sale la X (regola 29.1). Si torna con lo scafo tutto dietro la linea, lasciando strada a chi non lo fa (regola 21.1), e si riparte."] }
+  ];
+  const LD7 = [
+    { title: "Non toccare le boe", ...PAUSE, zoom: 2,
+      text: ["In regata non si toccano le boe (regola 31): prima della partenza quelle della linea di partenza; dopo, la boa da cui parte il lato che stai facendo e quella verso cui vai; dopo l'arrivo, quelle dell'arrivo.",
+             "Chi tocca una boa può scontarla con un giro di penalità (regola 44.1)."] },
+    { title: "I giri di penalità", ...PAUSE, zoom: 2,
+      text: ["Un contatto con colpa con un'altra barca costa due giri, una boa toccata un giro (regola 44.1). Ci si allontana dalle altre barche appena possibile e si fanno subito i giri, tutti nello stesso verso; ogni giro ha una virata e una strambata (regola 44.2).",
+             "Mentre sconti la penalità lasci strada a chi non lo fa (regola 21.2).",
+             "Nel gioco un giro vale se in venti secondi la prua fa un giro intero nello stesso verso, con una virata e una strambata. I giri non fatti, all'arrivo, costano quindici secondi l'uno: nel regolamento non c'è, è una scelta del gioco."] },
+    { title: "Tocca la boa e fai il giro", ...PAUSE, zoom: 2,
+      esercizio: { regata: 3, boa: [-30, 10, 50], avversari: "nessuno", // di bolina mure a sinistra, boa a 32 m, 22° a destra della prua: orzando (la barca sbandata orza) la si passa a 12 m sopravento
+        obiettivo: "Tocca la boa gialla, poi fai un giro di penalità",
+        brief: "Esercizio della lezione D7. A regata già partita sei di bolina, da solo, e la boa gialla è davanti a te, un po' a destra. Poggia e toccala, apposta. Poi allontanati un poco e fai un giro di penalità: una virata e una strambata, girando sempre nello stesso verso. È un esercizio: non si salva niente.",
+        fatto: R => R.need >= 1 && R.done >= R.need,
+        fallito: R => R.t > 180 ? (R.need ? "Sono passati tre minuti e il giro non è ancora fatto." : "Sono passati tre minuti e non hai toccato la boa.") : "" },
+      text: ["Ora provalo. Apri l'esercizio: sei di bolina e la boa gialla è davanti a te, un po' a destra. Toccala apposta, allontanati un poco e fai un giro, con una virata e una strambata.",
+             "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
+      done: "Giro fatto: la penalità per la boa toccata è scontata." },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Non si toccano le boe (regola 31). Boa toccata: un giro; contatto con colpa: due giri; subito, nello stesso verso, ognuno con una virata e una strambata (regole 44.1 e 44.2)."] }
   ];
 
   const LESSONS = [
@@ -492,7 +565,34 @@
       esame: [["Durante la virata", "Quale regola dice che chi vira lascia strada?", "La regola 13", ["La regola 10", "La regola 31", "La regola 29"], "È la regola 13."], ["Durante la virata", "Una barca vicina va mure a dritta. Conviene virarle proprio davanti?", "No: mentre viri lasci strada tu", ["Sì, così prendi la precedenza", "Sì, se sei più veloce", "Non importa"], "Durante la virata si lascia strada a tutte: virare davanti a una barca vicina è un errore."], ["Durante la virata", "Quando finisce, per la regola 13, la virata?", "Quando la barca è di bolina sulle nuove mure", ["Quando la prua passa il vento", "Quando la barca si ferma", "Dopo dieci secondi"], "Fino alla bolina sulle nuove mure."], ["Durante la virata", "Due barche virano insieme, una dietro l'altra. Chi lascia strada?", "Quella dietro", ["Quella davanti", "Nessuna", "Quella più grande"], "Se virano insieme, cede quella alla sinistra dell'altra o quella dietro."]] },
     { name: "Lezione D4", title: "Evitare il contatto", steps: LD4, nascosta: true, gruppo: "D", desc: "Anche chi ha la precedenza evita il contatto; danni e spazio (regole 14, 15, 16).",
       quiz: [["La barca con la precedenza deve evitare il contatto?", "Sì, se è ragionevolmente possibile", ["No, mai", "Solo se è mure a sinistra", "Solo alla partenza"], "Regola 14: tutte le barche evitano il contatto, se è ragionevolmente possibile."], ["Quando chi ha la precedenza deve cominciare a manovrare per evitare il contatto?", "Quando è chiaro che l'altra non lascia strada", ["Appena vede un'altra barca", "Mai", "Dopo il contatto"], "Chi ha la precedenza può aspettare finché è chiaro che l'altra non si scansa."], ["Un contatto senza danni né feriti: chi aveva la precedenza è penalizzato?", "No", ["Sì, sempre", "Sì, con due giri", "Solo nel torneo"], "Regola 43.1(c): senza danni o lesioni chi aveva la precedenza è esonerato."], ["Chi ha la precedenza cambia rotta. Che cosa deve fare?", "Lasciare all'altra lo spazio per tenersi lontana", ["Niente: ha la precedenza", "Virare subito", "Fermarsi"], "Regola 16: chi ha la precedenza e cambia rotta dà all'altra lo spazio per scansarsi."]],
-      esame: [["Evitare il contatto", "Quale regola chiede a tutte le barche di evitare il contatto?", "La regola 14", ["La regola 10", "La regola 26", "La regola 44"], "È la regola 14."], ["Evitare il contatto", "In questo gioco, dopo un contatto, chi ha torto?", "Sempre chi doveva lasciare strada", ["Sempre tutte e due", "Chi andava più veloce", "Nessuna"], "Il gioco non ha danni: chi doveva lasciare strada ha sempre torto."], ["Non togliere spazio", "Passi avanti a un'altra barca e così ottieni la precedenza. Che cosa devi fare all'inizio?", "Darle lo spazio per lasciarti strada", ["Niente: hai la precedenza", "Virare", "Fermarti"], "Regola 15: chi ottiene la precedenza dà all'inizio all'altra lo spazio per scansarsi."], ["Non togliere spazio", "Il gioco controlla le regole 15 e 16?", "No: valgono in regata, ma il gioco non le controlla", ["Sì, con il semaforo", "Sì, con 15 secondi", "Solo nel torneo"], "Il gioco controlla 10, 11, 12 e 13; la 14, la 15 e la 16 no."]] }
+      esame: [["Evitare il contatto", "Quale regola chiede a tutte le barche di evitare il contatto?", "La regola 14", ["La regola 10", "La regola 26", "La regola 44"], "È la regola 14."], ["Evitare il contatto", "In questo gioco, dopo un contatto, chi ha torto?", "Sempre chi doveva lasciare strada", ["Sempre tutte e due", "Chi andava più veloce", "Nessuna"], "Il gioco non ha danni: chi doveva lasciare strada ha sempre torto."], ["Non togliere spazio", "Passi avanti a un'altra barca e così ottieni la precedenza. Che cosa devi fare all'inizio?", "Darle lo spazio per lasciarti strada", ["Niente: hai la precedenza", "Virare", "Fermarti"], "Regola 15: chi ottiene la precedenza dà all'inizio all'altra lo spazio per scansarsi."], ["Non togliere spazio", "Il gioco controlla le regole 15 e 16?", "No: valgono in regata, ma il gioco non le controlla", ["Sì, con il semaforo", "Sì, con 15 secondi", "Solo nel torneo"], "Il gioco controlla 10, 11, 12 e 13; la 14, la 15 e la 16 no."]] },
+    { name: "Lezione D5", title: "I segnali di partenza", steps: LD5, nascosta: true, gruppo: "D", desc: "Le bandiere della partenza: classe, P, un minuto, via (regola 26). Esercizio in regata.",
+      quiz: [["Quale bandiera sale cinque minuti prima della partenza?", "La bandiera di classe", ["La P", "La X", "La bandiera blu"], "È il segnale di avviso: la bandiera di classe, cinque minuti al via (regola 26)."],
+             ["Che cosa vuol dire la P che si ammaina?", "Manca un minuto alla partenza", ["La partenza è rinviata", "Qualcuno è partito in anticipo", "La regata è finita"], "Il preparatorio (P) sale a quattro minuti e si ammaina a un minuto dal via."],
+             ["Al segnale di partenza, dove devi essere?", "Dietro la linea, dalla parte da cui si parte", ["Già oltre la linea", "Vicino alla boa di bolina", "Ovunque: non conta"], "Al via lo scafo deve essere tutto dietro la linea; poi la si taglia."],
+             ["Il suono del segnale non si sente. Che cosa conta?", "La bandiera", ["Il suono: senza suono non si parte", "L'orologio di bordo", "La prima barca che parte"], "Regola 26: i tempi si prendono dalle bandiere; un suono che manca non conta."]],
+      esame: [["La sequenza", "Quando sale la bandiera P?", "Quattro minuti prima della partenza", ["Cinque minuti prima", "Un minuto prima", "Alla partenza"], "La P è il preparatorio: quattro minuti prima del via."],
+              ["La sequenza", "Che cosa segna la partenza?", "La bandiera di classe che si ammaina", ["La P che sale", "La X che sale", "La bandiera blu che si ammaina"], "Al via si ammaina la bandiera di classe."],
+              ["La linea", "In questo gioco, fra quali punti si taglia la linea di partenza?", "Fra la barca giuria e la boa arancione", ["Fra due boe gialle", "Fra la boa di bolina e la giuria", "Dove si vuole"], "La linea va dalla barca giuria alla boa arancione."],
+              ["Parti al segnale", "Mancano trenta secondi al via. Dove conviene essere?", "Dietro la linea e vicino, pronto a partire lanciato", ["Lontano dalla linea, fermo", "Già oltre la linea", "Vicino alla boa di bolina"], "Conviene aspettare vicino alla linea e cazzare poco prima del via."]] },
+    { name: "Lezione D6", title: "La partenza anticipata", steps: LD6, nascosta: true, gruppo: "D", desc: "Oltre la linea al via: sale la X, si torna dietro e si riparte (regole 29.1 e 21.1). Esercizio in regata.",
+      quiz: [["Al segnale di partenza la tua prua è oltre la linea. Che cosa succede?", "Sei in anticipo: sale la X e devi tornare dietro la linea", ["Niente: conta solo la poppa", "Hai fatto la partenza migliore", "Devi fare due giri di penalità"], "Basta una parte dello scafo oltre la linea al via: richiamo individuale (regola 29.1)."],
+             ["Com'è fatta la bandiera X?", "Bianca con una croce blu", ["Blu con un quadrato bianco", "Tutta gialla", "Rossa con una croce bianca"], "La X del richiamo individuale è bianca con la croce blu; la P è blu con il quadrato bianco."],
+             ["Che cosa devi fare dopo una partenza anticipata?", "Tornare con lo scafo tutto dietro la linea e partire di nuovo", ["Fare due giri di penalità", "Continuare fino alla boa", "Fermarti oltre la linea"], "Regola 29.1: si torna dietro la linea e si riparte."],
+             ["Mentre torni dietro la linea, chi lascia strada?", "Tu, alle barche che non stanno tornando", ["Le altre barche a te", "Sempre la barca mure a sinistra", "Nessuno"], "Regola 21.1: chi torna dietro la linea lascia strada a chi non lo fa."]],
+      esame: [["Il richiamo individuale", "Quale regola parla del richiamo individuale?", "La regola 29.1", ["La regola 10", "La regola 31", "La regola 44.2"], "È la 29.1."],
+              ["Il richiamo individuale", "Per quanto tempo al massimo resta su la X?", "Quattro minuti dal via", ["Un minuto", "Fino all'arrivo", "Dieci secondi"], "Resta finché le barche in anticipo non sono tornate, ma non oltre quattro minuti dal via."],
+              ["Tornare lasciando strada", "Quale regola dice che chi torna dietro la linea lascia strada?", "La regola 21.1", ["La regola 13", "La regola 26", "La regola 44.1"], "È la 21.1."],
+              ["Parti in anticipo e torna", "Sei tornato dietro la linea dopo la X. Che cosa fai?", "Riparto tagliando la linea fra giuria e boa", ["Vado dritto alla boa di bolina", "Aspetto un'altra partenza", "Faccio un giro di penalità"], "Tornato dietro la linea, si riparte tagliandola come al via."]] },
+    { name: "Lezione D7", title: "Boe e giri di penalità", steps: LD7, nascosta: true, gruppo: "D", desc: "Non si toccano le boe; boa toccata un giro, contatto con colpa due (regole 31, 44.1, 44.2). Esercizio in regata.",
+      quiz: [["Hai toccato la boa di bolina. Quanti giri di penalità fai?", "Uno", ["Due", "Nessuno", "Tre"], "Per una boa toccata basta un giro (regola 44.1)."],
+             ["Hai urtato un'altra barca e la colpa è tua. Quanti giri fai?", "Due", ["Uno", "Nessuno", "Quattro"], "Per un contatto con colpa i giri sono due (regola 44.1)."],
+             ["Che cosa deve avere ogni giro di penalità?", "Una virata e una strambata", ["Due virate", "Due strambate", "Niente: basta girare"], "Regola 44.2: ogni giro ha una virata e una strambata."],
+             ["Fai due giri di penalità. In che verso?", "Tutti e due nello stesso verso, quello che preferisci", ["Uno per verso", "Sempre verso destra", "Sempre verso sinistra"], "Regola 44.2: i giri sono tutti nello stesso verso; quale, lo scegli tu."]],
+      esame: [["Non toccare le boe", "Quale regola vieta di toccare le boe?", "La regola 31", ["La regola 10", "La regola 26", "La regola 13"], "È la 31."],
+              ["Non toccare le boe", "Prima della partenza, quali boe non devi toccare?", "Quelle della linea di partenza", ["Nessuna: la regola vale dopo il via", "Solo la boa di bolina", "Solo quelle dell'arrivo"], "Prima della partenza non si toccano le boe di partenza (regola 31)."],
+              ["I giri di penalità", "Mentre sconti una penalità, chi lascia strada?", "Tu, alle barche che non stanno scontando", ["Le altre barche a te", "La barca mure a sinistra", "Nessuno"], "Regola 21.2: chi sconta una penalità lascia strada."],
+              ["I giri di penalità", "Quando si fanno i giri di penalità?", "Subito, appena ci si è allontanati dalle altre barche", ["All'arrivo", "Alla boa successiva", "Quando si vuole"], "Regola 44.2: appena possibile dopo l'incidente, lontano dalle altre barche."]] },
   ];
 
   // ---- prove ----
