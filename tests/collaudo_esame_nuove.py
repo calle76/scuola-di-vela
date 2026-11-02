@@ -1,5 +1,5 @@
 # Collaudo dell'esame e del glossario con le lezioni nuove (1.2.3, docs/PROPOSTA-ESAME-E-GLOSSARIO.md §3: criteri G1-G5 scritti prima del codice).
-#   G1: con le lezioni nuove nascoste, esame e glossario identici al gioco di riferimento (RIF, 1.2.2): stesse domande estratte con 20 semi fissi,
+#   G1: con le lezioni nuove nascoste (dalla 1.2.4 le nasconde il collaudo: di base sono visibili, G0), esame e glossario identici al gioco di riferimento (RIF, 1.2.2): stesse domande estratte con 20 semi fissi,
 #       stesse voci del glossario nello stesso ordine.
 #   G2: con tutte le lezioni rese visibili (solo qui, nella pagina del collaudo): 34 domande, 1 per lezione nuova, soglia 28 (anche nel pulsante del menu);
 #       in 200 estrazioni ogni domanda delle lezioni nuove esce almeno una volta, nessuna domanda ripetuta nella stessa estrazione.
@@ -43,6 +43,10 @@ async def main():
             ctx, pg, e0 = await pagina(b, (pathlib.Path(tmp) / "index.html").as_uri())
             rif_es, rif_gl = await pg.evaluate(ESTRAI), await pg.evaluate(GLOSS); await ctx.close()
             ctx, pg, errs = await pagina(b, (ROOT / "index.html").as_uri())
+            # 1.2.4: di base tutte le lezioni sono visibili (menu nuovo); G1 le nasconde apposta per confrontarsi con la 1.2.2
+            g0 = await pg.evaluate("() => ({ nasc: LESSONS.filter(L => L.nascosta).length, n: domandeEsame(), s: sogliaEsame(), gl: glossVisibili().length })")
+            chk("G0 di base (1.2.4) nessuna lezione nascosta: esame da 34, ne servono 28, glossario di 67 voci", g0 == {"nasc": 0, "n": 34, "s": 28, "gl": 67}, str(g0))
+            await pg.evaluate("() => { LESSONS.forEach((L, i) => { if (i >= 6) L.nascosta = true; }); showMenu(); }")
             nuovo_es, nuovo_gl = await pg.evaluate(ESTRAI), await pg.evaluate(GLOSS)
             chk("G1 esame identico a RIF con le lezioni nuove nascoste (20 semi)", len(rif_es) == 20 and metro.tutti(len(x) == 20 for x in rif_es) and rif_es == nuovo_es, f"{len(rif_es)} estrazioni da {len(rif_es[0])} domande")
             chk("G1 glossario identico a RIF con le lezioni nuove nascoste", len(rif_gl) == 48 and rif_gl == nuovo_gl, f"{len(rif_gl)} voci prima, {len(nuovo_gl)} ora")

@@ -131,6 +131,7 @@ TESTS=(
     "collaudo_pannello_lezioni.py|py|chiaro|0||collaudo_pannello_lezioni.py"
     "collaudo_esercizi_regata.py|py|chiaro|0||collaudo_esercizi_regata.py"
     "collaudo_esame_nuove.py|py|chiaro|0||collaudo_esame_nuove.py"
+    "collaudo_menu.py|py|chiaro|0||collaudo_menu.py"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"
     "collaudo_fantasma.py|py|chiaro|0||collaudo_fantasma.py"

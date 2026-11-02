@@ -4,6 +4,9 @@
 # dal testo di index.html. I numeri attesi sono quelli della tabella degli esempi del §12.
 # L1-L2 con #collaudo (meriti() dall'aggancio); L3-L4 senza, come la carica un giocatore, con salvataggi preparati.
 # Lo spazio (L4) vale solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).
+# Dalla 1.2.4 (menu nuovo, docs/PROPOSTA-MENU.md §2, regola scritta prima del codice): Conoscenza = 12 × punti dei quiz di tutte le 20 lezioni / 40,
+# Esperienza = 6 × lezioni fatte / 20, per difetto. I giocatori del §12 sono rifatti sulle 20 lezioni con gli stessi totali (per esempio 14 ripassi
+# pieni su 20 = 8 punti, come 4 su 6 prima); l'ordine della Scuola (ORD) è scritto qui dalla proposta, non letto dal gioco.
 # Fallisce se una parte misura zero casi. Uso: python collaudo_libretto.py
 import asyncio, json, pathlib, re, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
@@ -12,7 +15,8 @@ INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; BASE = IN
 import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]   # [oro, argento, bronzo] per prova
 assert len(BANDS) == 5, BANDS
-QUIZ_JS = re.search(r"const QUIZ = \[.*?\n  \];", SRC, re.S).group(0)
+ORD = [0, 1, 6, 2, 3, 4, 7, 5, 9, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19, 17]   # indici delle lezioni nell'ordine della Scuola (PROPOSTA-LEZIONI-SCUOLA §5)
+TUTTE = range(20)
 MK = ["m0.4", "m1.4", "m2.4", "m3.5", "m4.6"]   # chiavi delle prove (KEYV), come le scrive il gioco
 fail = []; casi = {}; visti = {}
 def chk(parte, c, m):
@@ -36,9 +40,10 @@ async def main():
         b = await getattr(pw, __import__("os").environ.get("BROWSER", "chromium")).launch()
         pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
-        NQ = await pg.evaluate("s => new Function(s + ';return QUIZ')().map(q => q.length)", QUIZ_JS)
+        NQ = await pg.evaluate("() => LESSONS.map((L, i) => (QUIZ[i] || L.quiz).length)")
+        chk("metro", len(NQ) == 20 and await pg.evaluate("() => JSON.stringify(ORD_L)") == json.dumps(ORD).replace(" ", ""), f"20 lezioni e ordine della Scuola come nella proposta: {NQ}")
         piene = {i: n for i, n in enumerate(NQ)}   # ogni ripasso tutto giusto
-        L = await pg.evaluate("() => { const n = []; for (let i = 0; i < 6; i++) n.push('Lezione ' + (i + 1)); return n; }")
+        pieni = lambda k: {i: NQ[i] for i in ORD[:k]}   # i primi k ripassi della Scuola tutti giusti
         print("fasce lette:", BANDS, "| domande dei ripassi:", NQ)
         async def M(p): return await pg.evaluate("p => __sv.meriti(p)", p)
         def area(m):
@@ -46,12 +51,12 @@ async def main():
 
         # ---- L1: giocatori del §12
         GIOC = {
-            "A": (prog([1] * 5, [0, 1], {i: NQ[i] for i in range(4)}, {"r0.4:principianti": (3, False), "r1.4:principianti": (3, True)}, range(6)),
+            "A": (prog([1] * 5, [0, 1], pieni(14), {"r0.4:principianti": (3, False), "r1.4:principianti": (3, True)}, TUTTE),
                   (12, 8, 4, 6, 30), "Ti manca l'esame.", ["l'esame su tutte le lezioni."]),
-            "B": (prog([0] * 5, range(5), piene, None, range(6)), (20, 12, 0, 6, 38), "Ti mancano punti in Competizione; poi l'esame.", ["la Regata a bastone (con avversari)."]),
-            "C": (prog([0, 0, 0, 0, 1], (), {i: NQ[i] for i in range(5)}, {"r0.4:esperti": (1, False), "r1.4:principianti": (3, False)}, range(3)),
-                  (14, 10, 6, 3, 33), "Ti mancano punti in Esperienza; poi l'esame.", ["Lezione 4, Vento reale e apparente."]),
-            "D": (prog([2] * 5, [3], {i: NQ[i] for i in range(3)}, {"r0.4:principianti": (4, True), "r1.4:principianti": (4, False)}, range(6)),
+            "B": (prog([0] * 5, range(5), piene, None, TUTTE), (20, 12, 0, 6, 38), "Ti mancano punti in Competizione; poi l'esame.", ["la Regata a bastone (con avversari)."]),
+            "C": (prog([0, 0, 0, 0, 1], (), pieni(17), {"r0.4:esperti": (1, False), "r1.4:principianti": (3, False)}, ORD[:10]),
+                  (14, 10, 6, 3, 33), "Ti mancano punti in Esperienza; poi l'esame.", ["Lezione 11, I salti di vento."]),
+            "D": (prog([2] * 5, [3], pieni(10), {"r0.4:principianti": (4, True), "r1.4:principianti": (4, False)}, TUTTE),
                   (6, 6, 2, 6, 20), "Ti mancano punti in Abilità e Competizione; poi l'esame.", ["Prova 1, Al traverso: prova a migliorare il tempo.", "la Regata a bastone (con avversari)."]),
         }
         for g, (p, att, riga, sugg) in GIOC.items():
@@ -63,12 +68,12 @@ async def main():
             print(f"L1 {g}: {got} | {m['manca']} | {m['sugg']}")
 
         # ---- L2: casi al bordo
-        base = dict(prove=[1, 1, 1, 1, None], ripassi={0: NQ[0], 1: NQ[1], 2: NQ[2]}, regate={"r0.4:principianti": (2, False)}, lezioni=range(6))  # 8, 6, 3, 6 = 23
+        base = dict(prove=[1, 1, 1, 1, None], ripassi=pieni(10), regate={"r0.4:principianti": (2, False)}, lezioni=TUTTE)  # 8, 6, 3, 6 = 23
         m = await M(prog(**base)); area(m)
         chk("L2", (m["pt"]["abil"], m["pt"]["cono"], m["pt"]["comp"], m["pt"]["esp"], m["totale"]) == (8, 6, 3, 6, 23), f"L2 tutti al minimo: {m['pt']} {m['totale']}")
         chk("L2", m["manca"] == "Ti mancano 6 punti al totale; poi l'esame." and len(m["sugg"]) == 3, f"L2 tutti al minimo: «{m['manca']}» {m['sugg']}")
-        for nome, mod, k, att, voce in (("Abilità", dict(prove=[1, 1, 1, 2, None]), "abil", 7, "Prova 5, "), ("Conoscenza", dict(ripassi={0: NQ[0], 1: NQ[1]}), "cono", 4, "Ripasso 3, Andature, mure e precedenze."),
-                                  ("Competizione", dict(regate={"r0.4:principianti": (3, False)}), "comp", 2, "la Regata nelle raffiche (con avversari)."), ("Esperienza", dict(lezioni=range(5)), "esp", 5, "Lezione 6, ")):
+        for nome, mod, k, att, voce in (("Abilità", dict(prove=[1, 1, 1, 2, None]), "abil", 7, "Prova 5, "), ("Conoscenza", dict(ripassi=pieni(7)), "cono", 4, "Ripasso 8, Raffiche e scuffia."),
+                                  ("Competizione", dict(regate={"r0.4:principianti": (3, False)}), "comp", 2, "la Regata nelle raffiche (con avversari)."), ("Esperienza", dict(lezioni=ORD[:17]), "esp", 5, "Lezione 18, ")):
             m = await M(prog(**{**base, **mod})); area(m)
             chk("L2", m["pt"][k] == att and m["manca"] == f"Ti mancano punti in {nome}; poi l'esame." and len(m["sugg"]) == 1 and m["sugg"][0].startswith(voce),
                 f"L2 {nome} sotto il minimo: {m['pt'][k]} «{m['manca']}» {m['sugg']}")
@@ -81,14 +86,19 @@ async def main():
                 elif esame: chk("L2", m["superato"] and m["manca"] is None and m["sugg"] == [], f"L2 tutto a posto ed esame: superato {m['superato']} «{m['manca']}»")
                 else: chk("L2", m["manca"] == "Ti manca l'esame." and m["sugg"] == ["l'esame su tutte le lezioni."] and not m["superato"], f"L2 totale 29 senza esame: «{m['manca']}»")
         # esame superato ma un'area sotto: non superato
-        m = await M(prog(**{**base, "prove": [0, 0, 0, 0, 1], "lezioni": range(5)}, esame=True))
+        m = await M(prog(**{**base, "prove": [0, 0, 0, 0, 1], "lezioni": ORD[:17]}, esame=True))
         chk("L2", not m["superato"] and "Esperienza" in m["manca"], f"L2 esame superato, Esperienza 5: superato {m['superato']}")
-        # soglie dei ripassi, conti fatti qui con le frazioni
+        # soglie dei ripassi, conti fatti qui con le frazioni. Dalla 1.2.4 un ripasso vale 0, 1 o 2 punti su 40, e Conoscenza = 12 × punti / 40 per difetto:
+        # con gli altri 19 pieni (38 punti) si distingue 2 da meno di 2 (12 contro 11); con 16 pieni e uno a metà (33) si distingue 0 da almeno 1 (9 contro 10)
+        meta = lambda j: next(s for s in range(NQ[j] + 1) if 0.6 <= s / NQ[j] < 0.8)
         for i, n in enumerate(NQ):
+            j = 0 if i else 1; altri = [k for k in range(20) if k not in (i, j)][:16]
             for s in range(n + 1):
-                att = 2 if s / n >= 0.8 else 1 if s / n >= 0.6 else 0
-                m = await M(prog(ripassi={i: s}))
-                chk("L2 ripassi", m["pt"]["cono"] == att, f"L2 ripasso {i + 1}, {s} su {n}: {m['pt']['cono']} punti, attesi {att}")
+                x = 2 if s / n >= 0.8 else 1 if s / n >= 0.6 else 0
+                m = await M(prog(ripassi={**{k: NQ[k] for k in range(20) if k != i}, i: s}))
+                chk("L2 ripassi", m["pt"]["cono"] == (12 if x == 2 else 11), f"L2 ripasso {i + 1}, {s} su {n}, altri pieni: {m['pt']['cono']} punti, attesi {12 if x == 2 else 11}")
+                m = await M(prog(ripassi={**{k: NQ[k] for k in altri}, j: meta(j), i: s}))
+                chk("L2 ripassi", m["pt"]["cono"] == (10 if x >= 1 else 9), f"L2 ripasso {i + 1}, {s} su {n}, base 33: {m['pt']['cono']} punti, attesi {10 if x >= 1 else 9}")
         print("L2 ripassi: lunghezze", sorted(set(NQ)), "| con 4 domande 3 su 4 = 1 punto, 4 su 4 = 2:",
               any(n == 4 for n in NQ), "| 60% e 80% esatti provati:", any(n % 5 == 0 for n in NQ))
         # regate: il migliore dei due livelli, «nessuno» e n diverso da 4 non contano; pulite contate a parte, senza punti
@@ -102,7 +112,7 @@ async def main():
         chk("L2 regate", m["pt"]["comp"] == 0, f"L2 flotta di 3: {m['pt']['comp']} punti")
         m = await M(prog()); area(m)
         chk("L2", m["totale"] == 0 and m["manca"] == "Ti mancano punti in Abilità, Conoscenza, Competizione ed Esperienza; poi l'esame." and len(m["sugg"]) == 4, f"L2 vuoto: «{m['manca']}» {m['sugg']}")
-        m = await M(prog([0] * 5, range(5), piene, {"r0.4:esperti": (1, True), "r1.4:esperti": (1, True)}, range(6), True)); area(m)
+        m = await M(prog([0] * 5, range(5), piene, {"r0.4:esperti": (1, True), "r1.4:esperti": (1, True)}, TUTTE, True)); area(m)
         chk("L2", m["totale"] == 46 and m["superato"], f"L2 tutto al massimo: {m['totale']} superato {m['superato']}")
         # controllo del metro: ogni area vista almeno una volta diversa da zero e diversa dal massimo
         for k, mx in (("abil", 20), ("cono", 12), ("comp", 8), ("esp", 6)):
@@ -138,11 +148,11 @@ async def main():
         print("L3 giro dei suggerimenti:", [x.split(": ", 1)[1] for x in giro])
         await ctx.close()
         ctx, q, e = await menu(650, GIOC["A"][0], "libero")
-        chk("L3", await q.locator("#libManca").count() == 0 and "In arrivo" in await q.inner_text(".tiles"), "L3: nel gioco libero niente libretto, «In arrivo» sì")
+        chk("L3", await q.locator("#libManca").count() == 0 and "Tornei" in await q.inner_text(".tiles"), "L3: nel gioco libero niente libretto, i tornei sì (1.2.4: «In arrivo» tolto)")
         await ctx.close()
         # L4: spazio con ogni tipo di riga «cosa manca» (la più lunga è il caso peggiore): carriera vuota (Abilità), Conoscenza,
         # Competizione, Esperienza con sei lezioni da fare, totale, esame, superato
-        tutto = dict(prove=[0] * 5, pulite=range(5), ripassi=piene, regate={"r0.4:esperti": (1, False), "r1.4:esperti": (1, False)}, lezioni=range(6))
+        tutto = dict(prove=[0] * 5, pulite=range(5), ripassi=piene, regate={"r0.4:esperti": (1, False), "r1.4:esperti": (1, False)}, lezioni=TUTTE)
         righe = [None, prog(**{**tutto, "ripassi": None}), prog(**{**tutto, "regate": None}), prog(**{**tutto, "lezioni": ()}),
                  prog(**{**base, "prove": [0, 0, 0, 0, 2]}), prog(**tutto), prog(**tutto, esame=True)]
         veri = True

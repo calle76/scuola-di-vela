@@ -1,3 +1,4 @@
+# 1.2.4: le pagine nascondono le 14 lezioni nuove (sorgente.NASCONDI_NUOVE): qui si misura la carriera sulle 6 lezioni di prima.
 # Collaudo della 1.0: una carriera intera, da zero all'attestato, nella stessa pagina e nello stesso salvataggio (criteri I1-I4 di
 # docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md, §14, scritti prima del codice). «Carriera» si sceglie cliccando il selettore; alla fine si
 # legge solo quello che il gioco ha salvato. Serve #collaudo, perché i piloti usano l'aggancio __sv.
@@ -38,7 +39,7 @@ async def main():
     t_inizio = time.time()
     async with async_playwright() as pw:
         b = await getattr(pw, __import__("os").environ.get("BROWSER", "chromium")).launch()
-        pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+        pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); await pg.add_init_script(sorgente.NASCONDI_NUOVE)
         await pg.add_init_script(SEME); await pg.goto(URL); await pg.wait_for_timeout(300)
         await pg.evaluate("() => localStorage.clear()"); await pg.reload(); await pg.wait_for_timeout(300)
         await pg.click("#modoSel button[data-v='carriera']")
@@ -91,6 +92,7 @@ async def main():
         # ---- ripassi ed esame, dal menu, a clic
         await pg.evaluate("() => document.getElementById('toMenu').click()"); await pg.wait_for_timeout(200)
         for li in range(6):
+            g = await pg.evaluate(f"() => gruppoDi(['l', {li}])"); await pg.click(f"#schede button[data-g='{g}']")   # 1.2.4: i ripassi stanno nella scheda del loro gruppo
             await pg.click(f"[data-q='{li}']")
             while not await pg.locator("#qzAgain").count():
                 q = await pg.inner_text(".qz .q"); g = await pg.evaluate("([li, q]) => __B.QUIZ[li].find(r => r[0] === q)[1]", [li, q])

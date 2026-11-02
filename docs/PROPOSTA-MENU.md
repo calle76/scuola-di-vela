@@ -54,3 +54,8 @@
 ## 5. Da decidere (Ale)
 
 1. **Bozza A (schede, ripassi su due colonne) o B (tendine)?** Io consiglio la A: è l'unica che sta nella finestra in tutti i casi provati.
+
+## 6. Avanzamento
+
+- **Ale, 2 novembre 2026:** «va bene la A, vai avanti».
+- **1.2.4:** fatto. M1-M6 verdi in Chromium e Firefox (`collaudo_menu.py`). Aggiunta alla proposta: i meriti contano le lezioni visibili (nel gioco tutte), perché i collaudi della carriera nascondono le nuove. Collaudi adattati elencati nel `CHANGELOG.md`.

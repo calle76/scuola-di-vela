@@ -92,7 +92,7 @@ async def main():
         global LIM_C2; LIM_C2 = await pg.evaluate("() => ES_C2")
         tit = await pg.evaluate("() => [15, 16, 17, 18, 19].map(i => LESSONS[i].name + ' ' + LESSONS[i].title + ' ' + LESSONS[i].steps.findIndex(s => s.esercizio))")
         print("lezioni:", tit)
-        chk("A0 le lezioni D5, D6, D7, C1 e C2 hanno un passo con l'esercizio", len(tit) == 5 and all(t.startswith("Lezione " + k) and not t.endswith("-1") for t, k in zip(tit, ["D5", "D6", "D7", "C1", "C2"])), str(tit))
+        chk("A0 le lezioni D5, D6, D7, C1 e C2 hanno un passo con l'esercizio", len(tit) == 5 and all(t.startswith("Lezione " + k + " ") and not t.endswith("-1") for t, k in zip(tit, ["16", "17", "20", "18", "19"])), str(tit))   # 1.2.4: D5, D6, D7, C1, C2 sono le lezioni 16, 17, 20, 18, 19 del menu
         R = {}
         for nome, li in LEZ.items():
             for pil in ("buono", "mani", "sbaglia"):

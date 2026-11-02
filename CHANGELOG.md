@@ -17,6 +17,40 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.4 — Il menu nuovo: tutte le 20 lezioni, in tre gruppi (ramo `pulizia`)
+
+`docs/PROPOSTA-MENU.md`, bozza A scelta da Ale il 2 novembre («va bene la A»). **Da questa versione le 14 lezioni nuove si vedono**, e con loro l'esame da 34 domande e le 19 voci nuove del glossario.
+
+**Il menu.**
+- La Scuola ha **tre schede**: 1 · La barca (11 voci), 2 · Vento e raffiche (5), 3 · Regole e partenze (9), ognuna con il conto delle voci fatte. Le voci sono numerate da 1 a 25 di seguito. Il menu apre la scheda della prima voce da fare e, tornando da una lezione o da una prova, quella della voce appena aperta.
+- Le lezioni si chiamano **Lezione 1 … Lezione 20** nell'ordine approvato (`PROPOSTA-LEZIONI-SCUOLA.md` §5); i ripassi hanno lo stesso numero. I salvataggi restano legati all'indice interno: **i progressi di prima restano** (controllato, M3).
+- I **ripassi** della scheda aperta stanno su due colonne («12 · Mure opposte»); «✓» = migliore almeno l'80%, il punteggio si legge passando sopra col mouse. Poi l'esame.
+- Tolto il riquadretto «In arrivo · Altri tipi di barca».
+
+**Lezione 4 (era la 3) «Andature e mure», senza precedenze** (decisione del 31 ottobre): la pagina «Le mure» rimanda al gruppo 3 dalla lezione 12; tolta dal suo quiz la domanda «chi deve lasciare strada» (6 → 5 domande; la stessa cosa la chiede la lezione 12).
+
+**Testi:** 84 nomi e voci del glossario rinumerati; i rimandi «lezione 5» per la strambata ora dicono 6 (quattro frasi); le istruzioni degli esercizi in regata dicono il numero nuovo (16, 17, 20, 18, 19).
+
+**Carriera (libretto):** Conoscenza = 12 × punti dei quiz / punti massimi, Esperienza = 6 × lezioni fatte / lezioni, per difetto, su tutte le lezioni visibili (oggi le 20). Massimi e minimi come prima (totale 46, ne servono 29). **Chi aveva già i meriti dalle 6 lezioni li vede calare** finché non fa le nuove: con le 6 lezioni fatte e i loro 6 quiz pieni, Esperienza scende da 6 a 1 e Conoscenza da 12 a 3. È voluto (la scuola è più lunga), ma lo dico. «Solo le visibili» è un'aggiunta alla proposta: nel gioco sono tutte visibili e il conto è quello scritto; serve ai collaudi che nascondono le lezioni nuove per misurare la carriera sulle 6 di prima.
+
+**Difetti trovati e corretti prima del risultato:** il pulsante dell'esame bloccato diceva «prima i ripassi 1 e 3» con i numeri vecchi (ora quelli del menu).
+
+**Misurato** (`tests/collaudo_menu.py`, nuovo; criteri M1-M6 scritti prima):
+- **M1:** menu senza pixel di eccesso con ognuno dei 3 gruppi aperto, in gioco libero e in carriera, a 1360×650 e 1360×768: 12 casi su 12, in Chromium e Firefox.
+- **M2:** numeri da 1 a 25 senza buchi; nomi e titoli nell'ordine della proposta; le 25 voci aprono ognuna la sua lezione o prova; «Lezione N» e «Ripasso N» giusti per tutte e 20.
+- **M3:** un salvataggio di prima (6 lezioni, 2 prove con record e stella, 2 quiz) dà le stesse 8 voci fatte, gli stessi record e gli stessi punteggi, in gioco libero e in carriera; controprova: salvataggio vuoto, 0 voci fatte su 25.
+- **M4:** nessun «Lezione B/C/D…» nei testi di lezioni, quiz, esami, prove e glossario (più di 300, letti dalla pagina); i rimandi per numero (2, 6, 12) puntano alla lezione giusta; i 5 esercizi dicono il numero della loro lezione; 13 voci del glossario controllate sul titolo della lezione.
+- **M5:** «Andature e mure» senza la parola «precedenza», quiz di 5 domande, pagina «Le mure».
+- **M6:** senza `#collaudo` una voce per gruppo si apre, si torna al menu sulla sua scheda, nessun errore.
+- **Collaudi adattati** (detto uno per uno):
+  - `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_esame`, `collaudo_carriera_intera` ora nascondono nella pagina le 14 lezioni nuove (`sorgente.NASCONDI_NUOVE`) e misurano i meccanismi sulle 6 lezioni di prima, come facevano; il caso con le 20 lezioni lo misurano `collaudo_esame_nuove` (esame da 34), `collaudo_libretto` e `collaudo_menu`.
+  - `collaudo_libretto` riscritto sulle 20 lezioni con i punti attesi calcolati dalla regola della proposta: i giocatori del §12 hanno gli stessi totali di prima (per esempio 14 ripassi pieni su 20 = 8 punti, come 4 su 6); le soglie dei ripassi (60% e 80%) controllate con due basi diverse.
+  - `collaudo_carriera` K5: **non confronta più il testo del menu con la 1.0.1** (il menu è cambiato apposta), solo il piede; K2-K3 leggono il punteggio dei ripassi dal testo che compare passando sopra.
+  - `collaudo_esame_nuove` G0 nuovo: di base nessuna lezione nascosta, esame da 34 e 28, glossario di 67 voci; G1 ora le nasconde apposta.
+  - `collaudo_quiz`, `collaudo_linea`, `collaudo_pannello` (la prova 5 sta nella scheda 2), `collaudo_esercizi_regata` (nomi nuovi): adattati.
+- Verdi: tutti quelli sopra, più `collaudo_lezioni`, `collaudo_pannello_lezioni`, `collaudo_pilota_lezioni --veloce`, `collaudo_vista`, `collaudo_esercizi_regata --semi 1-3`, `collaudo_versione`; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. Regate non toccate (`js/regate.js` invariato).
+- **Da sapere, peso basso:** `collaudo_impronta.py` (solo per le pulizie del codice, fuori dal giro completo) dice «NON VALIDO» perché cerca la barca scelta con `lv == 2`, che la pulizia della 1.1.0 ha tolto: non dipende da questa versione, e andrà aggiornato alla prossima pulizia.
+
 ## 1.2.3 — Esame e glossario con le lezioni nuove (ramo `pulizia`)
 
 `docs/PROPOSTA-ESAME-E-GLOSSARIO.md`, approvata da Ale il 2 novembre («sì perfetto»). Finché le 14 lezioni nuove restano nascoste nel menu, **per chi gioca non cambia niente**; tutto entra da solo quando il menu nuovo le mostrerà.

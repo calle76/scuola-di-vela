@@ -25,7 +25,7 @@
     $("rightBtn").hidden = !S.capsized || S.righting > 0 || noRight;
     $("capOverlay").hidden = !S.capsized || S.righting > 0 || noRight;
     $("capText").textContent = S.capCause === "gybe"
-      ? "Hai scuffiato per una strambata: il vento è passato dall'altro lato con la vela tutta aperta e il boma ha attraversato la barca di colpo. Per strambare senza rischi: prima cazza, poi poggia, poi lasca (lezione 5)."
+      ? "Hai scuffiato per una strambata: il vento è passato dall'altro lato con la vela tutta aperta e il boma ha attraversato la barca di colpo. Per strambare senza rischi: prima cazza, poi poggia, poi lasca (lezione 6)."
       : "Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.";
     // suggerimento
     const kind = st ? (st.hintKind || "sail") : "tt";

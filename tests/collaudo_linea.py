@@ -163,7 +163,7 @@ async def parte2(b):
     p = json.loads(await pg.evaluate("localStorage.getItem('scuolaVelaSim.v1')")); g = json.loads(await pg.evaluate("localStorage.getItem('scuolaVelaGhost.v1')"))
     v["record, stelle e fantasmi vecchi delle prove cancellati"] = not any(k in p["best"] or k in p["clean"] or k in g for k in ["m0", "m1", "m3.2", "m4.3", "m0.2", "m3.4", "r0.3"])   # 1.0.6 e 1.0.11: anche le chiavi delle barche vecchie
     v["regate e completamenti conservati"] = p["best"].get("r0.4") == 200 and p["clean"].get("r0.4") is True and "r0.2b" in g and p["done"].get("m0") is True
-    await pg.click("button.item[data-k='3']"); await pg.wait_for_timeout(500)   # Prova 1 nella sequenza della Scuola
+    await pg.locator("#menu button.item", has_text="Prova 1").click(); await pg.wait_for_timeout(500)   # Prova 1 nella Scuola (1.2.4: per nome, il numero è cambiato)
     v["riquadro delle istruzioni aperto"] = await pg.is_visible("#bGo")
     await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
     testi = await pg.evaluate("window.__testi")

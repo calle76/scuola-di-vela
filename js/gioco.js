@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.3"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.4"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -123,12 +123,15 @@
   const MERITI = [["abil", "Abilità", 20, 8], ["cono", "Conoscenza", 12, 6], ["comp", "Competizione", 8, 3], ["esp", "Esperienza", 6, 6]];
   const TOT_MIN = 29;
   function meriti(p){
+    const VIS = ORD_L.filter(i => !LESSONS[i].nascosta);
     const racePt = i => Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; }));
     const pt = {
       abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
-      cono: QUIZ.reduce((a, q, i) => { const s = p.quiz?.["q" + i]; return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
+      // 1.2.4 (docs/PROPOSTA-MENU.md §2): conoscenza ed esperienza su tutte le lezioni visibili (oggi le 20), in proporzione, con gli stessi massimi e minimi di prima.
+      // Solo le visibili, come l'esame: i collaudi che nascondono le lezioni nuove ritrovano i conti delle 6 lezioni di prima
+      cono: Math.floor(MERITI[1][2] * VIS.reduce((a, i) => { const s = p.quiz?.["q" + i], q = quizDi(i); return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0) / (2 * VIS.length) + 1e-9),
       comp: RACES_CARRIERA.reduce((a, rc, i) => a + racePt(i), 0),
-      esp: LESSONS.filter((L, i) => !L.nascosta && p.done["l" + i]).length }; // 1.1.4: le lezioni nuove della scuola (nascosta) entrano nei meriti col menu nuovo
+      esp: Math.floor(MERITI[3][2] * VIS.filter(i => p.done["l" + i]).length / VIS.length + 1e-9) };
     const pulite = RACES_CARRIERA.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
     const totale = MERITI.reduce((a, [k]) => a + pt[k], 0), esame = !!p.exam?.superato;
     // 0.23, dopo la prova di Ale: una riga con tutto quello che manca, e un suggerimento concreto per ogni area che manca
@@ -139,13 +142,13 @@
       : totale < TOT_MIN ? (TOT_MIN - totale === 1 ? "Ti manca 1 punto" : "Ti mancano " + (TOT_MIN - totale) + " punti") + " al totale" + poi
       : !esame ? "Ti manca l'esame." : null;
     const voce = k => {
-      if (k === "esp"){ const i = LESSONS.findIndex((L, j) => !L.nascosta && !p.done["l" + j]); return i < 0 ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
+      if (k === "esp"){ const i = VIS.find(j => !p.done["l" + j]); return i === undefined ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
       if (k === "abil"){
         const fas = i => medalOf(i, p.best[recK("m" + i)]), tit = i => "Prova " + (i + 1) + ", " + MISSIONS[i].title;
         let i = MISSIONS.findIndex((m, j) => !fas(j)); if (i >= 0) return tit(i) + ".";
         i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
         i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
-      if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
+      if (k === "cono"){ const i = VIS.find(j => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < quizDi(j).length * 4; }); return i === undefined ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
       const rp = RACES_CARRIERA.map((rc, i) => racePt(i));
       const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES_CARRIERA[i].title + " (con avversari).";
     };
@@ -176,18 +179,20 @@
   const fmtTime = sec => { const m = Math.floor(sec / 60), s2 = sec % 60; return m ? m + " min " + s2 + " s" : s2 + " s"; };
 
   function openItem(it){
+    if (it !== "free" && it[0] !== "r") menuGr = gruppoDi(it); // 1.2.4: tornando al menu si ritrova la scheda della voce aperta
     $("menu").hidden = true; $("game").hidden = false; resize();
     if (it === "free") startFree(); else if (it[0] === "r") startRace(it[1]); else it[0] === "l" ? startLesson(it[1]) : startMission(it[1]);
     window.scrollTo(0, 0); canvas.focus();
   }
   const oggi = () => { const d = new Date(); return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); };
   const fmtData = d => new Date(d + "T12:00").toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
-  const ripName = li => "Ripasso " + (li + 1); // 1.0.2: «Lezione» resta alla Scuola; ripassi ed esame usano «Ripasso N»
+  const ripName = li => "Ripasso " + numLez(li); // 1.0.2: «Lezione» resta alla Scuola; ripassi ed esame usano «Ripasso N»; dalla 1.2.4 N è il numero della lezione nel menu
+  let menuGr = null; // 1.2.4: la scheda aperta della Scuola (gruppo); null = quella della prima voce da fare
   const ripElenco = a => (a.length > 1 ? "ripassi " + a.slice(0, -1).join(", ") + " e " + a[a.length - 1] : "ripasso " + a[0]);
   function esameBtn(){
     const ex = modo === "carriera" ? progress.exam : null, tot = domandeEsame();
     if (ex?.superato) return `<button id="goEsame" disabled>Esame superato<small>${ex.voto} su ${ex.n || 20}</small></button>`; // 1.2.3: ex.n, le domande di quell'esame (prima sempre 20)
-    if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${ripElenco(ex.ripasso.map(i => i + 1))}</small></button>`;
+    if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${ripElenco(ex.ripasso.map(numLez))}</small></button>`;
     return `<button id="goEsame">Esame su tutte le lezioni<small>${tot} domande, ne servono ${sogliaEsame(tot)}</small></button>`;
   }
   // 0.24, attestato (solo carriera): compare da solo la prima volta che si torna al menu con il livello superato, poi dal libretto
@@ -213,9 +218,12 @@
     let nuovo = false;
     if (modo === "carriera" && !progress.brevetto && meriti(progress).superato){ progress.brevetto = { data: oggi() }; saveProgress(); nuovo = true; }
     $("game").hidden = true; $("menu").hidden = false;
-    const doneCount = SEQ.filter(([t, i]) => progress.done[t + i]).length;
+    const vis = ([t, i]) => t !== "l" || !LESSONS[i].nascosta, VSEQ = SEQ.filter(vis); // 1.2.4: nel gioco nessuna lezione è nascosta; i collaudi possono nasconderle
+    const doneCount = VSEQ.filter(([t, i]) => progress.done[t + i]).length;
+    if (menuGr === null){ const p = VSEQ.findIndex(([t, i]) => !progress.done[t + i]); menuGr = p < 0 ? 0 : gruppoDi(VSEQ[p]); }
     const esc = t => t.replace(/"/g, "&quot;");
-    const rows = SEQ.map(([t, i], k) => {
+    const schede = GRUPPI.map(([nome, voci], j) => { const v = voci.filter(vis); return `<button data-g="${j}" aria-pressed="${j === menuGr}">${j + 1} · ${nome} <small>${v.filter(([t, i]) => progress.done[t + i]).length}/${v.length}</small></button>`; }).join("");
+    const rows = VSEQ.map(([t, i], k) => { if (gruppoDi([t, i]) !== menuGr) return "";
       const key = t + i, done = progress.done[key];
       const kind = t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
       const title = t === "l" ? LESSONS[i].title : MISSIONS[i].title;
@@ -230,26 +238,28 @@
     const torBtn = (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
         const st = chiuso ? "dopo il brevetto di livello 1" : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
         return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo dell'1b</span><span class="state ${F ? "ok" : "todo"}">${st}</span></button>`; })(); // senza descrizione (la dà il riquadro che si apre); nel gioco libero sta nel terzo riquadro: in «Regate» il menu non stava in 1360x650
-    const quiz = LESSONS.map((L, i) => { if (L.nascosta) return ""; const best = progress.quiz?.["q" + i];
-      return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + quizDi(i).length : quizDi(i).length + " domande"}</small></button>`; }).join("");
+    // 1.2.4: i ripassi della scheda aperta, su due colonne; ✓ = migliore almeno l'80%, il punteggio si legge passando sopra
+    const quiz = `<div class="rip2">` + GRUPPI[menuGr][1].filter(([t, i]) => t === "l" && !LESSONS[i].nascosta).map(([, i]) => { const L = LESSONS[i], best = progress.quiz?.["q" + i], n = quizDi(i).length;
+      return `<button data-q="${i}" title="${esc(ripName(i) + " · " + L.title + " · " + (best !== undefined ? "migliore: " + best + " su " + n : n + " domande"))}"><span>${numLez(i)} · ${L.title}</span>${best !== undefined && best * 5 >= n * 4 ? "<small>✓</small>" : ""}</button>`; }).join("") + `</div>`;
     $("menu").innerHTML = `<div class="menu-inner">
       <header class="menu-head"><div><h1>Scuola di vela <span class="ver">V. ${VERSIONE}</span></h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
         <div class="head-r"><div class="seg" id="modoSel"><button data-v="libero" aria-pressed="${modo === "libero"}">Gioco libero</button><button data-v="carriera" aria-pressed="${modo === "carriera"}">Carriera</button></div>
         <button class="pill" id="menuGloss">Glossario</button></div></header>
       <div class="tiles">
-        <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></div></section>
+        <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${VSEQ.length} completate</span></div><div class="seg schede" id="schede">${schede}</div><div class="items">${rows}</div></div></section>
         <section class="tile">
           <div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}${modo === "carriera" ? torBtn : ""}</div></div>
           <div><div class="part-head"><h2>Navigazione libera</h2></div><div class="items"><button class="item wide free" id="goFree"><span class="num">⛵</span><span class="title">Naviga senza obiettivi</span><span></span><span class="desc">Scegli vento e raffiche e prova quello che vuoi.</span></button></div></div>
         </section>
         <section class="tile">
-          <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
+          <div><div class="part-head"><h2>Ripassi ed esame</h2><span>gruppo ${menuGr + 1} · ${GRUPPI[menuGr][0]}</span></div><div class="review">${quiz}
             ${esameBtn()}</div></div>
-          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>Tornei</h2></div><div class="items">${torBtn}</div></div><div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">Altri tipi di barca.</p></div>`}
+          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>Tornei</h2></div><div class="items">${torBtn}</div></div>`}
         </section>
       </div>
       <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><span><button class="linkish" id="regOpen">Regate registrate</button> <button class="linkish" id="resetProg">Azzera i progressi</button></span></footer></div>`;
-    $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
+    $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(VSEQ[+b.dataset.k]));
+    $("schede").onclick = e => { const b = e.target.closest("button[data-g]"); if (b && +b.dataset.g !== menuGr){ menuGr = +b.dataset.g; showMenu(); } };
     $("goFree").onclick = () => openItem("free");
     $("goTor").onclick = torApri;
     $("goEsame").onclick = openEsame;
@@ -309,7 +319,7 @@
   const wrongItem = w => `<div class="wq"><p class="wt">${w.q}</p><p>Hai risposto: ${w.given}</p><p>Giusta: <b>${w.right}</b></p><p class="expl">${w.expl}</p>${w.passo ? `<p class="from">dal passo «${w.passo}»</p>` : ""}</div>`;
   function renderEsito(b){
     const n = qz.qs.length, soglia = sogliaEsame(n), ok = qz.score >= soglia;
-    const groups = LESSONS.map((L, li) => [L, qz.wrong.filter(w => w.li === li)]).filter(([, ws]) => ws.length);
+    const groups = ORD_L.map(li => [LESSONS[li], qz.wrong.filter(w => w.li === li)]).filter(([, ws]) => ws.length); // 1.2.4: nell'ordine della Scuola
     // 0.24, carriera: un esame superato è definitivo (voto unico); non superato, prima il ripasso completo delle lezioni sbagliate
     const car = modo === "carriera", rip = groups.map(([L]) => LESSONS.indexOf(L));
     if (car){ progress.exam = ok ? { superato: true, voto: qz.score, n, data: oggi() } : { superato: false, voto: qz.score, n, data: oggi(), ripasso: rip }; saveProgress(); }

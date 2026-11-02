@@ -1,3 +1,4 @@
+# 1.2.4: le pagine nascondono le 14 lezioni nuove (sorgente.NASCONDI_NUOVE): qui si misura la carriera sulle 6 lezioni di prima.
 # Collaudo della 0.22: bivio gioco libero / carriera, salvataggi e fantasmi separati (criteri K1-K5 di
 # docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md, §11, scritti prima del codice). La modalità si cambia sempre cliccando il selettore.
 # K1 (con #collaudo): il pilota di collaudo_fasce.py, letto dal suo file, completa la prova 1 in una modalità;
@@ -32,7 +33,7 @@ async def k1(b):
     for verso, (attiva, altra) in (("carriera", (CAR, LIB)), ("libero", (LIB, CAR))):
         ga, go = (GCAR, GLIB) if verso == "carriera" else (GLIB, GCAR)
         for seme in (1, 2, 3):
-            ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page()
+            ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page(); await pg.add_init_script(sorgente.NASCONDI_NUOVE)
             errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
             await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo")
             pre = {altra: finto(999), go: FANT}
@@ -67,7 +68,7 @@ async def ripasso_tutto_giusto(pg):
     return n
 
 async def k2_k4(b):
-    ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page()
+    ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page(); await pg.add_init_script(sorgente.NASCONDI_NUOVE)
     errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); dialoghi = []
     pg.on("dialog", lambda d: (dialoghi.append(d.message), asyncio.ensure_future(d.accept())))
     await pg.goto(BASE); await scrivi(pg, {LIB: finto(500, quiz=3), GLIB: FANT}); await pg.reload(); await pg.wait_for_timeout(300)
@@ -78,13 +79,13 @@ async def k2_k4(b):
     dopo = await pg.evaluate(LEGGI)
     chk(dopo.get(LIB) == prima[LIB] and dopo.get(GLIB) == prima[GLIB], "K2: il ripasso in carriera non tocca il gioco libero (byte per byte)")
     chk(json.loads(dopo.get(CAR, "{}")).get("quiz", {}).get("q0") == n, f"K2: ripasso scritto in carriera ({n} su {n})")
-    chk(f"migliore: {n} su {n}" in await pg.locator("[data-q='0']").inner_text(), "K2: il menu della carriera mostra il ripasso")
+    chk(f"migliore: {n} su {n}" in await pg.locator("[data-q='0']").get_attribute("title"), "K2: il menu della carriera mostra il ripasso")   # 1.2.4: il punteggio sta nel testo che compare passando sopra
     chk(dopo.get(MODO) == "carriera", "K2: modalità salvata")
     # K3
     await pg.reload(); await pg.wait_for_timeout(300)
-    chk(await modo(pg) == "carriera" and f"migliore: {n} su {n}" in await pg.locator("[data-q='0']").inner_text(), "K3: ricaricando resta la carriera, con i suoi dati")
+    chk(await modo(pg) == "carriera" and f"migliore: {n} su {n}" in await pg.locator("[data-q='0']").get_attribute("title"), "K3: ricaricando resta la carriera, con i suoi dati")
     await scegli(pg, "libero"); await pg.reload(); await pg.wait_for_timeout(300)
-    chk(await modo(pg) == "libero" and "migliore: 3 su" in await pg.locator("[data-q='0']").inner_text(), "K3: ricaricando resta il gioco libero, con i suoi dati")
+    chk(await modo(pg) == "libero" and "migliore: 3 su" in await pg.locator("[data-q='0']").get_attribute("title"), "K3: ricaricando resta il gioco libero, con i suoi dati")
     # K4: dati in tutte e due, poi «Azzera» in carriera e in libero
     for m, (mia, mg), (altra, ag) in (("carriera", (CAR, GCAR), (LIB, GLIB)), ("libero", (LIB, GLIB), (CAR, GCAR))):
         await scrivi(pg, {LIB: finto(500, quiz=3), GLIB: FANT, CAR: finto(400, quiz=5), GCAR: FANT, MODO: m}); await pg.reload(); await pg.wait_for_timeout(300)
@@ -107,7 +108,7 @@ async def k5(b):
     vecchio.write_bytes(subprocess.run(["git", "show", "8da0d7c:index.html"], cwd=QUI.parent, capture_output=True, check=True).stdout)
     testi = []
     for url in (BASE, vecchio.as_uri()):
-        ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page()
+        ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page(); await pg.add_init_script(sorgente.NASCONDI_NUOVE)
         await pg.goto(url); await pg.wait_for_timeout(300)
         tiles, foot = await pg.inner_text(".tiles"), await pg.inner_text(".menu-foot")
         if url == BASE: tiles = re.sub(r"⚑\nRegata nei salti di vento\nDa fare\n+[^\n]*\n", "", tiles)  # 1.0.28: riquadro voluto del livello 2, nel menu del gioco libero
@@ -124,7 +125,9 @@ async def k5(b):
             chk(await modo(pg) == "libero", "K5: senza chiavi si parte in gioco libero")
             chk(MODO not in await pg.evaluate(LEGGI), "K5: aprire il menu non scrive la modalità")
         await ctx.close()
-    chk(testi[0] == testi[1], "K5: riquadri e piede del menu uguali alla 1.0.1 (salvo i due testi voluti della 1.0.2, il ripasso 5 con 6 domande della 1.0.20 e i riquadri voluti della 1.0.28, 1.0.34 e 1.0.37 e il link della 1.0.60)")
+    # 1.2.4: il menu è cambiato apposta (schede per gruppo, 25 voci, ripassi su due colonne: docs/PROPOSTA-MENU.md), quindi i riquadri non si confrontano più
+    # con la 1.0.1; resta il piede. Il contenuto del menu nuovo lo controlla collaudo_menu.py.
+    chk(testi[0][1] == testi[1][1], "K5: piede del menu uguale alla 1.0.1 (salvo il testo voluto della 1.0.2 e il link della 1.0.60)")
 
 async def main():
     global QUIZ_JS
