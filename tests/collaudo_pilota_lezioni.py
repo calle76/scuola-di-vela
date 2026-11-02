@@ -187,10 +187,12 @@ function* spingiBoma(C){                                                  // lez
   yield* guida(C, { twa: 90, centra: true, regola: true, resta: true });
 }
 function* scarsi(C){                                                     // lezione B5: bolina a 50° letti; vento medio da nord (scritto sul mare): scarso = prua oltre 50° dal nord
-  const inBolina = stabile(() => Math.abs(n180(prua(C, 50) - sv.S.h)) <= 4, 3);   // «mettiti di bolina, guarda la Prua per un po'»: decide solo dopo 3 s di bolina tenuta
+  const inBolina = stabile(() => twaV(C) >= 40 && twaV(C) <= 60, 2);    // «mettiti di bolina, guarda la Prua per un po'»: decide dopo 2 s di bolina (40-60° letti). 2 nov 2026: prima
+                                                                          // chiedeva 3 s a ±4° dalla prua voluta, e mentre inseguiva il vento che gira non ci riusciva proprio al massimo dello scarso (semi 51 e 79: 98/100)
   for (let n = 0; n < 5000; n++){
     sterza(C, prua(C, 50), 4);
-    const sc = Math.abs(n180(sv.S.h)) - 50 + C.bias;                      // quanto la prua è più lontana dal vento medio della prua media
+    const sc = Math.abs(n180(prua(C, 50))) - 50 + C.bias;                 // scarso: la prua di bolina (Prua del pannello, un numero) contro la prua media (50° letti dal nord, - errore di lettura): un errore
+                                                                          // costante si annulla, come per chi prende la media della Prua; prima si usava la prua del momento, con dentro l'errore di timone
     if (inBolina() && sc >= 10 && kn() > 2 && Math.abs(sv.S.r) < 3){ suTutti(); yield* virare(C); continue; }
     yield C.rt;
   }
