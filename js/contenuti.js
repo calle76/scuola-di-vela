@@ -744,7 +744,9 @@
   // Esame del livello 1 (0.20): una domanda per concetto insegnato, col titolo del passo da cui nasce.
   // ESAME[lezione] = [[passo, domanda, giusta, [sbagliate], spiegazione], …]; ogni esame ne estrae QUOTE[lezione] per lezione.
   // Ogni lezione deve avere almeno QUOTE + 1 domande (lo controlla tests/collaudo_esame.py).
-  const QUOTE = [4, 3, 4, 3, 3, 3], SOGLIA_ESAME = 16;
+  // 1.2.3 (docs/PROPOSTA-ESAME-E-GLOSSARIO.md, Ale 2 nov 2026): le lezioni nuove (dalla 7) danno QUOTA_NUOVE domande, prese dal loro campo esame;
+  // entrano solo le lezioni visibili nel menu (non nascosta); soglia = SOGLIA_ESAME delle domande, arrotondata per eccesso (16 su 20, 28 su 34).
+  const QUOTE = [4, 3, 4, 3, 3, 3], QUOTA_NUOVE = 1, SOGLIA_ESAME = 0.8;
   const ESAME = [
     [ ["Dritta e sinistra", "La barca punta verso il basso dello schermo. Il lato della barca che vedi a destra sullo schermo si chiama…", "sinistra", ["dritta", "sopravento", "poppa"], "Dritta e sinistra si contano guardando verso prua: se la prua punta in basso, sono invertite rispetto allo schermo."],
       ["Sopravento e sottovento", "Dove siede il timoniere, rispetto al vento?", "Sopravento, per fare contrappeso", ["Sottovento, per stare vicino al boma", "Al centro, per non far sbandare", "A prua, per vedere il vento"], "La vela e il boma stanno sottovento; il timoniere siede dal lato opposto, sopravento, per fare contrappeso."],
@@ -774,18 +776,30 @@
       ["Raffiche e sbandamento", "Vuoi capire se sta arrivando una raffica. Dove guardi?", "Sull'acqua sopravento: chiazze più scure e increspate", ["Sull'acqua sottovento: onde più alte e più lunghe del solito", "Il filetto sopravento, che si agita prima che arrivi", "La vela, che comincia a sbattere prima che arrivi"], "Dove il vento è più forte l'acqua è più scura e increspata, e la chiazza viaggia col vento: per questo arriva da sopravento."] ]
   ];
 
+  const bancaEsame = li => ESAME[li] || LESSONS[li].esame || [];
+  const quotaEsame = li => li < QUOTE.length ? QUOTE[li] : QUOTA_NUOVE;
+  const lezioniEsame = () => LESSONS.map((L, li) => li).filter(li => !LESSONS[li].nascosta && bancaEsame(li).length);
+  const domandeEsame = () => lezioniEsame().reduce((a, li) => a + quotaEsame(li), 0);
+  const sogliaEsame = (n = domandeEsame()) => Math.ceil(n * SOGLIA_ESAME - 1e-9);
+  const quizDi = li => QUIZ[li] || LESSONS[li].quiz; // 1.2.3: il ripasso di una lezione nuova usa il quiz della lezione
+
   // ---- glossario ----
+  // dalla 1.2.3 le voci delle lezioni nuove (terzo campo = nome della lezione) restano nascoste come la lezione (glossVisibili)
   const GLOSS = [
     ["Abbrivio", "La velocità che la barca conserva per inerzia, per esempio mentre attraversa il vento durante una virata.", "Lezione 5"],
     ["Albero", "Il palo verticale che regge la vela.", "Lezione 1"],
     ["Andatura", "La direzione della barca rispetto al vento: bolina, traverso, lasco, gran lasco, poppa.", "Lezione 3"],
     ["Angolo morto", "Il settore attorno alla direzione del vento in cui la vela non spinge e non si può navigare: nelle scuole si indica di solito in circa 45° per lato (90° in tutto); le derive riescono a stringere un po' di più.", "Lezione 1"],
+    ["Avviso", "Il primo segnale della partenza, cinque minuti prima del via: sale la bandiera di classe (regola 26).", "Lezione D5"],
+    ["Bandiera di classe", "Sale all'avviso, cinque minuti prima del via, e si ammaina alla partenza.", "Lezione D5"],
+    ["Barca giuria", "La barca da cui si dà la partenza, alzando e ammainando le bandiere. Nel gioco è un estremo della linea di partenza; l'altro è la boa arancione.", "Lezione D5"],
     ["Barra", "Il manico del timone. Si sposta dalla parte opposta a quella verso cui si vuole girare: barra sottovento, la barca orza; barra sopravento, la barca poggia.", "Lezione 2"],
     ["Boa", "Galleggiante ancorato al fondo, usato come riferimento o come segnale.", "Prove"],
     ["Linea d'arrivo", "Linea immaginaria fra due boe (in regata spesso fra una boa e la barca giuria): si arriva quando la si attraversa venendo dal percorso.", "Prove"],
     ["Bolina", "L'andatura più vicina al vento. Bolina stretta: circa 45°, il massimo che la barca riesce a stringere; bolina larga: circa 60-75°.", "Lezione 3"],
     ["Boma", "L'asta orizzontale, fissata all'albero, che tiene il lato basso della randa.", "Lezione 1"],
     ["Bordeggiare", "Risalire il vento a zig-zag, alternando tratti di bolina sulle due mure. Ogni tratto è un bordo.", "Lezione 5"],
+    ["Buono", "Di bolina, il vento è buono quando gira verso poppa: puoi orzare. Lo stesso salto che è scarso su una mura è buono sull'altra.", "Lezione B5"],
     ["Cazzare", "Tirare una scotta: la vela si avvicina al centro della barca.", "Lezione 1"],
     ["Cima", "A bordo le corde si chiamano cime.", "Lezione 1"],
     ["Deriva (barca)", "Piccola barca a vela senza cabina, con la lama di deriva mobile. È la barca su cui di solito si impara.", "Lezione 1"],
@@ -793,31 +807,46 @@
     ["Dritta", "Il lato destro della barca, guardando verso prua.", "Lezione 1"],
     ["Filetti", "Nastrini sulla vela che mostrano come scorre l'aria: dritti se la vela è regolata; si agita quello sopravento se è troppo lascata, quello sottovento se è troppo cazzata.", "Lezione 3"],
     ["Fileggiare", "Il movimento della vela che sbatte perché è troppo lascata o perché la barca è nell'angolo morto.", "Lezione 1"],
+    ["Giro di penalità", "Un giro intero della barca, con una virata e una strambata, per scontare una penalità: uno per una boa toccata, due per un contatto con colpa; subito e tutti nello stesso verso (regole 44.1 e 44.2).", "Lezione D7"],
     ["Gran lasco", "Andatura con il vento quasi da dietro, circa 150°.", "Lezione 3"],
     ["Lascare", "Mollare una scotta: la vela si apre verso l'esterno.", "Lezione 1"],
+    ["Lasciare strada", "Navigare in modo che l'altra barca possa tenere la sua rotta senza manovrare per evitarti. Con mure diverse lascia strada la barca mure a sinistra (regola 10).", "Lezione D1"],
     ["Lasco", "Andatura con il vento che arriva da dietro il fianco, circa 120°.", "Lezione 3"],
+    ["Libera dietro, libera avanti", "Con le stesse mure, una barca che sta tutta dietro la linea tirata al traverso dal punto più a poppa dell'altra è libera dietro, e lascia strada a quella libera avanti (regola 12).", "Lezione D2"],
+    ["Linea di partenza", "La linea dalla barca giuria alla boa arancione. Al via si deve essere dietro, dalla parte da cui si parte; poi la si taglia.", "Lezione D5"],
     ["Mure", "Il lato da cui arriva il vento: mure a dritta se arriva da destra, mure a sinistra se arriva da sinistra. Tra due barche a vela con mure diverse, quella mure a sinistra deve lasciare strada; con le stesse mure, se sono affiancate, cede quella sopravento.", "Lezione 3"],
     ["Nodo", "Unità di velocità in mare: un miglio nautico all'ora, cioè 1,852 km/h.", "Lezione 1"],
     ["Orzare", "Girare la prua verso il vento.", "Lezione 1"],
     ["Orziera", "Barca che tende a salire da sola verso il vento. Le cause possono essere diverse e spesso si sommano: il vento e le raffiche, le onde che spostano la prua, la barca molto sbandata, le vele troppo cazzate, la posizione e il peso dell'equipaggio. Si corregge con la barra e, quando si può, con le vele e con il peso.", "Lezione 2"],
+    ["Partenza anticipata", "Al segnale di partenza una parte dello scafo è già oltre la linea. Si torna con lo scafo tutto dietro la linea e si riparte (regola 29.1).", "Lezione D6"],
+    ["Partenza da fermi", "Partire con la barca ferma e la vela che sbatte: cazzata la vela, servono alcuni secondi e qualche metro prima che la barca arrivi alla sua velocità.", "Lezione C2"],
+    ["Partenza in velocità", "Aspettare quasi fermi vicino alla linea, una o due lunghezze dietro, e cazzare negli ultimi secondi, per tagliare la linea subito dopo il via e già veloci.", "Lezione C1"],
     ["Poggiare", "Girare la prua allontanandola dal vento.", "Lezione 1"],
     ["Poppa (andatura)", "Andatura con il vento esattamente da dietro.", "Lezione 3"],
     ["Poppa (parte della barca)", "La parte posteriore della barca.", "Lezione 1"],
+    ["Precedenza", "Ce l'ha la barca a cui l'altra deve lasciare strada. Avere la precedenza non è il permesso di urtare.", "Lezione D1"],
+    ["Preparatorio", "Il segnale di quattro minuti prima del via: sale la bandiera P, blu con il quadrato bianco. Si ammaina a un minuto dal via (regola 26).", "Lezione D5"],
     ["Prua", "La parte anteriore della barca.", "Lezione 1"],
     ["Raddrizzare", "Rimettere dritta una deriva scuffiata, salendo sulla lama di deriva e facendo leva col proprio peso.", "Lezione 6"],
     ["Raffica", "Aumento breve del vento, visibile sull'acqua come una chiazza più scura e increspata.", "Lezione 6"],
     ["Randa", "La vela principale, fissata all'albero e al boma.", "Lezione 1"],
+    ["Richiamo individuale", "La bandiera X, bianca con la croce blu, alzata con un suono quando al via qualcuno è in anticipo. Resta su finché sono tornati tutti, ma non più di quattro minuti dal via (regola 29.1).", "Lezione D6"],
     ["Rilevamento", "La direzione, in gradi a partire da nord in senso orario, in cui si vede un oggetto dalla barca.", "Prove"],
+    ["Salto di vento", "Un cambio di direzione del vento. Spesso il vento oscilla avanti e indietro; a volte gira sempre dalla stessa parte.", "Lezione B5"],
     ["Sbandamento", "L'inclinazione laterale della barca spinta dal vento.", "Lezione 6"],
     ["Scarroccio", "Lo scivolamento laterale della barca spinta dal vento, che la deriva riduce ma non annulla.", "Lezione 1"],
+    ["Scarso", "Di bolina, il vento è scarso quando gira verso la prua: per restare di bolina devi poggiare. Con il vento che oscilla, di bolina si vira sugli scarsi.", "Lezione B5"],
     ["Scotta", "La cima con cui si regola la vela.", "Lezione 1"],
     ["Scuffiare", "Rovesciarsi: succede alle derive quando lo sbandamento diventa eccessivo.", "Lezione 6"],
     ["Segnavento", "La piccola freccia gialla in cima all'albero: la punta indica da dove arriva il vento apparente (per questo sembra opposta alla freccia gialla grande «apparente», che arriva dal mare e punta verso la barca).", "Lezione 4"],
     ["Sinistra", "Il lato sinistro della barca, guardando verso prua.", "Lezione 1"],
     ["Sopravento", "Il lato colpito per primo dal vento; in generale, la parte da cui arriva il vento.", "Lezione 1"],
     ["Sottovento", "Il lato riparato, opposto a quello da cui arriva il vento.", "Lezione 1"],
+    ["Sovrapposte", "Due barche con le stesse mure sono sovrapposte, cioè affiancate, quando nessuna delle due sta tutta dietro una linea tirata al traverso dal punto più a poppa dell'altra. Lascia strada la sopravento (regola 11).", "Lezione D2"],
+    ["Spingere il boma", "Con la barca ferma nell'angolo morto, spingere il boma fuori e mettere la barra dalla stessa parte: la barca arretra e la prua gira lontano dal vento. Serve anche a frenare o ad arretrare apposta. Nel gioco, tasto Z.", "Lezione B2"],
     ["Sporgersi fuori bordo", "Spostare il peso fuori dalla barca, sopravento, per contrastare lo sbandamento.", "Lezione 6"],
     ["Stallo", "Vela troppo cazzata: non sbatte, ma l'aria non ci scorre sopra bene e la barca rallenta.", "Lezione 1"],
+    ["Stallo della pala", "La pala del timone girata oltre un certo angolo: l'acqua non riesce più a seguirla e si stacca, la spinta smette di crescere e la pala frena sempre di più. Su una deriva da regata succede fra circa 15° e 30°.", "Lezione B1"],
     ["Strambata", "Cambio di mure passando con la poppa attraverso il vento; detta anche abbattuta. Se involontaria o fatta con la vela aperta, il boma attraversa la barca con violenza.", "Lezione 5"],
     ["Timone", "La pala immersa a poppa che fa girare la barca, comandata dalla barra.", "Lezione 1"],
     ["Traverso", "Andatura con il vento perpendicolare alla barca, circa 90°.", "Lezione 3"],
@@ -825,4 +854,5 @@
     ["Vento reale", "Il vento come soffia rispetto al mare, quello che si misura da fermi.", "Lezione 4"],
     ["Virata", "Cambio di mure passando con la prua attraverso il vento.", "Lezione 5"]
   ];
+  const glossVisibili = () => GLOSS.filter(([, , w]) => !LESSONS.some(L => L.nascosta && L.name === w));
 

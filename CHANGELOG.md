@@ -17,6 +17,31 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.3 — Esame e glossario con le lezioni nuove (ramo `pulizia`)
+
+`docs/PROPOSTA-ESAME-E-GLOSSARIO.md`, approvata da Ale il 2 novembre («sì perfetto»). Finché le 14 lezioni nuove restano nascoste nel menu, **per chi gioca non cambia niente**; tutto entra da solo quando il menu nuovo le mostrerà.
+
+**Esame.**
+- Le lezioni nuove danno **1 domanda ciascuna**, presa dalle 4 del loro campo `esame` (la banca le legge dalla lezione, non le copia). Le 6 lezioni di oggi restano 4-3-4-3-3-3.
+- Entrano solo le **lezioni visibili**. Con tutte e 20: **34 domande, ne servono 28** (l'80% arrotondato per eccesso, come 16 su 20). `SOGLIA_ESAME` ora è la frazione (0,8), non il numero.
+- L'esame salvato in carriera ricorda quante domande aveva (`n`), così il voto «su quanto» resta giusto anche quando il numero cambierà; per i salvataggi vecchi vale 20.
+- **Ripasso:** il ripasso di una lezione nuova (dopo un esame sbagliato in carriera) apre il quiz della lezione (`quizDi`).
+
+**Glossario:** **19 voci nuove**, in ordine alfabetico fra le vecchie: stallo della pala (B1), spingere il boma (B2), salto di vento, scarso, buono (B5), lasciare strada, precedenza (D1), sovrapposte, libera dietro e libera avanti (D2), barca giuria, linea di partenza, avviso, preparatorio, bandiera di classe (D5), partenza anticipata, richiamo individuale (D6), giro di penalità (D7), partenza in velocità (C1), partenza da fermi (C2). Una voce di una lezione nascosta resta nascosta (`glossVisibili`). La voce «Stallo» di oggi (la vela) non cambia: quella della pala è una voce a parte.
+
+**G3, controllo a mano:** ogni definizione nuova è detta nel testo della sua lezione (passi, riepilogo o spiegazione del quiz): 19 su 19. Le definizioni sono parafrasi di quei testi, che hanno già le loro fonti.
+
+**Corretto, trovato dal collaudo prima del risultato:** con le lezioni nuove visibili il menu si rompeva (`QUIZ[i].length` di una lezione senza quiz nella banca vecchia). Ora l'elenco dei ripassi usa `quizDi`. Oggi non si vedeva, perché le lezioni nuove sono nascoste.
+
+**Misurato** (`tests/collaudo_esame_nuove.py`, nuovo; criteri G1-G5 scritti prima):
+- **G1:** con le lezioni nascoste, 20 estrazioni a seme fisso identiche alla 1.2.2, glossario identico (48 voci nello stesso ordine), pulsante «20 domande, ne servono 16».
+- **G2:** con tutte le lezioni rese visibili nella pagina del collaudo: 34 domande, soglia 28, anche nel pulsante del menu; 200 estrazioni con 4-3-4-3-3-3 più 1 per lezione nuova, nessuna domanda ripetuta; tutte le 56 domande delle lezioni nuove escono almeno una volta.
+- **G4:** esito con 34 sbagliate («0 su 34: non superato (servono 28)», 34 domande sotto 20 lezioni) e glossario di 67 voci: i due riquadri stanno dentro 1360×650, in Chromium e Firefox.
+- **Da sapere, cambiato dopo aver visto il primo giro (lo dico):** il controllo G4 contava anche la pagina dietro il riquadro, cioè il menu, che con tutte e 20 le lezioni visibili sfora la finestra di **426 px** (427 in Firefox). È il lavoro del menu nuovo, non dell'esame: ora il collaudo misura il solo riquadro e riporta lo sforamento del menu in una riga «DA SAPERE». Oggi, con le lezioni nascoste, il menu non sfora (`collaudo_esame`, pagina 0 px).
+- **G5:** senza `#collaudo`, esame di 34 domande fino in fondo e ricerca nel glossario («scarso»), nessun errore.
+- Rilanciati, verdi: `collaudo_esame` (adattato: la soglia si calcola dalla frazione), `collaudo_quiz`, `collaudo_carriera_esame`, `collaudo_carriera_intera`, `collaudo_versione`; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. Regate non toccate.
+- **Resta per il menu:** i meriti della carriera (area «conoscenza») contano ancora solo i quiz delle 6 lezioni di oggi.
+
 ## 1.2.2 — Lezioni C1 e C2: le partenze, con l'esercizio in regata (ramo `pulizia`)
 
 Gruppo C di `docs/PROPOSTA-LEZIONI-SCUOLA.md` §4, con il meccanismo B della 1.2.1 (`docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, via di Ale del 1 novembre). Le lezioni restano nascoste nel menu, come le altre nuove.

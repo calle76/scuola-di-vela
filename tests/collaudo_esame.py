@@ -3,7 +3,7 @@
 # Ogni parte dichiara quanti casi ha misurato e fallisce se sono zero.
 # Le misure del riquadro valgono solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).
 # Uso: python collaudo_esame.py
-import asyncio, sys, pathlib, re, shutil, subprocess, tempfile
+import asyncio, sys, pathlib, re, shutil, subprocess, tempfile, math
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -89,7 +89,7 @@ async def un_esame(pg, giuste, D):
     return sbagliate
 
 async def controlla_esito(pg, giuste, sbagliate, D):
-    soglia = D["SOGLIA_ESAME"]
+    soglia = math.ceil(20 * D["SOGLIA_ESAME"] - 1e-9)   # 1.2.3: SOGLIA_ESAME è la frazione (0,8); con le 6 lezioni visibili, 16 su 20
     atteso = f"{giuste} su 20: " + ("superato" if giuste >= soglia else f"non superato (servono {soglia})")
     chk("esito", (await pg.inner_text(".qz .score")) == atteso, f"«{await pg.inner_text('.qz .score')}» invece di «{atteso}»")
     elenco = await pg.evaluate("""() => [...(document.getElementById('qzWrong')?.children || [])].map(e => e.tagName === 'H3' ? ['h3', e.textContent] :

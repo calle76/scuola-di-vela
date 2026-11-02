@@ -37,3 +37,8 @@
 ## 5. Da decidere (Ale)
 
 1. **Esame:** 1 domanda per ogni lezione nuova (34 in tutto, ne servono 28), solo le lezioni visibili. Va bene?
+
+## 6. Avanzamento
+
+- **Ale, 2 novembre 2026:** «sì perfetto».
+- **1.2.3:** fatto. G1, G2, G4, G5 verdi in Chromium e Firefox (`collaudo_esame_nuove.py`), G3 a mano 19 su 19. G4 misura il solo riquadro: il menu dietro, con 20 lezioni visibili, sfora di 426 px ed è lavoro del menu nuovo (detto nel `CHANGELOG.md`). 19 voci nuove invece delle «circa 20» stimate.

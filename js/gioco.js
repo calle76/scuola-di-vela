@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.2"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.3"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -185,10 +185,10 @@
   const ripName = li => "Ripasso " + (li + 1); // 1.0.2: «Lezione» resta alla Scuola; ripassi ed esame usano «Ripasso N»
   const ripElenco = a => (a.length > 1 ? "ripassi " + a.slice(0, -1).join(", ") + " e " + a[a.length - 1] : "ripasso " + a[0]);
   function esameBtn(){
-    const ex = modo === "carriera" ? progress.exam : null, tot = QUOTE.reduce((a, b) => a + b);
-    if (ex?.superato) return `<button id="goEsame" disabled>Esame superato<small>${ex.voto} su ${tot}</small></button>`;
+    const ex = modo === "carriera" ? progress.exam : null, tot = domandeEsame();
+    if (ex?.superato) return `<button id="goEsame" disabled>Esame superato<small>${ex.voto} su ${ex.n || 20}</small></button>`; // 1.2.3: ex.n, le domande di quell'esame (prima sempre 20)
     if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${ripElenco(ex.ripasso.map(i => i + 1))}</small></button>`;
-    return `<button id="goEsame">Esame su tutte le lezioni<small>${tot} domande, ne servono ${SOGLIA_ESAME}</small></button>`;
+    return `<button id="goEsame">Esame su tutte le lezioni<small>${tot} domande, ne servono ${sogliaEsame(tot)}</small></button>`;
   }
   // 0.24, attestato (solo carriera): compare da solo la prima volta che si torna al menu con il livello superato, poi dal libretto
   // disegno nostro: una deriva stilizzata sul mare, in alto sull'attestato (non è un marchio né un logo di nessuna classe)
@@ -197,7 +197,7 @@
     const B = progress.brevetto, m = meriti(progress), q = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
     $("atBody").innerHTML = `${NAVE}<p class="sc">Scuola di vela</p><hr><p class="titolo">Attestato del gioco</p><h2 id="atTitle">Brevetto di livello 1</h2><p class="ruolo">Timoniere di deriva</p>
       <label for="atName">Nome (facoltativo)</label><input id="atName" maxlength="60" autocomplete="off" value="${q(B.nome || "")}">
-      <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${QUOTE.reduce((a, b) => a + b)}.</p>
+      <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${progress.exam.n || 20}.</p>
       <ul>${MERITI.map(([k, nome, max]) => `<li>${nome}: ${m.pt[k]} / ${max}</li>`).join("")}</ul>
       <p class="legal">Nessun valore legale: non sostituisce un corso di vela né la patente nautica.</p>
       <div class="row"><button class="primary" id="atPrint">Stampa</button><button id="atClose">Chiudi</button></div>`;
@@ -231,7 +231,7 @@
         const st = chiuso ? "dopo il brevetto di livello 1" : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
         return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo dell'1b</span><span class="state ${F ? "ok" : "todo"}">${st}</span></button>`; })(); // senza descrizione (la dà il riquadro che si apre); nel gioco libero sta nel terzo riquadro: in «Regate» il menu non stava in 1360x650
     const quiz = LESSONS.map((L, i) => { if (L.nascosta) return ""; const best = progress.quiz?.["q" + i];
-      return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
+      return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + quizDi(i).length : quizDi(i).length + " domande"}</small></button>`; }).join("");
     $("menu").innerHTML = `<div class="menu-inner">
       <header class="menu-head"><div><h1>Scuola di vela <span class="ver">V. ${VERSIONE}</span></h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
         <div class="head-r"><div class="seg" id="modoSel"><button data-v="libero" aria-pressed="${modo === "libero"}">Gioco libero</button><button data-v="carriera" aria-pressed="${modo === "carriera"}">Carriera</button></div>
@@ -272,7 +272,7 @@
   // ---- glossario e impostazioni ----
   function renderGloss(q = ""){
     const n = q.trim().toLowerCase();
-    const list = GLOSS.filter(([t, d]) => !n || t.toLowerCase().includes(n) || d.toLowerCase().includes(n));
+    const list = glossVisibili().filter(([t, d]) => !n || t.toLowerCase().includes(n) || d.toLowerCase().includes(n));
     $("glList").innerHTML = list.length ? list.map(([t, d, w]) => `<dt>${t}<small>${w}</small></dt><dd>${d}</dd>`).join("")
       : `<p class="gl-empty">Nessun termine trovato. Prova con una parola più breve.</p>`;
   }
@@ -290,13 +290,14 @@
   const showQuiz = () => { renderQuiz(); $("quiz").showModal(); };
   function openQuiz(li, only){ // only: indici delle domande da riproporre (giro parziale); senza, ripasso completo
     releaseKeys();
-    const qs = QUIZ[li].map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n))
+    const qs = quizDi(li).map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n))
       .map(({ n, q, right, wrong, expl }) => ({ n, q, right, opts: quizOpts(right, wrong), expl }));
     qz = { li, qs, i: 0, score: 0, answered: false, partial: !!only, wrong: [] };
     showQuiz();
   }
-  // esame: QUOTE[li] domande a caso da ogni lezione, poi le 20 in ordine casuale. Nel gioco libero non salva niente.
-  const estraiEsame = () => mescola(ESAME.flatMap((qs, li) => mescola(qs.map(q => [li, ...q])).slice(0, QUOTE[li])));
+  // esame: quotaEsame(li) domande a caso da ogni lezione visibile, poi tutte in ordine casuale (20 con le sole 6 lezioni di oggi). Nel gioco libero non salva niente.
+  // 1.2.3: le lezioni nascoste non consumano numeri a caso, quindi con le sole 6 lezioni l'estrazione è identica a prima (collaudo_esame, G1)
+  const estraiEsame = () => mescola(lezioniEsame().flatMap(li => mescola(bancaEsame(li).map(q => [li, ...q])).slice(0, quotaEsame(li))));
   function openEsame(){
     releaseKeys();
     const qs = estraiEsame().map(([li, passo, q, right, wrong, expl]) => ({ li, passo, q, right, opts: quizOpts(right, wrong), expl }));
@@ -307,14 +308,14 @@
   $("quiz").addEventListener("close", () => { if (mode === "menu") showMenu(); }); // aggiorna il punteggio migliore nel menu
   const wrongItem = w => `<div class="wq"><p class="wt">${w.q}</p><p>Hai risposto: ${w.given}</p><p>Giusta: <b>${w.right}</b></p><p class="expl">${w.expl}</p>${w.passo ? `<p class="from">dal passo «${w.passo}»</p>` : ""}</div>`;
   function renderEsito(b){
-    const n = qz.qs.length, ok = qz.score >= SOGLIA_ESAME;
+    const n = qz.qs.length, soglia = sogliaEsame(n), ok = qz.score >= soglia;
     const groups = LESSONS.map((L, li) => [L, qz.wrong.filter(w => w.li === li)]).filter(([, ws]) => ws.length);
     // 0.24, carriera: un esame superato è definitivo (voto unico); non superato, prima il ripasso completo delle lezioni sbagliate
     const car = modo === "carriera", rip = groups.map(([L]) => LESSONS.indexOf(L));
-    if (car){ progress.exam = ok ? { superato: true, voto: qz.score, data: oggi() } : { superato: false, voto: qz.score, data: oggi(), ripasso: rip }; saveProgress(); }
+    if (car){ progress.exam = ok ? { superato: true, voto: qz.score, n, data: oggi() } : { superato: false, voto: qz.score, n, data: oggi(), ripasso: rip }; saveProgress(); }
     const btns = !car ? `<button class="primary" id="qzAgain">Rifai l'esame</button>`
       : ok ? "" : rip.map(li => `<button data-rq="${li}">${ripName(li)}</button>`).join("");
-    b.innerHTML = `<h2>Esame · livello 1</h2><div class="score">${qz.score} su ${n}: ${ok ? "superato" : `non superato (servono ${SOGLIA_ESAME})`}</div>
+    b.innerHTML = `<h2>Esame · livello 1</h2><div class="score">${qz.score} su ${n}: ${ok ? "superato" : `non superato (servono ${soglia})`}</div>
       ${car ? `<p class="q">${ok ? "Il voto è definitivo." : "Ripassa le lezioni in cui hai sbagliato, poi potrai rifare l'esame."}</p>` : ""}
       ${groups.length ? `<div class="wlist" id="qzWrong">${groups.map(([L, ws]) => `<h3>${L.name}: ${L.title}</h3>${ws.map(wrongItem).join("")}`).join("")}</div>` : ""}
       <div class="row">${btns}<button id="qzClose">Chiudi</button></div>`;
