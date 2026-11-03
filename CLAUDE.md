@@ -5,7 +5,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 ## Da leggere prima di lavorare
 
 - Sempre: `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni; la storia fino alla 0.24 è in `docs/archivio/`, da aprire solo se serve), `docs/COLLAUDI.md` **senza** la tabella «Browser»: di quella si legge solo la riga del collaudo che serve (`grep -n "collaudo_nome" docs/COLLAUDI.md`).
-- **Il codice non si legge mai tutto.** Dalla 1.0.3 è diviso: `index.html` (stile e struttura) e `js/` (`motore.js`, `base.js`, `contenuti.js`, `gioco.js`, `regate.js`, `disegno.js`, `registratore.js`, `moviola.js`, `avvio.js`, `laboratorio.js`, caricati in quest'ordine; la prima riga di ogni file dice cosa contiene). Si apre solo il file che serve, e dentro si legge prima la mappa:
+- **Il codice non si legge mai tutto.** Dalla 1.0.3 è diviso: `index.html` (stile e struttura) e `js/` (`motore.js`, `base.js`, `contenuti.js`, `gioco.js`, `regate.js`, `disegno.js`, `registratore.js`, `moviola.js`, `suoni.js`, `avvio.js`, `laboratorio.js`, caricati in quest'ordine; la prima riga di ogni file dice cosa contiene). Si apre solo il file che serve, e dentro si legge prima la mappa:
   `grep -nE "^  // ([A-ZÀ-Ú]{4,}|-{3,})" js/nome.js`
   Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna. Una riga eseguita al caricamento di un file non vede le funzioni dei file caricati dopo: il codice nuovo che deve partire all'avvio va in `avvio.js`.
 - Sul metodo: `docs/METODO.md` (fasi, traguardi, revisione a fine tappa); `docs/DECISIONI.md` (decisioni prese e quanto costa cambiarle) prima di aprire un livello o una proposta grossa, e ogni decisione nuova di Ale ci va con una riga.
@@ -29,7 +29,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 - **Un solo tentativo non basta**, nemmeno per dire che una cosa non succede: molti tentativi con semi fissi, e dì quanti.
 - **Il metro di misura non deve dipendere da ciò che si misura.** Un controllo scritto come «nessun caso sbagliato» è vero anche con zero casi: verifica che abbia misurato davvero.
 - **Collauda guidando davvero la barca** (pilota automatico, aggancio `#collaudo`) e anche in una pagina caricata come la carica un giocatore, senza `#collaudo`.
-- **Non-regressione.** La barca senza fiocco deve restare identica a quella del gioco (30 casi di `polare.js`, uscite di `polare.js` e `raffiche_e_virate.js` carattere per carattere, prove 1-3).
+- **Non-regressione.** Dalla 1.1.0 (pulizia del codice, ramo `pulizia`) il gioco ha solo la barca dell'1b: `polare.js` e `raffiche_e_virate.js` (carattere per carattere col riferimento) e `impronta1b.js` (al bit) misurano quella. Il prototipo del fiocco si confronta con la barca a una vela della 1.0.78, congelata in `tests/fisica/motore1a.js` (`MOTORE=1a node polare.js` dà le uscite di prima): la sua barca senza fiocco deve restare identica a quella (oggi non lo è già più dalla tappa C: scarto fino a 2,73 nodi, `CHANGELOG.md` 1.1.0).
 - **Pannello** a 1360x650 senza pixel di eccesso, anche nel caso peggiore.
 - **A ogni versione del gioco aggiorna la costante `VERSIONE` (in `js/gioco.js`) e la voce del `CHANGELOG.md`**; `tests/collaudo_versione.py` controlla che coincidano.
 - **Ogni versione aggiorna `CHANGELOG.md`.** I prototipi non sono versioni: stanno in `sperimentale/`, non toccano `index.html` né `js/`, e vanno sotto «Sperimentale».

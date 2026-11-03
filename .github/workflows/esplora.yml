@@ -1,6 +1,6 @@
 # Esploratore su GitHub Actions (1 novembre 2026): tests/esplora.py diviso in pezzi che girano insieme.
 # Parte a mano, e da solo ogni settimana nella notte fra domenica e lunedì (lunedì alle 03:00 UTC, dopo i collaudi delle 02:00;
-# dal 2 novembre 2026 il giro da solo prova il ramo pulizia, come i collaudi di notte: quando pulizia entra in main, togliere le righe «ref:»):
+# dal 2 al 3 novembre 2026 il giro da solo provava il ramo pulizia; dal 3 novembre, con pulizia entrata in main, di nuovo main):
 # nelle settimane pari i semi 1-100 (gli stessi di sempre: si vede se qualcosa è cambiato), nelle dispari un blocco nuovo
 # (101-200, 201-300, … fino a 901-1000, poi si ricomincia). Gli altri valori sono quelli consigliati (Ale, 1 novembre 2026).
 # Non promuove né boccia: raccoglie numeri (numeri non finiti, barche ferme, pannello che sfora, errori della pagina)
@@ -82,8 +82,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         if: matrix.browser != 'nessuno'
-        with:
-          ref: ${{ github.event_name == 'schedule' && 'pulizia' || github.ref }}   # 2 nov 2026 (Ale): il giro del lunedì prova il ramo pulizia, come i collaudi di notte; a mano il ramo scelto
       - uses: actions/setup-python@v5
         if: matrix.browser != 'nessuno'
         with:
@@ -119,8 +117,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         if: matrix.browser != 'nessuno'
-        with:
-          ref: ${{ github.event_name == 'schedule' && 'pulizia' || github.ref }}   # 2 nov 2026 (Ale): il giro del lunedì prova il ramo pulizia, come i collaudi di notte; a mano il ramo scelto
       - uses: actions/setup-python@v5
         if: matrix.browser != 'nessuno'
         with:
@@ -151,8 +147,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'schedule' && 'pulizia' || github.ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"

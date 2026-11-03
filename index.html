@@ -102,6 +102,8 @@ canvas:focus{outline:none}
 .brief-line{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .brief-line h2{margin:0!important}
 #race.brief-line{justify-content:flex-end} /* 1.0.70: il titolo della regata non si ripete, resta il pulsante Istruzioni */
+#race.brief-line.es{justify-content:space-between;align-items:center} /* 1.2.1: nell'esercizio di una lezione, a sinistra l'obiettivo */
+.obj{margin:0;font-size:.92rem;line-height:1.3}
 .pillbtn{font:inherit;font-size:.92rem;border:1px solid var(--line);background:transparent;color:var(--ink);padding:3px 11px;border-radius:14px;cursor:pointer;white-space:nowrap}
 .overlay.finOv{top:50%;transform:translate(-50%,-50%);max-width:min(540px,90%);max-height:92%;overflow-y:auto;text-align:left;padding:16px 20px}
 .finOv .standings{margin:0 0 12px;font-size:1rem}.finOv .standings span{color:#cfe0ee}.finOv .standings li.me b{color:#F2C14E}
@@ -169,7 +171,7 @@ canvas:focus{outline:none}
 .ends{display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink-soft);margin-top:-4px}
 .keys{font-size:.8rem;color:var(--ink-soft);line-height:1.5;margin:4px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .keys kbd{font:inherit;font-weight:600;color:var(--ink);border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-right:2px}
-dialog#setDlg{border:none;border-radius:10px;padding:0;width:min(480px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
+dialog#setDlg{border:none;border-radius:10px;padding:0;width:min(520px,94vw);max-height:90vh;background:var(--panel);color:var(--ink)}
 dialog#setDlg::backdrop{background:rgba(13,25,36,.5)}
 .set-body{padding:4px 20px 20px}
 #openSet{font-size:1.1rem;line-height:1;padding:5px 9px}
@@ -181,7 +183,7 @@ dialog#setDlg::backdrop{background:rgba(13,25,36,.5)}
 select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .check{display:flex;gap:8px;align-items:center;font-size:.95rem;cursor:pointer}
 .check input{width:18px;height:18px;accent-color:var(--ink)}
-#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:2px} #freeOpts{flex-direction:row;flex-wrap:wrap;gap:4px 10px} #freeOpts .optrow{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza; 1.0.24: a capo, la scelta «Barca» sta su una riga sua */
+#setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:2px} #rigaScelte{display:flex;flex-wrap:wrap;gap:4px 10px} #freeOpts{flex-direction:row;flex-wrap:wrap;gap:4px 10px;flex:3 1 auto} #freeOpts[hidden]{display:none} #suoniRiga{flex:1 1 auto} #freeOpts .optrow,#freeOpts:not([hidden]) + #suoniRiga{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza; 1.0.24: a capo, la scelta «Barca» sta su una riga sua; 1.2.6: «Suoni» sulla stessa riga del vento (#rigaScelte, finestra larga 520 px invece di 480 perché le quattro scelte ci stiano), la riga in più della 1.2.5 faceva scorrere la finestra di 21 px a 650 */
 #sesBox{display:flex;gap:8px;align-items:center} #sesBox[hidden]{display:none} #sesNote{flex:1;font:inherit;font-size:.9rem;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);resize:none}
 
 /* ---- glossario ---- */
@@ -225,6 +227,8 @@ table.tor tr.me td{font-weight:700}
 .review button:hover{border-color:var(--ink)}
 .review button:disabled{cursor:default;color:var(--ink-soft);border-style:dashed}
 .review button:disabled:hover{border-color:var(--line)}
+.seg.schede{margin:0 0 8px}.seg.schede small{font-size:.8rem;opacity:.75} /* 1.2.4: le schede dei gruppi della Scuola */
+.rip2{display:grid;grid-template-columns:1fr 1fr;gap:4px}.rip2 button{min-width:0}.rip2 button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis} /* 1.2.4: ripassi su due colonne */
 dialog#gloss{border:none;border-radius:10px;padding:0;width:min(640px,94vw);max-height:86vh;background:var(--panel);color:var(--ink)}
 dialog#gloss::backdrop{background:rgba(13,25,36,.5)}
 dialog#attest{border:none;border-radius:10px;padding:0;width:min(560px,94vw);max-height:92vh;background:var(--panel);color:var(--ink)}
@@ -300,22 +304,21 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
         <div><div class="optrow" style="margin-bottom:6px"><span>Vista</span></div>
           <div class="seg" id="viewMode"><button data-v="prua" aria-pressed="true">Prua in alto</button><button data-v="nord" aria-pressed="false">Nord in alto</button></div>
           <p class="keys" style="margin-top:6px">Con «prua in alto» la barca resta ferma sullo schermo e ruota il mare: quando la barca gira a destra, il mare sembra girare a sinistra. Con «nord in alto» è la barca a girare.</p></div>
-        <div id="freeOpts" class="opts" style="margin-top:0">
+        <div id="rigaScelte"><div id="freeOpts" class="opts" style="margin-top:0">
           <div class="optrow"><span>Vento da</span>
             <select autocomplete="off" id="wDir"><option value="0">nord</option><option value="45">nord-est</option><option value="90">est</option><option value="135">sud-est</option><option value="180">sud</option><option value="225">sud-ovest</option><option value="270">ovest</option><option value="315">nord-ovest</option></select></div>
           <div class="optrow"><span>Intensità</span>
             <select autocomplete="off" id="wSpd"><option value="6">6 nodi, brezza leggera</option><option value="10" selected>10 nodi, brezza tesa</option><option value="15">15 nodi, vento fresco</option></select></div>
           <div class="optrow"><span>Raffiche</span>
             <select autocomplete="off" id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
-          <div class="optrow"><span>Barca</span>
-            <select autocomplete="off" id="boatLv" title="Barca dell'1b: la barra arriva fino a 45° e la pala può stallare; la freccia porta la barra fino a 35°, Maiusc + freccia fino in fondo; Z tenuto premuto spinge il boma fuori"><option value="1" selected>1a</option><option value="2">1b</option></select></div>
         </div>
+        <div class="optrow" id="suoniRiga"><span>Suoni</span><select autocomplete="off" id="suoniSel"><option value="spento">spenti</option><option value="basso">bassi</option><option value="medio">medi</option><option value="alto">alti</option></select></div></div>
         <label class="check" title="Vale per la modalità in corso: nelle prove e nelle regate parte spenta."><input autocomplete="off" type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (per la modalità in corso)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
         <label class="check" title="La vela si regola da sola (prove e navigazione libera). Se la usi, la prova non vale record né medaglia. I tasti della scotta la spengono."><input autocomplete="off" type="checkbox" id="autoSheetOpt"> Scotta automatica (la prova non vale medaglia)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente e della velocità</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showDead" checked> Rosa dell'angolo morto, in basso a sinistra</label>
-        <label class="check" title="Rosso: devi lasciare strada. Verde: hai la precedenza, non il permesso di urtare. Solo nelle regate dell'1b: «Regata nei salti di vento» e torneo."><input autocomplete="off" type="checkbox" id="showSem"> Semaforo di precedenza sullo scafo (solo regate 1b)</label>
+        <label class="check" title="Rosso: devi lasciare strada. Verde: hai la precedenza, non il permesso di urtare. In tutte le regate e nel torneo."><input autocomplete="off" type="checkbox" id="showSem"> Semaforo di precedenza sullo scafo (regate)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="allInstr"> Numeri di vento, sbandamento e scarroccio nel pannello, sempre</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showGhost" checked> Mostra il fantasma del tuo record (prove e regate)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="sesOn"> Registra fuori dalle regate (M segna un momento)</label>
@@ -361,6 +364,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
         <button id="lBack">Indietro</button>
         <button id="lRetry">Ricomincia</button>
         <button id="lQuiz" hidden>Fai il ripasso</button>
+        <button class="primary" id="lEs" hidden>Apri l'esercizio</button>
         <button class="primary" id="lNext">Avanti</button>
       </div>
     </section>
@@ -371,7 +375,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
       <div class="row"><button class="primary" id="mNext">Prosegui</button></div>
     </section>
 
-    <section class="card brief-line" id="race" hidden><h2 id="rTitle" hidden></h2><button class="pillbtn" id="rBrief">Istruzioni</button></section>
+    <section class="card brief-line" id="race" hidden><h2 id="rTitle" hidden></h2><p class="obj" id="rObj" hidden></p><button class="pillbtn" id="rBrief">Istruzioni</button></section>
     <section class="status" id="status" hidden>
       <p class="clock" id="stClock"></p>
       <ol class="standings" id="standings"></ol>
@@ -380,7 +384,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
     </section>
     <div class="done" id="rDone" hidden><p id="rDoneText"></p>
       </div>
-    <div class="row" id="rRow" hidden><button id="rRestart">Ricomincia</button><button id="rWind">Cambia vento</button><button id="rRet" hidden>Ritirati dalla regata</button><button class="primary" id="rTor" hidden>Classifica del torneo</button></div>
+    <div class="row" id="rRow" hidden><button id="rRestart">Ricomincia</button><button id="rWind">Cambia vento</button><button id="rRet" hidden>Ritirati dalla regata</button><button id="rLez" hidden>Torna alla lezione</button><button class="primary" id="rTor" hidden>Classifica del torneo</button></div>
 
     <section class="card" id="free" hidden>
       <h2>Navigazione libera</h2>
@@ -417,7 +421,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
         <input autocomplete="off" id="sheet" type="range" min="0" max="100" value="40">
         <div class="ends"><span>cazzata</span><span>lascata</span></div>
       </section>
-      <p class="keys"><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>↑</kbd> cazza &nbsp;<kbd>↓</kbd> lasca &nbsp;<kbd>Spazio</kbd> centra la barra<span id="kQ" hidden> &nbsp;<kbd>Q</kbd> vista</span></p>
+      <p class="keys" title="La sola freccia porta la barra fino a 35°; Maiusc + freccia fino in fondo, 45°, dove la pala può stallare. Z tenuto premuto spinge il boma fuori."><kbd>←</kbd><kbd>→</kbd> barra &nbsp;<kbd>↑</kbd> cazza &nbsp;<kbd>↓</kbd> lasca &nbsp;<kbd>Spazio</kbd> centra la barra<span id="kQ" hidden> &nbsp;<kbd>Q</kbd> vista</span></p>
     </div>
 
     <div class="row" id="mRow" hidden><button id="mRetry">Ricomincia la prova</button><button id="mWind">Cambia vento</button></div>
@@ -434,6 +438,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
 <script src="js/disegno.js"></script>
 <script src="js/registratore.js"></script>
 <script src="js/moviola.js"></script>
+<script src="js/suoni.js"></script>
 <script src="js/avvio.js"></script>
 <script src="js/laboratorio.js"></script>
 

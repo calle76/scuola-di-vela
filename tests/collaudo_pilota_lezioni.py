@@ -52,6 +52,14 @@ const PASSI = {
   "4:In poppa":                      { lim: 60,  f: C => guida(C, { twa: 172, centra: true, regola: true }) },
   "5:Prepararsi a virare":           { lim: 60,  aspetta: true, f: C => guida(C, { twa: 58, centra: true, regola: true, resta: true }) }, // «lascia che arrivi ad almeno 3,3 nodi»
   "5:Virare":                        { lim: 40,  f: C => virare(C) },
+  "7:Una virata con la barra in fondo": { lim: 40, f: C => virare(C, true) },
+  "8:Spingi il boma e riparti":      { lim: 40,  f: C => spingiBoma(C) },
+  "10:Raddrizza e riparti":          { lim: 60,  f: C => poi(premi(C, "a"), aspettaDritta(C), colpiScotta(C, "ok")) },   // 1.1.7, lezione B4: «premi A e aspetta; poi cazza finché i filetti sono dritti»
+  "12:Passale dietro":               { lim: 60,  riparti: true, f: C => passaDietro(C) },                                         // 1.2.0, D1: «poggia quanto basta per passarle dietro, poi torna di bolina»
+  "13:Sorpassa senza toccarla":      { lim: 90,  riparti: true, f: C => sorpassa(C) },                                            // 1.2.0, D2: «sposta un poco la prua da una parte, tieniti a un paio di metri e passa avanti»
+  "14:Vira dopo che è passata":      { lim: 60,  riparti: true, f: C => viraDopo(C) },                                            // 1.2.0, D3: «aspetta che sia passata e lontana, poi vira»
+  "11:Vira sullo scarso":            { lim: 300, aspetta: true, f: C => scarsi(C) },                                // 1.1.8, lezione B5: «quando sei scarso di quasi una decina di gradi rispetto alla media vira»: il pilota vira quando legge 10°
+  "9:La rotta nella raffica":        { lim: 120, aspetta: true, f: C => rottaRaffica(C) },                          // 1.1.6, lezione B3: «tieni la rotta nella raffica: lasca un poco e piccoli colpi di barra; passata, cazza»                                          // 1.1.5, lezione B2: «Z e barra verso il boma; al traverso molla Z, centra e cazza»                                       // 1.1.4, lezione B1: «vira tenendo Maiusc con la freccia verso il boma»
   "5:Una virata che non riesce":     { lim: 120, f: C => nonRiesce(C) },
   "5:Risalire il vento":             { lim: 180, f: C => bordeggia(C) },
   "5:Strambata violenta":            { lim: 60,  f: C => strambaAperta(C) },
@@ -160,15 +168,75 @@ function* rotta(C){                                                      // come
     } else yield 0.2;
   }
 }
-function* virare(C){                                                     // «barra sottovento con decisione, finché sei in bolina dall'altra parte; poi centra»
+function* virare(C, maiusc = false){                                     // «barra sottovento con decisione, finché sei in bolina dall'altra parte; poi centra»; maiusc: con Maiusc (lezione B1)
   if (kn() < 3){                                                          // «si vira sempre con la barca lanciata» (passo prima): se dopo l'attesa la barca è lenta,
     const g = guida(C, { twa: 58, centra: true, regola: true, resta: true }); let t = 0;   // prima riprende velocità in bolina (messa a punto, seme 3)
     for (const w of g){ yield w; t += w; if (kn() >= 3.3 || t > 25) break; }
     suTutti();
   }
   const l0 = lato(), k = versoBomaK();
+  if (maiusc) key("Shift", true);
   yield* tieni(C, k, () => lato() !== l0 && twaV(C) >= 50, 30);
+  if (maiusc) key("Shift", false);
   centra();
+}
+function* spingiBoma(C){                                                  // lezione B2: boma spinto (Z) e barra verso il boma fino al traverso, poi si riparte
+  const k = versoBomaK(); key("z", true);
+  yield* tieni(C, k, () => twaV(C) >= 80, 30);
+  key("z", false); centra();
+  yield* guida(C, { twa: 90, centra: true, regola: true, resta: true });
+}
+function* scarsi(C){                                                     // lezione B5: bolina a 50° letti; vento medio da nord (scritto sul mare): scarso = prua oltre 50° dal nord
+  const inBolina = stabile(() => twaV(C) >= 40 && twaV(C) <= 60, 2);    // «mettiti di bolina, guarda la Prua per un po'»: decide dopo 2 s di bolina (40-60° letti). 2 nov 2026: prima
+                                                                          // chiedeva 3 s a ±4° dalla prua voluta, e mentre inseguiva il vento che gira non ci riusciva proprio al massimo dello scarso (semi 51 e 79: 98/100)
+  for (let n = 0; n < 5000; n++){
+    sterza(C, prua(C, 50), 4);
+    const sc = Math.abs(n180(prua(C, 50))) - 50 + C.bias;                 // scarso: la prua di bolina (Prua del pannello, un numero) contro la prua media (50° letti dal nord, - errore di lettura): un errore
+                                                                          // costante si annulla, come per chi prende la media della Prua; prima si usava la prua del momento, con dentro l'errore di timone
+    if (inBolina() && sc >= 10 && kn() > 2 && Math.abs(sv.S.r) < 3){ suTutti(); yield* virare(C); continue; }
+    yield C.rt;
+  }
+}
+// lezioni D (1.2.0): la barca di scena si vede; il pilota legge la sua posizione e la sua prua come le vede il giocatore
+const scena = () => sv.S.scenaMob && sv.S.scenaMob[0];
+const relScena = b => { const rx = sv.S.x - b.x, ry = sv.S.y - b.y, s = Math.sin(b.h * D), c = Math.cos(b.h * D); return { along: rx * s - ry * c, side: rx * c + ry * s }; };
+const verso = (x, y) => Math.atan2(x - sv.S.x, -(y - sv.S.y)) / D;
+function* passaDietro(C){                                                  // «poggia quanto basta per passarle dietro, poi torna di bolina»: poggiato a 100° finché
+  const s0 = Math.sign(relScena(scena()).side); let su = false;          // sei 7 m dietro la sua poppa (lungo la sua rotta), poi bolina: le attraversi la scia dietro
+  for (let n = 0; n < 5000; n++){
+    const r = relScena(scena());
+    if (!su && Math.sign(r.side) === s0 && r.along > -7) sterza(C, prua(C, 100), 4); else { su = true; sterza(C, prua(C, 50), 4); }
+    yield C.rt;
+  }
+}
+function* sorpassa(C){                                                     // 20° più poggiato della sua prua finché la tua poppa è avanti alla sua prua, poi la sua stessa prua
+  for (let n = 0; n < 5000; n++){
+    const b = scena(), r = relScena(b);
+    sterza(C, r.along > 8 ? prua(C, 50) : b.h + 20, 4);
+    yield C.rt;
+  }
+}
+function* viraDopo(C){                                                     // bolina; vira quando l'altra ha passato la prua (tu sei dietro di lei) ed è a più di 15 m e si allontana
+  let d0 = 1e9;
+  for (let n = 0; n < 5000; n++){
+    const b = scena(), d = Math.hypot(b.x - sv.S.x, b.y - sv.S.y);
+    if (d > 15 && d > d0 + 0.01 && relScena(b).along < 0){ suTutti(); yield* virare(C); break; }
+    d0 = d; sterza(C, prua(C, 50), 4); yield C.rt;
+  }
+  for (let n = 0; n < 5000; n++){ sterza(C, prua(C, 50), 4); yield C.rt; }
+}
+function* aspettaDritta(C){ while (sv.S.capsized) yield C.rt; }          // lezione B4: «aspetta che la barca torni dritta»
+function* rottaRaffica(C){                                                // lezione B3: la rotta del suggerimento, lascando quando sbanda e cazzando quando i filetti sbattono
+  for (let n = 0; n < 5000; n++){
+    suTutti();
+    if (heel() > 13){ key(lascaK(), true); yield 0.2 + (C.imp ? C.extra : 0); key(lascaK(), false); }
+    else if (heel() < 8 && tt() === "wind"){ key(cazzaK(), true); yield 0.15; key(cazzaK(), false); }
+    const off = n180(sv.S.h - sv.S.course);                               // come rotta(): piccoli colpi, senza insistere se la prua rientra
+    if (Math.abs(off) > 2 && !(off * sv.S.r < 0 && Math.abs(sv.S.r) > 3)){
+      const k = off > 0 ? "ArrowRight" : "ArrowLeft";
+      key(k, true); yield 0.13 + (C.imp ? C.extra : 0); key(k, false); yield 0.07;
+    } else yield 0.2;
+  }
 }
 function* nonRiesce(C){                                                  // lezione 5, passo 4
   yield* tieni(C, lascaK(), () => sh() >= 0.995 || kn() < 1, 25);       // lasca finché la barca scende sotto 1 nodo
@@ -244,8 +312,9 @@ window.__corsa = (li, imp, semeGioco, semePilota) => {
     if (traccia && Math.round(T * 60) % 30 === 0){ const I = sv.readI(); traccia.push([+T.toFixed(1), Math.round(n180(sv.twd - sv.S.h)), +I.kn.toFixed(1), I.tt, +I.sheet.toFixed(2), +I.tiller.toFixed(2), Math.round(sv.S.heel), +sv.S.r.toFixed(1), [...giu].join("+")]); }
     if (sv.stepDone) return true; } return sv.stepDone; };
   for (let passo = 0; passo < 40; passo++){
-    const titolo = $("lTitle").textContent, finale = !$("lQuiz").hidden, nx = $("lNext");
+    const titolo = $("lTitle").textContent, finale = !$("lQuiz").hidden || $("lNext").textContent !== "Avanti", nx = $("lNext");   // 1.1.4: le lezioni nascoste non hanno il pulsante del quiz
     if (finale) break;
+    if (!$("lEs").hidden){ sv.showStep(passo + 1); continue; }             // 1.2.1: passo con l'esercizio in regata, lo misura collaudo_esercizi_regata.py; qui si salta
     const pratico = nx.hidden || nx.classList.contains("pending");         // con una condizione: «Avanti» compare solo a passo completato
     if (!pratico){ nx.click(); continue; }
     const voce = PASSI[(li + 1) + ":" + titolo];
@@ -257,6 +326,7 @@ window.__corsa = (li, imp, semeGioco, semePilota) => {
     // 2) guidando
     r.guida = r.mani; r.tGuida = null; r.riprese = 0; r.forzato = false;
     if (!r.mani && voce){
+      if (voce.riparti){ suTutti(); $("lRetry").click(); }               // 1.2.0: barca di scena che si muove: dopo l'attesa il copione è finito, il giocatore preme Ricomincia
       const C = { imp, rt: 0.1 + rnd() * 0.3, extra: 0.3 + rnd() * 1.2, err, bias: (rnd() * 2 - 1) * err, riprese: 0, fermo: 0 };
       const t1 = T, g = voce.f(C);
       let fatto = false, finito = false;
@@ -353,7 +423,8 @@ async def main():
     if "--reale" in a: sys.exit(0 if await reale() else 1)
     semi = range(1, 4) if "--veloce" in a else range(1, 21)
     if "--semi" in a: x, y = a[a.index("--semi") + 1].split("-"); semi = range(int(x), int(y) + 1)
-    lezioni = [int(c) - 1 for c in a[a.index("--solo") + 1]] if "--solo" in a else list(range(6))
+    so = a[a.index("--solo") + 1] if "--solo" in a else None   # 1.1.7: «--solo 10» o «--solo 1,10» per la decima; «--solo 123» resta una cifra per lezione
+    lezioni = ([int(c) - 1 for c in so.split(",")] if "," in so or so in ("10", "11", "12", "13", "14", "15", "16", "17", "18") else [int(c) - 1 for c in so]) if so else list(range(18))   # 1.2.1: D5-D7 (16-18) hanno solo pagine e un esercizio in regata, misurato da collaudo_esercizi_regata.py; 1.1.4-1.1.9: dalla settima all'undicesima le lezioni B1-B5, poi D1-D4 (nascoste; per ora senza passi pratici) (nascoste nel menu)
     pagina = a[a.index("--pagina") + 1] if "--pagina" in a else str(ROOT / "index.html")
     ris, errs = await corse(pagina, semi, lezioni)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -364,7 +435,7 @@ async def main():
     print(f"\nmisurato: {len(passi)} passi pratici, {corse_mani} corse a mani ferme, errori della pagina {len(errs)} {errs[:2]}")
     print("da guardare:" if problemi else "da guardare: niente")
     for q in problemi: print("  - " + q)
-    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3)[l] for l in lezioni) and not errs
+    valido = len(passi) == len(lezioni) * 0 + sum((6, 5, 9, 3, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0)[l] for l in lezioni) and not errs
     print("ESITO:", "NON VALIDO (passi mancanti o errori della pagina)" if not valido else ("OK" if not problemi else "DA GUARDARE"))
     sys.exit(2 if not valido else 0)   # i casi «da guardare» sono un rapporto, non un fallimento dello script: si leggono (lancia_tutti.sh li mostra)
 

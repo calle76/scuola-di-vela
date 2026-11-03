@@ -3,7 +3,7 @@
 # Ogni parte dichiara quanti casi ha misurato e fallisce se sono zero.
 # Le misure del riquadro valgono solo con i caratteri veri (Barlow, Source Serif): senza, ESITO: NON VALIDA (uscita 1).
 # Uso: python collaudo_esame.py
-import asyncio, sys, pathlib, re, shutil, subprocess, tempfile
+import asyncio, sys, pathlib, re, shutil, subprocess, tempfile, math
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -12,6 +12,9 @@ OUT = pathlib.Path(__file__).resolve().parent / "output"; OUT.mkdir(exist_ok=Tru
 RIF_0195 = "8500b5b"  # commit con index.html della 0.19.5, per il confronto del menu
 VIETATE = ["lascia strada", "lasciare strada", "precedenz", "abbattuta", "viro", "strambo", "orzier", "scader", "rosso", "verde"]
 SEME = 20261010; ESTRAZIONI = 500
+# 1.2.4 (menu nuovo): le 14 lezioni nuove sono visibili e l'esame ha 34 domande; questo collaudo misura l'esame delle 6 lezioni di oggi (20 domande),
+# quindi nasconde nella pagina le lezioni dalla 7 dell'array (NASCONDI). L'esame da 34 lo misura collaudo_esame_nuove.py.
+NASCONDI = "() => { LESSONS.forEach((L, i) => { if (i >= 6) L.nascosta = true; }); if (typeof mode !== 'undefined' && mode === 'menu') showMenu(); }"
 # Math.random a seme fisso (mulberry32): lo imposta il collaudo, il gioco non cambia
 SEED_JS = "(()=>{let s=%d;Math.random=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};})()"
 
@@ -89,19 +92,19 @@ async def un_esame(pg, giuste, D):
     return sbagliate
 
 async def controlla_esito(pg, giuste, sbagliate, D):
-    soglia = D["SOGLIA_ESAME"]
+    soglia = math.ceil(20 * D["SOGLIA_ESAME"] - 1e-9)   # 1.2.3: SOGLIA_ESAME è la frazione (0,8); con le 6 lezioni visibili, 16 su 20
     atteso = f"{giuste} su 20: " + ("superato" if giuste >= soglia else f"non superato (servono {soglia})")
     chk("esito", (await pg.inner_text(".qz .score")) == atteso, f"«{await pg.inner_text('.qz .score')}» invece di «{atteso}»")
     elenco = await pg.evaluate("""() => [...(document.getElementById('qzWrong')?.children || [])].map(e => e.tagName === 'H3' ? ['h3', e.textContent] :
         ['wq', e.querySelector('.wt').textContent, e.querySelector('.from')?.textContent, e.textContent])""")
-    nomi = [f"Lezione {li+1}" for li in range(6)]
+    nomi = await pg.evaluate("() => LESSONS.slice(0, 6).map(L => L.name)")   # 1.2.4: «Lezione 1, 2, 4, 5, 6, 8» nel menu nuovo
     lez_attese = sorted({li for li, _, _ in sbagliate})
     h3 = [e[1] for e in elenco if e[0] == "h3"]
     chk("esito", [h.split(":")[0] for h in h3] == [nomi[li] for li in lez_attese], f"titoli di lezione {h3}")
     chk("esito", sum(e[0] == "wq" for e in elenco) == len(sbagliate), "numero di sbagliate in elenco")
     att = {r[1]: (li, r, data) for li, r, data in sbagliate}; cur = None
     for e in elenco:
-        if e[0] == "h3": cur = int(e[1].split(":")[0].split()[-1]) - 1; continue
+        if e[0] == "h3": cur = nomi.index(e[1].split(":")[0]); continue
         li, r, data = att.get(e[1], (None, None, None))
         chk("esito", li == cur, f"«{e[1]}» sotto la lezione sbagliata")
         chk("esito", r is not None and e[2] == f"dal passo «{r[0]}»", f"riga del passo per «{e[1]}»: {e[2]}")
@@ -113,7 +116,7 @@ async def main():
         # --- 1) banca e 500 estrazioni a seme fisso (aggancio #collaudo) ---
         pg = await b.new_page(viewport={"width": 1360, "height": 650}); pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.add_init_script(SEED_JS % SEME)
-        await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
+        await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300); await pg.evaluate(NASCONDI)
         await pg.evaluate(DATI_JS, DATI_SRC); D = await pg.evaluate("__E")
         controlla_banca(D)
         await estrazioni(pg, D, ESTRAZIONI, "estrazione")
@@ -121,7 +124,7 @@ async def main():
         extra = "\n  ESAME[1].push(" + ",".join(f'["Come si timona", "prova {c}", "giusta {c}", ["a {c}", "b {c}", "c {c}"], "spiegazione"]' for c in "xyz") + ");"
         var = src.replace(blocco("ESAME"), blocco("ESAME") + extra, 1)
         tmp = sorgente.copia(tempfile.mkdtemp(), [(blocco("ESAME"), blocco("ESAME") + extra)])   # copia della pagina con le domande in più
-        await pg.goto(tmp.as_uri() + "#collaudo"); await pg.wait_for_timeout(300)
+        await pg.goto(tmp.as_uri() + "#collaudo"); await pg.wait_for_timeout(300); await pg.evaluate(NASCONDI)
         D2 = dict(D); D2["ESAME"] = [list(l) for l in D["ESAME"]]
         D2["ESAME"][1] = D2["ESAME"][1] + [["Come si timona", f"prova {c}", f"giusta {c}", [f"a {c}", f"b {c}", f"c {c}"], "spiegazione"] for c in "xyz"]
         await estrazioni(pg, D2, 200, "estrazione (lezione 2 con 7 domande)")
@@ -133,7 +136,7 @@ async def main():
         await pg.goto(BASE); await pg.wait_for_timeout(300)
         # progressi già presenti, per vedere che l'esame non li tocca
         await pg.evaluate("""() => localStorage.setItem('scuolaVelaSim.v1', JSON.stringify({done: {l0: true, m0: true}, best: {'m0.4': 90}, clean: {}, quiz: {q0: 5, q2: 4}}))""")
-        await pg.reload(); await pg.wait_for_timeout(300)
+        await pg.reload(); await pg.wait_for_timeout(300); await pg.evaluate(NASCONDI)
         await pg.evaluate(DATI_JS, DATI_SRC)
         prima = await pg.evaluate("JSON.stringify(Object.fromEntries(Object.keys(localStorage).sort().map(k => [k, localStorage.getItem(k)])))")
         chk("pagina", await pg.evaluate("typeof window.__sv") == "undefined", "la pagina non deve avere l'aggancio dei collaudi")

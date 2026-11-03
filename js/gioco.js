@@ -12,8 +12,8 @@
   const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false };
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
-  const freeEnv = { twd: 0, tws: 10, gusts: 1, lv: 1 }; // lv: 1.0.24, 2 = barca dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md)
-  const VERSIONE = "1.0.78"; // sola fonte: menu, mare e registratore la leggono da qui
+  const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
+  const VERSIONE = "1.2.6"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -123,13 +123,16 @@
   const MERITI = [["abil", "Abilità", 20, 8], ["cono", "Conoscenza", 12, 6], ["comp", "Competizione", 8, 3], ["esp", "Esperienza", 6, 6]];
   const TOT_MIN = 29;
   function meriti(p){
+    const VIS = ORD_L.filter(i => !LESSONS[i].nascosta);
     const racePt = i => Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; }));
     const pt = {
       abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
-      cono: QUIZ.reduce((a, q, i) => { const s = p.quiz?.["q" + i]; return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
-      comp: RACES1.reduce((a, rc, i) => a + racePt(i), 0),
-      esp: LESSONS.filter((L, i) => p.done["l" + i]).length };
-    const pulite = RACES1.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
+      // 1.2.4 (docs/PROPOSTA-MENU.md §2): conoscenza ed esperienza su tutte le lezioni visibili (oggi le 20), in proporzione, con gli stessi massimi e minimi di prima.
+      // Solo le visibili, come l'esame: i collaudi che nascondono le lezioni nuove ritrovano i conti delle 6 lezioni di prima
+      cono: Math.floor(MERITI[1][2] * VIS.reduce((a, i) => { const s = p.quiz?.["q" + i], q = quizDi(i); return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0) / (2 * VIS.length) + 1e-9),
+      comp: RACES_CARRIERA.reduce((a, rc, i) => a + racePt(i), 0),
+      esp: Math.floor(MERITI[3][2] * VIS.filter(i => p.done["l" + i]).length / VIS.length + 1e-9) };
+    const pulite = RACES_CARRIERA.filter((rc, i) => ["principianti", "esperti"].some(l => p.race?.[recK("r" + i) + ":" + l]?.pulita)).length;
     const totale = MERITI.reduce((a, [k]) => a + pt[k], 0), esame = !!p.exam?.superato;
     // 0.23, dopo la prova di Ale: una riga con tutto quello che manca, e un suggerimento concreto per ogni area che manca
     const sotto = MERITI.filter(([k, , , min]) => pt[k] < min);
@@ -139,15 +142,15 @@
       : totale < TOT_MIN ? (TOT_MIN - totale === 1 ? "Ti manca 1 punto" : "Ti mancano " + (TOT_MIN - totale) + " punti") + " al totale" + poi
       : !esame ? "Ti manca l'esame." : null;
     const voce = k => {
-      if (k === "esp"){ const i = LESSONS.findIndex((L, j) => !p.done["l" + j]); return i < 0 ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
+      if (k === "esp"){ const i = VIS.find(j => !p.done["l" + j]); return i === undefined ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
       if (k === "abil"){
         const fas = i => medalOf(i, p.best[recK("m" + i)]), tit = i => "Prova " + (i + 1) + ", " + MISSIONS[i].title;
         let i = MISSIONS.findIndex((m, j) => !fas(j)); if (i >= 0) return tit(i) + ".";
         i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
         i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
-      if (k === "cono"){ const i = QUIZ.findIndex((q, j) => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < q.length * 4; }); return i < 0 ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
-      const rp = RACES1.map((rc, i) => racePt(i));
-      const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES1[i].title + " (con avversari).";
+      if (k === "cono"){ const i = VIS.find(j => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < quizDi(j).length * 4; }); return i === undefined ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
+      const rp = RACES_CARRIERA.map((rc, i) => racePt(i));
+      const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES_CARRIERA[i].title + " (con avversari).";
     };
     const aree = sotto.length ? sotto : totale < TOT_MIN ? MERITI.filter(([k, , max]) => pt[k] < max) : [];
     const sugg = aree.map(([k]) => voce(k)).filter(Boolean);
@@ -160,7 +163,7 @@
     const rows = MERITI.map(([k, nome, max, min]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-m="${k}">${m.pt[k]} / ${max}</span> · <span class="${m.pt[k] >= min ? "ok" : "no"}">servono ${min}</span></span></div>`).join("");
     const sug = m.sugg.length ? m.sugg[giroSug++ % m.sugg.length] : null;
     return `<div><div class="part-head"><h2>Libretto</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
-      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES1.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Brevetto ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Attestato</button></p>`
+      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES_CARRIERA.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Brevetto ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Attestato</button></p>`
         : `<p class="manca" id="libManca">${m.superato ? "Livello 1 superato." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
   loadProgress();
@@ -176,19 +179,21 @@
   const fmtTime = sec => { const m = Math.floor(sec / 60), s2 = sec % 60; return m ? m + " min " + s2 + " s" : s2 + " s"; };
 
   function openItem(it){
+    if (it !== "free" && it[0] !== "r") menuGr = gruppoDi(it); // 1.2.4: tornando al menu si ritrova la scheda della voce aperta
     $("menu").hidden = true; $("game").hidden = false; resize();
     if (it === "free") startFree(); else if (it[0] === "r") startRace(it[1]); else it[0] === "l" ? startLesson(it[1]) : startMission(it[1]);
     window.scrollTo(0, 0); canvas.focus();
   }
   const oggi = () => { const d = new Date(); return d.getFullYear() + "-" + p2(d.getMonth() + 1) + "-" + p2(d.getDate()); };
   const fmtData = d => new Date(d + "T12:00").toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
-  const ripName = li => "Ripasso " + (li + 1); // 1.0.2: «Lezione» resta alla Scuola; ripassi ed esame usano «Ripasso N»
+  const ripName = li => "Ripasso " + numLez(li); // 1.0.2: «Lezione» resta alla Scuola; ripassi ed esame usano «Ripasso N»; dalla 1.2.4 N è il numero della lezione nel menu
+  let menuGr = null; // 1.2.4: la scheda aperta della Scuola (gruppo); null = quella della prima voce da fare
   const ripElenco = a => (a.length > 1 ? "ripassi " + a.slice(0, -1).join(", ") + " e " + a[a.length - 1] : "ripasso " + a[0]);
   function esameBtn(){
-    const ex = modo === "carriera" ? progress.exam : null, tot = QUOTE.reduce((a, b) => a + b);
-    if (ex?.superato) return `<button id="goEsame" disabled>Esame superato<small>${ex.voto} su ${tot}</small></button>`;
-    if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${ripElenco(ex.ripasso.map(i => i + 1))}</small></button>`;
-    return `<button id="goEsame">Esame su tutte le lezioni<small>${tot} domande, ne servono ${SOGLIA_ESAME}</small></button>`;
+    const ex = modo === "carriera" ? progress.exam : null, tot = domandeEsame();
+    if (ex?.superato) return `<button id="goEsame" disabled>Esame superato<small>${ex.voto} su ${ex.n || 20}</small></button>`; // 1.2.3: ex.n, le domande di quell'esame (prima sempre 20)
+    if (ex?.ripasso?.length) return `<button id="goEsame" disabled>Esame: prima i ripassi<small>${ripElenco(ex.ripasso.map(numLez))}</small></button>`;
+    return `<button id="goEsame">Esame su tutte le lezioni<small>${tot} domande, ne servono ${sogliaEsame(tot)}</small></button>`;
   }
   // 0.24, attestato (solo carriera): compare da solo la prima volta che si torna al menu con il livello superato, poi dal libretto
   // disegno nostro: una deriva stilizzata sul mare, in alto sull'attestato (non è un marchio né un logo di nessuna classe)
@@ -197,7 +202,7 @@
     const B = progress.brevetto, m = meriti(progress), q = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
     $("atBody").innerHTML = `${NAVE}<p class="sc">Scuola di vela</p><hr><p class="titolo">Attestato del gioco</p><h2 id="atTitle">Brevetto di livello 1</h2><p class="ruolo">Timoniere di deriva</p>
       <label for="atName">Nome (facoltativo)</label><input id="atName" maxlength="60" autocomplete="off" value="${q(B.nome || "")}">
-      <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${QUOTE.reduce((a, b) => a + b)}.</p>
+      <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${progress.exam.n || 20}.</p>
       <ul>${MERITI.map(([k, nome, max]) => `<li>${nome}: ${m.pt[k]} / ${max}</li>`).join("")}</ul>
       <p class="legal">Nessun valore legale: non sostituisce un corso di vela né la patente nautica.</p>
       <div class="row"><button class="primary" id="atPrint">Stampa</button><button id="atClose">Chiudi</button></div>`;
@@ -213,9 +218,12 @@
     let nuovo = false;
     if (modo === "carriera" && !progress.brevetto && meriti(progress).superato){ progress.brevetto = { data: oggi() }; saveProgress(); nuovo = true; }
     $("game").hidden = true; $("menu").hidden = false;
-    const doneCount = SEQ.filter(([t, i]) => progress.done[t + i]).length;
+    const vis = ([t, i]) => t !== "l" || !LESSONS[i].nascosta, VSEQ = SEQ.filter(vis); // 1.2.4: nel gioco nessuna lezione è nascosta; i collaudi possono nasconderle
+    const doneCount = VSEQ.filter(([t, i]) => progress.done[t + i]).length;
+    if (menuGr === null){ const p = VSEQ.findIndex(([t, i]) => !progress.done[t + i]); menuGr = p < 0 ? 0 : gruppoDi(VSEQ[p]); }
     const esc = t => t.replace(/"/g, "&quot;");
-    const rows = SEQ.map(([t, i], k) => {
+    const schede = GRUPPI.map(([nome, voci], j) => { const v = voci.filter(vis); return `<button data-g="${j}" aria-pressed="${j === menuGr}">${j + 1} · ${nome} <small>${v.filter(([t, i]) => progress.done[t + i]).length}/${v.length}</small></button>`; }).join("");
+    const rows = VSEQ.map(([t, i], k) => { if (gruppoDi([t, i]) !== menuGr) return "";
       const key = t + i, done = progress.done[key];
       const kind = t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
       const title = t === "l" ? LESSONS[i].title : MISSIONS[i].title;
@@ -225,31 +233,33 @@
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
-    const races = (modo === "carriera" ? RACES1 : RACES).map((rc, i) => { const b = progress.best[recK("r" + i)];
+    const races = (modo === "carriera" ? RACES_CARRIERA : RACES).map((rc, i) => { const b = progress.best[recK("r" + i)];
       return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
     const torBtn = (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
         const st = chiuso ? "dopo il brevetto di livello 1" : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
         return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo dell'1b</span><span class="state ${F ? "ok" : "todo"}">${st}</span></button>`; })(); // senza descrizione (la dà il riquadro che si apre); nel gioco libero sta nel terzo riquadro: in «Regate» il menu non stava in 1360x650
-    const quiz = LESSONS.map((L, i) => { const best = progress.quiz?.["q" + i];
-      return `<button data-q="${i}">${ripName(i)} · ${L.title}<small>${best !== undefined ? "migliore: " + best + " su " + QUIZ[i].length : QUIZ[i].length + " domande"}</small></button>`; }).join("");
+    // 1.2.4: i ripassi della scheda aperta, su due colonne; ✓ = migliore almeno l'80%, il punteggio si legge passando sopra
+    const quiz = `<div class="rip2">` + GRUPPI[menuGr][1].filter(([t, i]) => t === "l" && !LESSONS[i].nascosta).map(([, i]) => { const L = LESSONS[i], best = progress.quiz?.["q" + i], n = quizDi(i).length;
+      return `<button data-q="${i}" title="${esc(ripName(i) + " · " + L.title + " · " + (best !== undefined ? "migliore: " + best + " su " + n : n + " domande"))}"><span>${numLez(i)} · ${L.title}</span>${best !== undefined && best * 5 >= n * 4 ? "<small>✓</small>" : ""}</button>`; }).join("") + `</div>`;
     $("menu").innerHTML = `<div class="menu-inner">
       <header class="menu-head"><div><h1>Scuola di vela <span class="ver">V. ${VERSIONE}</span></h1><p>Un simulatore per imparare a governare una deriva. Segui l'ordine numerato della Scuola, oppure apri qualsiasi voce.</p></div>
         <div class="head-r"><div class="seg" id="modoSel"><button data-v="libero" aria-pressed="${modo === "libero"}">Gioco libero</button><button data-v="carriera" aria-pressed="${modo === "carriera"}">Carriera</button></div>
         <button class="pill" id="menuGloss">Glossario</button></div></header>
       <div class="tiles">
-        <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${SEQ.length} completate</span></div><div class="items">${rows}</div></div></section>
+        <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${VSEQ.length} completate</span></div><div class="seg schede" id="schede">${schede}</div><div class="items">${rows}</div></div></section>
         <section class="tile">
           <div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}${modo === "carriera" ? torBtn : ""}</div></div>
           <div><div class="part-head"><h2>Navigazione libera</h2></div><div class="items"><button class="item wide free" id="goFree"><span class="num">⛵</span><span class="title">Naviga senza obiettivi</span><span></span><span class="desc">Scegli vento e raffiche e prova quello che vuoi.</span></button></div></div>
         </section>
         <section class="tile">
-          <div><div class="part-head"><h2>Ripasso ed esame</h2><span>a scelta multipla</span></div><div class="review">${quiz}
+          <div><div class="part-head"><h2>Ripassi ed esame</h2><span>gruppo ${menuGr + 1} · ${GRUPPI[menuGr][0]}</span></div><div class="review">${quiz}
             ${esameBtn()}</div></div>
-          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>Tornei</h2></div><div class="items">${torBtn}</div></div><div><div class="part-head"><h2>In arrivo</h2></div><p class="soon">Altri tipi di barca.</p></div>`}
+          ${modo === "carriera" ? librettoHtml() : `<div><div class="part-head"><h2>Tornei</h2></div><div class="items">${torBtn}</div></div>`}
         </section>
       </div>
       <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><span><button class="linkish" id="regOpen">Regate registrate</button> <button class="linkish" id="resetProg">Azzera i progressi</button></span></footer></div>`;
-    $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(SEQ[+b.dataset.k]));
+    $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(VSEQ[+b.dataset.k]));
+    $("schede").onclick = e => { const b = e.target.closest("button[data-g]"); if (b && +b.dataset.g !== menuGr){ menuGr = +b.dataset.g; showMenu(); } };
     $("goFree").onclick = () => openItem("free");
     $("goTor").onclick = torApri;
     $("goEsame").onclick = openEsame;
@@ -272,7 +282,7 @@
   // ---- glossario e impostazioni ----
   function renderGloss(q = ""){
     const n = q.trim().toLowerCase();
-    const list = GLOSS.filter(([t, d]) => !n || t.toLowerCase().includes(n) || d.toLowerCase().includes(n));
+    const list = glossVisibili().filter(([t, d]) => !n || t.toLowerCase().includes(n) || d.toLowerCase().includes(n));
     $("glList").innerHTML = list.length ? list.map(([t, d, w]) => `<dt>${t}<small>${w}</small></dt><dd>${d}</dd>`).join("")
       : `<p class="gl-empty">Nessun termine trovato. Prova con una parola più breve.</p>`;
   }
@@ -290,13 +300,14 @@
   const showQuiz = () => { renderQuiz(); $("quiz").showModal(); };
   function openQuiz(li, only){ // only: indici delle domande da riproporre (giro parziale); senza, ripasso completo
     releaseKeys();
-    const qs = QUIZ[li].map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n))
+    const qs = quizDi(li).map(([q, right, wrong, expl], n) => ({ n, q, right, wrong, expl })).filter(x => !only || only.includes(x.n))
       .map(({ n, q, right, wrong, expl }) => ({ n, q, right, opts: quizOpts(right, wrong), expl }));
     qz = { li, qs, i: 0, score: 0, answered: false, partial: !!only, wrong: [] };
     showQuiz();
   }
-  // esame: QUOTE[li] domande a caso da ogni lezione, poi le 20 in ordine casuale. Nel gioco libero non salva niente.
-  const estraiEsame = () => mescola(ESAME.flatMap((qs, li) => mescola(qs.map(q => [li, ...q])).slice(0, QUOTE[li])));
+  // esame: quotaEsame(li) domande a caso da ogni lezione visibile, poi tutte in ordine casuale (20 con le sole 6 lezioni di oggi). Nel gioco libero non salva niente.
+  // 1.2.3: le lezioni nascoste non consumano numeri a caso, quindi con le sole 6 lezioni l'estrazione è identica a prima (collaudo_esame, G1)
+  const estraiEsame = () => mescola(lezioniEsame().flatMap(li => mescola(bancaEsame(li).map(q => [li, ...q])).slice(0, quotaEsame(li))));
   function openEsame(){
     releaseKeys();
     const qs = estraiEsame().map(([li, passo, q, right, wrong, expl]) => ({ li, passo, q, right, opts: quizOpts(right, wrong), expl }));
@@ -307,14 +318,14 @@
   $("quiz").addEventListener("close", () => { if (mode === "menu") showMenu(); }); // aggiorna il punteggio migliore nel menu
   const wrongItem = w => `<div class="wq"><p class="wt">${w.q}</p><p>Hai risposto: ${w.given}</p><p>Giusta: <b>${w.right}</b></p><p class="expl">${w.expl}</p>${w.passo ? `<p class="from">dal passo «${w.passo}»</p>` : ""}</div>`;
   function renderEsito(b){
-    const n = qz.qs.length, ok = qz.score >= SOGLIA_ESAME;
-    const groups = LESSONS.map((L, li) => [L, qz.wrong.filter(w => w.li === li)]).filter(([, ws]) => ws.length);
+    const n = qz.qs.length, soglia = sogliaEsame(n), ok = qz.score >= soglia;
+    const groups = ORD_L.map(li => [LESSONS[li], qz.wrong.filter(w => w.li === li)]).filter(([, ws]) => ws.length); // 1.2.4: nell'ordine della Scuola
     // 0.24, carriera: un esame superato è definitivo (voto unico); non superato, prima il ripasso completo delle lezioni sbagliate
     const car = modo === "carriera", rip = groups.map(([L]) => LESSONS.indexOf(L));
-    if (car){ progress.exam = ok ? { superato: true, voto: qz.score, data: oggi() } : { superato: false, voto: qz.score, data: oggi(), ripasso: rip }; saveProgress(); }
+    if (car){ progress.exam = ok ? { superato: true, voto: qz.score, n, data: oggi() } : { superato: false, voto: qz.score, n, data: oggi(), ripasso: rip }; saveProgress(); }
     const btns = !car ? `<button class="primary" id="qzAgain">Rifai l'esame</button>`
       : ok ? "" : rip.map(li => `<button data-rq="${li}">${ripName(li)}</button>`).join("");
-    b.innerHTML = `<h2>Esame · livello 1</h2><div class="score">${qz.score} su ${n}: ${ok ? "superato" : `non superato (servono ${SOGLIA_ESAME})`}</div>
+    b.innerHTML = `<h2>Esame · livello 1</h2><div class="score">${qz.score} su ${n}: ${ok ? "superato" : `non superato (servono ${soglia})`}</div>
       ${car ? `<p class="q">${ok ? "Il voto è definitivo." : "Ripassa le lezioni in cui hai sbagliato, poi potrai rifare l'esame."}</p>` : ""}
       ${groups.length ? `<div class="wlist" id="qzWrong">${groups.map(([L, ws]) => `<h3>${L.name}: ${L.title}</h3>${ws.map(wrongItem).join("")}`).join("")}</div>` : ""}
       <div class="row">${btns}<button id="qzClose">Chiudi</button></div>`;
@@ -447,8 +458,8 @@
   let briefing = false, briefSkip = false; // briefSkip: solo per i collaudi automatici
   function showBrief(title, text, first){
     $("bTitle").textContent = title; $("bText").textContent = text;
-    $("bRaceOpts").hidden = mode !== "race" || !first;
-    $("bNote").textContent = !first ? "Il gioco è fermo finché non riprendi." : mode === "race" ? "Il conto alla rovescia parte quando premi Parti (o Invio)." : "Il cronometro parte quando premi Parti (o Invio).";
+    $("bRaceOpts").hidden = mode !== "race" || !first || !!R.es; // 1.2.1: l'esercizio di una lezione ha avversari e preparazione suoi
+    $("bNote").textContent = !first ? "Il gioco è fermo finché non riprendi." : mode === "race" ? (R.t < 0 ? "Il conto alla rovescia parte quando premi Parti (o Invio)." : "Il gioco parte quando premi Parti (o Invio).") : "Il cronometro parte quando premi Parti (o Invio).";
     $("bGo").textContent = first ? "Parti" : "Riprendi";
     releaseKeys();
     briefing = true; $("briefOv").hidden = false;
@@ -475,12 +486,20 @@
     else if (!prev || prev.pause) { freshState(0, 0, 90, st.autoTrim ? 0.4 : 0.3); }
     // 1.0.2: «La scuffia» non fa raddrizzare (la barca resta rovesciata fino al passo dopo); «Raddrizzare» parte sempre con la barca rovesciata
     if (st.noRight && S.capsized) freshState(0, 0, 90, 0.4);
+    if (st.scenaH !== undefined) freshState(0, 0, st.scenaH, 0.4); // 1.1.9: la prua della barca nelle pagine con una scena (lezioni D, regolamento)
+    // 1.2.0 (docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md, meccanismo A): barche di scena che si muovono, un copione: vanno dritte a velocità costante
+    // (b.u m/s) e, se b.orza = [inizio s, gradi, durata s], orzano piano. Niente fisica e niente guida: non si scansano mai.
+    S.scenaMob = st.scenaMobile ? st.scenaMobile.map(b => ({ x: S.x + b.x, y: S.y + b.y, h: b.h, h0: b.h, u: b.u, orza: b.orza, t: 0, col: b.col, label: b.label })) : null;
+    // 1.1.5: la barca parte ferma nell'angolo morto, con la prua a 10° dal vento e la vela tutta lascata (lezione B2, spingere il boma)
+    if (st.startIrons){ Object.assign(S, { h: norm360(env.twd + (S.boomSide < 0 ? 10 : -10)), u: 0, vl: 0, r: 0, heel: 0, heelRate: 0, capsized: false }); ctl.sheet = 1; ctl.tiller = 0; }
+    if (st.shifts) setShifts(st.shifts); // 1.1.8: salti di vento nel passo (lezione B5); freshState li spegne
     if (st.startCapsized && !S.capsized){ Object.assign(S, { capsized: true, indietro: 0, capCause: "heel", capSide: S.boomSide, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); }
-    base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized };
+    base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized, gapMin: 1e9, gapVirata: 1e9 };
     S.markReached = false;
     // 0.20.2: il punto del passo è una linea d'arrivo (FIN_HALF m per lato), perpendicolare alla direzione dalla partenza del passo all'arrivo
     S.lessonMark = st.mark ? { x: S.x + st.mark[0], y: S.y + st.mark[1], label: "Arrivo", fin: true, nx: st.mark[0] / Math.hypot(...st.mark), ny: st.mark[1] / Math.hypot(...st.mark) } : null;
     if (st.course) S.course = Math.round(norm360(S.h) / 5) * 5;
+    S.rottaScuola = !st.tiller && !st.pause ? S.h : null; // 1.1.3: rotta tenuta dalla scuola nei passi senza barra (vedi applyInput)
     $("lStep").textContent = "Passo " + (i + 1) + " di " + steps.length;
     $("lTitle").textContent = st.title;
     $("lText").innerHTML = st.text.map(t => "<p>" + (typeof t === "function" ? t() : t) + "</p>").join("");
@@ -492,13 +511,42 @@
     $("lFeedback").classList.toggle("pending", semBtns); $("lFeedback").hidden = !semBtns;
     $("lBack").hidden = i === 0;
     $("lRetry").hidden = !!st.pause;
-    $("lNext").classList.toggle("pending", semBtns && !!st.cond); $("lNext").hidden = !semBtns && !!st.cond;
+    $("lNext").classList.toggle("pending", semBtns && !!st.cond); $("lNext").hidden = !semBtns && (!!st.cond || !!st.esercizio);
+    $("lEs").hidden = !st.esercizio; $("lEs").textContent = "Apri l'esercizio"; $("lEs").classList.add("primary"); // 1.2.1: il passo apre una regata (meccanismo B)
     $("lNext").textContent = st.final ? nextLabel() : "Avanti";
-    $("lQuiz").hidden = !st.final;
+    $("lQuiz").hidden = !st.final || !!LESSONS[lessonIdx].nascosta; // 1.1.4: il quiz delle lezioni nuove arriva col menu nuovo
     if (st.final){ progress.done["l" + lessonIdx] = true; saveProgress(); }
     setControls(st.sem || [], !!st.tiller, !!st.sheet, st.turnHint);
     setHud(st.hud || 0);
     $("hint").hidden = st.pause || st.hintKind === "none" || !st.hud;
+  }
+  // muove le barche di scena e misura, rispetto alla prima: base.gapMin distanza minima fra gli scafi (m), base.contatto, base.dietro (le hai attraversato
+  // la rotta passando dietro la sua poppa di almeno 2 m), base.davanti (la tua poppa è almeno 2 m davanti alla sua prua), base.gapVirata (distanza minima mentre
+  // la tua prua è a meno di 30° dal vento, cioè durante la virata)
+  function scenaMuovi(dt){
+    S.scenaMob.forEach((b, i) => {
+      b.t += dt;
+      if (b.orza){ const k = clamp((b.t - b.orza[0]) / b.orza[2], 0, 1); b.h = norm360(b.h0 + sgn(norm180(env.twd - b.h0)) * b.orza[1] * k); }
+      b.x += Math.sin(b.h * D2R) * b.u * dt; b.y -= Math.cos(b.h * D2R) * b.u * dt;
+      if (i || S.capsized) return;
+      const gap = -polySep(hullWorld(S), hullWorld(b), S.x, S.y, b.x, b.y).pen;
+      base.gapMin = Math.min(base.gapMin, gap);
+      if (Math.abs(norm180(local.twd - S.h)) < 30) base.gapVirata = Math.min(base.gapVirata, gap);
+      if (gap <= 0 && !base.contatto){ base.contatto = true; toast("Contatto: dovevi lasciare strada. Premi Ricomincia."); }
+      const rx = S.x - b.x, ry = S.y - b.y, along = rx * Math.sin(b.h * D2R) - ry * Math.cos(b.h * D2R), side = rx * Math.cos(b.h * D2R) + ry * Math.sin(b.h * D2R);
+      if (base.latoScena !== undefined && Math.sign(side) !== Math.sign(base.latoScena) && along < -4.1) base.dietro = true; // poppa a -2,1 m, più 2 m
+      if (along > 6.2) base.davanti = true;                                                                              // sua prua a +2,1, tua poppa a 2,1 da te, più 2 m
+      base.latoScena = side;
+    });
+  }
+  // 1.2.1 (meccanismo B): dall'esercizio si torna al suo passo, con la barca ferma come in ogni pagina; ok = obiettivo raggiunto
+  function tornaLezione(es, ok){
+    mode = "lesson"; lessonIdx = es.lezione; showCards("lesson"); regReset();
+    setWhere(LESSONS[es.lezione].name + ": " + LESSONS[es.lezione].title);
+    env.twd = 0; env.tws = 10 / KN; setGusts(0);
+    freshState(0, 0, 90, 0.4);
+    showStep(es.passo);
+    if (ok){ completeStep(); $("lEs").textContent = "Rifai l'esercizio"; $("lEs").classList.remove("primary"); }
   }
   function completeStep(){
     stepDone = true;
@@ -508,6 +556,7 @@
   $("lNext").onclick = () => { const st = curStep(); if (st.final) return goNext(); showStep(Math.min(LESSONS[lessonIdx].steps.length - 1, stepIdx + 1)); };
   $("lBack").onclick = () => showStep(Math.max(0, stepIdx - 1));
   $("lQuiz").onclick = () => openQuiz(lessonIdx);
+  $("lEs").onclick = () => apriEsercizio(lessonIdx, stepIdx);
   $("lRetry").onclick = () => { freshState(0, 0, 90, curStep().autoTrim ? 0.4 : 0.3); showStep(stepIdx); };
 
   // ---- giro di boa (boe da lasciare a sinistra) ----
@@ -583,14 +632,13 @@
     env.twd = freeEnv.twd; env.tws = freeEnv.tws / KN;
     curMarks = [{ x: 0, y: -160, label: "Boa 1" }, { x: 110, y: -40, label: "Boa 2" }, { x: -110, y: -40, label: "Boa 3" }];
     freshState(0, 30, norm360(env.twd + 90), 0.3);
-    if (freeEnv.lv === 2){ S.lv = 2; setShifts("osc"); }
+    setShifts("osc"); // i salti di vento della barca dell'1b (1.0.28)
     setGusts(freeEnv.gusts);
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
   }
   $("wDir").onchange = e => { freeEnv.twd = +e.target.value; env.twd = freeEnv.twd; setGusts(gustLevel); };
   $("wSpd").onchange = e => { freeEnv.tws = +e.target.value; env.tws = freeEnv.tws / KN; };
   $("gustSel").onchange = e => { freeEnv.gusts = +e.target.value; setGusts(freeEnv.gusts); };
-  $("boatLv").onchange = e => { freeEnv.lv = +e.target.value; if (mode === "free"){ if (freeEnv.lv === 2){ S.lv = 2; setShifts("osc"); } else { delete S.lv; delete S.stall; setShifts(null); } } };
 
   // ======================================================================
   // INPUT
@@ -615,9 +663,9 @@
     }
     if (k === "1" || k === "2"){ if (!sesTyping()) userZoom = k === "1" ? Math.min(3, userZoom * 1.25) : Math.max(ZMIN, userZoom / 1.25); return; } // 1.0.48: zoom coi tasti vicini a Q, al posto dei pulsanti + e − (idea di Ale)
     if (k === "a"){ rightBoat(); return; } // 1.0.27: raddrizza con A (era R; R resta libero per le manovre dei livelli futuri, decisione di Ale)
-    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, nell'1b la barra arriva fino a 45°
+    if (k === "Shift"){ keys.add(k); return; } // 1.0.24: Maiusc + freccia, la barra arriva fino a 45°
     if (k === "q"){ if (!sesTyping()) keys.add("q"); return; } // vista, tenuto premuto (anche con Bloc Maiusc: k è minuscolo)
-    if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto (solo la barca dell'1b)
+    if (k === "z"){ if (!sesTyping()) keys.add("z"); return; } // 1.0.26: spingi il boma, tenuto premuto
     if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(k)){
       if (e.target.tagName === "SELECT") return;
       e.preventDefault(); keys.add(k);
@@ -632,7 +680,7 @@
     ["pointerup","pointercancel","lostpointercapture"].forEach(ev => btn.addEventListener(ev, () => semRelease(a)));
     btn.addEventListener("contextmenu", e => e.preventDefault());
   });
-  $("tiller").addEventListener("input", e => { if (S.lv === 2) tillerAim = e.target.value / 100; else ctl.tiller = e.target.value / 100; dragTiller = true; });
+  $("tiller").addEventListener("input", e => { tillerAim = e.target.value / 100; dragTiller = true; });
   ["pointerup","change","touchend"].forEach(ev => $("tiller").addEventListener(ev, () => dragTiller = false));
   $("sheet").addEventListener("input", e => { autoSheetSpegni(); ctl.sheet = e.target.value / 100; });
   function seg(id, key){
@@ -651,7 +699,7 @@
   $("allInstr").onchange = e => { opt.allInstr = e.target.checked; setHud(hudLevel); };
   $("showGhost").onchange = e => opt.ghost = e.target.checked;
   const otherWind = () => { let w; do { w = Math.floor(Math.random() * 8) * 45; } while (w === env.twd); return w; };
-  $("rRestart").onclick = () => startRace(raceIdx, env.twd);
+  $("rRestart").onclick = () => R && R.es ? apriEsercizio(R.es.lezione, R.es.passo) : startRace(raceIdx, env.twd);
   // 1.0.70: «Cambia vento» tolto dalle regate; 1.0.75: rimesso nel pannello e nella schermata finale delle regate (rWind, finWind in regate.js), mai nel torneo; nelle prove c'è sempre (mWind)
   $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
   $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
@@ -667,8 +715,8 @@
 
   function applyInput(dt){
     let tillerInput = false;
-    ctl.push = S.lv === 2 && keys.has("z") && !S.capsized; // 1.0.26: boma spinto finché Z è premuto (docs/archivio/PROPOSTA-SPINGI-BOMA.md)
-    if (tillerAim !== null){ // 1b: il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
+    ctl.push = keys.has("z") && !S.capsized; // 1.0.26: boma spinto finché Z è premuto (docs/archivio/PROPOSTA-SPINGI-BOMA.md)
+    if (tillerAim !== null){ // il cursore trascinato col mouse muove la barra al più alla velocità di Maiusc + freccia
       const d = tillerAim - ctl.tiller, m = 1.6 * dt; ctl.tiller = Math.abs(d) <= m ? tillerAim : ctl.tiller + Math.sign(d) * m; tillerInput = true;
       if (!dragTiller && ctl.tiller === tillerAim) tillerAim = null;
     }
@@ -677,8 +725,8 @@
       if (l || r){
         let dir = (r ? 1 : 0) - (l ? 1 : 0);
         if (opt.helm === "prua") dir = -dir * (S.u < 0 ? -1 : 1);
-        // 1.0.25, 1b: la sola freccia porta la barra fino a 35° (RUD2_SICURA), Maiusc + freccia fino a 45°; sempre alla velocità dell'1a
-        const lim = S.lv === 2 && !keys.has("Shift") ? Math.max(RUD2_SICURA, Math.abs(ctl.tiller)) : 1;
+        // 1.0.25: la sola freccia porta la barra fino a 35° (RUD2_SICURA), Maiusc + freccia fino a 45°; sempre alla stessa velocità
+        const lim = !keys.has("Shift") ? Math.max(RUD2_SICURA, Math.abs(ctl.tiller)) : 1;
         ctl.tiller = clamp(ctl.tiller + dir * 1.6 * dt, -lim, lim); tillerInput = true;
       }
     }
@@ -687,6 +735,10 @@
     if (!tillerInput && (opt[centerKey()] || quick) && !dragTiller){
       ctl.tiller *= Math.exp((quick ? -6 : -2.5) * dt); if (Math.abs(ctl.tiller) < 0.01) ctl.tiller = 0;
     }
+    // 1.1.3 (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A): nei passi delle lezioni senza barra la rotta la tiene la scuola, come la vela nei passi con autoTrim.
+    // La barca dell'1b orza da sola sbandando (1.0.46): a barra ferma nei passi sulla scotta finiva vicino all'angolo morto (passo 3.10: da 90° a 32° dal vento)
+    if (mode === "lesson" && S.rottaScuola != null && !allowTiller && !S.capsized && S.u > 0.3) ctl.tiller = clamp(norm180(S.h - S.rottaScuola) / 20 + S.r * 0.02, -0.6, 0.6);
+    S.tilAttivo = tillerInput; // 1.1.3: la barra si sta muovendo per mano del giocatore (tasti o cursore), per i passi che lo chiedono
     if (autoSheetAttiva() && allowSheet && (keys.has("ArrowUp") || keys.has("ArrowDown"))) autoSheetSpegni(); // i tasti della scotta tolgono l'automatismo
     if ((allowSheet || allowSem.includes("cazza")) && keys.has("ArrowUp") || semHeld.has("cazza")) ctl.sheet = Math.max(0, ctl.sheet - 0.27 * dt);
     if ((allowSheet || allowSem.includes("lasca")) && keys.has("ArrowDown") || semHeld.has("lasca")) ctl.sheet = Math.min(1, ctl.sheet + 0.27 * dt);
@@ -749,10 +801,10 @@
       S.x += Math.sin(to) * 0.25 * dt; S.y -= Math.cos(to) * 0.25 * dt;
       if (S.righting){
         S.righting += dt;
-        if (S.righting > raddT(S)){
-          const side = S.capSide, lv2 = S.lv === 2; // 1b: al traverso, ferma, vela tutta lascata (RADD2)
-          S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = lv2 ? 0 : 0.3;
-          S.h = norm360(local.twd + side * (lv2 ? RADD2.twa : 60)); ctl.sheet = lv2 ? 1 : 0.8; ctl.tiller = 0;
+        if (S.righting > RADD2.t){
+          const side = S.capSide; // al traverso, ferma, vela tutta lascata (RADD2; fino alla 1.0.78 l'1a ripartiva a 60° con 0,3 m/s)
+          S.capsized = false; S.righting = 0; S.heel = 0; S.heelRate = 0; S.hike = 0.3; S.u = 0;
+          S.h = norm360(local.twd + side * RADD2.twa); ctl.sheet = 1; ctl.tiller = 0;
           S.prevSide = sgn(norm180(local.twd - S.h));
         }
       }
@@ -771,8 +823,22 @@
       const f = finCross(S.lessonMark, px0, py0, S.x, S.y);
       if (f >= 0) S.markReached = true; else if (f === -2) toast("Fuori dalla linea: passa tra le due boe");
     }
+    if (mode === "lesson" && S.scenaMob) scenaMuovi(dt);
     // obiettivi
     if (mode === "lesson" && st.cond && !stepDone){
+      // 1.1.3 (docs/PROPOSTA-LEZIONI-SCUOLA.md, gruppo A): quello che il giocatore ha fatto nel passo, per i passi che la barca dell'1b farebbe da sola
+      // (orza da sola sbandando, 1.0.46): base.barraLee = secondi con la barra verso il boma (barra sottovento), base.lasca = scotta lascata in raffica
+      if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.barraLee = (base.barraLee || 0) + dt;
+      if (S.tilAttivo && Math.abs(ctl.tiller) > 0.8) base.maiusc = (base.maiusc || 0) + dt;
+      if (S.pushing) base.push = (base.push || 0) + dt; // 1.1.5: secondi col boma spinto (tasto Z) // 1.1.4: barra oltre 36°, cioè con Maiusc (la sola freccia si ferma a 35°) // solo la barra mossa adesso: quella rimasta dal passo prima non conta
+      if (shiftSt){ // 1.1.8 (lezione B5): base.scarso = di quanti gradi il vento è girato verso la prua rispetto al medio, letto l'ultima volta in bolina; base.buone = virate fatte da scarsi di almeno 7°; base.daBuono = una virata fatta da buoni di almeno 3°, che fa fallire il passo fino a Ricomincia; contano solo le virate cominciate da bolina (barca fra 35° e 75° dal vento negli ultimi 4 s) e volute (barra verso il boma negli ultimi 4 s: lasciata a sé, la barca orziera vira da sola) (misurato: senza, chi vira a caso completava 10 volte su 10)
+        const a = norm180(local.twd - S.h);
+        if (S.tilAttivo && ctl.tiller * S.boomSide > 0.05) base.tBarraLee = simTime;
+        if (Math.abs(a) >= 35 && Math.abs(a) <= 75){ base.scarso = -Math.sign(a) * norm180(local.twd - env.twd); base.tScarso = simTime; }
+        if (S.tacks > (base.tacksVisti ?? base.tacks)){ const sc = simTime - (base.tScarso ?? -1e9) < 4 && simTime - (base.tBarraLee ?? -1e9) < 4 ? base.scarso : 0; if (sc >= 7) base.buone = (base.buone || 0) + 1; else if (sc <= -3 && !base.daBuono){ base.daBuono = true; toast("Hai virato da buono: sulle altre mure ora sei scarso. Premi Ricomincia."); } base.tacksVisti = S.tacks; }
+      }
+      if (base.shPrev !== undefined && ctl.sheet > base.shPrev && local.tws > env.tws * 1.12) base.lasca = (base.lasca || 0) + ctl.sheet - base.shPrev;
+      base.shPrev = ctl.sheet;
       if (st.cond(readI(), S, base)){ holdT += dt; if (holdT >= (st.hold || 0.3)) completeStep(); } else holdT = 0;
     }
     if ((mode === "mission" || mode === "free") && curMarks.length && !S.finished){

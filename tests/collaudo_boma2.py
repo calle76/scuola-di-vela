@@ -1,5 +1,5 @@
 # «Spingi il boma» nel livello 2 in prova (1.0.26, docs/archivio/PROPOSTA-SPINGI-BOMA.md), guidando coi tasti veri (#collaudo, passi di 1/60 s, senza raffiche):
-#  1. nella barca del livello 1 Z non fa niente;
+#  1. (fino alla 1.0.78: nella barca dell'1a Z non fa niente; dalla 1.1.0 la barca è una sola, controllo tolto)
 #  2. 9 uscite dall'angolo morto (6, 10, 15 nodi; prua nel vento, a 20° da una parte e dall'altra): Z tenuto e la freccia verso il boma
 #     finché la prua è a 50° dal vento; la prua gira verso il boma, il boma resta a 80° mentre Z è premuto e il suggerimento lo dice;
 #     poi si lascia Z, si centra la barra (Spazio), si cazza (↑ per 2 s) e in 7 s la barca va avanti ad almeno 0,5 nodi;
@@ -20,7 +20,7 @@ async def apri(pg, kn, lv):
     await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(200)
     await pg.evaluate("__sv.openItem('free')")
     await pg.evaluate("""([k, lv]) => { for (const [id, v] of [['wSpd', k], ['gustSel', '0'], ['wDir', '0'], ['boatLv', lv]]){
-        const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); } }""", [str(kn), str(lv)])
+        const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); } }""", [str(kn), str(lv)])
     await pg.evaluate("__sv.openItem('free')")
     await pg.evaluate("__sv.setShifts(null)")  # dalla 1.0.28 la barca del livello 2 ha i salti di vento: qui si misura il boma, senza
     await pg.click("#c")
@@ -30,12 +30,6 @@ async def main():
         b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
         errori = []; pg.on("pageerror", lambda e: errori.append(str(e)))
 
-        # 1: livello 1
-        await apri(pg, 10, 1)
-        await pg.keyboard.down("z")
-        r = await pg.evaluate("() => { __sv.run(1 / 60, 60); return [__sv.S.pushing, __sv.S.boom, __sv.ctl.push]; }")
-        await pg.keyboard.up("z")
-        check(r[0] is None and r[2] is False and r[1] < 79, f"livello 1: Z non spinge il boma (boma a {r[1]:.0f}°)")
 
         # 2: uscite dall'angolo morto
         n = 0
@@ -79,7 +73,7 @@ async def main():
         await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
         await pg.click("#goFree"); await pg.wait_for_timeout(200)
         await pg.evaluate("document.getElementById('setDlg').showModal()")
-        await pg.select_option("#boatLv", "2"); await pg.evaluate("document.getElementById('setDlg').close()")
+        await pg.evaluate("document.getElementById('setDlg').close()")
         await pg.keyboard.down("z"); await pg.wait_for_timeout(700)
         txt = await pg.text_content("#vSh"); await pg.keyboard.up("z")
         check("80" in txt, f"senza #collaudo, livello 2: Z spinge il boma ({txt.strip()})")

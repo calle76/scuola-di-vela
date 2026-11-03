@@ -139,3 +139,15 @@ Tempi medi dei passi con la 1b: quasi tutti simili, con qualche eccezione. «Rad
 - Nelle prove 4 e 5 l'oro del pilota non basta più, e una corsa della 5 si blocca nell'angolo morto.
 
 Sono tutte cose del passo 3 (lezioni riscritte) e del passo 4 (medaglie). La pulizia non le corregge, ma le rende visibili a chi gioca: per questo la pulizia va nel ramo a parte. Le copie dei collaudi usate qui stanno nella cartella temporanea della sessione e non entrano nel repository.
+
+## 8. Fatto (1.1.0, 1 novembre 2026, ramo `pulizia`)
+
+Via di Ale il 1 novembre. Esito completo, con i numeri, nel `CHANGELOG.md` alla voce 1.1.0. In breve:
+- **Passati:** P1 (impronta dell'1b identica al bit), P2 (copia della 1a fedele, prototipo identico), P3 (riferimenti nuovi uguali alla 1b di prima), P4 (salti, giri e tornei identici al bit, testi esclusi), P5 (80 regate su 80 con tutte le barche arrivate), P6 (46 righe → 0), P8 (7 schermate su 7 in Chromium e Firefox, 0 errori), P9 (pannello 0 px; riquadro di bastone e raffiche 0 px).
+- P7 è solo numeri: identici alla misura 0.
+- **Non fatto:** il cambio dei nomi delle costanti (§2.A). Tocca 20 script e non cambia il gioco: lo rimando alla pulizia finale, e lo dico qui perché era nella proposta approvata.
+- **Trovati per strada:**
+  - l'introduzione della regata dei giri diceva «vento che gira, boa a 300 m», e non era vero: corretto;
+  - il riquadro delle istruzioni di salti e giri sfora da prima, 84-406 px: non corretto, va col passo 3;
+  - il prototipo del fiocco non era più identico alla 1a del gioco: scarto fino a 2,73 nodi;
+  - `collaudo_triangolo` T2b fallisce anche su `main`.

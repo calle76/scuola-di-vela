@@ -113,6 +113,10 @@ TESTS=(
     "collaudo_regate.py (bastone)|py|chiaro|0|regate|collaudo_regate.py 6 0"
     "collaudo_regate.py (raffiche)|py|chiaro|0|regate|collaudo_regate.py 6 1"
     "collaudo_partenze.py|py|ambiguo|0||collaudo_partenze.py"
+    "collaudo_non_partite.py (bastone)|py|chiaro|1||collaudo_non_partite.py 0"
+    "collaudo_non_partite.py (raffiche)|py|chiaro|1||collaudo_non_partite.py 1"
+    "collaudo_non_partite.py (salti)|py|chiaro|1||collaudo_non_partite.py 2"
+    "collaudo_non_partite.py (giri)|py|chiaro|1||collaudo_non_partite.py 3"
     "collaudo_aggressiva.py|py|chiaro|0||collaudo_aggressiva.py"
     "collaudo_contatto_senza_colpa.py|py|chiaro|0||collaudo_contatto_senza_colpa.py"
     "collaudo_pulsanti.py|py|chiaro|0||collaudo_pulsanti.py"
@@ -124,6 +128,11 @@ TESTS=(
     "collaudo_strambata.py (15 nodi)|py|chiaro|0||collaudo_strambata.py 15 10"
     "collaudo_suggerimento.py|py|chiaro|0||collaudo_suggerimento.py"
     "collaudo_pannello.py (1360x650)|py|chiaro|0||collaudo_pannello.py 1360 650"
+    "collaudo_pannello_lezioni.py|py|chiaro|0||collaudo_pannello_lezioni.py"
+    "collaudo_esercizi_regata.py|py|chiaro|0||collaudo_esercizi_regata.py"
+    "collaudo_esame_nuove.py|py|chiaro|0||collaudo_esame_nuove.py"
+    "collaudo_menu.py|py|chiaro|0||collaudo_menu.py"
+    "collaudo_suoni.py|py|chiaro|0||collaudo_suoni.py"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"
     "collaudo_fantasma.py|py|chiaro|0||collaudo_fantasma.py"
@@ -137,8 +146,8 @@ TESTS=(
 # Cosa guardare per i collaudi "ambiguo" (una riga ciascuno, dal rapporto atteso in docs/COLLAUDI.md).
 nota() {
     case "$1" in
-        "polare.js") echo "confronta a mano con circa 4,7 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.0.11; 1.0.6-1.0.10 3,8 / 6,0 / 4,1)" ;;
-        "raffiche_e_virate.js") echo "virata riuscita in circa 3,0 s da 3,9 nodi e in circa 6,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 67° (scuffia) con la scotta fissa e circa 53° col boma a 21° (dalla 1.0.11)" ;;
+        "polare.js") echo "confronta a mano con circa 4,6 nodi a 45°, 6,0 a 90°, 4,1 a 180° con 10 nodi (dalla 1.1.0, barca dell'1b; con l'1a 4,7 / 6,0 / 4,1)" ;;
+        "raffiche_e_virate.js") echo "virata riuscita in circa 3,9 s da 3,9 nodi e in circa 7,5 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 65° (scuffia) con la scotta fissa e circa 52° col boma a 21° (dalla 1.1.0, barca dell'1b; con l'1a 3,0 / 6,6 / 67° / 53°)" ;;
         "collaudo_regole.py") echo "riga «ESITO: OK» (regole 10, 11, 12 e 13 nell'1b: 24 casi a mano dal regolamento, virata, e le due regole di sempre nell'1a)" ;;
         "collaudo_semaforo.py") echo "riga «ESITO: OK» (semaforo di precedenza: 16 regate dell'1b, colore uguale alla penalità, impostazione spenta, 1a senza semaforo)" ;;
         "collaudo_contatto_vero.py") echo "riga «ESITO: OK» (contatto fra gli scafi nell'1b: 8 coppie a mano nei due livelli, 6 regate col pilota nell'1a e nell'1b, 0 sovrapposizioni senza contatto, nessun contatto con gli scafi a più di 5 cm)" ;;
@@ -150,7 +159,7 @@ nota() {
         "collaudo_moto_mare.py") echo "riga «ESITO: OK» (barca che balla sull'onda, solo disegno: testa d'albero ferma senza vento, almeno 4 px con 10 nodi, rollio al traverso e beccheggio in poppa, ritmo più fitto di bolina; 24.000 quadri)" ;;
         "collaudo_riquadro_regata.py") echo "riga «ESITO: OK» (60 partenze con caratteri degli avversari a caso, nessun eccesso del riquadro delle istruzioni; NON VALIDO se non ha visto il caso peggiore con tre prudenti)" ;;
         "collaudo_schermate.py") echo "l'ultima riga «errori: [...]» deve essere vuota; le schermate della linea d'arrivo (tests/output/L_*.png) si guardano a occhio" ;;
-        "collaudo_pilota_lezioni.py (veloce)") echo "32 passi, «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.11 La scotta: cazzare dopo un colpo lungo, 2.4 Barra sottovento dopo un colpo lungo, 6.3 La scuffia a mani ferme, voluto dalla 1.0.15; esito in docs/archivio/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
+        "collaudo_pilota_lezioni.py (veloce)") echo "40 passi (dalla 1.1.4-1.2.0 anche le lezioni B1-B5 e D1-D4, nascoste nel menu; D1-D3 con un esercizio, D4 solo teoria; dalla 1.2.1 D5-D7, con un esercizio in regata che questo pilota salta: lo misura collaudo_esercizi_regata.py), «guidando» completo in ogni passo, «ESITO: DA GUARDARE» con i soli casi noti dei semi 1-3 (1.11 La scotta: cazzare dopo un colpo lungo, 2.4 Barra sottovento dopo un colpo lungo, 6.3 La scuffia a mani ferme, voluto dalla 1.0.15; esito in docs/archivio/PROPOSTA-PILOTA-LEZIONI.md): un passo nuovo nell'elenco è un problema nuovo" ;;
         "collaudo_pilota_lezioni.py (semi 1-100)") echo "«guidando» non completato al più 1 volta su 100 per passo; «da guardare» con i casi noti dell'esito in docs/archivio/PROPOSTA-PILOTA-LEZIONI.md (1.9, 1.11, 1.12, 2.4, 2.5, 5.8, 6.2, 6.3): numeri molto diversi o passi nuovi sono un problema" ;;
         "collaudo_pilota_lezioni.py (senza #collaudo)") echo "«3 tentativi su 3 con entrambi i passi completati»" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
@@ -161,7 +170,7 @@ nota() {
         "collaudo_strambata.py (15 nodi)") echo "scuffia sempre" ;;
         "collaudo_pannello.py (1360x650)") echo "«pannello che eccede: nessuno» e «eccesso massimo del pannello (pixel): 0» (dalla 1.0.2 nessun passo sfora; qualunque eccesso è un problema nuovo); riga dei tasti 0 px, «errori: []» e «caratteri del gioco caricati: True»" ;;
         "collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
-        "collaudo_fasce.py") echo "con la linea d'arrivo (0.19): dalla 1.0.6 (barca nuova e pilota corretto), valori della sandbox: prove 1-4 a 79,6/124,2/161,8/285,1 s per ogni vento, 8 su 8; prova 5 finite 23 su 24, mediana 304,6 s, con circa 7 corse lunghe (556-897 s) da capire; fino alla 1.0.5, sul PC di Ale: 92,1/142,6/196,4/333,3, prova 5 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
+        "collaudo_fasce.py") echo "giro GitHub del 1 novembre 2026 (1.1.6, barca dell'1b): prove 1-4 a 79,2/124,4/158,7/285,8-286,5 s per ogni vento, 8 su 8 (oro mancato nella 4, noto dalla 1.1.0, da ritarare con le medaglie); prova 5 finite 24 su 24, quasi tutte 299-313 s con 1-4 corse lunghe (fino a 741 s). Prima: con la linea d'arrivo (0.19): dalla 1.0.6 (barca nuova e pilota corretto), valori della sandbox: prove 1-4 a 79,6/124,2/161,8/285,1 s per ogni vento, 8 su 8; prova 5 finite 23 su 24, mediana 304,6 s, con circa 7 corse lunghe (556-897 s) da capire; fino alla 1.0.5, sul PC di Ale: 92,1/142,6/196,4/333,3, prova 5 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
         "collaudo_fantasma.py") echo "la prova deve completarsi e il fantasma risultare salvato" ;;
         "collaudo_competizione.py (tastiera)") echo "riga «ESITO: OK» (piazzamento salvato con avversari, niente con «nessuno»); «ESITO: NON VALIDO» vuol dire che il pilota da tastiera non è arrivato in fondo: non è un errore del gioco, si rilancia" ;;
         "collaudo_registro.py") echo "riga finale «ESITO: 15 su 15 verifiche riuscite»" ;;

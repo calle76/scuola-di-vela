@@ -17,6 +17,569 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## Il ramo `pulizia` entra in `main` (3 novembre 2026, nessuna versione nuova: online va la 1.2.6)
+
+Giro veloce su GitHub della 1.2.6, lanciato a mano da Ale sul ramo `pulizia`, Chromium e Firefox: **0 falliti** nelle 8 parti (versione provata 1.2.6); noti i soliti (`collaudo_partenze`, `collaudo_giri_avversari` Firefox); da controllare con i numeri di sempre (`collaudo_pilota_lezioni --veloce` OK, `collaudo_fasce` con la prova 5 fino a 761 s, già vista nel giro della 1.2.1); `collaudo_contatto_vero` Firefox di nuovo passato, resta fra i noti (va e viene).
+- Unione con merge (non rebase), senza conflitti. Online, al posto della 1.0.78, va la 1.2.6.
+- Tolte dai giri automatici (`collaudi.yml`, `esplora.yml`) le righe che di notte e il lunedì provavano `pulizia`: da ora provano `main`. Si lavora di nuovo su `main`.
+
+## 1.2.6 — Le impostazioni tornano dentro lo schermo (ramo `pulizia`)
+
+Dal giro su GitHub della 1.2.5 (3 novembre 2026, Chromium e Firefox, 74 collaudi per browser): **2 falliti, uguali nei due browser, tutti e due nati con i suoni.** Il resto OK, noti o da controllare come sempre.
+
+**1. Difetto del gioco: la finestra delle impostazioni (⚙) scorreva di 21 px** (Chromium; 18 in Firefox) in navigazione libera a 1360×650, con la registrazione accesa e i marcatori: lo ha visto `collaudo_registratore`. Causa: la riga «Suoni» della 1.2.5. Il criterio S6 di `collaudo_suoni` la misurava in navigazione libera ma con la registrazione spenta, cioè non nel caso peggiore.
+- **Corretto:** «Suoni» sta sulla stessa riga di vento, intensità e raffiche; la finestra è larga 520 px invece di 480, perché le quattro scelte (463 px) ci stiano. Nelle lezioni, dove il vento non si sceglie, «Suoni» resta su una riga sua, con la scritta a sinistra come prima.
+- **Misurato (caso peggiore):** finestra alta 572 px invece di 606, dentro i 585 disponibili, non scorre, in Chromium e Firefox; nelle lezioni 552 px, uguale alla 1.2.5. `collaudo_registratore` OK nei due browser (eccesso massimo 0 px), `collaudo_pannello` 1360×650 OK.
+- **Collaudo:** S6 di `collaudo_suoni` misura anche il caso peggiore (registrazione accesa e riga dei marcatori). Controprova: la stessa misura sulla 1.2.5 dà 21 px (Chromium) e 18 (Firefox).
+
+**2. Difetto del collaudo: `collaudo_ricarica` voleva «Suoni» come in una pagina nuova dopo F5**, ma la scelta dei suoni il gioco la ricorda apposta nel browser (1.2.5). Ora per «Suoni» controlla che dopo F5 si veda la scelta fatta prima e che sia quella in uso (`suoniLiv`), diversa da quella di una pagina nuova; gli altri 17 controlli come prima. OK in Chromium e Firefox. Controprova: una copia del gioco che non aggiorna la casella dopo F5 fallisce («spenti» mostrato, «bassi» in uso).
+
+**3. Fallimenti noti:** `collaudo_contatto_vero` in Firefox (penetrazione 0,29 m contro 0,25) passa nel giro di GitHub e in 2 lanci qui, 3 su 3, penetrazione massima 0,10 m; ma nel giro della 1.2.1 era fallito di nuovo dopo aver già passato una volta: va e viene, quindi **resta** fra i fallimenti noti (annotato nella voce). Il riepilogo continuerà a dire «erano noti e ora passano» quando passa: va ignorato.
+
+**Da controllare nel giro, come sempre:** lezioni semi 1-100, il passo 5.8 non completato 5 volte su 100 (noto: 4 su 100, causa nel pilota); `collaudo_torneo` (misura) in Firefox, C11 di tempi veri (non fa rosso su GitHub).
+
+Verdi anche: `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici al riferimento; `collaudo_suoni` nei due browser; `collaudo_versione`.
+
+**Da Ale (3 novembre), per dopo:** i suoni sono da migliorare: il mare è un fruscio piatto, la vela che sbatte un ticchettio irreale; cercare registrazioni vere a licenza libera.
+
+## 1.2.5 — I suoni (ramo `pulizia`)
+
+`docs/PROPOSTA-SUONI.md`, prima fetta; Ale, 2 novembre: «accesi bassi, vai avanti». Il gioco non è più muto.
+
+**Come:** i suoni li genera il browser (Web Audio), senza file. Un file nuovo, `js/suoni.js`, a ogni fotogramma **legge** lo stato del gioco e suona quando un numero cambia: non chiama la simulazione e non usa `Math.random` (ha un generatore suo). Partono dopo il primo tasto o clic, tacciono nel menu, nella moviola e con la finestra nascosta; in un browser senza audio si gioca muti.
+
+**Cosa suona:**
+- **sempre:** il vento, più forte e più acuto col vento apparente (sale quando la raffica arriva sulla barca, non prima: nessun aiuto nascosto); l'acqua sullo scafo, con la velocità;
+- **la vela che sbatte**, a colpi più fitti col vento forte, quando la vela fileggia (angolo morto o troppo lascata); un fruscio continuo col boma spinto (Z);
+- **manovre e incidenti:** virata (fruscio e tonfo morbido), strambata (colpo secco, più forte con più vento), scuffia (tonfo e spruzzo), raddrizzata (acqua che scola), contatto fra barche (colpo sordo), boa toccata (colpo cavo);
+- **la tromba della giuria** come la regola 26 (riletta nel PDF di F15): un suono all'avviso, uno al preparatorio, uno lungo a un minuto, uno al via, agli istanti in cui il gioco alza e ammaina le bandiere, in tutte le regate (anche dove le bandiere non si disegnano, perché il conto alla rovescia c'è); un suono con la X (regola 29.1);
+- **all'arrivo** un suono breve per ogni barca: non è nel regolamento, è una **scelta del gioco**;
+- un suono breve per un passo di lezione completato (anche un esercizio) e uno per una prova finita.
+- Forme, altezze e volumi sono **ipotesi nostre, fatte a orecchio**: giudicale tu giocando.
+
+**Impostazioni (⚙):** riga «Suoni», spenti / bassi / medi / alti; all'inizio **bassi**; la scelta resta nel browser.
+
+**Testo cambiato:** nella regata con le bandiere, «Il gioco non ha suoni: i tempi contano sulle bandiere» diventa «I suoni della giuria accompagnano le bandiere, ma i tempi contano sulle bandiere (regola 26)».
+
+**Misurato** (`tests/collaudo_suoni.py`, nuovo; criteri S1-S6 scritti prima; i computer dei collaudi non hanno casse, quindi si leggono il registro degli eventi suonati e i volumi calcolati):
+- **S1:** la stessa regata a seme fisso con e senza la lettura dei suoni: arrivi e barca identici al bit. `arrivi_regate.py` (20 regate e 2 tornei) identico alla 1.2.4, a parte il numero di versione che il torneo salva. `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **S2:** regata con i giri, preparazione di 3 minuti sui semi 1-10, 5 e 1 minuto sui semi 1-3. Ogni virata, strambata, contatto, boa toccata e arrivo ha il suo suono entro 0,1 s: 144 virate, 54 strambate, 63 contatti, 10 boe, 64 arrivi in Chromium (138, 52, 57, 6, 64 in Firefox). Le trombe agli istanti della regola 26 in tutte le 16 regate (con la X un suono in più allo zero). La X: in anticipo apposta due trombe allo zero, senza anticipo una. Una boa toccata nell'esercizio della lezione 20: un suono. Scuffia e raddrizzata: uno ciascuna. Passo completato e prova finita: uno ciascuno, provati mettendo lo stato a mano (si prova il collegamento). Controprova: barca ferma per un minuto, nessun suono.
+- **S3:** il volume del vento cresce sempre col vento apparente (1.320 letture da 0 a 20 nodi), quello dell'acqua con la velocità; la vela suona con la prua al vento e troppo lascata, non quando è regolata.
+- **S4:** la lettura dei suoni costa 12 µs per fotogramma con l'audio acceso, contro 18,5 ms del fotogramma: +0,07% (soglia 10%). **Cambiato il modo di misurare dopo il primo giro, lo dico:** alternando fotogrammi con e senza suoni usciva +23,5% anche ad audio spento, ma era rumore (60 fotogrammi passano da soli da 573 a 1.176 ms); ora la lettura dei suoni e il fotogramma si misurano a parte. In Firefox senza schermo l'audio resta sospeso, quindi lì il costo è misurato muto (0,7 µs).
+- **S5:** nessun audio prima del primo clic; «spenti» spegne e resta dopo il ricaricamento; un browser senza audio gioca muto, senza errori. Non provato: la finestra nascosta (il browser dei collaudi non la simula).
+- **S6:** impostazioni a 1360×650 dentro la finestra, senza scorrere (da 49 a 601 px; prima da 66 a 584).
+- **Corretto nel collaudo prima del risultato:** per sapere se al via c'era qualcuno in anticipo leggeva la lista della X a fine regata, quando è già vuota; due casi davano falso errore. Ora guarda la X durante la regata.
+- Verdi anche: `collaudo_pannello` (1360×650), `collaudo_lezioni`, `collaudo_versione`.
+- **Da sapere:** che il suono esca davvero in Firefox lo puoi verificare solo tu: nel Firefox dei collaudi, senza schermo, l'audio resta sospeso (il gioco funziona muto).
+
+## Collaudi: il giro veloce su GitHub della 1.2.4 (2 novembre 2026, ramo `pulizia`, nessuna versione nuova)
+
+Lanciato a mano da Ale, Chromium e Firefox: **un solo fallito**, `collaudo_linea` in Chromium (caso «fuori», partenza +30 m mure a sinistra, nella lezione 6 «Risalire il vento»); il resto OK, noti o da controllare come sempre (`collaudo_partenze`, `collaudo_giri_avversari` Firefox, `collaudo_fasce`, `collaudo_pilota_lezioni --veloce`).
+- **La causa sta nel collaudo, non nel gioco.** Il collaudo non aveva un seme fisso: qui la stessa prova passava 2 volte su 3. Con il seme fisso il caso si riproduce col seme 5: tornando indietro dopo il taglio fuori il suo pilota strambava, la barca scuffiava e il pilota non sapeva raddrizzarla, quindi restava lì fino al limite di 600 s.
+- **Corretto:** seme fisso su tutte le pagine del collaudo (`--seme N`, 1 se non detto) e il pilota che raddrizza dopo 1 s, come quello delle regate. **Misurato:** semi 1-20 tutti OK in Chromium; Firefox col seme 1 OK.
+
+## 1.2.4 — Il menu nuovo: tutte le 20 lezioni, in tre gruppi (ramo `pulizia`)
+
+`docs/PROPOSTA-MENU.md`, bozza A scelta da Ale il 2 novembre («va bene la A»). **Da questa versione le 14 lezioni nuove si vedono**, e con loro l'esame da 34 domande e le 19 voci nuove del glossario.
+
+**Il menu.**
+- La Scuola ha **tre schede**: 1 · La barca (11 voci), 2 · Vento e raffiche (5), 3 · Regole e partenze (9), ognuna con il conto delle voci fatte. Le voci sono numerate da 1 a 25 di seguito. Il menu apre la scheda della prima voce da fare e, tornando da una lezione o da una prova, quella della voce appena aperta.
+- Le lezioni si chiamano **Lezione 1 … Lezione 20** nell'ordine approvato (`PROPOSTA-LEZIONI-SCUOLA.md` §5); i ripassi hanno lo stesso numero. I salvataggi restano legati all'indice interno: **i progressi di prima restano** (controllato, M3).
+- I **ripassi** della scheda aperta stanno su due colonne («12 · Mure opposte»); «✓» = migliore almeno l'80%, il punteggio si legge passando sopra col mouse. Poi l'esame.
+- Tolto il riquadretto «In arrivo · Altri tipi di barca».
+
+**Lezione 4 (era la 3) «Andature e mure», senza precedenze** (decisione del 31 ottobre): la pagina «Le mure» rimanda al gruppo 3 dalla lezione 12; tolta dal suo quiz la domanda «chi deve lasciare strada» (6 → 5 domande; la stessa cosa la chiede la lezione 12).
+
+**Testi:** 84 nomi e voci del glossario rinumerati; i rimandi «lezione 5» per la strambata ora dicono 6 (quattro frasi); le istruzioni degli esercizi in regata dicono il numero nuovo (16, 17, 20, 18, 19).
+
+**Carriera (libretto):** Conoscenza = 12 × punti dei quiz / punti massimi, Esperienza = 6 × lezioni fatte / lezioni, per difetto, su tutte le lezioni visibili (oggi le 20). Massimi e minimi come prima (totale 46, ne servono 29). **Chi aveva già i meriti dalle 6 lezioni li vede calare** finché non fa le nuove: con le 6 lezioni fatte e i loro 6 quiz pieni, Esperienza scende da 6 a 1 e Conoscenza da 12 a 3. È voluto (la scuola è più lunga), ma lo dico. «Solo le visibili» è un'aggiunta alla proposta: nel gioco sono tutte visibili e il conto è quello scritto; serve ai collaudi che nascondono le lezioni nuove per misurare la carriera sulle 6 di prima.
+
+**Difetti trovati e corretti prima del risultato:** il pulsante dell'esame bloccato diceva «prima i ripassi 1 e 3» con i numeri vecchi (ora quelli del menu).
+
+**Misurato** (`tests/collaudo_menu.py`, nuovo; criteri M1-M6 scritti prima):
+- **M1:** menu senza pixel di eccesso con ognuno dei 3 gruppi aperto, in gioco libero e in carriera, a 1360×650 e 1360×768: 12 casi su 12, in Chromium e Firefox.
+- **M2:** numeri da 1 a 25 senza buchi; nomi e titoli nell'ordine della proposta; le 25 voci aprono ognuna la sua lezione o prova; «Lezione N» e «Ripasso N» giusti per tutte e 20.
+- **M3:** un salvataggio di prima (6 lezioni, 2 prove con record e stella, 2 quiz) dà le stesse 8 voci fatte, gli stessi record e gli stessi punteggi, in gioco libero e in carriera; controprova: salvataggio vuoto, 0 voci fatte su 25.
+- **M4:** nessun «Lezione B/C/D…» nei testi di lezioni, quiz, esami, prove e glossario (più di 300, letti dalla pagina); i rimandi per numero (2, 6, 12) puntano alla lezione giusta; i 5 esercizi dicono il numero della loro lezione; 13 voci del glossario controllate sul titolo della lezione.
+- **M5:** «Andature e mure» senza la parola «precedenza», quiz di 5 domande, pagina «Le mure».
+- **M6:** senza `#collaudo` una voce per gruppo si apre, si torna al menu sulla sua scheda, nessun errore.
+- **Collaudi adattati** (detto uno per uno):
+  - `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_esame`, `collaudo_carriera_intera` ora nascondono nella pagina le 14 lezioni nuove (`sorgente.NASCONDI_NUOVE`) e misurano i meccanismi sulle 6 lezioni di prima, come facevano; il caso con le 20 lezioni lo misurano `collaudo_esame_nuove` (esame da 34), `collaudo_libretto` e `collaudo_menu`.
+  - `collaudo_libretto` riscritto sulle 20 lezioni con i punti attesi calcolati dalla regola della proposta: i giocatori del §12 hanno gli stessi totali di prima (per esempio 14 ripassi pieni su 20 = 8 punti, come 4 su 6); le soglie dei ripassi (60% e 80%) controllate con due basi diverse.
+  - `collaudo_carriera` K5: **non confronta più il testo del menu con la 1.0.1** (il menu è cambiato apposta), solo il piede; K2-K3 leggono il punteggio dei ripassi dal testo che compare passando sopra.
+  - `collaudo_esame_nuove` G0 nuovo: di base nessuna lezione nascosta, esame da 34 e 28, glossario di 67 voci; G1 ora le nasconde apposta.
+  - `collaudo_quiz`, `collaudo_linea`, `collaudo_pannello` (la prova 5 sta nella scheda 2), `collaudo_esercizi_regata` (nomi nuovi): adattati.
+- Verdi: tutti quelli sopra, più `collaudo_lezioni`, `collaudo_pannello_lezioni`, `collaudo_pilota_lezioni --veloce`, `collaudo_vista`, `collaudo_esercizi_regata --semi 1-3`, `collaudo_versione`; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. Regate non toccate (`js/regate.js` invariato).
+- **Da sapere, peso basso:** `collaudo_impronta.py` (solo per le pulizie del codice, fuori dal giro completo) dice «NON VALIDO» perché cerca la barca scelta con `lv == 2`, che la pulizia della 1.1.0 ha tolto: non dipende da questa versione, e andrà aggiornato alla prossima pulizia.
+
+## 1.2.3 — Esame e glossario con le lezioni nuove (ramo `pulizia`)
+
+`docs/PROPOSTA-ESAME-E-GLOSSARIO.md`, approvata da Ale il 2 novembre («sì perfetto»). Finché le 14 lezioni nuove restano nascoste nel menu, **per chi gioca non cambia niente**; tutto entra da solo quando il menu nuovo le mostrerà.
+
+**Esame.**
+- Le lezioni nuove danno **1 domanda ciascuna**, presa dalle 4 del loro campo `esame` (la banca le legge dalla lezione, non le copia). Le 6 lezioni di oggi restano 4-3-4-3-3-3.
+- Entrano solo le **lezioni visibili**. Con tutte e 20: **34 domande, ne servono 28** (l'80% arrotondato per eccesso, come 16 su 20). `SOGLIA_ESAME` ora è la frazione (0,8), non il numero.
+- L'esame salvato in carriera ricorda quante domande aveva (`n`), così il voto «su quanto» resta giusto anche quando il numero cambierà; per i salvataggi vecchi vale 20.
+- **Ripasso:** il ripasso di una lezione nuova (dopo un esame sbagliato in carriera) apre il quiz della lezione (`quizDi`).
+
+**Glossario:** **19 voci nuove**, in ordine alfabetico fra le vecchie: stallo della pala (B1), spingere il boma (B2), salto di vento, scarso, buono (B5), lasciare strada, precedenza (D1), sovrapposte, libera dietro e libera avanti (D2), barca giuria, linea di partenza, avviso, preparatorio, bandiera di classe (D5), partenza anticipata, richiamo individuale (D6), giro di penalità (D7), partenza in velocità (C1), partenza da fermi (C2). Una voce di una lezione nascosta resta nascosta (`glossVisibili`). La voce «Stallo» di oggi (la vela) non cambia: quella della pala è una voce a parte.
+
+**G3, controllo a mano:** ogni definizione nuova è detta nel testo della sua lezione (passi, riepilogo o spiegazione del quiz): 19 su 19. Le definizioni sono parafrasi di quei testi, che hanno già le loro fonti.
+
+**Corretto, trovato dal collaudo prima del risultato:** con le lezioni nuove visibili il menu si rompeva (`QUIZ[i].length` di una lezione senza quiz nella banca vecchia). Ora l'elenco dei ripassi usa `quizDi`. Oggi non si vedeva, perché le lezioni nuove sono nascoste.
+
+**Misurato** (`tests/collaudo_esame_nuove.py`, nuovo; criteri G1-G5 scritti prima):
+- **G1:** con le lezioni nascoste, 20 estrazioni a seme fisso identiche alla 1.2.2, glossario identico (48 voci nello stesso ordine), pulsante «20 domande, ne servono 16».
+- **G2:** con tutte le lezioni rese visibili nella pagina del collaudo: 34 domande, soglia 28, anche nel pulsante del menu; 200 estrazioni con 4-3-4-3-3-3 più 1 per lezione nuova, nessuna domanda ripetuta; tutte le 56 domande delle lezioni nuove escono almeno una volta.
+- **G4:** esito con 34 sbagliate («0 su 34: non superato (servono 28)», 34 domande sotto 20 lezioni) e glossario di 67 voci: i due riquadri stanno dentro 1360×650, in Chromium e Firefox.
+- **Da sapere, cambiato dopo aver visto il primo giro (lo dico):** il controllo G4 contava anche la pagina dietro il riquadro, cioè il menu, che con tutte e 20 le lezioni visibili sfora la finestra di **426 px** (427 in Firefox). È il lavoro del menu nuovo, non dell'esame: ora il collaudo misura il solo riquadro e riporta lo sforamento del menu in una riga «DA SAPERE». Oggi, con le lezioni nascoste, il menu non sfora (`collaudo_esame`, pagina 0 px).
+- **G5:** senza `#collaudo`, esame di 34 domande fino in fondo e ricerca nel glossario («scarso»), nessun errore.
+- Rilanciati, verdi: `collaudo_esame` (adattato: la soglia si calcola dalla frazione), `collaudo_quiz`, `collaudo_carriera_esame`, `collaudo_carriera_intera`, `collaudo_versione`; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. Regate non toccate.
+- **Resta per il menu:** i meriti della carriera (area «conoscenza») contano ancora solo i quiz delle 6 lezioni di oggi.
+
+## 1.2.2 — Lezioni C1 e C2: le partenze, con l'esercizio in regata (ramo `pulizia`)
+
+Gruppo C di `docs/PROPOSTA-LEZIONI-SCUOLA.md` §4, con il meccanismo B della 1.2.1 (`docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, via di Ale del 1 novembre). Le lezioni restano nascoste nel menu, come le altre nuove.
+
+**Le due lezioni** (testi parafrasati; quiz ed esame di 4 domande come le altre):
+- **C1 «Partenza in velocità»:** si aspetta vicino alla linea, una o due lunghezze dietro, quasi fermi con la vela che sbatte e la prua appena sotto la bolina; negli ultimi secondi si cazza, per tagliare la linea subito dopo il via e già veloci. Cazzando troppo presto si è in anticipo (29.1), troppo tardi si parte lenti. Fonti: F25 (attesa quasi fermi e piena velocità allo zero), F27 (attesa appena sotto la bolina: la sola parte confermata, la parte sull'accelerazione non è letta e il testo non la usa), conferma di Ale del 17 ottobre (in questa classe si parte da fermi, non lanciati da lontano). Esercizio: regata a bastone da solo, un minuto di preparazione; vale se tagli la linea **entro 5 s dal via a più di 3,5 nodi**, senza anticipo (soglie della proposta, scritte prima).
+- **C2 «Partenza da fermi»:** da fermi servono secondi e metri per prendere velocità; come si riparte (prua appena sotto la bolina, cazzare, barca piatta, poi in bolina). Esercizio: barca **ferma 12 m dietro il centro della linea, a 60° dal vento, vela tutta lascata**, 10 s al via; vale se al via vai sotto 1 nodo, non sei in anticipo e tagli la linea **entro 25 s**.
+- Alla fine di tutti e due gli esercizi il messaggio dice dopo quanti secondi e a che velocità hai tagliato la linea (`def.misura`).
+- **Ipotesi nostre:** 12 m, 60°, 10 s, 1 nodo; il limite di 25 s della C2 con la regola scritta prima di misurare: il massimo del pilota sui semi 1-20 (16,0 s) arrotondato ai 5 s superiori, più 5 s.
+
+**Codice:** nell'esercizio un secondo stato di partenza, `def.linea` (punto dietro la linea, angolo dal vento, velocità; vela tutta lascata), accanto a `def.boa`. Le regate normali non lo toccano.
+
+**Misurato** (`tests/collaudo_esercizi_regata.py`, esteso a C1 e C2, con l'opzione nuova `--solo`):
+
+| Esercizio | guidando, semi 1-20 | guidando, semi 101-120 (conferma) | a mani ferme | chi sbaglia apposta |
+|---|---|---|---|---|
+| C1 | 20 su 20 (linea a 0,5-2,3 s dal via, 4,4-5,1 nodi) | 20 su 20 (0,2-2,3 s) | 0 su 20 (al via oltre la linea) | cazza solo al via: 0 su 20 (al via 0,1-0,4 nodi) |
+| C2 | 20 su 20 (linea a 13,0-16,0 s, circa 2,5 nodi) | 20 su 20 (13,0-15,9 s) | 0 su 20 (non parte) | cazza 8 s prima del via: 0 su 20 (al via 5,1 nodi) |
+
+- **Da sapere:** nella C2 la barca a mani ferme e quella che cazza prima non dipendono dal seme (niente raffiche né avversari): le 20 prove sono lo stesso caso ripetuto. Il pilota, invece, cambia a ogni seme.
+- D5, D6 e D7 sui semi 1-20, con il collaudo esteso: tutto come nella 1.2.1 (20 su 20 guidando, 0 a mani ferme e sbagliando).
+- **E3:** dopo cinque esercizi completati (D5-D7, C1, C2) localStorage e registrazioni identici a prima; la controprova li vede cambiare.
+- **E4:** `arrivi_regate.py` identico al bit fra 1.2.1 e 1.2.2; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **E5:** pannello a 1360×650 senza pixel di eccesso negli esercizi C1 e C2, prima e dopo il via; `collaudo_pannello_lezioni` 106 passi su 106.
+- **Firefox, semi 1-10:** C2 10 su 10; **C1 9 su 10**, alla soglia: nel seme 7 il pilota taglia la linea in tempo (1,8 s) ma rallentato a 3,2 nodi (al via andava a 4,5). È il pilota, che vicino alla linea manovra; la soglia resta quella. Mani ferme e chi sbaglia 0 su 10; pannello senza eccesso.
+- Altri collaudi rilanciati, verdi: `collaudo_pannello_lezioni` (106 passi), `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_pilota_lezioni --veloce` (40 passi; quelli con l'esercizio li salta), `collaudo_versione`.
+
+## 1.2.1 — La regata come esercizio di una lezione: lezioni D5-D7 (ramo `pulizia`)
+
+Meccanismo B di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale il 1 novembre. Le lezioni restano nascoste nel menu, come le altre nuove.
+
+**Il meccanismo.** Un passo di lezione con il campo `esercizio` mostra il pulsante «Apri l'esercizio», che apre una regata in modo «esercizio»:
+- **lo stato di partenza e l'obiettivo sono separati**, come chiesto da Ale (così il coach potrà riusarlo partendo da un'istantanea del registratore). Stato di partenza: regata, avversari, preparazione, e in più (`boa`) la barca messa vicino alla boa a regata già partita. Obiettivo: una frase nel pannello, `fatto` e `fallito`, letti a ogni passo;
+- **non salva niente**: niente record, fantasma, regata fatta, piazzamento, né registrazione automatica;
+- obiettivo raggiunto: «Obiettivo raggiunto», e dopo 2 s si torna al passo, fatto. Obiettivo mancato (o arrivo senza obiettivo): un messaggio, poi Ricomincia (rifà l'esercizio) o «Torna alla lezione» (passo da fare). Nell'esercizio non ci sono «Cambia vento» né la scelta di avversari e preparazione.
+- Il codice delle regate normali cambia solo dove leggeva la preparazione scelta nelle impostazioni: ora la legge dalla regata (`R.cd`), che nelle regate normali è la stessa.
+
+**Le tre lezioni** (regole rilette nel PDF di F15 il 2 novembre: 26, 29.1, 21.1, 21.2, 31, 44.1, 44.2; testi parafrasati, quiz e esame di 4 domande come le altre):
+- **D5 «I segnali di partenza»:** la sequenza (avviso 5 minuti con la bandiera di classe, P a 4, P giù a 1, classe giù al via; contano le bandiere, non i suoni) e la linea. Esercizio: partenza da solo con 5 minuti; vale se al via sei dietro la linea e la tagli entro un minuto.
+- **D6 «La partenza anticipata»:** la X del richiamo individuale e il ritorno dietro la linea lasciando strada (21.1). Il testo dice la semplificazione del gioco: la barca è tornata quando il suo centro è dietro la linea. Esercizio: preparazione di 1 minuto; vale se al via sei oltre la linea, torni e riparti.
+- **D7 «Boe e giri di penalità»:** quali boe non si toccano (31), un giro per la boa e due per un contatto (44.1), stesso verso, virata e strambata (44.2), chi sconta lascia strada (21.2); il testo dice cosa è del gioco (20 s per un giro, 15 s per giro mancante). Esercizio: di bolina con la boa a 32 m, un po' a destra della prua; vale se la tocchi e fai un giro.
+- **Ipotesi nostre:** un minuto (D5) e tre minuti (D6, D7) per completare, 2 s prima del ritorno alla lezione, la posizione di partenza della D7.
+
+**Misurato** (`tests/collaudo_esercizi_regata.py`, nuovo; soglie E1-E5 della proposta, scritte prima):
+
+| Esercizio | guidando, semi 1-10 | guidando, semi 11-20 | a mani ferme | chi sbaglia apposta |
+|---|---|---|---|---|
+| D5 | 10 su 10 (via tagliato in 3-4 s) | 10 su 10 | 0 su 10 | parte in anticipo: 0 su 10 |
+| D6 | 10 su 10 (14-18 s) | 10 su 10 | 0 su 10 | non torna: 0 su 10 |
+| D7 | 10 su 10 (34 s) | 10 su 10 | 0 su 10 | tocca e non gira: 0 su 10 |
+
+- Firefox, semi 1-10: gli stessi numeri, tutto verde.
+- **E3:** dopo tre esercizi completati, localStorage e registrazioni sono identici a prima. Controprova: una regata normale fino all'arrivo li cambia, quindi il controllo vede le differenze.
+- **E4:** `arrivi_regate.py` (20 regate e 2 tornei) identico al bit fra 1.2.0 e 1.2.1. La «Regata con i giri di penalità», l'unica che quel file non copre, l'ho confrontata a parte: 9 regate con 1, 3 e 5 minuti e i tre livelli, identiche (arrivi, penalità, messaggi, introduzione). `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **E5:** pannello a 1360×650 senza pixel di eccesso nell'esercizio, prima e dopo il via, in Chromium e Firefox; `collaudo_pannello_lezioni` 98 passi su 98, ora anche con il testo di fine passo degli esercizi. Pagina senza `#collaudo`: l'esercizio si apre dal passo, con le istruzioni, e si torna alla lezione senza errori.
+- Altri collaudi rilanciati: `collaudo_pilota_lezioni --veloce` (40 passi, OK; i passi con l'esercizio li salta), `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_segnali`: verdi.
+
+**Corretto nel collaudo prima del risultato:** il pilota «in anticipo» della D6 andava di bolina per tutto il minuto e finiva a 130 m di lato; tornando, la guida automatica si incastrava nel comitato (osservazione 79), 1 su 3. Ora aspetta come il pilota e va oltre la linea quando, di bolina, la passerebbe circa 10 s prima del via. Una prima versione (8 s fissi prima del via) non bastava: 0 su 10.
+
+**Corretto nel gioco prima del risultato:** la prima posizione di partenza della D7 era sotto la boa. Con la barca che orza sbandando, la rotta si sarebbe avvicinata alla boa anche a mani ferme. Ora la boa è a 32 m, 22° a destra della prua: orzando la si passa a 12 m sopravento.
+
+## Collaudi: il giro notturno su GitHub della 1.2.0 (2 novembre 2026, ramo `pulizia`, nessuna versione nuova)
+
+Primo giro notturno partito da solo sul ramo `pulizia` (GitHub l'ha avviato alle 9:36 invece che alle 3: per i giri programmati l'orario non è garantito, e va bene così). Chromium e Firefox, 70 collaudi per browser: **0 falliti**.
+- **`collaudo_pilota_lezioni` (semi 1-100), passo 11.3 «Vira sullo scarso» (B5):** il pilota guidando non lo completa 2 volte su 100 (semi 51 e 79, uguali nei due browser), mentre la soglia è al più 1. Nella 1.1.8 era stato misurato solo sui semi 1-20. **La causa sta nel pilota, non nella lezione.** Decideva solo dopo 3 s a ±4° dalla prua voluta e misurava lo scarso sulla prua del momento. Mentre inseguiva il vento che gira, proprio al massimo dello scarso non stava fermo in bolina: nel seme 51 lo scarso vero arriva a 12°, ma quando il pilota si stabilizza è già sceso sotto i 10°.
+  - **Corretto il pilota, dopo aver visto i risultati (lo dico):** decide dopo 2 s di bolina (40-60° letti) e legge lo scarso dalla prua di bolina confrontata con la prua media. La Prua del pannello è un numero, e un errore di lettura costante si annulla come per chi ne prende la media. Le soglie restano quelle di prima: vira con 10° letti, 300 s di limite, al più 1 mancato su 100.
+  - Tentativi scartati, sui semi 1-100: tolleranza ±6° invece di ±4°, ancora 98/100; scarso letto con l'errore di lettura che non si annulla, 96/100 (falliscono i semi con l'errore fra +2,4° e +3°, che con salti di 12-15° aspettano uno scarso vero di 13°).
+  - **Misurato:** semi 1-100 (messa a punto) 100/100, tempo medio 103,3 s; **semi 101-200 (conferma, mai guardati)** 100/100 con il pilota preciso e con il giocatore impreciso, tempo medio 113,9 s, massimo 209 s. A mani ferme 0/100. `--veloce`: 40 passi, ESITO OK. La lezione non è cambiata.
+- **Firefox, `collaudo_contatto_vero`:** era un fallimento noto e stanotte passa. Lo tolgo da `tests/fallimenti_noti.txt` solo se passa anche nelle prossime notti.
+- Il resto era atteso: in Firefox `collaudo_torneo` C11 è solo una misura di tempo; `collaudo_fasce` e `competizione (tastiera)` sono da controllare come sempre, nei valori già scritti.
+
+## 1.2.0 — Barche di scena che si muovono: esercizi delle lezioni D1-D3 (ramo `pulizia`)
+
+Meccanismo A di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale: «la 1 è la simulazione di un evento, un copione».
+
+**Campo nuovo dei passi, `scenaMobile`:** barche che vanno dritte a velocità costante, oppure orzano piano in un momento scritto nel passo. Non hanno fisica né guida, e non si scansano mai. Il contatto si calcola sui contorni veri degli scafi, con la stessa funzione delle regate (`polySep`). Ricomincia rimette tutto com'era all'inizio. Le regate non sono toccate.
+
+**I tre esercizi** (barca di scena a 2,2 m/s, salvo la D2 a 1,0 m/s; vento 10 nodi; vela che si regola da sola):
+- **D1 «Passale dietro»:** sei di bolina mure a sinistra e arriva una barca mure a dritta. Il passo vale se le attraversi la rotta dietro la poppa con almeno 2 m di margine, senza mai avvicinarti a meno di 2 m e senza contatto.
+- **D2 «Sorpassa senza toccarla»:** sei libera dietro una barca più lenta. Il passo vale se la tua poppa arriva almeno 2 m davanti alla sua prua, senza mai avvicinarti a meno di 2 m.
+- **D3 «Vira dopo che è passata»:** il passo vale se viri e, mentre la tua prua è a meno di 30° dal vento, l'altra resta ad almeno 10 m.
+- Le distanze (2 m e 10 m) e le velocità sono ipotesi nostre.
+
+**Misurato** (pilota delle lezioni):
+
+| Esercizio | guidando, semi 1-10 | guidando, semi 11-20 | a mani ferme |
+|---|---|---|---|
+| D1 | 10 su 10 (11,8 s) | 10 su 10 | 0 su 10 |
+| D2 | 10 su 10 (14,3 s) | 10 su 10 | 0 su 10 |
+| D3 | 10 su 10 (12,9 s) | 10 su 10 | 0 su 10 |
+
+- Un pilota che nella D3 vira subito, senza aspettare: 0 su 10.
+- Nella D1 e nella D2, a mani ferme, si finisce addosso all'altra barca.
+
+**Corretto prima del risultato:**
+- Il collaudo faceva i 30 s a mani ferme e poi guidava senza ripartire, quando il copione era già finito. Ora in questi passi preme Ricomincia, come farebbe un giocatore.
+- Il pilota della D1 inseguiva un punto dietro la barca rossa, che però si spostava: finiva per salire nel vento e virare. Ora fa quello che dice il testo: poggia finché è passata, poi torna di bolina.
+- Il pilota della D3 aveva il segno sbagliato nel controllo «è passata».
+- Nel passo D3 la «distanza in virata» si misurava già sotto i 40° dal vento: chi stringe molto il vento veniva contato come se virasse. Ora si misura sotto i 30°.
+- La barca di scena della D3 passava a 2,8 m dalla prua del giocatore: ora parte 4 m più avanti.
+- La rosa grande delle andature copriva la scena (visto nello screenshot): è tolta da questi tre passi, e l'andatura resta scritta nel pannello.
+
+**Per i collaudi:** l'aggancio `#collaudo` espone anche `base`, le misure del passo in corso.
+
+**Controlli:** `collaudo_pannello_lezioni` 86 passi su 86 a 0 px, in Chromium e in Firefox. Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_intera`, `collaudo_libretto`. Fisica identica al bit.
+
+## 1.1.9 — Gruppo D, prima parte: lezioni D1-D4 sul regolamento (nascoste nel menu, ramo `pulizia`)
+
+Le prime quattro delle sette lezioni sul regolamento (`docs/PROPOSTA-LEZIONI-2A.md`, approvata il 31 ottobre): D1 «Mure opposte», D2 «Stesse mure», D3 «Chi vira cede», D4 «Evitare il contatto». Sono `LESSONS[11]`-`LESSONS[14]`, con `nascosta: true` e `gruppo: "D"`.
+
+**Fonti:** le regole 10-16, le definizioni (libera dietro e avanti, sovrapposte, sopravento e sottovento, tenersi lontano) e la regola 43.1(c), rilette oggi nel PDF di F15. Le regole sono parafrasate, con il numero.
+
+**Il testo dice quello che fa il gioco.** Il gioco applica le regole 10, 11, 12 e 13 (`chiCede`, 1.0.40, provate da `collaudo_regole.py` e `collaudo_semaforo.py`). Le regole 14, 15 e 16 non le applica, e non ci sono danni: la D4 lo dice. Le penalità scritte nella D1 (15 s, due giri, un punto nel torneo) sono quelle degli avvisi del gioco.
+
+**Campo nuovo delle pagine di teoria, `scena`:** barche ferme accanto a quella della lezione, disegnate con la funzione degli avversari (`drawOther`), con il colore dello scafo e una scritta sotto ciascuna. `scenaH` dà la prua della barca della lezione e `me` la sua scritta. Controllato con gli screenshot: nella prima stesura la barca rossa della D1 finiva sul bordo dello schermo, ed è stata avvicinata da 28 a 14 m.
+
+**Rimandato, ed ecco perché:**
+- **Gli esercizi pratici in regata** (proposta §2: «prove in regata con il semaforo»). Oggi una lezione non può aprire una regata. Lo stesso meccanismo serve alle partenze del gruppo C, quindi si fa una volta sola, insieme. Per ora le D1-D4 sono teoria, disegni, quiz (4 domande) ed esame (4 domande). La D4 doveva restare solo teoria comunque.
+- **La pagina sulle precedenze della lezione 3** resta finché le lezioni D sono nascoste. Se la togliessi adesso, chi gioca non troverebbe più le precedenze da nessuna parte. Si toglie insieme al menu nuovo, con il titolo «Andature e mure».
+
+**Misurato:**
+- `collaudo_pannello_lezioni`: 83 passi su 83 a 0 px, in Chromium e in Firefox. Pagina senza errori.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Il pilota delle lezioni percorre anche le D1-D4: 0 passi pratici, perché non ne hanno. Il numero atteso dei passi pratici per lezione è stato aggiornato, così il metro non dà per buono uno zero che non dovrebbe esserci.
+- Fisica identica al bit.
+
+## 1.1.8 — Lezione B5 «I salti di vento» (nascosta nel menu, ramo `pulizia`): il gruppo B è completo
+
+Quinta lezione del gruppo B, undicesima nel gioco (`LESSONS[10]`, `nascosta: true`).
+
+**Fonte, letta oggi prima del testo:** Dellenbaugh, «Windshift Rules of Thumb», *Sailing World* (nuova **F41**). La proposta delle lezioni diceva che per la B5 mancava una fonte sulla bolina nei salti, perché si citava F7, che parla delle andature portanti. In realtà quella fonte c'era già in `archivio/PROPOSTA-SALTI-VENTO.md`, senza numero: ora è riletta e numerata. È una sola fonte, di un allenatore su una rivista, e il testo lo dice («in un esempio di un allenatore»). Due fonti della stessa proposta non sono state rilette: WindCheck, che ha rifiutato la lettura, e la guida di Raymarine. Il testo non usa niente di loro.
+
+**La lezione:** due pagine di teoria («Il vento gira», «Vira sugli scarsi»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Campo nuovo dei passi, `shifts`:** accende i salti di vento delle regate dell'1b (`SALTI2`, 1.0.28: 12-15° per parte, una mezza oscillazione ogni 60-75 s). Il testo dice che nel gioco il vento oscilla più in fretta che nell'esempio della fonte.
+- **Passo pratico «Vira sullo scarso»:** il vento medio arriva da nord, come dice la scritta del vento, e lo scarso si legge con la «Prua» del pannello. La vela si regola da sola. Il passo vale con **due virate fatte da scarsi di almeno 7°**, poi 3 s di bolina sopra i 2 nodi. Una virata fatta da buoni di almeno 3° fa fallire il passo: compare un avviso e si preme Ricomincia. Contano solo le virate volute, cioè con la barra verso il boma negli ultimi 4 s, e partite da bolina, cioè fra 35° e 75° dal vento negli ultimi 4 s.
+
+**Come si è arrivati alla condizione (soglie cambiate dopo aver visto i numeri, ecco quali):**
+1. Prima stesura: una virata da scarsi di almeno 5°. Il pilota bravo passava 10 volte su 10, ma anche un pilota che vira a caso ogni 20 s passava 10 volte su 10: il passo non distingueva niente.
+2. Soglia a 7° e virata da buoni che fa fallire. Chi vira a caso passava ancora 6 volte su 10, e il pilota bravo passava solo 8 volte su 10. La causa era nel pilota: decideva prima di essere di bolina e virava su uno «scarso» letto male. È stato corretto, e ora decide dopo 3 s di bolina tenuta, come chiede il testo. Nello stesso giro sono state aggiunte le due regole «virata voluta» e «partita da bolina».
+3. Una virata non bastava ancora: chi vira a caso passava 6 volte su 10. Con **due virate** le attese erano state scritte prima di misurare: pilota bravo almeno 9 su 10, chi vira a caso molto sotto la metà.
+
+**Misurato (versione finale):**
+
+| Pilota | semi 1-10 | semi 11-20 (conferma) |
+|---|---|---|
+| bravo (vira quando legge 10° di scarso) | 10 su 10, in media 105,1 s | 10 su 10, 104,7 s |
+| a mani ferme, 30 s (collaudo) e 120 s | 0 su 10 | 0 su 10 |
+| vira a caso ogni 20 s | 0 su 10 | **1 su 10** |
+| vira quando è buono di 8° | 0 su 10 | 0 su 10 |
+
+- Il passo è lungo, circa due minuti, perché bisogna aspettare due scarsi.
+- Lasciata a sé per 120 s, la barca non vira mai da sola: 0 virate su 20 semi.
+- `collaudo_pilota_lezioni.py --solo 11` per l'undicesima lezione.
+- `collaudo_pannello_lezioni`: 72 passi su 72 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Fisica identica al bit. Le regate non cambiano: il campo `shifts` agisce solo nei passi delle lezioni.
+
+## 1.1.7 — Lezione B4 «La raddrizzata lunga» (nascosta nel menu, ramo `pulizia`)
+
+Quarta lezione del gruppo B, decima nel gioco (`LESSONS[9]`, `nascosta: true`).
+
+**Fonti**, scritte nel codice sopra la lezione:
+- **Il video di un allenatore** (19 ottobre 2026) è l'unica fonte per la barca con una persona sola. È divulgativo e il testo lo dice («un allenatore, in un video»). **La trascrizione non è salvata nel progetto**: ho usato il riassunto di `docs/archivio/PROPOSTA-RADDRIZZATA.md`. Dice: schiena al vento, albero sottovento, vela che sale e sbatte libera, 15-20 s dalla scuffia alla barca che naviga.
+- **La dispensa di una scuola di vela** (`fonti-pdf/Dispensa-Scuola-Vela-2019.pdf`, pp. 24-25, riletta oggi): non si lascia la barca; con le vele cazzate la barca non si raddrizza; spalle al vento; piedi vicino allo scafo. Con l'equipaggio insegna anche a tenere la barca con la prua al vento. **Questo il gioco non lo fa, e il testo lo dice.** È una fonte informale: per decisione di Ale non diventa domande di quiz, e infatti quiz ed esame si reggono sul video e sul gioco.
+- W4 e W5 (`DUBBI-E-RICERCHE.md` §3), due fonti deboli: le scotte vanno libere.
+
+**La lezione:** due pagine di teoria («Prima di raddrizzare», «Spalle al vento»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Passo pratico:** «Raddrizza e riparti». La barca parte scuffiata, con 12 nodi e raffiche leggere. Il passo vale se la barca, dopo essere stata raddrizzata, va fra 60° e 120° dal vento ad almeno 2,5 nodi con i filetti dritti, per 1 s.
+- **Trovato misurando:** premendo solo A e poi più niente, con la vela che sbatte, la barca arriva da sola a 2,4-3,2 nodi in 30 s (semi 1-10). Per questo il passo chiede anche i filetti dritti, e una risposta sbagliata dell'esame, «aspetto che riparta da sola», è stata cambiata: nel gioco non era del tutto falsa.
+
+**Misurato:**
+- pilota delle lezioni esteso alla B4 (A, attesa, poi colpi di scotta guardando i filetti): semi 1-10, guidando 10 su 10 (in media 14,3 s), a mani ferme 0 su 10; semi 11-20 lo stesso. Premendo solo A: 0 su 10.
+- `collaudo_pilota_lezioni.py --solo 10` per la decima lezione (una cifra non bastava più; `--solo 1,10` per più lezioni).
+- `collaudo_pannello_lezioni`: 68 passi su 68 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Fisica identica al bit.
+
+## 1.1.6 — Lezione B3 «La barca che orza sbandando» (nascosta nel menu, ramo `pulizia`)
+
+Terza lezione del gruppo B, nona nel gioco (`LESSONS[8]`, `nascosta: true`).
+
+**Fonti rilette nei PDF prima del testo**, scritte nel codice sopra la lezione:
+- F4 (`fonti-pdf/sname-jst-2020-05.pdf`): p. 28 e fig. 13, di bolina con la barca dritta la barra sta circa al centro; p. 32, eq. 6, sbandando il centro velico va sottovento e la barca orza di più; p. 33, anche lo scafo sbandato orza da solo, senza numeri.
+- F38 (`fonti-pdf/HANDBOOK_2025.pdf`, pagina «Rudder and Tiller»): sbandata, la barca diventa molto orziera; poggiare sbandati carica molto pala e barra, ed è così che si rompono; prima si raddrizza, sporgendosi o lascando.
+- **Semplificazione detta nel testo:** nel gioco conta solo la vela (il termine della 1.0.46), lo scafo sbandato non fa orzare.
+
+**La lezione:** due pagine di teoria («Perché la barca orza», «Nella raffica»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Passo pratico:** «La rotta nella raffica». Al traverso, 12 nodi, una raffica media (+45%) che arriva da sola, come nella lezione 6. Il passo vale se nel cuore della raffica la prua resta entro 6° dalla rotta indicata, lo sbandamento sotto 15° e la velocità sopra 2 nodi, per 2 s di fila.
+- **Il testo dice quello che il gioco fa** (misurato sul motore, 12 nodi al traverso, raffica +45% per 6 s, vela regolata):
+  - con la barra al centro la prua sale di 19° (5° senza raffica);
+  - tenendo la prua con la sola barra servono 2,5° di barra e la barca sbanda fino a 22°;
+  - lascando un poco (0,15) bastano 1,1° di barra e la barca sbanda fino a 11,5°.
+  - Nel gioco, a mani ferme, in 30 s la barca passa dal traverso a circa 40° dal vento e sbanda fino a 39-51° (semi 1-10).
+
+**Corretto, trovato rileggendo:** i testi della lezione B1 (1.1.4) dicevano tre volte «470», il nome di una classe, contro il principio 5. Ora dicono «una deriva da regata». Il nome resta solo nei commenti del codice, che citano la fonte.
+
+**Misurato:**
+- pilota delle lezioni esteso alla B3: semi 1-10, guidando 10 su 10 (in media 17,1 s), a mani ferme 0 su 10. Semi 11-20: lo stesso (17,4 s).
+- `collaudo_pannello_lezioni`: 64 passi su 64 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_versione`.
+- Fisica identica al bit (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`).
+
+## 1.1.5 — Lezione B2 «Spingere il boma» (nascosta nel menu, ramo `pulizia`)
+
+Seconda lezione del gruppo B, ottava nel gioco (`LESSONS[7]`, `nascosta: true`).
+
+**Fonti lette prima del testo**, scritte nel codice sopra la lezione:
+- `docs/archivio/PROPOSTA-SPINGI-BOMA.md` §1: US Sailing, la guida di un circolo per una deriva in singolo, Australian Sailing «Sailing Backwards», un allenatore di partenze. Tutte dicono boma spinto fuori, barra dalla stessa parte, la barca arretra e la prua gira verso il boma; al traverso si molla, si centra e si cazza. Nessuna dà numeri.
+- Regola 21.3 di F15, **riletta nel PDF**: chi va all'indietro, o di lato verso il vento, spingendo una vela si tiene lontano da chi non lo fa. **Il gioco non la applica, e il testo lo dice** (come deciso per le regole che il gioco non fa).
+
+**La lezione:** due pagine di teoria («Fuori dall'angolo morto», «All'indietro, apposta»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame.
+- **Passo pratico:** «Spingi il boma e riparti». La barca parte ferma nell'angolo morto (campo nuovo dei passi, `startIrons`: prua a 10° dal vento, ferma, vela lascata). Il passo vale se il boma è stato spinto (Z) per almeno 0,5 s in tutto e poi la barca va avanti al traverso, fra 60° e 120° dal vento, ad almeno 1,5 nodi, per 1 s.
+- **Il testo dice quello che il gioco fa** (misurato, 10 nodi):
+  - a mani ferme, in 30 s, la prua passa solo da 10° a 20° dal vento e la barca scivola all'indietro a 1,8 nodi. Per questo la prima stesura, «la barca prima o poi poggia da sola», è diventata «resta lì a lungo e scivola all'indietro»;
+  - con Z e la barra verso il boma la barca arretra fino a 2,4 nodi, la prua gira verso il boma ed è al traverso in 2,7 s.
+
+**Misurato:**
+- pilota delle lezioni esteso con Z: semi 1-10, guidando 10 su 10 (in media 6,7 s), a mani ferme 0 su 10. Semi 11-20: lo stesso (6,6 s).
+- `collaudo_pannello_lezioni`: 60 passi su 60 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera_intera`, `collaudo_libretto`.
+- Fisica identica al bit.
+
+## 1.1.4 — Lezione B1 «Il timone che stalla» (nascosta nel menu, ramo `pulizia`)
+
+Prima lezione del gruppo B (`docs/PROPOSTA-LEZIONI-SCUOLA.md`). Come ha deciso Ale il 1 novembre, **non compare nel menu** finché non arriva il menu nuovo: nel gioco è la settima lezione (`LESSONS[6]`, `nascosta: true`). Il libretto, i meriti, il ripasso e il pulsante del quiz la ignorano. Quiz ed esame stanno nella lezione e si collegano col menu.
+
+**Fonti lette prima del testo** (`docs/archivio/PROPOSTA-STALLO-TIMONE.md` §1, §9, §10), e scritte nel codice sopra la lezione:
+- F4 (vasca, modellino del 470): la forza della pala cresce fino a circa 15° e poi resta uguale, mentre la resistenza continua a crescere. Nelle virate vere la barra arriva a 45°, e accompagnarla è il modo più ragionevole.
+- F35 (calcolo a grandezza vera): stallo a circa 30°.
+- Day 2017: l'angolo che la pala sente non è quello della barra.
+- Regole di questo gioco, dichiarate come tali nel testo: la sola freccia arriva a 35° (1.0.25), Maiusc a 45°.
+
+**La lezione:** due pagine di teoria («La pala è un'ala», «35° e 45°»), un passo pratico e il riepilogo; 4 domande di quiz e 4 per l'esame. Nel glossario nessuna voce nuova: «Stallo» c'è già (per la vela).
+- Il **passo pratico** è «Una virata con la barra in fondo»: virata riuscita, con la barra oltre 36° (cioè con Maiusc) per almeno 0,3 s in tutto. Il conteggio è nuovo (`base.maiusc`), con lo stesso metodo della barra sottovento della 1.1.3.
+- Un passo «fai stallare la pala» non c'è, perché **con i tasti la pala non stalla**. Misurato: 0 s di stallo in 6 prove, partendo da 2, 3 e 5,5 nodi, con 35° e con 45°. La barca comincia a girare prima che l'angolo diventi troppo grande (1.0.31). Il testo lo dice: «con i tasti la pala stalla di rado; se succede, il pannello lo dice».
+
+**Misurato:**
+- `collaudo_pilota_lezioni.py --solo 7` (pilota esteso: vira tenendo Maiusc): semi 1-10, guidando 10 su 10, a mani ferme 0 su 10, tempo medio 3,3 s. Semi 11-20: lo stesso.
+- Tutte le lezioni, semi 11-20: 32 passi 10 su 10 e il 6.3 9 su 9, come nella 1.1.3.
+- `collaudo_pannello_lezioni`: 56 passi su 56 a 0 px, in Chromium e in Firefox.
+- Verdi `collaudo_lezioni`, `collaudo_quiz`, `collaudo_esame`, `collaudo_carriera`, `collaudo_carriera_intera`, `collaudo_carriera_esame`, `collaudo_libretto`, `collaudo_pannello`, `collaudo_schermate`, `collaudo_pulsanti`. Il menu non cambia.
+- Fisica identica al bit.
+- Il pilota riconosce l'ultimo passo anche dalla scritta del pulsante: le lezioni nascoste non hanno il pulsante del quiz, e senza questa correzione andava oltre la fine (720 errori della pagina nella prima prova).
+
+## Collaudi: il giro mirato delle partenze sui semi 1-100 (1 novembre 2026, nessuna versione nuova)
+
+- Su GitHub, versione `97d3dde` (guida degli avversari della 1.1.2), `collaudo_non_partite` con i semi 1-100: in tutto 7200 barche per browser.
+  - **Chromium:** 3 non partite su 7200 (0,04%), tutte nella regata dei salti. Bastone, raffiche e giri: 0.
+  - **Firefox:** 9 su 7200 (0,13%): 8 nei salti (semi 22, 36, 47, 54, 56, 80) e 1 nelle raffiche (seme 89).
+  - Nella 1.1.0 era l'1,7% (25 su 1440).
+  - I due browser danno casi diversi, perché i conti differiscono all'ultima cifra e le traiettorie si separano. Il seme 22 in Firefox cade dentro i semi 1-40 che avevo misurato solo in Chromium.
+- **Decisione di Ale:** il residuo si accetta e si annota; ci si torna lavorando sugli avversari. Nel giro normale (semi 1-20) il collaudo è verde in tutti e due i browser.
+
+## 1.1.3 — Lezioni, gruppo A, prima parte: i cinque passi che la barca dell'1b rompeva (ramo `pulizia`)
+
+Prima fetta di `docs/PROPOSTA-LEZIONI-SCUOLA.md`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
+
+**La causa, misurata.** Dal traverso, con la barra al centro e la vela che si regola da sola, la barca dell'1b orza da sola di circa 0,8° al secondo, già con 4-6° di sbandamento. È la barca orziera della 1.0.46 (fonte F4). In 30 s passa da 90° a 67° dal vento:
+- nei passi 2.4 «Barra sottovento: si orza», 3.2 «Bolina» e 5.2 «Prepararsi a virare» entrava da sola nel settore della bolina;
+- nel 6.2 «Assorbire una raffica» la raffica la faceva sbandare (fino a 52°) e poi orzare fino a 40° dal vento, così la vela si scaricava da sola;
+- nel 3.10 «Filetto sottovento» il passo non ha la barra: la barca orzava fino a 32° dal vento, dove il filetto sottovento non si può agitare. In più la condizione chiedeva un angolo d'attacco oltre 29°, ma il filetto si agita già da 27°: chi si fermava appena lo vedeva agitarsi (come dice il testo) non arrivava mai alla soglia.
+
+**Correzioni, solo nelle lezioni:**
+- **2.4, 3.2, 5.2:** il passo vale solo se il giocatore ha **spostato davvero la barra verso il boma** (barra sottovento) per almeno 0,1 s in tutto. Conta solo la barra mossa in quel momento, con i tasti o il cursore: quella rimasta dal passo prima non vale.
+- **6.2:** il passo vale solo se il giocatore ha **lascato durante la raffica**, almeno 0,05 di scotta in tutto. È la tecnica che la lezione insegna.
+- **3.10:** la condizione è il filetto sottovento agitato, cioè quello che il giocatore vede, per 0,5 s. Prima chiedeva un angolo oltre 29° per 1 s.
+- **Nei passi senza barra (3.8-3.10, 4.2, 4.3) la rotta la tiene la scuola**, come la vela si regola da sola nei passi con `autoTrim`. È una semplificazione dichiarata e scritta nei testi dei passi 3.8 e 4.2. Con la 1a, a barra ferma, la rotta restava quella; con la barca orziera dell'1b no.
+- **6.4 «Raddrizzare»:** il testo dice che ci vogliono una decina di secondi e che la barca torna dritta al traverso, con la vela lascata. È il comportamento dell'1b (1.0.32).
+- **Soglie del gioco, scelte sui semi 1-10 e confermate sui semi 11-20:** 0,3 s di barra, poi 0,2 s, poi 0,1 s.
+  - Con 0,3 s, 3.2 e 5.2 si completavano guidando 6 volte su 10: dopo l'attesa a mani ferme la barca è già quasi in bolina e basta poca barra.
+  - Con 0,2 s, 3.2 era a 8 su 10.
+
+**Misurato** (`collaudo_pilota_lezioni.py`):
+- **Semi 1-10: 32 passi su 32 completati guidando 10 volte su 10, 0 passi che si completano da soli.** Con la 1.1.0: 27 su 32, il 3.10 mai completato, 4 passi completati da soli.
+- **Semi 11-20 (conferma):** 31 passi 10 su 10 e il 6.3 «La scuffia» 9 su 9. Il 6.3 si completa da solo 1 volta su 10: è noto e voluto dalla 1.0.15 (con la 1a succedeva 6 volte su 10), perché lì si scuffia apposta.
+- «Già fatto dopo un colpo lungo» 1 volta su 10 per 3.5 «Poppa» e per 6.3, il tipo già noto.
+
+**Collaudi:**
+- `collaudo_lezioni` verde in Chromium e Firefox (18 passi). Il colpo di scotta del suo «L5 prepararsi» passa da 1,5 a 1,0 s: era tarato sulla 1a e con l'1b la vela finiva troppo cazzata. Provati 1,0, 0,7 e 0,5 s, tutti OK.
+- `collaudo_carriera_intera` di nuovo verde: tolte le sue voci dai fallimenti noti.
+- Verdi anche `collaudo_registro` (15 su 15), `collaudo_suggerimento`, `collaudo_pannello` (Chromium e Firefox), `collaudo_quiz`, `collaudo_libretto`.
+- **Nuovo `collaudo_pannello_lezioni.py`** (nel giro): misura il pannello a 1360×650 in **tutti i 52 passi** delle lezioni, con il testo di fine passo. Ha trovato un difetto vecchio: il **6.4 sforava di 17 px** già prima, e nessun collaudo lo misurava. Con la prima versione del testo nuovo arrivava a 41 px; il testo accorciato lo porta a 0 px in Chromium e in Firefox. Sulla 1.1.2 la stessa misura trova i 17 px: il metro se ne accorge.
+
+**Ancora da fare nel gruppo A:** togliere le precedenze dalla lezione 3. Si fa insieme alle lezioni del gruppo D, così il contenuto non resta scoperto per un periodo. Poi il controllo frase per frase dei testi contro la barca dell'1b (criterio L2).
+
+## Collaudi dopo il giro su GitHub della 1.1.2 (1 novembre 2026, nessuna versione nuova)
+
+- Giro completo su GitHub, Chromium e Firefox: **cadono solo `collaudo_lezioni`** (passo 5.2, va col gruppo A delle lezioni), **`collaudo_registro`** (Chromium) e una serie di fallimenti noti con i numeri cambiati.
+- **`collaudo_registro`, corretto:** contava come «contatto annunciato al giocatore» anche il messaggio «Contatto fra X e Y», che riguarda due avversari e dalla 1.1.0 compare in tutte le regate. Ora conta solo i messaggi che non cominciano con «Contatto fra». Rilanciato qui: 15 su 15.
+- **Fallimenti noti aggiornati** con le righe del giro (`tests/fallimenti_noti.txt`, ogni voce col motivo):
+  - `collaudo_partenze`, Chromium e Firefox: oltre al criterio (1), noto, il (2), cioè le partenze lente con 300 s nelle raffiche, circa 8 s. È un difetto degli avversari dell'1b presente dalla 1.1.0.
+  - `collaudo_virate2` e `collaudo_competizione` (misura): stessi criteri di prima, numeri della 1.1.2.
+  - `collaudo_giri_avversari` in Firefox: G4 ha trovato 14 casi di due giri di fila contro i 15 che il metro chiede. La mediana (22,2 s) è dentro la soglia. G2 è all'82% (soglia 80%; nella 1.1.0, in Firefox, 91%).
+- Il collaudo nuovo `collaudo_non_partite` è verde in tutte e quattro le regate, in tutti e due i browser.
+
+## 1.1.2 — Gli avversari cedono come prima dopo il via; collaudi sistemati dopo il giro della 1.1.1 (ramo `pulizia`)
+
+Il giro su GitHub della 1.1.1 ha trovato un peggioramento vero: con la correzione A (cedere solo a chi si avvicina) in tutta la regata, gli avversari estinguevano meno debiti di giri. `collaudo_giri_avversari` G2 era all'80% in Chromium e al 74% in Firefox, contro il 93% e il 91% della 1.1.0, con soglia 80%.
+
+**Correzione:** A vale solo in partenza, finché la barca non ha tagliato la linea (`b.leg === 0`). Dopo il via gli avversari cedono come nella 1.1.0. B1 e B2 restano come nella 1.1.1.
+
+**Prove senza ciascuna correzione** (G2, Chromium, 40 regate):
+- 1.1.1 così com'era: 80%;
+- senza A: 90%;
+- senza B1: 86%;
+- senza B2: 80%.
+
+**Misurato sulla 1.1.2:**
+- **Barche non partite:** semi 1-20, 0 su 1440; semi 21-40 (conferma), **0 su 1440**. Anche il caso del seme 40 che Ale aveva accettato ora parte. La scelta di limitare A alla partenza è venuta dopo aver visto i numeri della 1.1.1, e lo dico: i semi 21-40 erano già stati usati come conferma della 1.1.1.
+- **Contatti in 80 regate intere:** 333, contro 332 della 1.1.0 e 374 della 1.1.1.
+- **`collaudo_giri_avversari`:** verde, G2 **92%**, G1 102 su 102.
+- **`collaudo_avversari1b`, scenario 5:** di nuovo 7 su 10, come nella 1.1.0. Il 9 su 10 della 1.1.1 veniva da A in tutta la regata.
+- **Fisica:** `impronta1b.js` identica al bit.
+- **Partenze lente nelle raffiche** (criterio (2) di `collaudo_partenze`): non le ha portate la 1.1.1. Nel giro della 1.1.0 il ritardo mediano con 300 s era già di 12,4 s per i principianti e di 8,3 s per gli esperti, e con 180 s di 7,4 s; nella 1.1.1 è sceso a 7,9 s, 8,2 s e 2,3 s. Resta fuori soglia (3 s) da quando la regata nelle raffiche ha gli avversari dell'1b: difetto noto, da guardare con gli avversari.
+
+**Collaudi corretti** dopo il giro della 1.1.1:
+- `collaudo_regola21` (K2, K3): il caso costruito ora azzera i richiami (21.1) e i debiti degli avversari (21.2). Con la guida nuova il pilota a volte era ancora oltre la linea, o un avversario stava scontando, e la regola misurata era giustamente 21.1 o 21.2.
+- `collaudo_giri` E1: si aspetta 15 s per ogni giro non fatto, invece di 30 s fissi. In Firefox, seme 501, il pilota tocca anche la boa e i giri non fatti sono 3, +45 s, come deve essere.
+- `collaudo_moto_mare`: salti di vento spenti, perché misura il moto con la prua fissa rispetto al vento. Era rimasto indietro dalla 1.1.0.
+- `collaudo_boma_poppa` B4a, `collaudo_riquadro_bandiere` Q6a, `collaudo_scotta_automatica` A1: da quando cambia la guida degli avversari, nessuna regata può più essere identica alle versioni vecchie (1.0.69-1.0.72). Il confronto delle regate ora è **solo riportato**, e A1 confronta solo le corse a scotta fissa. Il controllo «la modifica non cambia le regate» lo fa `tests/arrivi_regate.py` a ogni modifica.
+- Verdi qui: `collaudo_regola21` (Chromium e Firefox), `collaudo_giri` (Chromium e Firefox), `collaudo_linea` (Firefox), `collaudo_moto_mare`, `collaudo_scotta_automatica`, `collaudo_semaforo`, `collaudo_regate` raffiche (18 su 18).
+- I fallimenti noti con numeri cambiati (`collaudo_virate2`, `collaudo_competizione`, `collaudo_partenze`, `collaudo_avversari1b` in Firefox) si aggiornano con le righe del prossimo giro.
+
+## Collaudi: le partenze su tanti semi e i collaudi scelti su GitHub (1 novembre 2026, nessuna versione nuova)
+
+- **`tests/collaudo_non_partite.py`, nuovo.** Conta gli avversari non partiti entro 60 s in una delle quattro regate, con principianti ed esperti, 60/180/300 s di preparazione e semi 1-20 (si possono cambiare con `NONPARTITE_SEMI`). È la misura della 1.1.1 diventata collaudo: soglia 0, e il metro deve contare tutte le barche. Nel giro sono quattro voci lunghe, una per regata.
+  - Provato qui: bastone, semi 1-20, 360 barche contate su 360, 0 non partite, OK.
+  - Salti, seme 40: FALLITO con la barca giusta (Verde). È il caso accettato da Ale.
+- **Su GitHub, «Run workflow» ha due caselle nuove:**
+  - «Solo questi collaudi»: un pezzo del nome, per esempio `non_partite`, passato a `lancia_tutti.sh --solo`;
+  - «Semi di collaudo_non_partite», per esempio `1-100`.
+- **Perché non «10 volte lo stesso collaudo»:** i collaudi girano a semi e passi fissi, quindi ripetuti danno lo stesso numero carattere per carattere. Per vedere di più servono semi diversi, come fanno l'Esploratore e ora questo collaudo.
+- **Decisione di Ale:** il caso del seme 40 si accetta.
+
+## 1.1.1 — Gli avversari dell'1b partono (ramo `pulizia`)
+
+Da `docs/PROPOSTA-PARTENZE-1B.md`, con il via di Ale (scelta A, 1 novembre 2026). Si cambia solo la guida degli avversari, in `js/regate.js`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
+
+**Il difetto.** Con la 1.1.0 alcuni avversari non partivano entro 60 s dallo sparo (criterio (4) di `collaudo_partenze.py`). Misurato qui, in Chromium, sulle quattro regate: principianti ed esperti, 60/180/300 s di preparazione, semi 1-20, cioè 1440 barche. Le barche non partite erano **25 su 1440**: 6 nel bastone, 6 nelle raffiche, 5 nei salti, 8 nei giri. Sulla 1.0.78 bastone e raffiche avevano 0, ma la regata dei giri, già dell'1b, ne aveva già **8 su 360**: il difetto c'era da prima e nessun collaudo lo guardava.
+
+**Tre correzioni:**
+- **A. Si cede solo a chi si avvicina.** Due barche parallele alla stessa velocità, a meno di due lunghezze, risultavano «sul punto di toccarsi» a ogni passo. Così si cedevano a vicenda: tutte e due al traverso lungo la linea, tagliata poi fuori dagli estremi. Ora, con gli scafi a più di una lunghezza, una barca che si avvicina a meno di `V_AVV` = 0,1 m/s non conta. Chi sta già cedendo continua finché le barche si avvicinano. **Ipotesi nostra:**
+  - scelta sui semi 1-20: con 0,3 m/s le barche non partite erano 0, ma i contatti crescevano del 25%;
+  - senza questa correzione, nei salti restano 5 barche su 360 non partite.
+- **B1. Abbrivio prima di virare.** Per virare da quasi ferma, la barca poggiava finché superava 1,1 m/s, poi orzava, rallentava sotto 1,1 e poggiava di nuovo. Restava così per minuti a 2,1 nodi, in un caso fino a 250 m dal centro della linea. Ora continua a prendere abbrivio fino a `U_ABBRIVIO` = 1,6 m/s, circa 3,1 nodi (le virate dell'1b riescono da circa 2,9 nodi, 1.0.43), e intanto la vela si regola invece di sbattere. Ipotesi nostra.
+- **B2. Chi taglierebbe fuori lascia la prua di partenza.** Dopo lo sparo, una barca vicina alla boa che, tenendo la prua di partenza, taglierebbe la linea fuori dall'estremo (scivola di lato di tan(bolina + 4°) metri per metro) passa alla guida generale. Prima, nei 18 casi rimasti dopo A e B1, la barca girava attorno alla boa per tutto il minuto.
+- **Provate e tolte:**
+  - un punto di rientro dietro la linea per chi era fuori dagli estremi: creava proprio il giro attorno alla boa;
+  - cedere al lasco quando la guida chiede di andare sottovento, per chi torna dopo un richiamo: le barche non partite salivano a 18 su 1440 sui semi 1-20 e i contatti quasi raddoppiavano.
+
+**Misurato** (Chromium, 4 regate, 2 livelli, 3 preparazioni):
+- **P1/P2, semi 1-20 (scelta): 0 barche non partite su 1440.**
+- **Semi 21-40 (conferma, mai guardati): 1 su 1440.** È la regata dei salti, esperti, 60 s, seme 40, Verde: parte in anticipo e, mentre deve tornare, cede a Rossa che va di bolina e si allontana fino a 65 m oltre la linea. Con la 1.1.0 lo stesso seme partiva. **La soglia dichiarata (0) non è raggiunta sui semi di conferma**, e lo riporto così.
+- **P3, contatti in 80 regate intere** (bastone e raffiche, semi 1-40): 374 contro 332 della 1.1.0, cioè **+12,7%** (soglia 20%). Tutte le barche arrivano in 80 regate su 80.
+- **P4:** `collaudo_partenze.py` completo non sta nei 10 minuti di un comando qui. Il bastone è dentro tutte le soglie: richiami 0% e 1,7%, ritardo mediano 1,1-2,2 s, velocità mediana 4,8 e 4,6 nodi. Le raffiche si leggono nel giro su GitHub.
+- **P5:**
+  - `collaudo_avversari1b`: lo scenario 5 passa da 7 a **9 su 10** (soglia 9: verde), gli altri 10 su 10;
+  - verdi `collaudo_regole`, `collaudo_semaforo`, `collaudo_contatto_senza_colpa` (21 su 21) e `collaudo_regate` bastone e raffiche (18 arrivi su 18);
+  - non lanciati qui: `collaudo_giri_avversari` (40 regate) e i tornei.
+- Cambiano, come previsto, gli arrivi di tutte le regate e dei tornei: `arrivi_regate.py` non è più identico.
+
+## Collaudi dopo il giro su GitHub della 1.1.0 (1 novembre 2026, ramo `pulizia`, nessuna versione nuova)
+
+Il primo giro completo su GitHub sul ramo `pulizia` (Chromium e Firefox, 65 collaudi per browser) ha dato più cadute di quelle che avevo lanciato in locale. Una per una:
+- **Collaudi che dipendevano dalla 1a**, corretti senza cambiare le soglie:
+  - `collaudo_laboratorio` (4): misura la velocità a vento fermo, ma la navigazione libera ha ora sempre i salti di vento. Salti spenti nel collaudo.
+  - `collaudo_timone2` (Firefox, barra a 0,853 invece di 0,8): togliendo il controllo della 1a avevo tolto anche il primo tasto premuto, quello che lasciava passare i fotogrammi veri prima dei controlli. Ora il ciclo del browser è fermo (`__sv.fast(0)`) prima dei controlli sulla barra.
+  - `collaudo_fantasma`: il suo pilota lascava la barra ferma. La barca dell'1b orza quando sbanda (nella mia prova la prua passa da 0° a 338° in 180 s) e non arrivava più. Ora tiene la prua con la barra: prova 1 completata in 1 min 27 s, fantasma salvato.
+  - `collaudo_registro` (contatto, solo Chromium su GitHub): l'inseguimento in tempo vero passa da 60 a 120 s, perché gli avversari dell'1b cedono e il contatto ora è fra gli scafi.
+  - `collaudo_scotta_automatica` A1: le 2 regate erano identiche alla 1.0.72; le 4 corse a scotta fissa differivano di poco. Causa misurata: la navigazione libera accende sempre i salti di vento, i numeri casuali si consumano in un altro ordine e le raffiche nascono altrove. Senza raffiche le 5 parti sono identiche al bit, quindi A1 ora confronta senza raffiche.
+  - `collaudo_riquadro_bandiere` Q6a e Q6b: confrontano con la 1.0.69 solo le regate che erano già dell'1b, come `collaudo_boma_poppa`.
+  - Rilanciati qui: verdi `collaudo_laboratorio` e `collaudo_timone2` (Chromium e Firefox), `collaudo_registro` (15 su 15), `collaudo_scotta_automatica`, `collaudo_fantasma`; `collaudo_riquadro_bandiere` verde fino a Q6b compreso, fermato dal mio limite di 10 minuti durante Q7, che è una misura di tempo.
+- **Fallimenti noti aggiornati** (`tests/fallimenti_noti.txt`), con le righe prese dal giro:
+  - `collaudo_competizione` (misura): C1 era già fuori fascia ed è peggiorato con la barca dell'1b. Il giocatore guidato dal pilota arriva quarto nel 40-51% delle regate in Chromium e nel 45-54% in Firefox (prima 34-48% e 35-48%). Da ritarare al passo 4, con medaglie e soglia del torneo.
+  - `collaudo_carriera_intera` I4: il passo 3.10 si salta. Va col gruppo A delle lezioni.
+- **Restano FALLITO apposta:**
+  - `collaudo_lezioni` («L5 prepararsi», passo 3).
+  - **`collaudo_partenze`, che è un difetto vero della 1.1.0:** con gli avversari dell'1b, in bastone e raffiche, alcune barche non partono entro 60 s dallo sparo: 12 barche su 720 in Chromium e 6 su 720 in Firefox, quasi tutte principianti con 300 s di preparazione. Con gli avversari dell'1a erano 0. Gli avversari dell'1b non sono mai stati misurati da questo collaudo, perché nella regata dei salti non c'è. La correzione tocca la guida degli avversari dell'1b: decide Ale.
+- Atteso e già detto: `collaudo_fasce` e `collaudo_pilota_lezioni` DA CONTROLLARE; `collaudo_torneo` C11 è una misura di tempo.
+
+## 1.1.0 — Pulizia del codice: resta solo la barca dell'1b (ramo `pulizia`)
+
+Primo passo della riorganizzazione in «La scuola» e «Deriva» (`docs/PROPOSTA-RIORGANIZZAZIONE.md` §5, passo 2; proposta e misura 0 in `docs/PROPOSTA-PULIZIA-CODICE.md`). **Sta nel ramo `pulizia`, non in `main`:** lezioni e prove sono state provate con la barca dell'1a, e con l'1b alcune cose non vanno (misura 0). Il ramo entra in `main` insieme alle lezioni riscritte (passo 3), così il gioco online non cambia prima.
+
+**Cosa cambia per chi gioca:**
+- Lezioni, prove, navigazione libera e tutte le regate usano la barca dell'1b: la barra arriva a 35° con la sola freccia e a 45° con Maiusc, la pala può stallare, Z spinge il boma, la raddrizzata dura 10 s.
+- La scelta «Barca» nelle impostazioni non c'è più. In navigazione libera il vento ha sempre i salti dell'1b.
+- «Regata a bastone» e «Regata nelle raffiche» ora sono della barca dell'1b: regole 10-13, contatto fra gli scafi, avversari dell'1b, semaforo. Carriera e meriti contano ancora queste due, come prima: menu e carriera si rifanno al passo 5.
+- Testi: tolta «Barca dell'1b» dove non c'è più una scelta. Dalle introduzioni delle regate è tolta la frase «Da questo livello i contatti sono quelli veri… Prima avevi imparato…», che parlava della 1a; resta la spiegazione di chi cede, ora in tutte le regate. Il semaforo nelle impostazioni dice «regate» e non più «solo regate 1b». I tasti Maiusc e Z sono spiegati al passaggio del mouse sulla riga dei tasti, perché l'unica spiegazione stava nella scelta «Barca», che non c'è più. La lezione vera arriva con il passo 3.
+- **Difetto corretto per strada:** dalla 1.0.61 l'introduzione della «Regata con i giri di penalità» diceva che il vento gira e che la boa è a 300 m. Non era vero: il testo seguiva la barca dell'1b e non la regata. Ora lo dice solo la regata nei salti di vento.
+- Il registratore non scrive più «(barca 1a|1b)» nell'intestazione della regata.
+
+**Codice:**
+- `js/motore.js`: quello che valeva con `S.lv === 2` vale sempre; tolti lo scarroccio dell'1a (`BOAT.foilK`) e `raddT`. Sotto 0,5 m/s e all'indietro resta il timone di prima, come già nell'1b.
+- `js/regate.js`: tolti la regola 10 propria degli avversari dell'1a, lo scarto da qualsiasi barca davanti, il contatto fra cerchi e le regole «10 e 11 semplificate». `RACES1` diventa `RACES_CARRIERA` (le regate col campo `scuola: false` ne restano fuori).
+- `js/gioco.js`, `js/disegno.js`, `js/registratore.js`, `index.html`: tolti selettore e rami dell'1a.
+- Le righe di codice in `index.html` e `js/` che contengono `S.lv`, `lv2`, `RACES1`, `boatLv` o `.lv` erano **46**, ora sono **0**. Le righe di solo commento non contano. Il comando, uguale prima (su `main`) e dopo: `cat index.html js/*.js | grep -E "S\.lv|lv2|RACES1|boatLv|\.lv\b" | grep -vE "^\s*//" | wc -l`.
+- I nomi `RUD2`, `RADD2`, `BOMA2`, `DERIVA2`, `SALTI2` restano: il cambio dei nomi previsto dalla proposta (§2.A) **non è fatto**. Tocca 20 script di collaudo e non cambia niente nel gioco: lo propongo per la pulizia finale, dopo le lezioni.
+
+**Collaudi della fisica e prototipo:**
+- Nuova copia congelata del motore della 1a, `tests/fisica/motore1a_sorgente.js`, letta da `tests/fisica/motore1a.js`; con `MOTORE=1a` la legge anche `tests/fisica/motore.js`. Il prototipo del fiocco (`sperimentale/misure_fiocco.js`) si confronta con questa: uscita identica carattere per carattere prima e dopo (136 righe). **Trovato:** già prima della pulizia, il prototipo «senza fiocco» non era più identico al gioco: 30 casi, scarto massimo 2,73 nodi a 15 nodi e 90°. La 1a del gioco era cambiata dopo la tappa C e il prototipo è rimasto indietro. La regola di `CLAUDE.md` sulla non-regressione va riscritta.
+- **P1:** `impronta1b.js` è identica al bit (25 corse, 51.802 passi).
+- **P2:** `MOTORE=1a node polare.js` e `MOTORE=1a node raffiche_e_virate.js` danno i riferimenti di prima, carattere per carattere.
+- **P3:** riferimenti nuovi di `polare.txt` e `raffiche_e_virate.txt`, rigenerati: ora misurano la barca dell'1b, perché il gioco ha solo quella. I valori nuovi sono identici carattere per carattere a quelli che la barca dell'1b dava già prima (stessi script con `lv: 2` sulla copia congelata). Polare con 10 nodi: 4,6 nodi a 45° (prima 4,7), 6,0 a 90°, 4,1 a 180°. Virata da 3,9 nodi in 3,9 s (prima 3,0), da 1,9 nodi in 7,5 s (prima 6,6). Raffica a 20 nodi senza reagire: 65°, scuffia (prima 67°).
+- `scarroccio1b.js` e `timone2.js` mettono ancora a confronto 1a e 1b, prendendo la 1a dalla copia congelata: uscite identiche a prima. `timone2.js` esce con «almeno un criterio FUORI soglia» come prima.
+- `bolina.js`, `retromarcia.js`, `angolo_morto.js`, `raffiche_portanti.js` e `virate2.js` misuravano la barca senza `lv` e ora misurano l'1b. Non sono nel giro e non li ho rilanciati.
+
+**Regate (P4, P5):**
+- **P4:** `tests/arrivi_regate.py`, con in più la regata dei giri (6 semi): le 28 righe di salti, giri e 2 tornei sono identiche al bit a `main`. Restano esclusi i testi di introduzione, cambiati come detto sopra.
+- **P5:** bastone e raffiche con gli avversari dell'1b, semi 1-20 principianti e 21-40 esperti. Arrivano tutte le barche in **80 regate su 80** (soglia 19 su 20 per regata e livello). Tempo medio di tutte le barche: bastone 225/221 s, raffiche 204/208 s (prima, con la 1a, sui 7 semi di `arrivi_regate.py`: 221/214 e 203/201). Barche con almeno una penalità: 49, 52, 49, 57 su 80 per gruppo, 61-71%. Con la 1a, sui 7 semi, erano 7/16, 8/12, 12/16, 7/12, cioè 44-75%.
+
+**Riquadro delle istruzioni a 1360×650** (misurato in tutte e quattro le regate, 3 livelli di avversari, Chromium e Firefox):
+- Bastone e raffiche: **0 px**, come prima. In una prima stesura avevo aggiunto anche lì la frase su chi cede: sforava di 35-88 px e `collaudo_pannello.py` l'ha preso. La frase ora c'è solo dove c'era già: salti, giri e torneo (campo `precedenze`).
+- **Difetto vecchio, trovato ora:** il riquadro di salti e giri sfora già su `main`. Su `main` 158-210 px per i salti e 354-406 px per i giri; ora 84-137 e 207-284, perché i testi sono più corti. Nessun collaudo lo vedeva: `collaudo_pannello.py` misura solo la prima regata. Da sistemare con i testi della scuola (passo 3), insieme a un collaudo che misuri tutte le regate.
+
+**Lezioni e prove sulla barca nuova (P7, solo numeri):** identici alla misura 0, carattere per carattere.
+- `collaudo_pilota_lezioni.py`, semi 1-10: 27 passi su 32 completati 10 volte su 10. 3.10 «Filetto sottovento» mai completato (0 su 10). Quattro passi si completano da soli, senza toccare niente: 2.4, 3.2, 5.2, 6.2.
+- `collaudo_fasce.py`: oro mancato nella prova 4 (285,8 s contro 280) e nella 5 (302,4 s contro 300, una corsa su 24 bloccata). Le prove 1-3 vanno come prima.
+- `collaudo_lezioni.py`: ESITO FALLITO solo per «L5 prepararsi (bolina lanciata)». Va col passo 3 e non l'ho aggiunto ai fallimenti noti. Ho portato l'attesa di «L6 raddrizzare» da 8 a 12 s, perché la raddrizzata dell'1b dura 10 s.
+
+**Pagina come la carica un giocatore (P8):** in Chromium e Firefox, senza `#collaudo`, si aprono lezione 1, prova 1, navigazione libera e le quattro regate: 7 su 7, 0 errori della pagina, pagina che non scorre (0 px).
+
+**Collaudi lanciati:**
+- **Verdi:** `collaudo_versione`, `collaudo_timone2`, `collaudo_boma2`, `collaudo_raddrizzata`, `collaudo_salti2`, `collaudo_pannello` (90 misure del pannello, 6 del riquadro), `collaudo_quiz`, `collaudo_regole` (35 controlli), `collaudo_semaforo`, `collaudo_carriera`, `collaudo_registratore`, `collaudo_registro` (15 su 15), `collaudo_libretto`, `collaudo_contatto_vero`, `collaudo_contatto_senza_colpa`, `collaudo_suggerimento`, `collaudo_regate` bastone e raffiche (6 corse ciascuna, 18 arrivi su 18, nessuna BLOCCATA), `collaudo_partenze`.
+- **Fallisce, come su `main`:** `collaudo_triangolo` T2b, 129 su 168 confronti dei distacchi; numeri identici a quelli di `main` rilanciato qui.
+
+**Collaudi cambiati,** perché misuravano la barca dell'1a o sceglievano la barca dal selettore «Barca». Ogni cambio è scritto nel file.
+- `collaudo_boma2`: tolto «nella 1a Z non fa niente».
+- `collaudo_timone2`: tolti i controlli sulla scelta «Barca» e sulla barra della 1a; ora controlla che la scelta «Barca» non ci sia più.
+- `collaudo_raddrizzata`: solo la 1b; la regata 0 si raddrizza ora in 15 s a 90°.
+- `collaudo_salti2`: tolto «nella libera dell'1a il vento non gira».
+- `collaudo_scotta_automatica`: solo la 1b; A1 confronta con la 1.0.72 solo le regate che erano già dell'1b.
+- `collaudo_boma_poppa`: tolta la 1a (B2b); B4a confronta solo le 10 regate già dell'1b.
+- `collaudo_regole`: la regata 0 ha gli attesi di F15. In fila con le stesse mure cede chi è dietro (12), non il più sopravento (11).
+- `collaudo_semaforo`: nella regata 0 il semaforo ora si deve vedere (1.824 passi).
+- `collaudo_contatto_vero`: la regata 0 ha gli attesi del contatto fra scafi.
+- `collaudo_contatto_senza_colpa`: barche affiancate a 1,2 m invece di 3 e «non in virata» all'inizio. Il caso costruito spostava le prue a mano e la regola 13 lo prendeva per una virata.
+- `collaudo_suggerimento`: salti di vento spenti nella navigazione libera, perché misura i tempi del suggerimento con il vento fermo.
+- `collaudo_lezioni`: attesa della raddrizzata (vedi sopra).
+- `collaudo_impronta`: solo la riga del selettore. Il riferimento resta vecchio, come prima.
+- `tests/lancia_tutti.sh`: i valori da confrontare a mano per `polare.js` e `raffiche_e_virate.js`.
+- **Non lanciati qui:** `collaudo_boma_poppa`, `collaudo_scotta_automatica`, `collaudo_impronta`, i collaudi della carriera intera e dell'esame, `collaudo_avversari1b`, `collaudo_giri*`, `collaudo_torneo`, `collaudo_moviola` e gli altri del giro. Li lancia `tests/lancia_tutti.sh`.
+
 ## 1.0.78 — Descrizione della regata dei giri: «per un contatto con colpa»
 
 La descrizione nel menu diceva «due giri se lasci male la strada», una frase mia della 1.0.69 che non vuol dire niente: segnalata da Ale il 1 novembre 2026. Ora dice: «Livello 2: due giri per un contatto con colpa, uno se tocchi una boa; bandiere sulla giuria.» È anche più precisa, perché nel gioco i due giri arrivano solo con un contatto in cui avevi la colpa.

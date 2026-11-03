@@ -1,7 +1,7 @@
 // Misure della tappa A del prototipo del fiocco. Uso: node misure_fiocco.js
 // Legge la fisica da sperimentale/fiocco.html (prototipo) e da index.html (gioco, per il confronto).
 const P = require("./motore_fiocco.js");                 // prototipo
-const G = require("../tests/fisica/motore.js");          // gioco
+const G = require("../tests/fisica/motore1a.js");        // gioco: la barca a una vela della 1.0.78, copia congelata (docs/PROPOSTA-PULIZIA-CODICE.md)  // FIOCCO
 const KN = 1.943844;
 
 // velocità di equilibrio a un angolo dal vento, cercando la regolazione migliore

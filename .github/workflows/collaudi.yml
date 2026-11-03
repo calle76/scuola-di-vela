@@ -1,6 +1,6 @@
 # Collaudi su GitHub Actions (docs/PROPOSTA-COLLAUDI-SU-GITHUB.md, 1 novembre 2026).
 # Lancia tests/lancia_tutti.sh con Chromium e Firefox, diviso in 4 pezzi per browser (8 computer insieme).
-# Parte di notte (circa alle 3 italiane) solo se nelle ultime 24 ore c'è stato almeno un commit sul ramo pulizia (dal 1 novembre 2026; prima main),
+# Parte di notte (circa alle 3 italiane) solo se nelle ultime 24 ore c'è stato almeno un commit su main (dal 1 al 3 novembre 2026 provava il ramo pulizia),
 # e a mano dalla scheda Actions («Run workflow», con la scelta del giro veloce). Non parte a ogni push:
 # in una sessione se ne fanno molti (Ale, 1 novembre 2026).
 # Non scrive niente nel repository e non usa chiavi né password.
@@ -15,6 +15,14 @@ on:
         description: "Solo il giro --veloce (salta i collaudi lunghi)"
         type: boolean
         default: false
+      solo:
+        description: "Solo i collaudi il cui nome contiene questo testo (per esempio: non_partite); vuoto = tutti"
+        type: string
+        default: ""
+      semi_partenze:
+        description: "Semi di collaudo_non_partite (per esempio 1-200); vuoto = 1-20"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -34,8 +42,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # 1 novembre 2026 (Ale): di notte si prova il ramo pulizia, dove si lavora; a mano il ramo scelto in «Run workflow»
-          ref: ${{ github.event_name == 'schedule' && 'pulizia' || github.ref }}
       - id: conta
         run: |
           n=$(git log --since="24 hours ago" --oneline | wc -l)
@@ -62,8 +68,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # 1 novembre 2026 (Ale): di notte si prova il ramo pulizia, dove si lavora; a mano il ramo scelto in «Run workflow»
-          ref: ${{ github.event_name == 'schedule' && 'pulizia' || github.ref }}
 
       - name: Node come sul PC (v20.19.2)
         uses: actions/setup-node@v4
@@ -84,9 +88,13 @@ jobs:
       - name: Collaudi
         env:
           BROWSER: ${{ matrix.browser }}
+          SOLO: ${{ inputs.solo }}
+          SEMI_PARTENZE: ${{ inputs.semi_partenze }}
         run: |
           OPZ="--parte ${{ matrix.parte }}/4 --parallelo 2"
           if [ "${{ inputs.veloce }}" = "true" ]; then OPZ="$OPZ --veloce"; fi
+          if [ -n "$SOLO" ]; then OPZ="$OPZ --solo $SOLO"; fi
+          if [ -n "$SEMI_PARTENZE" ]; then export NONPARTITE_SEMI="$SEMI_PARTENZE"; fi
           set +e
           tests/lancia_tutti.sh $OPZ 2>&1 | tee riepilogo.txt
           esito=${PIPESTATUS[0]}

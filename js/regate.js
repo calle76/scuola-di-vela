@@ -57,12 +57,16 @@
   const RACES = [
     { title: "Regata a bastone", desc: "Tre avversari, vento costante: partenza, bolina, poppa, arrivo.", wind: 0, tws: 10, gusts: 0 },
     { title: "Regata nelle raffiche", desc: "Tre avversari e vento rafficato: chi legge meglio l'acqua vince.", wind: 225, tws: 12, gusts: 1 },
-    // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): barca dell'1b, bolina di 300 m, salti di vento; resta fuori da meriti e carriera
-    { title: "Regata nei salti di vento", where: "salti di vento", desc: "Barca dell'1b, bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, lv2: true, up: 300, shifts: true },
+    // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): bolina di 300 m, salti di vento; resta fuori da meriti e carriera
+    { title: "Regata nei salti di vento", where: "salti di vento", desc: "Bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, up: 300, shifts: true, scuola: false, precedenze: true },
     // 1.0.61 (docs/PROPOSTA-LIVELLO-2A.md, fetta 1): livello 2a, due giri al posto dei 15 s per il giocatore; resta fuori da meriti e carriera
-    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: due giri per un contatto con colpa, uno se tocchi una boa; bandiere sulla giuria.", wind: 0, tws: 10, gusts: 0, lv2: true, giri: true, segnali: true }
+    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: due giri per un contatto con colpa, uno se tocchi una boa; bandiere sulla giuria.", wind: 0, tws: 10, gusts: 0, giri: true, segnali: true, scuola: false, precedenze: true }
   ];
-  const RACES1 = RACES.filter(rc => !rc.lv2); // le regate dell'1a (stessi indici: quelle dell'1b, col campo lv2, stanno in fondo); carriera, meriti e record contano solo queste
+  // le prime due regate (stessi indici: le altre, con scuola: false, stanno in fondo); carriera e meriti contano solo queste. Fino alla 1.0.78 erano le regate
+  // della barca dell'1a; dalla pulizia del codice (docs/PROPOSTA-PULIZIA-CODICE.md) c'è una barca sola, e menu e carriera si rifanno con la scuola
+  // precedenze: l'introduzione spiega chi cede (fino alla 1.0.78 la frase c'era nelle regate dell'1b; bastone e raffiche restano senza, perché il riquadro
+  // a 1360x650 sforerebbe di 35-88 px: docs/PROPOSTA-PULIZIA-CODICE.md; i testi si rifanno con le lezioni della scuola)
+  const RACES_CARRIERA = RACES.filter(rc => rc.scuola !== false);
   const LINE_HALF = 35, MARK_UP = 140;
   let TRI_L = 140; // 1.0.55: lato del triangolo del torneo, in metri: il più piccolo con la mediana del pilota fra 4 e 5,5 minuti (C8: 4,03 sui semi 1-20, 4,16 sui 61-80); __sv.triL serve alla misura
   const FLEET_LOOK = [
@@ -84,7 +88,7 @@
   const START_GAP = 20, START_CPA = 14;
   const AGGRO_OFF = 15; // metri: sotto questa distanza l'aggressiva smette di stringere (spirito della regola 16)
   const HOLD_S = -1; // in partenza si aspetta e si parte mure a dritta (precedenza): virare da fermi al via non riesce, e puntando un punto dritto controvento la barca zigzagava
-  function startSpots(n){
+  function startSpots(n, cd = opt.countdown){
     // in coordinate del vento una barca mure a sinistra (s = 1) avanza verso +x, una mure a dritta verso -x
     const ok = (a, c) => {
       const rx = c.x - a.x, ry = c.y - a.y;
@@ -98,7 +102,7 @@
     // la linea, e con un minuto chi nasceva lontano partiva con una ventina di secondi di ritardo contro i cinque di
     // chi nasceva vicino (misurato su 30 partenze). Le barche si piazzano una alla volta: con la banda corta quattro
     // barche a 20 m l'una dall'altra ci stanno appena, e sorteggiare tutto l'insieme in blocco riusciva troppo di rado.
-    const vicino = opt.countdown <= 60, yMin = vicino ? 26 : 38, yMax = vicino ? 54 : 74;
+    const vicino = cd <= 60, yMin = vicino ? 26 : 38, yMax = vicino ? 54 : 74;
     const estrai = () => ({ x: -30 + Math.random() * 60, y: yMin + Math.random() * (yMax - yMin), s: Math.random() < 0.5 ? 1 : -1 });
     for (let giro = 0; giro < 40; giro++){             // se una barca non trova posto si riparte da zero
       const P = [];
@@ -124,33 +128,40 @@
       ? { up: 45 + r() * 3, down: 150 + r() * 5, trim: (r() - 0.5) * 4, gain: 18, boardMin: 35, boardMax: 90, react: 5, startM: 0.5 + (r() - 0.5) * 1 }
       : { up: 49 + r() * 5, down: 142 + r() * 8, trim: (r() - 0.5) * 12, gain: 26, boardMin: 25, boardMax: 60, react: 3, startM: 1.5 + (r() - 0.5) * 3 };
   }
-  function startRace(i, wind){
+  // es (1.2.1, meccanismo B di docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md): la regata è l'esercizio di un passo di lezione. es = { def, lezione, passo, esito }:
+  // def.regata (indice in RACES), def.cd (preparazione, s), def.avversari, def.boa (stato di partenza: [dx, dy, gradi dal vento] attorno alla boa, coordinate del vento,
+  // regata già partita), def.linea (1.2.2, stato di partenza: [dx, dy, gradi dal vento, velocità m/s] dal centro della linea, dy > 0 dietro; vela tutta lascata), def.obiettivo (riga del pannello), def.brief, def.fatto(R, me) e def.fallito(R, me) (l'obiettivo, separato dallo stato di partenza).
+  // Un esercizio non salva niente: niente record, fantasma, piazzamenti, regate fatte né registrazioni automatiche.
+  function startRace(i, wind, es){
     mode = "race"; raceIdx = i; showCards("race"); regReset();
-    const rc = i === "t" ? torRc() : RACES[i], liv = rc.tor ? tor.liv : opt.aiLevel; // "t": la regata del torneo in corso (torneo dell'1b)
-    setWhere(rc.tor ? "Torneo dell'1b" : "Regata: " + (rc.where || rc.title)); // 1.0.48: titolo corto nel pannello, perché «Regata: Regata nei salti di vento» andava a capo (check di Ale)
+    const rc = i === "t" ? torRc() : RACES[i], liv = es ? es.def.avversari || "nessuno" : rc.tor ? tor.liv : opt.aiLevel; // "t": la regata del torneo in corso (torneo dell'1b)
+    const cd = es ? (es.def.boa ? 0 : es.def.cd) : opt.countdown;
+    setWhere(es ? "Esercizio: " + LESSONS[es.lezione].name : rc.tor ? "Torneo dell'1b" : "Regata: " + (rc.where || rc.title)); // 1.0.48: titolo corto nel pannello, perché «Regata: Regata nei salti di vento» andava a capo (check di Ale)
     env.twd = wind === undefined ? rc.wind : wind; env.tws = rc.tws / KN;
     curMarks = [];
-    const spots = startSpots(liv === "nessuno" ? 1 : 1 + FLEET_LOOK.length);
-    const [px, py] = fromWF(spots[0].x, spots[0].y);
-    freshState(px, py, norm360(env.twd + spots[0].s * 90), 0.35);
-    setGusts(rc.gusts, !!rc.tor);
-    if (rc.lv2) S.lv = 2;
-    if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
+    const spots = startSpots(liv === "nessuno" ? 1 : 1 + FLEET_LOOK.length, cd);
     const up = rc.up || MARK_UP, tri = !!rc.tri; // tri: triangolo equilatero di lato up, due boe (1.0.55)
+    if (es && es.def.boa){ const [dx, dy, a] = es.def.boa; spots[0] = { x: dx, y: -up + dy, s: Math.sign(a), a: Math.abs(a) }; } // 1.2.1: si parte vicino alla boa, a regata già partita
+    if (es && es.def.linea){ const [dx, dy, a] = es.def.linea; spots[0] = { x: dx, y: dy, s: Math.sign(a), a: Math.abs(a) }; } // 1.2.2: si parte dietro la linea, in un punto dato
+    const [px, py] = fromWF(spots[0].x, spots[0].y);
+    freshState(px, py, norm360(env.twd + spots[0].s * (spots[0].a || 90)), 0.35);
+    if (es && es.def.linea){ S.u = es.def.linea[3]; ctl.sheet = 1; info = step(S, ctl, local, 0); } // 1.2.2 (C2): ferma, con la vela tutta lascata che sbatte
+    setGusts(rc.gusts, !!rc.tor);
+    if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { cd: opt.countdown, t: -opt.countdown, phase: "pre", up, tri, lv2: !!rc.lv2, tor: !!rc.tor, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
     const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: spots[0].y };
     R.boats.push(me);
+    if (es && es.def.boa){ R.phase = "race"; me.leg = 1; }
     const slots = [-24, 2, 24].sort(() => Math.random() - 0.5);
     const aggro = sorteggiaAggressiva(liv);
     (liv === "nessuno" ? [] : FLEET_LOOK).forEach((look, k) => {
       const spot = spots[k + 1];
       const [x, y] = fromWF(spot.x, spot.y);
       const bs = newBoat(x, y, norm360(env.twd + spot.s * 90));
-      if (rc.lv2) bs.lv = 2;
       Object.assign(bs, { hullColor: look.hull, sailColor: look.sail, sailorColor: look.sailor });
       const b = { me: false, name: look.name, S: bs, ctl: { sheet: 0.4, tiller: 0 }, info: null, wake: [], wakeT: 0, leg: 0, ocs: false, pen: 0, fin: null,
                   prevWY: spot.y, rOff: Math.random() * 6, ai: aiParams(liv), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6,
@@ -159,26 +170,27 @@
       b.info = step(bs, b.ctl, env, 0); bs.dispBoom = bs.boomSide * bs.boom;
       R.boats.push(b);
     });
-    recStart(recK("r" + i) + "b"); rivReset();
-    $("rTitle").textContent = rc.title;
-    R.brief = introRegata(rc, liv);
+    if (es) rec.key = null; else recStart(recK("r" + i) + "b"); // senza chiave il fantasma non si salva (recSave)
+    rivReset();
+    $("rTitle").textContent = es ? "Esercizio: " + LESSONS[es.lezione].steps[es.passo].title : rc.title;
+    R.brief = es ? es.def.brief : introRegata(rc, liv);
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();
-    $("rRestart").hidden = $("rWind").hidden = rc.tor; $("rRet").hidden = !rc.tor; $("aiLevel").parentElement.hidden = rc.tor;
+    $("rRestart").hidden = rc.tor; $("rWind").hidden = rc.tor || !!es; $("rRet").hidden = !rc.tor; $("rLez").hidden = !es; $("aiLevel").parentElement.hidden = rc.tor;
+    $("rObj").hidden = !es; $("rObj").textContent = es ? es.def.obiettivo : ""; $("race").classList.toggle("es", !!es);
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
-    showBrief(rc.title, R.brief, true);
+    showBrief($("rTitle").textContent, R.brief, true);
   }
 
   // il testo che si legge prima della regata (dopo la creazione delle barche: dice i caratteri degli avversari)
   function introRegata(rc, liv){
     let t = (rc.tor ? torBrief() : "") + "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
-      (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.lv2 ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Barca dell'1b, boa a 300 m" : "") +
+      (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Boa a 300 m" : "") +
       ". Partenza tra la barca giuria e la boa arancione, " + (rc.tri ? "girare la boa 1 e poi la boa 2, tutte e due lasciandole a sinistra, e tornare a tagliare la stessa linea" : "girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea") + ". Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
         : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
-    if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. Il gioco non ha suoni: i tempi contano sulle bandiere.";
-    if (rc.lv2) t += " Da questo livello i contatti sono quelli veri, scafo contro scafo. Prima avevi imparato a stare lontano perché il contatto scattava prima del contatto vero." +
-      " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
+    if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. I suoni della giuria accompagnano le bandiere, ma i tempi contano sulle bandiere (regola 26).";
+    if (rc.precedenze) t += " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
     return t;
   }
 
@@ -239,9 +251,11 @@
     // 1.0.16 (docs/archivio/PROPOSTA-PARTENZE.md): si aspetta quasi fermi da una a due lunghezze dietro la linea e si parte per essere a piena
     // velocità allo zero (le misure sono nella proposta). Il blocco vale anche dopo lo sparo, finché chi è già partito non ha tagliato;
     // l'avvicinamento resta alla logica generale, che sa fare i bordi.
-    // 1.0.28, solo 1b: col vento girato la prua di partenza può portare fuori dall'estremo, e da lì non si rientrava più
+    // 1.0.28: col vento girato la prua di partenza può portare fuori dall'estremo, e da lì non si rientrava più
     // (regata nei salti, seme 20): dopo il via chi è fuori dagli estremi usa la logica generale, che punta un punto dentro la linea
-    const fuori = R.lv2 && R.t >= 0 && Math.abs(toWF(s.x, s.y)[0]) > LINE_HALF - 3;
+    // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B2): anche chi taglierebbe la linea fuori dagli estremi tenendo la prua di partenza (scivola di lato di
+    // tan(up + 4) metri per metro verso la linea, verso -x) lascia quella prua: vicino alla boa la barca dell'1b ci girava attorno per tutto il minuto
+    const [fx, fy] = toWF(s.x, s.y), fuori = R.t >= 0 && (Math.abs(fx) > LINE_HALF - 3 || (b.leg === 0 && fy > 0 && fx - Math.tan((ai.up + 4) * D2R) * fy < -(LINE_HALF - 2)));
     if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart) && !fuori){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
       const [bx, by] = toWF(s.x, s.y);
       const L = BOAT.length, lat = Math.tan((ai.up + 4) * D2R); // metri di lato per ogni metro guadagnato verso la linea, in bolina larga
@@ -286,16 +300,6 @@
       const newSide = sgn(norm180(twd - brg));
       if (newSide !== side && Math.abs(rel) < 90) desired = A > ai.up + 12 ? twd - side * ai.up : twd - newSide * ai.up;
     }
-    // mure a sinistra: lascia strada a chi è mure a dritta, passandogli di poppa (solo 1a; nell'1b chi cede lo decide cedeAvv1b, qui sotto)
-    if (!R.lv2 && side < 0 && !hold){
-      for (const o of R.boats){
-        if (o === b || o.S.capsized) continue;
-        const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > 30) continue;
-        const oTwa = norm180(windOf(o) - o.S.h); if (oTwa < 0) continue; // nell'1a windOf è il vento del giocatore (difetto noto dalla 1.0.1)
-        const ang = Math.abs(norm180(bearingTo(s, o.S) - s.h)); if (ang > 70) continue;
-        desired -= side * 28; break;
-      }
-    }
     // carattere aggressivo: prima del via punta le barche mure a sinistra che ha vicine, per costringerle a manovrare.
     // Spirito delle regole 14 e 16: sotto AGGRO_OFF smette di stringere, così una manovra per evitarla esiste sempre,
     // e sotto il raggio del blocco qui sotto cerca comunque di non urtare. La colpa resta decisa solo da mure e sopravento.
@@ -310,38 +314,34 @@
       }
       if (prey) desired = bearingTo(s, prey.S);
     }
-    // evita qualsiasi barca vicina davanti (anche quando avrebbe diritto di rotta: meglio non urtare); la prudente comincia da più lontano.
-    // Solo 1a: nell'1b decide cedeAvv1b. 1.0.17 (docs/archivio/PROPOSTA-PARTENZE.md §8): chi sta evitando può orzare anche dentro l'angolo morto
-    // (prima lo scarto veniva riscritto dalla regola qui sotto: annullato nel 39% degli istanti, presente in 83 contatti su 88).
-    const avoidR = b.char === "prudente" ? 22 : 14;
-    let avoiding = false;
-    if (R.lv2){ if (!hold) desired = cedeAvv1b(b, desired, twd, side, ai); } // avoiding resta false: nell'1b la prua non entra mai nell'angolo morto
-    else for (const o of R.boats){
-      if (o === b || o.fin !== null) continue;
-      const d = Math.hypot(o.S.x - s.x, o.S.y - s.y); if (d > avoidR) continue;
-      const relB = norm180(bearingTo(s, o.S) - s.h); if (Math.abs(relB) > 90) continue; // 1.0.17: era 60°; i contatti misurati hanno le prue a 93°, cioè l'altra arriva di fianco
-      desired -= (relB >= 0 ? 1 : -1) * 35 * (1 - d / avoidR + 0.3); avoiding = true; break;
-    }
+    // chi deve cedere si scosta (cedeAvv1b, qui sotto). Fino alla 1.0.78 la barca dell'1a aveva qui una regola 10 sua e uno scarto da qualsiasi barca davanti
+    if (!hold) desired = cedeAvv1b(b, desired, twd, side, ai);
     // 1.0.67 (docs/PROPOSTA-GIRI-AVVERSARI.md): chi ha un debito di giri e la via libera segue la sequenza dei giri al posto della rotta; le tre regole qui sotto (angolo morto, abbrivio, piantata) non valgono
     const gm = R.giri ? giroAI(b, dt, twd, ai) : null;
     if (gm !== null) desired = gm;
     // la prua desiderata non deve mai finire nell'angolo morto (tranne durante una virata voluta)
     const dTwa = norm180(twd - desired);
     const wantsTack = !hold && Math.abs(rel) < ai.up && sgn(dTwa) !== side;
-    if (gm === null && !wantsTack && !avoiding && Math.abs(dTwa) < ai.up - 2) desired = twd - (sgn(dTwa) || side) * (ai.up - 2); // 1.0.17: chi evita può orzare oltre, e perde velocità come nella realtà
+    if (gm === null && !wantsTack && Math.abs(dTwa) < ai.up - 2) desired = twd - (sgn(dTwa) || side) * (ai.up - 2);
     // se per arrivare alla rotta voluta bisogna attraversare il vento e manca velocità: prima poggia e prendi abbrivio
     const turn = norm180(desired - s.h), toWind = norm180(twd - s.h);
     // (vale solo prima di iniziare: a virata in corso la velocità cala per forza, e non va interrotta)
     // 0.21.3: stessa soglia della regola «piantata» qui sotto (era 44° fisso): in partenza, fra 40° e 44°, nessuna delle due agiva e una barca
     // lenta che voleva virare oscillava per minuti attorno a 40° senza partire (collaudo_regate.py, regata nelle raffiche, seme 17)
     const ironsA = b.leg === 0 && !b.ocs ? 40 : 44;
-    if (gm === null && sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) >= ironsA && s.u < 1.1) desired = twd - side * 95;
+    // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B1): chi comincia a prendere abbrivio continua fino a U_ABBRIVIO. Con la soglia sola (1,1 m/s) la barca dell'1b
+    // poggiava, passava 1,1, orzava, rallentava sotto 1,1 e poggiava di nuovo, per minuti a 2,1 nodi: la sua virata riesce da circa 2,9 nodi (1.0.43)
+    const vuoleVirare = gm === null && sgn(turn) === sgn(toWind) && Math.abs(toWind) < Math.abs(turn) && Math.abs(toWind) >= ironsA;
+    if (!vuoleVirare || s.u >= U_ABBRIVIO) b.abbrivio = false; else if (s.u < 1.1) b.abbrivio = true;
+    const abbrivio = !!b.abbrivio;
+    if (abbrivio) desired = twd - side * 95;
     // piantata nell'angolo morto: poggia e lascia sbattere la vela finché riparte
     const irons = A < ironsA && s.u < 0.6; // 44°: tra 40° e 44° una barca ferma restava sospesa senza ripartire; in partenza resta 40° (con 44° poggia troppo presto vicino alla linea), salvo chi torna dietro la linea dopo una partenza anticipata
     if (irons && gm === null) desired = twd - side * 80;
     muoviTimone(b.ctl, s, desired, ai, dt);
     let sheet = sheetFor(b.info, ai);
-    if (hold || irons) sheet = 1;
+    if ((hold && !abbrivio) || irons) sheet = 1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B1): per prendere abbrivio la vela si regola; con la vela che sbatte la barca dell'1b
+                                                  // non supera 2 nodi (sotto 1,1 m/s), non vira mai e scivolava al traverso per minuti, lontano dalla linea
     if (A > 158) sheet = Math.min(sheet, 0.42); // abbattuta controllata
     if (s.heel > 22) sheet = Math.min(1, sheet + 0.2);
     b.ctl.sheet += (sheet - b.ctl.sheet) * Math.min(1, dt * 3);
@@ -351,6 +351,8 @@
   // rotta e scarta solo all'ultimo; mai dentro l'angolo morto. Prima ogni avversario scartava qualsiasi barca davanti entro 14-22 m, anche
   // avendo la precedenza, orzando fin dentro l'angolo morto: 72 piantate su 124 avendo la precedenza (tests/misura_avversari.py, semi 1-20).
   const D_CEDE = 30, T_CEDE = 15, CEDE_A = 28, ULTIMO = 1.5; // ipotesi nostre: 30 m e 28° come la regola 10 degli avversari dell'1a; 15 s di preavviso
+  const U_ABBRIVIO = 1.6; // 1.1.1 (B1): m/s fino ai quali si prende abbrivio prima di virare (circa 3,1 nodi); ipotesi nostra
+  const V_AVV = 0.1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, A): m/s di avvicinamento sotto i quali, con gli scafi a più di una lunghezza, l'altra barca non è un pericolo; ipotesi nostra, scelta sui semi 1-20 (con 0,3: contatti +25%), confermata sui semi 21-40
   function cedeAvv1b(b, desired, twd, side, ai){
     const s = b.S, L = BOAT.length, vx = Math.sin(s.h * D2R) * s.u, vy = -Math.cos(s.h * D2R) * s.u;
     if (b.virando) return desired; // a virata in corso la si finisce
@@ -360,6 +362,7 @@
       const rx = o.S.x - s.x, ry = o.S.y - s.y, d = Math.hypot(rx, ry); if (d > D_CEDE) continue;
       const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
       const t = w2 > 1e-6 ? Math.max(0, -(rx * wx + ry * wy) / w2) : 0; // fra quanti secondi si è più vicini
+      if (b.leg === 0 && d > L && -(rx * wx + ry * wy) / d < V_AVV && !(o === b.cedeA && t > 0)) continue; // 1.1.1: in partenza due barche che non si avvicinano (per esempio parallele alla stessa velocità) non si cedono: prima si cedevano a vicenda per sempre. Solo in partenza: in tutta la regata i debiti di giri estinti scendevano dal 93% all'80%
       if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», torna su e urta
       bt = t; best = { o, d };
     }
@@ -423,10 +426,9 @@
     if (s.capsized){
       s.capT += dt; s.u = 0;
       if (R.giri){ b.gCum = null; b.sconta = false; } // 1.0.67: scuffia durante i giri: il giro in corso si perde, il debito resta
-      const b1 = s.lv === 2; // 1.0.32: l'1b si raddrizza più lenta e al traverso del vento vero (coi salti, env.twd è il medio)
-      if (s.capT > (b1 ? RADD2.tAI : 5)){
+      if (s.capT > RADD2.tAI){ // 1.0.32: raddrizzata lenta, al traverso del vento vero (coi salti, env.twd è il medio)
         s.capsized = false; s.capT = 0; s.heel = 0; s.heelRate = 0;
-        s.h = norm360((b1 ? windAt(s.x, s.y).twd : env.twd) + s.capSide * (b1 ? RADD2.twa : 60)); b.ctl.sheet = b1 ? 1 : 0.8;
+        s.h = norm360(windAt(s.x, s.y).twd + s.capSide * RADD2.twa); b.ctl.sheet = 1;
       }
       return;
     }
@@ -493,16 +495,16 @@
   // sovrapposizione dei contorni di due scafi: { pen, nx, ny } con la normale da B ad A, oppure null se non si toccano
   function hullOverlap(A, B){ const m = polySep(hullWorld(A), hullWorld(B), A.x, A.y, B.x, B.y); return m.pen > 0 ? m : null; }
   // ---- chi cede (1.0.40, docs/PROPOSTA-REGOLE-PRECEDENZA-1B.md) ----
-  // Una sola funzione per penalità, testo di fine regata e semaforo. Nell'1a (!R.lv2) le regole sono quelle di sempre (10, e le stesse
-  // mure col più sopravento in y), identiche al bit; nell'1b valgono 10, 11, 12 e 13 di F15, con le definizioni sui contorni degli scafi.
-  const windOf = b => R.lv2 ? windAt(b.S.x, b.S.y).twd : local.twd;
+  // Una sola funzione per penalità, testo di fine regata e semaforo: valgono 10, 11, 12 e 13 di F15, con le definizioni sui contorni degli scafi
+  // (fino alla 1.0.78 la barca dell'1a aveva solo la 10 e le stesse mure col più sopravento in y).
+  const windOf = b => windAt(b.S.x, b.S.y).twd;
   const tackOf = b => sgn(norm180(windOf(b) - b.S.h)); // -1 mure a sinistra, +1 mure a dritta
   // X è «dietro» a Y (clear astern) se tutto lo scafo di X sta dietro la linea al traverso dal punto più a poppa dello scafo di Y
   function dietroA(X, Y){
     const h = Y.h * D2R, fx = Math.sin(h), fy = -Math.cos(h), proj = p => p[0] * fx + p[1] * fy;
     return Math.max(...hullWorld(X).map(proj)) < Math.min(...hullWorld(Y).map(proj));
   }
-  // la barca A è in virata finché non è di nuovo di bolina (regola 13); aggiornato a ogni passo per tutte le barche dell'1b
+  // la barca A è in virata finché non è di nuovo di bolina (regola 13); aggiornato a ogni passo per tutte le barche
   const VIRATA_MIN = 42, VIRATA_MAX = 10; // gradi dal vento vero e secondi: ipotesi nostre (docs/PROPOSTA-REGOLE-PRECEDENZA-1B.md)
   function aggiornaVirate(){
     for (const b of R.boats){
@@ -520,10 +522,6 @@
   // ritorna { cede: la barca che deve cedere, regola: 10-13, 21.1 o 21.2 }
   function chiCede(A, B){
     const tA = tackOf(A), tB = tackOf(B);
-    if (!R.lv2){ // 1a: come prima della 1.0.40
-      if (tA !== tB) return { cede: tA < 0 ? A : B, regola: 10 };
-      return { cede: piuSopravento(A, B), regola: 11 };
-    }
     if (R.giri){ // 1.0.66 (docs/PROPOSTA-REGOLA-21-2.md): 21.1 chi torna dietro la linea dopo la partenza anticipata e 21.2 chi sconta una penalità lasciano strada a chi non lo fa; fra le due la Sezione A non vale
       const sa = subordinata(A), sb = subordinata(B);
       if ((sa !== 0) !== (sb !== 0)) return { cede: sa ? A : B, regola: sa || sb };
@@ -705,7 +703,7 @@
               12: v("eri", "era") + " dietro, con le stesse mure e senza essere affiancat" + v("o", "a") + ": " + v("dovevi", "doveva") + " lasciare strada a chi stava davanti",
               13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non " + v("eri", "era") + " di nuovo di bolina",
               21.1: v("stavi", "stava") + " tornando dietro la linea dopo una partenza anticipata e " + v("dovevi", "doveva") + " lasciare strada a chi non lo faceva",
-              21.2: v("stavi", "stava") + " scontando una penalità e " + v("dovevi", "doveva") + " lasciare strada a chi non la scontava" })[cc.regola] + (R.lv2 ? " (regola " + cc.regola + ")" : "");
+              21.2: v("stavi", "stava") + " scontando una penalità e " + v("dovevi", "doveva") + " lasciare strada a chi non la scontava" })[cc.regola] + " (regola " + cc.regola + ")";
   }
   function contacts(){
     const bs = R.boats;
@@ -715,26 +713,23 @@
       const d = Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y);
       if (R.contacts[key]){
         if (d > 8) delete R.contacts[key];
-        else if (d <= 4.4){ // 1.0.41 (1b) e 1.0.42 (anche 1a, correzione di un difetto): gli scafi non si compenetrano; finché si toccano si spingono fuori ad ogni passo (la penalità resta una sola)
+        else if (d <= 4.4){ // 1.0.41: gli scafi non si compenetrano; finché si toccano si spingono fuori ad ogni passo (la penalità resta una sola)
           const m = hullOverlap(A.S, B.S); if (m){ const p = m.pen / 2 + 0.02; A.S.x += m.nx * p; A.S.y += m.ny * p; B.S.x -= m.nx * p; B.S.y -= m.ny * p; } }
         continue; } // stesso contatto finché non si separano
-      let mtv = null;
-      if (R.lv2){ if (d > 4.4) continue; mtv = hullOverlap(A.S, B.S); if (!mtv) continue; } // 1b: scafo contro scafo; 4,4 m = due mezze lunghezze, oltre non si toccano
-      else if (d > 4.2) continue;                                                          // 1a: cerchio di 4,2 m, la distanza di sicurezza dichiarata
+      if (d > 4.4) continue; const mtv = hullOverlap(A.S, B.S); if (!mtv) continue; // scafo contro scafo (1.0.39); 4,4 m = due mezze lunghezze, oltre non si toccano
       R.contacts[key] = simTime;
-      // mure di ciascuna col vento nel suo punto (1b; nell'1a, difetto noto dalla 1.0.1, col vento del giocatore)
+      // mure di ciascuna col vento nel suo punto
       const cc = chiCede(A, B), guilty = cc.cede;
       const why = motivoContatto(cc, guilty);
       if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri){ if (guilty.me) giriDebito(); else guilty.gDebt = (guilty.gDebt || 0) + 2; } else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
       for (const o of [A, B]){ o.S.u *= 0.6; }
-      const dx = mtv ? mtv.nx : (A.S.x - B.S.x) / (d || 1), dy = mtv ? mtv.ny : (A.S.y - B.S.y) / (d || 1);
-      const push = mtv ? mtv.pen / 2 + 0.15 : (4.6 - d) / 2 + 0.3; // 1b: si separano di 0,3 m fra gli scafi
+      const dx = mtv.nx, dy = mtv.ny, push = mtv.pen / 2 + 0.15; // si separano di 0,3 m fra gli scafi
       A.S.x += dx * push; A.S.y += dy * push; B.S.x -= dx * push; B.S.y -= dy * push;
-      // 1.0.49 (docs/PROPOSTA-AVVERSARI-1B.md, punto C): ogni penalità col motivo, per l'elenco a fine regata; nell'1b anche un messaggio quando si toccano due avversari
+      // 1.0.49 (docs/PROPOSTA-AVVERSARI-1B.md, punto C): ogni penalità col motivo, per l'elenco a fine regata, e un messaggio quando si toccano due avversari
       const altra = guilty === A ? B : A;
       R.penList.push((guilty.me ? "Tu" : "La " + guilty.name) + ", contatto con " + (altra.me ? "te" : "la " + altra.name) + ": " + why + ".");
       rivMark("Contatto a " + rivTempo(R.t) + ". " + R.penList[R.penList.length - 1], true);
-      if (R.lv2 && !A.me && !B.me) toast("Contatto fra " + A.name + " e " + B.name + ": penalità alla " + guilty.name);
+      if (!A.me && !B.me) toast("Contatto fra " + A.name + " e " + B.name + ": penalità alla " + guilty.name);
       if (A.me || B.me){
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
@@ -850,14 +845,15 @@
     const sig = (at, text) => { if (prevT < at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
     if (R.segnali){ // 1.0.65: i messaggi seguono le bandiere (le soglie con <=, perché il primo passo parte esattamente dal tempo dell'avviso)
       const sigB = (at, text) => { if (prevT <= at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
-      if (R.cd >= 180){
+      if (!R.cd); // 1.2.1: esercizio che parte a regata già cominciata (def.boa): nessun segnale
+      else if (R.cd >= 180){
         sigB(-R.cd, "Avviso: alzata la bandiera di classe, partenza tra " + Math.round(R.cd / 60) + " minuti");
         sigB(-(R.cd - 60), "Preparatorio: alzata la bandiera P");
         sigB(-60, "Un minuto: ammainata la P");
       } else sigB(-R.cd, "Un minuto: resta la bandiera di classe, partenza tra un minuto");
     } else {
-    sig(-opt.countdown, "Segnale di avviso: partenza tra " + Math.round(opt.countdown / 60) + (opt.countdown >= 120 ? " minuti" : " minuto"));
-    if (opt.countdown > 60) sig(-60, "Un minuto");
+    sig(-R.cd, "Segnale di avviso: partenza tra " + Math.round(R.cd / 60) + (R.cd >= 120 ? " minuti" : " minuto"));
+    if (R.cd > 60) sig(-60, "Un minuto");
     }
     sig(-30, "30 secondi");
     sig(-10, "10 secondi");
@@ -873,10 +869,10 @@
       else toast(ant.length ? "Partenza! Richiamo individuale: " + chi + (ant.length > 1 ? " devono" : " deve") + " tornare dietro la linea" : "Partenza!", ant.length ? 4.5 : 2.6);
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
-    if (R.lv2) aggiornaVirate();
+    aggiornaVirate();
     contacts();
     if (R.giri){ boeToccate(); giriPenalita(); }
-    if (R.lv2) semaforo();
+    semaforo();
     if (R.t >= 0 && Math.floor(R.t * 2) !== Math.floor(prevT * 2)) for (const b of R.boats){ // strada fatta ogni 0,5 s, per i distacchi
       const p = b.fin === null ? strada(b) : null; if (p !== null) (b.hist = b.hist || []).push([R.t, p]); }
     recSample(R.t, dt); rivCapture(R.t, dt);
@@ -884,10 +880,12 @@
     if (R.tor) torFinestra();
     if (R.tor && (me.fin !== null || me.dnf) && R.phase !== "done"){ R.phase = "done"; R.doneAt = R.t; torArrivo(); }
     if (me.fin !== null && R.phase !== "done") salvaArrivo(me);
+    if (R.es) esControlla(me);
     if (R.pend && (R.boats.every(b => b.fin !== null) || R.t >= me.fin)) salvaPiazzamento(me);
   }
   function salvaArrivo(me){ // il giocatore ha tagliato l'arrivo: record, regata fatta, risultato a schermo
     R.phase = "done"; R.doneAt = R.t;
+    if (R.es) return; // esercizio: niente si salva; se l'obiettivo non c'è, lo dice esControlla
     const key = "r" + raceIdx, bk = recK(key), prev = progress.best[bk], tot = Math.round(me.fin);
     if (!prev || tot < prev){ progress.best[bk] = tot; recSave(); }
     progress.done[key] = true; if (regTotal() === 0) progress.clean[bk] = true; saveProgress();
@@ -905,6 +903,21 @@
     if (!old || pts(v) > pts(old)){ progress.race[R.pend.key] = v; saveProgress(); }
     R.pend = null;
   }
+  // ---- esercizi delle lezioni (1.2.1, meccanismo B) ----
+  // L'obiettivo si legge a ogni passo: raggiunto, dopo ES_RITORNO s si torna al passo della lezione, che risulta fatto; mancato, un messaggio e si ricomincia
+  // (Ricomincia) o si torna alla lezione. L'arrivo senza obiettivo è un obiettivo mancato.
+  const ES_RITORNO = 2; // s: il tempo per leggere «Obiettivo raggiunto» prima di tornare alla lezione; ipotesi nostra
+  function esControlla(me){
+    const es = R.es;
+    if (es.esito === "ok"){ if (R.t - es.okT >= ES_RITORNO) tornaLezione(es, true); return; }
+    if (es.esito) return;
+    const f = es.def.fallito(R, me, es) || (me.fin !== null || me.dnf ? "Sei arrivato, ma l'obiettivo dell'esercizio non c'è." : "");
+    if (f){ es.esito = "no"; toast(f + " Premi Ricomincia, oppure Torna alla lezione.", 6); return; }
+    if (es.def.fatto(R, me, es)){ es.esito = "ok"; es.okT = R.t; toast((es.def.misura ? es.def.misura(es) + " " : "") + "Obiettivo raggiunto: si torna alla lezione.", ES_RITORNO + 1); } // 1.2.2: def.misura, il risultato (C1, C2)
+  }
+  function apriEsercizio(li, si){ const def = LESSONS[li].steps[si].esercizio; startRace(def.regata, undefined, { def, lezione: li, passo: si, esito: null }); }
+  $("rLez").onclick = () => { if (R && R.es) tornaLezione(R.es, false); };
+
   // ---- distacchi e classifica ----
   // 1.0.33: distacchi in secondi (docs/archivio/PROPOSTA-DISTACCHI.md). Strada fatta in metri, nella direzione del vento medio (lo spostamento
   // di lato non conta, come nel tracciamento delle regate vere): di bolina i metri saliti dalla linea (al più R.up), in poppa R.up più
@@ -1010,7 +1023,7 @@
   }
   function torRc(){
     const k = tor.ris.length, g = tor.regate[k], c = TOR_COND[g.c];
-    return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: c.tws, gusts: c.gusts, shifts: c.shifts, lv2: true, tor: true, tri: torTri(k), up: torTri(k) ? TRI_L : undefined };
+    return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: c.tws, gusts: c.gusts, shifts: c.shifts, tor: true, precedenze: true, tri: torTri(k), up: torTri(k) ? TRI_L : undefined };
   }
   const torBrief = () => "Torneo dell'1b, " + torNome(tor.ris.length) + ", con la barca completa dell'1b. Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
     (FLEET_LOOK.length + 2) + ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3). Chi non arriva entro metà del tempo della prima, contato dal suo arrivo, non si classifica. ";
@@ -1202,7 +1215,7 @@
     if (!opt.ghost) return;
     let g = null;
     if (mode === "mission") g = ghostAt(recK("m" + missionIdx), S.time);
-    if (mode === "race" && R) g = ghostAt(recK("r" + raceIdx) + "b", R.t);
+    if (mode === "race" && R && !R.es) g = ghostAt(recK("r" + raceIdx) + "b", R.t);
     if (!g) return;
     drawOther(g, { alpha: 17, awa: -g.boomSide * 40 }, 0, 0.35);
   }

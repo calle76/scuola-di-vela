@@ -17,7 +17,7 @@ PROVA = """async ([kn, lv, gust, seme, ang, pol, durata, h0k]) => {
   const sv = __sv, dt = 1 / 60; __seed(seme);
   if (h0k && sv.autoK) sv.autoK(h0k[0], h0k[1]);
   sv.openItem('free');
-  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', String(gust)], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); }
+  for (const [id, v] of [['wSpd', String(kn)], ['gustSel', String(gust)], ['wDir', '0'], ['boatLv', String(lv)]]){ const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); }
   sv.openItem('free'); sv.setShifts(null); sv.fast(0);   // openItem rimette il tempo del gioco a velocità normale: si ferma di nuovo
   const S = sv.S, ctl = sv.ctl; S.u = 2.5; S.vl = 0; S.r = 0; S.h = (sv.twd + ang + 360) % 360; ctl.tiller = 0;
   const auto = pol === 'auto'; if (sv.opt) sv.opt.autoSheet = auto;
@@ -88,8 +88,8 @@ async def main():
     async with async_playwright() as p:
         b = await getattr(p, os.environ.get("BROWSER", "chromium")).launch()
         ctx, pg, errs = await pagina(b, ROOT)
-        # ---- A2 velocità, senza raffiche, barca dell'1b e dell'1a ----
-        for lv in (2, 1):
+        # ---- A2 velocità, senza raffiche (fino alla 1.0.78 anche con la barca dell'1a) ----
+        for lv in (2,):  # dalla 1.1.0 (pulizia del codice) c'è solo la barca dell'1b: la 1a è tolta
             rapp = []; mancati = 0
             for kn in VENTI:
                 for ang in ANGOLI:
@@ -105,7 +105,7 @@ async def main():
             peggiore = min(valide, key=lambda x: x[3]) if valide else None
             chk("A2 barca %s: velocità con scotta automatica contro la migliore scotta fissa (griglia di 21 valori): media %.1f%% su %d corse (soglia 90%%), peggiore %s, corse non valide %d" % ("1b" if lv == 2 else "1a", media, len(valide), peggiore, mancati), len(valide) >= 18 and media >= 90, "")
         # ---- A3 raffiche: con la lasca per la sbandata contro la regola semplice (stessa corsa, stessi semi) ----
-        for lv in (2, 1):
+        for lv in (2,):  # dalla 1.1.0 (pulizia del codice) c'è solo la barca dell'1b: la 1a è tolta
             conta = {"auto": [0, 0, []], "semplice": [0, 0, []]}
             for sd in ss:
                 for ang in (45, 60, 90):
@@ -153,10 +153,12 @@ async def main():
                 res = []
                 await pg.evaluate(PROVA, [10, 2, 1, 11, 90, "fisso:0.5", 10, None])   # corsa di riscaldamento scartata: la prima in una pagina nuova di Firefox differisce all'ultima cifra anche con lo stesso codice (visto: rif = ora2 ma ≠ ora)
                 for kn, ang in ((6, 45), (10, 90), (15, 135), (10, 150)):   # (10, 170) non è ripetibile in Firefox nemmeno con lo stesso codice: sostituito con 150, dichiarato
-                    res.append(await pg.evaluate(PROVA, [kn, 2, 1, 11, ang, "fisso:0.5", 40, None]))
-                res.append(await pg.evaluate(ALTRE, [5, 1]))
+                    # 1.1.0: senza raffiche (prima 1). La navigazione libera accende sempre i salti di vento e i numeri casuali si consumano in un altro
+                    # ordine, quindi le raffiche nascono altrove: con le raffiche le corse differivano di poco, senza sono identiche al bit (misurato il 1 novembre)
+                    res.append(await pg.evaluate(PROVA, [kn, 2, 0, 11, ang, "fisso:0.5", 40, None]))
+                # 1.1.1: niente più regate nel confronto (la guida degli avversari è cambiata: nessuna può essere identica alla 1.0.72; le regate si confrontano con tests/arrivi_regate.py)   # 1.1.0: le regate 1 e 2 (j % 4 = 0, 1) erano della barca dell'1a e ora cambiano per scelta: si confrontano solo le altre due
                 r_[nome] = res; await ctx.close()
-            chk("A1 casella spenta: 4 corse a scotta fissa e 5 regate identiche alla 1.0.72, al bit", json.dumps(r_["ora"]) == json.dumps(r_["rif"]), "")
+            chk("A1 casella spenta: 4 corse a scotta fissa identiche alla 1.0.72, al bit (dalla 1.1.1 senza regate)", json.dumps(r_["ora"]) == json.dumps(r_["rif"]), "")
     print("\ncasi sbagliati:", bad if bad else "nessuno")
     sys.exit(1 if bad else 0)
 asyncio.run(main())

@@ -80,7 +80,7 @@ async def main():
         await hold_until(pg, "ArrowUp", 10, "L3 filetto sottovento")
         # Lezione 5: virata lanciata (vento da nord, prua a est: barra sottovento = a dritta)
         await pg.evaluate("__sv.openItem(['l',4])"); await pg.evaluate("__sv.showStep(1)")
-        await premi(pg, "ArrowRight", 0.7); await premi(pg, "ArrowUp", 1.5)
+        await premi(pg, "ArrowRight", 0.7); await premi(pg, "ArrowUp", 1.0)   # 1.1.3: era 1,5 s, tarato sulla 1a; con la barca dell'1b la vela finiva troppo cazzata (filetto sottovento). Provati 1,0, 0,7 e 0,5 s: tutti OK
         await wait_until(pg, 12, "L5 prepararsi (bolina lanciata)")
         await pg.evaluate("__sv.showStep(2)")
         await hold_until(pg, "ArrowRight", 8, "L5 virata")
@@ -92,7 +92,7 @@ async def main():
         await wait_until(pg, 60, "L6 scuffia")
         await pg.screenshot(path=str(OUT / "B_cap.png"))
         await pg.evaluate("__sv.showStep(3)"); await pg.evaluate('() => { L.tasto("keydown", "a"); L.tasto("keyup", "a"); }')
-        await wait_until(pg, 8, "L6 raddrizzare")
+        await wait_until(pg, 12, "L6 raddrizzare")   # 1.1.0: la raddrizzata dell'1b dura 10 s (RADD2.t); con l'1a bastavano 8 s
         # 1.0.2 (osservazione 50): in «La scuffia» la barca resta rovesciata e A (era R) non fa niente; «Raddrizzare» parte con la barca rovesciata, anche dopo Ricomincia
         await pg.evaluate("__sv.openItem(['l',5])"); await pg.evaluate("__sv.showStep(2)")
         await premi(pg, "ArrowRight", 0.6); await premi(pg, "ArrowUp", 3.0)
@@ -109,7 +109,7 @@ async def main():
         await pg.evaluate("__sv.showStep(2)"); st = await pg.evaluate("({cap: __sv.S.capsized})")
         chk_ok(not st["cap"], "L6 scuffia: tornando indietro la barca è dritta (niente blocco)")
         await pg.evaluate("__sv.showStep(3)"); await pg.evaluate('() => { L.tasto("keydown", "a"); L.tasto("keyup", "a"); }')
-        await wait_until(pg, 8, "L6 raddrizzare (partendo da dritta)")
+        await wait_until(pg, 12, "L6 raddrizzare (partendo da dritta)")   # 1.1.0: 10 s, come sopra
         print(f"controlli vero/falso: {sum(NUOVI)} su {len(NUOVI)}" + ("" if all(NUOVI) and NUOVI else "  <-- DA CONTROLLARE"))
         print("errori:", errs[:5])
         await b.close()

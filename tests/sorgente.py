@@ -27,3 +27,8 @@ def copia(cartella, sostituzioni=(), pagina=ROOT / "index.html"):
         (cartella / rel).parent.mkdir(parents=True, exist_ok=True); (cartella / rel).write_text(t, encoding="utf-8")
     if (pagina.parent / "fonts").is_dir(): shutil.copytree(pagina.parent / "fonts", cartella / "fonts", dirs_exist_ok=True)   # 1.0.5: i caratteri stanno nel progetto
     return cartella / pagina.name
+
+# 1.2.4 (menu nuovo): script da dare a una pagina prima del caricamento perché nasconda le 14 lezioni nuove (indici 6-19) e ridisegni il menu.
+# Lo usano i collaudi che misurano i meccanismi sulle 6 lezioni di prima (esame da 20, carriera); il gioco vero le mostra tutte.
+NASCONDI_NUOVE = """window.addEventListener("DOMContentLoaded", () => { if (typeof LESSONS === "undefined") return;
+  LESSONS.forEach((L, i) => { if (i >= 6) L.nascosta = true; }); if (mode === "menu") showMenu(); });"""

@@ -7,7 +7,7 @@
 #   e si confrontano solo i contatti con la barca su cui era calcolato il semaforo: gli altri si riportano a parte); il controllo deve aver visto contatti e semafori (n > 0), e si riporta quanti contatti
 #   del giocatore erano senza semaforo visibile.
 # Parte 2, impostazione: con il semaforo spento l'immagine del mare non cambia quando c'è un colore (rosso o verde) e cambia quando è acceso.
-#   Spento di default; l'1a (regata 0) non lo ha mai (R.sem sempre nullo).
+#   Spento di default. Fino alla 1.0.78 l'1a (regata 0) non lo aveva mai; dalla 1.1.0 (pulizia del codice) c'è in tutte le regate.
 # Uso: python collaudo_semaforo.py
 import asyncio, pathlib, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
@@ -53,7 +53,7 @@ CORSA = """([race, seme, liv, acceso]) => {
       window.__halo = 0; const con = foto(); const alone = window.__halo; cb.checked = false; cb.dispatchEvent(new Event("change")); const spento = foto();
       const col = R.sem; R.sem = null; const senza = foto(); R.sem = col; cb.checked = true; cb.dispatchEvent(new Event("change"));
       out.img = { colore: col, diverse: con !== spento, spentoUguale: spento === senza, alone, barcheVicine: R.boats.filter(b => b !== me && Math.hypot(b.S.x - me.S.x, b.S.y - me.S.y) < 12).length }; } }
-  out.secondi = +(n / 60).toFixed(0); out.lv2 = R.lv2; return out; }"""
+  out.secondi = +(n / 60).toFixed(0); return out; }"""
 
 async def main():
     fail = []; casi = 0
@@ -87,7 +87,7 @@ async def main():
         r = await pg.evaluate("() => document.getElementById('showSem').checked"); chk(r is False or r is True, "impostazione mancante")
         await pg.reload(); await pg.wait_for_function("window.__sv")
         spento = await pg.evaluate("() => document.getElementById('showSem').checked"); chk(spento is False, "il semaforo non è spento all'avvio")
-        r1a = await pg.evaluate(CORSA, [0, 1, "principianti", True]); chk(r1a["nonNullo"] == 0 and not r1a["lv2"], f"1a: semaforo mai visto: {r1a['nonNullo']} passi")
+        r1a = await pg.evaluate(CORSA, [0, 1, "principianti", True]); chk(r1a["nonNullo"] > 0, f"regata 0 (fino alla 1.0.78 dell'1a, senza semaforo): ora il semaforo si vede, {r1a['nonNullo']} passi")
         chk(not errs, f"errori della pagina: {errs[:3]}")
         await b.close()
     print(f"controlli: {casi}, falliti: {len(fail)}")

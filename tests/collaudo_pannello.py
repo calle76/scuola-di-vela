@@ -129,7 +129,9 @@ async def main():
         print("gioco vero, senza #collaudo:")
         await giro("regata 1", lambda: pg2.click("[data-r='0']"), "#rRestart", True)
         for n in range(1, 6):
-            await giro(f"prova {n}", lambda n=n: pg2.locator("#menu button.item", has_text=f"Prova {n}").click(), "#mRetry", False)
+            async def apri_prova(n=n):   # 1.2.4: la prova sta nella scheda del suo gruppo (la 5 nel gruppo 2)
+                await pg2.click(f"#schede button[data-g='{1 if n == 5 else 0}']"); await pg2.locator("#menu button.item", has_text=f"Prova {n}").click()
+            await giro(f"prova {n}", apri_prova, "#mRetry", False)
         print(f"riquadro delle istruzioni: misurato {len(riquadri)} volte, eccesso massimo (pixel): {max(riquadri) if riquadri else 'nessuna misura'}")
         if not riquadri: errs2.append("riquadro delle istruzioni mai misurato")
         print("errori:", errs + errs2)

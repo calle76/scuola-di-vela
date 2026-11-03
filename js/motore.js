@@ -14,7 +14,6 @@ const BOAT = {
   appDA: 0.0049,      // m², attrito di deriva e timone come area di resistenza (Day 2017, fig. 11, bolina)
   rhoW: 1025,         // kg/m³, acqua di mare
   rudderDragK: 45,
-  foilK: 520,         // resistenza laterale della deriva
   maxBoom: 85,
   minBoom: 9,         // 1.0.11: era 14; con α = 20° la vela porta del tutto da 29° di vento apparente (docs/archivio/PROPOSTA-BOLINA.md)
   luffA0: 22,         // gradi di vento apparente sotto cui l'inferitura comincia a sgonfiarsi (1.0.11: era 27)
@@ -37,13 +36,13 @@ const BOAT = {
   TE: 0.80            // m, 1.0.11: profondità efficace di scafo e deriva per la resistenza indotta (ipotesi: dà il 14% di Day 2017 §3.4 con 10 nodi); 0 = senza
 };
 
-// ==== BARCA DELL'1B (nel codice lv 2; 1.0.24-1.0.46) ====
-// Tutto ciò che vale solo con S.lv === 2, cioè la barca dell'1b (l'1a non ha S.lv e resta identico al bit): RUD2 (timone), RADD2 (raddrizzata), BOMA2 (spingi il boma), DERIVA2 (scarroccio), SALTI2 con
-// newShift/stepShift (salti di vento), poi in step() i rami `lv2` (con la barca orziera sbandando, 1.0.46) e `push`. Fuori da qui: gioco.js (scelta «Barca», salti di vento, barra con Maiusc,
-// Z per il boma), regate.js (regate con rc.lv2), disegno.js (angolo della barra nel disegno). Per trovarli: grep -nE "S\.lv|lv2|RUD2|RADD2|raddT|BOMA2|SALTI2|DERIVA2".
+// ==== LA BARCA DELL'1B (1.0.24-1.0.46; dalla pulizia del codice è l'unica) ====
+// Fino alla 1.0.78 il gioco aveva due barche: l'1a (senza S.lv) e l'1b (S.lv === 2). La pulizia (docs/PROPOSTA-PULIZIA-CODICE.md) ha tenuto solo l'1b;
+// l'1a resta, congelata, in tests/fisica/motore1a_sorgente.js per i confronti. Qui: RUD2 (timone), RADD2 (raddrizzata), BOMA2 (spingi il boma), DERIVA2 (scarroccio),
+// SALTI2 con newShift/stepShift (salti di vento), poi in step() il ramo `pala` (con la barca orziera sbandando, 1.0.46) e `push`.
 
-// 1.0.24: timone dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md). Vale solo per una barca con S.lv === 2 che va avanti ad almeno uMin;
-// sotto, all'indietro e nell'1a il timone resta quello di sempre (barra fino a 30°, rotazione che insegue la barra).
+// 1.0.24: timone dell'1b (docs/archivio/PROPOSTA-STALLO-TIMONE.md). Vale per la barca che va avanti ad almeno uMin;
+// sotto e all'indietro il timone resta quello di prima (barra fino a 30°, rotazione che insegue la barra, prua che poggia da sola nel vento).
 // La pala sente l'angolo effettivo (barra meno l'acqua che le arriva di traverso perché la barca gira), stalla oltre stallA
 // (la forza resta quella dello stallo, la resistenza continua a crescere: Masuyama e Ogihara 2020, F4) e la rotazione nasce dalla
 // forza della pala contro lo smorzamento dello scafo: dr/dt = −yawG·u·(u·F + yawRho·r), a regime curvatura = δ / (xR + yawRho).
@@ -58,15 +57,14 @@ const RUD2 = {
   Izz: 200,           // kg·m², 1.0.31: inerzia d'imbardata con l'acqua trascinata da pala e deriva (stima, fissata prima di misurare; sensibilità 130-300)
   stallA: 22,         // gradi di angolo effettivo: F4 15° (modellino 1:5), F35 30° (calcolo a grandezza vera); fissato prima di misurare
   dragK: 117,         // N·s²/m²: resistenza della pala, usa l'angolo effettivo. F4: 12 kgf a 15° e 6 nodi con la pala del 470 (0,169 m², era 184); 1.0.44: scalata alla pala di una deriva singola da 4,2 m, 0,107 m² (regole di classe, docs/archivio/PROPOSTA-PALA-DERIVA-1B.md)
-  uMin: 0.5           // m/s: sotto, il timone dell'1a (come ironsU: niente sovrapposizione con la prua che poggia da sola)
+  uMin: 0.5           // m/s: sotto, il timone di prima (come ironsU: niente sovrapposizione con la prua che poggia da sola)
 };
-const RUD2_SICURA = 35 / 45; // 1.0.25: nell'1b la sola freccia porta la barra fino a 35° (quasi senza stallo), Maiusc + freccia fino a 45°; regola del gioco, nessuna fonte
+const RUD2_SICURA = 35 / 45; // 1.0.25: la sola freccia porta la barra fino a 35° (quasi senza stallo), Maiusc + freccia fino a 45°; regola del gioco, nessuna fonte
 // 1.0.32: raddrizzata dell'1b (docs/archivio/PROPOSTA-RADDRIZZATA.md): più lunga e con la barca al traverso, vela tutta lascata che sbatte,
-// come negli schemi di un video di allenamento (raddrizzare con la schiena al vento, 15-20 s in tutto). 1a: 3 s e 60°, come sempre.
+// come negli schemi di un video di allenamento (raddrizzare con la schiena al vento, 15-20 s in tutto). Fino alla 1.0.78 l'1a: 3 s e 60°.
 const RADD2 = { t: 10, tAI: 15, twa: 90 }; // secondi dal tasto A (giocatore), secondi dalla scuffia (avversari), gradi dal vento
-function raddT(S){ return S.lv === 2 ? RADD2.t : 3; }
 const BOOM_ISTERESI = 5; // 1.0.71: gradi da dietro (vento apparente a ±180°) entro i quali il boma tiene il lato che aveva; ipotesi nostra, nessuna fonte (docs/PROPOSTA-BOMA-IN-POPPA.md)
-// 1.0.26: «spingi il boma» dell'1b (docs/archivio/PROPOSTA-SPINGI-BOMA.md). Con C.push e S.lv === 2 il boma resta a BOMA2.angle dalla parte
+// 1.0.26: «spingi il boma» dell'1b (docs/archivio/PROPOSTA-SPINGI-BOMA.md). Con C.push il boma resta a BOMA2.angle dalla parte
 // dove si trovava quando si è cominciato a spingere; la vela è una piastra investita dal vento (forza normale CN = CL cos α + CD sin α)
 // applicata al centro velico lungo il boma, quindi spinge indietro, di lato e fa girare la prua verso il boma. Costanti: stime senza fonte.
 const BOMA2 = {
@@ -98,7 +96,7 @@ function stepShift(st, dt, rnd, ruota = true){ // avanza di dt secondi; restitui
 }
 // 1.0.45: scarroccio dell'1b (docs/archivio/PROPOSTA-SCARROCCIO-1B.md): deriva e pala come ali, Day 2017 eq. 11-12 (F17) con le misure delle regole di
 // classe (F37), barca dritta, scia della deriva sulla pala a zero: side = ½ρ·K·u·vl, K = 1,70 m² (deriva 1,176, pala 0,527 con l'acqua al 90%).
-// Al posto di u si usa √(u² + u0²): u0 è ricavato perché da ferma la barca scarrocci come nell'1a (q·u0 = 0,4·foilK + 60 = 268; ipotesi).
+// Al posto di u si usa √(u² + u0²): u0 è ricavato perché da ferma la barca scarrocci come l'1a (q·u0 = 0,4·foilK + 60 = 268 con foilK = 520 dell'1a; ipotesi).
 const DERIVA2 = { q: 873, u0: 0.307 }; // q = ½·ρ·K (N·s/m²), u0 in m/s
 function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso segno della barra
   return tiller * RUD2.maxRudder + Math.atan2(S.r * D2R * RUD2.xR, S.u) / D2R;
@@ -146,7 +144,7 @@ function step(S, C, E, dt){
   const lf = Math.max(0, Math.min(1, (A - BOAT.luffA0) / BOAT.luffW)); // vento apparente troppo stretto: la vela si sgonfia (angolo morto)
   const L = q * CL(alpha) * lf, Dg = q * (CD(alpha) + (alpha < 6 ? 0.2 * (1 - alpha / 6) : 0)); // vela che sbatte: più resistenza
   let push = null; // boma spinto (1b): forza e momento della vela a collo, nel riferimento della barca (x avanti, y a dritta)
-  if (C.push && S.lv === 2){
+  if (C.push){
     if (!S.pushSide) S.pushSide = S.boomSide;
     const p = S.pushSide, b = BOMA2.angle * D2R, f = [-Math.cos(awa * D2R), -Math.sin(awa * D2R)]; // f: dove va l'aria
     let n = [p * Math.sin(b), Math.cos(b)]; // normale alla vela, girata dalla parte verso cui la spinge il vento
@@ -157,10 +155,10 @@ function step(S, C, E, dt){
   } else if (S.pushSide) S.pushSide = 0;
   const drive = push ? push.Fx : L * Math.sin(A * D2R) - Dg * Math.cos(A * D2R);
   const side = push ? push.Fy * (awa >= 0 ? -1 : 1) : L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento (col boma spinto può essere negativa)
-  const lv2 = S.lv === 2 && S.u >= RUD2.uMin && !push, a2 = lv2 ? rud2Alpha(S, C.tiller) : 0;
-  const rud = lv2 ? 0 : C.tiller * BOAT.maxRudder; // 1b: la barra conta solo attraverso a2
+  const pala = S.u >= RUD2.uMin && !push, a2 = pala ? rud2Alpha(S, C.tiller) : 0; // pala: il timone che stalla (sopra uMin e senza boma spinto)
+  const rud = pala ? 0 : C.tiller * BOAT.maxRudder; // con la pala la barra conta solo attraverso a2
   const res = hullDrag(S.u) * (S.u < 0 ? BOAT.backDrag : 1) +
-              (lv2 ? RUD2.dragK * S.u * S.u * Math.sin(Math.abs(a2) * D2R) ** 2 :
+              (pala ? RUD2.dragK * S.u * S.u * Math.sin(Math.abs(a2) * D2R) ** 2 :
               BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2);
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   // 1.0.11: resistenza indotta, Delft (Day 2017, eq. 15) Ri = Fh² / (π·½ρ·V²·TE²), con u² + 0,4 come nello scarroccio: a bassa velocità la deriva non regge
@@ -170,7 +168,7 @@ function step(S, C, E, dt){
   // 1.0.8: nessun tetto all'indietro (docs/archivio/PROPOSTA-RETROMARCIA.md): vela che sbatte contro la resistenza della tabella, la stessa della marcia avanti
   // scarroccio: la deriva resiste molto, meno a bassa velocità
   const leewardSign = awa >= 0 ? -1 : 1; // vento da dritta -> scarroccia verso sinistra
-  const latTarget = leewardSign * side / (S.lv === 2 ? DERIVA2.q * Math.sqrt(S.u * S.u + DERIVA2.u0 * DERIVA2.u0) : BOAT.foilK * (S.u * S.u + 0.4) + 60);
+  const latTarget = leewardSign * side / (DERIVA2.q * Math.sqrt(S.u * S.u + DERIVA2.u0 * DERIVA2.u0));
   S.vl += (Math.max(-0.8, Math.min(0.8, latTarget)) - S.vl) * Math.min(1, dt * 2);
   // sbandamento: momento sbandante della vela contro timoniere sporto fuori e forma dello scafo
   S.heel = S.heel || 0; S.heelRate = S.heelRate || 0; S.hike = S.hike === undefined ? 0.2 : S.hike;
@@ -183,7 +181,7 @@ function step(S, C, E, dt){
   const acc = (mHeel - mRight) / BOAT.rollI - BOAT.rollDamp / BOAT.rollI * S.heelRate;
   S.heelRate += acc * dt;
   S.heel += S.heelRate / D2R * dt;
-  if (lv2){ // 1b: la forza della pala (che stalla oltre stallA) contro lo smorzamento dello scafo
+  if (pala){ // la forza della pala (che stalla oltre stallA) contro lo smorzamento dello scafo
     const F = Math.max(-RUD2.stallA, Math.min(RUD2.stallA, a2)) * D2R;
     const V2 = S.u * S.u + (S.r * D2R * RUD2.xR) ** 2;
     S.r += -RUD2.yawG * (V2 * F + S.u * RUD2.yawRho * S.r * D2R) * dt / D2R;
@@ -193,7 +191,7 @@ function step(S, C, E, dt){
     S.r /= 1 + RUD2.hullKq / RUD2.Izz * Math.abs(S.r * D2R) * dt; // forma che non inverte mai il verso della rotazione
     S.stall = Math.abs(a2) > RUD2.stallA;
   } else {
-  if (S.lv === 2) S.stall = false;
+  S.stall = false;
   // virata: la barra a dritta porta la pala a sinistra -> la prua gira a sinistra
   let rTarget = -(S.u / BOAT.turnLen) * Math.sin(rud * D2R) / D2R; // gradi/s
   // barca ferma nel vento: la prua poggia da sola
@@ -208,6 +206,6 @@ function step(S, C, E, dt){
   const latoBoma = awa >= 0 ? -1 : 1; // -1: boma a sinistra
   S.boomSide = push ? S.pushSide : (S.boomSide && latoBoma !== S.boomSide && A > 180 - BOOM_ISTERESI) ? S.boomSide : latoBoma;
   S.boom = push ? BOMA2.angle : boom;
-  if (S.lv === 2) S.pushing = !!push;
+  S.pushing = !!push;
   return { heel: S.heel, hike: S.hike, awa, aws, alpha, awFrom, drive, side, twa: norm180(E.twd - S.h), leeway: Math.atan2(S.vl, Math.max(0.3, Math.abs(S.u))) / D2R };
 }

@@ -23,7 +23,7 @@ async def gira(pg, li, wrong_pos):
         await pg.locator(".opt").nth(k).click(); await pg.click("#qzNext"); n += 1
     return n
 async def menu_best(pg, li):
-    return (await pg.locator("[data-q]").nth(li).inner_text()).replace("\n", " ")
+    return await pg.locator(f"[data-q='{li}']").get_attribute("title")   # 1.2.4: ripassi su due colonne, il punteggio sta nel testo che compare passando sopra
 
 async def main():
     async with async_playwright() as p:

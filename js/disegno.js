@@ -25,7 +25,7 @@
     $("rightBtn").hidden = !S.capsized || S.righting > 0 || noRight;
     $("capOverlay").hidden = !S.capsized || S.righting > 0 || noRight;
     $("capText").textContent = S.capCause === "gybe"
-      ? "Hai scuffiato per una strambata: il vento è passato dall'altro lato con la vela tutta aperta e il boma ha attraversato la barca di colpo. Per strambare senza rischi: prima cazza, poi poggia, poi lasca (lezione 5)."
+      ? "Hai scuffiato per una strambata: il vento è passato dall'altro lato con la vela tutta aperta e il boma ha attraversato la barca di colpo. Per strambare senza rischi: prima cazza, poi poggia, poi lasca (lezione 6)."
       : "Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.";
     // suggerimento
     const kind = st ? (st.hintKind || "sail") : "tt";
@@ -235,6 +235,7 @@
     });
     if (mode === "race") drawRaceWorld(v);
     drawGhost();
+    if (mode === "lesson" && st) scenaBarche(st).forEach(b => drawOther(b.S, { alpha: 17, awa: -b.S.boomSide * 40 }, 0, 1)); // 1.1.9: barche di scena (lezioni D), ferme o in movimento (1.2.0)
     drawBoat();
     drawTurnHint();
     ctx.restore();
@@ -250,6 +251,7 @@
     if (st && st.rose) drawRose(v, st.maneuvers, st.target);
     if (opt.arrows && (!st || st.arrows || st.hud >= 2 || (!st.pause && st.hud))) drawWindArrows(v, mode === "lesson" && lessonIdx < 3); // il vento apparente si spiega nella lezione 4
     if (st && st.labels) drawLabels(v, st.labels);
+    if (mode === "lesson" && st && (st.scena || S.scenaMob)) drawScenaScritte(v, st);
     drawCompass(v);
     drawWindBox(v);
     const heelG = !st || st.hud >= 3;
@@ -446,6 +448,21 @@
     }
     return { roll, pitch, amp, heave: heave * 0.012 * Math.min(1, kn / 10) };
   }
+  // 1.1.9 (lezioni D, regolamento): barche ferme accanto a quella della lezione, per le pagine di teoria. b.x, b.y in metri dalla barca, b.h prua, b.col colore dello scafo,
+  // b.label scritta; st.me è la scritta sulla barca della lezione. Vento da nord nelle lezioni: il boma sta dal lato opposto a quello da cui arriva il vento.
+  function scenaBarche(st){
+    const tutte = [...(st.scena || []).map(b => ({ ...b, x: S.x + b.x, y: S.y + b.y })), ...(S.scenaMob || [])];
+    return tutte.map(b => { const twa = norm180(env.twd - b.h), side = twa >= 0 ? -1 : 1;
+      return { S: { x: b.x, y: b.y, h: b.h, u: b.u || 0, vl: 0, r: 0, heel: 0, hike: 0.5, boomSide: side, boom: 30, dispBoom: side * 30, capsized: false, hullColor: b.col }, label: b.label }; });
+  }
+  function drawScenaScritte(v, st){
+    ctx.save(); ctx.font = font(600, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const scritta = (x, y, txt) => { const [sx, sy] = toScreen(v, x, y), w = ctx.measureText(txt).width + 12;
+      ctx.fillStyle = "rgba(10,24,36,.75)"; ctx.fillRect(sx - w / 2, sy + 26, w, 20); ctx.fillStyle = "#fff"; ctx.fillText(txt, sx, sy + 36); };
+    scenaBarche(st).forEach(b => b.label && scritta(b.S.x, b.S.y, b.label));
+    if (st.me) scritta(S.x, S.y, st.me);
+    ctx.restore();
+  }
   function drawBoat(){
     const t = simTime;
     ctx.save(); ctx.translate(S.x, S.y); ctx.rotate(S.h * D2R);
@@ -488,7 +505,7 @@
     ctx.fillStyle = colors.spar; ctx.fillRect(-0.04, 0.05, 0.08, 0.45);
     ctx.restore();
     // timone: pala dietro lo specchio di poppa, barra in avanti
-    const tau = ctl.tiller * (S.lv === 2 ? RUD2.maxRudder : BOAT.maxRudder) * D2R;
+    const tau = ctl.tiller * RUD2.maxRudder * D2R;
     ctx.strokeStyle = colors.spar; ctx.lineCap = "round";
     ctx.lineWidth = 0.09; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(-Math.sin(tau) * 0.55, 2.05 + Math.cos(tau) * 0.55); ctx.stroke();
     ctx.lineWidth = 0.06; ctx.beginPath(); ctx.moveTo(0, 2.05); ctx.lineTo(Math.sin(tau) * 1.0, 2.05 - Math.cos(tau) * 1.0); ctx.stroke();
@@ -572,7 +589,7 @@
     geo = { mastY, ex, ey, rx: (hx + ex + lx) / 3, ry: (mastY + ey + ly) / 3, qx, qy, tau, hx, hY, sc: 1 + wv.heave }; // hx, hY: testa d'albero (collaudo_moto_mare.py)
   }
   function drawCapsized(t){
-    const side = S.capSide || 1, prog = S.righting ? Math.min(1, S.righting / raddT(S)) : 0;
+    const side = S.capSide || 1, prog = S.righting ? Math.min(1, S.righting / RADD2.t) : 0;
     // 1.0.23: nei primi 0,6 s dopo la scuffia l'albero finisce di cadere (prima la barca passava di colpo da sbandata a sdraiata)
     const fall = S.capAt === undefined ? 1 : Math.min(1, (t - S.capAt) / 0.6);
     const lie = (1 - prog) * (0.75 + 0.25 * (1 - (1 - fall) * (1 - fall))); // 1 = sdraiata, 0 = dritta
@@ -650,7 +667,7 @@
   }
   function drawHeelGauge(){
     const r = 44, cx = 84, cy = H - 20;
-    const heel = S.capsized ? 90 * (S.righting ? 1 - Math.min(1, S.righting / raddT(S)) : 1) : Math.max(-60, Math.min(90, S.heel));
+    const heel = S.capsized ? 90 * (S.righting ? 1 - Math.min(1, S.righting / RADD2.t) : 1) : Math.max(-60, Math.min(90, S.heel));
     ctx.save(); ctx.translate(cx, cy);
     ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.beginPath(); ctx.arc(0, 0, r + 8, Math.PI, 0); ctx.closePath(); ctx.fill();
     const zone = (a1, a2, col) => { ctx.strokeStyle = col; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(0, 0, r, -Math.PI / 2 + a1 * D2R, -Math.PI / 2 + a2 * D2R); ctx.stroke(); };
