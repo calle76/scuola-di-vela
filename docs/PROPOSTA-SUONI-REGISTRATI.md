@@ -100,3 +100,11 @@ La cartella, cioè la pagina e i suoi file audio (1,4 MB), **non va nel reposito
 
 - **Ale, 3 novembre 2026:** «sì, vai con la fermata 2».
 - **1.2.7:** fatto come al §3; R1-R6 verdi in Chromium e Firefox (`collaudo_suoni.py`). Numeri nel `CHANGELOG.md`.
+- **3 novembre, pomeriggio (Ale fuori, prove in autonomia):**
+  - **Il gioco vero, registrato.** Ho registrato il suono del gioco in Chromium (volume «bassi»), con la barca guidata dallo script: 8 s al traverso e 6 s con la prua al vento, a 10 e poi a 15 nodi.
+  - **I colpi partono:** 34 nei 6 s a 10 nodi, 41 a 15 nodi.
+  - **Ma non spiccano.** Ho misurato, sopra i 1.000 Hz, la differenza fra i momenti più forti e il livello tipico: con la prua al vento è 3,1 dB a 10 nodi e 2,9 a 15. Al traverso, dove non c'è nessun colpo, è già 4,6 e 3,0 dB.
+  - **Con i colpi più forti:** +6 dB dà 6,0 e 3,3 dB; +12 dB dà 11,7 e 6,0 dB.
+  - **Rispetto alla 1.2.6:** il gioco esce più basso di 3,4-3,6 dB nei tratti a 10 nodi e al traverso a 15, di 1,5 dB con la prua al vento a 15.
+  - **Il volume dei colpi non l'ho cambiato:** è una scelta da fare a orecchio. Le quattro registrazioni (1.2.6, e 1.2.7 come ora, a +6 e a +12 dB) sono in cima alla pagina d'ascolto.
+  - **Il giro d'acqua non ha stacco.** Dove ricomincia, il salto fra un campione e il successivo è 0,0078: più piccolo del salto tipico fra campioni vicini (mediana 0,0083). Il livello cambia di 0,8 dB, contro una variazione tipica di 1,1 dB fra tratti vicini di 50 ms.
