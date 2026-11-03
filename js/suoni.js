@@ -14,6 +14,7 @@
   // 1.2.7: acquaVel e acquaFiltro = velocità e filtro del giro d'acqua; ritmo = colpi di vela al secondo; colpi = colpi di vela partiti (anche a gioco muto)
   let suoniFonte = "sintetici";                // «registrati» quando acqua e colpi sono decodificati; finché no (o se la decodifica fallisce) restano i sintetici
   let sReg = null, sProssimo = 0;               // suoni registrati decodificati; tempo al prossimo colpo di vela (s di gioco)
+  const COLPI_VOL = 0.28 * 4;                   // volume dei colpi di vela col vento forte: 0,28 nella 1.2.7, ×4 (+12 dB) dalla 1.2.8 (Ale, 3 novembre 2026, ascoltando il gioco registrato)
   let sPrev = null, sFase = 0;
   let sSeme = 0x5EA;                           // generatore suo (mulberry32), solo per il fruscio
   const sRand = () => { sSeme = sSeme + 0x6D2B79F5 | 0; let t = Math.imul(sSeme ^ sSeme >>> 15, 1 | sSeme); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
@@ -130,7 +131,7 @@
     suoniVal.ritmo = colpiOn ? 1 + 0.35 * aws * KN : 0;
     if (!colpiOn) sProssimo = 0;
     else { sProssimo -= dt; if (sProssimo <= 0){ suoniVal.colpi++; sProssimo = (0.6 + sRand() * 0.8) / suoniVal.ritmo;
-      if (suoniAttivi() && sReg) try { sColpo(0.28 * Math.min(1, aws / 8)); } catch(e){} } }
+      if (suoniAttivi() && sReg) try { sColpo(COLPI_VOL * Math.min(1, aws / 8)); } catch(e){} } }
     if (suoniAttivi()){
       const t = actx.currentTime;
       sCh.vento.g.gain.setTargetAtTime(suoniVal.vento, t, 0.25); sCh.vento.fl.frequency.setTargetAtTime(250 + 55 * aws, t, 0.25);

@@ -17,6 +17,19 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.8 — La vela che sbatte si sente: colpi a +12 dB
+
+Ale, 3 novembre sera, dopo aver ascoltato le registrazioni del gioco vero nella pagina d'ascolto: «metti i colpi a +12 dB». Nella 1.2.7 i colpi partivano ma non spiccavano sopra vento e acqua (`PROPOSTA-SUONI-REGISTRATI.md` §8).
+
+**Cosa cambia:** il volume dei colpi di vela col vento forte passa da 0,28 a 1,12, cioè ×4, +12 dB (costante `COLPI_VOL` in `js/suoni.js`). Il resto è uguale.
+
+**Misurato** (gioco registrato in Chromium, barca guidata dallo script: 8 s al traverso e 6 s con la prua al vento, a 10 e 15 nodi; criteri scritti prima):
+- **Volume «bassi».** Ho misurato quanto i colpi spiccano sul fondo, sopra i 1.000 Hz. Con la prua al vento: 10,6 dB a 10 nodi e 5,2 dB a 15. Attesi: 11,7 e 6,0 dB, come nella prova a +12 dB, con ±1,5 dB di margine (ogni registrazione varia un po'). Dentro. Nella 1.2.7 erano 3,1 e 2,9 dB.
+- **Colpi partiti:** 35 e 40, come prima.
+- **Volume «alti»** (il caso più forte): picco a −1,4 dB, quindi nessuna saturazione, ma con poco margine. Se a «alti» senti gracchiare, si abbassa lì.
+- **`collaudo_suoni.py`:** verde in Chromium e Firefox (S1-S6, R2-R4).
+- **Controlli veloci:** `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici.
+
 ## 1.2.7 — La vela e l'acqua con suoni registrati
 
 `docs/PROPOSTA-SUONI-REGISTRATI.md`. Ale, 3 novembre, dopo aver ascoltato le prove: «sì, vai con la fermata 2». Prima versione su `main` dopo l'unione.
