@@ -9,6 +9,11 @@
 #   S4: costo per fotogramma (con l'audio acceso, dove il browser lo accende) al più +10%.
 #   S5: nessun audio prima del primo tasto; «spenti» spegne e resta dopo il ricaricamento; un browser senza audio gioca muto, senza errori.
 #   S6: impostazioni a 1360x650 dentro la finestra, senza scorrere.
+# Dalla 1.2.7 (docs/PROPOSTA-SUONI-REGISTRATI.md §4) anche acqua e vela registrate:
+#   R2: giro d'acqua più veloce e più chiaro con la barca veloce; colpi di vela in 60 s crescenti col vento apparente (4, 8, 12, 16 nodi) ed entro il 20%
+#       degli attesi (1 + 0,35 × nodi al secondo); controprova: nessun colpo con la vela regolata, a barca scuffiata, in pausa.
+#   R3: suoni «registrati» nella pagina con e senza #collaudo; col decodificatore rotto apposta restano i sintetici, senza errori.
+#   R4: js/suoni-dati.js al massimo 300 KB; decodifica al primo tasto al massimo 300 ms. (R1 = S1; R6 = S1-S6 verdi.)
 # Uso: python collaudo_suoni.py [--semi 1-10]   (BROWSER=firefox per Firefox)
 import asyncio, json, os, pathlib, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
@@ -155,8 +160,55 @@ async def main():
         await pg.click("#goFree"); await pg.keyboard.press("Enter"); await pg.keyboard.down("ArrowLeft"); await pg.wait_for_timeout(1500); await pg.keyboard.up("ArrowLeft")
         mut = await pg.evaluate("() => [!!actx, typeof S.u === 'number' && simTime > 0.5]")
         chk("S5", mut == [False, True] and not errs, f"S5 browser senza audio: si gioca muti, senza errori ({mut}, {errs[:1]})")
+        await ctx.close()
+        # ---- R2-R4 (1.2.7, docs/PROPOSTA-SUONI-REGISTRATI.md §4, criteri scritti prima del codice): acqua e vela registrate ----
+        ctx, pg, errs = await pagina(b)
+        r2 = await pg.evaluate("""() => { const sv = __sv, dt = 1 / 60, a = [], colpi = {}, attesi = {};
+            for (let kn = 0; kn <= 20; kn += 2){ sv.openItem("free"); env.tws = kn / KN; env.twd = 0; freshState(0, 0, 90, 0.4);
+              for (let k = 0; k < 120; k++){ sv.ctl.sheet = sv.autoSheet(); sv.ctl.tiller = 0; sv.run(dt, 1); sv.suoni.agg(dt, false); a.push([Math.abs(sv.S.u), sv.suoni.val.acquaVel, sv.suoni.val.acquaFiltro]); } }
+            for (const kn of [4, 8, 12, 16]){ sv.openItem("free"); env.tws = kn / KN; env.twd = 0; freshState(0, 0, 0, 0); const c0 = sv.suoni.val.colpi; let att = 0, aw = 0;
+              for (let k = 0; k < 3600; k++){ sv.ctl.sheet = 1; sv.ctl.tiller = 0; sv.run(dt, 1); sv.suoni.agg(dt, false); att += sv.suoni.val.ritmo * dt; aw += info.aws * KN / 3600; }
+              colpi[kn] = sv.suoni.val.colpi - c0; attesi[kn] = [+att.toFixed(1), +aw.toFixed(1)]; }
+            const contro = {};
+            sv.openItem("free"); env.tws = 10 / KN; env.twd = 0; freshState(0, 0, 90, 0.4); let c0 = sv.suoni.val.colpi;
+            for (let k = 0; k < 3600; k++){ sv.ctl.sheet = sv.autoSheet(); sv.ctl.tiller = 0; sv.run(dt, 1); sv.suoni.agg(dt, false); } contro.regolata = sv.suoni.val.colpi - c0;
+            freshState(0, 0, 0, 0); sv.S.capsized = true; c0 = sv.suoni.val.colpi; for (let k = 0; k < 3600; k++) sv.suoni.agg(dt, false); contro.scuffiata = sv.suoni.val.colpi - c0;
+            freshState(0, 0, 0, 0); c0 = sv.suoni.val.colpi; for (let k = 0; k < 3600; k++) sv.suoni.agg(dt, true); contro.in_pausa = sv.suoni.val.colpi - c0;
+            return { a, colpi, attesi, contro }; }""")
+        # 1.2.7, detto: il primo giro chiedeva anche «giro da min a max più largo di 0,2»; ma qui la barca parte a 1,5 m/s e non scende sotto 1,2, quindi il giro
+        # va da 0,96 a 1,12 per forza. Sostituito con un controllo più stretto: ogni lettura uguale alla formula del §3 (0,85 + 0,27 × min(1, u/3); 1.200 + 4.800 × min(1, u/3) Hz).
+        formula = [abs(v - (0.85 + 0.27 * min(1, u / 3))) < 1e-9 and abs(f - (1200 + 4800 * min(1, u / 3))) < 1e-6 for u, v, f in r2["a"]]
+        chk("R2", len(r2["a"]) > 1000 and mono([(u, v) for u, v, _ in r2["a"]]) and mono([(u, f) for u, _, f in r2["a"]]) and metro.tutti(formula),
+            f"R2 acqua: velocità del giro e filtro crescono sempre con la velocità della barca, ogni lettura come la formula del §3 ({len(r2['a'])} letture, giro da {min(v for _, v, _ in r2['a']):.2f} a {max(v for _, v, _ in r2['a']):.2f}, filtro da {min(f for _, _, f in r2['a']):.0f} a {max(f for _, _, f in r2['a']):.0f} Hz)")
+        ck = [r2["colpi"][str(k)] for k in (4, 8, 12, 16)]
+        # attesi dal §3: (1 + 0,35 × vento apparente in nodi) colpi al secondo, integrati sui 60 s; entro il 20%
+        dentro = [abs(r2["colpi"][str(k)] - r2["attesi"][str(k)][0]) <= 0.2 * r2["attesi"][str(k)][0] for k in (4, 8, 12, 16)]
+        chk("R2", all(x < y for x, y in zip(ck, ck[1:])) and ck[0] > 0, f"R2 vela: colpi in 60 s prua al vento a 4, 8, 12, 16 nodi: {ck}, crescono sempre")
+        chk("R2", metro.tutti(dentro), f"R2 vela: colpi entro il 20% degli attesi (attesi, vento apparente medio in nodi): {r2['attesi']}")
+        chk("R2", r2["contro"] == {"regolata": 0, "scuffiata": 0, "in_pausa": 0}, f"R2 controprova: nessun colpo con la vela regolata, a barca scuffiata, in pausa: {r2['contro']}")
+        chk("R6", not errs, f"R2 errori della pagina {errs[:1]}"); await ctx.close()
+        # R3-R4: la decodifica, nella pagina con e senza #collaudo; e col decodificatore che fallisce apposta (devono restare i suoni sintetici, senza errori)
+        peso = (ROOT / "js" / "suoni-dati.js").stat().st_size
+        chk("R4", peso <= 300 * 1024, f"R4 js/suoni-dati.js: {peso / 1024:.0f} KB (al massimo 300)")
+        async def attendi(pg, cond, s=10):   # aspetta al più s secondi; se non succede, il controllo dopo lo dice (con lo stato letto), senza fermare il collaudo
+            for _ in range(s * 10):
+                if await pg.evaluate(cond): return
+                await pg.wait_for_timeout(100)
+        for h in ("", "#collaudo"):
+            ctx, pg, errs = await pagina(b, h); await pg.click("#goFree"); await pg.keyboard.press("Enter")
+            await attendi(pg, "() => suoniFonte !== 'sintetici' && suoniFonte !== 'decodifica'")
+            r3 = await pg.evaluate("() => [suoniFonte + ' (audio: ' + (actx ? actx.state : 'nessuno') + ')', sReg ? sReg.ms : null]")
+            r3[0] = r3[0].replace(" (audio: running)", "").replace(" (audio: suspended)", "") if r3[0].startswith("registrati") else r3[0]
+            chk("R3", r3[0] == "registrati" and not errs, f"R3 pagina {'con' if h else 'senza'} #collaudo: suoni {r3[0]}, errori {errs[:1]}")
+            chk("R4", r3[1] is not None and r3[1] <= 300, f"R4 decodifica al primo tasto: {r3[1]} ms (al massimo 300)")
+            await ctx.close()
+        ctx, pg, errs = await pagina(b, "", "if (window.AudioContext) AudioContext.prototype.decodeAudioData = function(b, ok, no){ const e = new Error('rotto apposta'); if (no) no(e); return Promise.reject(e); };")
+        await pg.click("#goFree"); await pg.keyboard.press("Enter")
+        await attendi(pg, "() => suoniFonte.startsWith('errore')"); await pg.keyboard.down("ArrowLeft"); await pg.wait_for_timeout(800); await pg.keyboard.up("ArrowLeft")
+        r3e = await pg.evaluate("() => [suoniFonte, !!actx, simTime > 0.3]")
+        chk("R3", r3e[0].startswith("errore") and r3e[1] and r3e[2] and not errs, f"R3 decodifica rotta apposta: {r3e}, si gioca coi suoni sintetici, errori della pagina {errs[:1]}")
         await ctx.close(); await b.close()
     print("casi per parte:", casi)
     print("\ncasi sbagliati:", "nessuno" if not bad else bad)
-    sys.exit(1 if bad or any(casi.get(k, 0) == 0 for k in ("S1", "S2", "S3", "S4", "S5", "S6")) else 0)
+    sys.exit(1 if bad or any(casi.get(k, 0) == 0 for k in ("S1", "S2", "S3", "S4", "S5", "S6", "R2", "R3", "R4")) else 0)
 asyncio.run(main())

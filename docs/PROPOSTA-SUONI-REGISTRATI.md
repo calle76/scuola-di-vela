@@ -95,3 +95,8 @@ La cartella, cioè la pagina e i suoi file audio (1,4 MB), **non va nel reposito
 ## 7. Da decidere (Ale)
 
 1. **Ascoltando la pagina: la vela (prove 1-3) e l'acqua (prove 4-5) ti sembrano giuste per il gioco?** Puoi rispondere «sì», «sì ma…» (per esempio più o meno colpi, acqua più forte), oppure «no, prova con…» uno degli originali. Se mi dai il via, procedo con la fermata 2.
+
+## 8. Avanzamento
+
+- **Ale, 3 novembre 2026:** «sì, vai con la fermata 2».
+- **1.2.7:** fatto come al §3; R1-R6 verdi in Chromium e Firefox (`collaudo_suoni.py`). Numeri nel `CHANGELOG.md`.
