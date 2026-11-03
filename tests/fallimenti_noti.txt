@@ -23,7 +23,7 @@ ESITO: FALLITO (scenari [5])
 scenario 5 (tutte girano entro 60 s, nessuna piantata): 7 su 10 FALLITO
 ESITO: FALLITO (scenari [5])
 
-== collaudo_contatto_vero.py | firefox | Firefox: penetrazione 0,29 m contro 0,25 nell'1a, accettato il 31 ottobre 2026
+== collaudo_contatto_vero.py | firefox | Firefox: penetrazione 0,29 m contro 0,25 nell'1a, accettato il 31 ottobre 2026; va e viene (fallito nel giro della 1.2.1, passato 3 su 3 il 3 novembre 2026): resta qui
 FALLITO: 1a: scafi sovrapposti 0.01 s a regata e penetrazione massima 0.29 m (attesi al massimo 0,5 s e 0,25 m: la correzione vale anche nell'1a dalla 1.0.42; prima 2,8 s e 1,37 m)
 ESITO: FALLITO
 
