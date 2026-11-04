@@ -114,7 +114,7 @@ async def k5(b):
         if url == BASE: tiles = re.sub(r"⚑\nRegata nei salti di vento\nDa fare\n+[^\n]*\n", "", tiles)  # 1.0.28: riquadro voluto del livello 2, nel menu del gioco libero
         if url == BASE: tiles = re.sub(r"⚑\nRegata con i giri di penalità\nDa fare\n+[^\n]*\n", "", tiles)  # 1.0.61: riquadro voluto del livello 2a, nel menu del gioco libero
         if url == BASE: tiles = tiles.replace("Andature, mure e precedenze", "Andature e filetti").replace("le mure e chi lascia strada;", "le mure;")  # 1.0.37: titolo e descrizione della lezione 3, voluti
-        if url == BASE: tiles = re.sub(r"Tornei\n⚑\nTorneo dell'1b\nDa fare\n", "", tiles).replace("Altri tipi di barca.", "I tornei, altri tipi di barca.")  # 1.0.34: torneo dell'1b, voluto
+        if url == BASE: tiles = re.sub(r"Tornei\n⚑\nTorneo\nDa fare\n", "", tiles).replace("Altri tipi di barca.", "I tornei, altri tipi di barca.")  # 1.0.34: torneo dell'1b, voluto
         if url == BASE: foot = re.sub(r"Regate registrate\s+", "", foot)  # 1.0.60: link voluto «Regate registrate» nel piede del menu
         if url != BASE:
             tiles = re.sub(r"Lezione (\d): ", r"Ripasso \1 · ", tiles)

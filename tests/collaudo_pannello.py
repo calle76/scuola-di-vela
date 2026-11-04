@@ -121,10 +121,10 @@ async def main():
             if not (fermo and parte and da_zero): errs2.append(f"{nome}: il cronometro non parte con Parti")
             await pg2.click("#toMenu"); await pg2.wait_for_timeout(300)
         # le fasce stampate nell'orologio: se cambiassero, il confronto qui sotto lo direbbe
-        atteso = {   # 1.0.6: fasce ritarate per la barca nuova
+        atteso = {   # 1.0.6: fasce ritarate per la barca nuova; 1.2.11: prove 4 e 5 (PROPOSTA-MEDAGLIE-E-NOMI.md)
                   "prova 1": "Tempo 0:00 \u00b7 oro entro 1:20", "prova 2": "Tempo 0:00 \u00b7 oro entro 2:05",
-                  "prova 3": "Tempo 0:00 \u00b7 oro entro 2:40", "prova 4": "Tempo 0:00 \u00b7 oro entro 4:40",
-                  "prova 5": "Tempo 0:00 \u00b7 oro entro 5:00"}
+                  "prova 3": "Tempo 0:00 \u00b7 oro entro 2:40", "prova 4": "Tempo 0:00 \u00b7 oro entro 4:50",
+                  "prova 5": "Tempo 0:00 \u00b7 oro entro 5:20"}
         riquadri = []
         print("gioco vero, senza #collaudo:")
         await giro("regata 1", lambda: pg2.click("[data-r='0']"), "#rRestart", True)

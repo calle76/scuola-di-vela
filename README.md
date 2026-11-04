@@ -23,7 +23,7 @@ Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
 | Regate | Regata a bastone e regata nelle raffiche, contro tre avversari guidati dal computer o in solitaria contro il proprio fantasma. |
 | Ripasso | 29 domande a scelta multipla sulle sei lezioni. |
 | Esame | 20 domande estratte da una banca separata dai ripassi; servono 16 risposte giuste. |
-| Gioco libero e carriera | Due salvataggi separati. In carriera il libretto conta i meriti (abilità, conoscenza, competizione, esperienza), dice cosa manca e suggerisce cosa fare; con i meriti e l'esame superato si ottiene il brevetto di livello 1, con un attestato stampabile **senza valore legale**. |
+| Gioco libero e carriera | Due salvataggi separati. In carriera il libretto conta i meriti (abilità, conoscenza, competizione, esperienza), dice cosa manca e suggerisce cosa fare; con i meriti e l'esame superato si ottiene l'attestato della scuola, stampabile e **senza valore legale**. |
 | Registro degli errori | Scuffie, strambate a vela aperta, barca piantata nel vento, boe girate dal lato sbagliato, contatti e partenze irregolari: contati durante lezioni, prove e regate. ★ nel menu per le prove e regate completate senza errori. |
 | Glossario | 45 termini nautici con definizione. |
 

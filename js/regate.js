@@ -60,7 +60,7 @@
     // 1.0.28 (docs/archivio/PROPOSTA-SALTI-VENTO.md): bolina di 300 m, salti di vento; resta fuori da meriti e carriera
     { title: "Regata nei salti di vento", where: "salti di vento", desc: "Bolina di 300 m e vento che gira: vira sugli scarsi, o va verso la rotazione.", wind: 0, tws: 10, gusts: 0, up: 300, shifts: true, scuola: false, precedenze: true },
     // 1.0.61 (docs/PROPOSTA-LIVELLO-2A.md, fetta 1): livello 2a, due giri al posto dei 15 s per il giocatore; resta fuori da meriti e carriera
-    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Livello 2: due giri per un contatto con colpa, uno se tocchi una boa; bandiere sulla giuria.", wind: 0, tws: 10, gusts: 0, giri: true, segnali: true, scuola: false, precedenze: true }
+    { title: "Regata con i giri di penalità", where: "giri di penalità", desc: "Due giri per un contatto con colpa, uno se tocchi una boa; bandiere sulla giuria.", wind: 0, tws: 10, gusts: 0, giri: true, segnali: true, scuola: false, precedenze: true }
   ];
   // le prime due regate (stessi indici: le altre, con scuola: false, stanno in fondo); carriera e meriti contano solo queste. Fino alla 1.0.78 erano le regate
   // della barca dell'1a; dalla pulizia del codice (docs/PROPOSTA-PULIZIA-CODICE.md) c'è una barca sola, e menu e carriera si rifanno con la scuola
@@ -136,7 +136,7 @@
     mode = "race"; raceIdx = i; showCards("race"); regReset();
     const rc = i === "t" ? torRc() : RACES[i], liv = es ? es.def.avversari || "nessuno" : rc.tor ? tor.liv : opt.aiLevel; // "t": la regata del torneo in corso (torneo dell'1b)
     const cd = es ? (es.def.boa ? 0 : es.def.cd) : opt.countdown;
-    setWhere(es ? "Esercizio: " + LESSONS[es.lezione].name : rc.tor ? "Torneo dell'1b" : "Regata: " + (rc.where || rc.title)); // 1.0.48: titolo corto nel pannello, perché «Regata: Regata nei salti di vento» andava a capo (check di Ale)
+    setWhere(es ? "Esercizio: " + LESSONS[es.lezione].name : rc.tor ? "Torneo" : "Regata: " + (rc.where || rc.title)); // 1.0.48: titolo corto nel pannello, perché «Regata: Regata nei salti di vento» andava a capo (check di Ale)
     env.twd = wind === undefined ? rc.wind : wind; env.tws = rc.tws / KN;
     curMarks = [];
     const spots = startSpots(liv === "nessuno" ? 1 : 1 + FLEET_LOOK.length, cd);
@@ -1025,7 +1025,7 @@
     const k = tor.ris.length, g = tor.regate[k], c = TOR_COND[g.c];
     return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: c.tws, gusts: c.gusts, shifts: c.shifts, tor: true, precedenze: true, tri: torTri(k), up: torTri(k) ? TRI_L : undefined };
   }
-  const torBrief = () => "Torneo dell'1b, " + torNome(tor.ris.length) + ", con la barca completa dell'1b. Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
+  const torBrief = () => "Torneo, " + torNome(tor.ris.length) + ". Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
     (FLEET_LOOK.length + 2) + ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3). Chi non arriva entro metà del tempo della prima, contato dal suo arrivo, non si classifica. ";
   // punti di una regata, nell'ordine delle barche: r = [{ fin, pp }], fin = tempo d'arrivo o null (non arrivata o ritirata), pp = penalità
   function torPunti(r){
@@ -1105,11 +1105,11 @@
     const T = tor || torNuovo(), k = T.ris.length, inGioco = mode === "race";
     const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + CHAR_TEXT[a.char]).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
-    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione dell'1b: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
-    const testa = !k ? `<p>Quattro regate, due a bastone e due a triangolo, con la barca completa dell'1b, contro gli stessi tre avversari (${T.liv}): ${car}. Vento: ${T.regate.map((g, j) => (j + 1) + ") " + TOR_COND[g.c].nome + (torTri(j) ? " (triangolo)" : " (bastone)")).join(", ")}.</p>
+    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
+    const testa = !k ? `<p>Quattro regate, due a bastone e due a triangolo, contro gli stessi tre avversari (${T.liv}): ${car}. Vento: ${T.regate.map((g, j) => (j + 1) + ") " + TOR_COND[g.c].nome + (torTri(j) ? " (triangolo)" : " (bastone)")).join(", ")}.</p>
       <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Un contatto con colpa vale 1 punto in più nella regata. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
-    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Torneo dell'1b</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Torneo</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
       ${nota ? `<p class="manca">${nota}</p>` : ""}${fine}${testa}${tab}
       <div class="row">${T.fine ? `<button class="primary" id="torMenu">Torna al menu</button>`
         : `<button class="primary" id="torGo">${k ? "Corri la regata " + (k + 1) : "Inizia il torneo"}</button>${tor ? `<button id="torRit">Ritirati dal torneo</button>` : ""}<button id="torMenu">${inGioco ? "Menu" : "Chiudi"}</button>`}</div>`;

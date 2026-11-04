@@ -72,7 +72,7 @@ async def un_esame(pg, giuste, D):
     banca = {r[1]: (li, r) for li, les in enumerate(D["ESAME"]) for r in les}
     sbagliate = []; k = 0
     while not await pg.locator("#qzAgain").count():
-        chk("esame", (await pg.inner_text(".qz-top h2")) == "Esame · livello 1", "titolo")
+        chk("esame", (await pg.inner_text(".qz-top h2")) == "Esame della scuola", "titolo")
         chk("esame", (await pg.inner_text(".qz-top span")) == f"Domanda {k+1} di 20", f"contatore alla domanda {k+1}")
         q = await pg.inner_text(".qz .q"); li, r = banca[q]
         opts = await pg.locator(".opt").all_inner_texts()

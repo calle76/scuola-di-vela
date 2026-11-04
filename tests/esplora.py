@@ -148,7 +148,11 @@ def riepilogo(righe):
         err = list(dict.fromkeys(e for c in cv for e in c.get("errori", [])))
         bloc = [(c["seme"], c["race"], c["liv"], x[0], x[3]) for c in cv if "barche" in c for x in c["barche"] if x[1] is None]
         print(f"numeri non finiti: {len(nan)} corse {nan[:5]} (numeri controllati: {sum(c.get('visti', 0) for c in cv)})")
-        print(f"barche non arrivate: {len(bloc)} {bloc[:5]}")
+        print(f"barche non arrivate entro il limite dello strumento (pilota 900 s dal via, poi 400 s per le altre): {len(bloc)} {bloc[:12]}")
+        coppie = [(c["seme"], c["race"], c["liv"], [k for k, v in c["fermaMax"].items() if v > 400]) for c in cv if sum(v > 400 for v in c.get("fermaMax", {}).values()) >= 2]
+        print(f"due barche oltre 400 s sullo stesso tratto (caso noto: si cedono a vicenda, docs/DECISIONI.md): {len(coppie)} corse su {len([c for c in cv if 'barche' in c])} {coppie[:12]}")
+        solo = [(c["seme"], c["race"], c["liv"]) for c in cv if "barche" in c and c["barche"][0][1] is None and c["barche"][0][3] == "tratto 0"]
+        print(f"pilota mai partito (caso noto: incastrato sul comitato, osservazione 79): {len(solo)} {solo[:12]}")
         print(f"eccezioni: {len(ecc)} {ecc[:3]}")
         print(f"errori della pagina (diversi): {len(err)} {err[:3]}")
         for s in sv:

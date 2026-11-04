@@ -17,6 +17,32 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.11 — La Scuola si chiude: medaglie ritarate e nomi al posto dei numeri
+
+`docs/PROPOSTA-MEDAGLIE-E-NOMI.md`, soglie committate prima del codice (129e859). Ale, 4 novembre: «puoi continuare senza chiedere autorizzazioni»; i nomi sono le sue decisioni del 30 ottobre.
+
+**Medaglie** (nessun numero della barca cambia): la regola di sempre, oro = mediana del pilota ai 5 s superiori, argento ×1,25, bronzo ×1,6, più una aggiunta: l'oro sale di 5 s finché il pilota ci sta in 25 corse su 30. Scelte sui semi 1-30:
+- **Prova 4:** da 280/350/450 a **290/365/465**. Prima l'oro il pilota non lo prendeva mai (285,8 s).
+- **Prova 5:** da 300/375/480 a **320/400/510**. Più largo del previsto (avevamo scritto «305 o 310»): la regola dà 310 in Chromium e 320 in Firefox, per le corse lunghe del pilota, e M3a vale per tutti e due.
+- **Prove 1-3:** la regola ridà i valori di prima.
+- I record salvati restano: la medaglia si calcola dal tempo migliore.
+
+**Nomi** (solo testi): «Torneo» invece di «Torneo dell'1b»; «Esame della scuola»; «Scuola superata» e «Attestato ottenuto il…» nel libretto; attestato «La scuola · superata» invece di «Brevetto di livello 1 · Timoniere di deriva»; torneo chiuso «dopo l'attestato»; via «Livello 2:» dalla regata dei giri. `progress.brevetto` resta come nome interno del campo salvato. Non è ancora il livello «Deriva»: regate e tornei restano dove sono.
+
+**Misurato sui semi 101-130, mai guardati, 30 corse per prova e per pilota (Chromium / Firefox):**
+- **M3a, oro del pilota preciso** (soglia 25): prove 1-4 30 / 30; prova 5 **25** / 28, in Chromium margine zero. Tempo più lungo nella prova 5: 892,7 s / 423,5 s.
+- **M3b, bronzo del pilota con errori** (soglia 25): 30 su 30 in tutte le prove. Mediane 116,7 / 137,7 / 231,4 / 360,2 / 444,9 s in Chromium, a meno di 1 s in Firefox.
+- **M3c, oro del pilota con errori** (al massimo 5): 0 su 30 in tutte. Prende argento nelle prove 2 e 4, bronzo nelle altre; mai «nessuna medaglia». Il pilota con errori è una nostra ipotesi, non un principiante vero.
+- **M3d:** pallino del menu uguale a quello calcolato, 5 su 5.
+- **Nomi:** `collaudo_nomi.py` verde in Chromium e Firefox: 21 schermate lette, 0 volte il gergo, la controprova lo trova (N1, N1c); attestato e carriera salvata a posto (N2, N3).
+- **Collaudi aggiornati nelle scritte attese, soglie intatte:** `carriera`, `carriera_esame`, `carriera_intera`, `esame`, verdi in tutti e due i browser, con `libretto`, `menu` e `torneo --veloce`. `collaudo_pannello.py` è caduto, giustamente: controlla a mano l'etichetta «oro entro» delle prove e non l'avevo messo fra quelli da aggiornare; con 4:50 e 5:20 è verde, eccesso 0 px.
+- `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici al riferimento.
+- **Non lanciati qui:** il giro completo, compresi `collaudo_registro`, `schermate`, `strambata` e `vista`, che hanno la correzione della pagina vuota ma non sono stati rifatti.
+
+**Giro completo e esploratore della 1.2.10** (zip di Ale del 4 novembre, semi 700-900, 3.216 corse): 0 numeri non finiti, 0 errori della pagina, 0 eccezioni, pannello 0 px, scimmia 8 giri senza errori. Corretti due strumenti, nessuno dei due è il gioco:
+- **`collaudo_timone2` fallito in Firefox:** il collaudo apriva il gioco dopo 300 ms fissi, mentre la pagina vuota era ancora in arrivo. Ora aspetta che sia arrivata, in 8 collaudi.
+- **Riepilogo dell'esploratore:** «barche non arrivate» erano in realtà tagliate dal limite dello strumento. Ora lo dice e conta a parte i due casi noti: coppie di barche che si cedono a vicenda (9 corse su 3.216, `DECISIONI.md`) e pilota incastrato sul comitato (2, osservazione 79).
+
 ## 1.2.10 — Anche Z, il boma e tutti i suoni brevi con registrazioni vere
 
 `docs/PROPOSTA-SUONI-FINE.md` §7. Ale, 4 novembre, dopo aver giocato la 1.2.9: non lo convincono il tasto Z e il boma in virata; poi: «sì, trova tutti i suoni». Soglie committate prima del codice (d1fda44).

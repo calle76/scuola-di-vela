@@ -679,6 +679,7 @@
   // oro = tempo del pilota automatico arrotondato ai 5 s superiori, argento +25%, bronzo +60%.
   // 1.0.6: ritarate per la barca nuova (resistenza dalla vasca) e il pilota corretto: argento e bronzo arrotondati ai 5 s più vicini.
   // 1.0.11: ritarate per la bolina nuova (pilota 79,0 / 124,5 / 156,8 / 276,0 s, prova 5 mediana 297,8): cambiano le prove 3, 4 e 5.
+  // 1.2.11 (docs/PROPOSTA-MEDAGLIE-E-NOMI.md): ritarate per la barca dell'1b sui semi 1-30 con tests/collaudo_medaglie.py --scelta; l'oro sale di 5 s finché il pilota ci sta in 25 corse su 30 in tutti e due i browser. Cambiano le prove 4 e 5.
   // Dalla 0.19 l'ultima voce di marks è una linea d'arrivo (FIN_HALF m per lato, perpendicolare all'ultimo lato), non una boa da raggiungere.
   const MISSIONS = [
     { title: "Al traverso", desc: "Taglia l'arrivo con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
@@ -695,11 +696,11 @@
       marks: [{ x: 0, y: -220, label: "Arrivo" }] },
     { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
       text: "Risali di bolina fino alla boa e girala lasciandola a sinistra, poi torna a tagliare la linea da cui sei partito, con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [280, 350, 450],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [290, 365, 465],
       marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
       text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino alla linea d'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [300, 375, 480],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [320, 400, 510],
       marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 

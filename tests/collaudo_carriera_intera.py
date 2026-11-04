@@ -111,7 +111,7 @@ async def main():
         await pg.screenshot(path=str(OUT / "I_attestato.png"))
         if att: await pg.click("#atClose")
         chk("I1", p.get("exam", {}).get("superato") is True and p["exam"].get("voto") == 20 and "data" in p.get("brevetto", {}), f"I1: esame {p.get('exam')}, brevetto {p.get('brevetto')}")
-        chk("I1", (await pg.inner_text("#libManca")).startswith("Brevetto ottenuto il"), f"I1: libretto «{await pg.inner_text('#libManca')}»")
+        chk("I1", (await pg.inner_text("#libManca")).startswith("Attestato ottenuto il"), f"I1: libretto «{await pg.inner_text('#libManca')}»")
         # meriti calcolati qui dalle regole scritte (§12), dal salvataggio
         fas = lambda i: next((3 - k for k in range(3) if p["best"].get(MK[i]) and p["best"][MK[i]] <= BANDS[i][k]), 0)
         abil = sum(fas(i) + (1 if p["clean"].get(MK[i]) else 0) for i in range(5))

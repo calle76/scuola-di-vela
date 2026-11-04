@@ -18,7 +18,7 @@ def check(ok, testo):
     if not ok: falliti.append(testo)
 
 async def apri(pg, kn, lv):
-    await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(200)
+    await pg.evaluate("location.href='about:blank'"); await pg.wait_for_url("about:blank"); await pg.wait_for_timeout(300); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(200)
     await pg.evaluate("__sv.openItem('free')")
     await pg.evaluate("""([k, lv]) => { for (const [id, v] of [['wSpd', k], ['gustSel', '0'], ['wDir', '0'], ['boatLv', lv]]){
         const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); } }""", [str(kn), str(lv)])
@@ -91,7 +91,7 @@ async def main():
         check(st["st"] > 0.2 and st["hint"], f"barca lenta, barra a fondo di colpo: la pala stalla {st['st']:.2f} s e il suggerimento lo dice")
 
         # 4: pagina come la carica un giocatore
-        await pg.evaluate("location.href='about:blank'"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
+        await pg.evaluate("location.href='about:blank'"); await pg.wait_for_url("about:blank"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
         await pg.click("#goFree"); await pg.wait_for_timeout(200)
         await pg.evaluate("document.getElementById('setDlg').showModal()")
         vis = await pg.is_visible("#boatLv"); check(not vis, "senza #collaudo: nelle impostazioni la scelta «Barca» non c'è più (1.1.0)")

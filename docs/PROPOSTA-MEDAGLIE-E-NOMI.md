@@ -64,3 +64,11 @@ Nessuna: non sono affermazioni nautiche. Le medaglie sono una taratura sulla bar
 - **Medaglie più facili per chi aveva già giocato:** un tempo di 285 s nella prova 4 oggi è argento, domani oro. Voluto: oggi quell'oro era fuori portata.
 - **Il pilota non è un giocatore:** le bande dicono quanto va la barca guidata bene, non quanto è difficile guidarla. Solo il gioco di Ale lo dice.
 - **Collaudi che controllano le scritte vecchie:** `collaudo_carriera`, `carriera_esame`, `carriera_intera`, `esame`, `torneo` e `libretto` vanno aggiornati nelle stesse righe, senza toccare le loro soglie.
+
+## 7. Esito (4 novembre 2026)
+
+Fatto: **1.2.11**, numeri in `CHANGELOG.md`. Soglie tutte rispettate e non toccate. Tre cose da ricordare:
+
+- **Prova 5:** oro a 320 s, non «305 o 310» come atteso, perché la regola applicata a tutti e due i browser dà 320 (Chromium da solo 310). Sui semi di conferma 25 su 30 in Chromium, margine zero, e 28 in Firefox.
+- **Il pilota con errori non resta mai senza medaglia** (bronzo o argento in 30 corse su 30). M3b lo chiedeva, ma vuol dire che il bronzo è largo per questo pilota: se giocando sembra regalato, si riguarda.
+- **Rischi:** `collaudo_pannello.py` mancava dall'elenco del §6.

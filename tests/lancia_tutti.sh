@@ -132,6 +132,8 @@ TESTS=(
     "collaudo_esercizi_regata.py|py|chiaro|0||collaudo_esercizi_regata.py"
     "collaudo_esame_nuove.py|py|chiaro|0||collaudo_esame_nuove.py"
     "collaudo_menu.py|py|chiaro|0||collaudo_menu.py"
+    "collaudo_nomi.py|py|chiaro|0||collaudo_nomi.py"
+    "collaudo_medaglie.py|py|chiaro|0||collaudo_medaglie.py"
     "collaudo_suoni.py|py|chiaro|0||collaudo_suoni.py"
     "collaudo_suoni_si_sentono.py|py|chiaro|0|audio|collaudo_suoni_si_sentono.py"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
@@ -171,7 +173,7 @@ nota() {
         "collaudo_strambata.py (15 nodi)") echo "scuffia sempre" ;;
         "collaudo_pannello.py (1360x650)") echo "«pannello che eccede: nessuno» e «eccesso massimo del pannello (pixel): 0» (dalla 1.0.2 nessun passo sfora; qualunque eccesso è un problema nuovo); riga dei tasti 0 px, «errori: []» e «caratteri del gioco caricati: True»" ;;
         "collaudo_pannello.py (1360x768)") echo "«pannello che eccede: nessuno» (anche la riga dei tasti), «errori: []» e «caratteri del gioco caricati: True» (dalla 0.19.2 richiede facce Barlow davvero caricate)" ;;
-        "collaudo_fasce.py") echo "giro GitHub del 1 novembre 2026 (1.1.6, barca dell'1b): prove 1-4 a 79,2/124,4/158,7/285,8-286,5 s per ogni vento, 8 su 8 (oro mancato nella 4, noto dalla 1.1.0, da ritarare con le medaglie); prova 5 finite 24 su 24, quasi tutte 299-313 s con 1-4 corse lunghe (fino a 741 s). Prima: con la linea d'arrivo (0.19): dalla 1.0.6 (barca nuova e pilota corretto), valori della sandbox: prove 1-4 a 79,6/124,2/161,8/285,1 s per ogni vento, 8 su 8; prova 5 finite 23 su 24, mediana 304,6 s, con circa 7 corse lunghe (556-897 s) da capire; fino alla 1.0.5, sul PC di Ale: 92,1/142,6/196,4/333,3, prova 5 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
+        "collaudo_fasce.py") echo "giro GitHub del 1 novembre 2026 (1.1.6, barca dell'1b): prove 1-4 a 79,2/124,4/158,7/285,8-286,5 s per ogni vento, 8 su 8 (oro mancato nella 4 fino alla 1.2.10; dalla 1.2.11 le bande sono ritarate e le controlla collaudo_medaglie.py); prova 5 finite 24 su 24, quasi tutte 299-313 s con 1-4 corse lunghe (fino a 741 s). Prima: con la linea d'arrivo (0.19): dalla 1.0.6 (barca nuova e pilota corretto), valori della sandbox: prove 1-4 a 79,6/124,2/161,8/285,1 s per ogni vento, 8 su 8; prova 5 finite 23 su 24, mediana 304,6 s, con circa 7 corse lunghe (556-897 s) da capire; fino alla 1.0.5, sul PC di Ale: 92,1/142,6/196,4/333,3, prova 5 19 su 24, mediana 353,6 s (nella sandbox la prova 5 varia: 18-21 su 24, mediana 353,6-354,6)" ;;
         "collaudo_fantasma.py") echo "la prova deve completarsi e il fantasma risultare salvato" ;;
         "collaudo_competizione.py (tastiera)") echo "riga «ESITO: OK» (piazzamento salvato con avversari, niente con «nessuno»); «ESITO: NON VALIDO» vuol dire che il pilota da tastiera non è arrivato in fondo: non è un errore del gioco, si rilancia" ;;
         "collaudo_registro.py") echo "riga finale «ESITO: 15 su 15 verifiche riuscite»" ;;
