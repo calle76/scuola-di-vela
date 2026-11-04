@@ -95,3 +95,35 @@ In un collaudo nuovo, `tests/collaudo_suoni_si_sentono.py`, **solo Chromium** (i
 - **1.2.9:** dopo la correzione dei volumi, G1-G6 verdi: `collaudo_suoni.py` in Chromium e Firefox, `collaudo_suoni_si_sentono.py` due giri in Chromium. Numeri nel `CHANGELOG.md`. Resta il giudizio di Ale all'ascolto: le registrazioni del gioco sono in cima a `sperimentale/suoni-registrati/ascolto.html`.
 - **Primo giro su GitHub (zip del 4 novembre, solo i collaudi dei suoni):** `collaudo_suoni.py` verde in Chromium e Firefox. `collaudo_suoni_si_sentono.py` fallito in Chromium per `ffmpeg` mancante, dopo aver confermato audio acceso e controprova a −140 dB: le misure di G6 su GitHub restano da fare. Aggiunto `ffmpeg` a `collaudi.yml`.
 - **Ale, 4 novembre, dopo aver giocato:** non lo convincono il suono del tasto Z e il boma che sbatte in virata. Tutti e due sono ancora sintetici: al §1 erano esclusi da questa fetta.
+
+## 7. Terza parte: tutti i suoni sintetici che restano (1.2.10)
+
+Ale, 4 novembre, dopo aver giocato: non lo convincono il tasto Z e il boma che sbatte in virata; alla proposta di rifarli con registrazioni: «sì, trova tutti i suoni». **Letto così:** Z, virata, strambata, scuffia, raddrizzata, contatto, boa, tromba, arrivo. Restano sintetici solo i segnali di passo e di prova, che non sono rumori del mondo. Soglie scritte qui prima del codice.
+
+**Registrazioni** (Freesound, tutte CC0, lette sulla pagina il 4 novembre; non ascoltate da me). Letti altri 25 candidati.
+
+| Suono | Freesound | Cosa dice la pagina |
+|---|---|---|
+| Z (tela) | 870603, CHallSmith | Lenzuolo pesante di cotone scosso |
+| Virata e strambata (boma) | 630432, KaleidacousticsAudio | Boma di una barca a vela che cigola in navigazione, microfono a contatto |
+| Virata e strambata (colpo) | 799644, KudoShimon | Colpi su legno, vestiti e altro |
+| Contatto | 637207, kyles | Colpi su vetroresina di una barca sull'acqua |
+| Boa | 538009, bruno.auzet | Una barchetta che urta un parabordo (un vecchio copertone), onde e vento |
+| Scuffia | 469608, Sheyvan; 442773, qubodup | Tuffo grande; 442773 è un montaggio di altri suoni CC0 |
+| Raddrizzata | 110593, korbel | Acqua che si muove vicino a una barca |
+| Tromba e arrivo | 131930, mcpable | Tromba ad aria di una piattaforma petrolifera, in Alberta |
+
+**Scartati, con il motivo:** 342446 (boe di metallo enormi); 414208 (tromba «fatta con Audacity»); 568012 (tromba con colpi e un racconto che non c'entra); 55027 e 865175 (quasi solo gravi, e il primo è già rielaborato); 617019 (vestito in mano, voluto come divisa militare); 161717 (collage).
+
+**Semplificazioni da dichiarare:** il lenzuolo non è una vela; il colpo non è un boma; il parabordo non è una boa; la tromba è di una piattaforma, non di una barca giuria. Il tempo della tromba lunga passa da 2,0 a circa 1,7 s, la durata del suono registrato. La regola 26 non fissa una durata.
+
+**Come suonano** (ipotesi nostre): Z è un giro di 8 s, volume 0,15 + 0,35 × min(1, aws/10), solo mentre il boma è spinto. La virata è il cigolio del boma più un colpo debole; la strambata un colpo forte col vento più il cigolio. Gli altri sono il loro ritaglio. Stessa decodifica a due tempi: se la seconda fallisce restano i suoni sintetici di prima.
+
+**Criteri:**
+- **H1:** S1 verde; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici; G2-G5 verdi; **tutti gli altri suoni identici al byte a quelli della 1.2.9.**
+- **H2:** con i suoni decodificati, virata, strambata, scuffia, raddrizzata, contatto, boa, tromba, tromba lunga e arrivo non creano **nessun oscillatore** (la nota finta è sparita davvero); con la seconda decodifica rotta apposta sì (la controprova che il conteggio funziona).
+- **H3:** Z: il giro segue la formula in ogni lettura, almeno 500; a Z rilasciato 0.
+- **H4, si sente** (collaudo che ascolta, volume «bassi», 3 volte per suono): ognuno dei nove eventi alza la banda 200-5.000 Hz di almeno **6 dB** sul tratto prima, al traverso a 10 nodi; Z vero (tasto premuto), acceso contro spento, almeno **+2 dB** nella banda 500-5.000 Hz.
+- **H5, non satura:** a «alto», 20 nodi con la prua al vento, strambata, contatto e gabbiano insieme: picco al più **−0,5 dB**.
+- **H6, costo:** `js/suoni-dati.js` al più **900 KB** (la soglia sale di nuovo: 700 era per gli otto suoni di prima); seconda decodifica al più 1.500 ms, come G4.
+- **Ascolto:** lo giudica Ale.
