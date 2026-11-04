@@ -177,7 +177,7 @@ async def c2(b, semi, carriera):
             if "torneo" in pr: no(f"C2 seme {seme}: torneo finito ma ancora nel salvataggio")
             if carriera:
                 mer = [6, 4, 3, 2][pos - 1] + (1 if metro.tutti(r[0]["pp"] == 0 for r in ris) else 0)
-                if ultimo["meriti"] != f"Meriti di Competizione dell'1b: {mer}.": diff += 1; no(f"C2 seme {seme}: meriti del gioco «{ultimo['meriti']}», nostri {mer}")
+                if ultimo["meriti"] != f"Meriti di Competizione del torneo: {mer}.": diff += 1; no(f"C2 seme {seme}: meriti del gioco «{ultimo['meriti']}», nostri {mer}")
                 if (pr.get("torneoFatto") or {}).get("mer", -1) < mer: no(f"C2 seme {seme}: torneoFatto {pr.get('torneoFatto')} con meriti {mer}")
             pp = sum(r[0]["pp"] for r in ris); na = sum(1 for r in ris for x in r if x["fin"] is None)
             print(f"  seme {seme}: {pos}° · punti Tu {[fmt(v) for v in cl[[x['i'] for x in cl].index(0)]['p']]} · penalità Tu {pp} · non arrivate {na} su 16", flush=True)

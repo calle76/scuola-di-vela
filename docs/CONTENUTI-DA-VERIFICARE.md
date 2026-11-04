@@ -6,6 +6,105 @@ Elenco delle affermazioni nautiche presenti nel gioco (lezioni, quiz, glossario)
 
 Colonna «Esito»: ✅ confermato · ❌ diverso (scrivi cosa dice il manuale) · ❓ non trovato.
 
+## Controllo della Scuola sulle fonti (4 novembre 2026, sulla 1.2.11)
+
+Riletti tutti i testi di `js/contenuti.js` (lezioni, prove, ripassi, esame, glossario) e i messaggi del pannello in `js/disegno.js`. **Questa sezione è il punto aggiornato per la Scuola e, dove è in contrasto, vale sulle tabelle più sotto,** che restano come storia. Dalla 1.2.12 (decisione di Ale: si tiene «strambata») sono sistemati il nome della manovra, il suo comando, la deriva che «riduce» e i difetti di testo qui sotto; il resto aspetta le decisioni di Ale.
+
+**Cosa non è della Scuola:** le sezioni «Ipotesi del prototipo del fiocco» e seguenti fino a «Per la fase B» riguardano il prototipo o il futuro, e non sono state controllate qui. Le 26 domande dell'esame nascono dai passi delle lezioni: hanno l'esito del passo da cui vengono.
+
+**Metro:** ✅ testo ufficiale, o almeno due fonti indipendenti. 🔶 una fonte, o conferma solo in parte. ❌ le fonti dicono altro. 🎮 scelta del gioco, da dichiarare e non da verificare. 📜 voce superata dal gioco di oggi. Le fonti con la sigla sono in `FONTI-PUBBLICHE.md`; «Dispensa» è `fonti-pdf/Dispensa-Scuola-Vela-2019.pdf`. Nessuna fonte è stata copiata: parafrasi.
+
+### ❌ Le fonti dicono altro (da decidere)
+
+| Punto | Cosa dice il gioco | Cosa dicono le fonti | Proposta |
+| --- | --- | --- | --- |
+| Il nome della manovra | «Strambata (detta anche abbattuta)», per la manovra voluta | Il regolamento italiano (F39, regola 44.2) scrive «abbattuta». Dispensa e F61: la manovra voluta è l'abbattuta; «strambata» è il modo comune di dirla e, per la Dispensa, indica quella involontaria. F62 li usa come sinonimi | **Fatto nella 1.2.12** (Ale, 4 novembre): si tiene «strambata» e la lezione e il glossario lo dicono |
+| Il comando a voce della strambata | «Pronti a strambare?», «Pronti!», «Strambo!» | Non trovato in nessuna fonte. F61: «Pronti all'abbattuta?», «Pronti!», «Randa al centro», «Abbatto!». Una sola fonte, informale | **Fatto nella 1.2.12:** «Pronti all'abbattuta?», «Pronti!», «Abbatto!». Una sola fonte, informale |
+| Quanto cazzare prima della strambata | «Fino a circa 45° dal centro barca» | Nessuna fonte dice 45°. Dispensa, F61 e F65 (barca da crociera): boma al centro o vicino. F64 (derive, un autore): l'errore più comune è cazzare troppo; il boma resta poco sotto i 90°. **Le fonti non concordano fra loro** | Dire che il 45° è la regola del gioco e che le scuole differiscono. Soglia del motore invariata |
+| Dove stanno i filetti | Due filetti sulla randa, vicino all'albero; «scorrono verso il boma» | Sulla randa stanno sulla balumina, uno a ogni stecca (F66, F67: barche da crociera). Quelli sui due lati sono tipici del fiocco (F61) | Dichiarare nella lezione: semplificazione del gioco |
+| A che cosa serve la deriva | La lama «impedisce» di essere spinti di lato (lezione 1, ripasso, glossario) | Dispensa: riduce lo scarroccio, non lo elimina. Lo dice anche la voce «Scarroccio» del nostro glossario | **Fatto nella 1.2.12** |
+
+### 🔶 Una fonte, o conferma solo in parte
+
+| Punto | Stato |
+| --- | --- |
+| Cause dell'orziera nel glossario | Sbandamento: ✅ (F4, F38, F69). Vele cazzate: F1. Peso dell'equipaggio: solo un forum di classe (F72). **Vento e raffiche, onde: nessuna fonte diretta** |
+| «Barra quasi al centro» di bolina a barca dritta | Solo F4, una barca. La lezione lo dichiara, ma il ripasso lo chiede in generale |
+| Con la vela già tutta lasca e troppo sbandamento, di bolina «orza un poco» | Non confermato. Per lo sbandamento eccessivo la Dispensa dice di lascare e poggiare leggermente, senza distinguere l'andatura |
+| Una raffica cambia anche direzione | Una sola fonte letta (F68, barca a chiglia) |
+| Fatta bene, la raddrizzata dura 15-20 s | Un solo video; il testo lo attribuisce a un allenatore |
+| Barra verso il boma senza spingere il boma | Lee e Yachting New Zealand (righe della lezione 5 più sotto). Il metodo col boma spinto ha più fonti |
+| Salti di vento (lezione 11) | Solo F41; il testo lo dice |
+| Non abbandonare la barca scuffiata | Solo la Dispensa |
+| Da fermo: prua sotto la bolina e poi orzare | F27 per l'attesa, F28 per poggiare appena e accelerare. Per «come si riparte» nessuna fonte specifica |
+| Termini di base (albero, scotta, cazzare, lascare, orzare, poggiare, nodo, barra, timone) | Glossario della Dispensa, una fonte informale. Nessun contrasto trovato: rischio basso |
+| Sequenza di 5 minuti e bandiere | ✅ regola 26, ma il testo nomina solo la P: il preparatorio può essere anche I, Z, Z con I, U o bandiera nera |
+
+### 🎮 Scelte del gioco scritte come se fossero fatti
+
+| Punto | Perché |
+| --- | --- |
+| «Oltre circa 60° di sbandamento si scuffia» (anche nel riepilogo) | **Voce nuova.** È la soglia del motore, nessuna fonte, e il testo non dice che è del gioco. Il regolamento considera scuffiata la barca con la testa d'albero in acqua (regola 22) |
+| «Quanto dietro la linea: una o due lunghezze» | **Voce nuova: è una domanda d'esame** su un numero nostro. F28 parla di circa 30 s di navigazione dalla linea e di accelerare negli ultimi 5-10 (unità illeggibile nel testo estratto) |
+| «Boma a una quarantina di gradi» al traverso | **Voce nuova.** Numero del nostro motore; nessuna fonte trovata |
+| Colori dei filetti (rosso a sinistra, verde a destra) | Scelta del gioco |
+| Le parole del regolamento | **Voce nuova.** Il testo italiano (F39) dice «tenersi discosta», «libera dalla poppa/prua», «ingaggiate», «diritto di rotta». Il gioco dice «lasciare strada», «libera dietro/avanti», «sovrapposte», «precedenza». Va bene per chi impara, ma non è detto da nessuna parte |
+| «Lasciare strada» | **Voce nuova.** La definizione ha anche una seconda parte: se sono ingaggiate, l'altra deve poter cambiare rotta da entrambi i lati senza toccare subito. Il testo dà solo la prima |
+| Tornare «dietro la linea» | Il regolamento dice anche «o uno dei suoi prolungamenti» (21.1, 29.1): il testo semplifica senza dirlo |
+| La X sta su al massimo quattro minuti | La regola aggiunge «o un minuto prima di una partenza successiva»: semplificazione innocua, con una sola classe |
+| Messaggi del passo «Una virata che non riesce» (sotto 1 nodo, 37°, 10 s) e uscita sull'altra mura | Misure del gioco, nessuna fonte: restano come sono, già dichiarate più sotto |
+| Limite dei filetti a 112° apparenti | Numero del motore. Il principio è confermato (vedi sotto) |
+| La trama dell'acqua che scorre più in fretta nella raffica | Aiuto visivo, già dichiarato |
+
+### ✅ Confermate: queste voci si chiudono
+
+| Voce | Fonti |
+| --- | --- |
+| Regole 10, 11, 12, 13, 14, 15, 16, 21, 26, 29.1, 31, 43.1(c), 44.1, 44.2 come le dicono le lezioni 12-20 | F15, rilette il 4 novembre 2026 |
+| Evitare il contatto anche con la precedenza; chi la ha può aspettare che sia chiaro | F15, regola 14 |
+| Si arriva con la prima parte dello scafo; regola del filo teso | F15, definizioni «Finish» e «Sail the Course» |
+| Allo sparo anche una parte dello scafo oltre la linea è anticipo; per tornare valgono anche i prolungamenti | F15, regole 29.1 e 21.1 (chiude la voce F14 più sotto) |
+| Comandi della virata: «Pronti a virare?», «Pronti!», «Viro!» | F60, F61; la Dispensa conferma lo schema domanda e risposta |
+| Lettura dei filetti: sopravento agitato, cazza o poggia; sottovento agitato, lasca o orza | Dispensa, F61, Lega Navale |
+| Alle andature portanti i filetti non servono (il principio) | F67; F61 li limita alla bolina; Bombaci. Da quale angolo esatto, no |
+| Poppa non è l'andatura più veloce; lo sono le andature al lasco e al traverso | F69, generale; F9 con riserva. Nessuna misura di una deriva |
+| Orzi e cazzi, poggi e laschi; accelerando il vento apparente va a prua e si cazza o si poggia | Dispensa, F62 per la poggiata con la vela lascata |
+| Di bolina il vento apparente è più forte | Dispensa, Bombaci; il resto è la somma dei vettori |
+| Orziera, il termine | Dispensa, F38, F69 |
+| Sbandando la barca orza | F4, F38 (due classi), F69 |
+| Andando all'indietro la barra funziona al contrario | Le quattro fonti della riga più sotto: basta chiamarla confermata |
+| Si vira con la barca lanciata | Dispensa, Bombaci |
+| Ogni angolo di barra frena | Dispensa, F4 |
+| In raffica di bolina si lascia e si orza di poco | Dispensa; F22 (bassa, circolo e forum). La Dispensa mette prima l'orzata e lascia solo con raffica forte: stesso contenuto, ordine diverso |
+| Al traverso e al lasco, in raffica si poggia | Già ✅ (F7, F18-F21); la Dispensa lo dice per la poppa |
+| Raffiche come chiazze scure in arrivo da sopravento | F31-F34 |
+| Il timoniere si sporge sopravento | Dispensa, F38 |
+| Si raddrizza sulla deriva col proprio peso, spalle al vento | Dispensa, F63 per il salire sulla deriva e sporgersi indietro, video dell'allenatore per le spalle al vento. Piedi vicino allo scafo: solo Dispensa |
+| **Scotte libere prima di raddrizzare** | Dispensa, F63, F70: chiude la voce «da confermare» |
+| **Albero sottovento, se no la barca si rovescia di nuovo** | F63, video dell'allenatore: chiude la voce «da confermare». Con l'equipaggio la Dispensa dice prua al vento: il gioco lo dice già |
+| Partenza: aspettare piano vicino alla linea e accelerare per essere a piena velocità al via | F25, F28, F71. Il consiglio di non arrivare lanciati da lontano resta parere di Ale per queste barche |
+| Bandiera P blu con il quadrato bianco; X bianca con la croce blu | F69, tabella delle bandiere (descrizione araldica) |
+
+### 📜 Voci superate dal gioco di oggi
+
+Toccare una boa «non ancora gestito» (ora c'è, lezione 20); penalità solo di 15 s e segnali a 1 minuto, 30 e 10 s (ora ci sono giri e sequenza 5-4-1-0); «gli altri due modi richiedono di spingere il boma, che il gioco non permette» (ora c'è Z, lezione 7); le cifre dei passi delle lezioni nelle tabelle sotto (le lezioni sono state rinumerate).
+
+### Difetti di testo trovati rileggendo (non nautici)
+
+Tutti corretti nella 1.2.12.
+
+- **Lezione 2, ultimo passo:** «Nella prossima lezione vedrai le andature e i filetti». La prossima è «Il timone che stalla»; le andature sono la lezione 4.
+- **Lezione 6, ultimo passo:** «poi passa alle prove 3 e 4». Prima c'è ancora «Spingere il boma».
+- **Lezione 8, ultimo passo:** «poi prova il percorso nelle raffiche». Prima ci sono ancora le lezioni 9, 10 e 11.
+- **Lezione 6, «Una virata che non riesce»:** «Orza a bolina lascando: rallenta fino a perdere l'abbrivio e fallendo la virata» non è italiano chiaro.
+
+### Cosa non è stato verificato
+
+- **Non aperte:** F26 resta non ritrovata; un articolo di Dellenbaugh e uno di WindCheck hanno rifiutato il programma (403); `yachtsandyachting` e SailJuice (F29) danno 404. Il corso federale linkato dalla ricerca dà 404.
+- **Barche diverse:** F65, F66, F67 e F68 parlano di barche da crociera o a chiglia. Per le derive monoposto mancano quasi sempre fonti federali: F1, F2 e F3 non sono state riaperte in questo controllo.
+- **Lette solo in parte:** la pagina US Sailing di F63 è letta da un riassunto automatico; il testo integrale è quello di Discover Boating, che viene dallo stesso ente, quindi conta come una fonte.
+- **Un programma non ha guardato il gioco:** il confronto è sui testi. Se il disegno dei filetti o delle bandiere corrisponde a quanto scritto, lo dice solo chi gioca.
+
 ## Dubbi specifici, da controllare per primi
 
 | Punto | Cosa dice il gioco | Perché c'è un dubbio | Esito |

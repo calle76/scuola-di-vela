@@ -55,9 +55,8 @@ async def main(n, quali):
                 vento = (k * 45) % 360
                 pg = await b.new_page(viewport={"width": 1280, "height": 800}); pg.on("pageerror", lambda e: errs.append(str(e)))
                 await pg.add_init_script(SEME); await pg.goto(URL); await pg.wait_for_timeout(300)
-                await pg.evaluate(f"__seed({k + 1})")
-                await pg.evaluate(f"__sv.openItem(['m',{idx}])"); await pg.evaluate(f"__sv.startMission({idx}, {vento})")
-                fin, t, reg = await pg.evaluate(CORSA, PIANI[idx]); await pg.close()
+                # tutto nella stessa chiamata: con chiamate separate i fotogrammi veri consumavano numeri casuali e gli stessi semi davano tempi diversi (giro GitHub della 1.2.11)
+                fin, t, reg = await pg.evaluate("([plan, seme, idx, vento]) => { __seed(seme); __sv.openItem(['m', idx]); __sv.startMission(idx, vento); return (" + CORSA.strip() + ")(plan); }", [PIANI[idx], k + 1, idx, vento]); await pg.close()
                 if fin: tempi.append(t)
                 else: note.append(f"non finita (vento {vento})")
                 e = {a: v for a, v in reg.items() if v}

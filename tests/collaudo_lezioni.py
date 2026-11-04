@@ -97,7 +97,7 @@ async def main():
         await pg.evaluate("__sv.openItem(['l',5])"); await pg.evaluate("__sv.showStep(2)")
         await premi(pg, "ArrowRight", 0.6); await premi(pg, "ArrowUp", 3.0)
         await wait_until(pg, 60, "L6 scuffia (di nuovo)")
-        await pg.evaluate('() => { L.tasto("keydown", "a"); L.tasto("keyup", "a"); }'); await pg.evaluate("__sv.run(1/60, 300)")
+        await pg.evaluate('() => { L.tasto("keydown", "a"); L.tasto("keyup", "a"); }'); await pg.evaluate("__sv.run(1/60, 300)"); await pg.evaluate("__sv.panel()")   # il pannello si ridisegna ogni 0,1 s: senza, si leggeva quello vecchio (giro GitHub della 1.2.11, Firefox)
         st = await pg.evaluate("({cap: __sv.S.capsized, righting: __sv.S.righting, btn: !document.getElementById('rightBtn').hidden, ov: !document.getElementById('capOverlay').hidden})")
         print("   La scuffia dopo A:", st); chk_ok(st["cap"] and not st["righting"] and not st["btn"] and not st["ov"], "L6 scuffia: A non raddrizza, pulsante e riquadro nascosti")
         await pg.evaluate("__sv.showStep(3)"); await pg.evaluate("__sv.panel()")

@@ -24,7 +24,7 @@
              "Dall'albero parte il <em>boma</em>, l'asta orizzontale che tiene il lato basso della vela. La vela si chiama <em>randa</em>, e si regola con una cima, la <em>scotta</em>."] },
     { title: "Timone e deriva", ...PAUSE, zoom: 3, labels: ["timone", "barra", "deriva"],
       text: ["A poppa c'è il <em>timone</em>, una pala immersa in acqua che fa girare la barca. Il timoniere lo comanda con la <em>barra</em>, il manico che tiene in mano.",
-             "Al centro dello scafo scende sott'acqua la <em>deriva</em>, una lama che impedisce alla barca di essere spinta di lato dal vento. Senza, la barca scivolerebbe via di fianco. Da questa lama prendono il nome le barche come questa."] },
+             "Al centro dello scafo scende sott'acqua la <em>deriva</em>, una lama che riduce lo scivolamento di lato della barca, spinta dal vento. Senza, la barca scivolerebbe via di fianco. Da questa lama prendono il nome le barche come questa."] },
     { title: "Il vento", ...PAUSE, zoom: 1.2, arrows: true,
       text: ["Le increspature sul mare e la freccia <em>bianca</em> mostrano il vento. In alto a sinistra c'è scritto da dove arriva; in alto a destra c'è la bussola.",
              "In vela si dice sempre <em>da dove arriva</em> il vento, non dove va: questo è un «vento da nord»."] },
@@ -92,7 +92,7 @@
       done: "Rotta tenuta. Piccole correzioni, fatte presto, sono meglio di grandi correzioni fatte tardi." },
     { title: "Navigazione libera", tiller: true, sheet: true, hud: 1, hintKind: "sail", final: true,
       text: ["Ora hai la barra e la scotta: la barra con le frecce ← → o il cursore, la scotta con le frecce ↑ (cazza) e ↓ (lasca) o il cursore.",
-             "Esercitati a orzare e poggiare con la barra, regolando la vela ogni volta. Nella prossima lezione vedrai le andature e i filetti, che ti diranno esattamente come regolare la vela."] }
+             "Esercitati a orzare e poggiare con la barra, regolando la vela ogni volta. Nella lezione 4 vedrai le andature e i filetti, che ti diranno esattamente come regolare la vela."] }
   ];
 
   const L3 = [
@@ -169,7 +169,7 @@
   const L5 = [
     { title: "Cambiare mure", ...PAUSE, zoom: 1.2, rose: true, maneuvers: true,
       text: ["Per passare da mure a sinistra a mure a dritta, o viceversa, ci sono due manovre.",
-             "La <em>virata</em>: la prua attraversa il vento, cioè l'angolo morto. La <em>strambata</em> (detta anche abbattuta): è la poppa ad attraversare il vento. Si vira per risalire il vento, si stramba navigando col vento da dietro."] },
+             "La <em>virata</em>: la prua attraversa il vento, cioè l'angolo morto. La <em>strambata</em>: è la poppa ad attraversare il vento. Il regolamento e le scuole la chiamano <em>abbattuta</em>; «strambata» è il modo comune di dirla, e per alcuni testi è solo quella involontaria. Si vira per risalire il vento, si stramba navigando col vento da dietro."] },
     { title: "Prepararsi a virare", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "tt",
       text: ["Mettiti in <em>bolina</em>, regola la vela e lascia che la barca arrivi ad almeno 3,3 nodi."],
       cond: (I, S, B) => I.twa >= 43 && I.twa <= 72 && I.tt === "ok" && I.kn >= 3.3 && (B.barraLee || 0) >= 0.1, hold: 1, // 1.1.3: come 2.4
@@ -181,7 +181,7 @@
       done: "Virata riuscita: il boma è passato dall'altra parte e il timoniere ha cambiato lato. A bordo si annuncia così: «Pronti a virare?», «Pronti!», «Viro!»." },
     { title: "Una virata che non riesce", allow: ["irons"], tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora senza abbrivio: lasca la vela finché la barca scende sotto 1 nodo, poi prova a virare.",
-             "Orza a bolina lascando: rallenta fino a perdere l'abbrivio e fallendo la virata. Se la barca arretra risponde al timone in modo opposto. Porta la prua fuori dall'angolo morto, centra e cazza per ripartire."],
+             "Orza fino alla bolina con la vela lasca: la barca rallenta, perde l'abbrivio e la virata non riesce. Se la barca arretra risponde al timone in modo opposto. Porta la prua fuori dall'angolo morto, centra e cazza per ripartire."],
       // 0.20.2, due fasi. Fase 1: barca piantata (la condizione della 0.20.1, tenuta 1 s). Fase 2: uscita, prua ad almeno IRONS_A (40°) dal vento
       // e barca che va avanti, tenuta 1 s (hold); vale su tutte e due le mure. Lo stato delle fasi sta in B, che showStep rifà a ogni passo.
       cond: (I, S, B) => {
@@ -207,10 +207,10 @@
     { title: "Strambata controllata", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora fai bene: in poppa <em>cazza</em> finché il boma è a 45° o meno (guarda il valore sotto il cursore della scotta), <em>poggia</em> finché il vento passa dall'altro lato, poi <em>lasca</em> e regola: i filetti tornano dritti quando orzi fino al lasco."],
       cond: (I, S, B) => S.gybesC > B.gybesC && I.twa > 115 && I.tt === "ok", hold: 1,
-      done: "Strambata controllata: il boma ha fatto un tragitto breve e la barca non si è scomposta. Il comando a bordo: «Pronti a strambare?», «Pronti!», «Strambo!»." },
+      done: "Strambata controllata: il boma ha fatto un tragitto breve e la barca non si è scomposta. Il comando a bordo: «Pronti all'abbattuta?», «Pronti!», «Abbatto!»." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 2, rose: true, hintKind: "tt", final: true,
       text: ["<em>Virata</em>: prua nel vento, con la barca lanciata. <em>Strambata</em>: poppa nel vento, cazzando prima e lascando dopo. Per risalire il vento si <em>bordeggia</em>.",
-             "Esercitati, poi passa alle prove 3 e 4."] }
+             "Esercitati: più avanti ti aspettano le prove «Risalire il vento» e «Il giro di boa»."] }
   ];
 
   const L6 = [
@@ -231,7 +231,7 @@
       done: "Barca dritta, al traverso, vela lascata: regola con i filetti e riparti." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", final: true,
       text: ["Guarda le raffiche arrivare, <em>lasca</em> quando entri, <em>cazza</em> quando escono. Oltre circa 60° di sbandamento si <em>scuffia</em>.",
-             "Esercitati, poi prova il percorso nelle raffiche."] }
+             "Esercitati: il percorso nelle raffiche ti aspetta alla fine di questo gruppo."] }
   ];
 
   // ---- lezioni nuove della scuola (1.1.4, docs/PROPOSTA-LEZIONI-SCUOLA.md): nascoste nel menu finché non arriva il menu nuovo ----
@@ -721,7 +721,7 @@
   // Quiz di ripasso: [domanda, risposta giusta, [sbagliate], spiegazione]
   const QUIZ = [
     [ ["Guardando verso prua, come si chiama il lato destro della barca?", "Dritta", ["Sinistra", "Poppa", "Sottovento"], "Dritta e sinistra si riferiscono sempre alla barca guardando verso prua, non allo schermo né al vento."],
-      ["A cosa serve la deriva, la lama sotto lo scafo?", "Impedisce alla barca di essere spinta di lato dal vento", ["Fa girare la barca", "Regge la vela", "Frena la barca quando serve"], "Senza deriva la barca scivolerebbe via di fianco. A girarla è il timone."],
+      ["A cosa serve la deriva, la lama sotto lo scafo?", "Riduce lo scivolamento di lato della barca, spinta dal vento", ["Fa girare la barca", "Regge la vela", "Frena la barca quando serve"], "Senza deriva la barca scivolerebbe via di fianco. A girarla è il timone."],
       ["«Vento da nord» significa che il vento…", "arriva da nord", ["va verso nord", "soffia parallelo alla costa nord", "cambia direzione verso nord"], "In vela si indica sempre la direzione da cui il vento arriva."],
       ["Orzare significa…", "girare la prua verso il vento", ["girare la prua lontano dal vento", "tirare la scotta", "girare a sinistra"], "Orzare e poggiare si riferiscono al vento, non a destra o sinistra."],
       ["Da che parte sta il boma?", "Sottovento, dalla parte opposta a quella da cui arriva il vento", ["Sopravento", "Sempre a dritta", "Sempre al centro della barca"], "Il vento spinge la vela e il boma dalla parte opposta; il timoniere siede sopravento per fare contrappeso."],
@@ -744,7 +744,7 @@
       ["La barca si è fermata nel vento e comincia ad andare all'indietro. Cosa succede alla barra?", "Funziona al contrario", ["Non ha più nessun effetto", "Funziona come prima", "Si blocca al centro"], "Con l'acqua che scorre sulla pala da dietro, l'effetto del timone si inverte."],
       ["Come si fa una strambata controllata?", "Si cazza la vela, si poggia finché il vento passa dall'altro lato, poi si lasca", ["Si lasca tutta la vela e si poggia", "Si orza con decisione", "Si lascia fare alla barca"], "Cazzando prima, il boma fa un tragitto breve invece di attraversare la barca con violenza."],
       ["Che cosa significa bordeggiare?", "Risalire il vento a zig-zag, virando fra un tratto e l'altro", ["Navigare vicino alla costa", "Navigare in poppa", "Fare il giro di una boa"], "Ogni tratto di bolina fra due virate si chiama bordo."],
-      ["Con quale comando il timoniere annuncia la virata?", "«Pronti a virare?», poi «Viro!»", ["«Pronti a strambare?», poi «Strambo!»", "«Barra!»", "«Molla!»"], "Per la strambata si usa invece «Pronti a strambare?» e poi «Strambo!»."] ],
+      ["Con quale comando il timoniere annuncia la virata?", "«Pronti a virare?», poi «Viro!»", ["«Pronti all'abbattuta?», poi «Abbatto!»", "«Barra!»", "«Molla!»"], "Per la strambata si usa invece «Pronti all'abbattuta?» e poi «Abbatto!»."] ],
     [ ["Come si riconosce una raffica in arrivo?", "Una chiazza d'acqua più scura e increspata che arriva da sopravento", ["Onde più alte da sottovento", "Un cambio di colore del cielo", "Non si può riconoscere"], "Le raffiche viaggiano col vento: si vedono arrivare da sopravento."],
       ["Entri in una raffica e la barca sbanda molto. Qual è la prima cosa da fare?", "Lascare la scotta", ["Cazzare la scotta", "Poggiare con decisione", "Centrare la barra"], "Lascare riduce la forza sulla vela; di bolina si può anche orzare di poco per scaricarla."],
       ["Che cosa significa scuffiare?", "Rovesciarsi", ["Fermarsi nell'angolo morto", "Virare male", "Andare all'indietro"], "Succede alle derive quando lo sbandamento diventa eccessivo."],
@@ -796,6 +796,7 @@
   // ---- glossario ----
   // dalla 1.2.3 le voci delle lezioni nuove (terzo campo = nome della lezione) restano nascoste come la lezione (glossVisibili)
   const GLOSS = [
+    ["Abbattuta", "Il nome che il regolamento e le scuole danno alla strambata voluta: vedi Strambata.", "Lezione 6"],
     ["Abbrivio", "La velocità che la barca conserva per inerzia, per esempio mentre attraversa il vento durante una virata.", "Lezione 6"],
     ["Albero", "Il palo verticale che regge la vela.", "Lezione 1"],
     ["Andatura", "La direzione della barca rispetto al vento: bolina, traverso, lasco, gran lasco, poppa.", "Lezione 4"],
@@ -813,7 +814,7 @@
     ["Cazzare", "Tirare una scotta: la vela si avvicina al centro della barca.", "Lezione 1"],
     ["Cima", "A bordo le corde si chiamano cime.", "Lezione 1"],
     ["Deriva (barca)", "Piccola barca a vela senza cabina, con la lama di deriva mobile. È la barca su cui di solito si impara.", "Lezione 1"],
-    ["Deriva (lama)", "La lama che scende sotto lo scafo e impedisce alla barca di essere spinta di lato dal vento.", "Lezione 1"],
+    ["Deriva (lama)", "La lama che scende sotto lo scafo e riduce lo scivolamento di lato della barca, spinta dal vento.", "Lezione 1"],
     ["Dritta", "Il lato destro della barca, guardando verso prua.", "Lezione 1"],
     ["Filetti", "Nastrini sulla vela che mostrano come scorre l'aria: dritti se la vela è regolata; si agita quello sopravento se è troppo lascata, quello sottovento se è troppo cazzata.", "Lezione 4"],
     ["Fileggiare", "Il movimento della vela che sbatte perché è troppo lascata o perché la barca è nell'angolo morto.", "Lezione 1"],
@@ -857,7 +858,7 @@
     ["Sporgersi fuori bordo", "Spostare il peso fuori dalla barca, sopravento, per contrastare lo sbandamento.", "Lezione 8"],
     ["Stallo", "Vela troppo cazzata: non sbatte, ma l'aria non ci scorre sopra bene e la barca rallenta.", "Lezione 1"],
     ["Stallo della pala", "La pala del timone girata oltre un certo angolo: l'acqua non riesce più a seguirla e si stacca, la spinta smette di crescere e la pala frena sempre di più. Su una deriva da regata succede fra circa 15° e 30°.", "Lezione 3"],
-    ["Strambata", "Cambio di mure passando con la poppa attraverso il vento; detta anche abbattuta. Se involontaria o fatta con la vela aperta, il boma attraversa la barca con violenza.", "Lezione 6"],
+    ["Strambata", "Cambio di mure passando con la poppa attraverso il vento. Il regolamento e le scuole la chiamano abbattuta; «strambata» è il modo comune di dirla, e per alcuni testi è solo quella involontaria. Se involontaria o fatta con la vela aperta, il boma attraversa la barca con violenza.", "Lezione 6"],
     ["Timone", "La pala immersa a poppa che fa girare la barca, comandata dalla barra.", "Lezione 1"],
     ["Traverso", "Andatura con il vento perpendicolare alla barca, circa 90°.", "Lezione 4"],
     ["Vento apparente", "Il vento che si sente a bordo: combinazione del vento reale e del vento creato dal moto della barca. È quello su cui lavora la vela.", "Lezione 5"],

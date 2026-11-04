@@ -5,6 +5,7 @@
 #   M3b: pilota con errori, almeno 25 su 30 entro il bronzo, in ogni prova
 #   M3c: pilota con errori, oro al massimo in 5 su 30, in ogni prova (il metro deve distinguere)
 #   M3d: a corsa finita il pallino del menu è quello calcolato dal tempo, uno per prova
+#   M3e (aggiunto dopo il giro GitHub della 1.2.11, non è una soglia delle medaglie): le stesse corse rifatte danno gli stessi tempi
 # Le bande si leggono dal gioco. Uso: python collaudo_medaglie.py [--semi 101-130] [--prove 12345] [--scelta]
 #   --scelta: non controlla niente, stampa cosa dà la regola (semi 1-30): oro = mediana ai 5 s superiori, poi +5 s finché 25 su 30; argento ×1,25, bronzo ×1,6 ai 5 s più vicini
 import asyncio, os, pathlib, statistics, sys
@@ -49,6 +50,10 @@ CORSA = """
   return [!!sv.S.finished, sv.S.time];
 }
 """
+# Seme, apertura, partenza e corsa nella stessa chiamata: nessun fotogramma vero in mezzo. Con chiamate separate i fotogrammi consumavano numeri casuali
+# in quantità dipendente dal computer, e gli stessi semi davano tempi diversi (oro 22-28 su 30 nella prova 5; giro GitHub della 1.2.11).
+CORSA_INTERA = "([plan, E, seme, idx, vento]) => { __seed(seme); __sv.openItem(['m', idx]); __sv.startMission(idx, vento); return (" + CORSA.strip() + ")([plan, E]); }"
+N_RIPETI = 5
 bad = []
 def chk(ok, m):
     print(("OK   " if ok else "FALLITO ") + m, flush=True)
@@ -56,9 +61,7 @@ def chk(ok, m):
 async def corsa(b, idx, k, seme0, E, menu=False):
     pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.add_init_script(SEME); await pg.goto(URL); await pg.wait_for_timeout(200)
-    await pg.evaluate(f"__seed({seme0 + k})")
-    await pg.evaluate(f"__sv.openItem(['m',{idx}])"); await pg.evaluate(f"__sv.startMission({idx}, {(k * 45) % 360})")
-    fin, t = await pg.evaluate(CORSA, [PIANI[idx], E])
+    fin, t = await pg.evaluate(CORSA_INTERA, [PIANI[idx], E, seme0 + k, idx, (k * 45) % 360])
     pallino = None
     if menu and fin:   # il giocatore torna al menu e legge il pallino sulla voce della prova
         await pg.evaluate("showMenu()")
@@ -90,6 +93,8 @@ async def main():
             for k in range(n):
                 fin, t, bande, _, e = await corsa(b, idx, k, primo, PRECISO); errori += e; pr.append((fin, t))
             ok_t = [t for f, t in pr if f]
+            ripetute = [await corsa(b, idx, k, primo, PRECISO) for k in range(N_RIPETI)]   # il metro si ripete? (M3e, aggiunto col giro GitHub della 1.2.11)
+            chk(metro.tutti(((r[0], r[1]) == pr[k] for k, r in enumerate(ripetute)), minimo=N_RIPETI), f"M3e prova {idx + 1}: le prime {N_RIPETI} corse rifatte danno gli stessi tempi")
             if scelta:
                 print(f"prova {idx + 1}: finite {len(ok_t)} su {n}, mediana {statistics.median(ok_t):.1f}, min {min(ok_t):.1f}, max {max(ok_t):.1f}; oggi {bande}, la regola dà {regola(ok_t)}", flush=True); continue
             for k in range(n):
