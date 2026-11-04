@@ -65,6 +65,8 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 
 Dopo ogni fetta, collaudi verdi e commit.
 
+**Aggiornamento del 4 novembre, decisione di Ale: Deriva aspetta che la Scuola sia giocata (`CHECK-SCUOLA-1.2.11.md`), e ogni lavoro su Deriva resta nascosto o in `sperimentale/`.** Quindi 1.3.0, 1.3.1 e 1.3.2 non sono più versioni visibili una dopo l'altra: chi apre il gioco vede il menu di oggi finché Ale non dice di mostrare Deriva. Come farlo si propone quando si riparte; idea più semplice: le lezioni con `nascosta: true`, come già fatto per le lezioni nuove, e il menu a due livelli solo con `#deriva` nell'indirizzo. Oggi il menu mostra già regate dei salti e dei giri e torneo: restano dove sono.
+
 ## 6. Criteri misurabili (soglie nostre, scritte prima)
 
 Tutti in Chromium e Firefox.
