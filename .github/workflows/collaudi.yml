@@ -85,6 +85,10 @@ jobs:
           .venv-collaudi/bin/pip install --quiet "playwright==1.60.0"
           .venv-collaudi/bin/playwright install --with-deps ${{ matrix.browser }}
 
+      - name: ffmpeg per collaudo_suoni_si_sentono.py (misura solo in Chromium)
+        if: matrix.browser == 'chromium'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
       - name: Collaudi
         env:
           BROWSER: ${{ matrix.browser }}

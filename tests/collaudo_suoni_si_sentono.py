@@ -9,7 +9,7 @@
 #   controprova del metro: con il volume generale a zero la registrazione è silenziosa; se l'audio non è acceso il collaudo fallisce
 # Uso: python collaudo_suoni_si_sentono.py [--salva cartella]   (--salva: scrive le registrazioni in WAV, per la pagina d'ascolto)
 #      SUONI_BASE=percorso/index.html misura un'altra copia del gioco (usato una volta per il riferimento della 1.2.8, che è scritto qui sotto)
-import asyncio, array, base64, math, os, pathlib, statistics, subprocess, sys, wave
+import asyncio, array, base64, math, os, pathlib, shutil, statistics, subprocess, sys, wave
 import metro
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -58,6 +58,8 @@ def salva(cart, nome, a, sr):
 async def main():
     if os.environ.get("BROWSER", "chromium") != "chromium":   # si misura solo in Chromium: nel giro di Firefox non c'è niente da fare, e lo dice
         print("Solo Chromium: in Firefox senza schermo l'audio resta sospeso. Niente misure in questo giro."); return
+    if not shutil.which("ffmpeg"):   # serve per filtrare il suono registrato: senza, nessuna misura (su GitHub lo installa collaudi.yml)
+        print("FALLITO ffmpeg non è installato: senza non si misura niente."); print("\ncasi sbagliati: ffmpeg mancante"); sys.exit(1)
     a = sys.argv[1:]; cart = a[a.index("--salva") + 1] if "--salva" in a else None
     solo128 = "SUONI_BASE" in os.environ
     async with async_playwright() as p:
