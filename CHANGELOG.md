@@ -17,6 +17,36 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.10 — Anche Z, il boma e tutti i suoni brevi con registrazioni vere
+
+`docs/PROPOSTA-SUONI-FINE.md` §7. Ale, 4 novembre, dopo aver giocato la 1.2.9: non lo convincono il tasto Z e il boma in virata; poi: «sì, trova tutti i suoni». Soglie committate prima del codice (d1fda44).
+
+**Cosa cambia** (tutti CC0 da Freesound, F51-F59; numeri **ipotesi nostre**, a orecchio):
+- **Z:** tela vera, un giro di 8 s da un lenzuolo pesante scosso, che segue il vento. Non è una vela: semplificazione dichiarata.
+- **Virata:** il cigolio di un boma vero, registrato su una barca a vela, più un colpo debole. Sparita la nota elettronica.
+- **Strambata:** un colpo più forte col vento, più il cigolio del boma.
+- **Scuffia, raddrizzata, contatto, boa, tromba, arrivo:** ognuno col suo ritaglio. La tromba viene da una piattaforma petrolifera. La tromba lunga dura circa 1,7 s invece di 2,0 (la regola 26 non fissa una durata).
+- **Restano sintetici:** solo i segnali di passo e di prova, che non sono rumori del mondo; e tutti i suoni brevi se la seconda decodifica fallisce.
+- **Peso:** `js/suoni-dati.js` da 640 a 803 KB. Gli altri otto suoni identici al byte.
+
+**Misurato:**
+- **H1:** S1 verde; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici; `collaudo_suoni.py` verde in Chromium e Firefox.
+- **H2:** i nove eventi usano 0 pezzi sintetici. Controprova: con la seconda decodifica rotta ne usano da 1 a 2 ciascuno, e «passo» 2.
+- **H3, Z:** 800 letture col boma spinto, tutte uguali alla formula; 0 nelle 120 a tasto rilasciato.
+- **H4, il suono vero** (3 prove per suono, banda 200-5.000 Hz, soglia almeno 6 dB): virata da 11,9 a 15,4; strambata da 9,4 a 9,7; scuffia da 12,2 a 12,6; raddrizzata da 7,4 a 11,4; contatto da 7,1 a 13,1; boa da 6,8 a 9,6; tromba da 8,5 a 11,7; tromba lunga da 11,8 a 12,2; arrivo da 9,2 a 12,3. **Z**, acceso contro spento, tasto premuto davvero, boma spinto in 111 letture su 120: 6,0, 5,9 e 3,3 dB (soglia +2).
+- **H5:** a «alto», strambata, contatto e gabbiano insieme a 20 nodi: picco da −4,2 a −2,3 dB (soglia −0,5).
+- **H6:** 803 KB (soglia 900). Seconda decodifica al massimo 268 ms in Chromium e 363 in Firefox (soglia 1.500).
+- **G6 di nuovo, stesso giro:** il gabbiano ha il margine più stretto: 6,3 dB contro 6, una prova su 6.
+
+**Cambiato strada facendo, lo dico:**
+- **Falliti, corretti alzando i volumi e non le soglie.** Raddrizzata fino a 2,2 dB e arrivo fino a 3,5: volumi raddoppiati (scolo da 0,5 a 1, arrivo da 0,3 a 0,6). Z: tre giri falliti, con peggior valore −1,3 dB e poi 1,5; volume da 0,15 + 0,35 × k a 0,42 + 1,00 × k (k = min(1, aws/10)), circa +9 dB.
+- **Il collaudo sbagliava due volte.** Su Z, il primo giro misurava a boma non spinto: l'apertura della scena azzera i tasti tenuti. Ora il tasto si preme a scena partita, e si contano le letture col boma spinto. In H2, contare solo gli oscillatori non vedeva la raddrizzata, che è solo rumore: ora si conta anche il rumore, cioè è più severo.
+- **Il volume di Z** è molto più alto di quello scritto nella proposta: è il punto da giudicare per primo.
+
+**Da sapere:**
+- Non ho potuto ascoltarli. La pagina d'ascolto li ha in cima, ma il giudizio vero è giocando.
+- `collaudo_suoni_si_sentono.py` ora dura circa 8 minuti, e su GitHub non ha ancora misurato niente.
+
 ## 1.2.9 — I suoni finiti: vento vero, sciabordio, sartiame, scricchiolio, gorgoglio, gabbiani
 
 `docs/PROPOSTA-SUONI-FINE.md`. Ale, 4 novembre: «procedi pure completando i suoni nel gioco, non chiedere autorizzazioni». Proposta e soglie committate prima del codice (08cebb3), poi tutto di seguito.

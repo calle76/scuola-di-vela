@@ -6,6 +6,8 @@
 #   sartiame, sciabordio, gorgoglio: acceso contro spento, nella loro banda, almeno +2 dB
 #   colpi di vela con la prua al vento: spicco sopra 1 kHz almeno 5,6 dB a 10 nodi e 2,9 dB a 15 (la 1.2.8 con lo stesso metro, 7,1 e 4,4, meno 1,5 dB)
 #   volume generale al traverso a 10 nodi entro ±3 dB dalla 1.2.8; a volume «alto», caso peggiore, picco al più -0,5 dB
+# 1.2.10 (docs/PROPOSTA-SUONI-FINE.md §7): H2 nessun oscillatore per i suoni brevi registrati (controprova: «passo» e la seconda decodifica rotta ne creano);
+#   H4 ognuno dei nove eventi alza la banda 200-5.000 Hz di almeno 6 dB, Z vero acceso contro spento almeno +2 dB; H5 picco a «alto» con strambata, contatto e gabbiano insieme
 #   controprova del metro: con il volume generale a zero la registrazione è silenziosa; se l'audio non è acceso il collaudo fallisce
 # Uso: python collaudo_suoni_si_sentono.py [--salva cartella]   (--salva: scrive le registrazioni in WAV, per la pagina d'ascolto)
 #      SUONI_BASE=percorso/index.html misura un'altra copia del gioco (usato una volta per il riferimento della 1.2.8, che è scritto qui sotto)
@@ -23,17 +25,17 @@ SCENA = """([kn, h, u, heel, sheet, tiller, muti, secondi, forza, liv]) => new P
   const tieni = () => { const S = sv.S; S.h = h; S.u = u; S.vl = 0; S.heel = heel; S.heelRate = 0; S.capsized = false; S.x = 0; S.y = 0; if ("r" in S) S.r = 0;
     sv.ctl.sheet = sheet === null ? sv.autoSheet() : sheet; sv.ctl.tiller = tiller; };
   const hold = setInterval(tieni, 5);
-  const proc = actx.createScriptProcessor(4096, 2, 2), blocchi = []; let picco = 0, stalli = 0, letture = 0;
-  const conta = setInterval(() => { letture++; if (sv.S.stall) stalli++; }, 50);
+  const proc = actx.createScriptProcessor(4096, 2, 2), blocchi = []; let picco = 0, stalli = 0, letture = 0, spinte = 0;
+  const conta = setInterval(() => { letture++; if (sv.S.stall) stalli++; if (sv.S.pushing) spinte++; }, 50);
   proc.onaudioprocess = e => { const a = e.inputBuffer.getChannelData(0), b = e.inputBuffer.getChannelData(1), m = new Float32Array(a.length);
     for (let i = 0; i < a.length; i++){ m[i] = (a[i] + b[i]) / 2; picco = Math.max(picco, Math.abs(a[i]), Math.abs(b[i])); } blocchi.push(m); };
   const zero = actx.createGain(); zero.gain.value = 0; sMaster.connect(proc); proc.connect(zero); zero.connect(actx.destination);
   const c0 = suoniVal.colpi;
-  if (forza) setTimeout(() => { if (typeof suoniMuta !== "undefined") delete suoniMuta[forza[0]]; forza[0] === "gabbiani" ? sv.suoni.gabbiano() : sv.suoni.scricchiolio(forza[1]); }, forza[2] * 1000);
+  if (forza) setTimeout(() => { if (typeof suoniMuta !== "undefined") delete suoniMuta[forza[0]]; forza[0] === "gabbiani" ? sv.suoni.gabbiano() : forza[0] === "scricchioli" ? sv.suoni.scricchiolio(forza[1]) : forza[0] === "misto" ? (sv.suoni.suona("strambata", 1), sv.suoni.suona("contatto"), sv.suoni.gabbiano()) : sv.suoni.suona(forza[0], forza[1]); }, forza[2] * 1000);
   setTimeout(() => { clearInterval(hold); clearInterval(conta); proc.disconnect(); sMaster.disconnect(proc); zero.disconnect();
     const n = blocchi.reduce((x, y) => x + y.length, 0), tutto = new Float32Array(n); let p = 0; for (const b of blocchi){ tutto.set(b, p); p += b.length; }
     let s = ""; const u8 = new Uint8Array(tutto.buffer); for (let i = 0; i < u8.length; i += 32768) s += String.fromCharCode.apply(null, u8.subarray(i, i + 32768));
-    fine({ b64: btoa(s), sr: actx.sampleRate, picco, stato: actx.state, colpi: suoniVal.colpi - c0, stalli, letture }); }, secondi * 1000);
+    fine({ b64: btoa(s), sr: actx.sampleRate, picco, stato: actx.state, colpi: suoniVal.colpi - c0, stalli, letture, spinte }); }, secondi * 1000);
 })"""
 bad = []; n_casi = 0
 def chk(ok, m):
@@ -122,6 +124,45 @@ async def main():
                 salva(cart, f"{nome}_acceso_{i + 1}", x1, sr)
             extra = f"; letture in stallo {st}" if nome == "gorgoglio" else ""
             chk(metro.tutti(d >= 2 for d in dd), f"{nome}: acceso contro spento, banda {lo}-{hi} Hz, {[round(d, 1) for d in dd]} dB (almeno +2){extra}")
+
+        # ---- H2: nessuna nota finta ----
+        EVENTI = ["virata", "strambata", "scuffia", "raddrizzata", "contatto", "boa", "tromba", "tromba_lunga", "arrivo"]
+        # 4 novembre, detto: il criterio scritto contava solo gli oscillatori, ma la raddrizzata sintetica è solo rumore e non ne ha (controprova 0). Ora conta anche il rumore sintetico (sCh.buf): più severo.
+        CONTA = """nomi => { let n = 0; const o = AudioContext.prototype.createOscillator, st = AudioBufferSourceNode.prototype.start;
+            AudioContext.prototype.createOscillator = function(){ n++; return o.call(this); }; AudioBufferSourceNode.prototype.start = function(...a){ if (this.buffer === sCh.buf) n++; return st.apply(this, a); };
+            const r = {}; for (const x of nomi){ const c = n; __sv.suoni.suona(x, 0.5); r[x] = n - c; } AudioContext.prototype.createOscillator = o; AudioBufferSourceNode.prototype.start = st; return r; }"""
+        h2 = await pg.evaluate(CONTA, EVENTI + ["passo"]); await pg.wait_for_timeout(2500)
+        chk(metro.tutti(h2[k] == 0 for k in EVENTI) and h2["passo"] > 0, f"H2 pezzi sintetici (oscillatori e rumore) di ogni suono: {h2} (0 per i nove eventi, più di 0 per «passo», che resta sintetico)")
+        ctx2 = await b.new_context(viewport={"width": 1360, "height": 650}); await ctx2.add_init_script("{ const o = AudioContext.prototype.decodeAudioData; let n = 0; AudioContext.prototype.decodeAudioData = function(b, ok, no){ if (++n <= 2) return o.call(this, b, ok, no); const e = new Error('rotto apposta'); if (no) no(e); return Promise.reject(e); }; }")
+        pg2 = await ctx2.new_page(); await pg2.goto(BASE + "#collaudo"); await pg2.wait_for_timeout(400); await pg2.click("#goFree"); await pg2.keyboard.press("Enter")
+        for _ in range(50):
+            if await pg2.evaluate("() => sAmbFonte.startsWith('errore')"): break
+            await pg2.wait_for_timeout(100)
+        h2b = await pg2.evaluate(CONTA, EVENTI); await ctx2.close()
+        chk(metro.tutti(h2b[k] > 0 for k in EVENTI), f"H2 controprova, seconda decodifica rotta: tornano i sintetici, pezzi sintetici {h2b}")
+
+        # ---- H4: ognuno dei nove eventi si sente; Z vero, col tasto premuto ----
+        for nome in EVENTI:
+            dd = []
+            for i in range(3):
+                r = await scena(10, 90, 2, sec=5, forza=[nome, 0.5, 3]); x = campioni(r); f = finestre(filtra(x, sr, 200, 5000), sr, 0.2)
+                dd.append(max(f[14:24]) - statistics.median(f[3:13])); salva(cart, f"evento_{nome}_{i + 1}", x, sr)
+            chk(metro.tutti(d >= 6 for d in dd), f"H4 {nome}: alza la banda 200-5000 Hz di {[round(d, 1) for d in dd]} dB (almeno 6)")
+        async def con_z(**k):   # il tasto si preme a scena partita: l'apertura della scena azzera i tasti tenuti
+            t = asyncio.create_task(scena(10, 20, 0.3, sec=6, **k)); await asyncio.sleep(0.5); await pg.keyboard.down("z"); r = await t; await pg.keyboard.up("z"); return r
+        dz, sp = [], []
+        for i in range(3):
+            r1 = await con_z(); x1 = campioni(r1); r0 = await con_z(muti=["tela"]); x0 = campioni(r0)
+            dz.append(db(rms(filtra(x1, sr, 500, 5000)[int(2 * sr):])) - db(rms(filtra(x0, sr, 500, 5000)[int(2 * sr):]))); sp.append(f"{r1['spinte']}/{r1['letture']}"); salva(cart, f"z_{i + 1}", x1, sr)
+            assert r1["spinte"] > 0, "boma mai spinto"
+        chk(metro.tutti(d >= 2 for d in dz), f"H4 Z, tasto premuto a scena partita (letture col boma spinto {sp}): acceso contro spento, banda 500-5000 Hz, {[round(d, 1) for d in dz]} dB (almeno +2)")
+
+        # ---- H5: a «alto», i più forti insieme ----
+        p5 = []
+        for i in range(3):
+            r = await scena(20, 0, 0.3, sheet=1, sec=4, forza=["misto", 0, 1], liv="alto"); p5.append(db(r["picco"])); salva(cart, f"alto_misto_{i + 1}", campioni(r), sr)
+        await pg.evaluate("() => suoniImposta('basso')")
+        chk(metro.tutti(v <= -0.5 for v in p5), f"H5 volume «alto», 20 nodi, strambata, contatto e gabbiano insieme: picco {[round(v, 1) for v in p5]} dB (al più -0,5)")
 
         # ---- non satura: volume «alto», caso peggiore ----
         pp = []

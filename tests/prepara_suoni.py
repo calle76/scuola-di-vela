@@ -8,9 +8,13 @@
 #   gorgoglio:    574866 «Water under boat gurgling waves» (TRP): giro di 10 s
 #   gabbiani:     496203 «Seagull» (poodaddy69) e 510917 «Seagulls_short» (Lydmakeren): 5 versi ritagliati a mano
 #   scricchiolii: 145721 «Mooring Rope» (Rmutt): 4 gruppi ritagliati a mano
+#   1.2.10: tela (Z) 870603 CHallSmith; boma 630432 KaleidacousticsAudio; colpo 799644 KudoShimon; scafo 637207 kyles; boa 538009 bruno.auzet;
+#           tuffo 469608 Sheyvan e 442773 qubodup; scolo 110593 korbel; tromba 131930 mcpable (docs/PROPOSTA-SUONI-FINE.md §7)
 # Le anteprime pubbliche (MP3 di qualità alta) si scaricano senza account, tutte da https://cdn.freesound.org/previews/ :
 #   377/377492_6999362-hq.mp3  852/852108_18387771-hq.mp3  659/659004_11673893-hq.mp3  637/637206_612689-hq.mp3  463/463373_2194924-hq.mp3
 #   574/574866_97550-hq.mp3  496/496203_8923841-hq.mp3  510/510917_11157357-hq.mp3  145/145721_981371-hq.mp3
+#   870/870603_18412227-hq.mp3  630/630432_13875907-hq.mp3  799/799644_7316601-hq.mp3  637/637207_612689-hq.mp3  538/538009_11519060-hq.mp3
+#   469/469608_3248005-hq.mp3  442/442773_71257-hq.mp3  110/110593_1848499-hq.mp3  131/131930_1542102-hq.mp3
 # Uso: python3 prepara_suoni.py cartella_con_i_mp3   (servono ffmpeg con libopus; scrive ../js/suoni-dati.js)
 import sys, subprocess, array, math, base64, pathlib, tempfile, json
 
@@ -85,15 +89,34 @@ gabb, ind_g = pezzi([(G1, "highpass=f=700", 0.45, 1.25), (G1, "highpass=f=700", 
 S = C / "145721_981371-hq.mp3"
 scr, ind_s = pezzi([(S, "highpass=f=300", 31.0, 2.0), (S, "highpass=f=300", 36.2, 2.4), (S, "highpass=f=300", 55.8, 1.8), (S, "highpass=f=300", 58.9, 2.2)])
 altri["gabbiani"] = (gabb, 48); altri["scricchioli"] = (scr, 32)
+# ---- 1.2.10: Z e gli eventi (tutti in un solo file, con l'indice dei ritagli per nome) ----
+altri["tela"] = (giro(C / "870603_18412227-hq.mp3", "highpass=f=150", 1.5, 8.0), 32)
+BOMA, COLPO, SCAFO, BOA, SCOLO, TROMBA = (C / x for x in ("630432_13875907-hq.mp3", "799644_7316601-hq.mp3", "637207_612689-hq.mp3", "538009_11519060-hq.mp3", "110593_1848499-hq.mp3", "131930_1542102-hq.mp3"))
+RITAGLI = {
+    "boma":   [(BOMA, "highpass=f=150", 14.0, 1.3), (BOMA, "highpass=f=150", 30.75, 1.5)],
+    "colpo":  [(COLPO, "highpass=f=60", 4.5, 0.6), (COLPO, "highpass=f=60", 5.65, 0.6), (COLPO, "highpass=f=60", 9.95, 0.6)],
+    "scafo":  [(SCAFO, "highpass=f=60", 0.25, 0.8), (SCAFO, "highpass=f=60", 1.75, 0.8), (SCAFO, "highpass=f=60", 6.0, 0.9), (SCAFO, "highpass=f=60", 14.0, 0.8)],
+    "boa":    [(BOA, "highpass=f=200", 3.6, 0.9), (BOA, "highpass=f=200", 14.2, 1.0), (BOA, "highpass=f=200", 19.6, 0.9)],
+    "tuffo":  [(C / "469608_3248005-hq.mp3", "highpass=f=50", 0, 2.0), (C / "442773_71257-hq.mp3", "highpass=f=50", 0, 2.2)],
+    "scolo":  [(SCOLO, "highpass=f=200", 3.0, 3.5)],
+    "tromba": [(TROMBA, "highpass=f=100", 0.28, 0.75)],
+    "tromba_lunga": [(TROMBA, "highpass=f=100", 0.28, 1.75)],
+    "arrivo": [(TROMBA, "highpass=f=100", 0.28, 0.4)],
+}
+ev, ind_ev = [], {}
+for nome, lista in RITAGLI.items():
+    x, idx = pezzi(lista); ind_ev[nome] = [[round(a + len(ev) / SR, 3), b] for a, b in idx]; ev += x
+altri["eventi"] = (ev, 32)
 ogg = {k: opus(x, kb) for k, (x, kb) in altri.items()}
 
-testo = (f"// Scuola di vela, suoni-dati.js — Suoni registrati (dalla 1.2.7, docs/PROPOSTA-SUONI-REGISTRATI.md; dalla 1.2.9 anche docs/PROPOSTA-SUONI-FINE.md): Ogg Opus in base64. Fatto da tests/prepara_suoni.py, non si scrive a mano.\n"
-         f"// Fonti CC0 (FONTI-PUBBLICHE.md F42-F50): vela 377492, acqua 852108, vento 659004, sciabordio 637206, sartiame 463373, gorgoglio 574866, gabbiani 496203 e 510917, scricchiolii 145721 (numeri di Freesound).\n"
+testo = (f"// Scuola di vela, suoni-dati.js — Suoni registrati (dalla 1.2.7, docs/PROPOSTA-SUONI-REGISTRATI.md; dalla 1.2.9 docs/PROPOSTA-SUONI-FINE.md): Ogg Opus in base64. Fatto da tests/prepara_suoni.py, non si scrive a mano.\n"
+         f"// Fonti CC0 (FONTI-PUBBLICHE.md F42-F59): vela 377492, acqua 852108, vento 659004, sciabordio 637206, sartiame 463373, gorgoglio 574866, gabbiani 496203 e 510917, scricchiolii 145721, tela 870603, boma 630432, colpo 799644, scafo 637207, boa 538009, tuffo 469608 e 442773, scolo 110593, tromba 131930 (numeri di Freesound).\n"
          f"  const SUONI_DATI = {{\n"
          f"    colpi: {{ n: {len(forti)}, spazio: {SLOT}, lungo: {LUNGO}, forti: {forti} }},   // {len(forti)} colpi, uno ogni {SLOT} s del file; forti: 1 = colpo forte, 0 = rimbalzo debole\n"
          f"    acqua: {{ giro: {L} }},\n"
          f"    gabbiani: {json.dumps(ind_g)},   // [inizio, durata] di ogni verso, in s\n"
          f"    scricchioli: {json.dumps(ind_s)},   // [inizio, durata] di ogni gruppo, in s\n"
+         f"    eventi: {json.dumps(ind_ev)},   // 1.2.10: i ritagli di ogni suono breve, [inizio, durata] in s\n"
          f"    ogg: {{\n      acqua: \"{ba}\",\n      colpi: \"{bc}\",\n"
          + "".join(f"      {k}: \"{ogg[k][0]}\",\n" for k in altri) +
          f"    }}\n  }};\n")

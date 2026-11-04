@@ -127,3 +127,5 @@ Ale, 4 novembre, dopo aver giocato: non lo convincono il tasto Z e il boma che s
 - **H5, non satura:** a «alto», 20 nodi con la prua al vento, strambata, contatto e gabbiano insieme: picco al più **−0,5 dB**.
 - **H6, costo:** `js/suoni-dati.js` al più **900 KB** (la soglia sale di nuovo: 700 era per gli otto suoni di prima); seconda decodifica al più 1.500 ms, come G4.
 - **Ascolto:** lo giudica Ale.
+
+**Avanzamento, 1.2.10:** H1-H6 verdi dopo aver alzato i volumi di raddrizzata, arrivo e Z e corretto due difetti del collaudo (`CHANGELOG.md`). Z è a 0,42 + min(1, aws/10) invece di 0,15 + 0,35 × min(1, aws/10) scritto qui sopra; scolo e arrivo sono a 1 e 0,6. Resta il giudizio di Ale: registrazioni in cima a `sperimentale/suoni-registrati/ascolto.html`.

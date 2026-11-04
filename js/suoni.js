@@ -1,4 +1,4 @@
-// Scuola di vela, suoni.js — Suoni del gioco (dalla 1.2.5, docs/PROPOSTA-SUONI.md): generati dal browser (Web Audio); dalla 1.2.7 acqua e vela registrate (js/suoni-dati.js, PROPOSTA-SUONI-REGISTRATI.md); dalla 1.2.9 anche vento, sciabordio, sartiame, gorgoglio, gabbiani, scricchiolii (PROPOSTA-SUONI-FINE.md). Legge lo stato del gioco e non lo tocca.
+// Scuola di vela, suoni.js — Suoni del gioco (dalla 1.2.5, docs/PROPOSTA-SUONI.md): generati dal browser (Web Audio); dalla 1.2.7 acqua e vela registrate (js/suoni-dati.js, PROPOSTA-SUONI-REGISTRATI.md); dalla 1.2.9 anche vento, sciabordio, sartiame, gorgoglio, gabbiani, scricchiolii, e dalla 1.2.10 Z e gli eventi (PROPOSTA-SUONI-FINE.md). Legge lo stato del gioco e non lo tocca.
 // Non chiama la simulazione e non usa Math.random (ha un generatore suo): le regate a seme fisso restano identiche con i suoni accesi o spenti.
   // ======================================================================
   // SUONI
@@ -13,11 +13,23 @@
   const suoniVal = { vento: 0, acqua: 0, vela: 0, acquaVel: 1, acquaFiltro: 0, ritmo: 0, colpi: 0 }; // suoni continui all'ultimo fotogramma (anche senza audio): per i collaudi
   // 1.2.7: acquaVel e acquaFiltro = velocità e filtro del giro d'acqua; ritmo = colpi di vela al secondo; colpi = colpi di vela partiti (anche a gioco muto)
   // 1.2.9: ventoVel, ventoFiltro, onde, sartiame, sartiameVel, gorgoglio = gli altri suoni continui; gabbiani, scricchioli = quanti ne sono partiti (anche a gioco muto)
-  Object.assign(suoniVal, { ventoVel: 1, ventoFiltro: 0, onde: 0, sartiame: 0, sartiameVel: 1, gorgoglio: 0, gabbiani: 0, scricchioli: 0 });
+  Object.assign(suoniVal, { ventoVel: 1, ventoFiltro: 0, onde: 0, sartiame: 0, sartiameVel: 1, gorgoglio: 0, tela: 0, telaVel: 1, gabbiani: 0, scricchioli: 0 });
   let suoniFonte = "sintetici";                // «registrati» quando acqua e colpi sono decodificati; finché no (o se la decodifica fallisce) restano i sintetici
   let sReg = null, sProssimo = 0;               // suoni registrati decodificati; tempo al prossimo colpo di vela (s di gioco)
   let sAmb = null, sAmbFonte = "attesa", sAmbMs = null; // 1.2.9: gli altri suoni registrati, decodificati dopo acqua e colpi; se la decodifica fallisce il vento resta sintetico e gli altri tacciono
   let sGabb = null, sScr = null;                // tempo al prossimo gabbiano e al prossimo scricchiolio (s di gioco)
+  // 1.2.10: i suoni brevi registrati: per ognuno i ritagli (SUONI_DATI.eventi) e il volume (ipotesi nostre, a orecchio). Finché mancano restano quelli di SUONO, sintetici.
+  const SUONO_REG = {
+    virata:     k => { sTaglio("boma", 0.6, 0.04, k.t); sTaglio("colpo", 0.2, 0.06, k.t + 0.2); },
+    strambata:  k => { sTaglio("colpo", 0.5 + 0.5 * k.v, 0.06, k.t); sTaglio("boma", 0.6, 0.04, k.t + 0.05); },
+    scuffia:    k => sTaglio("tuffo", 1, 0.04, k.t),
+    raddrizzata: k => sTaglio("scolo", 1, 0.05, k.t),
+    contatto:   k => sTaglio("scafo", 1, 0.05, k.t),
+    boa:        k => sTaglio("boa", 0.8, 0.05, k.t),
+    tromba:     k => sTaglio("tromba", 0.5, 0, k.t),
+    tromba_lunga: k => sTaglio("tromba_lunga", 0.5, 0, k.t),
+    arrivo:     k => sTaglio("arrivo", 0.6, 0, k.t)
+  };
   const suoniMuta = {};                         // solo per il collaudo che ascolta: { sartiame: true } spegne quel suono per confrontare con e senza
   const COLPI_VOL = 0.28 * 4;                   // volume dei colpi di vela col vento forte: 0,28 nella 1.2.7, ×4 (+12 dB) dalla 1.2.8 (Ale, 3 novembre 2026, ascoltando il gioco registrato)
   let sPrev = null, sFase = 0;
@@ -62,9 +74,10 @@
     }).catch(e => { suoniFonte = "errore: " + (e && e.message || e); });
   }
   function suoniAmbiente(){ // 1.2.9: la seconda decodifica parte solo dopo la prima, che così resta veloce come prima
-    const t0 = performance.now(), nomi = ["vento", "onde", "sartiame", "gorgoglio", "gabbiani", "scricchioli"]; sAmbFonte = "decodifica";
-    Promise.all(nomi.map(sDec)).then(([vento, onde, sartiame, gorgoglio, gabbiani, scricchioli]) => {
-      sAmb = { vento: sGiro(vento, 2000, sRand()), onde: sGiro(onde, 8000, sRand()), sartiame: sGiro(sartiame, 8000, sRand()), gorgoglio: sGiro(gorgoglio, 8000, sRand()), gabbiani, scricchioli };
+    const t0 = performance.now(), nomi = ["vento", "onde", "sartiame", "gorgoglio", "gabbiani", "scricchioli", "tela", "eventi"]; sAmbFonte = "decodifica";
+    Promise.all(nomi.map(sDec)).then(([vento, onde, sartiame, gorgoglio, gabbiani, scricchioli, tela, eventi]) => {
+      sAmb = { vento: sGiro(vento, 2000, sRand()), onde: sGiro(onde, 8000, sRand()), sartiame: sGiro(sartiame, 8000, sRand()), gorgoglio: sGiro(gorgoglio, 8000, sRand()), tela: sGiro(tela, 8000, sRand()), gabbiani, scricchioli, eventi };
+      sCh.vela.g.gain.setTargetAtTime(0, actx.currentTime, 0.02);   // il fruscio sintetico del boma spinto tace: ora suona la tela registrata
       sCh.vento.g.gain.setTargetAtTime(0, actx.currentTime, 0.1);   // il fruscio sintetico del vento tace: ora suona quello registrato
       sAmbMs = performance.now() - t0; sAmbFonte = "registrati";
     }).catch(e => { sAmbFonte = "errore: " + (e && e.message || e); });
@@ -74,6 +87,11 @@
     const g = actx.createGain(); g.gain.value = v; src.connect(g); let out = g;
     if (pan && actx.createStereoPanner){ const sp = actx.createStereoPanner(); sp.pan.value = pan; g.connect(sp); out = sp; }
     out.connect(sMaster); src.start(actx.currentTime + 0.01, voce[0], voce[1]);
+  }
+  function sTaglio(nome, v, varia, t){ // un ritaglio a caso di un suono breve registrato; se è silenziato per il collaudo non parte
+    if (suoniMuta[nome]) return;
+    const L = SUONI_DATI.eventi[nome], voce = L[Math.floor(sRand() * L.length)], src = actx.createBufferSource(); src.buffer = sAmb.eventi; src.playbackRate.value = 1 - varia + sRand() * 2 * varia;
+    const g = actx.createGain(); g.gain.value = v; src.connect(g); g.connect(sMaster); src.start(t, voce[0], voce[1]);
   }
   function sGabbiano(){ // ipotesi nostre: volume da 0,30 a 0,60, altezza ±6%, dovunque fra sinistra e destra
     suoniVal.gabbiani++; const L = SUONI_DATI.gabbiani, voce = L[Math.floor(sRand() * L.length)], v = 0.3 + sRand() * 0.3, pan = sRand() * 1.6 - 0.8;
@@ -131,7 +149,7 @@
   };
   function suona(nome, v = 0){
     suoniReg.push([+simTime.toFixed(3), nome, mode === "race" && R ? +R.t.toFixed(3) : null]); if (suoniReg.length > 2000) suoniReg.shift();
-    if (suoniAttivi()) try { SUONO[nome]({ t: actx.currentTime + 0.01, v }); } catch(e){}
+    if (suoniAttivi()) try { (sAmb && SUONO_REG[nome] || SUONO[nome])({ t: actx.currentTime + 0.01, v }); } catch(e){} // 1.2.10: registrato se c'è, altrimenti sintetico
   }
 
   // ---- lettura dello stato, a ogni fotogramma ----
@@ -166,6 +184,7 @@
     suoniVal.ventoVel = 0.9 + 0.2 * Math.min(1, aws / 10); suoniVal.ventoFiltro = 1000 + 350 * aws;
     suoniVal.onde = muto ? 0 : 0.10 + 0.08 * Math.min(1, local.tws / 8);
     const kSart = Math.min(1, Math.max(0, aws * KN - 12) / 10); suoniVal.sartiame = muto ? 0 : 0.22 * kSart; suoniVal.sartiameVel = 0.9 + 0.2 * kSart;
+    suoniVal.tela = muto || !S.pushing ? 0 : 0.42 + Math.min(1, aws / 10); suoniVal.telaVel = 0.9 + 0.2 * Math.min(1, aws / 10); // 1.2.10: boma spinto (Z), ipotesi nostre
     suoniVal.gorgoglio = muto || fermo || S.capsized || !S.stall ? 0 : 0.8 * Math.min(1, u / 3);
     // gabbiani e scricchiolii: il tempo conta solo a gioco in corso; il conto va anche a gioco muto (lo leggono i collaudi)
     if (!muto && !fermo){
@@ -178,13 +197,13 @@
       const t = actx.currentTime;
       if (sAmb){
         const su = (ch, n) => ch.g.gain.setTargetAtTime(suoniMuta[n] ? 0 : suoniVal[n], t, 0.25);
-        su(sAmb.vento, "vento"); su(sAmb.onde, "onde"); su(sAmb.sartiame, "sartiame"); su(sAmb.gorgoglio, "gorgoglio");
+        su(sAmb.vento, "vento"); su(sAmb.onde, "onde"); su(sAmb.sartiame, "sartiame"); su(sAmb.gorgoglio, "gorgoglio"); sAmb.tela.g.gain.setTargetAtTime(suoniMuta.tela ? 0 : suoniVal.tela, t, 0.05); sAmb.tela.src.playbackRate.setTargetAtTime(suoniVal.telaVel, t, 0.3);
         sAmb.vento.src.playbackRate.setTargetAtTime(suoniVal.ventoVel, t, 0.5); sAmb.vento.fl.frequency.setTargetAtTime(suoniVal.ventoFiltro, t, 0.25);
         sAmb.sartiame.src.playbackRate.setTargetAtTime(suoniVal.sartiameVel, t, 0.5);
       } else { sCh.vento.g.gain.setTargetAtTime(suoniVal.vento, t, 0.25); sCh.vento.fl.frequency.setTargetAtTime(250 + 55 * aws, t, 0.25); }
       if (sReg){
         sReg.g.gain.setTargetAtTime(suoniVal.acqua, t, 0.2); sReg.src.playbackRate.setTargetAtTime(suoniVal.acquaVel, t, 0.3); sReg.fl.frequency.setTargetAtTime(suoniVal.acquaFiltro, t, 0.2);
-        sCh.vela.g.gain.setTargetAtTime(S.pushing ? suoniVal.vela : 0, t, 0.02);   // con i colpi registrati il fruscio sintetico resta solo per il boma spinto (Z)
+        sCh.vela.g.gain.setTargetAtTime(S.pushing && !sAmb ? suoniVal.vela : 0, t, 0.02);   // con i colpi registrati il fruscio sintetico resta solo per il boma spinto (Z), finché non c'è la tela registrata (1.2.10)
       } else {
         sCh.acqua.g.gain.setTargetAtTime(suoniVal.acqua, t, 0.2); sCh.acqua.fl.frequency.setTargetAtTime(300 + 220 * u, t, 0.2);
         sCh.vela.g.gain.setTargetAtTime(suoniVal.vela, t, 0.02);

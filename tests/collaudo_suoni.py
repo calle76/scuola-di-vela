@@ -19,6 +19,8 @@
 #   G3: tutto decodificato con e senza #collaudo; seconda decodifica rotta apposta: acqua e colpi registrati, vento sintetico, nessun errore.
 #   G4: seconda decodifica al più 1.500 ms; js/suoni-dati.js al più 700 KB (R4 diceva 300, con due suoni soli: cambiata prima di costruire il file, detto nella proposta).
 #   G5: acqua e colpi identici a quelli della 1.2.8. (G1 = S1; che si sentano davvero lo misura collaudo_suoni_si_sentono.py.)
+# Dalla 1.2.10 (docs/PROPOSTA-SUONI-FINE.md §7): H1, gli altri suoni identici alla 1.2.9; H3, la tela del boma spinto (Z) secondo la formula, tasto premuto davvero; H6, file al più 900 KB.
+# H2, H4 e H5 stanno in collaudo_suoni_si_sentono.py, perché servono l'audio acceso.
 # Uso: python collaudo_suoni.py [--semi 1-10]   (BROWSER=firefox per Firefox)
 import asyncio, hashlib, json, os, pathlib, re, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
@@ -199,10 +201,10 @@ async def main():
         chk("R6", not errs, f"R2 errori della pagina {errs[:1]}"); await ctx.close()
         # R3-R4: la decodifica, nella pagina con e senza #collaudo; e col decodificatore che fallisce apposta (devono restare i suoni sintetici, senza errori)
         peso = (ROOT / "js" / "suoni-dati.js").stat().st_size
-        chk("R4", peso <= 700 * 1024, f"G4 js/suoni-dati.js: {peso / 1024:.0f} KB (al massimo 700, dalla 1.2.9)")
+        chk("R4", peso <= 900 * 1024, f"H6 js/suoni-dati.js: {peso / 1024:.0f} KB (al massimo 900, dalla 1.2.10)")
         dati = (ROOT / "js" / "suoni-dati.js").read_text(encoding="utf-8")   # G5: il testo di acqua e colpi come nella 1.2.8
-        for nome, h in (("acqua", "8238e8312bfd97143abd2bdb58c052e6bc372b5929dea138a24d0132dac8b353"), ("colpi", "4e26ce6139136616082d5873aa89f717fa2f9373ff1589c4363c1dd228547c04")):
-            chk("G5", hashlib.sha256(re.search(nome + r': "([^"]+)"', dati).group(1).encode()).hexdigest() == h, f"G5 {nome}: identico alla 1.2.8")
+        for nome, h in (("acqua", "8238e8312bfd97143abd2bdb58c052e6bc372b5929dea138a24d0132dac8b353"), ("colpi", "4e26ce6139136616082d5873aa89f717fa2f9373ff1589c4363c1dd228547c04"), ("vento", "3d5cb9d5e2935a0e1139e7e272641b7efb3598ed79d397a6bdb7eafdbeff6630"), ("onde", "fc2d05615348a186f9d16df6093859bed624ca60a9d55ee5b14217c5b908042d"), ("sartiame", "300933ff11b0a88b408b2b86043efebbd146436ab14102052a62119e3385d88d"), ("gorgoglio", "cfa2932686ebf71f21b01081f7e132891b20fcd1009708200b38e39fa26ea30f"), ("gabbiani", "590474bf32920b8b3956da669e8d388ac8741038b1385dffe792bfbecc12dd6f"), ("scricchioli", "e8c3e4b8689efea0c4d4b151fa83edba4e25d553ead62a818b4f6d5d3be06983")):   # H1: dalla 1.2.10 anche i sei della 1.2.9
+            chk("G5", hashlib.sha256(re.search(nome + r': "([^"]+)"', dati).group(1).encode()).hexdigest() == h, f"G5/H1 {nome}: identico alla versione di prima")
         for h in ("", "#collaudo"):
             ctx, pg, errs = await pagina(b, h); await pg.click("#goFree"); await pg.keyboard.press("Enter")
             await attendi(pg, AMB_FINITA)
@@ -260,8 +262,20 @@ async def main():
         chk("G2", metro.tutti(abs(x - ATT_G) <= 0.2 * ATT_G for x in fi["gab"]) and fi["gabPausa"] == 0 and fi["gabMenu"] == 0, f"G2 gabbiani in 40 minuti (attesi {ATT_G:.1f} ±20%, 10 finestre): {fi['gab']}; in pausa {fi['gabPausa']}, nel menu {fi['gabMenu']}")
         chk("G2", fi["scrScuf"] == 0 and fi["gorScuf"] == 0, f"G2 controprova a barca scuffiata: scricchiolii {fi['scrScuf']}, gorgoglio {fi['gorScuf']}")
         chk("G2", not errs, f"G2 errori della pagina {errs[:1]}"); await ctx.close()
+        # ---- H3 (1.2.10): la tela del boma spinto, con il tasto Z premuto come dalla tastiera ----
+        ctx, pg, errs = await pagina(b)
+        h3 = await pg.evaluate("""() => { const sv = __sv, dt = 1 / 60, L = [], z = []; sv.openItem("free");
+            for (const kn of [4, 8, 12, 16]){ env.tws = kn / KN; env.twd = 0; freshState(0, 0, 10, 0.3); keys.add("z");
+              for (let k = 0; k < 200; k++){ sv.ctl.sheet = sv.autoSheet(); sv.run(dt, 1); sv.suoni.agg(dt, false); L.push([info.aws, !!sv.S.pushing, sv.suoni.val.tela, sv.suoni.val.telaVel]); }
+              keys.delete("z"); for (let k = 0; k < 30; k++){ sv.run(dt, 1); sv.suoni.agg(dt, false); z.push([!!sv.S.pushing, sv.suoni.val.tela]); } }
+            return { L, z }; }""")
+        fh = [abs(t - ((0.42 + min(1, max(0, aw) / 10)) if pu else 0)) < 1e-9 and abs(v - (0.9 + 0.2 * min(1, max(0, aw) / 10))) < 1e-9 for aw, pu, t, v in h3["L"]]
+        spinte = sum(1 for r in h3["L"] if r[1])
+        chk("H3", spinte >= 500 and metro.tutti(fh), f"H3 tela: {len(fh)} letture come la formula, {spinte} col boma spinto davvero (almeno 500), volume da {min(r[2] for r in h3['L']):.2f} a {max(r[2] for r in h3['L']):.2f}")
+        chk("H3", metro.tutti(t == 0 for pu, t in h3["z"] if not pu) and any(not pu for pu, _ in h3["z"]), f"H3 tela: 0 a tasto rilasciato ({sum(1 for pu, _ in h3['z'] if not pu)} letture)")
+        chk("H3", not errs, f"H3 errori della pagina {errs[:1]}"); await ctx.close()
         await b.close()
     print("casi per parte:", casi)
     print("\ncasi sbagliati:", "nessuno" if not bad else bad)
-    sys.exit(1 if bad or any(casi.get(k, 0) == 0 for k in ("S1", "S2", "S3", "S4", "S5", "S6", "R2", "R3", "R4", "G2", "G3", "G4", "G5")) else 0)
+    sys.exit(1 if bad or any(casi.get(k, 0) == 0 for k in ("S1", "S2", "S3", "S4", "S5", "S6", "R2", "R3", "R4", "G2", "G3", "G4", "G5", "H3")) else 0)
 asyncio.run(main())
