@@ -14,8 +14,13 @@
 #       degli attesi (1 + 0,35 × nodi al secondo); controprova: nessun colpo con la vela regolata, a barca scuffiata, in pausa.
 #   R3: suoni «registrati» nella pagina con e senza #collaudo; col decodificatore rotto apposta restano i sintetici, senza errori.
 #   R4: js/suoni-dati.js al massimo 300 KB; decodifica al primo tasto al massimo 300 ms. (R1 = S1; R6 = S1-S6 verdi.)
+# Dalla 1.2.9 (docs/PROPOSTA-SUONI-FINE.md §4) anche vento, sciabordio, sartiame, gorgoglio, gabbiani, scricchiolii:
+#   G2: ogni lettura uguale alla formula; sartiame solo sopra i 12 nodi; gorgoglio solo in stallo vero, con la barca guidata; scricchiolii e gabbiani entro il 25% e il 20% degli attesi, 10 finestre.
+#   G3: tutto decodificato con e senza #collaudo; seconda decodifica rotta apposta: acqua e colpi registrati, vento sintetico, nessun errore.
+#   G4: seconda decodifica al più 1.500 ms; js/suoni-dati.js al più 700 KB (R4 diceva 300, con due suoni soli: cambiata prima di costruire il file, detto nella proposta).
+#   G5: acqua e colpi identici a quelli della 1.2.8. (G1 = S1; che si sentano davvero lo misura collaudo_suoni_si_sentono.py.)
 # Uso: python collaudo_suoni.py [--semi 1-10]   (BROWSER=firefox per Firefox)
-import asyncio, json, os, pathlib, sys
+import asyncio, hashlib, json, os, pathlib, re, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]; BASE = (ROOT / "index.html").as_uri()
@@ -61,6 +66,11 @@ async def pagina(b, hash_="#collaudo", init=None):
     pg = await ctx.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(BASE + hash_); await pg.wait_for_timeout(400)
     return ctx, pg, errs
+async def attendi(pg, cond, s=10):   # aspetta al più s secondi; se non succede, il controllo dopo lo dice (con lo stato letto), senza fermare il collaudo
+    for _ in range(s * 10):
+        if await pg.evaluate(cond): return
+        await pg.wait_for_timeout(100)
+AMB_FINITA = "() => suoniFonte.startsWith('errore') || sAmbFonte === 'registrati' || sAmbFonte.startsWith('errore')"
 async def main():
     a = sys.argv[1:]; x, y = (a[a.index("--semi") + 1] if "--semi" in a else "1-10").split("-"); semi = list(range(int(x), int(y) + 1))
     BR = os.environ.get("BROWSER", "chromium")
@@ -129,7 +139,7 @@ async def main():
         chk("S5", not errs, f"S1-S3 errori della pagina {errs[:1]}"); await ctx.close()
         # ---- S4: costo. 2 nov 2026, dopo il primo giro (detto): fotogrammi con e senza alternati davano +23,5% solo per rumore (60 fotogrammi da 573 a 1176 ms
         # da soli), quindi si misurano a parte la lettura dei suoni (10.000 volte) e il fotogramma (mediana di 8 giri da 60). L'audio si accende con un clic.
-        ctx, pg, errs = await pagina(b); await pg.click("#goFree"); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(300)
+        ctx, pg, errs = await pagina(b); await pg.click("#goFree"); await pg.keyboard.press("Enter"); await attendi(pg, AMB_FINITA)   # 1.2.9: il costo si misura con tutti i suoni accesi
         r4 = await pg.evaluate("""() => { const sv = __sv, dt = 1 / 60; let t0 = performance.now(); for (let k = 0; k < 10000; k++) sv.suoni.agg(dt, false); const agg = (performance.now() - t0) / 10000;
             const tf = []; for (let g = 0; g < 8; g++){ const t1 = performance.now(); for (let k = 0; k < 60; k++) sv.frame(dt); tf.push((performance.now() - t1) / 60); }
             return { agg, frame: tf.sort((x, y) => x - y)[4], attivi: sv.suoni.attivi }; }""")
@@ -189,26 +199,69 @@ async def main():
         chk("R6", not errs, f"R2 errori della pagina {errs[:1]}"); await ctx.close()
         # R3-R4: la decodifica, nella pagina con e senza #collaudo; e col decodificatore che fallisce apposta (devono restare i suoni sintetici, senza errori)
         peso = (ROOT / "js" / "suoni-dati.js").stat().st_size
-        chk("R4", peso <= 300 * 1024, f"R4 js/suoni-dati.js: {peso / 1024:.0f} KB (al massimo 300)")
-        async def attendi(pg, cond, s=10):   # aspetta al più s secondi; se non succede, il controllo dopo lo dice (con lo stato letto), senza fermare il collaudo
-            for _ in range(s * 10):
-                if await pg.evaluate(cond): return
-                await pg.wait_for_timeout(100)
+        chk("R4", peso <= 700 * 1024, f"G4 js/suoni-dati.js: {peso / 1024:.0f} KB (al massimo 700, dalla 1.2.9)")
+        dati = (ROOT / "js" / "suoni-dati.js").read_text(encoding="utf-8")   # G5: il testo di acqua e colpi come nella 1.2.8
+        for nome, h in (("acqua", "8238e8312bfd97143abd2bdb58c052e6bc372b5929dea138a24d0132dac8b353"), ("colpi", "4e26ce6139136616082d5873aa89f717fa2f9373ff1589c4363c1dd228547c04")):
+            chk("G5", hashlib.sha256(re.search(nome + r': "([^"]+)"', dati).group(1).encode()).hexdigest() == h, f"G5 {nome}: identico alla 1.2.8")
         for h in ("", "#collaudo"):
             ctx, pg, errs = await pagina(b, h); await pg.click("#goFree"); await pg.keyboard.press("Enter")
-            await attendi(pg, "() => suoniFonte !== 'sintetici' && suoniFonte !== 'decodifica'")
+            await attendi(pg, AMB_FINITA)
             r3 = await pg.evaluate("() => [suoniFonte + ' (audio: ' + (actx ? actx.state : 'nessuno') + ')', sReg ? sReg.ms : null]")
             r3[0] = r3[0].replace(" (audio: running)", "").replace(" (audio: suspended)", "") if r3[0].startswith("registrati") else r3[0]
             chk("R3", r3[0] == "registrati" and not errs, f"R3 pagina {'con' if h else 'senza'} #collaudo: suoni {r3[0]}, errori {errs[:1]}")
             chk("R4", r3[1] is not None and r3[1] <= 300, f"R4 decodifica al primo tasto: {r3[1]} ms (al massimo 300)")
+            am = await pg.evaluate("() => [sAmbFonte, sAmbMs, !!sAmb]")
+            chk("G3", am[0] == "registrati" and am[2], f"G3 pagina {'con' if h else 'senza'} #collaudo: altri suoni {am[0]}")
+            chk("G4", am[1] is not None and am[1] <= 1500, f"G4 seconda decodifica: {am[1]} ms (al massimo 1500)")
             await ctx.close()
+        # G3: la seconda decodifica rotta apposta (si rompono le chiamate dopo le prime due): acqua e colpi registrati, vento sintetico, nessun errore
+        ctx, pg, errs = await pagina(b, "", "if (window.AudioContext){ const o = AudioContext.prototype.decodeAudioData; let n = 0; AudioContext.prototype.decodeAudioData = function(b, ok, no){ if (++n <= 2) return o.call(this, b, ok, no); const e = new Error('rotto apposta'); if (no) no(e); return Promise.reject(e); }; }")
+        await pg.click("#goFree"); await pg.keyboard.press("Enter"); await attendi(pg, AMB_FINITA); await pg.keyboard.down("ArrowLeft"); await pg.wait_for_timeout(800); await pg.keyboard.up("ArrowLeft")
+        ge = await pg.evaluate("() => [suoniFonte, sAmbFonte, !!sReg, !!sAmb, simTime > 0.3]")
+        chk("G3", ge[0] == "registrati" and ge[1].startswith("errore") and ge[2] and not ge[3] and ge[4] and not errs, f"G3 seconda decodifica rotta apposta: {ge}, errori della pagina {errs[:1]}")
+        await ctx.close()
         ctx, pg, errs = await pagina(b, "", "if (window.AudioContext) AudioContext.prototype.decodeAudioData = function(b, ok, no){ const e = new Error('rotto apposta'); if (no) no(e); return Promise.reject(e); };")
         await pg.click("#goFree"); await pg.keyboard.press("Enter")
         await attendi(pg, "() => suoniFonte.startsWith('errore')"); await pg.keyboard.down("ArrowLeft"); await pg.wait_for_timeout(800); await pg.keyboard.up("ArrowLeft")
         r3e = await pg.evaluate("() => [suoniFonte, !!actx, simTime > 0.3]")
         chk("R3", r3e[0].startswith("errore") and r3e[1] and r3e[2] and not errs, f"R3 decodifica rotta apposta: {r3e}, si gioca coi suoni sintetici, errori della pagina {errs[:1]}")
-        await ctx.close(); await b.close()
+        await ctx.close()
+        # ---- G2 (1.2.9, docs/PROPOSTA-SUONI-FINE.md §4): i suoni nuovi seguono i numeri ----
+        ctx, pg, errs = await pagina(b)
+        g2 = await pg.evaluate("""() => { const sv = __sv, dt = 1 / 60, L = [], val = sv.suoni.val, leggi = stallo => L.push([info.aws, local.tws, Math.abs(sv.S.u), !!sv.S.stall, !!sv.S.capsized, val.vento, val.ventoFiltro, val.ventoVel, val.onde, val.sartiame, val.sartiameVel, val.gorgoglio]);
+            for (let kn = 0; kn <= 24; kn += 2){ sv.openItem("free"); env.tws = kn / KN; env.twd = 0; freshState(0, 0, 0, 0.5);
+              for (let k = 0; k < 120; k++){ sv.ctl.sheet = 1; sv.ctl.tiller = 0; sv.run(dt, 1); sv.suoni.agg(dt, false); leggi(); } }
+            // la barca guidata in stallo vero: al lasco veloce, barra a fondo alternata (la pala stalla quando la barca non segue ancora)
+            sv.openItem("free"); env.tws = 12 / KN; env.twd = 0; freshState(0, 0, 90, 3); let inStallo = 0;
+            for (let k = 0; k < 3600; k++){ sv.ctl.sheet = sv.autoSheet(); sv.ctl.tiller = Math.floor(k / 90) % 2 ? 1 : -1; sv.run(dt, 1); sv.suoni.agg(dt, false); if (sv.S.stall) inStallo++; leggi(); if (sv.S.capsized) rightBoat(); }
+            const fine = { scr: [], scr10: 0, gab: [], gabPausa: 0, gabMenu: 0, scrScuf: 0, gorScuf: 0 };
+            sv.openItem("free"); env.tws = 10 / KN; env.twd = 0; freshState(0, 0, 90, 2);
+            for (let w = 0; w < 10; w++){ sv.suoni.reset(1000 + w); sv.S.heel = 25; const c0 = val.scricchioli; for (let k = 0; k < 3600; k++) sv.suoni.agg(dt, false); fine.scr.push(val.scricchioli - c0); }
+            sv.suoni.reset(1100); sv.S.heel = 10; let c0 = val.scricchioli; for (let k = 0; k < 3600; k++) sv.suoni.agg(dt, false); fine.scr10 = val.scricchioli - c0;
+            for (let w = 0; w < 10; w++){ sv.suoni.reset(2000 + w); const c = val.gabbiani; for (let k = 0; k < 24000; k++) sv.suoni.agg(0.1, false); fine.gab.push(val.gabbiani - c); }
+            c0 = val.gabbiani; for (let k = 0; k < 24000; k++) sv.suoni.agg(0.1, true); fine.gabPausa = val.gabbiani - c0;
+            c0 = val.gabbiani; for (let k = 0; k < 24000; k++) sv.suoni.agg(0.1, true, true); fine.gabMenu = val.gabbiani - c0;
+            sv.suoni.reset(1200); sv.S.heel = 25; sv.S.capsized = true; sv.S.stall = true; sv.S.u = 2; c0 = val.scricchioli; for (let k = 0; k < 3600; k++){ sv.suoni.agg(dt, false); fine.gorScuf = Math.max(fine.gorScuf, val.gorgoglio); } fine.scrScuf = val.scricchioli - c0;
+            return { L, inStallo, fine }; }""")
+        L, fi = g2["L"], g2["fine"]
+        ok_f = lambda x, y: abs(x - y) < 1e-9
+        vento = [ok_f(r[5], 0.03 + 0.42 * min(1.5, max(0, r[0]) / 10) ** 1.5) and ok_f(r[6], 1000 + 350 * max(0, r[0])) and ok_f(r[7], 0.9 + 0.2 * min(1, max(0, r[0]) / 10)) for r in L]
+        onde = [ok_f(r[8], 0.10 + 0.08 * min(1, r[1] / 8)) for r in L]
+        kn = await pg.evaluate("() => KN")
+        sart = [ok_f(r[9], 0.22 * min(1, max(0, max(0, r[0]) * kn - 12) / 10)) and ok_f(r[10], 0.9 + 0.2 * min(1, max(0, max(0, r[0]) * kn - 12) / 10)) for r in L]
+        gorg = [ok_f(r[11], 0.8 * min(1, r[2] / 3) if r[3] and not r[4] else 0) for r in L]
+        sopra = [r for r in L if r[9] > 0]; sotto = [r for r in L if r[0] * kn < 12]
+        chk("G2", len(L) > 1000 and metro.tutti(vento) and metro.tutti(onde) and metro.tutti(sart) and metro.tutti(gorg), f"G2 vento, sciabordio, sartiame, gorgoglio: ogni lettura come la formula ({len(L)} letture; vento da {min(r[5] for r in L):.2f} a {max(r[5] for r in L):.2f}, sciabordio da {min(r[8] for r in L):.2f} a {max(r[8] for r in L):.2f}, sartiame fino a {max(r[9] for r in L):.2f})")
+        chk("G2", len(sotto) >= 100 and metro.tutti(r[9] == 0 for r in sotto) and len(sopra) >= 100, f"G2 sartiame: 0 sotto i 12 nodi ({len(sotto)} letture), sopra 0 in {len(sopra)} letture")
+        fuori = [r for r in L if not r[3]]
+        chk("G2", g2["inStallo"] >= 30 and metro.tutti(r[11] == 0 for r in fuori), f"G2 gorgoglio: barca guidata in stallo vero per {g2['inStallo']} letture (almeno 30), volume 0 nelle {len(fuori)} senza stallo")
+        ATT_S, ATT_G = 60 / 4.25, 2400 / 47.5
+        chk("G2", metro.tutti(abs(x - ATT_S) <= 0.25 * ATT_S for x in fi["scr"]) and fi["scr10"] == 0, f"G2 scricchiolii in 60 s a 25° (attesi {ATT_S:.1f} ±25%, 10 finestre): {fi['scr']}; a 10°: {fi['scr10']}")
+        chk("G2", metro.tutti(abs(x - ATT_G) <= 0.2 * ATT_G for x in fi["gab"]) and fi["gabPausa"] == 0 and fi["gabMenu"] == 0, f"G2 gabbiani in 40 minuti (attesi {ATT_G:.1f} ±20%, 10 finestre): {fi['gab']}; in pausa {fi['gabPausa']}, nel menu {fi['gabMenu']}")
+        chk("G2", fi["scrScuf"] == 0 and fi["gorScuf"] == 0, f"G2 controprova a barca scuffiata: scricchiolii {fi['scrScuf']}, gorgoglio {fi['gorScuf']}")
+        chk("G2", not errs, f"G2 errori della pagina {errs[:1]}"); await ctx.close()
+        await b.close()
     print("casi per parte:", casi)
     print("\ncasi sbagliati:", "nessuno" if not bad else bad)
-    sys.exit(1 if bad or any(casi.get(k, 0) == 0 for k in ("S1", "S2", "S3", "S4", "S5", "S6", "R2", "R3", "R4")) else 0)
+    sys.exit(1 if bad or any(casi.get(k, 0) == 0 for k in ("S1", "S2", "S3", "S4", "S5", "S6", "R2", "R3", "R4", "G2", "G3", "G4", "G5")) else 0)
 asyncio.run(main())

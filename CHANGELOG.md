@@ -17,6 +17,52 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.9 — I suoni finiti: vento vero, sciabordio, sartiame, scricchiolio, gorgoglio, gabbiani
+
+`docs/PROPOSTA-SUONI-FINE.md`. Ale, 4 novembre: «procedi pure completando i suoni nel gioco, non chiedere autorizzazioni». Proposta e soglie committate prima del codice (08cebb3), poi tutto di seguito.
+
+**Cosa cambia** (tutti CC0 da Freesound, F44-F50; numeri e curve sono **ipotesi nostre**, a orecchio; nessuna registrazione è di una deriva, semplificazione dichiarata):
+- **Il vento** ora è registrato: più forte, più chiaro e un po' più veloce col vento apparente.
+- **Sciabordio** sempre presente, acqua su uno scafo: si sente soprattutto a barca ferma.
+- **Sartiame** che fischia sopra i 12 nodi apparenti, più forte fino ai 22.
+- **Scricchiolio** oltre 18° di sbandamento, uno ogni 2,5-6 s a caso.
+- **Gorgoglio** con la pala in stallo: lo stesso stato del messaggio nel pannello.
+- **Gabbiani** uno ogni 25-70 s a caso, a destra o a sinistra. Non dipendono da boe o giuria: il suono non dice dov'è la boa.
+- **Livello «alto»** da 0,8 a 0,6, per fare posto ai suoni nuovi senza saturare. «Bassi» e «medi» non cambiano.
+- **Peso:** `js/suoni-dati.js` da 206 a 640 KB. Acqua e colpi identici al byte. La decodifica è a due tempi; se la seconda fallisce, il vento resta sintetico e gli altri nuovi tacciono.
+- **Non fatte:** le «onde lontane» della vecchia proposta. Lo sciabordio basta.
+
+**Misurato:**
+- **G1, simulazione:** S1 verde; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **G2, comandi** (`collaudo_suoni.py`, Chromium e Firefox, risultati uguali): 5.160 letture tutte uguali alle formule. Sartiame 0 nelle 1.585 letture sotto i 12 nodi. Gorgoglio: barca in stallo vero per 1.268 letture, 0 nelle 3.892 senza stallo. Scricchiolii in 60 s a 25°, 10 finestre, da 12 a 15 (attesi 14,1 ±25%), 0 a 10°. Gabbiani in 40 minuti, 10 finestre, da 47 a 55 (attesi 50,5 ±20%), 0 in pausa e nel menu. A barca scuffiata 0 scricchiolii e gorgoglio 0.
+- **G3:** tutto decodificato con e senza `#collaudo`. Con la seconda decodifica rotta apposta si gioca senza errori.
+- **G4:** lettura dei suoni +0,11% di un fotogramma in Chromium (in Firefox senza schermo l'audio è sospeso, quindi il costo vero lì non è misurato). Prima decodifica al massimo 156 ms in Chromium, 203 in Firefox (soglia 300); seconda 181 e 257 ms (soglia 1.500). 640 KB (soglia 700).
+- **G6, il suono vero** (`collaudo_suoni_si_sentono.py`, nuovo, solo Chromium; due giri completi dopo la correzione dei volumi):
+
+| Misura | Soglia | Giro 1 | Giro 2 |
+|---|---|---|---|
+| Gabbiano sul tratto prima (dB, 6 prove) | ≥ 6 | da 7,9 a 13,7 | da 9,4 a 13,5 |
+| Scricchiolio sul tratto prima (dB, 3 prove) | ≥ 4 | da 8,4 a 9,4 | da 6,1 a 7,6 |
+| Sartiame, acceso contro spento (dB) | ≥ +2 | da 3,5 a 4,3 | da 3,6 a 4,4 |
+| Sciabordio, acceso contro spento (dB) | ≥ +2 | da 4,4 a 5,5 | da 3,5 a 4,5 |
+| Gorgoglio, acceso contro spento (dB) | ≥ +2 | da 4,0 a 6,6 | da 3,8 a 5,2 |
+| Colpi di vela a 10 nodi (dB) | ≥ 5,6 | da 11,1 a 14,6 | da 10,6 a 14,3 |
+| Colpi di vela a 15 nodi (dB) | ≥ 2,9 | da 10,9 a 13,2 | da 11,8 a 12,7 |
+| Volume al traverso a 10 nodi (dB; la 1.2.8: −40,7) | entro ±3 | da −41,3 a −40,6 | da −41,2 a −40,6 |
+| Picco a «alto», caso peggiore (dB) | ≤ −0,5 | da −3,1 a −2,3 | da −3,4 a −3,2 |
+
+  Controprova del metro: a volume generale zero, −140 dB. I colpi di vela spiccano molto più di prima (la 1.2.8 con lo stesso metro: 7,1 e 4,4 dB) probabilmente perché il vento registrato copre meno quella banda del sintetico; la causa non l'ho misurata.
+
+**Cambiato strada facendo, lo dico:**
+- **Soglie dei colpi** da 9,1 e 3,7 a 5,6 e 2,9, prima di misurare la versione nuova: lo script di ieri non era stato conservato, e il metro riscritto sulla 1.2.8 dà 7,1 e 4,4 dB, non 10,6 e 5,2. La regola resta «la 1.2.8 meno 1,5 dB».
+- **Soglia del peso** da 300 a 700 KB, scritta nella proposta prima di costruire il file.
+- **Il primo giro di G6 è fallito:** gabbiani fino a 2,1 dB, scricchiolii fino a 3,2, gorgoglio fino a 0,8, picco a «alto» fino a −0,4. Le soglie non sono cambiate. Ho alzato i volumi: gabbiani da 0,15-0,35 a 0,30-0,60, scricchiolii da 0,25-0,50 a 0,40-0,80, gorgoglio da 0,35 a 0,80; e ho abbassato il livello «alto».
+
+**Da sapere:**
+- Che i suoni piacciano lo giudica Ale. Non ho potuto ascoltarli: ho letto misure e spettrogrammi. Il fischio del sartiame viene da un porto prima di una tempesta e potrebbe suonare drammatico.
+- `collaudo_suoni_si_sentono.py` non è ancora mai girato su GitHub: se lì l'audio non parte, fallisce e lo dice.
+- A volume «bassi» il gioco esce intorno a −41 dB: è basso, come nella 1.2.8.
+
 ## 1.2.8 — La vela che sbatte si sente: colpi a +12 dB
 
 Ale, 3 novembre sera, dopo aver ascoltato le registrazioni del gioco vero nella pagina d'ascolto: «metti i colpi a +12 dB». Nella 1.2.7 i colpi partivano ma non spiccavano sopra vento e acqua (`PROPOSTA-SUONI-REGISTRATI.md` §8).

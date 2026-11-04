@@ -34,9 +34,9 @@ Tutte le curve e i numeri sono **ipotesi nostre, a orecchio**, senza fonti. Il c
 | **Vento** | sempre (giro di 20 s) | volume come oggi (0,03 + 0,42 × min(1,5; aws/10)^1,5, aws in m/s); filtro passa-basso 1.000 + 350 × aws Hz; velocità del giro 0,9 + 0,2 × min(1, aws/10) |
 | **Sciabordio** | sempre (giro di 20 s) | 0,10 + 0,08 × min(1, vento reale/8 m/s); a barca scuffiata resta |
 | **Sartiame** | vento apparente sopra 12 nodi (giro di 12 s) | 0,22 × min(1, (nodi − 12)/10); velocità del giro 0,9 + 0,2 × lo stesso rapporto |
-| **Scricchiolio** | sbandamento oltre 18°, non scuffiata | uno ogni 2,5-6 s a caso; volume 0,25 + 0,25 × min(1, (sbandamento − 18)/15); altezza ±8% |
-| **Gorgoglio** | pala in stallo (`S.stall`, lo stesso stato del messaggio nel pannello) | 0,35 × min(1, velocità/3 m/s), giro di 10 s |
-| **Gabbiani** | sempre, mai in pausa, nel menu o nella moviola | uno ogni 25-70 s a caso; volume 0,15-0,35; posizione a caso fra sinistra e destra (stereo); altezza ±6% |
+| **Scricchiolio** | sbandamento oltre 18°, non scuffiata | uno ogni 2,5-6 s a caso; volume 0,40 + 0,40 × min(1, (sbandamento − 18)/15) (scritto prima: 0,25 + 0,25); altezza ±8% |
+| **Gorgoglio** | pala in stallo (`S.stall`, lo stesso stato del messaggio nel pannello) | 0,80 × min(1, velocità/3 m/s) (scritto prima: 0,35), giro di 10 s |
+| **Gabbiani** | sempre, mai in pausa, nel menu o nella moviola | uno ogni 25-70 s a caso; volume 0,30-0,60 (scritto prima: 0,15-0,35); posizione a caso fra sinistra e destra (stereo); altezza ±6% |
 
 **Decisione diversa dalla vecchia proposta:** i gabbiani non sono più frequenti vicino a boe e giuria. È più semplice, e così il suono non dice dov'è la boa: un velista non si orienta coi gabbiani.
 
@@ -76,7 +76,7 @@ In un collaudo nuovo, `tests/collaudo_suoni_si_sentono.py`, **solo Chromium** (i
   - **non satura:** a volume «alto», caso peggiore (20 nodi con la prua al vento e un gabbiano), picco al più **−0,5 dB**.
   - **Controprova del metro:** a suoni «spenti» la registrazione deve risultare silenziosa (sotto −70 dB), e il collaudo fallisce se l'audio non è acceso, invece di passare a vuoto.
 
-**R5, licenze:** i sette file in `FONTI-PUBBLICHE.md` con autore, pagina, licenza, giorno e cosa è stato tagliato. Nessun file CC BY-NC.
+**R5, licenze:** i sette file in `FONTI-PUBBLICHE.md` (F44-F50) con autore, pagina, licenza, giorno e cosa è stato tagliato. Nessun file CC BY-NC.
 
 **Ascolto:** che piacciano lo giudica Ale. Le registrazioni del gioco vanno nella pagina d'ascolto, che non entra nel repository.
 
@@ -90,3 +90,6 @@ In un collaudo nuovo, `tests/collaudo_suoni_si_sentono.py`, **solo Chromium** (i
 ## 6. Avanzamento
 
 - **4 novembre 2026:** proposta scritta prima del codice.
+- **Soglia cambiata prima di misurare la versione nuova, lo dico.** Lo script con cui ieri erano usciti 10,6 e 5,2 dB non è stato conservato. Il metro riscritto (livello ogni 50 ms sopra 1 kHz, 95° percentile meno mediana) sulla **1.2.8** dà 7,1 dB a 10 nodi e 4,4 a 15 (3 giri ciascuno, da 6,9 a 7,4 e da 4,3 a 4,6). Con le soglie 9,1 e 3,7 la 1.2.8 stessa fallirebbe a 10 nodi. Stessa regola di prima, «la 1.2.8 meno 1,5 dB», ma con lo stesso metro: **5,6 dB a 10 nodi e 2,9 a 15**. Riferimento del volume al traverso a 10 nodi: −40,7 dB (3 giri, da −41,0 a −40,5).
+- **Primo giro di G6, sui volumi scritti al §3 (uno solo, 3 volte per suono, 6 per i gabbiani). Falliti:** gabbiani [10,3; 7,5; 8,0; 6,3; 2,1; 3,7] dB contro 6; scricchiolii [3,2; 6,8; 9,1] contro 4; gorgoglio [1,2; 0,8; 3,0] contro +2; a «alto» picco [−0,4; −1,3; −0,6] contro −0,5. **Le soglie non cambiano, cambiano i volumi** (al §3, con i valori di prima). Il livello «alto» scende da 0,8 a 0,6, per fare posto ai suoni nuovi: non era previsto nella proposta.
+- **1.2.9:** dopo la correzione dei volumi, G1-G6 verdi: `collaudo_suoni.py` in Chromium e Firefox, `collaudo_suoni_si_sentono.py` due giri in Chromium. Numeri nel `CHANGELOG.md`. Resta il giudizio di Ale all'ascolto: le registrazioni del gioco sono in cima a `sperimentale/suoni-registrati/ascolto.html`.

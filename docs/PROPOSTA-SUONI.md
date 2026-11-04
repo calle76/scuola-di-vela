@@ -80,3 +80,4 @@ Niente musica, niente voci: costano molto e allontanano dal simulatore.
 - **Ale, 2 novembre 2026:** «accesi bassi, vai avanti».
 - **1.2.5:** prima fetta fatta; S1-S6 verdi in Chromium e Firefox (`collaudo_suoni.py`), con il metodo di S4 cambiato dopo il primo giro (detto nel `CHANGELOG.md`). Non provata la finestra nascosta. Resta la seconda fetta (§4: gabbiani con licenza libera, sartiame, onde, scricchiolii, gorgoglio della pala).
 - **3 novembre 2026:** Ale, dopo aver giocato: «il mare è un fruscio piatto, ma soprattutto la vela quando sbatte è un ticchettio irreale». Proposta per vela e acqua registrate (CC0, Freesound): `PROPOSTA-SUONI-REGISTRATI.md` (fermata 1).
+- **4 novembre 2026, 1.2.9:** seconda fetta fatta, senza le onde lontane: `PROPOSTA-SUONI-FINE.md`.

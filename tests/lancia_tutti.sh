@@ -133,6 +133,7 @@ TESTS=(
     "collaudo_esame_nuove.py|py|chiaro|0||collaudo_esame_nuove.py"
     "collaudo_menu.py|py|chiaro|0||collaudo_menu.py"
     "collaudo_suoni.py|py|chiaro|0||collaudo_suoni.py"
+    "collaudo_suoni_si_sentono.py|py|chiaro|0|audio|collaudo_suoni_si_sentono.py"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"
     "collaudo_fantasma.py|py|chiaro|0||collaudo_fantasma.py"
