@@ -136,4 +136,10 @@ Ale: «sì parti, e la guida vale anche per la Scuola». Il lavoro è solo sul r
 
 Il pilota usa la stessa guida degli avversari, quindi non dice quanto è difficile per chi gioca. C11 non si è concluso: la misura si è fermata al limite di tempo che le avevo dato, 25 minuti, insieme a un altro collaudo. Firefox non è stato misurato.
 
-**Difetto nuovo, aperto:** `collaudo_partenze.py` aggiunge un fallimento che nel giro della 1.2.12 non c'era: criterio (4), regata nelle raffiche, principianti, 180 s, seme 5: Verde e Blu non partono entro 60 s. Va capito prima di portare il lavoro su `main`. I fallimenti (1) e (2) sono già noti.
+**Difetto nuovo, corretto dopo (vedi in fondo):** `collaudo_partenze.py` aggiunge un fallimento che nel giro della 1.2.12 non c'era: criterio (4), regata nelle raffiche, principianti, 180 s, seme 5: Verde e Blu non partono entro 60 s. Va capito prima di portare il lavoro su `main`. I fallimenti (1) e (2) sono già noti.
+
+**Aggiornamento, stesso giorno: correzione allo spillo rifatta.** Era la correzione di partenza a far correre via le barche oltre lo spillo. Ora chi taglierebbe fuori stringe il vento o cambia mure verso il centro, negli ultimi 15 s prima del via. `collaudo_partenze.py` (Chromium): il criterio (4) non fallisce più; restano (1) e (2), già noti. Quindi la tabella sopra descrive il codice di prima.
+
+**Misura sul codice attuale, semi 361-380, mai usati**, 80 regate per browser (Chromium / Firefox): penalità 169 / 161 (massimo 190), prima del via 117 / 109 (massimo 90, **fuori**), fuori linea 21 / 30 (massimo 36), ritorni di bolina con la precedenza 0 / 0, urti mentre si cede 36 / 34, strambate ravvicinate 4 / 9, non arrivate 0 / 0, piantate 13 / 11 (massimo 12, **fuori in Chromium**), boe sbagliate 2 / 5. Il gioco di oggi non è stato misurato su questi semi: il confronto resta quello della tabella.
+
+**Regata giocata da Ale** (6 novembre, 15:50, a bastone, codice precedente all'aggiornamento): nessun contatto, penalità o fuori linea fino al suo arrivo, primo in 181 s. Al via resta del disordine: Rossa corre lungo la linea e taglia a 8 s, Blu passa a 3,6 m da Ale. Una regata sola.
