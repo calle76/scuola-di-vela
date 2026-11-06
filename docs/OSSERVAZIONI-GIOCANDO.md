@@ -190,3 +190,9 @@ Ale: «fanno ancora confusione». Tre avversari prudenti, principianti, 10 nodi,
 | 85 | **Strambate ravvicinate.** La Blu stramba due volte in 3 s (t = 189 e 192) tornando alla stessa rotta, senza cedere a nessuno; in poppa fa 3 strambate, Rossa 2, Verde 1 | Da capire, non è stata cercata la causa |
 
 Limite dello strumento: `analizza_sessione.py` su questi file scrive «a cedere 533 s», ma conta righe a 10 al secondo (sono circa 53 s), e «DIVERSO» perché i file automatici non hanno il riassunto del gioco. Non sono difetti del gioco.
+
+## 6 novembre 2026: chiusura a metà regata del torneo, in Firefox (`collaudo_torneo` C11)
+
+| # | Cosa si è visto | Cosa ne facciamo |
+| --- | --- | --- |
+| 86 | **Se si chiude la scheda a metà regata, il ritiro può non salvarsi.** Alla chiusura `torEsci` simula il resto della regata e salva solo alla fine (`js/regate.js`, `torChiudi`): in Firefox 1,3-2,7 s su un PC a 6 processori, 2,6-9,9 s col computer carico. Quarta regata, uscita 40 s dopo «Corri», Firefox, ritiro salvato. **Senza carico:** chiusura della scheda 39 su 40 (quella persa a 2,5 s), chiusura del browser 12 su 12, ricaricamento 10 su 10, navigazione 10 su 10 con 8 s di attesa e 2 su 10 con 1,5 s, l'attesa del collaudo. **Col computer carico (18 processi di calcolo):** chiusura della scheda **0 su 5** (interrotta dopo circa 3 s), ricaricamento 5 su 5, navigazione con 8 s 3 su 5 (perse a 7,9 e 8,0 s). Le regate già finite restano; quella in corso si può ricorrere, cioè chiudendo la scheda si può cancellare una regata andata male | Il limite di tempo è dedotto dai numeri: la chiusura è fatta dallo strumento di prova, non a mano. Non spiegato: nella prima prova, sotto carico, con una scorciatoia per le prime tre regate, 9 perse su 9 anche con 8 s. Proposta: salvare un risultato provvisorio **prima** della simulazione, e far aspettare al collaudo la fine del salvataggio. Serve il via di Ale |
