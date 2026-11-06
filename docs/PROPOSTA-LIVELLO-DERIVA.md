@@ -56,7 +56,7 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 | Lezione sui segnali della giuria | **tolta** | C'è già nella Scuola (gruppo D) |
 | Momento clou | **in Deriva, come scritto allora** | Corretto il 6 novembre, decisione di Ale: «il coach e il clou è nel livello deriva. Tutte le altre implementazioni del coach arrivano col fiocco». Qui avevo scritto «dopo, col Fiocco»: era sbagliato |
 
-**Fuori da questa proposta:** giri di penalità nel torneo o in altre regate (il torneo resta con la penalità sul punteggio, regola 44.3, decisa il 20 ottobre); regola 18 («ultima fatica», dopo Deriva); correzione degli avversari.
+**Fuori da questa proposta:** giri di penalità nel torneo o in altre regate (il torneo resta con la penalità sul punteggio, regola 44.3, decisa il 20 ottobre); regola 18 («ultima fatica», dopo Deriva). **La correzione degli avversari non è più fuori** (Ale, 6 novembre: in Deriva è da migliorare): i casi sono in `OSSERVAZIONI-GIOCANDO.md`, 80-85; proposta a sé, con le due fermate, e prima di misurare la soglia del torneo, perché ne sposterebbe i numeri (§2, D7).
 
 ## 5. Traguardi (`METODO.md` §5) e versioni
 
