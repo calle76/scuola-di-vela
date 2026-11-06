@@ -1,5 +1,7 @@
 # Stato del progetto
 
+> **Documento vecchio in parte (6 novembre 2026).** Livelli, esame e passaggi di livello: vale `IL-GIOCO.md`. Questo file andrà in archivio al passo 7 di `PROPOSTA-RIORGANIZZAZIONE.md`.
+
 **Una pagina sola, riscritta a ogni fine sessione.** Serve alle chat sul sito di Claude (nelle sessioni di Claude Code il repository si legge direttamente): per quelle bastano **questo file e `CHANGELOG.md`**. Aggiornato al **27 ottobre 2026, versione 1.0.53** (il registro dice «barca 1a/1b»; casella del semaforo «solo regate 1b»; prima la 1.0.52 (registratore di sessione con tutte le barche; prima la 1.0.51, classifica con «2 penalità (+30 s)»; la 1.0.50, regata del torneo lasciata a metà = ritiro, `PROPOSTA-RITIRO-A-META.md`)). Metodo e decisioni: `METODO.md`, `DECISIONI.md`.
 
 ## Dove siamo

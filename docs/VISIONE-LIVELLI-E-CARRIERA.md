@@ -1,5 +1,7 @@
 # Visione: livelli, squadra e carriera
 
+> **Documento vecchio in parte (6 novembre 2026).** Livelli, esame e passaggi di livello: vale `IL-GIOCO.md`. Questo file andrà in archivio al passo 7 di `PROPOSTA-RIORGANIZZAZIONE.md`.
+
 Aggiornato al 4 ottobre 2026; livelli rinumerati il 16 ottobre 2026 (vedi sotto). Questo documento descrive dove vuole arrivare la Scuola di vela oltre il livello 1. **Nel gioco esiste solo il livello 1**; tutto il resto è disegno. Dove questo documento e `ROADMAP.md` dicono cose diverse sulle fasi C ed E, vale questo.
 
 Ogni punto porta il suo stato:

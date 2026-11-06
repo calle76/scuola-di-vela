@@ -1,5 +1,7 @@
 # Roadmap
 
+> **Documento vecchio in parte (6 novembre 2026).** Livelli, esame e passaggi di livello: vale `IL-GIOCO.md`. Questo file andrà in archivio al passo 7 di `PROPOSTA-RIORGANIZZAZIONE.md`.
+
 Aggiornata al 4 ottobre 2026; ordine dopo la 1.0 e livelli rivisti il 16 ottobre 2026.
 
 Il disegno dei livelli, dei ruoli, dei meriti e della carriera è in `VISIONE-LIVELLI-E-CARRIERA.md`; le fonti pubbliche consultate in `FONTI-PUBBLICHE.md`. Dove questa roadmap e la visione dicono cose diverse sulle fasi C ed E, vale la visione.

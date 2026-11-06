@@ -6,7 +6,7 @@
 
 Deriva è il secondo livello, con la **stessa barca** della Scuola. Si impara a gareggiare: regate più difficili, un torneo da superare, rivedere le proprie regate. Quasi tutto **esiste già** nel gioco, mescolato nel menu con la Scuola: il lavoro è soprattutto metterlo in ordine e dargli un traguardo.
 
-**Barca, fisica e avversari non cambiano.** Il motore non si tocca.
+**Barca e fisica non cambiano:** il motore non si tocca. Gli avversari sì, con una proposta a sé (`PROPOSTA-AVVERSARI-DERIVA.md`). **Aggiornata il 6 novembre con le decisioni di Ale:** una prova con le medaglie e le due strade per passare (§3, §6); il quadro d'insieme sta in `IL-GIOCO.md`.
 
 ## 2. La scoperta: la soglia decisa il 30 ottobre così non si può avere
 
@@ -33,15 +33,19 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 | | La scuola | Deriva |
 | --- | --- | --- |
 | Lezioni | le 20 di oggi | **2 nuove:** 21 «Come funziona il torneo», 22 «Rivedi la tua regata» |
-| Prove con medaglie | le 5 di oggi | nessuna |
+| Prove con medaglie | le 5 di oggi | **1 nuova: i giri di penalità** (sotto) |
 | Regate | bastone, raffiche | salti di vento, giri di penalità |
 | Torneo | nessuno | **il torneo di oggi, da superare** |
 | Ripassi | quiz ed esame | i 2 quiz nuovi, **nessun esame** |
 | Coach | nessuno | **registratore e moviola, che ci sono già, e il momento clou, da fare** (proposta a sé, §5) |
-| Traguardo | attestato | «Deriva superata»; nessun attestato |
+| Traguardo | attestato | «Deriva superata», per una delle due strade (sotto); nessun attestato né esame |
 | Navigazione libera | sì | sta nella Scuola, sempre aperta |
 
 **Il menu:** due pulsanti nuovi in alto, «La scuola» e «Deriva». **Nel gioco libero** è tutto sempre aperto (principio 2). **In carriera** Deriva si apre con l'attestato, com'è già oggi per il torneo. Superata Deriva, il gioco lo dice e basta: «Fiocco» non esiste ancora, e nel menu non compare.
+
+**Prova «I giri di penalità» (Ale, 6 novembre):** percorso breve a tempo, da soli: un lato di bolina fino a una boa e il ritorno, con due giri da scontare durante il percorso. Il tempo comprende i giri; un giro non fatto costa 15 s, come nelle regate. Medaglie tarate col pilota, come le altre prove. **Non è un doppione:** l'esercizio della lezione «Boe e giri di penalità» fa toccare una boa e fare un giro, senza tempo e senza salvare niente; la regata con i giri ha gli avversari e nessuna medaglia. Qui si misura quanto stretti e veloci sono i giri.
+
+**Le due strade per passare (Ale, 6 novembre):** **del piazzamento**, fra i primi tre nel torneo; **del merito**, torneo finito senza ritiro e quasi tutti i punti del livello. I punti sono propri di Deriva e quelli della Scuola non contano. Esperienza: lezioni 21 e 22, regate finite, momento clou rivisto la prima volta. Conoscenza: i 2 quiz. Competizione: regate e torneo. Abilità: la prova. Non è la regola della Scuola: lì punti ed esame bastano, qui senza finire il torneo non si passa. Il coach non è mai obbligatorio.
 
 **Lezione 21, il torneo:** solo teoria e quiz di 4 domande: punti bassi, scarto, penalità sul punteggio, finestra d'arrivo. Sono le regole già nel gioco.
 
@@ -52,7 +56,7 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 | Scritto allora | Proposta ora | Perché |
 | --- | --- | --- |
 | Uno o due tornei | **uno** | È quello che esiste e che è collaudato; il secondo si aggiunge senza rifare niente |
-| Giri di penalità come prova fra le lezioni | **tolta** | Li insegna già con un esercizio la lezione «Boe e giri di penalità»; e «nessuna medaglia» fuori dalla Scuola (`DECISIONI.md`, 30 ottobre) |
+| Giri di penalità come prova fra le lezioni | **rimessa, con le medaglie** | Corretto il 6 novembre, decisione di Ale. Il 4 novembre l'avevo tolta citando «nessuna medaglia fuori dalla Scuola», ma quella frase nel registro non c'è: c'è «nessuna medaglia nell'1b» e un'idea da confermare |
 | Lezione sui segnali della giuria | **tolta** | C'è già nella Scuola (gruppo D) |
 | Momento clou | **in Deriva, come scritto allora** | Corretto il 6 novembre, decisione di Ale: «il coach e il clou è nel livello deriva. Tutte le altre implementazioni del coach arrivano col fiocco». Qui avevo scritto «dopo, col Fiocco»: era sbagliato |
 
@@ -61,7 +65,7 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 ## 5. Traguardi (`METODO.md` §5) e versioni
 
 - **Alfa, 1.3.0:** menu a due livelli, voci spostate, carriera che apre Deriva. Nessun contenuto nuovo.
-- **Beta, 1.3.1:** lezioni 21 e 22 con quiz e collaudi.
+- **Beta, 1.3.1:** lezioni 21 e 22 con quiz, la prova dei giri, i punti di Deriva, con i collaudi.
 - **Uscita, 1.3.2:** soglia nel torneo e nel libretto, misura D7, giro completo, prova a mano di Ale e di Lucio.
 
 Dopo ogni fetta, collaudi verdi e commit.
@@ -79,17 +83,20 @@ Tutti in Chromium e Firefox.
 - **D3, tutto al suo posto:** ogni voce apre la sua lezione, regata o torneo. Nel gioco libero tutto aperto; in carriera Deriva chiusa senza attestato e aperta con. Anche nella pagina senza `#collaudo`, 0 errori.
 - **D4, la Scuola resta com'è:** in carriera meriti e conti identici a oggi; l'esame resta di 34 domande con 28 per passare; le lezioni 21 e 22 non entrano in meriti, esame e «di 25 completate». `collaudo_carriera_intera.py` verde.
 - **D5, lezione 22:** esercizio completato guidando 10 su 10, a mani ferme 0 su 10, semi 1-10, confermato sui semi 11-20.
-- **D6, la soglia:** 1°, 2° e 3° superano; 4° e torneo ritirato no (controprova). Il risultato resta alla ricarica; un salvataggio di oggi con un 3° già fatto risulta superato. Nel gioco libero il torneo non apre né chiude niente.
+- **D6, la soglia:** 1°, 2° e 3° superano; il torneo ritirato no, mai, nemmeno con tutti i punti; il 4° solo con i punti della strada del merito, e non senza (controprove). Il risultato resta alla ricarica; un salvataggio di oggi con un 3° già fatto risulta superato. Nel gioco libero il torneo non apre né chiude niente.
 - **D7, la misura:** semi **201-240, mai guardati**, 40 tornei a browser, principianti. A coppie di semi consecutivi (20 coppie, due tentativi).
   - Un tentativo: fra i primi tre fra il 40% e il 70% dei tornei.
   - Due tentativi: almeno una riuscita in almeno 14 coppie su 20 (70%).
+- **D8, niente doppioni:** nessuna domanda dei quiz di Deriva è uguale a una della Scuola; le lezioni 21 e 22 non hanno voci di glossario già presenti; superare Deriva non chiede né dà esame o attestato; i punti della Scuola non cambiano quelli di Deriva e viceversa.
+- **D9, la prova:** il pilota la completa 10 su 10 con i giri fatti; a mani ferme 0 su 10; chi non fa i giri prende 15 s a giro; medaglie con la regola delle altre prove (semi scelti su un gruppo, confermati su un altro).
+- **D10, la strada del merito:** ripetendo la stessa cosa senza migliorare i punti non salgono; il pilota che finisce quarto e ha fatto tutto il resto passa; chi ha fatto solo il torneo e non è fra i primi tre non passa. La soglia dei punti si misura dopo gli avversari: non deve bastare giocare poche regate.
 - **Nomi:** `collaudo_nomi.py` esteso alle schermate nuove.
 
 Il pilota non è un giocatore: D7 dice che il traguardo è raggiungibile, non quanto è difficile. Quello lo dice solo chi gioca. Un numero fuori fascia si riporta com'è.
 
 ## 7. Costanti nuove
 
-Una sola: il piazzamento richiesto, **3°**, ipotesi nostra da confermare giocando. Si salva nulla di nuovo: «superata» si ricava dal miglior piazzamento già salvato (`progress.torneoFatto`).
+Il piazzamento richiesto, **3°**; la quota di punti della strada del merito (numero da misurare); i tempi delle medaglie della prova; i punti assegnati in ogni area. Sono ipotesi nostre, da confermare giocando. Si salvano in più i punti di Deriva; il piazzamento è già salvato (`progress.torneoFatto`).
 
 ## 8. Fonti
 
@@ -105,4 +112,4 @@ La lezione 21 usa F15 (appendice A sui punteggi, 44.3 sulla penalità), già cit
 
 ## 10. Decisioni per Ale
 
-Una sola adesso: **la soglia del torneo, §2.** Tutto il resto è scelto da Claude e si cambia a basso costo, salvo che Ale dica altrimenti.
+Decise il 6 novembre: prova con medaglie e due strade. Resta **la soglia del torneo, §2**, da chiedere con i numeri degli avversari corretti. Tutto il resto è scelto da Claude e si cambia a basso costo, salvo che Ale dica altrimenti.
