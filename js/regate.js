@@ -390,6 +390,7 @@
     for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
       const nd = rotta + dir * da, t2 = norm180(twd - nd);
       if (sgn(t2) !== lato || Math.abs(t2) < ai.up - 2 || Math.abs(t2) > 172) continue;
+      if (Math.abs(norm180(twd - rotta)) > 100 && Math.abs(t2) < 90) continue; // chi scende non torna verso la bolina per cedere (osservazione 80)
       if (s.u < U_ABBRIVIO && Math.abs(t2) < ai.up + 10) continue; // lenta non orza: si pianterebbe (dalla misura: piantate al via)
       if (boa){ const px = s.x + Math.sin(nd * D2R) * 25, py = s.y - Math.cos(nd * D2R) * 25; if (Math.hypot(px - boa.x, py - boa.y) < Math.hypot(s.x - boa.x, s.y - boa.y) - 10 && (px - boa.x) * boa.ox + (py - boa.y) * boa.oy < 0) continue; } // vicino alla boa non si taglia dalla parte interna
       const lib = passaggio(b, nd);
@@ -399,7 +400,7 @@
     return scelta === null ? desired : scelta;
   }
   const GYBE_MIN = 10, SCARTO_MAX = 25; // secondi, ipotesi nostre
-  const FUORI_T = 15; // Deriva, fetta 4: chi è già partito e taglierebbe fuori dallo spillo corregge già negli ultimi secondi; ipotesi nostra
+  const FUORI_T = 8; // Deriva, fetta 4: chi è già partito e taglierebbe fuori dallo spillo corregge già negli ultimi secondi; ipotesi nostra
   const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
   // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)
   function passaggio(b, nd){
