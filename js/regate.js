@@ -382,10 +382,13 @@
     const rotta = devo ? (sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up) : b.rottaU;
     const relB = norm180(bearingTo(s, o.S) - s.h);
     const prima = devo && tackOf(b) !== tackOf(o) ? -lato : (relB >= 0 ? -1 : 1); // la direzione preferita: mure diverse poggia e passa di poppa; se no, via dall'altra barca
+    const mk = b.leg >= 1 && b.leg <= R.marks.length ? R.marks[b.leg - 1] : null, boa = mk && mk.out !== undefined && Math.hypot(mk.x - s.x, mk.y - s.y) < 40 ? { x: mk.x, y: mk.y, ox: Math.sin(mk.out * D2R), oy: -Math.cos(mk.out * D2R) } : null;
     let scelta = null, meglio = -1;
     for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
       const nd = rotta + dir * da, t2 = norm180(twd - nd);
       if (sgn(t2) !== lato || Math.abs(t2) < ai.up - 2 || Math.abs(t2) > 172) continue;
+      if (s.u < U_ABBRIVIO && Math.abs(t2) < ai.up + 10) continue; // lenta non orza: si pianterebbe (dalla misura: piantate al via)
+      if (boa){ const px = s.x + Math.sin(nd * D2R) * 25, py = s.y - Math.cos(nd * D2R) * 25; if (Math.hypot(px - boa.x, py - boa.y) < Math.hypot(s.x - boa.x, s.y - boa.y) - 10 && (px - boa.x) * boa.ox + (py - boa.y) * boa.oy < 0) continue; } // vicino alla boa non si taglia dalla parte interna
       const lib = passaggio(b, nd);
       if (lib >= 2 * L) return nd;
       if (lib > meglio){ meglio = lib; scelta = nd; }
