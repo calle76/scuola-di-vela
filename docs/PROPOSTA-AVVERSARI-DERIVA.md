@@ -84,3 +84,45 @@ Le regole di riferimento sono la 14 e la 16 (F15), già usate dal codice. Le sce
 Si lavora sul ramo `deriva`, in una cartella separata: la cartella di Ale, `main` e il gioco online non cambiano.
 
 **Una domanda, da decidere prima di portare il lavoro su `main`:** la guida nuova vale anche per le regate della Scuola? **Consiglio di sì.** Avversari diversi fra i due livelli confonderebbero chi gioca e raddoppierebbero il codice. In cambio i punti di Competizione nella Scuola possono cambiare un poco: si misurano e si riportano prima.
+
+## 10. Esiti della fermata 2 (6 novembre 2026, ramo `deriva`)
+
+Ale: «sì parti, e la guida vale anche per la Scuola». Il lavoro è solo sul ramo `deriva`, non su `main`.
+
+**Misura finale sui semi 341-360, mai usati prima**, stesso codice nei due browser, 80 regate per browser, 240 avversari. Il codice è stato fermato prima di questa misura.
+
+| | Soglia | Chromium: prima → dopo | Firefox: prima → dopo | Esito |
+| --- | --- | --- | --- | --- |
+| V1 penalità | al massimo 190 | 332 → **162** | 338 → **162** | sì |
+| V2 prima del via | al massimo 90 | 169 → **110** | 166 → **94** | **no** |
+| V3 fuori linea | al massimo 36 | 62 → **24** | 63 → **25** | sì |
+| V4 ritorni di bolina con la precedenza | 0 | 18 → **0** | 3 → **0** | sì |
+| V5 urti mentre si cede | -50% | 123 → **41** | 136 → **32** | sì |
+| V6 strambate ravvicinate | -50% | 29 → **7** | 18 → **5** | sì |
+| V7 non arrivate | 0 | 0 → 0 | 0 → 0 | sì |
+| V7 piantate | al massimo 12 | 8 → **20** | 10 → **20** | **no** |
+| V7 boe sbagliate | al massimo 5 | 7 → 1 | 0 → 2 | sì |
+| V7 arrivo mediano | al massimo +5% | migliora o resta | migliora o resta | sì |
+
+**Le soglie non sono state cambiate.** Fuori soglia restano V2 e le piantate. Prima del via le penalità calano del 35-43% rispetto a oggi, ma il punto d'incontro delle barche resta affollato. Le piantate raddoppiano: sono soste brevi, spesso vicino a un'altra barca, soprattutto al via e vicino alla boa. Non ho cercato oltre, per non adattare il codice ai semi.
+
+**Cosa è cambiato rispetto al §4:**
+
+- **Fetta 1 tolta:** far cedere chi è in attesa ha **peggiorato** (penalità 270 → 409, prima del via 152 → 254, semi 41-60): chi era fermo si muoveva e urtava altri.
+- **Fette 2 e 3 fatte:** lo scarto più piccolo che passa lontano da tutte le barche vicine; chi ha la precedenza parte dalla rotta che aveva.
+- **Fetta 4 ridotta:** la causa ipotizzata per l'osservazione 83 era sbagliata. Le barche che escono non stanno cedendo: corrono oltre lo spillo partendo. La correzione vale negli ultimi 8 s prima del via.
+- **Fetta 5 fatta:** le strambate ravvicinate erano la prua che oscillava attorno ai 180°. Sulle stesse mure si resta entro 172° dal vento, e per 10 s dopo una strambata.
+- **Aggiunte, trovate misurando:** chi è lento non orza per cedere; chi scende non sale oltre il traverso per cedere; vicino alla boa non si taglia dalla parte interna; nessuno scarto dura più di 25 s. Quest'ultima serve a evitare un difetto mio: due barche parallele si tenevano a vicenda su una rotta e non arrivavano più (2 barche in Firefox, semi 41-60).
+
+**V8, situazioni costruite** (`collaudo_avversari_deriva.py`, Chromium, 10 varianti, soglia 9):
+
+| Caso | Prima | Dopo | Giudizio |
+| --- | --- | --- | --- |
+| 80 ritorno di bolina | 10 | 10 | **non distingue**: non riproduce il caso di Ale. Il contatore V4 lo vede (18 → 0) |
+| 81 chi cede, a 2-3,2 s dall'altra | 0 | **6** | migliora, ma **fuori soglia**; resa più difficile dopo averla vista facile (era 9 → 10 da 3-4,5 s) |
+| 82 due barche, una terza vicina | 8 | **10** | sì |
+| 83 giocatore fermo vicino allo spillo | 10 | **7** | **peggiora**, e sul gioco di prima non riproduce ciò che Ale ha visto. Da riguardare giocando |
+
+**Non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. `collaudo_avversari1b.py`: fallisce lo scenario 5 a 8 su 10, già noto come fallimento a 7 su 10.
+
+**Da fare prima di portarlo su `main`:** il giudizio di Ale giocando; rifare il riferimento di `collaudo_impronta.py`, che fotografa le regate; rileggere `collaudo_competizione.py` e l'esploratore; misurare i punti di Competizione nella Scuola, come promesso al §9.
