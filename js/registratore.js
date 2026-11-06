@@ -244,7 +244,7 @@
   // ---- registrazione automatica delle regate (1.0.60, docs/PROPOSTA-COACH-REGISTRATORE.md) ----
   // In ogni regata il registratore parte da solo col conto alla rovescia e si chiude all'arrivo; il file è a pezzi, salvati in IndexedDB (le ultime REG_MAX regate).
   // Solo lettura come il resto: non tocca il motore né Math.random. Se la registrazione a mano è già accesa, quella ha la precedenza; se la si accende a regata in corso, l'automatica si chiude.
-  const REG_HZ = 10, PEZZO_0 = 120, PEZZO_S = 300, REG_MAX = 5; // ipotesi nostre: righe S e B al secondo; fine del primo pezzo e durata degli altri (secondi di regata); regate tenute
+  const REG_HZ = 10, PEZZO_0 = 120, PEZZO_S = 300, REG_MAX = 5, REG_MIN = 2; // ipotesi nostre: righe S e B al secondo; fine del primo pezzo e durata degli altri (secondi di regata); regate tenute; secondi sotto i quali una regata chiusa non si tiene
   const REG_LEGENDA = [
     "#  REGISTRAZIONE AUTOMATICA DI REGATA (formato 3, dalla 1.0.60): come il formato 2, con queste differenze",
     "#   t = secondi di regata: negativi prima del via, 0 allo sparo; le righe S e B sono " + REG_HZ + " al secondo (nel formato 2 una al secondo);",
@@ -272,7 +272,7 @@
     for (const p of regPezzi){ const o = document.createElement("option"); o.value = p.id; o.textContent = p.quando + " · " + p.nome + " · pezzo " + p.n + (p.fine ? " (" + p.fine + ")" : "") + " · " + Math.round(p.testo.length / 1024) + " KB"; s.appendChild(o); }
     if (!regPezzi.length){ const o = document.createElement("option"); o.textContent = "nessuna regata registrata"; s.appendChild(o); }
     else if (regPezzi.some(p => p.id === v)) s.value = v; // la scelta resta solo se quel pezzo c'è ancora
-    $("regGet").disabled = $("regDel").disabled = !regPezzi.length;
+    $("regGet").disabled = $("regDel").disabled = $("regLast").disabled = !regPezzi.length;
   }
   function regAggiungi(rec){
     regPezzi.push(rec);
@@ -281,6 +281,7 @@
     via.forEach(p => regPezzi.splice(regPezzi.indexOf(p), 1));
     regIdb("readwrite", st => { st.put(rec); via.forEach(p => st.delete(p.id)); });
     regUi();
+    document.querySelector("#regBox select").selectedIndex = 0; // finita una regata si riparte dal suo primo pezzo: restando sulla scelta di prima, «Scarica» dava un pezzo di una regata vecchia (Ale, 6 novembre)
   }
   function regSigilla(fine){ // chiude il pezzo in corso: testo con intestazione, salvato
     const d = ses.start, file = d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + "-" + p2(d.getHours()) + p2(d.getMinutes());
@@ -312,10 +313,16 @@
       const arr = sesAutoR.boats.filter(b => b.fin !== null).sort((a, b) => a.fin - b.fin);
       for (const b of sesAutoR.boats) sesLine(["F", t, b.name, b.fin !== null ? arr.indexOf(b) + 1 : "-", b.fin !== null ? b.fin.toFixed(1) : "-", b.pen || 0, b.pp || 0, sesStato(b)].join(" "));
     }
-    regSigilla(motivo === "arrivo" ? "ultimo" : "interrotto");
+    // una regata aperta e richiusa subito non contiene niente: nel menu si confondeva col pezzo 1 di quella vera (regata di Ale, 6 novembre)
+    if (motivo === "arrivo" || ses.pz > 1 || ses.ult - ses.p0 >= REG_MIN) regSigilla(motivo === "arrivo" ? "ultimo" : "interrotto");
     Object.assign(ses, sesSalva); sesSalva = null; sesMarksUi();
   }
   $("regGet").onclick = () => { const p = regPezzi.find(x => x.id === document.querySelector("#regBox select").value); if (p) sesFile("regata-" + p.file + "-pezzo-" + p.n + ".txt", p.testo); };
+  $("regLast").onclick = () => { // un solo file: il browser può bloccare più scaricamenti partiti da un solo clic
+    if (!regPezzi.length) return;
+    const reg = Math.max(...regPezzi.map(p => p.reg)), pz = regPezzi.filter(p => p.reg === reg).sort((a, b) => a.n - b.n);
+    sesFile("regata-" + pz[0].file + "-intera.txt", pz.map(p => p.testo).join("\n"));
+  };
   addEventListener("click", e => { if (e.target.id === "regOpen") $("regDlg").showModal(); }); // il link sta nel menu, che si ridisegna a ogni apertura
   $("regClose").onclick = () => $("regDlg").close();
   $("regDel").onclick = () => {
