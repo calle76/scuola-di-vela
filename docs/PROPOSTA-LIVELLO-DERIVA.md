@@ -37,6 +37,7 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 | Regate | bastone, raffiche | salti di vento, giri di penalità |
 | Torneo | nessuno | **il torneo di oggi, da superare** |
 | Ripassi | quiz ed esame | i 2 quiz nuovi, **nessun esame** |
+| Coach | nessuno | **registratore e moviola, che ci sono già, e il momento clou, da fare** (proposta a sé, §5) |
 | Traguardo | attestato | «Deriva superata»; nessun attestato |
 | Navigazione libera | sì | sta nella Scuola, sempre aperta |
 
@@ -53,7 +54,7 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 | Uno o due tornei | **uno** | È quello che esiste e che è collaudato; il secondo si aggiunge senza rifare niente |
 | Giri di penalità come prova fra le lezioni | **tolta** | Li insegna già con un esercizio la lezione «Boe e giri di penalità»; e «nessuna medaglia» fuori dalla Scuola (`DECISIONI.md`, 30 ottobre) |
 | Lezione sui segnali della giuria | **tolta** | C'è già nella Scuola (gruppo D) |
-| Momento clou | **dopo, col Fiocco** | `DECISIONI.md`, 1 novembre: le fasi 2-4 del coach vanno col livello del Fiocco. La moviola c'è già |
+| Momento clou | **in Deriva, come scritto allora** | Corretto il 6 novembre, decisione di Ale: «il coach e il clou è nel livello deriva. Tutte le altre implementazioni del coach arrivano col fiocco». Qui avevo scritto «dopo, col Fiocco»: era sbagliato |
 
 **Fuori da questa proposta:** giri di penalità nel torneo o in altre regate (il torneo resta con la penalità sul punteggio, regola 44.3, decisa il 20 ottobre); regola 18 («ultima fatica», dopo Deriva); correzione degli avversari.
 
@@ -64,6 +65,8 @@ Bozze: `menu-bozze/D_deriva_carriera.png`, `menu-bozze/D_scuola_libero.png` (fat
 - **Uscita, 1.3.2:** soglia nel torneo e nel libretto, misura D7, giro completo, prova a mano di Ale e di Lucio.
 
 Dopo ogni fetta, collaudi verdi e commit.
+
+**Momento clou (aggiunto il 6 novembre):** è codice nuovo, quindi ha una sua proposta con le due fermate (`PROPOSTA-COACH-REGISTRATORE.md`, fase 2, criterio 3). Quando si riparte con Deriva si decide in quale fetta entra e cosa ne dice la lezione 22. Domanda sulla penalità e passo da ripetere (fasi 3 e 4) restano col livello del Fiocco.
 
 **Aggiornamento del 4 novembre, decisione di Ale: Deriva aspetta che la Scuola sia giocata (`CHECK-SCUOLA-1.2.11.md`), e ogni lavoro su Deriva resta nascosto o in `sperimentale/`.** Quindi 1.3.0, 1.3.1 e 1.3.2 non sono più versioni visibili una dopo l'altra: chi apre il gioco vede il menu di oggi finché Ale non dice di mostrare Deriva. Come farlo si propone quando si riparte; idea più semplice: le lezioni con `nascosta: true`, come già fatto per le lezioni nuove, e il menu a due livelli solo con `#deriva` nell'indirizzo. Oggi il menu mostra già regate dei salti e dei giri e torneo: restano dove sono.
 
