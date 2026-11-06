@@ -255,7 +255,7 @@
     // (regata nei salti, seme 20): dopo il via chi è fuori dagli estremi usa la logica generale, che punta un punto dentro la linea
     // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B2): anche chi taglierebbe la linea fuori dagli estremi tenendo la prua di partenza (scivola di lato di
     // tan(up + 4) metri per metro verso la linea, verso -x) lascia quella prua: vicino alla boa la barca dell'1b ci girava attorno per tutto il minuto
-    const [fx, fy] = toWF(s.x, s.y), fuori = (R.t >= 0 || (b.goStart && R.t > -FUORI_T)) && (Math.abs(fx) > LINE_HALF - 3 || (b.leg === 0 && fy > 0 && fx - Math.tan((ai.up + 4) * D2R) * fy < -(LINE_HALF - 2)));
+    const [fx, fy] = toWF(s.x, s.y), fuori = R.t >= 0 && (Math.abs(fx) > LINE_HALF - 3 || (b.leg === 0 && fy > 0 && fx - Math.tan((ai.up + 4) * D2R) * fy < -(LINE_HALF - 2)));
     if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart) && !fuori){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
       const [bx, by] = toWF(s.x, s.y);
       const L = BOAT.length, lat = Math.tan((ai.up + 4) * D2R); // metri di lato per ogni metro guadagnato verso la linea, in bolina larga
@@ -271,7 +271,10 @@
           if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)) b.goStart = true; } // il margine fa arrivare dopo lo zero, mai prima
       }
       b.holdA = holdAngle(by);
-      if (b.goStart){ pre = true; b.preDesired = lineAim; if (by < 1 && R.t < -1) hold = true; } // partita: se è in anticipo non supera la linea prima dello zero
+      if (b.goStart){ pre = true; b.preDesired = lineAim;
+        // Deriva, fetta 4: chi taglierebbe la linea oltre lo spillo stringe il vento; se non basta, cambia mure verso il centro. Mandarla alla guida generale la faceva correre via lungo la linea (partenze, seme 5)
+        if (R.t > -FUORI_T && R.t < 0 && by > 0){ const margine = -(LINE_HALF - 2); if (bx - lat * by < margine) b.preDesired = bx - Math.tan((ai.up - 2) * D2R) * by >= margine ? twd + HOLD_S * (ai.up - 2) : twd - HOLD_S * (ai.up + 4); }
+        if (by < 1 && R.t < -1) hold = true; } // partita: se è in anticipo non supera la linea prima dello zero
       // ancora in avvicinamento, con la logica generale perché sa fare i bordi; si lasca quando lo scivolamento simulato finirebbe
       // dentro la fascia d'attesa, cioè quando è il momento di smettere di spingere per fermarsi lì
       else if (Math.hypot(s.x - px, s.y - py) > (far ? 8 : 6) && glideY(b, w) > 2 * L) dest = { x: px, y: py };
@@ -400,7 +403,7 @@
     return scelta === null ? desired : scelta;
   }
   const GYBE_MIN = 10, SCARTO_MAX = 25; // secondi, ipotesi nostre
-  const FUORI_T = 8; // Deriva, fetta 4: chi è già partito e taglierebbe fuori dallo spillo corregge già negli ultimi secondi; ipotesi nostra
+  const FUORI_T = 15; // Deriva, fetta 4: secondi prima del via in cui si guarda dove si taglierà la linea; ipotesi nostra
   const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
   // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)
   function passaggio(b, nd){
