@@ -126,3 +126,14 @@ Ale: «sì parti, e la guida vale anche per la Scuola». Il lavoro è solo sul r
 **Non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. `collaudo_avversari1b.py`: fallisce lo scenario 5 a 8 su 10, già noto come fallimento a 7 su 10.
 
 **Da fare prima di portarlo su `main`:** il giudizio di Ale giocando; rifare il riferimento di `collaudo_impronta.py`, che fotografa le regate; rileggere `collaudo_competizione.py` e l'esploratore; misurare i punti di Competizione nella Scuola, come promesso al §9.
+
+**Torneo col pilota** (`collaudo_torneo.py`, Chromium, semi 101-120, 20 tornei, confronto col giro della 1.2.12; numeri da riportare, senza soglia):
+
+| | 1° | 2° | 3° | 4° | Fra i primi tre | Penalità del pilota a torneo | Barche non arrivate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1.2.12 | 4 | 1 | 8 | 7 | 13 su 20 | 4,3 | 3 su 320 |
+| Ramo `deriva` | 4 | 7 | 3 | 6 | 14 su 20 | 2,35 | 5 su 320 |
+
+Il pilota usa la stessa guida degli avversari, quindi non dice quanto è difficile per chi gioca. C11 non si è concluso: la misura si è fermata al limite di tempo che le avevo dato, 25 minuti, insieme a un altro collaudo. Firefox non è stato misurato.
+
+**Difetto nuovo, aperto:** `collaudo_partenze.py` aggiunge un fallimento che nel giro della 1.2.12 non c'era: criterio (4), regata nelle raffiche, principianti, 180 s, seme 5: Verde e Blu non partono entro 60 s. Va capito prima di portare il lavoro su `main`. I fallimenti (1) e (2) sono già noti.
