@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.12"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.13"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -557,7 +557,9 @@
   $("lBack").onclick = () => showStep(Math.max(0, stepIdx - 1));
   $("lQuiz").onclick = () => openQuiz(lessonIdx);
   $("lEs").onclick = () => apriEsercizio(lessonIdx, stepIdx);
-  $("lRetry").onclick = () => { freshState(0, 0, 90, curStep().autoTrim ? 0.4 : 0.3); showStep(stepIdx); };
+  $("lRetry").onclick = () => { freshState(0, 0, 90, curStep().autoTrim ? 0.4 : 0.3); showStep(stepIdx);
+    const q = curStep().ripresa; // 1.2.13: vedi «ripresa» in contenuti.js
+    if (q){ if (q.twa !== undefined){ S.h = norm360(env.twd + q.twa); S.r = 0; } if (q.u !== undefined){ S.u = q.u; S.vl = 0; } if (q.sheet !== undefined) ctl.sheet = q.sheet; } };
 
   // ---- giro di boa (boe da lasciare a sinistra) ----
   // La boa è girata quando la barca attraversa la semiretta che parte dalla boa verso l'esterno della curva del percorso,

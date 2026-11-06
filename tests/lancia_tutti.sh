@@ -133,6 +133,7 @@ TESTS=(
     "collaudo_esame_nuove.py|py|chiaro|0||collaudo_esame_nuove.py"
     "collaudo_menu.py|py|chiaro|0||collaudo_menu.py"
     "collaudo_nomi.py|py|chiaro|0||collaudo_nomi.py"
+    "collaudo_ricomincia.py|py|chiaro|0||collaudo_ricomincia.py"
     "collaudo_medaglie.py|py|chiaro|0||collaudo_medaglie.py"
     "collaudo_suoni.py|py|chiaro|0||collaudo_suoni.py"
     "collaudo_suoni_si_sentono.py|py|chiaro|0|audio|collaudo_suoni_si_sentono.py"

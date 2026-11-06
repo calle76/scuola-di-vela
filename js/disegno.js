@@ -414,6 +414,7 @@
       if (Math.hypot(x - bx, y - by) < 6) a = -Math.PI * 0.75;
       if (n === "barra") a += 0.6; if (n === "timone") a -= 0.6; if (n === "deriva") a = Math.atan2(y - by, x - bx) + Math.PI / 2;
       if (n === "randa") a += 0.5;
+      if (n === "sottovento") a -= 0.5; // 1.2.13: più in alto, per non toccare la scritta «boma» (lezione 1, passo 6)
       let d = 58;
       let ex = x + Math.cos(a) * d, ey = y + Math.sin(a) * d;
       for (const u of used) if (Math.hypot(ex - u[0], ey - u[1]) < 28){ d += 30; ex = x + Math.cos(a) * d; ey = y + Math.sin(a) * d; }

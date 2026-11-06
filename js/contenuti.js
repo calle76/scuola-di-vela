@@ -12,6 +12,7 @@
   const poggiaSide = () => windLeft() ? "destra" : "sinistra", orzaSide = () => windLeft() ? "sinistra" : "destra";
   const turnKey = side => (opt.helm === "prua") === (side === "destra") ? "→" : "←";
   const barraNote = side => opt.helm === "prua" ? "" : ` La freccia sposta la barra a ${side === "destra" ? "sinistra" : "dritta"}: perché la prua giri dall'altra parte lo vedrai nella lezione 2.`;
+  // ripresa (1.2.13): dove rimette la barca «Ricomincia» nei passi in cui la partenza normale, al traverso, completerebbe già il passo (twa: gradi dal vento; u: velocità; sheet: scotta).
   const L1 = [
     { title: "La barca", ...PAUSE, zoom: 3, labels: ["prua", "poppa"],
       text: ["Questa è una <em>deriva</em>: una piccola barca a vela per una persona, la barca su cui di solito si impara. La vedi dall'alto.",
@@ -41,7 +42,7 @@
              "Se tieni premuto troppo a lungo, la prua attraversa il vento e la barca vira: premi <em>Ricomincia</em>."],
       cond: I => I.twa < 40 && I.kn < 1.5, hold: 0.5,
       done: "Questo è l'<em>angolo morto</em>: con la prua troppo vicina al vento (nelle scuole si indica in circa 45° per lato) la vela sbatte come una bandiera e non spinge, e la barca si ferma. Nessuna barca a vela può andare dritta contro il vento." },
-    { title: "Ripartire", tiller: true, turnHint: true, autoTrim: true, hud: 1, hintKind: "sail",
+    { title: "Ripartire", ripresa: { twa: 10, u: 0 }, tiller: true, turnHint: true, autoTrim: true, hud: 1, hintKind: "sail",
       text: [() => `Tieni premuto <em>${turnKey(poggiaSide())}</em> per poggiare e uscire dall'angolo morto, finché il vento arriva di fianco e la barca riparte. Se giri troppo, correggi con l'altra freccia. Con la prua proprio nel vento va bene anche l'altra freccia: da entrambi i lati si poggia.`],
       cond: I => I.twa > 70 && I.twa < 105 && I.kn > 2.5, hold: 1, // al traverso: più poggiati la vela non sbatterebbe nel passo «lascare»
       done: "La barca è ripartita. Ricapitolando: <em>orzare</em> avvicina la prua al vento, <em>poggiare</em> la allontana. Si riferiscono al vento, non a destra o sinistra: con il vento dall'altro lato della barca, per poggiare gireresti dall'altra parte." },
@@ -50,7 +51,7 @@
              "Da qui la vela non si regola più da sola. Tieni premuto <em>Lasca</em> (tasto S) e apri la vela del tutto."],
       cond: I => I.sheet > 0.9 && (I.tt === "wind" || I.tt === "flog"), hold: 0.5,
       done: "Vedi come sbatte? Si dice che la vela <em>fileggia</em>: troppo aperta, prende il vento di taglio e non spinge. La barca rallenta." },
-    { title: "La scotta: cazzare", sem: ["cazza", "lasca"], tiller: true, turnHint: true, hud: 1, hintKind: "sail",
+    { title: "La scotta: cazzare", ripresa: { sheet: 1 }, sem: ["cazza", "lasca"], tiller: true, turnHint: true, hud: 1, hintKind: "sail",
       text: ["Ora tieni premuto <em>Cazza</em> (tasto W), poco alla volta, finché la vela smette di sbattere e si gonfia. Se esageri, correggi con Lasca."],
       cond: I => I.tt === "ok", hold: 1,
       done: "Vela regolata: la barca riprende velocità. La regola pratica: <em>lasca finché la vela comincia a sbattere, poi cazza quanto basta perché smetta</em>." },
@@ -103,7 +104,7 @@
       text: ["Orza fino alla <em>bolina</em> (il settore con il bordo tratteggiato nel cerchio), con il vento tra circa 45° e 75° dalla prua. La vela si regola da sola: guarda come si chiude il boma."],
       cond: (I, S, B) => I.twa >= 43 && I.twa <= 72 && Math.abs(I.r) < 4 && (B.barraLee || 0) >= 0.1, hold: 1, // 1.1.3: come 2.4, la barca dell'1b orza da sola
       done: "Bolina: l'andatura più vicina al vento. <em>Bolina stretta</em> è il massimo che la barca riesce a stringere, <em>bolina larga</em> un po' più aperta. La vela sta molto cazzata." },
-    { title: "Traverso", tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [3],
+    { title: "Traverso", ripresa: { twa: 60 }, tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "sail", target: [3],
       text: ["Poggia fino al <em>traverso</em> (il settore con il bordo tratteggiato), con il vento a circa 90°."],
       cond: I => I.twa >= 80 && I.twa <= 100 && Math.abs(I.r) < 4, hold: 1,
       done: "Al traverso il vento arriva di fianco. È un'andatura veloce, e la vela va aperta circa a metà: il boma a una quarantina di gradi dal centro barca, a metà strada tra tutto cazzato e tutto lascato. Il valore esatto lo leggi sotto il cursore della scotta." },
@@ -129,7 +130,7 @@
       text: ["Ora impara a cazzare: tira la scotta (freccia ↑) poco alla volta, finché entrambi i filetti scorrono dritti. In mare puoi anche poggiare; qui la barra è bloccata e si esercita la scotta."],
       cond: I => I.tt === "ok" && I.alpha >= 10 && I.alpha <= 25, hold: 1.5, // 1.0.37: lontano dai confini 8° e 27°
       done: "Vela regolata." },
-    { title: "Filetto sottovento", sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
+    { title: "Filetto sottovento", ripresa: { sheet: 0.5 }, sheet: true, hud: 1, hintKind: "none", zoom: 1.6,
       text: ["Cazza ancora, troppo, finché si agita il filetto <em>sottovento</em>."],
       cond: I => I.tt === "lee", hold: 0.5, // 1.1.3: era anche alpha > 29 con hold 1; il filetto si agita da 27° (ttState): con la barca dell'1b, che orza, chi si fermava al filetto agitato non arrivava mai a 29°
       done: "Vela troppo cazzata: l'aria si stacca dal lato sottovento, la vela va in stallo e la barca rallenta." },
@@ -137,7 +138,7 @@
       text: ["Poggia fino al <em>lasco</em> e regola la vela finché i filetti sono dritti."],
       cond: I => I.twa >= 105 && I.twa <= 140 && I.tt === "ok", hold: 1.5,
       done: "Poggiando la vela era troppo chiusa: hai dovuto lascare." },
-    { title: "Orzi e cazzi", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
+    { title: "Orzi e cazzi", ripresa: { twa: 120, sheet: 0.6 }, tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",
       text: ["Ora orza fino alla <em>bolina</em> e regola di nuovo."],
       cond: I => I.twa >= 43 && I.twa <= 72 && I.tt === "ok", hold: 1.5,
       done: "Orzando la vela era troppo aperta: hai dovuto cazzare. Regola da ricordare: <em>orzi e cazzi, poggi e laschi</em>." },
@@ -687,7 +688,7 @@
       start: { x: 0, y: 0, h: 90, sheet: 0.02 }, bands: [80, 100, 130],
       marks: [{ x: 230, y: 0, label: "Arrivo" }] },
     { title: "Lasco e poppa", desc: "Raggiungi l'arrivo sottovento.", wind: 45, tws: 10, gusts: 0,
-      text: "L'arrivo è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Attento a non strambare senza volerlo. Se devi per forza strambare, cazza prima tutta la vela, così la strambata è controllata (la vedrai meglio nella lezione 6).",
+      text: "L'arrivo è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Per arrivarci quasi sempre serve anche una strambata: cazza finché il boma è a 45° o meno, poggia finché il vento passa dall'altro lato, poi lasca. La vedrai meglio nella lezione 6.",
       start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [125, 155, 200],
       marks: [{ x: 60, y: 260, label: "Arrivo" }] },
     { title: "Risalire il vento", desc: "Raggiungi l'arrivo controvento.", wind: 180, tws: 10, gusts: 0,

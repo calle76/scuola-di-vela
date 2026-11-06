@@ -191,6 +191,14 @@ Ale: «fanno ancora confusione». Tre avversari prudenti, principianti, 10 nodi,
 
 Limite dello strumento: `analizza_sessione.py` su questi file scrive «a cedere 533 s», ma conta righe a 10 al secondo (sono circa 53 s), e «DIVERSO» perché i file automatici non hanno il riassunto del gioco. Non sono difetti del gioco.
 
+## 6 novembre 2026: scheda «La barca», prova di Ale alla 1.2.12
+
+| # | Cosa si è visto | Cosa ne facciamo |
+| --- | --- | --- |
+| 87 | Lezione 1, passo 6: «sottovento» e «boma» si sovrappongono | Corretto nella 1.2.13 |
+| 88 | Lezione 1, passo 9: Ricomincia mette la barca al traverso e completa il passo | Corretto nella 1.2.13, con altri 4 passi uguali trovati dal controllo |
+| 89 | Prova 2: secondo Ale la strambata è necessaria, solo di lasco e poppa non si arriva | Misurato: si può evitare solo puntando subito l'arrivo. Testo corretto nella 1.2.13; arrivo e medaglie non toccati |
+
 ## 6 novembre 2026: chiusura a metà regata del torneo, in Firefox (`collaudo_torneo` C11)
 
 | # | Cosa si è visto | Cosa ne facciamo |
