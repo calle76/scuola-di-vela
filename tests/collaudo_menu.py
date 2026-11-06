@@ -12,12 +12,12 @@ import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]; BASE = (ROOT / "index.html").as_uri()
 import sorgente; SRC = sorgente.testo()
-GRUPPI = [[("l", 0), ("l", 1), ("l", 6), ("l", 2), ("m", 0), ("m", 1), ("l", 3), ("l", 4), ("l", 7), ("m", 2), ("m", 3)],
+GRUPPI = [[("l", 0), ("l", 1), ("l", 2), ("m", 0), ("m", 1), ("l", 3), ("l", 4), ("l", 7), ("l", 6), ("m", 2), ("m", 3)],
           [("l", 5), ("l", 9), ("l", 8), ("l", 10), ("m", 4)],
           [("l", 11), ("l", 12), ("l", 13), ("l", 14), ("l", 15), ("l", 16), ("l", 18), ("l", 19), ("l", 17)]]
 SEQ = [x for g in GRUPPI for x in g]; ORD = [i for t, i in SEQ if t == "l"]
-TITOLI = ["La barca e il vento", "Il timone", "Il timone che stalla", "Andature e mure", "Al traverso", "Lasco e poppa", "Vento reale e apparente", "Virata e strambata",
-          "Spingere il boma", "Risalire il vento", "Il giro di boa", "Raffiche e scuffia", "La raddrizzata lunga", "La barca che orza sbandando", "I salti di vento", "Percorso nelle raffiche",
+TITOLI = ["La barca e il vento", "Il timone", "Andature e mure", "Al traverso", "Lasco e poppa", "Vento reale e apparente", "Virata e strambata",
+          "Spingere il boma", "Il timone che stalla", "Risalire il vento", "Il giro di boa", "Raffiche e scuffia", "La raddrizzata lunga", "La barca che orza sbandando", "I salti di vento", "Percorso nelle raffiche",
           "Mure opposte", "Stesse mure", "Chi vira cede", "Evitare il contatto", "I segnali di partenza", "La partenza anticipata", "Partenza in velocità", "Partenza da fermi", "Boe e giri di penalità"]
 bad = []; casi = {}
 def chk(parte, ok, m):
@@ -73,7 +73,7 @@ async def main():
         vecchi = [(d, t) for d, t in testi if re.search(r"[Ll]ezione [BCD]\d", t)]
         chk("M4", len(testi) > 300 and not vecchi, f"M4 nessun «Lezione B/C/D…» in {len(testi)} testi: {vecchi[:2]}")
         # i rimandi per numero nel codice del gioco (testi e messaggi), con il titolo a cui devono puntare
-        attesi = {"2": "Il timone", "4": "Andature e mure", "6": "Virata e strambata", "12": "Mure opposte"}   # il 4 dalla 1.2.12 (riepilogo della lezione 2)
+        attesi = {"2": "Il timone", "3": "Andature e mure", "5": "Virata e strambata", "8": "Raffiche e scuffia", "10": "La barca che orza sbandando", "12": "Mure opposte"}   # numeri rifatti nella 1.2.14
         rim = [(m.group(1), l.strip()[:80]) for l in SRC.splitlines() if not l.lstrip().startswith("//") for m in re.finditer(r"(?<![Ee]sercizio della )\blezione (\d+)\b", l.split(" // ")[0])]
         chk("M4", len(rim) >= 5 and all(n in attesi for n, _ in rim), f"M4 rimandi «lezione N» nei testi: {len(rim)}, numeri {sorted({n for n, _ in rim})}, fuori dall'elenco atteso: {[r for r in rim if r[0] not in attesi][:3]}")
         tit = await pg.evaluate("() => Object.fromEntries(LESSONS.map(L => [L.name.split(' ')[1], L.title]))")
@@ -87,7 +87,7 @@ async def main():
         sbag = [(v, glm.get(v), tit.get((glm.get(v) or "x y").split(" ")[1])) for v, t in att_gl.items() if tit.get((glm.get(v) or "x y").split(" ")[1]) != t]
         chk("M4", not sbag and all(w == "Prove" or re.fullmatch(r"Lezione ([1-9]|1\d|20)", w) for _, w in gl), f"M4 glossario: {len(att_gl)} voci controllate sul titolo, sbagliate {sbag}")
         # ---- M5: lezione 3 dell'array ----
-        l3 = [t for d, t in testi if d.startswith("Lezione 4 ")]
+        l3 = [t for d, t in testi if d.startswith("Lezione 3 ")]
         chk("M5", len(l3) > 20 and not any("precedenz" in t.lower() for t in l3) and not any("Chi deve lasciare strada" in t for t in l3), f"M5 «Andature e mure» senza precedenze ({len(l3)} testi)")
         chk("M5", await pg.evaluate("() => [LESSONS[2].title, QUIZ[2].length, LESSONS[2].steps.some(s => s.title === 'Le mure')]") == ["Andature e mure", 5, True], "M5 titolo, quiz di 5 domande, pagina «Le mure»")
         chk("M6", not errs, f"M2-M5 errori di pagina {errs[:1]}"); await ctx.close()

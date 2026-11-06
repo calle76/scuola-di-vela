@@ -15,7 +15,7 @@ INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; BASE = IN
 import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]   # [oro, argento, bronzo] per prova
 assert len(BANDS) == 5, BANDS
-ORD = [0, 1, 6, 2, 3, 4, 7, 5, 9, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19, 17]   # indici delle lezioni nell'ordine della Scuola (PROPOSTA-LEZIONI-SCUOLA §5)
+ORD = [0, 1, 2, 3, 4, 7, 6, 5, 9, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19, 17]   # indici delle lezioni nell'ordine della Scuola (PROPOSTA-LEZIONI-SCUOLA §5)
 TUTTE = range(20)
 MK = ["m0.4", "m1.4", "m2.4", "m3.5", "m4.6"]   # chiavi delle prove (KEYV), come le scrive il gioco
 fail = []; casi = {}; visti = {}
