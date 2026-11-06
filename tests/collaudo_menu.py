@@ -73,7 +73,7 @@ async def main():
         vecchi = [(d, t) for d, t in testi if re.search(r"[Ll]ezione [BCD]\d", t)]
         chk("M4", len(testi) > 300 and not vecchi, f"M4 nessun «Lezione B/C/D…» in {len(testi)} testi: {vecchi[:2]}")
         # i rimandi per numero nel codice del gioco (testi e messaggi), con il titolo a cui devono puntare
-        attesi = {"2": "Il timone", "6": "Virata e strambata", "12": "Mure opposte"}
+        attesi = {"2": "Il timone", "4": "Andature e mure", "6": "Virata e strambata", "12": "Mure opposte"}   # il 4 dalla 1.2.12 (riepilogo della lezione 2)
         rim = [(m.group(1), l.strip()[:80]) for l in SRC.splitlines() if not l.lstrip().startswith("//") for m in re.finditer(r"(?<![Ee]sercizio della )\blezione (\d+)\b", l.split(" // ")[0])]
         chk("M4", len(rim) >= 5 and all(n in attesi for n, _ in rim), f"M4 rimandi «lezione N» nei testi: {len(rim)}, numeri {sorted({n for n, _ in rim})}, fuori dall'elenco atteso: {[r for r in rim if r[0] not in attesi][:3]}")
         tit = await pg.evaluate("() => Object.fromEntries(LESSONS.map(L => [L.name.split(' ')[1], L.title]))")

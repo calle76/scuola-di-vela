@@ -39,6 +39,17 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 **Controlli sulla 1.2.12, Chromium e Firefox:** verdi `versione`, `lezioni`, `pannello_lezioni`, `quiz`, `esame`, `esame_nuove`, `pannello` (90 misure a 1360x650, eccesso massimo 0 px), `nomi`. `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici al riferimento.
 
+**Correzione a questo elenco:** il giro di GitHub smentisce il verde di `esame_nuove`: con la voce «Abbattuta» il glossario ha 68 voci e il collaudo ne aspettava 67. `collaudo_menu` non era fra i controlli della 1.2.12 ed è caduto anche lui.
+
+**Giro completo su GitHub della 1.2.12** (zip di Ale del 6 novembre, 77 voci per browser; solo collaudi corretti, gioco invariato, nessun cambio di versione). Quattro voci rosse:
+- **`collaudo_menu` (M4) e `collaudo_esame_nuove` (G0, G1, G4), nei due browser: conseguenze dei testi della 1.2.12, il gioco è giusto.** Il rimando nuovo «lezione 4» punta davvero ad «Andature e mure». Aggiornati i valori attesi: M4 accetta il 4 e ne controlla il titolo; glossario 68 voci; G1 identico alla 1.2.2 più la sola «Abbattuta». Verdi in Chromium e Firefox. Controprova su una copia guastata: voce tolta, voce in più e rimando alla lezione 5 fanno cadere i controlli giusti.
+- **`collaudo_boma2`, solo Firefox: errore del collaudo.** Alla prima apertura la pagina era già vuota, e la navigazione verso se stessa poteva interrompere il caricamento del gioco. Ora non parte. Verde 6 giri su 6 in Firefox, 1 in Chromium; la caduta era saltuaria e non si riproduce a comando, quindi questo non dimostra che sia sparita: si guarda nei prossimi giri. Altri 9 collaudi hanno la stessa riga e non sono stati toccati.
+- **`collaudo_torneo` (veloce), solo Firefox: C11, non corretto.** Chiusura del browser a metà regata: 3 su 4 registrate. Stessa famiglia della misura lunga (R2 37/40, R3 77/80, R4 18/20, DA CONTROLLARE), in Chromium 40/40. Va in rosso perché nella voce «veloce» non è segnata come misura di tempo. Non è stabilito se sia il collaudo o il gioco.
+- **Da guardare, nei valori noti:** lezioni semi 1-100, passo 5.8 non completato 5 volte su 100; `collaudo_fasce` prove 1-4 a 79,2/124,4/158,7/286,4 s, prova 5 mediana 302,1 s (massimo 427,0). `collaudo_torneo` (misura) in Chromium è verde: la correzione della 1.2.12 è confermata.
+- **`collaudo_suoni_si_sentono`:** verde in Chromium dopo 4 giri rossi, ma il sartiame sta a 2,1-4,3 dB su soglia 2. Un giro verde non chiude la questione. In Firefox non misura niente (audio sospeso senza schermo).
+
+**Esploratore della 1.2.12** (4 novembre, semi nuovi 901-1100, 1600 corse per browser, 4 giri di scimmia da 600 s per browser). Numeri non finiti 0 su 99.051.962 controllati; eccezioni ed errori della pagina 0; pannello oltre di 0 px; scimmia 7.109 azioni, 0 errori, pagina mai a scorrere. Casi noti: pilota mai partito 1 su 3200 (Firefox, seme 987, regata 3, esperti, fermo 1479 s); due barche oltre 400 s sullo stesso tratto 5 su 3200 (3 Chromium, 2 Firefox).
+
 ## 1.2.11 — La Scuola si chiude: medaglie ritarate e nomi al posto dei numeri
 
 `docs/PROPOSTA-MEDAGLIE-E-NOMI.md`, soglie committate prima del codice (129e859). Ale, 4 novembre: «puoi continuare senza chiedere autorizzazioni»; i nomi sono le sue decisioni del 30 ottobre.

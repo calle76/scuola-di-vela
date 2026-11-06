@@ -17,7 +17,9 @@ def check(ok, testo):
     if not ok: falliti.append(testo)
 
 async def apri(pg, kn, lv):
-    await pg.evaluate("location.href='about:blank'"); await pg.wait_for_url("about:blank"); await pg.wait_for_timeout(300); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(200)
+    if pg.url != "about:blank":   # alla prima apertura la pagina è già vuota: la navigazione verso se stessa poteva finire dopo l'attesa e interrompere il goto (Firefox, giro del 5 nov 2026)
+        await pg.evaluate("location.href='about:blank'"); await pg.wait_for_url("about:blank"); await pg.wait_for_timeout(300)
+    await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(200)
     await pg.evaluate("__sv.openItem('free')")
     await pg.evaluate("""([k, lv]) => { for (const [id, v] of [['wSpd', k], ['gustSel', '0'], ['wDir', '0'], ['boatLv', lv]]){
         const e = document.getElementById(id); if (!e) continue; e.value = v; e.dispatchEvent(new Event('change')); } }""", [str(kn), str(lv)])
