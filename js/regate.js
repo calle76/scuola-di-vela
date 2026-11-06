@@ -372,9 +372,12 @@
       if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», 
       bt = t; best = { o, d };
     }
-    if (!best){ b.cedeA = null; b.rottaU = null; return desired; }
+    if (!best){ b.cedeA = null; b.rottaU = null; b.cedeDa = null; return desired; }
     const o = best.o, devo = chiCede(b, o).cede === b; b.cedeA = devo ? o : null;
-    if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; } // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+    // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+    if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; }
+    if (b.cedeDa === null || b.cedeDa === undefined) b.cedeDa = R.t;
+    if (R.t - b.cedeDa > SCARTO_MAX){ b.rottaU = null; return desired; } // nessuno scarto dura per sempre: due barche parallele e vicine si tenevano a vicenda su una rotta (misurato: 2 barche mai arrivate)
     if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = s.h; // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
     // Deriva, fette 2 e 3 (docs/PROPOSTA-AVVERSARI-DERIVA.md): si prova lo scarto più piccolo che passa lontano da TUTTE le barche vicine. Chi cede parte dalla rotta che vuole,
     // chi ha la precedenza dalla rotta che ha: mai dentro l'angolo morto né oltre il vento, e quindi niente ritorni di bolina a chi sta scendendo.
@@ -395,7 +398,7 @@
     }
     return scelta === null ? desired : scelta;
   }
-  const GYBE_MIN = 10; // secondi, ipotesi nostra
+  const GYBE_MIN = 10, SCARTO_MAX = 25; // secondi, ipotesi nostre
   const FUORI_T = 15; // Deriva, fetta 4: chi è già partito e taglierebbe fuori dallo spillo corregge già negli ultimi secondi; ipotesi nostra
   const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
   // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)

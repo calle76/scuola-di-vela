@@ -8,7 +8,7 @@
 # Uso: python tests/misura_avversari.py PRIMO_SEME ULTIMO_SEME [regate, es. 0,2]   (0 = bastone 1a, 1 = raffiche 1a, 2 = salti di vento 1b)
 import asyncio, json, pathlib, statistics, sys
 from playwright.async_api import async_playwright
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+ROOT = pathlib.Path(__import__("os").environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent)  # RADICE: misurare un altro gioco con questo strumento
 S0, S1 = int(sys.argv[1]), int(sys.argv[2]); REG = [int(x) for x in (sys.argv[3] if len(sys.argv) > 3 else "0,2").split(",")]
 src = (pathlib.Path(__file__).resolve().parent / "esplora.py").read_text()
 SEME = src.split('SEME = """')[1].split('"""')[0]
