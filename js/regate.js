@@ -314,6 +314,12 @@
       }
       if (prey) desired = bearingTo(s, prey.S);
     }
+    // Deriva, fetta 5 (docs/PROPOSTA-AVVERSARI-DERIVA.md): col vento da dietro la prua oscillava attorno ai 180° e ogni oscillazione era una strambata (osservazione 85).
+    // Sulle stesse mure si resta entro 172° dal vento, e dopo una strambata per GYBE_MIN s, salvo vicino al bersaglio
+    if (A > 120){ const tk = sgn(norm180(twd - s.h)), dd = norm180(twd - desired);
+      if (tk){ if (b.tackP && tk !== b.tackP) b.tGybe = R.t; b.tackP = tk; }
+      const vicino = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
+      if (tk && !vicino && (sgn(dd) === tk ? Math.abs(dd) > 172 : R.t - (b.tGybe ?? -1e9) < GYBE_MIN || Math.abs(dd) > 172)) desired = twd - tk * 172; }
     // chi deve cedere si scosta (cedeAvv1b, qui sotto). Fino alla 1.0.78 la barca dell'1a aveva qui una regola 10 sua e uno scarto da qualsiasi barca davanti
     if (!hold) desired = cedeAvv1b(b, desired, twd, side, ai);
     // 1.0.67 (docs/PROPOSTA-GIRI-AVVERSARI.md): chi ha un debito di giri e la via libera segue la sequenza dei giri al posto della rotta; le tre regole qui sotto (angolo morto, abbrivio, piantata) non valgono
@@ -366,13 +372,14 @@
       if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», 
       bt = t; best = { o, d };
     }
-    if (!best){ b.cedeA = null; return desired; }
+    if (!best){ b.cedeA = null; b.rottaU = null; return desired; }
     const o = best.o, devo = chiCede(b, o).cede === b; b.cedeA = devo ? o : null;
-    if (!devo && best.d > ULTIMO * L) return desired; // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+    if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; } // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+    if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = s.h; // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
     // Deriva, fette 2 e 3 (docs/PROPOSTA-AVVERSARI-DERIVA.md): si prova lo scarto più piccolo che passa lontano da TUTTE le barche vicine. Chi cede parte dalla rotta che vuole,
     // chi ha la precedenza dalla rotta che ha: mai dentro l'angolo morto né oltre il vento, e quindi niente ritorni di bolina a chi sta scendendo.
-    const lato = devo ? side : (sgn(norm180(twd - s.h)) || side);
-    const rotta = devo ? (sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up) : s.h;
+    const lato = devo ? side : (sgn(norm180(twd - b.rottaU)) || side);
+    const rotta = devo ? (sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up) : b.rottaU;
     const relB = norm180(bearingTo(s, o.S) - s.h);
     const prima = devo && tackOf(b) !== tackOf(o) ? -lato : (relB >= 0 ? -1 : 1); // la direzione preferita: mure diverse poggia e passa di poppa; se no, via dall'altra barca
     let scelta = null, meglio = -1;
@@ -385,6 +392,7 @@
     }
     return scelta === null ? desired : scelta;
   }
+  const GYBE_MIN = 10; // secondi, ipotesi nostra
   const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
   // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)
   function passaggio(b, nd){
