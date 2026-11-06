@@ -223,7 +223,9 @@
       const near = (k, r) => Math.hypot(wx - P[k][0], wy - P[k][1]) < r;
       // il punto 1 si punta solo da sopra la boa: da più in basso la bolina porterebbe la barca proprio sopra la boa
       const sopra = due ? wx - mx < -2 && wy - my < -3 : wy < -R.up - 2 && wx > 3, oltre = due ? wy - my > 8 : wx < -8;
-      if (!b.rp && (near(0, 4) || sopra)) b.rp = 1;
+      // Deriva (docs/PROPOSTA-AVVERSARI-DERIVA.md, §11): chi può già puntare il punto oltre la boa senza virare, passando sopra la boa, non cerca il punto 0: mancandolo di poco virava indietro e si piantava (regata di Ale, 17:59)
+      const dxP = wx - P[1][0], dyP = wy - P[1][1], sulBordo = !due && wx > 3 && dxP > 0 && dyP > 0 && Math.atan2(dxP, dyP) >= PASSO_A * D2R && wy - dyP * wx / dxP < my - PASSO_M;
+      if (!b.rp && (near(0, 4) || sopra || sulBordo)) b.rp = 1;
       else if (b.rp === 1 && ((oltre && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
       else if (b.rp === 2 && near(2, 8)) b.rp = 0;
       const [x, y] = fromWF(P[b.rp || 0][0], P[b.rp || 0][1]); return { x, y, kind: "mark" };
@@ -360,6 +362,7 @@
   // rotta e scarta solo all'ultimo; mai dentro l'angolo morto. Prima ogni avversario scartava qualsiasi barca davanti entro 14-22 m, anche
   // avendo la precedenza, orzando fin dentro l'angolo morto: 72 piantate su 124 avendo la precedenza (tests/misura_avversari.py, semi 1-20).
   const D_CEDE = 30, T_CEDE = 15, ULTIMO = 1.5; // ipotesi nostre: 30 m come la regola 10 degli avversari dell'1a; 15 s di preavviso
+  const PASSO_A = 56, PASSO_M = 3; // Deriva, §11: gradi dal vento per arrivare senza virare, metri sopra la boa; ipotesi nostre
   const U_ABBRIVIO = 1.6; // 1.1.1 (B1): m/s fino ai quali si prende abbrivio prima di virare (circa 3,1 nodi); ipotesi nostra
   const V_AVV = 0.1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, A): m/s di avvicinamento sotto i quali, con gli scafi a più di una lunghezza, l'altra barca non è un pericolo; ipotesi nostra, scelta sui semi 1-20 (con 0,3: contatti +25%), confermata sui semi 21-40
   function cedeAvv1b(b, desired, twd, side, ai){

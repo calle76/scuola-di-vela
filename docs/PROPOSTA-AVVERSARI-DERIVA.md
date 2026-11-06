@@ -143,3 +143,30 @@ Il pilota usa la stessa guida degli avversari, quindi non dice quanto è diffici
 **Misura sul codice attuale, semi 361-380, mai usati**, 80 regate per browser (Chromium / Firefox): penalità 169 / 161 (massimo 190), prima del via 117 / 109 (massimo 90, **fuori**), fuori linea 21 / 30 (massimo 36), ritorni di bolina con la precedenza 0 / 0, urti mentre si cede 36 / 34, strambate ravvicinate 4 / 9, non arrivate 0 / 0, piantate 13 / 11 (massimo 12, **fuori in Chromium**), boe sbagliate 2 / 5. Il gioco di oggi non è stato misurato su questi semi: il confronto resta quello della tabella.
 
 **Regata giocata da Ale** (6 novembre, 15:50, a bastone, codice precedente all'aggiornamento): nessun contatto, penalità o fuori linea fino al suo arrivo, primo in 181 s. Al via resta del disordine: Rossa corre lungo la linea e taglia a 8 s, Blu passa a 3,6 m da Ale. Una regata sola.
+
+## 11. Il giro della boa (regata di Ale delle 17:59, osservazione 90; criteri scritti prima di correggere)
+
+**Cosa si vede.** Verde arriva a 2 m sotto il punto di passaggio 0, lo sorpassa e vira indietro per raggiungerlo; appena è sopra la boa cambia bersaglio e rivira senza velocità: 7 s sotto 1 nodo, anche all'indietro. Blu e Rossa, a circa 30 m dalla boa, fanno due virate di fila: scade il timer del bordo, poi la regola «vicino al bersaglio» riporta sul bordo di prima. Non nasce dalla guida nuova: c'è anche nella 1.2.14.
+
+**Correzioni, una alla volta.** A: si punta già il punto oltre la boa quando ci si arriva senza virare e passando sopra la boa di almeno 3 m. B: il timer dei bordi non fa più virare entro 60 m dal bersaglio.
+
+**Soglie**, rispetto al ramo prima di questa correzione. Pilota, Chromium e Firefox, bastone e raffiche, principianti ed esperti, 90 barche per regata: scelta sui semi 401-415, conferma sui semi 421-435 mai guardati.
+
+- G1, ferme almeno 3 s sotto 1 nodo entro 40 m dalla boa: da 16 (7 bastone, 9 raffiche) ad al massimo 8.
+- G2, barche con 3 o più virate entro 40 m: da 83 (43 + 40) ad al massimo 55.
+- G3, tempo mediano entro 40 m: bastone da 37,8 s ad al massimo 32, raffiche da 31,6 s ad al massimo 27.
+- G4, non peggiorare (`misura_avversari.py`): stesse soglie di V1, V3, V7; prima del via resta riportato, oggi fuori soglia.
+- G5, barca invariata, `collaudo_partenze.py` senza criteri nuovi fuori.
+
+Costanti nuove, ipotesi nostre: 3 m sopra la boa, 56° dal vento come limite di «senza virare», 60 m.
+
+**Esiti (semi 401-415, solo Chromium; soglie non cambiate). Non superate.** Dentro: correzione A. Tolta: correzione B, che alzava le barche ferme e portava il massimo entro 40 m a 119 s.
+
+| | Prima | A | A + B | Soglia |
+| --- | --- | --- | --- | --- |
+| G1 ferme | 16 | 9 | 12 | ≤ 8 |
+| G2 3 o più virate | 83 | 78 | 69 | ≤ 55 |
+| G3 bastone | 37,8 s | 37,5 s | 37,1 s | ≤ 32 s |
+| G3 raffiche | 31,6 s | 30,1 s | 30,65 s | ≤ 27 s |
+
+G4, semi 361-380, Chromium, con A (prima → dopo): penalità 169 → 174 (≤ 190), fuori linea 21 → 21 (≤ 36), ritorni di bolina 0 → 1 (soglia 0: **fuori**), urti cedendo 36 → 40, piantate 13 → 13 (≤ 12: **fuori**, come prima), boe 2 → 1, non arrivate 0. G5: barca identica; `collaudo_partenze.py` non concluso per tempo (fermato a 590 s). Firefox e conferma sui semi 421-435 non fatti, perché le soglie non sono raggiunte. Per confronto, Ale nella stessa regata è stato 29,5 s entro 40 m dalla boa. Molte virate restano perché chi arriva mure a sinistra deve passare sotto la boa e rivirare.
