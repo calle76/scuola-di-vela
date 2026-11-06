@@ -255,7 +255,7 @@
     // (regata nei salti, seme 20): dopo il via chi è fuori dagli estremi usa la logica generale, che punta un punto dentro la linea
     // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B2): anche chi taglierebbe la linea fuori dagli estremi tenendo la prua di partenza (scivola di lato di
     // tan(up + 4) metri per metro verso la linea, verso -x) lascia quella prua: vicino alla boa la barca dell'1b ci girava attorno per tutto il minuto
-    const [fx, fy] = toWF(s.x, s.y), fuori = R.t >= 0 && (Math.abs(fx) > LINE_HALF - 3 || (b.leg === 0 && fy > 0 && fx - Math.tan((ai.up + 4) * D2R) * fy < -(LINE_HALF - 2)));
+    const [fx, fy] = toWF(s.x, s.y), fuori = (R.t >= 0 || (b.goStart && R.t > -FUORI_T)) && (Math.abs(fx) > LINE_HALF - 3 || (b.leg === 0 && fy > 0 && fx - Math.tan((ai.up + 4) * D2R) * fy < -(LINE_HALF - 2)));
     if (b.leg === 0 && !b.ocs && (R.t < 0 || b.goStart) && !fuori){ // chi è oltre la linea torna indietro con la logica generale, che punta la linea: tenendo la prua della partenza se ne andava di bolina e non partiva più
       const [bx, by] = toWF(s.x, s.y);
       const L = BOAT.length, lat = Math.tan((ai.up + 4) * D2R); // metri di lato per ogni metro guadagnato verso la linea, in bolina larga
@@ -393,6 +393,7 @@
     return scelta === null ? desired : scelta;
   }
   const GYBE_MIN = 10; // secondi, ipotesi nostra
+  const FUORI_T = 15; // Deriva, fetta 4: chi è già partito e taglierebbe fuori dallo spillo corregge già negli ultimi secondi; ipotesi nostra
   const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
   // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)
   function passaggio(b, nd){
