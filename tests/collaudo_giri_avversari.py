@@ -171,7 +171,7 @@ async def main():
         scuff = sum(1 for k, s in A if s["scuff"])
         chk("G6 segmenti con scuffia: %d su %d (soglia 5%%)" % (scuff, nseg), nseg >= 20 and scuff <= 0.05 * nseg)
         # G12: il verso scelto. Dai campioni: all'inizio del segmento |twa| e u; dopo 1 s |twa| è cresciuto (poggia) o calato (orza)
-        seg = []; ripresi = 0; vicini = 0
+        seg = []; ripresi = 0; vicini = 0; soglia = 0
         for k, r in enumerate(R):
             for i, log in enumerate(r["log"]):
                 m = 0; fine_prec = None
@@ -183,10 +183,11 @@ async def main():
                     fine_prec = m
                     if cont: ripresi += 1
                     elif abs(log[a_][2]) > 160: vicini += 1  # partenza vicino alla poppa: l'angolo cresce e poi cala per la strambata, il metro non decide
+                    elif abs(log[a_][6] - 1.5) < 0.05 or abs(abs(log[a_][2]) - 80) < 2: soglia += 1  # 7 nov 2026: sulla soglia della guida (1,5 m/s, 80°) il campione del collaudo e l'istante della scelta cadono ai due lati: il metro non decide
                     elif m - a_ > 10 and abs(log[a_][2]) >= 30: seg.append((log, a_))  # niente partenze a meno di 30° dal vento: nel tempo della finestra (1 s) la prua l'ha già passato e l'angolo ricomincia a crescere
         larga = [(abs(l[a_][2]) >= 80 or l[a_][6] < 1.5, abs(l[a_ + 10][2]) - abs(l[a_][2])) for l, a_ in seg]
         ok12 = sum(1 for lg, d in larga if (d > 0) == lg)
-        chk("G12 il verso scelto: dall'andatura larga (>= 80° dal vento) o con poca velocità (< 1,5 m/s) l'angolo dal vento cresce nel primo secondo (si poggia), altrimenti cala (si orza): %d segmenti su %d (di cui poggiando %d; esclusi %d segmenti ripresi nel verso già scelto e %d partiti a più di 160° dal vento)" % (ok12, len(larga), sum(1 for lg, d in larga if lg), ripresi, vicini), len(larga) >= 20 and ok12 == len(larga), "non tornano (twa iniziale, u iniziale, variazione): %s" % [(round(l[a_][2]), round(l[a_][6], 2), round(abs(l[a_ + 10][2]) - abs(l[a_][2]), 1)) for (l, a_), (lg, d) in zip(seg, larga) if (d > 0) != lg])
+        chk("G12 il verso scelto: dall'andatura larga (>= 80° dal vento) o con poca velocità (< 1,5 m/s) l'angolo dal vento cresce nel primo secondo (si poggia), altrimenti cala (si orza): %d segmenti su %d (di cui poggiando %d; esclusi %d segmenti ripresi nel verso già scelto e %d partiti a più di 160° dal vento, %d sulla soglia della guida)" % (ok12, len(larga), sum(1 for lg, d in larga if lg), ripresi, vicini, soglia), len(larga) >= 20 and ok12 == len(larga), "non tornano (twa iniziale, u iniziale, variazione): %s" % [(round(l[a_][2]), round(l[a_][6], 2), round(abs(l[a_ + 10][2]) - abs(l[a_][2]), 1)) for (l, a_), (lg, d) in zip(seg, larga) if (d > 0) != lg])
         durante = sum(1 for r in R for i in range(3) for e in r["inc"][i] if e[2])
         extra = sum(e[1] for r in R for i in range(3) for e in r["inc"][i] if e[2])
         chk("G7 giri durante i quali l'avversario prende un altro debito: %d segmenti su %d (soglia 15%%), giri di debito in più %.2f a regata (soglia 0,3)" % (durante, nseg, extra / n), nseg >= 20 and durante <= 0.15 * nseg and extra / n < 0.3)

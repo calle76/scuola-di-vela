@@ -225,7 +225,10 @@
       const sopra = due ? wx - mx < -2 && wy - my < -3 : wy < -R.up - 2 && wx > 3, oltre = due ? wy - my > 8 : wx < -8;
       // Deriva (docs/PROPOSTA-AVVERSARI-DERIVA.md, §11): chi può già puntare il punto oltre la boa senza virare, passando sopra la boa, non cerca il punto 0: mancandolo di poco virava indietro e si piantava (regata di Ale, 17:59)
       const dxP = wx - P[1][0], dyP = wy - P[1][1], sulBordo = !due && wx > 3 && dxP > 0 && dyP > 0 && Math.atan2(dxP, dyP) >= PASSO_A * D2R && wy - dyP * wx / dxP < my - PASSO_M;
-      if (!b.rp && (near(0, 4) || sopra || sulBordo)) b.rp = 1;
+      // docs/PROPOSTA-DERIVA-SU-MAIN.md §6: da sinistra della boa la retta verso il punto 0 passava sopra la boa, cioè dal lato sbagliato: prima si va al punto 2, sotto e a sinistra
+      const sopraDaSinistra = !due && !b.rp && wx < -3 && wy + (P[0][1] - wy) * (0 - wx) / (P[0][0] - wx) < my + PASSO_M;
+      if (sopraDaSinistra) b.rp = 2;
+      else if (!b.rp && (near(0, 4) || sopra || sulBordo)) b.rp = 1;
       else if (b.rp === 1 && ((oltre && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
       else if (b.rp === 2 && near(2, 8)) b.rp = 0;
       const [x, y] = fromWF(P[b.rp || 0][0], P[b.rp || 0][1]); return { x, y, kind: "mark" };
