@@ -67,3 +67,26 @@ Regolamento di regata F15 e F39: chi deve tenersi discosto può farlo come vuole
 - **Il rigioco esagera:** la barca di Ale non reagisce, quindi i contatti contati sono più di quelli veri. Conta il confronto prima e dopo, non il numero assoluto.
 - **Costo di calcolo:** una simulazione in più, solo per chi cede e solo due volte al secondo, come `glideY`.
 - **Vale anche per la Scuola** (decisione di Ale del 6 novembre), quando il ramo entrerà in `main`.
+
+## 9. Esiti della fermata 2 (7 novembre 2026): **non superata, correzione tolta**
+
+Ale: «vai». Fonte riletta: in F15 la definizione «Keep Clear» dice solo che chi ha la precedenza deve poter tenere la sua rotta senza manovrare per evitare l'altra, e, se le barche sono affiancate, cambiare rotta in tutte e due le direzioni senza toccarla subito; non dice come chi cede ci riesca, quindi rallentare è ammesso. Il «come vuole» del §7 era una mia parafrasi: la regola fissa il risultato, non il modo.
+
+Fatto come al §4: candidato «frena» in `cedeAvv1b` (vela tutta lascata, prua tenuta), valutato con `step()` due volte al secondo, scelto solo se passa più lontano del miglior cambio di rotta. Misura sui **semi di scelta 521-540**, rigioco delle 4 regate di Ale, 80 corse per browser, prima e dopo sugli stessi semi (il prima su una copia congelata del codice).
+
+| | Chromium: prima → dopo | Firefox: prima → dopo | Soglia | Esito |
+| --- | --- | --- | --- | --- |
+| K1 S3, contatti di chi cede, a corsa | 1,15 → 1,00 (**-13%**) | 1,00 → 0,94 (**-6%**) | -30% | **no** |
+| K2 S4 | 0,95 → 1,00 (+5%) | 0,93 → 1,01 (+9%) | +10% | sì |
+| K2 contatti in tutto | 2,10 → 2,00 (-5%) | 1,93 → 1,95 (+1%) | +10% | sì |
+| K2 S1 stretta | 2,89 → 2,91 (+1%) | 2,46 → 2,60 (+6%) | +10% | sì |
+| K3 frenate scelte | 0 → 2.515 | 0 → 2.558 | almeno 20 | sì |
+| K3 ferme oltre 25 s per la frenata | massimo 8,5 s | massimo 2,4 s | nessuna | sì |
+| S7 barche ferme (senza soglia) | 0,04 → 0,19 a corsa | 0,07 → 0,19 | | peggio |
+| K5 casi costruiti | 80: 10, 81: 6, 82: 10, 83: 10 | 83: in 7 varianti su 10 una barca esce, ma il caso è superato (soglia: al massimo una barca fuori), quindi 10 su 10 | come oggi | da confrontare, vedi sotto |
+
+**Perché non basta, dai numeri:** dei contatti di chi cede con la barca lenta, ne restano 44 su 52 (Chromium) e 38 su 39 (Firefox). Una barca già lenta, frenando, cambia poco: è l'altra che le arriva addosso. Le frenate sono tante (2.500 in 80 corse) perché la scelta cambia quasi a ogni passo: la vela si lasca e si cazza a scatti.
+
+**Decisione presa da me secondo le regole:** soglia K1 non raggiunta, quindi la correzione non resta. `js/regate.js` è tornato identico al commit di prima (`git diff` vuoto); `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. La conferma sui semi 541-560 non serve e non è stata guardata; K4 (`misura_avversari.py`) misurato solo sul codice nuovo, non confrontato. Restano nello strumento `rigioca_regata.py` i contatori delle frenate (valgono 0 sul gioco di oggi).
+
+**Che cosa resta vero:** i contatti di chi cede si concentrano sulle barche lente e, nel rigioco, sull'altra barca che gira o su una terza barca vicina. Una barca lenta non si toglie di mezzo né girando né frenando: per evitarli bisognerebbe che non diventasse lenta vicino alle altre, cioè agire prima (in attesa e in partenza), oppure che la barca veloce che arriva se ne accorga (ma ha la precedenza). Sono due proposte diverse, da decidere con Ale.

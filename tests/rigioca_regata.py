@@ -23,13 +23,17 @@ CORSA = """([race, seme, liv, cd, rotta, caratteri, tFine, posti, diag]) => {
     const a = rotta[i], b = rotta[Math.min(i + 1, rotta.length - 1)], f = b[0] > a[0] ? Math.max(0, Math.min(1, (R.t - a[0]) / (b[0] - a[0]))) : 0, dh = ((b[3] - a[3] + 540) % 360) - 180;
     Object.assign(me.S, { x: a[1] + (b[1] - a[1]) * f, y: a[2] + (b[2] - a[2]) * f, h: un(a[3] + dh * f), u: a[4] + (b[4] - a[4]) * f, r: 0, capsized: false, heel: 0 }); };
   const D = [], ep = new Map(), storia = new Map(), dd = (a, b) => Math.hypot(a.S.x - b.S.x, a.S.y - b.S.y), ang = (a, b) => Math.abs(((a - b) % 360 + 540) % 360 - 180);
-  let nPen = R.penList.length;
+  let nPen = R.penList.length; const fr = new Map();
   const stato = (b, o, tipo) => { const e = ep.get(b), w = sv.windAt(b.S.x, b.S.y).twd, A = ang(w, b.S.h), so = storia.get(o) || [];
     const altre = R.boats.filter(x => x !== b && x !== o && x.fin === null && !x.S.capsized && dd(x, b) < 15).length;
     return { tipo, t: +R.t.toFixed(1), via: R.t >= 0, nome: b.name, con: o.me ? "Tu" : o.name, d: +dd(b, o).toFixed(1), durGioco: b.cedeDa == null ? null : +(R.t - b.cedeDa).toFixed(1), durVista: e ? +(R.t - e.t0).toFixed(1) : null,
       virando: !!b.virando, oVira: !!o.virando, abbrivio: !!b.abbrivio, piantata: A < 44 && b.S.u < 0.6, lenta: b.S.u < 1.6, giro: e ? +ang(b.S.h, e.h0).toFixed(0) : null, oGira: so.length ? +Math.max(...so.map(q => ang(o.S.h, q[1]))).toFixed(0) : 0, altre, A: +A.toFixed(0), u: +b.S.u.toFixed(2), uo: +o.S.u.toFixed(2), sconta: !!b.sconta }; };
   while (R.t < tFine){ metti(); sv.ctl.tiller = 0; sv.run(dt, 1); raccogli();
     if (!diag) continue;
+    for (const b of R.boats){ if (b.me) continue; const k = fr.get(b) || { on: false, n: 0, lento: 0, conFreno: false, max: 0 };
+      if (b.frena && !k.on) k.n++; k.on = !!b.frena;
+      if (R.t >= 0 && b.fin === null && !b.S.capsized && b.S.u * 1.944 < 0.5){ k.lento += dt; k.conFreno = k.conFreno || !!b.frena; if (k.conFreno) k.max = Math.max(k.max, k.lento); } else { k.lento = 0; k.conFreno = false; }
+      fr.set(b, k); }
     for (const b of R.boats){ const q = storia.get(b) || []; q.push([R.t, b.S.h]); while (q.length && R.t - q[0][0] > 5) q.shift(); storia.set(b, q); }
     for (const b of R.boats){ if (b.me) continue; const o = b.cedeA, e = ep.get(b);
       if (!o){ if (e && R.t - e.tl > 1) ep.delete(b); continue; }
@@ -38,7 +42,7 @@ CORSA = """([race, seme, liv, cd, rotta, caratteri, tFine, posti, diag]) => {
     while (nPen < R.penList.length){ const m = R.penList[nPen++].match(/^La (\\w+), contatto con (te|la (\\w+))/); if (!m) continue;
       const b = R.boats.find(x => x.name === m[1]), o = m[2] === "te" ? me : R.boats.find(x => x.name === m[3]), e = ep.get(b);
       if (e && e.o === o) D.push(stato(b, o, "S3")); else D.push(stato(b, o, "S4")); } }
-  return { D, vento, tInizio, tFineSim: +R.t.toFixed(1), righe, finiti: R.boats.filter(b => !b.me && b.fin !== null).length }; }"""
+  return { D, frenate: [...fr.values()].reduce((a, k) => a + k.n, 0), fermaFreno: Math.max(0, ...[...fr.values()].map(k => +k.max.toFixed(1))), vento, tInizio, tFineSim: +R.t.toFixed(1), righe, finiti: R.boats.filter(b => !b.me && b.fin !== null).length }; }"""
 
 def intestazione(righe):
     h = next((r for r in righe if r.startswith("# gioco")), ""); imp = next((r for r in righe if r.startswith("# impostazioni")), ""); bar = next((r for r in righe if r.startswith("# barche")), "")
@@ -75,7 +79,7 @@ async def main():
                 if g is None:
                     v = min((k for k in (round(t + d / 100, 2) for d in range(-3, 4)) if k in f2 and "Tu" in f2[k]), key=lambda k: abs(k - t), default=None); g = f2.get(v) if v is not None else None
                 if g and "Tu" in g and not any(abs(t - q) < 5 for q in urti): sc.append(math.hypot(g["Tu"]["x"] - x, g["Tu"]["y"] - y))
-            esiti.append(dict(seme=seme, fot=nf, contatti=nc, conTu=sum("Tu" in c[1:] for c in c2), prima=sum(c[0] < 0 for c in c2), scene=dict(collections.Counter(e["s"] for e in es)), finiti=r["finiti"], tFine=r["tFineSim"], scMed=statistics.median(sc) if sc else None, scMax=max(sc) if sc else None, nSc=len(sc), elenco=[[round(e["t"], 1), e["s"], e["testo"]] for e in es], diag=r["D"]))
+            esiti.append(dict(seme=seme, fot=nf, contatti=nc, conTu=sum("Tu" in c[1:] for c in c2), prima=sum(c[0] < 0 for c in c2), scene=dict(collections.Counter(e["s"] for e in es)), finiti=r["finiti"], tFine=r["tFineSim"], scMed=statistics.median(sc) if sc else None, scMax=max(sc) if sc else None, nSc=len(sc), elenco=[[round(e["t"], 1), e["s"], e["testo"]] for e in es], diag=r["D"], frenate=r.get("frenate"), fermaFreno=r.get("fermaFreno")))
             print(json.dumps(esiti[-1], ensure_ascii=False), flush=True)
         await br.close()
     n = len(esiti); vere, _, nv, _ = ss.scene(righe); tot = collections.Counter(); pres = collections.Counter()
