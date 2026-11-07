@@ -110,6 +110,7 @@ Costo di cambiamento:
 | Dopo il giro Chromium+Firefox del 31 ott: tre fallimenti stabili su Firefox (riquadro Q7 0,34 ms/4,2% contro 0,2 ms/3%; contatto_vero 0,29 m contro 0,25 m; giri_avversari G1 1 su 104) **accettati**, soglie invariate, si va avanti | 31 ott (Ale: «se non è indispensabile andrei oltre») | Nullo | CHANGELOG 1.0.72 |
 | Scotta automatica (1.0.73): spenta all'inizio; vale in prove e navigazione libera (non in regata né torneo); una prova con l'aiuto non dà record, medaglia né stella; solo casella nelle impostazioni, nessun tasto; nelle lezioni nessun effetto (per ora) | 31 ott (Ale: «come consigli tu») | Basso | `PROPOSTA-SCOTTA-AUTOMATICA.md` |
 | «Test dei test»: via per tutto (A conteggio dei casi, B ambigui → chiari, C controprove), fatto in notturna autonoma; da ora i controlli nuovi usano `metro.tutti`, le controprove (`tests/controprove.py`) non entrano nel giro di tutti i giorni ma si lanciano quando si scrive o cambia un collaudo; proposte per gli errori piccoli (§10) ancora da decidere (consiglio: dopo la pulizia del codice) | 31 ott (Ale: «per me puoi fare tutto») | Basso | `PROPOSTA-TEST-DEI-TEST.md` |
+| Strambate degli avversari vicino a un'altra barca: restano così (contatti in 1-2 regate su 240, una correzione toccherebbe fino a 4 strambate su 10); si passa ai contatti prima del via. Se ricapita giocando, Ale scarica la regata | 7 nov (Ale: «lasciamo le strambate e passiamo ai contatti prima del via») | basso | Guida degli avversari | `OSSERVAZIONI-GIOCANDO.md` 92 |
 
 ## Carriera, meriti, salvataggi
 
