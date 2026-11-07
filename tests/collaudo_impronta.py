@@ -196,7 +196,8 @@ def misura(imp, passi):
     stallo = sum(1 for st in lib["stati"] if st[3]); boma = sum(1 for st in lib["stati"] if st[4]); scuffie = 1 if lib.get("scuffia") == [True, False] else 0   # scuffiata a 90 s e raddrizzata con A
     print(f"barca dell'1b: {len(b1)} regate, {arrivi} arrivi, {virate} virate; gioco libero: barca {lib['lv']}, {len(lib['stati'])} stati, "
           f"col boma spinto {boma}, con la pala in stallo {stallo}, scuffia e raddrizzata con A {scuffie}", flush=True)
-    return sum(passi) >= 40 and vel >= 30 and tele >= 6 and len(reg) == 7 and lib["lv"] == 2 and virate > 0 and boma > 0 and scuffie > 0
+    # 7 nov 2026: dalla 1.1.0 c'è una barca sola e lv vale None; chiedere lv == 2 rendeva il collaudo sempre «non valido»
+    return sum(passi) >= 40 and vel >= 30 and tele >= 6 and len(reg) == 7 and lib["lv"] in (2, None) and virate > 0 and boma > 0 and scuffie > 0
 
 async def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]

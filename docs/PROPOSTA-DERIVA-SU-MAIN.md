@@ -37,3 +37,28 @@ Un numero fuori soglia si riporta com'è. Se P1 o P2 trovano un difetto, ci si f
 - **La Scuola cambia mentre Ale e Lucio la provano:** le regate e il torneo avranno gli avversari nuovi. Va detto a Lucio.
 - **Fallimenti noti che cambiano firma:** alcuni noti (per esempio scenario 5 di `collaudo_avversari1b.py`, `collaudo_partenze.py`, `collaudo_competizione.py`) potrebbero fallire con numeri diversi o diventare verdi. Ogni cambio si scrive, non si nasconde.
 - **I numeri della guida restano quelli del §10:** prima del via (V2) e le piantate fuori soglia. Si porta online sapendolo, per avere i dati che mancano.
+
+## 5. Esiti (7 novembre 2026): **fermi prima dell'unione**, come previsto al §2
+
+Ale: «vai». Giro su GitHub sul ramo `deriva` (8 zip delle 11:24): **12 falliti** contro 1 del giro di `main` della mattina. `main` non è stato toccato.
+
+**P2-P5, P7 (qui):** P2 sì, cambiano solo le 7 regate con avversari (regate 1-3 principianti ed esperti, prima regata del torneo); lezioni, prove, menu e mare identici. P4 sì. P5 sì: «deriva» compare solo come nome della barca. P7: `scene_strane.py --prova` OK; il rigioco si rifà dopo l'unione. **P3** (pilota nelle due regate della Scuola, 320 regate per ramo): piazzamenti simili; contatti nelle regate da 294 a 249, fuori linea da 111 a 51; **boe dal lato sbagliato da 6 a 15**.
+
+**Trovato e corretto, solo nel collaudo:** `collaudo_impronta.py` dava sempre «non valido» anche su `main`, perché chiedeva la barca «livello 2», che dalla 1.1.0 non c'è più. Ora accetta anche la barca unica; l'impronta di `deriva` rifatta è identica bit per bit.
+
+**I 12 falliti di P1:**
+
+| Collaudo | Cosa | Spiegazione | Da fare |
+| --- | --- | --- | --- |
+| `collaudo_suoni_si_sentono` (Chromium) | come al mattino | noto, non dipende dagli avversari | niente |
+| `collaudo_torneo` C11 (Firefox, 2 pezzi) | chiusura a metà torneo | noto, osservazione 86 | niente |
+| `collaudo_avversari1b` scenario 5 | Chromium da 7 a **9** su 10 (verde), Firefox da 7 a **8** | migliora | aggiornare la riga dei noti |
+| `collaudo_partenze` | stessi criteri (1) e (2), numeri un po' diversi | stessa famiglia di prima | aggiornare la riga dei noti |
+| `collaudo_competizione` C1 | piazzamenti diversi, un gruppo ora in fascia | la fascia va ritarata (previsto) | aggiornare la riga dei noti |
+| `collaudo_giri_avversari` | G4 durata dei giri 20-21 s (soglia 12-30, ma su 8-11 casi contro i 15 chiesti); **G12 nuovo**: 1 giro su 32-41 nel verso sbagliato | da capire | guardare |
+| `collaudo_contatto_vero` (Firefox) | **nuovo tipo**: un istante con scafi sovrapposti senza contatto | da capire | guardare |
+| `collaudo_moviola` | il pilota **non arriva** in 1 regata del torneo su 12 (seme 5): due contatti con Rossa, poi chiude fuori tempo massimo a 299 s | la guida nuova; su `main` arriva | guardare insieme alle boe |
+| `collaudo_registratore_barche` G4 costruito 8 | l'avversario fermato a mano era già lento prima | la guida nuova cambia la scena costruita | correggere la scena |
+| `collaudo_registro` (Chromium) | la scena del contatto non tocca | qui passa 15 su 15: caso isolato | rilanciare |
+
+**Difetti possibili della guida, prima di unire:** le boe dal lato sbagliato (P3), il pilota fuori tempo (moviola), G12 e il nuovo `contatto_vero`. Per la regola del §2 ci si ferma e si decide con Ale.
