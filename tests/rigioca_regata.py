@@ -2,12 +2,13 @@
 # Semplificazione dichiarata: la barca rigiocata non reagisce agli avversari e dopo un urto torna sulla rotta registrata. Conta che cosa fanno gli avversari, non dice chi vince.
 # Le barche partono dai posti del file (i posti sorteggiati dal seme facevano nascere contatti che nella regata non potevano esserci).
 # Si rifiuta se regata, vento o preparazione non si possono rifare uguali al file.
+# DIAGNOSI=1: per ogni «cede ma si avvicina» (cede da 2 s, sotto 8,4 m) e ogni contatto di chi cedeva annota lo stato della barca che cede (cause possibili, lette nel codice).
 # Uso: python tests/rigioca_regata.py PRIMO_SEME ULTIMO_SEME file.txt [altri pezzi...]     BROWSER=firefox per l'altro browser; RADICE=cartella per rigiocare su un altro codice
 import asyncio, collections, json, math, os, pathlib, re, statistics, sys
 from playwright.async_api import async_playwright
 import scene_strane as ss
 ROOT = pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent)
-CORSA = """([race, seme, liv, cd, rotta, caratteri, tFine, posti]) => {
+CORSA = """([race, seme, liv, cd, rotta, caratteri, tFine, posti, diag]) => {
   const sv = __sv; sv.fast(0); sv.openItem(["r", race]);
   const c = document.getElementById("cdSel"); c.value = String(cd); c.dispatchEvent(new Event("change"));
   __seed(seme); sv.simTime = 0;
@@ -21,8 +22,23 @@ CORSA = """([race, seme, liv, cd, rotta, caratteri, tFine, posti]) => {
   const metti = () => { while (i + 1 < rotta.length && rotta[i + 1][0] <= R.t) i++;
     const a = rotta[i], b = rotta[Math.min(i + 1, rotta.length - 1)], f = b[0] > a[0] ? Math.max(0, Math.min(1, (R.t - a[0]) / (b[0] - a[0]))) : 0, dh = ((b[3] - a[3] + 540) % 360) - 180;
     Object.assign(me.S, { x: a[1] + (b[1] - a[1]) * f, y: a[2] + (b[2] - a[2]) * f, h: un(a[3] + dh * f), u: a[4] + (b[4] - a[4]) * f, r: 0, capsized: false, heel: 0 }); };
-  while (R.t < tFine){ metti(); sv.ctl.tiller = 0; sv.run(dt, 1); raccogli(); }
-  return { vento, tInizio, tFineSim: +R.t.toFixed(1), righe, finiti: R.boats.filter(b => !b.me && b.fin !== null).length }; }"""
+  const D = [], ep = new Map(), storia = new Map(), dd = (a, b) => Math.hypot(a.S.x - b.S.x, a.S.y - b.S.y), ang = (a, b) => Math.abs(((a - b) % 360 + 540) % 360 - 180);
+  let nPen = R.penList.length;
+  const stato = (b, o, tipo) => { const e = ep.get(b), w = sv.windAt(b.S.x, b.S.y).twd, A = ang(w, b.S.h), so = storia.get(o) || [];
+    const altre = R.boats.filter(x => x !== b && x !== o && x.fin === null && !x.S.capsized && dd(x, b) < 15).length;
+    return { tipo, t: +R.t.toFixed(1), via: R.t >= 0, nome: b.name, con: o.me ? "Tu" : o.name, d: +dd(b, o).toFixed(1), durGioco: b.cedeDa == null ? null : +(R.t - b.cedeDa).toFixed(1), durVista: e ? +(R.t - e.t0).toFixed(1) : null,
+      virando: !!b.virando, oVira: !!o.virando, abbrivio: !!b.abbrivio, piantata: A < 44 && b.S.u < 0.6, lenta: b.S.u < 1.6, giro: e ? +ang(b.S.h, e.h0).toFixed(0) : null, oGira: so.length ? +Math.max(...so.map(q => ang(o.S.h, q[1]))).toFixed(0) : 0, altre, A: +A.toFixed(0), u: +b.S.u.toFixed(2), uo: +o.S.u.toFixed(2), sconta: !!b.sconta }; };
+  while (R.t < tFine){ metti(); sv.ctl.tiller = 0; sv.run(dt, 1); raccogli();
+    if (!diag) continue;
+    for (const b of R.boats){ const q = storia.get(b) || []; q.push([R.t, b.S.h]); while (q.length && R.t - q[0][0] > 5) q.shift(); storia.set(b, q); }
+    for (const b of R.boats){ if (b.me) continue; const o = b.cedeA, e = ep.get(b);
+      if (!o){ if (e && R.t - e.tl > 1) ep.delete(b); continue; }
+      if (!e || e.o !== o || R.t - e.tl > 1) ep.set(b, { o, t0: R.t, h0: b.S.h, tl: R.t, segnata: false }); else e.tl = R.t;
+      const f = ep.get(b); if (!f.segnata && R.t - f.t0 >= 2 && dd(b, o) < 8.4){ f.segnata = true; D.push(stato(b, o, "S1")); } }
+    while (nPen < R.penList.length){ const m = R.penList[nPen++].match(/^La (\\w+), contatto con (te|la (\\w+))/); if (!m) continue;
+      const b = R.boats.find(x => x.name === m[1]), o = m[2] === "te" ? me : R.boats.find(x => x.name === m[3]), e = ep.get(b);
+      if (e && e.o === o) D.push(stato(b, o, "S3")); else D.push(stato(b, o, "S4")); } }
+  return { D, vento, tInizio, tFineSim: +R.t.toFixed(1), righe, finiti: R.boats.filter(b => !b.me && b.fin !== null).length }; }"""
 
 def intestazione(righe):
     h = next((r for r in righe if r.startswith("# gioco")), ""); imp = next((r for r in righe if r.startswith("# impostazioni")), ""); bar = next((r for r in righe if r.startswith("# barche")), "")
@@ -49,7 +65,7 @@ async def main():
         for seme in range(a, z + 1):
             pg = await br.new_page(); pg.on("pageerror", lambda e: errs.append(str(e))); await pg.add_init_script(SEME)
             await pg.goto((ROOT / "index.html").as_uri() + "#collaudo"); await pg.wait_for_timeout(150)
-            r = await pg.evaluate(CORSA, [race, seme, info["liv"], cd, rotta, info["caratteri"], tFine, posti]); await pg.close()
+            r = await pg.evaluate(CORSA, [race, seme, info["liv"], cd, rotta, info["caratteri"], tFine, posti, bool(os.environ.get("DIAGNOSI"))]); await pg.close()
             if abs((r["vento"] - info["vento"] + 180) % 360 - 180) > 15: print(f"RIFIUTATO: vento nel gioco {r['vento']:.0f}, nel file {info['vento']}"); sys.exit(2)
             es, nf, nc, (t0, t1) = ss.scene(r["righe"]); f2, c2, _ = ss.leggi(r["righe"])
             # R4: fedeltà sugli stessi istanti, lontano dagli urti (5 s)
@@ -59,7 +75,7 @@ async def main():
                 if g is None:
                     v = min((k for k in (round(t + d / 100, 2) for d in range(-3, 4)) if k in f2 and "Tu" in f2[k]), key=lambda k: abs(k - t), default=None); g = f2.get(v) if v is not None else None
                 if g and "Tu" in g and not any(abs(t - q) < 5 for q in urti): sc.append(math.hypot(g["Tu"]["x"] - x, g["Tu"]["y"] - y))
-            esiti.append(dict(seme=seme, fot=nf, contatti=nc, conTu=sum("Tu" in c[1:] for c in c2), prima=sum(c[0] < 0 for c in c2), scene=dict(collections.Counter(e["s"] for e in es)), finiti=r["finiti"], tFine=r["tFineSim"], scMed=statistics.median(sc) if sc else None, scMax=max(sc) if sc else None, nSc=len(sc), elenco=[[round(e["t"], 1), e["s"], e["testo"]] for e in es]))
+            esiti.append(dict(seme=seme, fot=nf, contatti=nc, conTu=sum("Tu" in c[1:] for c in c2), prima=sum(c[0] < 0 for c in c2), scene=dict(collections.Counter(e["s"] for e in es)), finiti=r["finiti"], tFine=r["tFineSim"], scMed=statistics.median(sc) if sc else None, scMax=max(sc) if sc else None, nSc=len(sc), elenco=[[round(e["t"], 1), e["s"], e["testo"]] for e in es], diag=r["D"]))
             print(json.dumps(esiti[-1], ensure_ascii=False), flush=True)
         await br.close()
     n = len(esiti); vere, _, nv, _ = ss.scene(righe); tot = collections.Counter(); pres = collections.Counter()
