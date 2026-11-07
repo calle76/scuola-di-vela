@@ -28,7 +28,9 @@ CORSA = """([race, seme, liv, cd, rotta, caratteri, tFine, posti, diag]) => {
     const altre = R.boats.filter(x => x !== b && x !== o && x.fin === null && !x.S.capsized && dd(x, b) < 15).length;
     return { tipo, t: +R.t.toFixed(1), via: R.t >= 0, nome: b.name, con: o.me ? "Tu" : o.name, d: +dd(b, o).toFixed(1), durGioco: b.cedeDa == null ? null : +(R.t - b.cedeDa).toFixed(1), durVista: e ? +(R.t - e.t0).toFixed(1) : null,
       virando: !!b.virando, oVira: !!o.virando, abbrivio: !!b.abbrivio, piantata: A < 44 && b.S.u < 0.6, lenta: b.S.u < 1.6, giro: e ? +ang(b.S.h, e.h0).toFixed(0) : null, oGira: so.length ? +Math.max(...so.map(q => ang(o.S.h, q[1]))).toFixed(0) : 0, altre, A: +A.toFixed(0), u: +b.S.u.toFixed(2), uo: +o.S.u.toFixed(2), sconta: !!b.sconta }; };
+  const vc = new Map(); let nVir = 0; // docs/PROPOSTA-COPPIE.md, K3: quante volte chi cede sceglie di virare (b.virCede)
   while (R.t < tFine){ metti(); sv.ctl.tiller = 0; sv.run(dt, 1); raccogli();
+    for (const b of R.boats){ if (b.me) continue; if (b.virCede && !vc.get(b)) nVir++; vc.set(b, !!b.virCede); }
     if (!diag) continue;
     for (const b of R.boats){ if (b.me) continue; const k = fr.get(b) || { on: false, n: 0, lento: 0, conFreno: false, max: 0 };
       if (b.frena && !k.on) k.n++; k.on = !!b.frena;
@@ -42,7 +44,7 @@ CORSA = """([race, seme, liv, cd, rotta, caratteri, tFine, posti, diag]) => {
     while (nPen < R.penList.length){ const m = R.penList[nPen++].match(/^La (\\w+), contatto con (te|la (\\w+))/); if (!m) continue;
       const b = R.boats.find(x => x.name === m[1]), o = m[2] === "te" ? me : R.boats.find(x => x.name === m[3]), e = ep.get(b);
       if (e && e.o === o) D.push(stato(b, o, "S3")); else D.push(stato(b, o, "S4")); } }
-  return { D, frenate: [...fr.values()].reduce((a, k) => a + k.n, 0), fermaFreno: Math.max(0, ...[...fr.values()].map(k => +k.max.toFixed(1))), vento, tInizio, tFineSim: +R.t.toFixed(1), righe, finiti: R.boats.filter(b => !b.me && b.fin !== null).length }; }"""
+  return { D, virCede: nVir, frenate: [...fr.values()].reduce((a, k) => a + k.n, 0), fermaFreno: Math.max(0, ...[...fr.values()].map(k => +k.max.toFixed(1))), vento, tInizio, tFineSim: +R.t.toFixed(1), righe, finiti: R.boats.filter(b => !b.me && b.fin !== null).length }; }"""
 
 def intestazione(righe):
     h = next((r for r in righe if r.startswith("# gioco")), ""); imp = next((r for r in righe if r.startswith("# impostazioni")), ""); bar = next((r for r in righe if r.startswith("# barche")), "")
@@ -79,7 +81,7 @@ async def main():
                 if g is None:
                     v = min((k for k in (round(t + d / 100, 2) for d in range(-3, 4)) if k in f2 and "Tu" in f2[k]), key=lambda k: abs(k - t), default=None); g = f2.get(v) if v is not None else None
                 if g and "Tu" in g and not any(abs(t - q) < 5 for q in urti): sc.append(math.hypot(g["Tu"]["x"] - x, g["Tu"]["y"] - y))
-            esiti.append(dict(seme=seme, fot=nf, contatti=nc, conTu=sum("Tu" in c[1:] for c in c2), prima=sum(c[0] < 0 for c in c2), scene=dict(collections.Counter(e["s"] for e in es)), finiti=r["finiti"], tFine=r["tFineSim"], scMed=statistics.median(sc) if sc else None, scMax=max(sc) if sc else None, nSc=len(sc), elenco=[[round(e["t"], 1), e["s"], e["testo"]] for e in es], diag=r["D"], frenate=r.get("frenate"), fermaFreno=r.get("fermaFreno")))
+            esiti.append(dict(seme=seme, fot=nf, contatti=nc, conTu=sum("Tu" in c[1:] for c in c2), prima=sum(c[0] < 0 for c in c2), scene=dict(collections.Counter(e["s"] for e in es)), finiti=r["finiti"], virCede=r.get("virCede", 0), tFine=r["tFineSim"], scMed=statistics.median(sc) if sc else None, scMax=max(sc) if sc else None, nSc=len(sc), elenco=[[round(e["t"], 1), e["s"], e["testo"]] for e in es], diag=r["D"], frenate=r.get("frenate"), fermaFreno=r.get("fermaFreno")))
             print(json.dumps(esiti[-1], ensure_ascii=False), flush=True)
         await br.close()
     n = len(esiti); vere, _, nv, _ = ss.scene(righe); tot = collections.Counter(); pres = collections.Counter()

@@ -72,3 +72,32 @@ Regolamento di regata (F15): regola 11 (sopravento tiene discosto), regola 13 (d
 - **Più virate in tutto**, che costano velocità: lo dice K4 (arrivo mediano).
 - **Il rigioco esagera:** la tua barca non reagisce. Conta il confronto prima e dopo.
 - **Vale anche per la Scuola** (decisione del 6 novembre): cambiano gli arrivi di tutte le regate con avversari e del torneo; `collaudo_competizione` e `collaudo_giri_avversari` vanno rilanciati.
+
+## 9. Fermata 2, prima parte (7 novembre sera): **K1 non raggiunto, lavoro sospeso**
+
+Ale: «via». Rigioco delle 8 regate di Ale, semi di scelta 561-580, 160 corse per browser; il prima su una copia congelata di `main` (5019b2e). Contatore nuovo in `tests/rigioca_regata.py`: `virCede`, quante volte chi cede sceglie di virare.
+
+**Versione A, come al §4** (la virata si sceglie se passa a 2 lunghezze da tutte): S8 dopo il via 0,55 → 0,54 (Chromium, -2%), 0,50 → 0,47 (Firefox, -6%); virate scelte 179 e 178. **Perché non basta:** negli episodi S8 dopo il via la distanza mediana è 6,4 m e 69 su 86 sono sotto 8,4 m: due barche affiancate sono già sotto le 2 lunghezze, quindi la condizione non si avvera proprio dove serve.
+
+**Versione B, cambiata dopo aver visto i numeri (dichiarato):** la virata vale anche se nessuna barca si avvicina più di adesso e restano tutte ad almeno una lunghezza. Codice, in `cedeAvv1b` prima del ciclo degli scarti:
+
+```js
+b.virCede = false;
+if (devo && R.t >= 0 && s.u >= U_ABBRIVIO && sgn(norm180(twd - desired)) === -side){
+  const lib = passaggio(b, desired), ora = Math.min(...R.boats.filter(o => o !== b && o.fin === null && !o.dnf && !o.S.capsized).map(o => Math.hypot(o.S.x - s.x, o.S.y - s.y)));
+  if (lib >= 2 * L || (lib >= ora - 0.1 && lib >= L)){ b.virCede = true; return desired; }
+}
+```
+
+| | Chromium: prima → B | Firefox: prima → B | Soglia | Esito |
+| --- | --- | --- | --- | --- |
+| K1 S8 dopo il via, a corsa | 0,55 → 0,42 (**-24%**) | 0,50 → 0,37 (**-26%**) | -40% | **no** |
+| K2 contatti a corsa | 1,99 → 2,02 (+2%) | 1,89 → 1,84 (-3%) | +10% | sì |
+| K2 S3 | 1,05 → 1,07 (+2%) | 0,88 → 0,84 (-5%) | +10% | sì |
+| K2 S1 stretta | 2,71 → 2,70 | 2,53 → 2,42 | +10% | sì |
+| K3 virate scelte | 391 | 330 | almeno 20 | sì |
+| K3 S7 ferme, a corsa | 0,21 → 0,24 (**+0,03**) | 0,21 → 0,21 | al massimo +0,02 | **no** in Chromium |
+
+K4 misurato sulla versione A (`misura_avversari.py`, semi 361-380, prima → A): non arrivate 0 → 0; penalità 123 → 123 e 110 → 113 (+3%); arrivo mediano 342 → 320,5 s e 341 → 341 s; boe sbagliate 2 → 0 e 0 → 0. Sulla versione B non ancora misurato.
+
+**Stato:** `js/regate.js` è tornato identico a `main` (nessuna correzione nel gioco). Conferma sui semi 581-600 non guardata. **Da decidere con Ale:** la versione B dimezza circa un quarto delle coppie ma non arriva alla soglia; la parte che resta è probabilmente la regola «scarta all'ultimo» di chi ha la precedenza (§4, «cosa non si tocca qui»), che tiene il gruppo insieme poggiando.
