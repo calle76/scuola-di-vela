@@ -8,7 +8,7 @@
 # Uso: python tests/misura_avversari.py PRIMO_SEME ULTIMO_SEME [regate, es. 0,2]   (0 = bastone 1a, 1 = raffiche 1a, 2 = salti di vento 1b)
 import asyncio, json, pathlib, statistics, sys
 from playwright.async_api import async_playwright
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+ROOT = pathlib.Path(__import__("os").environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent)  # RADICE: misurare un altro gioco con questo strumento
 S0, S1 = int(sys.argv[1]), int(sys.argv[2]); REG = [int(x) for x in (sys.argv[3] if len(sys.argv) > 3 else "0,2").split(",")]
 src = (pathlib.Path(__file__).resolve().parent / "esplora.py").read_text()
 SEME = src.split('SEME = """')[1].split('"""')[0]
@@ -18,23 +18,31 @@ CORSA = """([race, seme, liv]) => {
   const sel = document.getElementById("aiLevel"); sel.value = liv; sel.dispatchEvent(new Event("change"));
   const R = sv.R, dt = 1 / 60, KN = 1.944, mk = R.mark, av = R.boats.filter(b => !b.me);
   const st = av.map(b => ({ nome: b.name, car: b.char, lento: 0, piantate: [], boaT: 0, ocs: false, pen0: (b.pen || 0) + (b.pp || 0) * 15,
-                             tack: 0, gybe: [], gyU: null, gyT: 0 }));
+                             tack: 0, gybe: [], gyU: null, gyT: 0, cedeT: 0, cedeZ: 0, urti: 0, gyTempi: [], tPoppa: -1e9, tRit: -1e9, ritorni: [] }));
   let n = 0; const penDove = [];
   const tackOf = b => Math.sign(((sv.windAt(b.S.x, b.S.y).twd - b.S.h) % 360 + 540) % 360 - 180);
   while (R.t < 900 && av.some(b => b.fin === null && !b.dnf)){
     sv.pilota(dt); sv.run(dt, 1); n++;
+    av.forEach((b, i) => { const q = st[i]; if (b.cedeA){ q.cedeT += dt; q.cedeZ = 0; } else if ((q.cedeZ += dt) > 1) q.cedeT = 0; }); // da quanto cede (un buco di 1 s non azzera)
     while (penDove.length < (R.penList || []).length){ // dove e quando avviene ogni penalità: tratto, distanza dalla boa, attesa del via
       const txt = R.penList[penDove.length], nome = txt.startsWith("Tu,") ? null : txt.split(",")[0].replace("La ", ""), g = R.boats.find(b => nome ? b.name === nome : b.me);
       penDove.push({ t: +R.t.toFixed(1), leg: g.leg, dBoa: Math.round(Math.hypot(g.S.x - mk.x, g.S.y - mk.y)), regola: +(txt.match(/regola (\d+)/) || [0, 0])[1], g: nome || "Tu" });
+      if (nome && st[av.indexOf(g)].cedeT >= 3) st[av.indexOf(g)].urti++; // V5: contatto con colpa di chi cedeva da almeno 3 s
     }
     av.forEach((b, i) => { const s = b.S, q = st[i];
       if (b.fin !== null || b.dnf || R.t < 0){ q.lento = 0; return; }
       if (b.ocs) q.ocs = true;
       const kn = s.u * KN, tk = tackOf(b), A = Math.abs(((sv.windAt(s.x, s.y).twd - s.h) % 360 + 540) % 360 - 180);
       // strambata: cambio di mure con vento in poppa (oltre 120°); velocità minima nei 6 s dopo rispetto a quella prima
-      if (q.tack && tk && tk !== q.tack && A > 120 && !s.capsized){ q.gyU = { prima: kn, min: kn }; q.gyT = 6; }
+      if (q.tack && tk && tk !== q.tack && A > 120 && !s.capsized){ q.gyTempi.push(R.t); q.gyU = { prima: kn, min: kn }; q.gyT = 6; }
       if (q.gyT > 0){ q.gyU.min = Math.min(q.gyU.min, kn); q.gyT -= dt; if (q.gyT <= 0) q.gybe.push(+(1 - q.gyU.min / Math.max(q.gyU.prima, 0.1)).toFixed(2)); }
       if (tk) q.tack = tk;
+      // V4: dopo la boa di bolina, stava scendendo (almeno 100° dal vento negli ultimi 12 s) e torna a meno di 60° con una barca entro 3 lunghezze
+      if (b.leg >= 2 && A >= 100) q.tPoppa = R.t;
+      if (b.leg >= 2 && A < 60 && !s.capsized && R.t - q.tPoppa < 12 && R.t - q.tRit > 30){
+        let o = null, d = 3 * BOAT.length; for (const x of R.boats){ if (x === b || x.fin !== null) continue; const dd = Math.hypot(x.S.x - s.x, x.S.y - s.y); if (dd < d){ d = dd; o = x; } }
+        if (o){ q.tRit = R.t; q.ritorni.push({ t: +R.t.toFixed(1), d: +d.toFixed(1), cede: sv.chiCede(b, o).cede === b }); }
+      }
       if (b.leg === 1 && Math.hypot(s.x - mk.x, s.y - mk.y) < 30) q.boaT += dt;
       if (!s.capsized && kn < 0.5){
         q.lento += dt;
@@ -48,7 +56,7 @@ CORSA = """([race, seme, liv]) => {
   }
   return { tFine: +R.t.toFixed(0), penList: R.penList || [], penDove, barche: av.map((b, i) => { const q = st[i];
     return { nome: q.nome, car: q.car, arrivo: b.fin === null ? null : +b.fin.toFixed(0), boeSbagliate: b.wrongMarks || 0, ocs: q.ocs,
-             penalita: Math.round(((b.pen || 0) + (b.pp || 0) * 15 - q.pen0) / 15), boaT: Math.round(q.boaT), piantate: q.piantate, strambate: q.gybe }; }) };
+             penalita: Math.round(((b.pen || 0) + (b.pp || 0) * 15 - q.pen0) / 15), boaT: Math.round(q.boaT), piantate: q.piantate, strambate: q.gybe, urti: q.urti, ritorni: q.ritorni, gyVicine: q.gyTempi.filter((x, k) => k && x - q.gyTempi[k - 1] < 5).length }; }) };
 }"""
 ALTRA = "l'altra"
 async def main():
@@ -69,9 +77,13 @@ async def main():
             bs = [x for r in righe if r["race"] == race and r["liv"] == liv for x in r["barche"]]
             pi = [p for x in bs for p in x["piantate"]]
             gy = [g for x in bs for g in x["strambate"]]
+            pd = [d for r in righe if r["race"] == race and r["liv"] == liv for d in r["penDove"]]
+            ar = [x["arrivo"] for x in bs if x["arrivo"] is not None]; ri = [q for x in bs for q in x["ritorni"]]
             print(f"regata {race}, {liv}: barche {len(bs)} | non arrivate {sum(x['arrivo'] is None for x in bs)} | boe sbagliate {sum(x['boeSbagliate'] for x in bs)}"
                   f" | ocs dopo il via {sum(x['ocs'] for x in bs)} | penalità {sum(x['penalita'] for x in bs)} | ferme alla boa >60 s {sum(x['boaT'] > 60 for x in bs)}"
                   f" | piantate {len(pi)} (barche con almeno una {sum(bool(x['piantate']) for x in bs)}; vicino a una barca {sum(p['vic'] is not None for p in pi)},"
                   f" di cui cede senza dovere {sum(bool(p['vic']) and p['vic']['cede'] == ALTRA for p in pi)})"
-                  f" | strambate {len(gy)}, perdita mediana {statistics.median(gy) if gy else '-'}, massima {max(gy) if gy else '-'}")
+                  f" | strambate {len(gy)}, perdita mediana {statistics.median(gy) if gy else '-'}, massima {max(gy) if gy else '-'}"
+                  f" | V1 penalità in lista {len(pd)} | V2 prima del via {sum(d['t'] < 0 for d in pd)} | V4 ritorni di bolina con precedenza {sum(not q['cede'] for q in ri)}, cedendo {sum(q['cede'] for q in ri)}"
+                  f" | V5 urti cedendo {sum(x['urti'] for x in bs)} | V6 strambate vicine {sum(x['gyVicine'] for x in bs)} | arrivo mediano {statistics.median(ar) if ar else '-'}")
 asyncio.run(main())

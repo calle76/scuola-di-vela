@@ -64,7 +64,7 @@ COSTRUITO = """([seme, d, modo]) => {
   const sv = __sv, dt = 1 / 60; const c = document.getElementById('sesOn'); c.checked = true; c.dispatchEvent(new Event('change'));
   sv.fast(0); __seed(seme); sv.openItem(['r', 2]); __seed(seme);
   const R = sv.R; for (let k = 0; k < 60 * 400 && R.t < 10; k++) sv.run(dt, 1);   // 10 s dopo il via (il conto alla rovescia dura 180 s)
-  const A = R.boats[1], B = R.boats[2], KN = 1.9438444924406;
+  const KN = 1.9438444924406, B = R.boats[2], A = modo === 'fermo' ? (R.boats.slice(1).find(b => b.S.u * KN > 1.5 && b.fin === null) || R.boats[1]) : R.boats[1];   // 7 nov 2026: per la barca ferma si prende un avversario che sta navigando (con la guida della 1.2.15 al seme 18 la prima era già ferma per conto suo)
   if (modo === 'contatto'){
     if (R.contacts['1-2'] !== undefined) return { salta: true };     // le due barche erano già in contatto per conto loro: il caso non è valido, se ne sceglie un altro seme
     const conta = () => sv.ses.lines.filter(l => l.includes(' contatto_barche ' + A.name + ' ' + B.name)).length, n0 = conta();   // solo la coppia messa a mano

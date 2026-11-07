@@ -223,7 +223,12 @@
       const near = (k, r) => Math.hypot(wx - P[k][0], wy - P[k][1]) < r;
       // il punto 1 si punta solo da sopra la boa: da più in basso la bolina porterebbe la barca proprio sopra la boa
       const sopra = due ? wx - mx < -2 && wy - my < -3 : wy < -R.up - 2 && wx > 3, oltre = due ? wy - my > 8 : wx < -8;
-      if (!b.rp && (near(0, 4) || sopra)) b.rp = 1;
+      // Deriva (docs/PROPOSTA-AVVERSARI-DERIVA.md, §11): chi può già puntare il punto oltre la boa senza virare, passando sopra la boa, non cerca il punto 0: mancandolo di poco virava indietro e si piantava (regata di Ale, 17:59)
+      const dxP = wx - P[1][0], dyP = wy - P[1][1], sulBordo = !due && wx > 3 && dxP > 0 && dyP > 0 && Math.atan2(dxP, dyP) >= PASSO_A * D2R && wy - dyP * wx / dxP < my - PASSO_M;
+      // docs/PROPOSTA-DERIVA-SU-MAIN.md §6: da sinistra della boa la retta verso il punto 0 passava sopra la boa, cioè dal lato sbagliato: prima si va al punto 2, sotto e a sinistra
+      const sopraDaSinistra = !due && !b.rp && wx < -3 && wy + (P[0][1] - wy) * (0 - wx) / (P[0][0] - wx) < my + PASSO_M;
+      if (sopraDaSinistra) b.rp = 2;
+      else if (!b.rp && (near(0, 4) || sopra || sulBordo)) b.rp = 1;
       else if (b.rp === 1 && ((oltre && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
       else if (b.rp === 2 && near(2, 8)) b.rp = 0;
       const [x, y] = fromWF(P[b.rp || 0][0], P[b.rp || 0][1]); return { x, y, kind: "mark" };
@@ -271,7 +276,10 @@
           if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)) b.goStart = true; } // il margine fa arrivare dopo lo zero, mai prima
       }
       b.holdA = holdAngle(by);
-      if (b.goStart){ pre = true; b.preDesired = lineAim; if (by < 1 && R.t < -1) hold = true; } // partita: se è in anticipo non supera la linea prima dello zero
+      if (b.goStart){ pre = true; b.preDesired = lineAim;
+        // Deriva, fetta 4: chi taglierebbe la linea oltre lo spillo stringe il vento; se non basta, cambia mure verso il centro. Mandarla alla guida generale la faceva correre via lungo la linea (partenze, seme 5)
+        if (R.t > -FUORI_T && R.t < 0 && by > 0){ const margine = -(LINE_HALF - 2); if (bx - lat * by < margine) b.preDesired = bx - Math.tan((ai.up - 2) * D2R) * by >= margine ? twd + HOLD_S * (ai.up - 2) : twd - HOLD_S * (ai.up + 4); }
+        if (by < 1 && R.t < -1) hold = true; } // partita: se è in anticipo non supera la linea prima dello zero
       // ancora in avvicinamento, con la logica generale perché sa fare i bordi; si lasca quando lo scivolamento simulato finirebbe
       // dentro la fascia d'attesa, cioè quando è il momento di smettere di spingere per fermarsi lì
       else if (Math.hypot(s.x - px, s.y - py) > (far ? 8 : 6) && glideY(b, w) > 2 * L) dest = { x: px, y: py };
@@ -314,6 +322,12 @@
       }
       if (prey) desired = bearingTo(s, prey.S);
     }
+    // Deriva, fetta 5 (docs/PROPOSTA-AVVERSARI-DERIVA.md): col vento da dietro la prua oscillava attorno ai 180° e ogni oscillazione era una strambata (osservazione 85).
+    // Sulle stesse mure si resta entro 172° dal vento, e dopo una strambata per GYBE_MIN s, salvo vicino al bersaglio
+    if (A > 120){ const tk = sgn(norm180(twd - s.h)), dd = norm180(twd - desired);
+      if (tk){ if (b.tackP && tk !== b.tackP) b.tGybe = R.t; b.tackP = tk; }
+      const vicino = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
+      if (tk && !vicino && (sgn(dd) === tk ? Math.abs(dd) > 172 : R.t - (b.tGybe ?? -1e9) < GYBE_MIN || Math.abs(dd) > 172)) desired = twd - tk * 172; }
     // chi deve cedere si scosta (cedeAvv1b, qui sotto). Fino alla 1.0.78 la barca dell'1a aveva qui una regola 10 sua e uno scarto da qualsiasi barca davanti
     if (!hold) desired = cedeAvv1b(b, desired, twd, side, ai);
     // 1.0.67 (docs/PROPOSTA-GIRI-AVVERSARI.md): chi ha un debito di giri e la via libera segue la sequenza dei giri al posto della rotta; le tre regole qui sotto (angolo morto, abbrivio, piantata) non valgono
@@ -350,7 +364,8 @@
   // 1.0.49 (docs/PROPOSTA-AVVERSARI-1B.md, punto A), solo 1b: chi deve cedere secondo chiCede si scosta, chi ha la precedenza tiene la
   // rotta e scarta solo all'ultimo; mai dentro l'angolo morto. Prima ogni avversario scartava qualsiasi barca davanti entro 14-22 m, anche
   // avendo la precedenza, orzando fin dentro l'angolo morto: 72 piantate su 124 avendo la precedenza (tests/misura_avversari.py, semi 1-20).
-  const D_CEDE = 30, T_CEDE = 15, CEDE_A = 28, ULTIMO = 1.5; // ipotesi nostre: 30 m e 28° come la regola 10 degli avversari dell'1a; 15 s di preavviso
+  const D_CEDE = 30, T_CEDE = 15, ULTIMO = 1.5; // ipotesi nostre: 30 m come la regola 10 degli avversari dell'1a; 15 s di preavviso
+  const PASSO_A = 56, PASSO_M = 3; // Deriva, §11: gradi dal vento per arrivare senza virare, metri sopra la boa; ipotesi nostre
   const U_ABBRIVIO = 1.6; // 1.1.1 (B1): m/s fino ai quali si prende abbrivio prima di virare (circa 3,1 nodi); ipotesi nostra
   const V_AVV = 0.1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, A): m/s di avvicinamento sotto i quali, con gli scafi a più di una lunghezza, l'altra barca non è un pericolo; ipotesi nostra, scelta sui semi 1-20 (con 0,3: contatti +25%), confermata sui semi 21-40
   function cedeAvv1b(b, desired, twd, side, ai){
@@ -362,20 +377,52 @@
       const rx = o.S.x - s.x, ry = o.S.y - s.y, d = Math.hypot(rx, ry); if (d > D_CEDE) continue;
       const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
       const t = w2 > 1e-6 ? Math.max(0, -(rx * wx + ry * wy) / w2) : 0; // fra quanti secondi si è più vicini
-      if (b.leg === 0 && d > L && -(rx * wx + ry * wy) / d < V_AVV && !(o === b.cedeA && t > 0)) continue; // 1.1.1: in partenza due barche che non si avvicinano (per esempio parallele alla stessa velocità) non si cedono: prima si cedevano a vicenda per sempre. Solo in partenza: in tutta la regata i debiti di giri estinti scendevano dal 93% all'80%
-      if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», torna su e urta
+      if (b.leg === 0 && d > L && -(rx * wx + ry * wy) / d < V_AVV && !(o === b.cedeA && t > 0)) continue; // 1.1.1: in partenza due barche che non si avvicinano (per esempio parallele alla stessa velocità) non si cedono: prima si cedevano
+      if (t >= bt || t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», 
       bt = t; best = { o, d };
     }
-    if (!best){ b.cedeA = null; return desired; }
+    if (!best){ b.cedeA = null; b.rottaU = null; b.cedeDa = null; return desired; }
     const o = best.o, devo = chiCede(b, o).cede === b; b.cedeA = devo ? o : null;
-    if (!devo && best.d > ULTIMO * L) return desired; // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+    // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+    if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; }
+    if (b.cedeDa === null || b.cedeDa === undefined) b.cedeDa = R.t;
+    if (R.t - b.cedeDa > SCARTO_MAX){ b.rottaU = null; return desired; } // nessuno scarto dura per sempre: due barche parallele e vicine si tenevano a vicenda su una rotta (misurato: 2 barche mai arrivate)
+    if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = s.h; // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
+    // Deriva, fette 2 e 3 (docs/PROPOSTA-AVVERSARI-DERIVA.md): si prova lo scarto più piccolo che passa lontano da TUTTE le barche vicine. Chi cede parte dalla rotta che vuole,
+    // chi ha la precedenza dalla rotta che ha: mai dentro l'angolo morto né oltre il vento, e quindi niente ritorni di bolina a chi sta scendendo.
+    const lato = devo ? side : (sgn(norm180(twd - b.rottaU)) || side);
+    const rotta = devo ? (sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up) : b.rottaU;
     const relB = norm180(bearingTo(s, o.S) - s.h);
-    const base = sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up; // se la guida chiede di virare (timer dei bordi), si cede sulle mure di adesso
-    const nd = devo && tackOf(b) !== tackOf(o) ? base - side * CEDE_A // regola 10: poggia e passa di poppa
-      : base - (relB >= 0 ? 1 : -1) * (devo ? CEDE_A : 35);          // stesse mure, o ultimo momento: si scosta dall'altra
-    const t2 = norm180(twd - nd);
-    if (sgn(t2) === side && Math.abs(t2) >= ai.up - 2) return nd;
-    return devo && Math.abs(relB) < 60 ? base - side * CEDE_A : twd - side * (ai.up - 2); // mai nell'angolo morto né oltre il vento: chi deve cedere a una barca davanti, se non può orzare, poggia
+    const prima = devo && tackOf(b) !== tackOf(o) ? -lato : (relB >= 0 ? -1 : 1); // la direzione preferita: mure diverse poggia e passa di poppa; se no, via dall'altra barca
+    const mk = b.leg >= 1 && b.leg <= R.marks.length ? R.marks[b.leg - 1] : null, boa = mk && mk.out !== undefined && Math.hypot(mk.x - s.x, mk.y - s.y) < 40 ? { x: mk.x, y: mk.y, ox: Math.sin(mk.out * D2R), oy: -Math.cos(mk.out * D2R) } : null;
+    let scelta = null, meglio = -1;
+    for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
+      const nd = rotta + dir * da, t2 = norm180(twd - nd);
+      if (sgn(t2) !== lato || Math.abs(t2) < ai.up - 2 || Math.abs(t2) > 172) continue;
+      if (Math.abs(norm180(twd - rotta)) > 100 && Math.abs(t2) < 90) continue; // chi scende non torna verso la bolina per cedere (osservazione 80)
+      if (s.u < U_ABBRIVIO && Math.abs(t2) < ai.up + 10) continue; // lenta non orza: si pianterebbe (dalla misura: piantate al via)
+      if (boa){ const px = s.x + Math.sin(nd * D2R) * 25, py = s.y - Math.cos(nd * D2R) * 25; if (Math.hypot(px - boa.x, py - boa.y) < Math.hypot(s.x - boa.x, s.y - boa.y) - 10 && (px - boa.x) * boa.ox + (py - boa.y) * boa.oy < 0) continue; } // vicino alla boa non si taglia dalla parte interna
+      const lib = passaggio(b, nd);
+      if (lib >= 2 * L) return nd;
+      if (lib > meglio){ meglio = lib; scelta = nd; }
+    }
+    return scelta === null ? desired : scelta;
+  }
+  const GYBE_MIN = 10, SCARTO_MAX = 25; // secondi, ipotesi nostre
+  const FUORI_T = 15; // Deriva, fetta 4: secondi prima del via in cui si guarda dove si taglierà la linea; ipotesi nostra
+  const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
+  // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)
+  function passaggio(b, nd){
+    const s = b.S, u = Math.max(s.u, 1), vx = Math.sin(nd * D2R) * u, vy = -Math.cos(nd * D2R) * u;
+    let min = 1e9;
+    for (const o of R.boats){
+      if (o === b || o.fin !== null || o.dnf || o.S.capsized) continue;
+      const rx = o.S.x - s.x, ry = o.S.y - s.y; if (Math.hypot(rx, ry) > D_CEDE) continue;
+      const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
+      const t = w2 > 1e-6 ? clamp(-(rx * wx + ry * wy) / w2, 0, T_CEDE) : 0;
+      min = Math.min(min, Math.hypot(rx + wx * t, ry + wy * t));
+    }
+    return min;
   }
 
   // la guida dell'avversario, la stessa nella regata e nelle due simulazioni qui sotto (startTime, glideY): se divergessero, la

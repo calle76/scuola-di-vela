@@ -39,7 +39,7 @@ RUN = """async ([seme, conMov]) => {
   // V1: fedeltà su tutta la regata, partenza compresa
   let errPos = 0, errH = 0, nc = 0, ncPre = 0;
   for (const [t, b] of truth){ if (t < riv.all[0].t || t > riv.all[riv.all.length - 1].t) continue; riv.pos = t - riv.all[0].t; rivApplica(); nc++; if (t < 0) ncPre++;
-    R.boats.forEach((bt, j) => { errPos = Math.max(errPos, Math.hypot(bt.S.x - b[j][0], bt.S.y - b[j][1])); errH = Math.max(errH, Math.abs(norm180(bt.S.h - b[j][2]))); }); }
+    R.boats.forEach((bt, j) => { errPos = Math.max(errPos, Math.hypot(bt.S.x - b[j][0], bt.S.y - b[j][1])); if (!bt.S.capsized) errH = Math.max(errH, Math.abs(norm180(bt.S.h - b[j][2]))); }); }   // 7 nov 2026: da scuffiata la prua alla raddrizzata cambia di colpo (seme 10: 50°); la posizione si confronta sempre
   out.errPos = errPos; out.errH = errH; out.confronti = nc; out.confrontiPre = ncPre;
   // per V5: si riparte da un punto noto, il Python preme i tasti veri e poi chiama FINE
   riv.playing = false; riv.pos = 30; riv.speed = 1; rivMostra(); document.getElementById("movPlay").focus();   // il fuoco come all'apertura

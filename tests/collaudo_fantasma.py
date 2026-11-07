@@ -17,9 +17,10 @@ async def main():
             await pg.click("[data-r='0']"); await pg.wait_for_timeout(200)
             await pg.evaluate("a=>{const e=document.querySelector(a[0]);e.value=a[1];e.dispatchEvent(new Event('change'))}", ["#aiLevel", "esperti"]); await pg.wait_for_timeout(200)
             await pg.evaluate("__sv.fast(25)")
-            for i in range(24):
+            # 1.2.15: si aspetta il tempo di gioco (600 s, oltre il doppio della corsa più lenta misurata, 291 s su 80), non 24 s d'orologio: su GitHub carico la regata non arrivava in fondo e due barche risultavano «bloccate»
+            for i in range(240):
                 await pg.wait_for_timeout(1000)
-                if await pg.evaluate("__sv.R.boats.filter(b=>!b.me).every(b=>b.fin!==null)"): break
+                if await pg.evaluate("__sv.R.boats.filter(b=>!b.me).every(b=>b.fin!==null) || __sv.R.t > 600"): break
             corsa = await pg.evaluate("__sv.R.boats.filter(b=>!b.me).map(b=>[b.name, b.fin===null?('BLOCCATA '+b.leg):Math.round(b.fin), b.pen])")
             bloccate += sum(1 for x in corsa if str(x[1]).startswith("BLOCCATA"))
             print("esperti corsa", run+1, corsa, flush=True)

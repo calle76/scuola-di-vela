@@ -144,6 +144,31 @@ async def main():
         d5 = await pg.evaluate("() => regPezzi.length"); await pg.reload(); await pg.wait_for_timeout(600); d6 = await pg.evaluate("() => regPezzi.length")
         chk("D5 «Cancella tutte» svuota la lista, anche dopo la ricarica", d5 == 0 and d6 == 0, "%d, %d" % (d5, d6))
         chk("D6 nessun errore di pagina", not errs, str(errs[:2]))
+        await ctx.close()
+        # ---- F: «Scarica l'ultima regata» e regate chiuse subito (6 novembre 2026, ramo deriva) ----
+        ctx, pg, errs = await pagina(b)
+        f0 = await pg.evaluate("() => document.getElementById('regLast').disabled")
+        chk("F1 senza regate il pulsante è spento", f0 is True, str(f0))
+        f = await pg.evaluate("""async () => { const sv = __sv, dt = 1 / 60, gira = (R, sec) => { const t1 = R.t + sec, me = R.boats[0]; while (R.t < t1 && R.t < 900 && me.fin === null && !me.dnf){ sv.pilota(dt); sv.run(dt, 1); } };
+          sv.fast(0); __seed(611); sv.openItem(["r", 1]); gira(sv.R, 0.5); const vuota = sv.R; sv.openItem(["r", 1]); sv.run(dt, 2); const dopoVuota = regPezzi.length;
+          gira(sv.R, 10); sv.openItem(["r", 1]); sv.run(dt, 2); const dopoCorta = regPezzi.map(p => p.fine);
+          gira(sv.R, 2000); sv.run(dt, 10); await new Promise(r => setTimeout(r, 500));
+          return { dopoVuota, dopoCorta, pezzi: regPezzi.map(p => [p.n, p.fine]), fine: sv.R.boats[0].fin === null ? null : sv.R.boats[0].fin - (sv.R.boats[0].pen || 0), pen: sv.R.boats[0].pen || 0 }; }""") # fin comprende le penalità, il file finisce all'arrivo vero
+        chk("F2 una regata chiusa entro 2 s non resta nel menu; una di 10 s sì", f["dopoVuota"] == 0 and f["dopoCorta"] == ["interrotto"], str(f))
+        chk("F3 la regata intera ha due pezzi (altrimenti F4 non misura niente)", f["fine"] is not None and [x for x in f["pezzi"] if x[1] != "interrotto"] == [[1, ""], [2, "ultimo"]], str(f))
+        scaricati = []; pg.on("download", lambda d: scaricati.append(d))
+        await pg.evaluate("document.getElementById('regDlg').showModal()"); await pg.wait_for_timeout(200)
+        sc = await pg.evaluate("() => document.querySelector('#regBox select').selectedOptions[0].textContent")
+        chk("F3b il menu è sul primo pezzo della regata appena finita, non su quella di prima", "pezzo 1" in sc and "interrotto" not in sc, sc)
+        await pg.click("#regLast"); await pg.wait_for_timeout(800)
+        testo = pathlib.Path(await scaricati[0].path()).read_text(encoding="utf-8") if scaricati else ""
+        tS = [float(x[1]) for x in righe(testo, "S")]
+        chk("F4 un solo file, con i due pezzi in ordine e senza l'altra regata", len(scaricati) == 1 and scaricati[0].suggested_filename.endswith("-intera.txt") and "· pezzo 1 ·" in testo and "· pezzo 2 (ultimo) ·" in testo and "(interrotto)" not in testo and "registrazione_chiusa arrivo" in testo, str([d.suggested_filename for d in scaricati]))
+        chk("F5 il file copre la regata dall'inizio all'arrivo, senza buchi oltre 0,2 s", bool(tS) and tS[0] < -100 and abs(tS[-1] - f["fine"]) < 1 and metro.tutti(0 <= q - w <= 0.2 for w, q in zip(tS, tS[1:])), str(tS[:1] + tS[-1:]))
+        al = await pg.evaluate("() => { const d = document.getElementById('regDlg'); return [d.scrollWidth <= d.clientWidth, d.scrollHeight <= d.clientHeight, document.getElementById('regLast').getBoundingClientRect().height > 0]; }")
+        chk("F6 il pannello delle registrazioni contiene il pulsante, senza eccessi", al == [True, True, True], str(al))
+        await pg.screenshot(path=os.environ["FOTO_REG"]) if os.environ.get("FOTO_REG") else None
+        chk("F7 nessun errore di pagina", not errs, str(errs[:2]))
         await ctx.close(); await b.close()
     # ---- E: il gioco non cambia ----
     ugu = lambda N, V: len(N) == len(V) == n and metro.tutti(a["fin"] == c["fin"] and a["pen"] == c["pen"] and a["pp"] == c["pp"] and a["fine"] == c["fine"] and a["passi"] == c["passi"] for a, c in zip(N, V))

@@ -9,22 +9,8 @@
 # (Chromium tests/output/lancia_tutti/20261101-031157, Firefox 20261101-041521) e coincidono con il giro su GitHub dello stesso giorno.
 # Per scrivere una voce nuova: .venv-collaudi/bin/python tests/noti.py righe <file di uscita>
 
-== collaudo_avversari1b.py | chromium | scenario 5 (tre barche alla boa) 7 su 10 contro 9, noto dalla 1.0.49 (COLLAUDI.md); gli altri scenari 10 su 10
-  scenario 5 variante 2: NO  contatti 1 (regola 13: 0), distanza minima A-B 4.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Blu, contatto con la Verde: era sopravento con le stesse mure e doveva stare lontano (regola 11).']
-  scenario 5 variante 3: NO  contatti 1 (regola 13: 0), distanza minima A-B 7.9 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Blu, contatto con la Verde: era sopravento con le stesse mure e doveva stare lontano (regola 11).']
-  scenario 5 variante 8: NO  contatti 0 (regola 13: 0), distanza minima A-B 3.3 m, deviazione 0°, velocità minima 1000000000, piantate 1, girate 3/3 []
-scenario 5 (tutte girano entro 60 s, nessuna piantata): 7 su 10 FALLITO
-ESITO: FALLITO (scenari [5])
-
-== collaudo_avversari1b.py | firefox | scenario 5 (tre barche alla boa) 7 su 10 contro 9, noto dalla 1.0.49 (COLLAUDI.md); gli altri scenari 10 su 10
-  scenario 5 variante 2: NO  contatti 1 (regola 13: 0), distanza minima A-B 2.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Verde, contatto con la Rossa: era mure a sinistra e doveva lasciare strada a chi era mure a dritta (regola 10).']
-  scenario 5 variante 3: NO  contatti 1 (regola 13: 0), distanza minima A-B 2.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 ['La Verde, contatto con la Rossa: era mure a sinistra e doveva lasciare strada a chi era mure a dritta (regola 10).']
-  scenario 5 variante 7: NO  contatti 0 (regola 13: 0), distanza minima A-B 7.8 m, deviazione 0°, velocità minima 1000000000, piantate 0, girate 2/3 []
-scenario 5 (tutte girano entro 60 s, nessuna piantata): 7 su 10 FALLITO
-ESITO: FALLITO (scenari [5])
-
-== collaudo_contatto_vero.py | firefox | Firefox: penetrazione 0,29 m contro 0,25 nell'1a, accettato il 31 ottobre 2026; va e viene (fallito nel giro della 1.2.1, passato 3 su 3 il 3 novembre 2026): resta qui
-FALLITO: 1a: scafi sovrapposti 0.01 s a regata e penetrazione massima 0.29 m (attesi al massimo 0,5 s e 0,25 m: la correzione vale anche nell'1a dalla 1.0.42; prima 2,8 s e 1,37 m)
+== collaudo_contatto_vero.py | firefox | Firefox, 1.2.15: un istante di 1/240 s con tre barche insieme (salti, seme 1, esperti): la spinta fra due fa sovrapporre per 4 mm la terza, che ha il contatto al passo dopo (PROPOSTA-DERIVA-SU-MAIN.md §6)
+FALLITO: 1b: 1 istanti con scafi sovrapposti e nessun contatto
 ESITO: FALLITO
 
 ~~ collaudo_torneo.py (misura) | tutti | C11: tempi veri (uscita dal menu, chiusura del browser a metà torneo), dipendono dal carico del computer: sul PC fallisce o passa da un giro all'altro
@@ -36,11 +22,11 @@ E2 passo di simulazione
 ~~ collaudo_riquadro_bandiere.py | tutti | Q7: costo del disegno misurato con l'orologio (3,8% sul PC in Firefox, OK su GitHub)
 Q7 costo del disegno
 
-== collaudo_partenze.py | chromium | criterio (1) esperti non meno dei principianti, noto (COLLAUDI.md); dalla 1.1.0 con gli avversari dell'1b in bastone e raffiche anche (2): ritardo mediano con 300 s nelle raffiche circa 8 s (1.1.0: 12,4 s), difetto noto degli avversari dell'1b (CHANGELOG 1.1.2)
-criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 1.7% non meno dei principianti 0.0%', '(2) raffiche, 12 nodi principianti 300 s: ritardo mediano 7.9 s', '(2) raffiche, 12 nodi esperti 300 s: ritardo mediano 8.2 s', '(1) raffiche, 12 nodi: esperti 5.0% non meno dei principianti 0.0%']
+== collaudo_partenze.py | chromium | criteri (1) e (2) noti (COLLAUDI.md); numeri della 1.2.15 (guida nuova degli avversari)
+criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 0.0% non meno dei principianti 0.0%', '(2) raffiche, 12 nodi principianti 300 s: ritardo mediano 7.8 s', '(2) raffiche, 12 nodi esperti 300 s: ritardo mediano 6.2 s', '(1) raffiche, 12 nodi: esperti 3.3% non meno dei principianti 0.0%']
 
-== collaudo_partenze.py | firefox | criterio (1) esperti non meno dei principianti, noto (COLLAUDI.md); dalla 1.1.0 anche (2) ritardo mediano con 300 s (raffiche circa 8 s, bastone esperti 4,9 s in Firefox), difetto noto degli avversari dell'1b (CHANGELOG 1.1.2)
-criteri della partenza: FALLITO; fuori criterio: ['(2) bastone, 10 nodi esperti 300 s: ritardo mediano 4.9 s', '(2) raffiche, 12 nodi principianti 300 s: ritardo mediano 8.3 s', '(2) raffiche, 12 nodi esperti 300 s: ritardo mediano 8.1 s']
+== collaudo_partenze.py | firefox | criteri (1) e (2) noti (COLLAUDI.md); numeri della 1.2.15 (guida nuova degli avversari)
+criteri della partenza: FALLITO; fuori criterio: ['(2) raffiche, 12 nodi principianti 300 s: ritardo mediano 6.0 s', '(2) raffiche, 12 nodi esperti 300 s: ritardo mediano 6.0 s', '(1) raffiche, 12 nodi: esperti 3.3% non meno dei principianti 1.7%']
 
 == collaudo_virate2.py | chromium | avversari oltre la bolina + 15° sopra la soglia del 5%, noto dalla 1.0.31 (quasi tutte manovre volute della guida); numeri della 1.1.2
 ESITO: FALLITO
@@ -48,22 +34,26 @@ ESITO: FALLITO
 == collaudo_virate2.py | firefox | avversari oltre la bolina + 15° sopra la soglia del 5%, noto dalla 1.0.31 (quasi tutte manovre volute della guida); numeri della 1.1.2
 ESITO: FALLITO
 
-== collaudo_competizione.py (misura) | chromium | C1 piazzamenti fuori dalla fascia 10-40%, noto; dalla 1.1.0 (barca dell'1b) peggiorato: da ritarare con medaglie e soglia del torneo (passo 4 della riorganizzazione); numeri della 1.1.2
-  NO  C1: 1° 6 (8%), 2° 18 (22%), 3° 21 (26%), 4° 35 (44%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 10 (12%), 2° 15 (19%), 3° 19 (24%), 4° 36 (45%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 4 (5%), 2° 15 (19%), 3° 23 (29%), 4° 38 (48%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 9 (11%), 2° 12 (15%), 3° 13 (16%), 4° 46 (57%) su 80 arrivate (fascia 10-40%)
+== collaudo_competizione.py (misura) | chromium | C1 piazzamenti fuori dalla fascia 10-40%, noto; da ritarare con le medaglie. Numeri della 1.2.15 (guida nuova degli avversari)
+  NO  C1: 1° 9 (11%), 2° 15 (19%), 3° 23 (29%), 4° 33 (41%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 6 (8%), 2° 14 (18%), 3° 23 (29%), 4° 37 (46%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 6 (8%), 2° 13 (16%), 3° 16 (20%), 4° 45 (56%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 4 (5%), 2° 11 (14%), 3° 18 (22%), 4° 47 (59%) su 80 arrivate (fascia 10-40%)
   misura C1: NO
   conferma C1: NO
 ESITO: FALLITO
 
-== collaudo_competizione.py (misura) | firefox | C1 piazzamenti fuori dalla fascia 10-40%, noto; dalla 1.1.0 (barca dell'1b) peggiorato: da ritarare al passo 4; numeri della 1.1.2
-  NO  C1: 1° 9 (11%), 2° 11 (14%), 3° 24 (30%), 4° 36 (45%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 4 (5%), 2° 17 (21%), 3° 20 (25%), 4° 39 (49%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 2 (2%), 2° 9 (11%), 3° 32 (40%), 4° 37 (46%) su 80 arrivate (fascia 10-40%)
+== collaudo_competizione.py (misura) | firefox | C1 piazzamenti fuori dalla fascia 10-40%, noto; da ritarare con le medaglie. Numeri della 1.2.15 (guida nuova degli avversari)
+  NO  C1: 1° 9 (11%), 2° 20 (25%), 3° 18 (22%), 4° 33 (41%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 6 (8%), 2° 9 (11%), 3° 25 (31%), 4° 40 (50%) su 80 arrivate (fascia 10-40%)
+  NO  C1: 1° 3 (4%), 2° 18 (22%), 3° 20 (25%), 4° 39 (49%) su 80 arrivate (fascia 10-40%)
   misura C1: NO
 ESITO: FALLITO
 
-== collaudo_giri_avversari.py (40 regate) | firefox | Firefox, 1.1.2: G4 trova 14 casi di due giri di fila contro i 15 che il metro chiede (mediana 22,2 s, dentro 12-30); G2 82% (soglia 80%). Chromium verde (G2 92%)
-FALLITO G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 22.2 s su 14 casi, minimo-massimo 19.6-27.5
-casi sbagliati: ['G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 22.2 s su 14 casi, minimo-massimo 19.6-27.5']
+== collaudo_giri_avversari.py (60 regate) | firefox | Firefox, 1.2.15: G4 trova 11 casi di due giri di fila contro i 15 che il metro chiede (mediana 20,5 s, dentro 12-30): con la guida nuova i contatti sono meno. Chromium verde con 60 regate
+FALLITO G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 20.5 s su 11 casi, minimo-massimo 19.6-24.4
+casi sbagliati: ['G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 20.5 s su 11 casi, minimo-massimo 19.6-24.4']
+
+== collaudo_moviola.py (8 regate) | chromium | 1.2.15: al seme 5 del torneo il pilota cede 60 s accanto a Rossa e chiude fuori tempo (V3); la correzione provata alzava le penalità (PROPOSTA-DERIVA-SU-MAIN.md §6)
+FALLITO V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (7 regate arrivate) scarti massimi: inizio 0.02 s, fine 999999700.83 s; copie per regata 3142-4108
+casi sbagliati: ["V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (7 regate arrivate)"]
