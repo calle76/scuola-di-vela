@@ -7,11 +7,13 @@
 #  S5 ritorno di bolina: sul lato di poppa, oltre 100° dal vento e poi entro 12 s sotto 60°, con una barca entro 12,6 m (3 lunghezze)
 #  S6 strambate ravvicinate: due cambi di mure oltre 120° dal vento in meno di 5 s
 #  S7 ferma: evento avv_fermo (sotto 0,5 nodi per 5 s dopo il via)
+#  S8 coppia che si tiene (docs/PROPOSTA-COPPIE.md): «cede:X» da almeno 10 s, X entro 12,6 m (3 lunghezze) e prue entro 20°: le due barche vanno insieme e nessuna si libera
 # Uso: python tests/scene_strane.py file.txt [altri pezzi della stessa regata...]   (i pezzi si passano in ordine)
 #      python tests/scene_strane.py --prova     casi costruiti: ogni scena deve scattare su un caso e tacere su uno simile
 import collections, math, sys
 L2, L3, CEDE_MIN, GIRO, GIRO_T, CONT_T, RIT_T, STR_T, EPIS = 8.4, 12.6, 2.0, 60, 5.0, 5.0, 12.0, 5.0, 5.0
-NOMI = {"S1": "cede ma si avvicina", "S2": "curva grande per cedere", "S3": "contatto cedendo", "S4": "contatto senza che nessuno ceda", "S5": "ritorno di bolina", "S6": "strambate ravvicinate", "S7": "ferma"}
+COPPIA_T, COPPIA_A = 10.0, 20
+NOMI = {"S1": "cede ma si avvicina", "S2": "curva grande per cedere", "S3": "contatto cedendo", "S4": "contatto senza che nessuno ceda", "S5": "ritorno di bolina", "S6": "strambate ravvicinate", "S7": "ferma", "S8": "coppia che si tiene"}
 
 def ang(a, b): return abs((a - b + 180) % 360 - 180)
 
@@ -66,6 +68,7 @@ def scene(righe):
                 if d < L2 and t - inizio[(n, x)] >= CEDE_MIN: segna("S1", t, (n, x), f"{n} cede a {x} da {t - inizio[(n, x)]:.1f} s, a {d:.1f} m")
                 g = max(ang(b["h"], h0) for t0, h0 in s if t0 >= inizio[(n, x)])
                 if g > GIRO: segna("S2", t, (n, x), f"{n} cede a {x} girando di {g:.0f}° in 5 s")
+                if d < L3 and ang(b["h"], o["h"]) < COPPIA_A and t - inizio[(n, x)] >= COPPIA_T: segna("S8", t, (n, x), f"{n} cede a {x} da {t - inizio[(n, x)]:.0f} s, affiancate a {d:.1f} m")
             if b["lato"] is None or abs(b["twa"]) is None: continue
             A = abs(b["twa"])
             if b["lato"] == 2:
@@ -96,6 +99,7 @@ def casi():
     def rit(vicino): return _film(lambda t: [_s(t, 8 if vicino else 200, 0, 0, 150), _b(t, "Rossa", 0, 0, 0, 150 if t < 5 else 40, 2)])
     c["S5"] = (rit(True), rit(False))
     c["S6"] = (_film(lambda t: [_b(t, "Rossa", 0, 0, 0, 170 if t < 3 else -170 if t < 6 else 170, 2)]), _film(lambda t: [_b(t, "Rossa", 0, 0, 0, 170 if t < 1 else -170 if t < 9 else 170, 2)]))
+    c["S8"] = (_film(lambda t: [_s(t, 0, 0, 0, 50), _b(t, "Rossa", 5, 0, 0, 50, 1, "cede:Tu")], 12), _film(lambda t: [_s(t, 0, 0, 0, 50), _b(t, "Rossa", 5, 0, 90, 50, 1, "cede:Tu")], 12))
     c["S7"] = (["E 3.00 avv_fermo Rossa lato 1"] + _film(lambda t: [lontano(t)]), ["E 3.00 avv_riparte Rossa"] + _film(lambda t: [lontano(t)]))
     return c
 def prova():
