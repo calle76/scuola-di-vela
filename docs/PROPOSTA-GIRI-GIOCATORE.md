@@ -131,3 +131,18 @@ Consiglio **B**: la squalifica del giocatore si può fare subito con la regola n
 - **G13:** arrivo con due giri non fatti (parte E di `collaudo_giri.py`, oggi +15 s per giro): risultato «squalificato», ultima in classifica, nessun record salvato; con i giri fatti: arrivo normale (parte A);
 - **G14:** le altre regate e il torneo non cambiano (parte F di `collaudo_giri.py`, confronto al bit);
 - **G15:** il messaggio d'arrivo più lungo entra nel riquadro a 1360x650.
+
+## 11. Fermata 2, prima prova (8 novembre 2026): **non tutto verde, codice non committato**
+
+Ale: scelta B (squalifica per il giocatore, avversari +15 s per ora); il suo «ok» preso come via. Fatto in `js/regate.js` (giro in corso con `GIRO_SOSTA` 8 s e `GIRO_AVANZA` 5°, squalifica, riga nel riquadro), `js/registratore.js` (stato `dsq`), `js/contenuti.js` (lezione 20 e consegna dell'esercizio). Collaudo dei giri esteso: parte E alla squalifica, E3, L2-L5, M1.
+
+**Verdi:** `collaudo_giri` A1 (30/30, costo di due giri 17,5 s, uguale a prima), B1, P1-P2, C1, D1-D3, E1-E2 (squalifica, messaggio, nessun secondo in più), **L2** (giri lenti da 27 s circa: 10/10), **L3** (sosta di 5 s a metà giro: 10/10), **L5** (40° indietro: 10/10), F1 (altre regate identiche al bit), G1, H1-H3; `collaudo_regola21`, `collaudo_riquadro_bandiere`, `collaudo_pannello` (90 misure), `collaudo_pannello_lezioni`, `collaudo_esercizi_regata`; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+
+**Non verdi:**
+- **K1 (giri spuri), 2 regate su 30** (oggi 0). Il pilota di prova, che non riesce a girare la boa, ci fa un cerchio intero attorno: 360° nello stesso verso con una strambata e una virata, e in mezzo circa 5 s dritto (seme 825, da 118 a 144 s). È un giro vero, non voluto. La regola di oggi non lo contava solo perché durava più di 20 s. **Fuori dal criterio G1.**
+- **L4 (sosta di 15 s non deve contare), 5 su 10.** Con la barra al centro la barca continua a girare piano nello stesso verso (da 2°/s a 0,5°/s; seme 941: da 129° a 100° in 15 s), e ogni 5° conta come «la prua avanza»: il giro non riparte mai. Nell'altro verso la barca si ferma e la regola funziona. **La soglia di 5° è troppo piccola** (costante nostra, §6).
+- **M1 (strumento uguale al gioco), 28 su 40; E3, 0 casi.** Difetti del collaudo, non del gioco: la prova si fermava nell'istante del giro, prima della riga registrata (corretto: 2 s dritti dopo), e il filtro di E3 leggeva il debito già chiuso all'arrivo (corretto). Da rimisurare.
+
+**Cosa propongo (cambio dopo aver visto i numeri, da decidere con Ale):** `GIRO_AVANZA` da 5° a **20°** in 8 s, cioè la prua «avanza» se gira almeno 2,5°/s. Lo strumento, solo come informazione: sul file delle 10:03 dà gli stessi giri (158,0 e 227,1); giri senza penalità vera nelle altre 16 regate di Ale: 5° → 2, 20° → 1. Poi tutto si rimisura, L4 compreso, su semi nuovi. K1 resta da decidere a parte: un cerchio vero attorno alla boa, con la regola nuova, conta come giro; secondo me è giusto (lo è anche nella realtà), ma il criterio K1 andrebbe riscritto per dirlo, e questo è un cambio di criterio.
+
+**Stato:** `js/regate.js`, `js/registratore.js`, `js/contenuti.js`, `tests/collaudo_giri.py` e `tests/misura_giri_giocatore.py` modificati e **non committati**; `VERSIONE` e `CHANGELOG.md` non toccati (la versione non è chiusa).
