@@ -67,3 +67,25 @@ Con il numero giusto (4-5% oggi, 2% in Firefox) la soglia che Ale aveva messo pe
 ## 9. Fonti
 
 F15, regola 44.2 (giri appena possibile dopo essersi allontanati); F74 (Perry): con un'infrazione prima del via la penalità si fa prima del via, non dopo. «3 lunghezze» e «30 s» sono scelte nostre.
+
+## 10. Fermata 2 (8 novembre 2026, Ale: «ok, vai con la A»): **K1 e K3 non raggiunti**
+
+Ale ha dato il via e scelto A (squalifica anche per gli avversari se K2 è raggiunto). Fatto in `js/regate.js`: giri prima del via salvo negli ultimi 30 s, `GIRO_AI_VIA` 3, squalifica in `giriMancantiAI`; `collaudo_giri_avversari` G9 aggiornato alla squalifica. Misure con `misura_giri_avversari_liberi.py` (aggiunti i contatti del giocatore), prima su una copia congelata della 1.2.17, dopo su una copia della modifica.
+
+| | Chromium 361-380 | Firefox 361-380 | Chromium 381-400 | Firefox 381-400 | Soglia |
+| --- | --- | --- | --- | --- | --- |
+| K1 attesa dopo il via, mediana | 21 → 18 s | 42 → 12 s | 30 → 42 s | 49 → 26 s | ≤ 10 s: **no** |
+| K1 attesa, 75% | 77 → 38 s | 100 → 58 s | 68 → 68 s | 85 → 52 s | ≤ 40 s: **no** |
+| K2 arrivati con giri non fatti | 4% → 0% | 2% → 1% | 1% → 0% | 2% → 2% | ≤ 2%: sì |
+| K3 colpe degli avversari | 61 → 60 | 50 → 49 | 47 → 49 | 50 → 41 | +10%: sì |
+| K3 contatti con colpa del giocatore | 28 → 32 (+14%) | 26 → 26 | 23 → 27 (+17%) | 22 → 20 | +10%: **no** (Chromium) |
+| tempo con un debito dopo il via (s, in tutto) | 2254 → 1046 | 2421 → 1294 | 2035 → 1331 | 2537 → 1148 | riportato |
+| barca più vicina dopo il via, mediana | 2,4 → 2,0 L | 2,6 → 1,9 L | 2,0 → 1,8 L | 2,3 → 1,9 L | riportato |
+
+K4-K6 non misurati: con K1 e K3 fuori soglia non servono a decidere.
+
+**Cosa ne ricavo.** I giri prima del via funzionano: il tempo con un debito dopo il via si dimezza e i giri non fatti spariscono quasi del tutto. Ma chi prende un debito dopo il via aspetta ancora: anche 3 lunghezze libere in gruppo ci sono solo il 3-10% del tempo (le barche, ora, stanno più vicine: 1,8-2,0 lunghezze). Abbassare ancora la soglia vuol dire girare con le barche addosso. La cosa che fanno i velisti veri è un'altra: **allontanarsi** dal gruppo (la 44.2 dice «dopo essersi ben allontanata»), poggiando o lasciando passare, e poi girare. Oggi l'avversario con un debito continua la sua rotta col gruppo e aspetta che il gruppo si allarghi.
+
+I contatti del giocatore su Chromium (+4 e +4 su 23-28) sono numeri piccoli e in Firefox non salgono; non li spiego, li riporto come sono.
+
+**Stato:** la modifica è nel lavoro di `js/regate.js` e `tests/collaudo_giri_avversari.py`, **non committata**. Da decidere con Ale.

@@ -26,7 +26,8 @@ CORSA = """([seme, liv]) => {
     }
   }
   const arrivi = av.map(b => ({ nome: b.name, fin: b.fin, mancanti: (R.penList.find(p => p.startsWith("La " + b.name + ", giri di penalità non fatti")) || "").match(/\\((\\d+)\\)/)?.[1] | 0 }));
-  return { sec, debiti, arrivi };
+  return { sec, debiti, arrivi, tuContatti: R.penList.filter(p => p.startsWith("Tu, contatto")).length, contatti: Object.keys(R.contacts || {}).length,
+           giriDove: R.penList.filter(p => / penalità scontata/.test(p) && !p.startsWith("Tu")).length, dsq: av.filter(b => b.dsq).length };
 }"""
 async def main():
     a, z = int(sys.argv[1]), int(sys.argv[2]); tutti = []
@@ -46,6 +47,7 @@ async def main():
     dopo = [s for s in sec if s["motivo"] in ("barca entro 4 lunghezze", "vicino a boa o arrivo", "libera (sta per cominciare)")]
     if dopo:
         print(f"dopo la partenza ({len(dopo)} s): barca più vicina, mediana {statistics.median(s['d'] for s in dopo):.1f} lunghezze; " + ", ".join(f"almeno {k} L: {100 * sum(s['d'] >= k for s in dopo) / len(dopo):.0f}%" for k in (1.5, 2, 3, 4)))
+    print(f"colpe degli avversari (debiti) {len(deb)} | contatti con colpa del giocatore {sum(r['tuContatti'] for r in tutti)} | penalità scontate dagli avversari {sum(r['giriDove'] for r in tutti)} | avversari squalificati {sum(r['dsq'] for r in tutti)}")
     arr = [x for r in tutti for x in r["arrivi"] if x["fin"] is not None]; manc = [x for x in arr if x["mancanti"]]
     print(f"avversari arrivati {len(arr)}, con giri non fatti {len(manc)} ({100 * len(manc) / max(len(arr), 1):.0f}%), giri mancanti in tutto {sum(x['mancanti'] for x in manc)}")
     attese = []   # secondi dal debito al primo istante «libera» secondo soglie diverse, per avversario e debito (solo dopo la partenza)
