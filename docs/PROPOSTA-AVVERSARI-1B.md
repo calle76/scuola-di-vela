@@ -1,6 +1,6 @@
 # Avversari con la barca dell'1b — fermata 1
 
-Scritta il 26 ottobre 2026, sulla 1.0.48. Passo 2 del «Prossimo lavoro» di `STATO.md`; punto «1b alfa» di `METODO.md` §5. Nessun codice nel gioco: c'è solo lo strumento di misura `tests/misura_avversari.py` (nuovo, senza soglie).
+Scritta il 26 ottobre 2026, sulla 1.0.48. Passo 2 del «Prossimo lavoro» di `STATO.md` (oggi `archivio/STATO-2026-10-27.md`); punto «1b alfa» di `METODO.md` §5. Nessun codice nel gioco: c'è solo lo strumento di misura `tests/misura_avversari.py` (nuovo, senza soglie).
 
 ## 1. Da dove nasce
 

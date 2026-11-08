@@ -36,9 +36,9 @@ Costo di cambiamento:
 | Motore cinematico didattico, non un previsore; un effetto entra solo se si sente guidando e ha una fonte | inizio | alto | È la base di tutto il resto | `PROGETTO.md` |
 | Si tara la barca condotta bene; la differenza la fa chi guida | 16 ott | alto | Fasce, avversari e lezioni dipendono dalla velocità | `ROADMAP.md` |
 | Prima la barca, poi avversari, lezioni e per ultimi i tempi delle medaglie | 17 ott | — (regola di metodo) | — | `ROADMAP.md`, `METODO.md` |
-| Barca dell'1a congelata | 17-22 ott | alto | Impronta, lezioni, prove, esame | `STATO.md` |
+| Barca dell'1a congelata | 17-22 ott | alto | Impronta, lezioni, prove, esame | `archivio/STATO-2026-10-27.md` |
 | Barca dell'1b congelata | 23 ott | alto | Impronte, avversari, torneo | `archivio/PROPOSTA-CONGELAMENTO-1B.md` |
-| I numeri che dipendono dalla barca si derivano dalla barca, non si scrivono a mano | ott | medio | Sostituirli dopo vuol dire trovarli tutti | `STATO.md` |
+| I numeri che dipendono dalla barca si derivano dalla barca, non si scrivono a mano | ott | medio | Sostituirli dopo vuol dire trovarli tutti | `archivio/STATO-2026-10-27.md` |
 | Valori numerici misurati da pubblicazioni scientifiche, citati, si possono usare nel motore | 16 ott | basso | — | `CLAUDE.md` |
 
 ## Comandi
@@ -56,17 +56,17 @@ Costo di cambiamento:
 | Decisione | Data | Costo | Perché costa | Dove |
 | --- | --- | --- | --- | --- |
 | Ogni livello ha una parte «a» (teoria) e una «b» (pratica); 1a basi, 1b barca completa, 2 regolamento con la stessa barca, 3 fiocco, 4 gennaker, 5 equipaggio da tre e tattica | 19 ott | alto | Documenti, menu, carriera, ordine dei lavori | `VISIONE-LIVELLI-E-CARRIERA.md` §2 |
-| Nell'1b le regole si fermano alle 10-13; copertura del vento e protesta passano al livello 2 | 23 ott | medio | Avversari e domande dell'1b | `STATO.md` |
+| Nell'1b le regole si fermano alle 10-13; copertura del vento e protesta passano al livello 2 | 23 ott | medio | Avversari e domande dell'1b | `archivio/STATO-2026-10-27.md` |
 | Avversari dell'1b: chi deve cedere cede, chi ha la precedenza tiene la rotta (piantate 36 → 2, penalità 73 → 97) | 26 ott (1.0.49) | medio | Guida degli avversari e pilota dei collaudi | `PROPOSTA-AVVERSARI-1B.md` |
 | Avversari dell'1a lasciati come sono: meno bravi, come chi comincia | 26 ott | basso | — | `PROPOSTA-AVVERSARI-1B.md` §10 |
-| Torneo: uscire a metà regata (menu o chiusura del browser, anche per sbaglio) vale come «Ritirati» per quella regata; il torneo continua. Fatto nella 1.0.50 (prima la regata si rifaceva da capo, scelta della 1.0.34); conta dal clic su «Corri la regata» | 26 ott | basso | Salvataggio del torneo e `collaudo_torneo.py` C3 | `STATO.md` «Aperto» 4 |
+| Torneo: uscire a metà regata (menu o chiusura del browser, anche per sbaglio) vale come «Ritirati» per quella regata; il torneo continua. Fatto nella 1.0.50 (prima la regata si rifaceva da capo, scelta della 1.0.34); conta dal clic su «Corri la regata» | 26 ott | basso | Salvataggio del torneo e `collaudo_torneo.py` C3 | `archivio/STATO-2026-10-27.md` «Aperto» 4 |
 | Nessun aiuto a schermo per i salti di vento: si leggono dalla prua nel pannello | 26 ott | basso | — | `archivio/PROPOSTA-SALTI-VENTO.md` |
 | Si guida sempre un solo ruolo; nel torneo il ruolo resta lo stesso fino alla fine | ott | alto | Equipaggio del computer, meriti, tornei | `VISIONE-LIVELLI-E-CARRIERA.md` |
 | Nessun numero fisso di novità per livello | 4 ott | basso | — | `VISIONE-LIVELLI-E-CARRIERA.md` §1 |
 | Replay e «regata come fonte» solo nella parte «b» dei livelli | 20 ott | medio | Registrazione e istantanee | `PROPOSTA-REGATA-COME-FONTE.md` §9.7 |
 | Vela di portanza del livello 4: gennaker asimmetrico [da verificare su fonti] | ott | medio | Fisica del livello 4, non ancora scritta | memoria del progetto |
 | **Modalità coach**: in ogni regata il registratore parte da solo e si spegne all'arrivo (un file per regata, M sempre possibile); nella navigazione libera, nelle prove e nelle lezioni non registra, salvo registrazione forzata a mano. La registrazione serve al coach (rivivere una situazione, «perché la Rossa ha preso la penalità?») e al debugging | 27 ott | medio | Registratore, memoria del browser o cartella, replay e domande dei livelli futuri | `PROPOSTA-REGATA-COME-FONTE.md` §10 (fermata 1 da scrivere) |
-| Avversari dell'1b: **non si correggono ora** (penalità, boe dal lato sbagliato, tre barche alla boa, partenze); priorità al livello 2 (2a regolamento, 2b protesta) | 30 ott (Ale: «pazienza») | basso ora, medio dopo (i tornei del livello 2 giocano contro questi avversari) | La guida è in parte in comune con l'1a, che resta congelata | `ROADMAP.md`, `STATO.md` punti 4b e 5 |
+| Avversari dell'1b: **non si correggono ora** (penalità, boe dal lato sbagliato, tre barche alla boa, partenze); priorità al livello 2 (2a regolamento, 2b protesta) | 30 ott (Ale: «pazienza») | basso ora, medio dopo (i tornei del livello 2 giocano contro questi avversari) | La guida è in parte in comune con l'1a, che resta congelata | `ROADMAP.md`, `archivio/STATO-2026-10-27.md` punti 4b e 5 |
 | Registrazione automatica di ogni regata, dal conto alla rovescia all'arrivo, a pezzi (primo fino a 120 s, poi 300 s), 10 righe al secondo, ultime 5 regate in IndexedDB; la registrazione a mano ha la precedenza | 29 ott (1.0.60, idee di Ale: pre-via e pezzi da 5 minuti) | medio | Formato 3 del file, `analizza_sessione.py`, le fasi 2-4 del coach leggeranno questi pezzi | `PROPOSTA-COACH-REGISTRATORE.md` |
 | Modalità coach, più usi (Ale, 29 ott 2026): momento clou da rivedere; nei livelli con meno lezioni domanda su una penalità e passo da ripetere; registrazioni raccolte per il debugging. **La ripetizione non è una copia: stessa situazione, condizioni non identiche** (vento, onde, posizioni variati dentro margini). La moviola non è una funzione a sé | 29 ott | medio | Registratore, generatore delle situazioni, lezioni dei livelli futuri | `PROPOSTA-COACH-REGISTRATORE.md` |
 | Torneo dell'1b con percorsi misti, come nelle serie vere (regola 27.1: il percorso lo sceglie il comitato): regata 1 bastone, 2 triangolo, 3 bastone coi salti di vento, 4 triangolo | 27 ott | medio | Percorso, guida degli avversari, distacchi, disegno | `PROPOSTA-TORNEI-1B.md` §8.6 |
