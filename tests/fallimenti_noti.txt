@@ -50,10 +50,6 @@ ESITO: FALLITO
   misura C1: NO
 ESITO: FALLITO
 
-== collaudo_giri_avversari.py (60 regate) | firefox | Firefox, 1.2.15: G4 trova 11 casi di due giri di fila contro i 15 che il metro chiede (mediana 20,5 s, dentro 12-30): con la guida nuova i contatti sono meno. Chromium verde con 60 regate
-FALLITO G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 20.5 s su 11 casi, minimo-massimo 19.6-24.4
-casi sbagliati: ['G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 20.5 s su 11 casi, minimo-massimo 19.6-24.4']
-
 == collaudo_moviola.py (8 regate) | chromium | 1.2.15: al seme 5 del torneo il pilota cede 60 s accanto a Rossa e chiude fuori tempo (V3); la correzione provata alzava le penalità (PROPOSTA-DERIVA-SU-MAIN.md §6)
 FALLITO V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (7 regate arrivate) scarti massimi: inizio 0.02 s, fine 999999700.83 s; copie per regata 3142-4108
 casi sbagliati: ["V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (7 regate arrivate)"]

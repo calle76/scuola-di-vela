@@ -87,7 +87,7 @@ TESTS=(
     "collaudo_scotta_automatica.py|py|chiaro|0||collaudo_scotta_automatica.py 101-120"
     "collaudo_cambia_vento.py|py|chiaro|0||collaudo_cambia_vento.py"
     "collaudo_regola21.py (12 prove)|py|chiaro|0||collaudo_regola21.py 12"
-    "collaudo_giri_avversari.py (60 regate)|py|chiaro|0||collaudo_giri_avversari.py 60"
+    "collaudo_giri_avversari.py (80 regate)|py|chiaro|0||collaudo_giri_avversari.py 80"
     "collaudo_regole.py|py|chiaro|0||collaudo_regole.py"
     "collaudo_semaforo.py|py|chiaro|0||collaudo_semaforo.py"
     "collaudo_torneo.py (veloce)|py|chiaro|0||collaudo_torneo.py --veloce"
