@@ -146,3 +146,19 @@ Ale: scelta B (squalifica per il giocatore, avversari +15 s per ora); il suo «o
 **Cosa propongo (cambio dopo aver visto i numeri, da decidere con Ale):** `GIRO_AVANZA` da 5° a **20°** in 8 s, cioè la prua «avanza» se gira almeno 2,5°/s. Lo strumento, solo come informazione: sul file delle 10:03 dà gli stessi giri (158,0 e 227,1); giri senza penalità vera nelle altre 16 regate di Ale: 5° → 2, 20° → 1. Poi tutto si rimisura, L4 compreso, su semi nuovi. K1 resta da decidere a parte: un cerchio vero attorno alla boa, con la regola nuova, conta come giro; secondo me è giusto (lo è anche nella realtà), ma il criterio K1 andrebbe riscritto per dirlo, e questo è un cambio di criterio.
 
 **Stato:** `js/regate.js`, `js/registratore.js`, `js/contenuti.js`, `tests/collaudo_giri.py` e `tests/misura_giri_giocatore.py` modificati e **non committati**; `VERSIONE` e `CHANGELOG.md` non toccati (la versione non è chiusa).
+
+## 12. Fermata 2, seconda prova (8 novembre 2026, Ale: «sì a tutte e due»)
+
+`GIRO_AVANZA` 20°; K1 riscritto (al massimo 3 regate su 30 con giri riconosciuti, ognuno un giro vero misurato dal collaudo: soglia dichiarata dopo aver visto 2 su 30); semi nuovi per K (1801-1830) e per le prove L (1901-1970).
+
+**Correzioni del collaudo, dichiarate:** M1 si fermava nell'istante del giro, prima della riga registrata (2 s dritti dopo); E3 leggeva il debito già chiuso; L3 e L4 contano solo le prove in cui la barca gira davvero (in qualche seme, dopo la sosta, si pianta nella virata e non finisce il giro: 264-267°). Il primo filtro di L4 scartava anche la prova fermata perché il giro era stato contato, cioè proprio quella sbagliata: trovato su Firefox e corretto.
+
+**Chromium:** `collaudo_giri` tutto verde (K1 0 regate su 30; E3 30/30; L2 10/10 con giri da 27,6 s; L3 9/9 valide; L4 9/9; L5 10/10; M1 40/40; F1 identico al bit); `collaudo_regola21`, `collaudo_riquadro_bandiere`, `collaudo_pannello` (90 misure), `collaudo_pannello_lezioni`, `collaudo_esercizi_regata` verdi; barca identica; `collaudo_versione` verde (1.2.16).
+
+**Firefox:** tutto verde tranne **M1, 39 su 40**, e (col filtro corretto) **L4, 1 prova su 10 contata** (seme 1943). Causa: dopo un giro a barra tutta, con la barra al centro la barca ruota ancora per inerzia (25° nei primi 8 s, da 127° a 103°), quindi per il gioco gira ancora; ferma davvero lo è solo per circa 7,5 s, sotto gli 8 s. Il gioco segue la sua regola. Lo strumento, che legge la prua ogni 0,1 s, vede il passaggio dei 20° qualche centesimo dopo e dice il contrario: è un caso al limite.
+
+**Da decidere con Ale:**
+- **A.** Il gioco è giusto e la prova è sbagliata: la sosta di L4 si conta da quando la barca smette davvero di ruotare (sotto 2,5°/s), non da quando si mette la barra al centro; in M1 si accettano differenze solo nei casi entro 0,2 s dal limite degli 8 s. Cambio del collaudo, il gioco non cambia. **Consigliato.**
+- **B.** Si cambia il gioco: la sosta conta già dalla barra al centro (servirebbe guardare la barra, non la prua) oppure `GIRO_AVANZA` più grande. Altro cambio dopo aver visto i numeri, da rimisurare.
+
+**Stato:** codice, `VERSIONE` 1.2.16 e voce del `CHANGELOG.md` pronti ma **non committati**.
