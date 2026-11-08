@@ -7,10 +7,10 @@
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
 | 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
-| 2 | **Partenza: barche che scivolano oltre l'estremità della linea** mentre aspettano, poi rientrano e si toccano; al via chi accelera poggiando addosso a una vicina e chi vira subito sulla rotta di una mure a dritta | `OSSERVAZIONI-GIOCANDO.md` 93, 96, 100, 101, 102 | da proporre |
+| 2 | **Partenza: barche che scivolano oltre l'estremità della linea** mentre aspettano, poi rientrano e si toccano | `PROPOSTA-PARTENZA-ESTREMITA.md`; osservazioni 93, 96, 100 | proposta fatta (fermata 1), aspetta il via di Ale |
 | 3 | **Boa: avversario che si pianta** 6 m a destra della boa (la correzione «sul bordo» non scatta per meno di 1 m) | osservazioni 90, 103 | da proporre |
 | 4 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
-| 5 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 105, 106 | da proporre |
+| 5 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa, e al via: poggiare all'ultimo, virare sulla rotta di una mure a dritta), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 101, 102, 105, 106 | da proporre |
 | 6 | **In poppa gli avversari vanno a zig-zag** a 150-155° dal vento, più lenti della poppa piena | osservazione 95 | da proporre |
 | 7 | **Torneo in Firefox: chiudendo la scheda a metà, il ritiro può non salvarsi** (`collaudo_torneo` C11) | osservazione 86 | proposta fatta; Ale: dopo la prova della Scuola, poi senza nuovo via |
 | 8 | **Oro della prova 5** (col metro corretto 315/395/505 s invece di 320/400/510) | `CHANGELOG.md` 1.2.11-1.2.12 | aspetta i tempi della prova a mano di Ale |
