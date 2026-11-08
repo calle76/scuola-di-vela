@@ -26,7 +26,7 @@
 
 ## Cosa è stato fatto l'8 novembre, notte
 
-- Lette le 6 regate di Ale dell'8 sera (1.2.18, Chromium, 8 marcatori M): osservazioni 100-107 in `OSSERVAZIONI-GIOCANDO.md`, voci 2, 3, 13, 14, 15 di `DA-FARE.md`. File spostati in `registrazioni/`.
+- Lette le 6 regate di Ale dell'8 sera (1.2.18, Chromium, 8 marcatori M): osservazioni 100-107 in `OSSERVAZIONI-GIOCANDO.md`, voci 2-5 e 14 di `DA-FARE.md` (ordine deciso da Claude su delega di Ale). File spostati in `registrazioni/`.
 
 ## Dove sta cosa
 
