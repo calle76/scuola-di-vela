@@ -89,3 +89,26 @@ K4-K6 non misurati: con K1 e K3 fuori soglia non servono a decidere.
 I contatti del giocatore su Chromium (+4 e +4 su 23-28) sono numeri piccoli e in Firefox non salgono; non li spiego, li riporto come sono.
 
 **Stato:** la modifica è nel lavoro di `js/regate.js` e `tests/collaudo_giri_avversari.py`, **non committata**. Da decidere con Ale.
+
+## 11. Decisione di Ale e seconda versione (fermata 1)
+
+Ale (8 novembre): «ok, vai con la 3»: tolta la prima versione (`js/regate.js` e `collaudo_giri_avversari.py` di nuovo identici al commit 98f2b9b), proposta nuova: **chi ha una penalità prima si allontana dal gruppo, poi gira**, come chiede la 44.2 («dopo essersi ben allontanata dalle altre barche»). La squalifica degli avversari (scelta A) entra quando K2 è raggiunto.
+
+**Modello** (in `giroAI`, `js/regate.js`):
+1. **Giri prima del via**, salvo negli ultimi `GIRO_AI_PRIMA` = 30 s (dalla prima versione, che funzionava: tempo con un debito dopo il via dimezzato). Prima del via la barca **non** cerca spazio (rovinerebbe l'attesa sulla linea): gira solo se lo spazio c'è.
+2. **Dopo il via, cercare spazio.** Con un debito, se la via non è libera (una barca entro `GIRO_AI_VIA` lunghezze) e la barca non è entro 25 m da una boa o dall'arrivo, invece di tenere la rotta del gruppo la barca prova poche prue: quella che voleva, la stessa poggiata o orzata di 20°, 40° e 60° (mai dentro l'angolo morto né oltre 172° dal vento), e in bolina anche la virata. Sceglie quella che, con la previsione che la guida ha già (`passaggio`, 15 s in linea retta), passa più lontano da tutte le barche; a pari distanza (entro mezza lunghezza) la più vicina alla rotta voluta. Appena la via è libera, gira come oggi.
+3. **Non per sempre:** al massimo `GIRO_AI_CERCA` = 45 s di ricerca per debito; poi torna a tenere la rotta e ad aspettare come oggi (così una barca non va lontano dal percorso).
+4. Via libera a **3 lunghezze** (`GIRO_AI_VIA`), stop a 2 (`GIRO_AI_STOP`) come oggi.
+5. **Squalifica** di chi arriva con giri da fare (scelta A), solo se K2 è raggiunto; se no resta +15 s.
+
+Mentre cerca spazio la barca non sta scontando (la 21.2 vale solo durante i giri) e cede come sempre (`cedeAvv1b` resta prima). Non cambia: come gira, il verso, la distanza da boe e arrivo.
+
+**Criteri:** gli stessi del §5, **soglie non cambiate** (K1 attesa dopo il via mediana ≤ 10 s e 75% ≤ 40 s; K2 giri non fatti ≤ 2%; K3 colpe degli avversari e contatti del giocatore ≤ +10%; K4 `collaudo_giri_avversari` verde, aggiornato alla squalifica solo se K2; K5 partenze; K6 barca), in più:
+- **K7, non si va lontano:** tempo d'arrivo mediano degli avversari che hanno avuto un debito, al massimo +10% rispetto a oggi; avversari non arrivati 0; boe dal lato sbagliato non più di oggi.
+- **Da riportare:** quante volte si cerca spazio, quanto dura, quante volte si arriva ai 45 s senza trovarlo.
+
+Il prima è già misurato (copia congelata della 1.2.17, §10: semi 361-380 per la scelta, 381-400 per la conferma, Chromium e Firefox).
+
+**Costanti nuove:** `GIRO_AI_PRIMA` = 30 s (§6), `GIRO_AI_CERCA` = 45 s, scarti di 20°, 40° e 60° (come gli scarti per cedere, `SCARTI` 15-60°), tutte ipotesi nostre.
+
+**Rischi:** chi cerca spazio poggiando può andare addosso a una terza barca (K3); in bolina, poggiando, perde terreno (K7); 45 s possono non bastare in una flotta stretta (lo diciamo con il dato «arrivati ai 45 s»).
