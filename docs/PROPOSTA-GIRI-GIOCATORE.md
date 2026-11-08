@@ -87,3 +87,22 @@ Regola 21.2 (`sconta`): comincia quando il giro in corso arriva a `GIRO_INIZIO` 
 ## 8. Fonti
 
 F15 (44.2, 21.2), F39 (44.2 in italiano), F74 nuova (Perry, US Sailing). Caso 149, Q&A 2019.019 e il forum solo come indizi, non letti direttamente.
+
+## 9. La lezione sui giri di penalità (richiesta di Ale, 8 novembre)
+
+Ale: «c'è da correggere la spiegazione nella lezione dedicata ai giri di penalità». Lezione 20, passo «I giri di penalità» (`js/contenuti.js`, `LD7`). Il testo di oggi dice che un giro vale «se in venti secondi la prua fa un giro intero». Descrive la regola di oggi, ma con il modello del §4 diventa sbagliato. In più non dice che un giro lento o interrotto ricomincia da capo, che è proprio quello che è successo ad Ale. Si cambia **insieme alla regola**, nella fermata 2 (cambiare solo il testo lascerebbe la lezione diversa dal gioco).
+
+**Terzo paragrafo del passo, nuovo:**
+> Nel gioco un giro vale quando la prua fa un giro intero nello stesso verso e, durante il giro, fai una virata e una strambata. Non c'è un tempo massimo, ma non ci si ferma: se la barca smette di girare per più di otto secondi, o torna indietro, quel giro ricomincia da capo. Il pannello ti dice a che punto sei. I giri non fatti, all'arrivo, costano quindici secondi l'uno: nel regolamento non c'è, è una scelta del gioco.
+
+**Esercizio «Tocca la boa e fai il giro»**, consegna: dopo «girando sempre nello stesso verso» si aggiunge «senza fermarti a metà».
+
+**Riepilogo:** invariato (dice già «subito, nello stesso verso, ognuno con una virata e una strambata»).
+
+Anche il commento in testa alle lezioni del livello 2a (`js/contenuti.js`, «un giro vale con 360° nello stesso verso in 20 s») si aggiorna.
+
+**Criteri in più:**
+- **G11:** il passo e la consegna entrano nel riquadro della lezione a 1360x650 senza pixel di eccesso (il collaudo delle lezioni che misura il riquadro);
+- **G12:** l'esercizio «Tocca la boa e fai il giro» si completa ancora guidando la barca (`collaudo_esercizi_regata.py`).
+
+Nessuna fonte nuova: «prontamente» e «nello stesso verso, una virata e una strambata» sono F15 44.2; gli otto secondi e i quindici secondi sono scelte del gioco, e il testo lo dice.
