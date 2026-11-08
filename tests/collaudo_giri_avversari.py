@@ -21,7 +21,7 @@ REGATA = """async ([seme, liv]) => {
     const sc0 = op.map(b => !!b.sconta);
     sv.run(dt, 1);
     op.forEach((b, i) => { const d = (b.gDebt || 0); if (d > prev[i]) inc[i].push([R.t, d - prev[i], sc0[i]]); prev[i] = d; if (b.fin !== null && tFin[i] === null) tFin[i] = R.t; });
-    if (R.t >= 0 && n++ %% 6 === 0) op.forEach((b, i) => log[i].push([R.t, b.S.h, norm180(sv.windAt(b.S.x, b.S.y).twd - b.S.h), 0, b.sconta ? 1 : 0, b.gDebt || 0, b.S.u, b.S.capsized ? 1 : 0, b.gFatti || 0, strada(b)]));
+    if (n++ %% 6 === 0) op.forEach((b, i) => log[i].push([R.t, b.S.h, norm180(sv.windAt(b.S.x, b.S.y).twd - b.S.h), 0, b.sconta ? 1 : 0, b.gDebt || 0, b.S.u, b.S.capsized ? 1 : 0, b.gFatti || 0, strada(b)]));
   }
   const contatti = op.map(b => R.penList.filter(x => x.startsWith('La ' + b.name + ', contatto')).length);
   return { log, inc, tFin, contatti, fine: op.map(b => b.fin), gDebtFine: op.map(b => b.gDebt || 0), gFatti: op.map(b => b.gFatti || 0), pen: op.map(b => b.pen), nomi: op.map(b => b.name), t: R.t,
@@ -38,7 +38,7 @@ ARRIVO = """async ([seme]) => { const sv = __sv, dt = 1 / 60; __seed(seme); sv.s
     if (me.fin === null && !me.dnf) sv.pilota(dt); else sv.ctl.tiller = 0;
     if (!dato && b.leg === R.marks.length + 1){ const y = toWF(b.S.x, b.S.y)[1]; if (y < 0 && y > -22){ b.gDebt = 2; pen0 = b.pen; f0 = b.gFatti || 0; dato = true; } }
     sv.run(dt, 1); }
-  return { dato, fin: b.fin !== null, dpen: b.pen - (pen0 === null ? 0 : pen0), voce: R.penList.filter(x => x.startsWith('La ' + b.name + ', giri di penalità non fatti (2): +30')).length, debito: b.gDebt || 0, fatti: (b.gFatti || 0) - f0 }; }"""
+  return { dato, fin: b.fin !== null, dpen: b.pen - (pen0 === null ? 0 : pen0), voce: R.penList.filter(x => x.startsWith('La ' + b.name + ', giri di penalità non fatti (2): squalifica')).length, debito: b.gDebt || 0, fatti: (b.gFatti || 0) - f0, dsq: !!b.dsq, ultima: ranking().indexOf(b) >= R.boats.filter(o => o.fin !== null && !o.dsq).length }; }"""
 # per la regata dei giri: istantanee ogni 5 s di tutte le barche, e l'istante del primo giro di un avversario (sconta)
 SNAP = """async ([n, seme0]) => {
   const sv = __sv, dt = 1 / 60, out = [];
@@ -170,6 +170,8 @@ async def main():
         chk("G5 segmenti con un avversario fermo (u < 0,3) per più di 10 s: %d su %d (soglia 5%%)" % (pianta, nseg), nseg >= 20 and pianta <= 0.05 * nseg)
         scuff = sum(1 for k, s in A if s["scuff"])
         chk("G6 segmenti con scuffia: %d su %d (soglia 5%%)" % (scuff, nseg), nseg >= 20 and scuff <= 0.05 * nseg)
+        # 1.2.18: il registro comincia dall'apertura della regata, non dal via: dalla 1.2.18 gli avversari girano anche prima del via, e un giro cominciato prima e ripreso dopo
+        # sembrava un giro nuovo (G12 lo dava nel verso sbagliato, G4 non vedeva le coppie di giri). Cambio del metro dichiarato in docs/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md §14
         # G12: il verso scelto. Dai campioni: all'inizio del segmento |twa| e u; dopo 1 s |twa| è cresciuto (poggia) o calato (orza)
         seg = []; ripresi = 0; vicini = 0; soglia = 0
         for k, r in enumerate(R):
@@ -201,7 +203,8 @@ async def main():
         # ---- G9 ----
         G9 = [await pg.evaluate(ARRIVO, [900 + k]) for k in range(10)]
         val = [g for g in G9 if g["dato"] and g["fin"] and g["fatti"] == 0]  # chi ha fatto i giri prima di arrivare (la rotta lo ha riportato a più di 25 m dalla linea) non è un caso di giri mancanti
-        chk("G9 avversario che arriva con due giri da fare: +30 s e voce nell'elenco in %d casi su %d possibili (10 prove)" % (sum(1 for g in val if g["dpen"] == 30 and g["voce"] == 1 and g["debito"] == 0), len(val)), len(val) >= 7 and metro.tutti(g["dpen"] == 30 and g["voce"] == 1 for g in val), "non validi: %s" % [(i, g) for i, g in enumerate(G9) if g not in val or g["dpen"] != 30 or g["voce"] != 1])
+        # 1.2.18 (docs/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md, Ale: scelta A): l'avversario che arriva con giri da fare è squalificato (prima +15 s per giro)
+        chk("G9 avversario che arriva con due giri da fare: squalificato, nessun secondo in più, voce «squalifica» nell'elenco, dopo tutte le arrivate, in %d casi su %d possibili (10 prove)" % (sum(1 for g in val if g["dsq"] and g["dpen"] == 0 and g["voce"] == 1 and g["ultima"]), len(val)), len(val) >= 7 and metro.tutti(g["dsq"] and g["dpen"] == 0 and g["voce"] == 1 and g["ultima"] for g in val), "non validi: %s" % [(i, g) for i, g in enumerate(G9) if g not in val])
         chk("A0 nessun errore di pagina", not errs, str(errs[:2]))
         await ctx.close()
         # ---- G10 ----

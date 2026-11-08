@@ -329,10 +329,12 @@
       const vicino = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
       if (tk && !vicino && (sgn(dd) === tk ? Math.abs(dd) > 172 : R.t - (b.tGybe ?? -1e9) < GYBE_MIN || Math.abs(dd) > 172)) desired = twd - tk * 172; }
     // chi deve cedere si scosta (cedeAvv1b, qui sotto). Fino alla 1.0.78 la barca dell'1a aveva qui una regola 10 sua e uno scarto da qualsiasi barca davanti
+    if (R.giri && hold && b.gDebt > 0 && !b.ocs) hold = false; // 1.2.18 (docs/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md §12, Ale): con un debito di giri non si aspetta fermi, anche a costo di rovinare la partenza
     if (!hold) desired = cedeAvv1b(b, desired, twd, side, ai);
+    if (R.giri && !hold){ const sp = giroSpazioAI(b, desired, twd, ai); if (sp !== null) desired = sp; } // 1.2.18: con un debito e il gruppo vicino, si scosta il minimo che basta per avere spazio
     // 1.0.67 (docs/PROPOSTA-GIRI-AVVERSARI.md): chi ha un debito di giri e la via libera segue la sequenza dei giri al posto della rotta; le tre regole qui sotto (angolo morto, abbrivio, piantata) non valgono
     const gm = R.giri ? giroAI(b, dt, twd, ai) : null;
-    if (gm !== null) desired = gm;
+    if (gm !== null){ desired = gm; hold = false; }
     // la prua desiderata non deve mai finire nell'angolo morto (tranne durante una virata voluta)
     const dTwa = norm180(twd - desired);
     const wantsTack = !hold && Math.abs(rel) < ai.up && sgn(dTwa) !== side;
@@ -588,8 +590,8 @@
   // di GIRO_AVANZA gradi; è fatto a GIRO_GRADI con almeno una virata e una strambata da quando è cominciato. Nessun limite di durata (44.2 dice «prontamente»; fino alla 1.2.15
   // il giro doveva stare in 20 s e un giro lento non contava).
   // Un giro nel verso opposto al precedente fa ricominciare il conto della penalità in corso (R.done = R.base + 1: dalla 1.0.74 i giri delle penalità già scontate
-  // restano, R.base; prima tornava a 1 e il debito risaliva, osservazione 72). Scontata la penalità il verso è di nuovo libero (44.2: lo stesso verso vale per ogni penalità). All'arrivo con giri mancanti il giocatore è squalificato (1.2.16, decisione di Ale dell'8 novembre; 60.5); gli avversari prendono ancora GIRO_SEC s per giro (provvisorio, osservazione 99).
-  const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_SOSTA = 8, GIRO_AVANZA = 20, GIRO_SEC = 15, GIRO_INIZIO = 120; // ipotesi nostre: isteresi del verso (disturbo delle onde), secondi senza girare dopo i quali il giro
+  // restano, R.base; prima tornava a 1 e il debito risaliva, osservazione 72). Scontata la penalità il verso è di nuovo libero (44.2: lo stesso verso vale per ogni penalità). All'arrivo con giri mancanti il giocatore è squalificato (1.2.16, decisione di Ale dell'8 novembre; 60.5); dalla 1.2.18 anche gli avversari (giriMancantiAI).
+  const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_SOSTA = 8, GIRO_AVANZA = 20, GIRO_INIZIO = 120; // ipotesi nostre: isteresi del verso (disturbo delle onde), secondi senza girare dopo i quali il giro
     // riparte (1.2.16, sopra la sosta di 6-7 s del giro piantato di Ale), gradi da girare in GIRO_SOSTA s perché la prua «avanzi» (20: con 5 la barca a barra al centro, che scivola di 0,5-2°/s, sembrava girare; cambiato dopo la prima misura, Ale 8 nov), ripiego per giro non fatto degli avversari, gradi da cui si sta scontando (regola 21.2, 1.0.66)
   function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, v: 0, cum: 0, pk: 0, anc: 0, tA: R.t, tk: S.tacks, gy: S.gybesC + S.gybesV }; }
   function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata, senza fermarti."; }
@@ -629,9 +631,12 @@
   // ---- giri di penalità degli avversari (livello 2a, 1.0.67, docs/PROPOSTA-GIRI-AVVERSARI.md; F15 44.1 e 44.2) ----
   // Solo nelle regate con R.giri. Un avversario colpevole di un contatto ha un debito (b.gDebt, due giri). Dopo lo sparo, in regata e con nessuna barca a meno di GIRO_AI_VIA lunghezze
   // (e lontano da boe e linea d'arrivo) gira: la sequenza di prue sta in giroAI. Se una barca arriva a meno di GIRO_AI_STOP lunghezze il giro si sospende e riparte da zero. Mentre gira
-  // b.sconta è vero, quindi vale per lui la 21.2 (chiCede). Un giro è fatto con 360° nello stesso verso, una virata e una strambata (come per il giocatore). Semplificazione dichiarata: i giri
-  // cominciano solo dopo lo sparo (il regolamento li vuole «appena possibile», anche prima).
-  const GIRO_AI_VIA = 4, GIRO_AI_STOP = 2, GIRO_AI_ERR = 12, GIRO_AI_LONTANO = 25, GIRO_AI_LARGA = 80, GIRO_AI_LENTA = 1.5; // lunghezze, lunghezze, gradi (anticipo sulla prua successiva), metri da boe e arrivo, gradi dal vento e m/s sotto i quali si poggia per prima: ipotesi nostre
+  // b.sconta è vero, quindi vale per lui la 21.2 (chiCede). Un giro è fatto con 360° nello stesso verso, una virata e una strambata (come per il giocatore). Fino alla 1.2.17 i giri
+  // cominciavano solo dopo lo sparo; dalla 1.2.18 anche prima (giroSpazioAI e GIRO_AI_CERCA qui sotto).
+  // 1.2.18 (docs/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md §11-12, osservazione 99, Ale): i giri appena possibile, anche prima del via e anche nell'ultimo mezzo minuto (rovinare la partenza è il prezzo
+  // della penalità, F74); con il gruppo vicino la barca si scosta del minimo che basta (giroSpazioAI), al più GIRO_AI_CERCA s per giro; via libera a 3 lunghezze invece di 4
+  const GIRO_AI_CERCA = 45, GIRO_AI_SCARTI = [0, 20, 40, 60];
+  const GIRO_AI_VIA = 3, GIRO_AI_STOP = 2, GIRO_AI_ERR = 12, GIRO_AI_LONTANO = 25, GIRO_AI_LARGA = 80, GIRO_AI_LENTA = 1.5; // lunghezze, lunghezze, gradi (anticipo sulla prua successiva), metri da boe e arrivo, gradi dal vento e m/s sotto i quali si poggia per prima: ipotesi nostre
   function giroLibero(b, lung){ // nessun'altra barca (ancora in regata, non scuffiata) entro lung lunghezze
     for (const o of R.boats) if (o !== b && o.fin === null && !o.dnf && !o.S.capsized && Math.hypot(o.S.x - b.S.x, o.S.y - b.S.y) < lung * BOAT.length) return false;
     return true;
@@ -640,9 +645,27 @@
     for (const m of R.marks) if (Math.hypot(m.x - b.S.x, m.y - b.S.y) < GIRO_AI_LONTANO) return false;
     return !(b.leg === R.marks.length + 1 && Math.abs(toWF(b.S.x, b.S.y)[1]) < GIRO_AI_LONTANO);
   }
+  function giroSpazioAI(b, desired, twd, ai){ // la prua per allontanarsi dal gruppo prima dei giri, o null (si tiene la rotta): la deviazione più piccola, poggiando prima, con cui la previsione
+    // della guida (passaggio, 15 s in linea retta) passa ad almeno GIRO_AI_VIA lunghezze da tutte; se nessuna basta, quella che passa più lontano. Non se cede (cedeAvv1b viene prima) né vicino a boe e arrivo
+    if (!(b.gDebt > 0) || b.fin !== null || b.dnf || b.ocs || b.gCum != null || b.cedeA || (R.t >= 0 && b.leg < 1)) return null;
+    if (b.gCercaD !== b.gDebt){ b.gCercaD = b.gDebt; b.gCerca = null; } // un tempo di ricerca per ogni giro da fare
+    if (giroLibero(b, GIRO_AI_VIA) || !giroLontano(b)) return null;
+    if (b.gCerca == null) b.gCerca = R.t;
+    if (R.t - b.gCerca > GIRO_AI_CERCA) return null;
+    const L = BOAT.length, lato = sgn(norm180(twd - desired)) || b.side || 1;
+    let best = null, bl = -1;
+    for (const da of GIRO_AI_SCARTI) for (const dir of da ? [-lato, lato] : [1]){ // -lato: poggia
+      const nd = desired + dir * da, t2 = norm180(twd - nd);
+      if (sgn(t2) !== lato || Math.abs(t2) < ai.up - 2 || Math.abs(t2) > 172) continue;
+      const lib = passaggio(b, nd);
+      if (lib >= GIRO_AI_VIA * L) return nd;
+      if (lib > bl){ bl = lib; best = nd; }
+    }
+    return best;
+  }
   function giroAI(b, dt, twd, ai){ // la prua voluta per i giri, o null se la barca non sta girando
     const s = b.S;
-    if (!(b.gDebt > 0) || b.fin !== null || b.dnf || R.t < 0 || b.leg < 1 || b.ocs){ if (b.gCum != null){ b.gCum = null; b.sconta = false; } return null; }
+    if (!(b.gDebt > 0) || b.fin !== null || b.dnf || (R.t >= 0 && b.leg < 1) || b.ocs){ if (b.gCum != null){ b.gCum = null; b.sconta = false; } return null; }
     if (b.gCum == null){ // non sta girando: comincia solo se la via è libera
       if (!giroLibero(b, GIRO_AI_VIA) || !giroLontano(b)) return null;
       const sd = sgn(norm180(twd - s.h)) || b.side; // 1.0.68: il verso lo sceglie la barca all'inizio e resta lo stesso per tutta la penalità (44.2 non dice quale): da un'andatura larga o con poca velocità poggia per prima (strambata, poi virata: prende velocità), altrimenti orza per prima (virata, poi strambata)
@@ -663,10 +686,10 @@
     const t = x > U + GIRO_AI_ERR ? U : x > -U + GIRO_AI_ERR ? -U : x > -D + GIRO_AI_ERR ? -D : D - 360;
     return twd - b.gV * t;
   }
-  function giriMancantiAI(b){ // un avversario taglia l'arrivo con il debito aperto: come il giocatore, +GIRO_SEC s per giro
+  function giriMancantiAI(b){ // un avversario taglia l'arrivo con il debito aperto: squalificato, come il giocatore (1.2.18, scelta A di Ale; fino alla 1.2.17 +15 s per giro)
     const m = b.gDebt; if (!(m > 0)) return;
-    b.pen += GIRO_SEC * m; b.gDebt = 0; b.gCum = null; b.sconta = false;
-    R.penList.push("La " + b.name + ", giri di penalità non fatti (" + m + "): +" + GIRO_SEC * m + " s al tempo.");
+    b.dsq = true; b.gDebt = 0; b.gCum = null; b.sconta = false;
+    R.penList.push("La " + b.name + ", giri di penalità non fatti (" + m + "): squalifica (regole 44.2 e 60.5).");
   }
 
   // ---- boa toccata (livello 2a, 1.0.62, docs/PROPOSTA-LIVELLO-2A.md fetta 2; F15 31 e 44.1) ----
