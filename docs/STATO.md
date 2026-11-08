@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 8 novembre 2026, sera.*
+*Aggiornato: 8 novembre 2026, notte.*
 
 ## Versione
 
@@ -23,6 +23,10 @@
 - 1.2.18: avversari che scontano subito, anche prima del via, scostandosi il minimo; squalifica anche per loro.
 - Proposta «coppie che si tengono»: chiusa senza correzione (`PROPOSTA-COPPIE.md` §12).
 - Tag di versione per tutte le versioni dalla 0.18; release e issue su GitHub rifiutate (`DECISIONI.md`).
+
+## Cosa è stato fatto l'8 novembre, notte
+
+- Lette le 6 regate di Ale dell'8 sera (1.2.18, Chromium, 8 marcatori M): osservazioni 100-107 in `OSSERVAZIONI-GIOCANDO.md`, voci 2, 3, 13, 14, 15 di `DA-FARE.md`. File spostati in `registrazioni/`.
 
 ## Dove sta cosa
 

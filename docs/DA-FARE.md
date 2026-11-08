@@ -6,9 +6,9 @@
 
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
-| 1 | **Leggere le registrazioni di Ale e Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 | `STATO.md` | aspetta i file |
-| 2 | **Partenza: barche che scivolano oltre l'estremità della linea** mentre aspettano, poi rientrano e si toccano | `OSSERVAZIONI-GIOCANDO.md` 93, 96 | da proporre |
-| 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97 | da riproporre |
+| 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
+| 2 | **Partenza: barche che scivolano oltre l'estremità della linea** mentre aspettano, poi rientrano e si toccano; al via chi accelera poggiando addosso a una vicina e chi vira subito sulla rotta di una mure a dritta | `OSSERVAZIONI-GIOCANDO.md` 93, 96, 100, 101, 102 | da proporre |
+| 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
 | 4 | **In poppa gli avversari vanno a zig-zag** a 150-155° dal vento, più lenti della poppa piena | osservazione 95 | da proporre |
 | 5 | **Torneo in Firefox: chiudendo la scheda a metà, il ritiro può non salvarsi** (`collaudo_torneo` C11) | osservazione 86 | proposta fatta; Ale: dopo la prova della Scuola, poi senza nuovo via |
 | 6 | **Oro della prova 5** (col metro corretto 315/395/505 s invece di 320/400/510) | `CHANGELOG.md` 1.2.11-1.2.12 | aspetta i tempi della prova a mano di Ale |
@@ -17,4 +17,7 @@
 | 9 | **Suoni:** giudizio di Ale all'ascolto | `CHANGELOG.md` 1.2.9 | aspetta Ale |
 | 10 | **`collaudo_boma2` in Firefox:** guardare nei prossimi giri se la caduta è sparita (altri 9 collaudi con la stessa riga) | `CHANGELOG.md` 1.2.12 | da guardare |
 | 11 | **Livello Deriva** (stessa barca, momento clou e coach): manca il via e la soglia del torneo | `PROPOSTA-LIVELLO-DERIVA.md` §10 | dopo la prova della Scuola |
+| 13 | **Boa: avversario che si pianta** 6 m a destra della boa (la correzione «sul bordo» non scatta per meno di 1 m) | osservazioni 90, 103 | da proporre; posto nell'elenco da decidere |
+| 14 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 105, 106 | da proporre; posto da decidere |
+| 15 | **In Firefox il gioco scatta**, in Chromium no: misurare i fotogrammi al secondo | osservazione 107 | da misurare; posto da decidere |
 | 12 | **Copia di sicurezza del progetto fuori da GitHub** | — | la fa Ale, quando vuole |
