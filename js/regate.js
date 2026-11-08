@@ -837,6 +837,13 @@
   // accesi; il test è quello che decide la X allo sparo: centro della barca oltre la linea). Le bandiere si vedono per RQ_PERM s dopo ogni cambio (la X finché c'è); a destra solo se c'è qualcosa da dire.
   const RQ_PERM = 10, RQ_SCONTATA = 6, RQ_LAMPO = 1.5, RQ_X = 16, RQ_BW = 44, RQ_BH = 30; // secondi e pixel: ipotesi nostre
   const RQ_NOMI = { classe: "Classe", P: "P", X: "X", blu: "Blu" }, rqMis = new Map();
+  // 1.2.16 (docs/PROPOSTA-OROLOGIO-GIRI.md, Ale 8 novembre): con un debito di giri, un anello rosso che si riempie di verde mentre si fa il giro (nel verso del giro,
+  // dall'alto), con al centro i giri fatti su quelli della penalità aperta («0/2», «1/2»). Misure in pixel: ipotesi nostre
+  const RQ_OROLOGIO = "@orologio", RQ_OR_D = 64, RQ_OR_S = 10, RQ_OR_ROSSO = "#D9443C", RQ_OR_VERDE = "#7FD6A8";
+  function rqOrologio(){ // { frazione del giro in corso 0-1, verso +1 orario / -1 antiorario / 0, testo «fatti/totale» }
+    const g = R.giro, fatti = R.done - R.base, tot = R.need - R.base;
+    return { frac: g && g.v ? Math.max(0, Math.min(1, g.cum / GIRO_GRADI)) : 0, verso: g && g.v ? g.v : 0, testo: fatti + "/" + tot };
+  }
   const RQ_YS = 10, RQ_YD = 10; // altezza dei due pezzi (la bussola e il vento stanno in basso a destra)
   function rqAggiorna(){ // a ogni passo: quando cambia l'insieme delle bandiere, e quando un debito di giri si chiude
     const k = bandiereTesto(bandiereR()); if (k !== R.rqKey){ R.rqKey = k; R.rqT = R.t; }
@@ -852,15 +859,14 @@
       const fatti = R.done - R.base;   // 1.0.74: solo i giri della penalità aperta (prima anche quelli delle penalità già scontate, osservazione 72)
       righe.push(["Penalità: " + m + (m === 1 ? " giro" : " giri") + " da fare" + (fatti ? " · fatti " + fatti : ""), "#FFFFFF", 700, 14]);
       if (R.rqMotivo) righe.push(["Per: " + R.rqMotivo, "rgba(255,255,255,.75)", 600, 12]);
-      const g = R.giro; // 1.2.16: a che punto è il giro in corso, a passi di 30°
-      if (g && g.v) righe.push(["Giro in corso: " + Math.min(330, Math.floor(g.cum / 30) * 30) + "° di 360° · virata " + (me.S.tacks > g.tk ? "sì" : "no") + " · strambata " + (me.S.gybesC + me.S.gybesV > g.gy ? "sì" : "no"), "rgba(255,255,255,.9)", 600, 12]);
+      righe.push([RQ_OROLOGIO, "", 0, 0]); // 1.2.16 (docs/PROPOSTA-OROLOGIO-GIRI.md, Ale): l'orologio del giro, disegnato da drawRiquadro con rqOrologio()
       if (me.sconta) righe.push(["Stai scontando: lascia strada", "rgba(255,255,255,.75)", 600, 12]);
     } else if (scont) righe.push(["Penalità scontata", "#7FD6A8", 700, 14]);
     if (oltre) righe.push(["Oltre la linea: torna dietro", "#FFD447", 700, 14]);
     const vediF = flag.length && (recente || f.X);
     if (!vediF && !righe.length) return null;
     const senso = vediF ? (f.blu ? "Partito: la linea ora è d'arrivo" : f.P ? "Preparatorio: bandiera P alzata" : R.t >= -60 ? (R.cd >= 180 ? "Un minuto: la P è ammainata" : "Un minuto: resta la bandiera di classe") : "Avviso: bandiera di classe alzata") : null;
-    return { flag: vediF ? flag : [], senso, righe, lampo: R.rqT != null && R.t - R.rqT < RQ_LAMPO };
+    return { flag: vediF ? flag : [], senso, righe, lampo: R.rqT != null && R.t - R.rqT < RQ_LAMPO, orologio: deb ? rqOrologio() : null };
   }
   function rqLarg(t, px, peso){ // la larghezza di un testo si misura una volta sola (e di nuovo quando i caratteri sono pronti)
     const k = (fontsOk ? "1" : "0") + peso + "|" + px + "|" + t; let w = rqMis.get(k);
@@ -871,8 +877,16 @@
     ctx.fillStyle = "rgba(10,24,36,.78)"; ctx.fillRect(x, y, w, h);
     ctx.lineWidth = lampo ? 3 : 1; ctx.strokeStyle = lampo ? "#FFD447" : "rgba(255,255,255,.4)"; ctx.strokeRect(x, y, w, h);
   }
+  function rqDisegnaOrologio(o, cx, cy){
+    const r = (RQ_OR_D - RQ_OR_S) / 2, a0 = -Math.PI / 2; R.rqOr = [cx, cy, r]; // centro e raggio, per il collaudo che legge i pixel
+    ctx.save(); ctx.lineWidth = RQ_OR_S; ctx.lineCap = "butt";
+    ctx.strokeStyle = RQ_OR_ROSSO; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke();
+    if (o.frac > 0){ ctx.strokeStyle = RQ_OR_VERDE; ctx.beginPath(); ctx.arc(cx, cy, r, a0, a0 + o.verso * o.frac * 2 * Math.PI, o.verso < 0); ctx.stroke(); }
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = font(700, 18); ctx.fillStyle = "#FFFFFF"; ctx.fillText(o.testo, cx, cy + 1);
+    ctx.restore();
+  }
   function drawRiquadro(){
-    R.rqRect = null; R.rqRect2 = null; if (!R.segnali) return;
+    R.rqRect = null; R.rqRect2 = null; R.rqOr = null; if (!R.segnali) return;
     const d = rqDati(); if (!d) return;
     const gap = 10, pad = 10; ctx.save(); ctx.textBaseline = "middle"; ctx.textAlign = "left";
     const nf = d.flag.length;
@@ -887,9 +901,12 @@
       R.rqRect = [RQ_X, y0, w, h];
     }
     if (d.righe.length){ // destra: X, penalità, avviso
-      let w = 0, h = 2 * pad; for (const [t, , peso, px] of d.righe){ w = Math.max(w, rqLarg(t, px, peso)); h += px + 8; }
+      const hOr = RQ_OR_D + 12; // altezza dell'orologio, con un po' d'aria sopra e sotto
+      let w = 0, h = 2 * pad; for (const [t, , peso, px] of d.righe){ if (t === RQ_OROLOGIO){ w = Math.max(w, RQ_OR_D); h += hOr; } else { w = Math.max(w, rqLarg(t, px, peso)); h += px + 8; } }
       w += 2 * pad; const x = W - 16 - w, y0 = RQ_YD; rqSfondo(x, y0, w, h, false);
-      let y = y0 + pad; for (const [t, col, peso, px] of d.righe){ ctx.font = font(peso, px); ctx.fillStyle = col; ctx.fillText(t, x + pad, y + (px + 8) / 2); y += px + 8; }
+      let y = y0 + pad; for (const [t, col, peso, px] of d.righe){
+        if (t === RQ_OROLOGIO){ if (d.orologio) rqDisegnaOrologio(d.orologio, x + w / 2, y + hOr / 2); y += hOr; continue; }
+        ctx.font = font(peso, px); ctx.fillStyle = col; ctx.fillText(t, x + pad, y + (px + 8) / 2); y += px + 8; }
       R.rqRect2 = [x, y0, w, h];
     }
     ctx.restore();
@@ -1246,10 +1263,10 @@
     R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + 10, gy - 10); });
     drawOrologio(R.boats[0], ranking());
     ctx.restore();
-    drawRiquadro();
     const g = goal(); // dopo l'arrivo niente freccia
     if (g) offscreenArrow(v, g);
     linePill(v, R.pin, R.cb, R.t < 0 ? "Linea di partenza" : "Arrivo", g && g.kind !== "mark" ? g : null, 0, 4);
+    drawRiquadro(); // 1.2.17: per ultimo, sopra la scritta della linea e la freccia (la scritta «Arrivo» copriva l'orologio dei giri)
   }
   // ---- aiuti a schermo e fantasma (valgono in tutte le modalità) ----
   // freccia curva sulla prua: da che parte sta girando davvero la barca

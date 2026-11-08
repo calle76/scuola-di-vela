@@ -49,3 +49,11 @@ Nessuna costante del gioco cambia; solo misure di disegno (diametro, spessore, c
 ## 5. Fonti
 
 Nessuna fonte nautica: è un aiuto a schermo, che si può disattivare con «Suggerimenti» come gli altri? **No:** il riquadro delle penalità si vede sempre nella regata dei giri, anche oggi; il cerchio segue lui. Se Ale lo vuole legato a «Suggerimenti», è una riga.
+
+## 6. Via di Ale, con semplificazioni (8 novembre 2026)
+
+Ale: «deve comparire quando si ha la penalità: ti ricorda che la devi effettuare e comincia a colorarsi di verde quando comincia effettivamente ad eseguirla. Se vuoi togliere le varie indicazioni dei gradi e virate e strambate, per renderlo più semplice, magari ricordare 1 giro su 1 o 2 giri (0/1…1/1 oppure 0/2…1/2…2/2)».
+
+Quindi: l'orologio c'è **sempre quando c'è un debito di giri** (anche prima del via, anche con i Suggerimenti spenti); è tutto rosso finché il giro non comincia; al centro **solo «giri fatti / giri della penalità»** («0/2», «1/2»). Niente gradi, niente V e S: il criterio O4 cade, O3 controlla il nuovo numero. La riga «Penalità: 2 giri da fare · fatti 1» resta sopra, come promemoria (la usa anche `collaudo_riquadro_bandiere`).
+
+**Trovato nel collaudo (O2):** la scritta della linea («Arrivo», «Linea di partenza») e la freccia fuori schermo erano disegnate dopo il riquadro e gli passavano sopra (seme 3006: «Arrivo» sopra l'anello). Difetto che c'era già anche con le scritte; ora il riquadro si disegna per ultimo. Gli altri punti «né rossi né verdi» erano sul bordo sfumato dove finisce l'arco verde, che il collaudo non giudica (margine di 0,05 giri).
