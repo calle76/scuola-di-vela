@@ -23,3 +23,6 @@ RESOCONTO.md
 
 # ambiente virtuale dei collaudi (punto 8 della 0.17)
 .venv-collaudi/
+
+# registrazioni delle regate scaricate da Ale e Lucio (servono a tests/rigioca_regata.py e alle misure): restano sul PC, non vanno su GitHub
+registrazioni/

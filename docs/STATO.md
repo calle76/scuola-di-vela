@@ -7,12 +7,11 @@
 ## Versione
 
 - **Ultima versione chiusa: 1.2.18** (commit `3038b29`, tag `v1.2.18`). Novità nel `CHANGELOG.md`.
-- **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. **Da pushare:** `git push origin main --tags` (porta online la 1.2.18 e i 123 tag).
+- **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
 
 ## Cosa aspetta Ale
 
-- **Il push** qui sopra.
 - **Giocare la 1.2.16-1.2.18 e mandare le registrazioni** («Scarica l'ultima regata»; note con «#» nel file): giri di penalità senza limite di 20 s, orologio dei giri, avversari che scontano subito, squalifica per i giri non fatti.
 - **Il giro dei collaudi su GitHub** della 1.2.18 (scheda Actions → «Collaudi» → «Run workflow», completo), poi gli zip nella cartella del repo.
 - **L'ordine delle cose da fare** in `DA-FARE.md`.
@@ -30,3 +29,4 @@
 - Il gioco in una pagina: `IL-GIOCO.md`. Principi: `PROGETTO.md`. Metodo (due fermate, soglie prima): `METODO.md` e `CLAUDE.md`.
 - Decisioni di Ale e quanto costa cambiarle: `DECISIONI.md`. Difetti visti giocando: `OSSERVAZIONI-GIOCANDO.md`. Collaudi: `COLLAUDI.md`. Fonti: `FONTI-PUBBLICHE.md`.
 - Le proposte (`PROPOSTA-*.md`) hanno in fondo l'esito di ogni fermata.
+- **Le registrazioni delle regate** (`regata-….txt`, scaricate da Ale e Lucio) stanno in `registrazioni/`, nella cartella del repo ma fuori da git (`.gitignore`). Le nuove si mettono lì. Le 8 regate intere usate da `tests/rigioca_regata.py`: 04/11 21:12, 06/11 15:50, 17:59, 18:33, 07/11 16:42, 16:55, 17:07, 17:25.
