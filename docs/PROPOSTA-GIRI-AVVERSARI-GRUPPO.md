@@ -112,3 +112,35 @@ Il prima è già misurato (copia congelata della 1.2.17, §10: semi 361-380 per 
 **Costanti nuove:** `GIRO_AI_PRIMA` = 30 s (§6), `GIRO_AI_CERCA` = 45 s, scarti di 20°, 40° e 60° (come gli scarti per cedere, `SCARTI` 15-60°), tutte ipotesi nostre.
 
 **Rischi:** chi cerca spazio poggiando può andare addosso a una terza barca (K3); in bolina, poggiando, perde terreno (K7); 45 s possono non bastare in una flotta stretta (lo diciamo con il dato «arrivati ai 45 s»).
+
+## 12. Correzioni di Ale alla seconda versione (8 novembre 2026), prese come via
+
+Ale: «1. scontare i giri senza rovinare una partenza non è una penalità... ci deve essere questo rischio. 2. sì, perdendo meno tempo possibile, allontanandosi il minimo».
+
+1. **Niente eccezione per la partenza:** i giri e la ricerca di spazio valgono anche prima del via e nell'ultimo mezzo minuto; la barca con un debito non resta ferma in attesa (`hold`) sulla linea. `GIRO_AI_PRIMA` non c'è più.
+2. **Allontanarsi il minimo:** non la prua che passa più lontano, ma **la deviazione più piccola** che basta per avere 3 lunghezze (prima la rotta voluta, poi 20°, 40°, 60°, poggiando prima); se nessuna basta, quella che passa più lontano. Tolta la virata fra le scelte (sarebbe un cambio di rotta grande, e la guida tornerebbe indietro).
+
+**Criteri:** K1-K4, K6, K7 invariati. **K5 (partenze non peggiori) diventa solo riportato:** con la correzione 1 una barca con un debito deve poter partire male; dichiarato prima di misurare.
+
+## 13. Fermata 2 della seconda versione (8 novembre 2026): K2 e K7 sì, K1 e K3 no
+
+Misure con `misura_giri_avversari_liberi.py`, prima su una copia congelata della 1.2.17 (rifatta con lo strumento aggiornato per K7), dopo su una copia della modifica; semi 361-380 (scelta) e 381-400 (conferma), Chromium e Firefox, principianti ed esperti, 40 regate ciascuno.
+
+| | Ch 361 | Ff 361 | Ch 381 | Ff 381 | Soglia |
+| --- | --- | --- | --- | --- | --- |
+| K1 attesa dopo il via, mediana | 21 → 25 s | 42 → 9 s | 30 → 20 s | 49 → 28 s | ≤ 10 s: 1 su 4 |
+| K1 attesa, 75% | 77 → 37 s | 100 → 21 s | 68 → 42 s | 85 → 74 s | ≤ 40 s: 2 su 4 |
+| K2 giri non fatti | 4% → 0% | 2% → 0% | 1% → 0% | 2% → 1% | ≤ 2%: sì |
+| K3 contatti con colpa del giocatore | 28 → 30 | 26 → 27 | 23 → 26 (+13%) | 22 → 19 | +10%: 3 su 4 (in tutto 99 → 102, +3%) |
+| K3 colpe degli avversari | 61 → 58 | 50 → 53 | 47 → 49 | 50 → 42 | +10%: sì |
+| K7 arrivo mediano di chi ha avuto un debito | 225,5 → 218,2 s | 233,8 → 225,7 s | 228,1 → 220,6 s | 236,4 → 221,1 s | ≤ +10%: sì (migliora) |
+| K7 non arrivati / boe sbagliate | 0 / 0 → 0 / 0 | 0 / 0 → 0 / 0 | 0 / 0 → 0 / 0 | 0 / 0 → 0 / 0 | sì |
+| tempo con un debito dopo il via, in tutto | 2254 → 659 s | 2421 → 546 s | 2035 → 695 s | 2537 → 914 s | riportato (−70%) |
+| avversari con un debito dopo il via | 45 → 23 | 38 → 26 | 39 → 19 | 37 → 20 | riportato |
+| ricerca di spazio: volte, durata media, senza successo in 45 s | 90, 14,4 s, 16 | 80, 15,4 s, 10 | 81, 16,5 s, 16 | 69, 18,8 s, 12 | riportato |
+
+K4 (`collaudo_giri_avversari`), K5 (partenze, solo riportato) e K6 (barca) non misurati: servono solo se la modifica resta.
+
+**Lettura.** La maggior parte dei debiti ora si sconta prima del via (avversari ancora in debito dopo il via: circa la metà di prima); il tempo con un debito dopo il via cala del 70%; nessuno arriva più con giri da fare (salvo un caso in 160 regate); chi ha avuto un debito arriva prima di oggi (circa 8 s), perché non si trascina il debito per tutta la regata. K1 non si raggiunge perché cercare spazio richiede in media 14-19 s: la soglia di 10 s l'avevo scelta prima di sapere quanto dura la ricerca. K3: un insieme di semi su quattro, +3 contatti su 23; in tutto +3%.
+
+**Stato:** modifica in `js/regate.js`, **non committata**; `collaudo_giri_avversari.py` non ancora aggiornato (G9). Da decidere con Ale.

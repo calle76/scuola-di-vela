@@ -11,10 +11,11 @@ CORSA = """([seme, liv]) => {
   const sv = __sv; sv.fast(0); sv.openItem(["r", 3]); __seed(seme); sv.simTime = 0;
   const sel = document.getElementById("aiLevel"); sel.value = liv; sel.dispatchEvent(new Event("change"));
   const R = sv.R, dt = 1 / 60, L = 4.2, av = R.boats.filter(b => !b.me), sec = [], debiti = [];
-  let n = 0; const d0 = new Map(av.map(b => [b, 0]));
+  let n = 0; const d0 = new Map(av.map(b => [b, 0])), cerca = { volte: 0, scaduti: 0, secondi: 0 }, cPrima = new Map(), scad = new Set();
   while (R.t < 900 && av.some(b => b.fin === null && !b.dnf)){
     sv.pilota(dt); sv.run(dt, 1);
-    for (const b of av){ const g = b.gDebt || 0; if (g > d0.get(b)) debiti.push({ nome: b.name, t: +R.t.toFixed(1), prima: R.t < 0 }); d0.set(b, g); }
+    for (const b of av){ const g = b.gDebt || 0; if (g > d0.get(b)) debiti.push({ nome: b.name, t: +R.t.toFixed(1), prima: R.t < 0 }); d0.set(b, g);
+      const c = b.gCerca != null && b.gCum == null && b.gDebt > 0; if (c && !cPrima.get(b)) cerca.volte++; if (c){ cerca.secondi += dt; if (R.t - b.gCerca > 45 && !scad.has(b.gCerca + b.name)){ scad.add(b.gCerca + b.name); cerca.scaduti++; } } cPrima.set(b, c); }
     if (n++ % 60) continue;
     for (const b of av){
       if (!(b.gDebt > 0) || b.fin !== null || b.dnf || b.gCum != null) continue;
@@ -25,9 +26,9 @@ CORSA = """([seme, liv]) => {
       sec.push({ nome: b.name, t: +R.t.toFixed(0), motivo, d: +(dMin / L).toFixed(2), leg: b.leg });
     }
   }
-  const arrivi = av.map(b => ({ nome: b.name, fin: b.fin, mancanti: (R.penList.find(p => p.startsWith("La " + b.name + ", giri di penalità non fatti")) || "").match(/\\((\\d+)\\)/)?.[1] | 0 }));
+  const arrivi = av.map(b => ({ nome: b.name, fin: b.fin, ebbe: debiti.some(d => d.nome === b.name), boeSb: b.wrongMarks || 0, mancanti: (R.penList.find(p => p.startsWith("La " + b.name + ", giri di penalità non fatti")) || "").match(/\\((\\d+)\\)/)?.[1] | 0 }));
   return { sec, debiti, arrivi, tuContatti: R.penList.filter(p => p.startsWith("Tu, contatto")).length, contatti: Object.keys(R.contacts || {}).length,
-           giriDove: R.penList.filter(p => / penalità scontata/.test(p) && !p.startsWith("Tu")).length, dsq: av.filter(b => b.dsq).length };
+           giriDove: R.penList.filter(p => / penalità scontata/.test(p) && !p.startsWith("Tu")).length, dsq: av.filter(b => b.dsq).length, cerca };
 }"""
 async def main():
     a, z = int(sys.argv[1]), int(sys.argv[2]); tutti = []
@@ -49,6 +50,10 @@ async def main():
         print(f"dopo la partenza ({len(dopo)} s): barca più vicina, mediana {statistics.median(s['d'] for s in dopo):.1f} lunghezze; " + ", ".join(f"almeno {k} L: {100 * sum(s['d'] >= k for s in dopo) / len(dopo):.0f}%" for k in (1.5, 2, 3, 4)))
     print(f"colpe degli avversari (debiti) {len(deb)} | contatti con colpa del giocatore {sum(r['tuContatti'] for r in tutti)} | penalità scontate dagli avversari {sum(r['giriDove'] for r in tutti)} | avversari squalificati {sum(r['dsq'] for r in tutti)}")
     arr = [x for r in tutti for x in r["arrivi"] if x["fin"] is not None]; manc = [x for x in arr if x["mancanti"]]
+    fe = [x["fin"] for x in arr if x["ebbe"]]
+    print(f"K7: arrivo mediano di chi ha avuto un debito {statistics.median(fe):.1f} s su {len(fe)} | non arrivati {sum(1 for r in tutti for x in r['arrivi'] if x['fin'] is None)} | boe sbagliate {sum(x['boeSb'] for r in tutti for x in r['arrivi'])}" if fe else "K7: nessun arrivo con debito")
+    cv = sum(r["cerca"]["volte"] for r in tutti if "cerca" in r); cs = sum(r["cerca"]["scaduti"] for r in tutti if "cerca" in r); csec = sum(r["cerca"]["secondi"] for r in tutti if "cerca" in r)
+    print(f"cercare spazio: {cv} volte, {csec:.0f} s in tutto ({csec / max(cv, 1):.1f} s a volta), arrivate ai 45 s senza trovarlo {cs}")
     print(f"avversari arrivati {len(arr)}, con giri non fatti {len(manc)} ({100 * len(manc) / max(len(arr), 1):.0f}%), giri mancanti in tutto {sum(x['mancanti'] for x in manc)}")
     attese = []   # secondi dal debito al primo istante «libera» secondo soglie diverse, per avversario e debito (solo dopo la partenza)
     for r in tutti:
