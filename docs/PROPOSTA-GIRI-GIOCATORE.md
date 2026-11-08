@@ -106,3 +106,28 @@ Anche il commento in testa alle lezioni del livello 2a (`js/contenuti.js`, «un 
 - **G12:** l'esercizio «Tocca la boa e fai il giro» si completa ancora guidando la barca (`collaudo_esercizi_regata.py`).
 
 Nessuna fonte nuova: «prontamente» e «nello stesso verso, una virata e una strambata» sono F15 44.2; gli otto secondi e i quindici secondi sono scelte del gioco, e il testo lo dice.
+
+## 10. Squalifica per i giri non fatti (decisione di Ale, 8 novembre)
+
+Ale: «allora metti la squalifica», dopo aver letto cosa succede nella realtà. Nella realtà chi non sconta può essere protestato e, all'udienza, viene **squalificato dalla prova** (F15, 60.2 e 60.5(c)); chi ha già fatto i giri non viene punito di nuovo (60.5(c)(2)). Registrata in `DECISIONI.md`: chiude il «da decidere» di `REGOLE-DI-REGATA.md`.
+
+**Modello (semplificazione dichiarata: nel gioco non ci sono proteste né udienze; la squalifica arriva sempre e subito, all'arrivo):**
+- chi taglia l'arrivo con giri di penalità ancora da fare è **squalificato (DSQ)** al posto dei +15 s per giro (`GIRO_SEC` non serve più);
+- **in classifica** sta dopo tutte le barche arrivate, insieme a quelle non arrivate: nel punteggio vero DSQ e non arrivata prendono gli stessi punti (appendice A, A5.2). La riga dice «squalificata: giri di penalità non fatti»;
+- **il giocatore squalificato:** nessun record, nessun fantasma, nessun piazzamento salvato; il messaggio d'arrivo dice «Squalificato: non hai fatto i giri di penalità (regole 44.2 e 60.5)». Nell'elenco delle penalità: «Tu, giri di penalità non fatti (2): squalifica»;
+- **dove vale:** solo nelle regate con i giri (`R.giri`): la «Regata con i giri di penalità» e gli esercizi della lezione 20. Nel torneo la penalità resta +1 punto, nelle altre regate +15 s;
+- **lezione 20, terzo paragrafo** (al posto della frase sui quindici secondi): «I giri non fatti, all'arrivo, ti squalificano dalla prova, come nella realtà dopo una protesta.»
+
+**Gli avversari: misura** (`misura_avversari.py 361 380 3`, regata con i giri, Chromium, principianti ed esperti, 40 regate, gioco di oggi): 58 colpe degli avversari, 46 penalità scontate, **26 avversari su 120 arrivati con giri non fatti (22%; 0,65 a regata)**. Con la squalifica per tutti, quasi due regate su tre avrebbero un avversario squalificato, quasi sempre perché in gruppo non trova mai 4 lunghezze libere (osservazione 99), non per scelta.
+
+**Da decidere con Ale (una cosa sola):**
+- **A.** Squalifica subito anche per gli avversari: coerente, ma un avversario su cinque squalificato finché la 99 non è sistemata.
+- **B.** Squalifica subito per il giocatore; per gli avversari restano i +15 s, **dichiarato come provvisorio**, e passano alla squalifica con la proposta sull'osservazione 99 (gli avversari che riescono a fare i giri anche in gruppo), con soglia: avversari arrivati con giri non fatti sotto il 5%.
+- **C.** Squalifica per tutti, ma solo quando anche la 99 è fatta: per ora resta tutto com'è.
+
+Consiglio **B**: la squalifica del giocatore si può fare subito con la regola nuova del §4, che rende i giri possibili anche a chi è lento; quella degli avversari ha bisogno prima che il gioco li lasci girare.
+
+**Criteri in più:**
+- **G13:** arrivo con due giri non fatti (parte E di `collaudo_giri.py`, oggi +15 s per giro): risultato «squalificato», ultima in classifica, nessun record salvato; con i giri fatti: arrivo normale (parte A);
+- **G14:** le altre regate e il torneo non cambiano (parte F di `collaudo_giri.py`, confronto al bit);
+- **G15:** il messaggio d'arrivo più lungo entra nel riquadro a 1360x650.

@@ -67,7 +67,7 @@ Proposta di priorità, da decidere:
 1. **Due giri al posto dei 15 s** (44.1, 44.2), per il giocatore e per gli avversari.
    - **Giocatore:** il gioco conta già virate e strambate (`detectManeuvers`). Due giri nello stesso verso, ciascuno con una virata e una strambata, si riconoscono dalla rotazione cumulata della prua (720°) e dai due contatori.
    - **Avversari:** una manovra nuova in `aiControl`, cioè allontanarsi e poi girare due volte. È la parte più costosa.
-   - **Se il giocatore non sconta i giri:** nella realtà rischia la protesta e la squalifica. Nel gioco, per esempio, «squalificato» all'arrivo, oppure i 15 s come ripiego. Da decidere.
+   - **Se il giocatore non sconta i giri:** nella realtà rischia la protesta e la squalifica. Nel gioco, per esempio, «squalificato» all'arrivo, oppure i 15 s come ripiego. **Deciso da Ale l'8 novembre 2026: squalifica** (`PROPOSTA-GIRI-GIOCATORE.md` §10).
    - **Aiuti disattivabili (principio 3):** tenere la penalità a tempo come aiuto per chi inizia.
 2. **Un giro per aver toccato la boa** (31, 44.1): il gioco deve prima sapere quando la boa è toccata (oggi le boe non fanno da ostacolo).
 3. **Regole 11, 12 e 13 nella colpa dei contatti** (già fatte nella 1.0.40 e 1.0.49; voce rimasta indietro): distinguere sovrapposte e libere dietro, e chi sta virando. Tocca `contacts()` e il comportamento degli avversari.
