@@ -1,6 +1,6 @@
 # Proposta: barche affiancate che si tengono (fermata 1)
 
-**7 novembre 2026, su `main` (1.2.15). Fermata 1: nessuna riga del gioco cambiata.** 8 novembre: misura sulla prevenzione e modello rivisto ai §10-11 (fermata 1, seconda versione, aspetta il via). Ale: «vai con la proposta sulle barche affiancate». Osservazione 94 (boa delle 17:07) e parte della 93 (partenza delle 17:25).
+**7 novembre 2026, su `main` (1.2.15). Fermata 1: nessuna riga del gioco cambiata.** 8 novembre: misura sulla prevenzione e modello rivisto ai §10-11; fermata 2 al §12: K1 non raggiunto, gioco invariato. Ale: «vai con la proposta sulle barche affiancate». Osservazione 94 (boa delle 17:07) e parte della 93 (partenza delle 17:25).
 
 ## 1. In breve
 
@@ -149,3 +149,35 @@ Non cambia: chi ha la precedenza, `chiCede`, la regola «scarta all'ultimo», le
 **Rischi:** più virate, che costano tempo (K4, arrivo mediano); una barca che si libera sopravento può finire addosso a una terza (K2); e K1 potrebbe non arrivare a -40%, perché un terzo delle coppie viene dalla partenza e una parte dai casi in cui la virata non passa libera. **La mia stima, non misurata: fra -30% e -45%.**
 
 **Fonti:** F15, regole 11, 12 e 13 e definizione «tenersi discosto». F73 (sezione 13 della trascrizione): affiancate e vicine è una situazione da non avere. Che chi deve tenersi discosto lo faccia virando via è un'applicazione nostra, dichiarata.
+
+## 12. Fermata 2 del modello rivisto (8 novembre 2026): **K1 non raggiunto, il gioco resta com'era**
+
+Ale: «vai avanti». Rigioco delle 8 regate di Ale, semi 561-580, 160 corse per browser. Il «prima» è il codice di `main` (178cb8b, uguale a 5019b2e nei file di `js/`): su Chromium riproduce esattamente i numeri del §3 e del §9.
+
+**Prima versione, come al §11: aveva un difetto.** Le coppie scendevano molto (Chromium 0,55 → 0,26, Firefox 0,50 → 0,25), ma K5 non passava: `collaudo_avversari1b`, scenario 5 (tre barche alla boa), da 10 su 10 a 8 su 10. Con una stampa di controllo, su una copia del gioco, ho visto la causa. La strambata non segna la barca come «in manovra» (`b.virando`), e a virata cominciata nemmeno la guida lo fa subito. Così la regola nuova cambiava bordo a ogni fotogramma (`cambiaBordo`), e la guida rimbalzava fra le due mure. **Il calo delle coppie veniva da questo rimbalzo, non dalla regola.**
+
+**Correzione (difetto, non modello):** la regola scatta solo se la guida vuole ancora le mure che la barca ha (`b.side === side`), quindi una volta per manovra. Ho provato prima un'altra condizione, «chi prende già la boa sulle mure che ha non vira via», ma non cambiava niente ed è stata tolta. Con la correzione `collaudo_avversari1b` torna 10 su 10 in tutti gli scenari. Ho rifatto tutte le misure su una copia congelata di questa versione.
+
+| | Chromium: prima → dopo | Firefox: prima → dopo | Soglia | Esito |
+| --- | --- | --- | --- | --- |
+| **K1 S8 dopo il via, a corsa** | 0,55 → 0,57 (**+4%**) | 0,50 → 0,59 (**+18%**) | -40% | **no** |
+| K2 contatti a corsa | 1,99 → 1,98 | 1,89 → 1,95 (+3%) | +10% | sì |
+| K2 S3 | 1,05 → 1,07 | 0,88 → 0,89 | +10% | sì |
+| K2 S1 stretta | 2,71 → 2,56 | 2,53 → 2,36 | +10% | sì |
+| K3 virate scelte | 320 | 387 | almeno 20 | sì |
+| K3 S7 ferme, a corsa | 0,21 → 0,27 (**+0,06**) | 0,21 → 0,23 | al massimo +0,02 | **no** in Chromium |
+| K4 non arrivate (`misura_avversari`, semi 361-380) | 0 → 0 | 0 → 0 | 0 | sì |
+| K4 penalità | 123 → 118 | 110 → 104 | +10% | sì |
+| K4 arrivo mediano | 342 → 344,5 s (**+0,7%**) | 341 → 301 s | non peggiore | **no** in Chromium (di poco) |
+| K4 boe sbagliate | 2 → 0 | 0 → 0 | non più di oggi | sì |
+| K5 `collaudo_avversari1b` | 10/10 in tutti gli scenari | (non lanciato) | nessuno peggiora | sì |
+| K5 `collaudo_avversari_deriva` | identico al prima (casi 81 6/10, 83 7/10) | identico al prima (81 6/10) | nessuno peggiora | sì (fallisce già sul codice di oggi) |
+| K6 `polare`, `raffiche_e_virate`, `impronta1b` | identici | | identici | sì |
+
+Cambi di mure dopo il via, per barca (senza soglia): 5,4 prima, 5,8 con la prima versione (Chromium).
+
+**Perché non basta** (`misura_coppie.py` sulle corse dopo, Chromium): chi cede ora vira per primo più spesso (63 casi su 92, prima 41 su 88), ma le coppie si riformano. Quelle nate da un cambio di mure salgono da 18 a 28, e chi ha la precedenza vira anche lei (13 contro 8): le due barche si ritrovano vicine sulle mure nuove. La virata libera la barca solo per qualche secondo.
+
+**Decisione presa da me secondo le regole:** K1 non è raggiunto, quindi la correzione non resta. `js/regate.js` è identico a `main` (diff vuoto); `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` sono identici. La conferma sui semi 581-600 non serve: il «prima» è stato misurato, il «dopo» della prima versione è stato scartato senza guardarlo.
+
+**Cosa ne ricavo per la prossima volta:** in questo gioco una coppia non si scioglie con una manovra di una barca sola, perché la guida delle due barche le riporta vicine (bordi a tempo, stessa boa). Se si riprende, la strada da provare è che chi si libera **resti libero**: dopo la virata, un bordo minimo o una rotta che non torni verso l'altra. Va misurato prima, con lo stesso `misura_coppie.py`.
