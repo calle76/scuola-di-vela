@@ -47,8 +47,8 @@ if __name__ == "__main__" and sys.argv[1] != "--nuovo":
 
 # ---- modello proposto (docs/PROPOSTA-GIRI-GIOCATORE.md): il giro comincia quando la prua ruota, riparte se il verso si inverte di oltre VERSO gradi
 # o se la prua non avanza nel verso del giro per più di pausa secondi; conta a 360° con una virata e una strambata fatte durante il giro ----
-AVANZA = 5   # gradi: sotto, la prua «non avanza» (disturbo delle onde); ipotesi nostra
-def giri2(righe, pausa, debito_finto=False):
+AVANZA = 20  # gradi da girare in «pausa» secondi perché la prua «avanzi»; come GIRO_AVANZA del gioco (1.2.16: 20, prima 5)
+def giri2(righe, pausa, debito_finto=False, t_debito=None, need_debito=None):   # t_debito, need_debito: debito dato da fuori (collaudo_giri.py, parte M)
     S, ev, debito = [], [], []
     for r in righe:
         p = r.split()
@@ -60,9 +60,9 @@ def giri2(righe, pausa, debito_finto=False):
         elif p[0] == "E" and p[2] in ("strambata", "strambata_vela_aperta"): ev.append((t, "s"))
         elif p[0] == "Q" and r.split(None, 2)[2].startswith("Tu, contatto"): debito.append(t)
     S = sorted(set(S)); ev = sorted(set(ev)); debito = sorted(set(debito))
-    t0 = (S[0][0] if S else 0) if debito_finto else (debito[0] if debito else None)
+    t0 = (S[0][0] if S else 0) if debito_finto else t_debito if t_debito is not None else (debito[0] if debito else None)
     if t0 is None: return []
-    need = 10**9 if debito_finto else 2 * len(debito)
+    need = 10**9 if debito_finto else need_debito if need_debito is not None else 2 * len(debito)
     out = []; done = 0; dirz = 0; base = 0
     cur = None; prev = None
     def nuovo(t, h): return dict(t=t, cum=0.0, pk=0.0, anc=0.0, v=0, tPk=t, tk=sum(1 for te, k in ev if k == "v" and te <= t), gy=sum(1 for te, k in ev if k == "s" and te <= t))
@@ -73,6 +73,7 @@ def giri2(righe, pausa, debito_finto=False):
         if cur["v"] == 0:
             cur["cum"] += d
             if abs(cur["cum"]) >= AVANZA: cur["v"] = 1 if cur["cum"] > 0 else -1; cur["cum"] = cur["pk"] = cur["anc"] = abs(cur["cum"]); cur["tPk"] = t
+            elif t - cur["tPk"] > pausa: cur = nuovo(t, h)   # come il gioco (1.2.16): fermi senza giro cominciato, i conti ripartono da adesso
             continue
         cur["cum"] += d * cur["v"]
         cur["pk"] = max(cur["pk"], cur["cum"])

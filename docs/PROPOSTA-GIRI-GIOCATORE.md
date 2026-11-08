@@ -162,3 +162,9 @@ Ale: scelta B (squalifica per il giocatore, avversari +15 s per ora); il suo «o
 - **B.** Si cambia il gioco: la sosta conta già dalla barra al centro (servirebbe guardare la barra, non la prua) oppure `GIRO_AVANZA` più grande. Altro cambio dopo aver visto i numeri, da rimisurare.
 
 **Stato:** codice, `VERSIONE` 1.2.16 e voce del `CHANGELOG.md` pronti ma **non committati**.
+
+## 13. Chiusura (8 novembre 2026): scelta A, **1.2.16**
+
+Ale: «ok, vai con la A, se la barca gira... gira». Il gioco non cambia; nel collaudo la sosta di L3 e L4 si conta da quando la barca smette davvero di girare (sotto 2,5°/s su 1 s), e in M1 una differenza è accettata solo se lo strumento, con il limite spostato di 0,2 s (7,8 o 8,2 s), dà lo stesso risultato del gioco.
+
+`collaudo_giri.py`, 30 prove: **tutto verde in Chromium e in Firefox**. L2 10/10; L3 9/9 valide (Chromium) e 10/10 (Firefox); L4 9/9 e 10/10; L5 10/10; M1 40/40 in tutti e due, nessun caso al limite; K1 0 regate con giri non voluti; E3 squalificato e ultimo. Gli altri collaudi (§12) erano già verdi su questo codice. Criteri G1-G15: tutti raggiunti, con le correzioni del collaudo dichiarate ai §11-13.

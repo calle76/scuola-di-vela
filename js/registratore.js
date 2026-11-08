@@ -36,7 +36,7 @@
   // Un contatto è un nuovo valore in R.contacts (la definizione del gioco); il motivo è la voce nuova di R.penList (righe Q).
   // «Fermo»: sotto FERMO_KN per FERMO_S secondi di gioco dopo il via; «riparte» sopra RIPARTE_KN (ipotesi nostre, isteresi).
   const FERMO_KN = 0.5, RIPARTE_KN = 1, FERMO_S = 5;
-  const sesStato = b => [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + b.cedeA.name].filter(Boolean).join(",") || "-";
+  const sesStato = b => [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dsq && "dsq", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + b.cedeA.name].filter(Boolean).join(",") || "-";
   const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0, still: 0, fermo: false });
   function sesAltre(dSim, riga){
     const L = ses.L;
@@ -185,7 +185,7 @@
   "#                       contatto_senza_colpa +N: contatto che non conta negli errori (gli altri compaiono come «errore contactsPen +N»);",
   "#                       alla riaccensione «pausa Ns» = secondi veri passati a registrazione spenta; t non li conta)",
   "#  B t nome x y prua nodi twa lato stato   un avversario, una riga al secondo insieme alla S (formato 2, dalla 1.0.52): lato 0 prima del via, 1 bolina, 2 poppa;",
-  "#    stato: - | ocs partenza anticipata | scuf scuffiata | arr arrivata | dnf non arrivata | via sta partendo | cede:Nome a chi sta lasciando strada (separati da virgole)",
+  "#    stato: - | ocs partenza anticipata | scuf scuffiata | arr arrivata | dsq squalificata (1.2.16) | dnf non arrivata | via sta partendo | cede:Nome a chi sta lasciando strada (separati da virgole)",
   "#  E avv_fermo/avv_riparte nome   sotto 0,5 nodi per 5 s di gioco dopo il via (con lato e posizione), poi sopra 1 nodo; avv_lato nome N; avv_arrivo nome Ns;",
   "#    avv_ocs, avv_scuffia, avv_penalita nome +15s o +1pt, avv_boa_lato_sbagliato nome; contatto_barche nome1 nome2 (anche con «Tu»), uno per contatto",
   "#  Q t testo   motivo di una penalità, la stessa voce dell'elenco a fine regata",

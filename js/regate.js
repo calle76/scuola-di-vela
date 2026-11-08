@@ -583,37 +583,47 @@
     return { cede: lat * tA > 0 ? B : A, regola: 11 };                                             // B sta dal lato delle mure di A: B è sopravento
   }
   // ---- giri di penalità (livello 2a, 1.0.61, docs/PROPOSTA-LIVELLO-2A.md; F15 44.1 e 44.2) ----
-  // Solo nelle regate con R.giri e solo per il giocatore. Ogni contatto con colpa dà un debito di due giri (R.need). Un giro è fatto quando, negli ultimi GIRO_MAX_S secondi,
-  // la prua ha ruotato di almeno GIRO_GRADI nello stesso verso (senza tornare indietro di più di GIRO_VERSO gradi dal picco) e ci sono state almeno una virata e una strambata.
+  // Solo nelle regate con R.giri e solo per il giocatore. Ogni contatto con colpa dà un debito di due giri (R.need). 1.2.16 (docs/PROPOSTA-GIRI-GIOCATORE.md, osservazione 98): un giro
+  // comincia quando la prua ha girato di GIRO_AVANZA gradi in un verso; riparte da capo se torna indietro di oltre GIRO_VERSO gradi dal picco o se per più di GIRO_SOSTA secondi non avanza
+  // di GIRO_AVANZA gradi; è fatto a GIRO_GRADI con almeno una virata e una strambata da quando è cominciato. Nessun limite di durata (44.2 dice «prontamente»; fino alla 1.2.15
+  // il giro doveva stare in 20 s e un giro lento non contava).
   // Un giro nel verso opposto al precedente fa ricominciare il conto della penalità in corso (R.done = R.base + 1: dalla 1.0.74 i giri delle penalità già scontate
-  // restano, R.base; prima tornava a 1 e il debito risaliva, osservazione 72). Scontata la penalità il verso è di nuovo libero (44.2: lo stesso verso vale per ogni penalità). All'arrivo ogni giro mancante costa GIRO_SEC secondi (ripiego dichiarato: niente squalifica).
-  const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_MAX_S = 20, GIRO_SEC = 15, GIRO_INIZIO = 120; // ipotesi nostre (GIRO_INIZIO, 1.0.66: gradi in GIRO_MAX_S secondi da cui si sta scontando la penalità, regola 21.2): isteresi del verso (disturbo delle onde), tempo massimo di un giro, ripiego per giro non fatto
-  function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, cum: 0, buf: [], last: -1e9 }; }
-  function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata."; }
-  function giriDebito(n){ R.need += n === undefined ? 2 : n; giroVia(); giriMsg(); if (R.boats[0].sconta) R.boats[0].scontaT = R.t; } // la finestra riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
+  // restano, R.base; prima tornava a 1 e il debito risaliva, osservazione 72). Scontata la penalità il verso è di nuovo libero (44.2: lo stesso verso vale per ogni penalità). All'arrivo con giri mancanti il giocatore è squalificato (1.2.16, decisione di Ale dell'8 novembre; 60.5); gli avversari prendono ancora GIRO_SEC s per giro (provvisorio, osservazione 99).
+  const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_SOSTA = 8, GIRO_AVANZA = 20, GIRO_SEC = 15, GIRO_INIZIO = 120; // ipotesi nostre: isteresi del verso (disturbo delle onde), secondi senza girare dopo i quali il giro
+    // riparte (1.2.16, sopra la sosta di 6-7 s del giro piantato di Ale), gradi da girare in GIRO_SOSTA s perché la prua «avanzi» (20: con 5 la barca a barra al centro, che scivola di 0,5-2°/s, sembrava girare; cambiato dopo la prima misura, Ale 8 nov), ripiego per giro non fatto degli avversari, gradi da cui si sta scontando (regola 21.2, 1.0.66)
+  function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, v: 0, cum: 0, pk: 0, anc: 0, tA: R.t, tk: S.tacks, gy: S.gybesC + S.gybesV }; }
+  function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata, senza fermarti."; }
+  function giriDebito(n){ R.need += n === undefined ? 2 : n; giroVia(); giriMsg(); } // il giro riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
   function giriPenalita(){
     const me = R.boats[0], S = me.S, g = R.giro;
     if (!g || R.need <= R.done || me.fin !== null || me.dnf){ me.sconta = false; return; }
     if (S.capsized){ giroVia(); me.sconta = false; return; }
-    g.cum += norm180(S.h - g.h); g.h = S.h;
-    const gy = S.gybesC + S.gybesV;
-    if (R.t - g.last >= 0.5){ g.buf.push([R.t, g.cum, S.tacks, gy]); g.last = R.t; while (g.buf.length && R.t - g.buf[0][0] > GIRO_MAX_S) g.buf.shift(); }
-    const o = g.buf[0], net = o ? g.cum - o[1] : 0;
-    if (me.sconta){ if (R.t - me.scontaT > GIRO_MAX_S){ me.sconta = false; giroVia(); } } // 21.2: venti secondi senza finire un giro e non si sta più scontando
-    else if (Math.abs(net) >= GIRO_INIZIO){ me.sconta = true; me.scontaT = R.t; }
-    if (!o || Math.abs(net) < GIRO_GRADI || S.tacks <= o[2] || gy <= o[3]) return;
-    const v = Math.sign(net); let pk = 0;
-    for (const e of g.buf){ const x = (e[1] - o[1]) * v; if (x > pk) pk = x; else if (pk - x > GIRO_VERSO) return; } // il verso è cambiato
-    if (pk - net * v > GIRO_VERSO) return;
+    const d = norm180(S.h - g.h); g.h = S.h;
+    if (!g.v){ // nessun giro cominciato: si aspetta che la prua giri di GIRO_AVANZA gradi in un verso
+      g.cum += d;
+      if (Math.abs(g.cum) >= GIRO_AVANZA){ g.v = Math.sign(g.cum); g.cum = g.pk = g.anc = Math.abs(g.cum); g.tA = R.t; }
+      else if (R.t - g.tA > GIRO_SOSTA){ giroVia(); me.sconta = false; } // fermi fra un giro e l'altro: si smette di scontare (21.2) e si riprendono i conti di virate e strambate da adesso
+      return;
+    }
+    g.cum += d * g.v; if (g.cum > g.pk) g.pk = g.cum;
+    if (g.cum >= g.anc + GIRO_AVANZA){ g.anc = g.cum; g.tA = R.t; }
+    if (g.pk - g.cum > GIRO_VERSO || R.t - g.tA > GIRO_SOSTA){ // tornato indietro o fermo: il giro riparte da capo
+      const era = g.pk; giroVia(); me.sconta = false;
+      if (era >= GIRO_INIZIO) toast("Giro interrotto: ricomincia, stesso verso, senza fermarti");
+      return;
+    }
+    if (!me.sconta && g.cum >= GIRO_INIZIO) me.sconta = true;
+    if (g.cum < GIRO_GRADI || S.tacks <= g.tk || S.gybesC + S.gybesV <= g.gy) return;
+    const v = g.v;
     R.done = R.giroDir && v !== R.giroDir ? R.base + 1 : R.done + 1; R.giroDir = v;
-    giroVia(); giriMsg(); me.scontaT = R.t; if (R.done >= R.need) me.sconta = false;
+    giroVia(); giriMsg(); if (R.done >= R.need) me.sconta = false;
     toast(R.done >= R.need ? "Penalità scontata" : "Giro fatto: ne manca ancora " + (R.need - R.done));
     if (R.done >= R.need){ const k = R.need - R.base; R.penList.push("Tu, penalità scontata: " + k + (k === 1 ? " giro" : " giri") + "."); R.base = R.need; R.giroDir = 0; }
   }
-  function giriMancanti(b){ // il giocatore taglia l'arrivo con il debito aperto
+  function giriMancanti(b){ // il giocatore taglia l'arrivo con il debito aperto: squalificato (1.2.16; F15 44.2 e 60.5: nella realtà dopo una protesta, qui sempre)
     const m = R.need - R.done; if (m <= 0) return;
-    b.pen += GIRO_SEC * m; R.done = R.need;
-    R.penList.push("Tu, giri di penalità non fatti (" + m + "): +" + GIRO_SEC * m + " s al tempo.");
+    b.dsq = true; R.done = R.need;
+    R.penList.push("Tu, giri di penalità non fatti (" + m + "): squalifica (regole 44.2 e 60.5).");
   }
 
   // ---- giri di penalità degli avversari (livello 2a, 1.0.67, docs/PROPOSTA-GIRI-AVVERSARI.md; F15 44.1 e 44.2) ----
@@ -842,6 +852,8 @@
       const fatti = R.done - R.base;   // 1.0.74: solo i giri della penalità aperta (prima anche quelli delle penalità già scontate, osservazione 72)
       righe.push(["Penalità: " + m + (m === 1 ? " giro" : " giri") + " da fare" + (fatti ? " · fatti " + fatti : ""), "#FFFFFF", 700, 14]);
       if (R.rqMotivo) righe.push(["Per: " + R.rqMotivo, "rgba(255,255,255,.75)", 600, 12]);
+      const g = R.giro; // 1.2.16: a che punto è il giro in corso, a passi di 30°
+      if (g && g.v) righe.push(["Giro in corso: " + Math.min(330, Math.floor(g.cum / 30) * 30) + "° di 360° · virata " + (me.S.tacks > g.tk ? "sì" : "no") + " · strambata " + (me.S.gybesC + me.S.gybesV > g.gy ? "sì" : "no"), "rgba(255,255,255,.9)", 600, 12]);
       if (me.sconta) righe.push(["Stai scontando: lascia strada", "rgba(255,255,255,.75)", 600, 12]);
     } else if (scont) righe.push(["Penalità scontata", "#7FD6A8", 700, 14]);
     if (oltre) righe.push(["Oltre la linea: torna dietro", "#FFD447", 700, 14]);
@@ -933,6 +945,11 @@
   function salvaArrivo(me){ // il giocatore ha tagliato l'arrivo: record, regata fatta, risultato a schermo
     R.phase = "done"; R.doneAt = R.t;
     if (R.es) return; // esercizio: niente si salva; se l'obiettivo non c'è, lo dice esControlla
+    if (me.dsq){ // 1.2.16: squalificato per i giri non fatti: la regata è fatta, ma niente record, fantasma, «senza errori» né piazzamento
+      progress.done["r" + raceIdx] = true; saveProgress();
+      $("rDone").hidden = false; $("rDoneText").textContent = "Squalificato: non hai fatto i giri di penalità (regole 44.2 e 60.5). Il tempo non vale per il record.";
+      return;
+    }
     const key = "r" + raceIdx, bk = recK(key), prev = progress.best[bk], tot = Math.round(me.fin);
     if (!prev || tot < prev){ progress.best[bk] = tot; recSave(); }
     progress.done[key] = true; if (regTotal() === 0) progress.clean[bk] = true; saveProgress();
@@ -1004,7 +1021,7 @@
     return t === null ? null : (pb >= pm ? 1 : -1) * (R.t - t);
   }
   function ranking(){
-    const score = b => b.fin !== null ? 1e7 - b.fin : b.dnf ? -2e6 : (b.ocs ? -1e6 : b.leg * 1e4 - Math.hypot(b.S.x - targetOf(b).x, b.S.y - targetOf(b).y));
+    const score = b => b.dsq ? -2e6 : b.fin !== null ? 1e7 - b.fin : b.dnf ? -2e6 : (b.ocs ? -1e6 : b.leg * 1e4 - Math.hypot(b.S.x - targetOf(b).x, b.S.y - targetOf(b).y));
     return [...R.boats].sort((a, b) => score(b) - score(a));
   }
   function raceResults(prev, tot){
@@ -1021,6 +1038,7 @@
     return ", a " + s(dav) + (prima.length === 1 ? " (prima)" : ", a " + s(prima[0]) + " (prima)");
   }
   function legName(b){
+    if (b.dsq) return "squalificata: giri non fatti";
     if (b.fin !== null) return "arrivata · " + fmtTime(Math.round(b.fin));
     if (b.dnf) return b.me && b.ret ? "ritirata" : "non arrivata";
     if (b.S.capsized) return "scuffiata!";

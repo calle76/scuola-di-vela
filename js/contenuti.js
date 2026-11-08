@@ -439,7 +439,7 @@
   //   possibile dopo l'incidente, poi subito i giri, tutti nello stesso verso, ognuno con una virata e una strambata).
   // Gioco: sequenza intera con 5 minuti di preparazione, accorciata con 3 (avviso a 3, P a 2), con 1 minuto la sola bandiera di classe (bandiereAl); X per 240 s al più;
   //   la barca è tornata quando il suo centro è dietro la linea (raceLegs: semplificazione, il testo lo dice); 21.1, 21.2, boa toccata e giri solo nella «Regata con i giri
-  //   di penalità» (RACES[3]), che è quella degli esercizi; un giro vale con 360° nello stesso verso in 20 s, una virata e una strambata; giro mancante all'arrivo +15 s.
+  //   di penalità» (RACES[3]), che è quella degli esercizi; un giro vale con 360° nello stesso verso, una virata e una strambata, e riparte dopo 8 s senza girare (1.2.16; prima: in 20 s); giro mancante all'arrivo: squalifica (1.2.16; prima +15 s).
   // Esercizi: soglie (un minuto in D5, tre minuti in D6 e D7) ipotesi nostre.
   const LD5 = [
     { title: "La sequenza", ...PAUSE, zoom: 2,
@@ -489,11 +489,11 @@
     { title: "I giri di penalità", ...PAUSE, zoom: 2,
       text: ["Un contatto con colpa con un'altra barca costa due giri, una boa toccata un giro (regola 44.1). Ci si allontana dalle altre barche appena possibile e si fanno subito i giri, tutti nello stesso verso; ogni giro ha una virata e una strambata (regola 44.2).",
              "Mentre sconti la penalità lasci strada a chi non lo fa (regola 21.2).",
-             "Nel gioco un giro vale se in venti secondi la prua fa un giro intero nello stesso verso, con una virata e una strambata. I giri non fatti, all'arrivo, costano quindici secondi l'uno: nel regolamento non c'è, è una scelta del gioco."] },
+             "Nel gioco un giro vale quando la prua fa un giro intero nello stesso verso e, durante il giro, fai una virata e una strambata. Non c'è un tempo massimo, ma non ci si ferma: se la barca smette di girare per più di otto secondi, o torna indietro, quel giro ricomincia da capo. Il riquadro in alto a destra, sul mare, ti dice a che punto sei. I giri non fatti, all'arrivo, ti squalificano dalla prova, come nella realtà dopo una protesta."] },
     { title: "Tocca la boa e fai il giro", ...PAUSE, zoom: 2,
       esercizio: { regata: 3, boa: [-30, 10, 50], avversari: "nessuno", // di bolina mure a sinistra, boa a 32 m, 22° a destra della prua: orzando (la barca sbandata orza) la si passa a 12 m sopravento
         obiettivo: "Tocca la boa gialla, poi fai un giro di penalità",
-        brief: "Esercizio della lezione 20. A regata già partita sei di bolina, da solo, e la boa gialla è davanti a te, un po' a destra. Poggia e toccala, apposta. Poi allontanati un poco e fai un giro di penalità: una virata e una strambata, girando sempre nello stesso verso. È un esercizio: non si salva niente.",
+        brief: "Esercizio della lezione 20. A regata già partita sei di bolina, da solo, e la boa gialla è davanti a te, un po' a destra. Poggia e toccala, apposta. Poi allontanati un poco e fai un giro di penalità: una virata e una strambata, girando sempre nello stesso verso, senza fermarti a metà. È un esercizio: non si salva niente.",
         fatto: R => R.need >= 1 && R.done >= R.need,
         fallito: R => R.t > 180 ? (R.need ? "Sono passati tre minuti e il giro non è ancora fatto." : "Sono passati tre minuti e non hai toccato la boa.") : "" },
       text: ["Ora provalo. Apri l'esercizio: sei di bolina e la boa gialla è davanti a te, un po' a destra. Toccala apposta, allontanati un poco e fai un giro, con una virata e una strambata.",
