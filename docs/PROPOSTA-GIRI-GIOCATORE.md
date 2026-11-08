@@ -118,10 +118,10 @@ Ale: «allora metti la squalifica», dopo aver letto cosa succede nella realtà.
 - **dove vale:** solo nelle regate con i giri (`R.giri`): la «Regata con i giri di penalità» e gli esercizi della lezione 20. Nel torneo la penalità resta +1 punto, nelle altre regate +15 s;
 - **lezione 20, terzo paragrafo** (al posto della frase sui quindici secondi): «I giri non fatti, all'arrivo, ti squalificano dalla prova, come nella realtà dopo una protesta.»
 
-**Gli avversari: misura** (`misura_avversari.py 361 380 3`, regata con i giri, Chromium, principianti ed esperti, 40 regate, gioco di oggi): 58 colpe degli avversari, 46 penalità scontate, **26 avversari su 120 arrivati con giri non fatti (22%; 0,65 a regata)**. Con la squalifica per tutti, quasi due regate su tre avrebbero un avversario squalificato, quasi sempre perché in gruppo non trova mai 4 lunghezze libere (osservazione 99), non per scelta.
+**Gli avversari: misura** (`misura_avversari.py 361 380 3`, regata con i giri, Chromium, principianti ed esperti, 40 regate, gioco di oggi): 58 colpe degli avversari, 46 penalità scontate, ~~26 avversari su 120 arrivati con giri non fatti (22%; 0,65 a regata)~~. **Corretto il pomeriggio dell'8 novembre: il conto era sbagliato**, includeva anche le righe del giocatore («Tu, giri di penalità non fatti»), che col pilota arriva spesso col debito. Gli avversari arrivati con giri non fatti erano **6 su 120 (5%)** sulla 1.2.15 e sono 5 su 120 (4%) sulla 1.2.17 (stessi semi). La scelta B qui sotto è stata fatta da Ale sul numero sbagliato: va riproposta (`PROPOSTA-GIRI-AVVERSARI-GRUPPO.md`).
 
 **Da decidere con Ale (una cosa sola):**
-- **A.** Squalifica subito anche per gli avversari: coerente, ma un avversario su cinque squalificato finché la 99 non è sistemata.
+- **A.** Squalifica subito anche per gli avversari: coerente, ma un avversario su cinque squalificato finché la 99 non è sistemata (numero sbagliato, vedi sopra: era uno su venti).
 - **B.** Squalifica subito per il giocatore; per gli avversari restano i +15 s, **dichiarato come provvisorio**, e passano alla squalifica con la proposta sull'osservazione 99 (gli avversari che riescono a fare i giri anche in gruppo), con soglia: avversari arrivati con giri non fatti sotto il 5%.
 - **C.** Squalifica per tutti, ma solo quando anche la 99 è fatta: per ora resta tutto com'è.
 
