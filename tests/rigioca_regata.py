@@ -3,6 +3,7 @@
 # Le barche partono dai posti del file (i posti sorteggiati dal seme facevano nascere contatti che nella regata non potevano esserci).
 # Si rifiuta se regata, vento o preparazione non si possono rifare uguali al file.
 # DIAGNOSI=1: per ogni «cede ma si avvicina» (cede da 2 s, sotto 8,4 m) e ogni contatto di chi cedeva annota lo stato della barca che cede (cause possibili, lette nel codice).
+# SALVA=cartella: salva le righe di ogni corsa (cartella/NOME-seme.txt, NOME dal primo file) per altre misure.
 # Uso: python tests/rigioca_regata.py PRIMO_SEME ULTIMO_SEME file.txt [altri pezzi...]     BROWSER=firefox per l'altro browser; RADICE=cartella per rigiocare su un altro codice
 import asyncio, collections, json, math, os, pathlib, re, statistics, sys
 from playwright.async_api import async_playwright
@@ -73,6 +74,7 @@ async def main():
             await pg.goto((ROOT / "index.html").as_uri() + "#collaudo"); await pg.wait_for_timeout(150)
             r = await pg.evaluate(CORSA, [race, seme, info["liv"], cd, rotta, info["caratteri"], tFine, posti, bool(os.environ.get("DIAGNOSI"))]); await pg.close()
             if abs((r["vento"] - info["vento"] + 180) % 360 - 180) > 15: print(f"RIFIUTATO: vento nel gioco {r['vento']:.0f}, nel file {info['vento']}"); sys.exit(2)
+            if os.environ.get("SALVA"): pathlib.Path(os.environ["SALVA"]).mkdir(parents=True, exist_ok=True); (pathlib.Path(os.environ["SALVA"]) / f"{pathlib.Path(files[0]).stem}-{seme}.txt").write_text("\n".join(r["righe"]), encoding="utf-8")
             es, nf, nc, (t0, t1) = ss.scene(r["righe"]); f2, c2, _ = ss.leggi(r["righe"])
             # R4: fedeltà sugli stessi istanti, lontano dagli urti (5 s)
             urti = [c[0] for c in c2]; sc = []

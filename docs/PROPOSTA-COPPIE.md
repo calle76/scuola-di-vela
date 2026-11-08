@@ -1,6 +1,6 @@
 # Proposta: barche affiancate che si tengono (fermata 1)
 
-**7 novembre 2026, su `main` (1.2.15). Fermata 1: nessuna riga del gioco cambiata.** Ale: «vai con la proposta sulle barche affiancate». Osservazione 94 (boa delle 17:07) e parte della 93 (partenza delle 17:25).
+**7 novembre 2026, su `main` (1.2.15). Fermata 1: nessuna riga del gioco cambiata.** 8 novembre: misura sulla prevenzione e modello rivisto ai §10-11 (fermata 1, seconda versione, aspetta il via). Ale: «vai con la proposta sulle barche affiancate». Osservazione 94 (boa delle 17:07) e parte della 93 (partenza delle 17:25).
 
 ## 1. In breve
 
@@ -101,3 +101,51 @@ if (devo && R.t >= 0 && s.u >= U_ABBRIVIO && sgn(norm180(twd - desired)) === -si
 K4 misurato sulla versione A (`misura_avversari.py`, semi 361-380, prima → A): non arrivate 0 → 0; penalità 123 → 123 e 110 → 113 (+3%); arrivo mediano 342 → 320,5 s e 341 → 341 s; boe sbagliate 2 → 0 e 0 → 0. Sulla versione B non ancora misurato.
 
 **Stato:** `js/regate.js` è tornato identico a `main` (nessuna correzione nel gioco). Conferma sui semi 581-600 non guardata. **Da decidere con Ale:** la versione B dimezza circa un quarto delle coppie ma non arriva alla soglia; la parte che resta è probabilmente la regola «scarta all'ultimo» di chi ha la precedenza (§4, «cosa non si tocca qui»), che tiene il gruppo insieme poggiando.
+
+## 10. Prevenire invece di curare: quante coppie si potevano evitare prima (8 novembre 2026, misura senza toccare il gioco)
+
+Idea di Ale dal video F73 (Round Robin, min 3:34; trascrizione sezione 13): due barche affiancate e vicine sono un errore fatto prima, da evitare anche per chi ha la precedenza (regola 14). Prima di scrivere il modello ho misurato **quante coppie si potevano vedere arrivare qualche secondo prima**.
+
+Strumento nuovo `tests/misura_coppie.py` (e `SALVA=cartella` in `rigioca_regata.py`, per tenere le tracce delle corse). Per ogni coppia S8 dopo il via guarda l'istante t0 in cui chi cede comincia a cedere. Le categorie le ho scritte prima di guardare i numeri:
+- **A**, nata da una manovra: nei 10 s prima una delle due ha cambiato mure o lato;
+- **B**, prevedibile: 5 s prima erano a 3 lunghezze o più e la previsione in linea retta (15 s) già passava sotto 2 lunghezze;
+- **C**, già vicine: 5 s prima erano sotto 3 lunghezze;
+- **D**, il resto.
+
+**Cambi allo strumento fatti dopo aver visto le 8 regate vere e prima del rigioco (dichiarati):** in A il passaggio della linea si chiama «partenza» e non «boa»; C si divide in «ripresa» (la stessa barca cedeva alla stessa barca nei 30 s prima) e «nuova».
+
+**Rigioco:** le 8 regate di Ale, Chromium, semi 561-580, 160 corse. In tutto 88 coppie dopo il via, cioè 0,55 a corsa, come al §3: la misura torna.
+
+| | coppie | |
+| --- | --- | --- |
+| A nate da una manovra | 32 (36%) | 28 dalla partenza, 18 da una virata, 5 da un giro di boa (una coppia può averne più d'una) |
+| **B prevedibili 5 s prima** | **1 (1%)** | |
+| C già vicine, ripresa | 43 (49%) | |
+| C già vicine, nuova | 5 (6%) | |
+| D resto | 7 (8%) | |
+
+- **Le coppie non sono incontri nuovi.** In 73 casi su 88 la stessa barca cedeva già alla stessa barca nei 30 s prima. Risalendo la catena (buchi fino a 30 s), 28 coppie cominciano prima del via, 15 nei primi 30 s, 41 fra 30 e 120 s e 4 dopo. Metà delle coppie si forma entro 48 s dal via.
+- **Quando la catena comincia, le barche sono già vicine:** a metà dei casi sono a 8,4 m dopo il via e a 15,5 m prima. 5 s prima dell'inizio, le coppie dopo il via a 3 lunghezze o più erano 24 su 60, e la previsione in linea retta ne vedeva arrivare solo **7**. Le altre si avvicinano cambiando prua (virate, raffiche, scarti), non andando dritte.
+- **Stesse mure:** 87 su 88. Chi cede sta **sopravento** in 58 casi (davanti 33, dietro 25) e **dietro e sottovento** in 29 (regola 12); 1 caso è diverso.
+- **Dopo t0** vira per prima chi cede in 41 casi (dopo 17 s, a metà dei casi) e chi ha la precedenza in 38 (dopo 21 s); in 9 nessuna delle due vira entro 40 s.
+- **Regate vere di Ale** (8 file): solo 8 coppie dopo il via, 4 A (dalla partenza o da una virata) e 4 C ripresa. Stesso quadro, troppo poche per contare da sole.
+
+**Cosa ne ricavo.** «Guardare qualche secondo avanti» in linea retta, come fa già `cedeAvv1b` con i suoi 15 s, avrebbe visto al massimo 8 coppie su 88 (9%), lontano dal -40% di K1. Le coppie nascono da barche che partono o virano già vicine sulle stesse mure, e poi restano lì perché chi deve tenersi discosto si scosta del minimo (15°) e resta parallelo. La prevenzione utile, nello spirito del video, quindi non è «vedere prima» ma **«non restarci»**: chi deve tenersi discosto sulle stesse mure se ne va subito, invece di aspettare che il bordo finisca.
+
+## 11. Modello rivisto (fermata 1, seconda versione): chi deve tenersi discosto sulle stesse mure se ne va
+
+In `cedeAvv1b`, per chi deve cedere, dopo il via, con abbrivio (`U_ABBRIVIO`) e con l'altra barca **sulle stesse mure**:
+
+1. **Si libera virando** (strambando, in poppa) **anche se il suo bordo non è finito**, quando la virata passa libera con la condizione della versione B (§9): a 2 lunghezze da tutte, oppure nessuna più vicina di adesso e tutte ad almeno una lunghezza. Fino a ieri la virata valeva solo se la guida voleva già virare. Dopo, il bordo ricomincia (`cambiaBordo`), così non si torna subito indietro.
+2. **Non entro 30 m dal bersaglio**, dove decide già la regola «vicino al bersaglio» (`near`): lì virare per liberarsi farebbe sbagliare la boa.
+3. Se la virata non passa libera, resta lo scarto di oggi; `SCARTO_MAX` resta come rete.
+
+Non cambia: chi ha la precedenza, `chiCede`, la regola «scarta all'ultimo», le prue prima del via. Le coppie che nascono prima del via (28 su 88) restano alla proposta sull'osservazione 93.
+
+**Criteri:** gli stessi K1-K6 del §5, soglie **non cambiate** (K1 almeno -40% di coppie dopo il via in tutti e due i browser), semi 561-580, poi conferma sui 581-600 mai guardati. In più, da riportare senza soglia: virate a regata per barca, prima e dopo.
+
+**Costanti nuove:** nessuna (2 lunghezze, `U_ABBRIVIO` e i 30 m di `near` esistono già).
+
+**Rischi:** più virate, che costano tempo (K4, arrivo mediano); una barca che si libera sopravento può finire addosso a una terza (K2); e K1 potrebbe non arrivare a -40%, perché un terzo delle coppie viene dalla partenza e una parte dai casi in cui la virata non passa libera. **La mia stima, non misurata: fra -30% e -45%.**
+
+**Fonti:** F15, regole 11, 12 e 13 e definizione «tenersi discosto». F73 (sezione 13 della trascrizione): affiancate e vicine è una situazione da non avere. Che chi deve tenersi discosto lo faccia virando via è un'applicazione nostra, dichiarata.
