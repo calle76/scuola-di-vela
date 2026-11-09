@@ -70,3 +70,31 @@ Fra i valori che passano si sceglie quello che perde meno in poppa (Q1). A parit
 ## 4. Costo
 
 Codice piccolo. Misura col termostato: 4 configurazioni sulla scelta e 2 sulla conferma, circa 2 ore.
+
+## 5. Prima griglia (semi 1131-1160): nessuno passa, ma per un errore del codice
+
+| `DOWN_E` | Q1 poppa, persi mediana | Q2 arrivo | Q3 contatti | Q4 cambi di mure in poppa | Q5 scuffiate | Q6 boa toccata / sbagliate / non arrivate |
+| --- | --- | --- | --- | --- | --- | --- |
+| spento (1.2.23) | 12,4 s | 207,0 s | 166 | 1,89 | 0 | 57 / 2 / 0 |
+| 0° | 6,7 s (−46%) | 203,9 s | 168 | 1,77 | 0 | **69** ✗ / 4 / 0 |
+| 5° | 7,8 s (−37%) | 204,0 s | 161 | 1,81 | 0 | **65** ✗ / 2 / 0 |
+| 10° | 10,2 s (−18%) ✗ | 205,4 s | 165 | 1,93 | 0 | 63 ✗ / 2 / 0 |
+
+Soglie: Q1 ≤8,7 s; Q6 boa toccata ≤62.
+
+**Perché la boa toccata:** le toccate in più sono anche sul bastone (29 → 32-36), dove conta solo la boa di bolina, che l'angolo di poppa non tocca.
+
+Il codice usava l'angolo nuovo anche **prima del via**, quando gli avversari tornano col vento in poppa verso il punto di ritrovo. Così cambiavano le partenze e tutto quello che viene dopo. Il §2 diceva «cosa non si tocca: … la partenza»: è un errore dell'implementazione, come per la layline (`PROPOSTA-LAYLINE.md` §5, nota).
+
+Corretto (`b.leg` ≥ 1). La griglia si rifà sugli stessi semi con le **stesse soglie**; il riferimento non cambia, perché con `DOWN_E` spento il codice è identico. Si riportano tutte e due le griglie.
+
+## 6. Seconda griglia, dopo la correzione (stessi semi 1131-1160, stesse soglie)
+
+| `DOWN_E` | Q1 poppa, persi mediana | Q2 arrivo | Q3 contatti | Q4 cambi di mure in poppa | Q5 scuffiate | Q6 boa toccata / sbagliate / non arrivate |
+| --- | --- | --- | --- | --- | --- | --- |
+| spento (1.2.23) | 12,4 s | 207,0 s | 166 | 1,89 | 0 | 57 / 2 / 0 |
+| 0° | **6,7 s (−46%)** | 204,4 s | 167 | 1,78 | 0 | 62 / 4 / 0 (al limite: ≤62 e ≤4) |
+| 5° | 7,8 s (−37%) | 205,2 s | 167 | 1,82 | 0 | **64** ✗ / 2 / 0 |
+| 10° | 10,1 s (−18%) ✗ | 206,2 s | 171 | 1,94 | 0 | 57 / 2 / 0 |
+
+**Passa solo `DOWN_E` 0°, che si sceglie.** Boa toccata e boe sbagliate sono proprio sulla soglia, quindi la conferma è decisiva. Conferma sui semi 1161-1190.
