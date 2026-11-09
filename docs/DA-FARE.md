@@ -13,7 +13,7 @@
 | 2 | **Cono d'ombra delle vele** (copertura, vento sporco) nelle regate non didattiche | `RICERCA-CONO-D-OMBRA.md` (letteratura trovata, F75-F76) | da proporre (prossima voce) |
 | 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
 | 4 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa, e al via: poggiare all'ultimo, virare sulla rotta di una mure a dritta), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 101, 102, 105, 106 | da proporre |
-| 5 | **In poppa gli avversari vanno a zig-zag** a 150-155° dal vento, più lenti della poppa piena | osservazione 95 | da proporre |
+| 5 | **In poppa gli avversari vanno a zig-zag** a 150-155° dal vento, più lenti della poppa piena (la polare: VMG migliore a circa 170°) | osservazione 95; `PROPOSTA-AVVERSARI-ROTTA.md` | via di Ale in anticipo (9 nov); in corso |
 | 6 | **Torneo in Firefox: chiudendo la scheda a metà, il ritiro può non salvarsi** (`collaudo_torneo` C11) | osservazione 86 | proposta fatta; Ale: dopo la prova della Scuola, poi senza nuovo via |
 | 7 | **Oro della prova 5** (col metro corretto 315/395/505 s invece di 320/400/510) | `CHANGELOG.md` 1.2.11-1.2.12 | aspetta i tempi della prova a mano di Ale |
 | 8 | **Suono della boa poco forte** (`collaudo_suoni_si_sentono`, 5,2 dB su 6) | `CHANGELOG.md` 1.2.12 | da proporre |
