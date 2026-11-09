@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 8 novembre 2026, notte.*
+*Aggiornato: 9 novembre 2026, notte.*
 
 ## Versione
 
@@ -15,6 +15,7 @@
 - **Giocare la 1.2.16-1.2.18 e mandare le registrazioni** («Scarica l'ultima regata»; note con «#» nel file): giri di penalità senza limite di 20 s, orologio dei giri, avversari che scontano subito, squalifica per i giri non fatti.
 - **Il giro dei collaudi su GitHub** della 1.2.18 (scheda Actions → «Collaudi» → «Run workflow», completo), poi gli zip nella cartella del repo.
 - **L'ordine delle cose da fare** in `DA-FARE.md`.
+- **Partenza:** scegliere fra le 3 strade del §9 di `PROPOSTA-PARTENZA-ESTREMITA.md`.
 
 ## Cosa è stato fatto l'8 novembre
 
@@ -27,6 +28,7 @@
 ## Cosa è stato fatto l'8 novembre, notte
 
 - Lette le 6 regate di Ale dell'8 sera (1.2.18, Chromium, 8 marcatori M): osservazioni 100-107 in `OSSERVAZIONI-GIOCANDO.md`, voci 2-5 e 14 di `DA-FARE.md` (ordine deciso da Claude su delega di Ale). File spostati in `registrazioni/`.
+- Proposta partenza (`PROPOSTA-PARTENZA-ESTREMITA.md`), fermata 2: **non adottata**. Il riposizionamento in attesa toglie quasi tutte le barche oltre l'estremità allo sparo (conferma: 316 → 41 su 2160), ma i contatti salgono del 15% contro una soglia del 10%. Il gioco resta la 1.2.18; il codice è in `sperimentale/partenza-ripos/`. Strumento nuovo: `tests/misura_partenza_estremita.py`.
 
 ## Dove sta cosa
 

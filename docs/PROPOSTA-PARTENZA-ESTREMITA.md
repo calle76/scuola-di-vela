@@ -1,6 +1,6 @@
 # Proposta: barche che in attesa scivolano oltre l'estremità sinistra della linea (8 novembre 2026, notte)
 
-Voce 2 di `DA-FARE.md`; osservazioni 93, 96, 100 di `OSSERVAZIONI-GIOCANDO.md`. **Fermata 1: nessun codice scritto.**
+Voce 2 di `DA-FARE.md`; osservazioni 93, 96, 100 di `OSSERVAZIONI-GIOCANDO.md`. **Fermata 1: nessun codice scritto.** Fermata 2 (9 novembre): **non adottata**, la conferma non passa sui contatti (§9).
 
 ## 1. Era già stato risolto?
 
@@ -67,3 +67,42 @@ Se nessuna combinazione passa 1-4 sui semi di scelta, non si adotta nulla e si r
 ## 8. Costo
 
 Due sessioni: misura del riferimento e di A con le combinazioni di costanti; poi, se serve, B e la conferma. Collaudi: quelli del punto 6, e alla fine `tests/lancia_tutti.sh --veloce` sul PC di Ale.
+
+## 9. Esito della fermata 2 (9 novembre 2026, notte): non adottata
+
+Via di Ale l'8 sera. Misurato con `tests/misura_partenza_estremita.py`: 720 regate e 2160 partenze di avversari per gruppo di semi. Solo la parte A: B non è servita, perché A da sola passava la scelta.
+
+**Scelta, semi 601-640.** Il riferimento è la 1.2.18:
+
+| | oltre l'estremità | anticipate | mediana taglio | dopo 10 s | contatti | riposizionamenti | non partite |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| riferimento | 287 (13,3%) | 36 (1,7%) | 2,10 s | 294 | 298 | 0 | 5 |
+| −33 / 30 s | 42 | 45 (2,1%) | 1,98 | 184 | 310 | 347 | 5 |
+| −33 / 40 s | **65 (3,0%)** ✗ | 36 | 2,00 | 183 | 316 | 278 | 4 |
+| −33 / 50 s | **96 (4,4%)** ✗ | 35 | 2,02 | 195 | 318 | 250 | 4 |
+| −29 / 30 s | 29 | 42 (1,9%) | 1,95 | 160 | 295 | 465 | 6 |
+| −29 / 40 s | 39 | 30 (1,4%) | 1,95 | 167 | 301 | 356 | 5 |
+| −29 / 50 s | 56 | 31 | 1,98 | 183 | 314 | 313 | 5 |
+| −25 / 30 s | 33 | 54 (2,5%) | 2,03 | 154 | 318 | 671 | 8 |
+| **−25 / 40 s** | 35 (1,6%) | 36 (1,7%) | 1,93 | 152 | 302 | 426 | 5 |
+| −25 / 50 s | 34 | 37 | 1,93 | 163 | 306 | 385 | 5 |
+
+Le soglie, ricavate dal riferimento: oltre l'estremità ≤64, anticipate ≤3,7%, mediana ≤3,10 s, dopo 10 s ≤294, contatti ≤327, riposizionamenti ≥10. Sette combinazioni su nove passano. Ho scelto **X_RIPOS = −25, T_RIPOS = 40**: è quella che toglie più uscite senza peggiorare né le anticipate né le barche non partite. La regola di scelta fra le combinazioni che passano non era scritta nella proposta, quindi la dichiaro qui.
+
+**Conferma, semi 641-680 (mai guardati):**
+
+| | oltre l'estremità | anticipate | mediana | dopo 10 s | contatti | non partite |
+| --- | --- | --- | --- | --- | --- | --- |
+| riferimento 1.2.18 | 316 (14,6%) | 35 (1,6%) | 2,12 s | 289 | 272 | 7 |
+| −25 / 40 s | 41 (1,9%) ✓ | 31 (1,4%) ✓ | 1,95 ✓ | 144 ✓ | **313 (+15,1%)** ✗ | 8 |
+
+**Criterio 4 non passato** (soglia +10%, cioè 299): non si adotta, e il gioco resta la 1.2.18. Due cose da sapere:
+- Fra i due gruppi di semi il riferimento passa da 298 a 272 contatti, cioè il 9%: il rumore è grande quanto la soglia. Il «+15%» va però letto come esce, e la soglia non si cambia.
+- I tempi al taglio migliorano: chi era fuori allo sparo perdeva secondi, e i tagli dopo 10 s si dimezzano (289 → 144).
+
+Non fatti, perché servivano solo per l'adozione: il criterio 7 (rigiocate 17:25 e 22:14) e i collaudi del criterio 6. Il codice resta spento e fuori dal gioco in `sperimentale/partenza-ripos/ripos-1.2.18.patch` (si applica sulla 1.2.18 con `git apply`; `__sv.ripos(x, t, poppa)` lo accende nel collaudo).
+
+**Strade per Ale:**
+1. Lasciare così.
+2. Rimisurare i contatti con più semi (per esempio 80 per gruppo) per capire se il +15% è rumore. Sarebbe una proposta nuova con soglie nuove, scritte prima.
+3. Un riposizionamento che eviti chi ha già precedenza mentre passa in mezzo al gruppo, per ridurre i contatti: sarebbe la causa del rischio 1 del §7.
