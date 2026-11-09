@@ -95,6 +95,9 @@ async def main():
         casi = {"torna": [], "resta": [], "nessuno": []}
         for k in range(6):
             for caso in casi: casi[caso].append(await pg.evaluate(RICHIAMO, [caso, 40 + k]))
+        # 1.2.23: nel caso «nessuno» a volte un avversario parte davvero in anticipo e la X sale giustamente (Firefox, giro su GitHub della 1.2.22:
+        # 2 regate su 6, quindi 4 senza richiamo contro le 5 chieste). Si corrono altre 4 regate «nessuno»: la soglia (almeno 5 senza richiamo) non cambia
+        for k in range(6, 10): casi["nessuno"].append(await pg.evaluate(RICHIAMO, ["nessuno", 40 + k]))
         errX = []; n_con = n_senza = 0
         for caso, rr in casi.items():
             for i, r in enumerate(rr):

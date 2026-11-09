@@ -47,7 +47,7 @@
 ## Cosa è stato fatto il 9 novembre, sera
 
 - **1.2.23**: layline in acqua, disattivabile (riga «Layline» nelle impostazioni; nel torneo parte spenta). Gli avversari con la layline misurati e non adottati (virate −6% al massimo, soglia −10%). Lezione della layline scritta per Deriva (`PROPOSTA-LAYLINE.md`).
-- Letto il giro su GitHub della 1.2.22: niente di nuovo tranne `collaudo_segnali` G2 in Firefox (da capire) e la voce vecchia di `collaudo_partenze` in `tests/fallimenti_noti.txt` (aggiornata).
+- Letto il giro su GitHub della 1.2.22: niente di nuovo tranne `collaudo_segnali` G2 in Firefox (il collaudo aveva troppe poche regate senza richiamo: corretto il collaudo, non il gioco) e la voce vecchia di `collaudo_partenze` in `tests/fallimenti_noti.txt` (aggiornata).
 
 ## Dove sta cosa
 
