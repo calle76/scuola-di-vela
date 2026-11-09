@@ -11,6 +11,7 @@ URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve()
 CORSA = """([k, reg, liv, seme, par]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
+  if (sv.lay) sv.lay(LAYMARG); // 1.2.23 (PROPOSTA-LAYLINE): LAYMARG=gradi nell'ambiente, assente = spento
   if (sv.boa) sv.boa(par ? par[0] : null, par ? par[1] : null, par && par.length > 2 ? par[2] : null, par && par.length > 3 ? par[3] : null);
   sv.fast(0); sel('aiLevel', liv); sel('cdSel', '60'); window.confirm = () => true;
   if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
@@ -65,7 +66,7 @@ async def main(A, B, PAR):
             for liv in ("principianti", "esperti"):
                 for seme in range(A, B + 1):
                     reg = ({"tws": 12 if seme % 2 else 10} | ({} if c is None else {"giri": c})) if nuovo else {"c": c}
-                    r = await pg.evaluate(CORSA.replace("DIAGNOSI", "true" if os.environ.get("DIAG") else "false"), [k, reg, liv, seme, PAR])
+                    r = await pg.evaluate(CORSA.replace("DIAGNOSI", "true" if os.environ.get("DIAG") else "false").replace("LAYMARG", os.environ.get("LAYMARG") or "null"), [k, reg, liv, seme, PAR])
                     r.update(reg=nome, liv=liv, seme=seme); tutte.append(r)
             print(f"  {nome} fatta", flush=True)
         await br.close()
@@ -101,7 +102,7 @@ def riassumi(ds):
         for j, x in D: print(f"     boa {j + 1} t {x['t']:6.1f}  dx {x['dx']:6.1f} dy {x['dy']:6.1f}  rp {x['rp']}  cede {x['cede']}  sconta {x['sconta']}  vicina {x['vicina']} m")
     for j in (0, 1):
         g = [o for o in B if o["boa"] == j]
-        if g: print(f"   boa {j + 1}: passaggi {len(g)}, fermate {sum(o['ferme'] for o in g)}, 3+ virate {sum(o['virate'] >= 3 for o in g)}, mediana {statistics.median(o['sec'] for o in g):.1f} s")
+        if g: print(f"   boa {j + 1}: passaggi {len(g)}, virate {sum(o['virate'] for o in g)}, fermate {sum(o['ferme'] for o in g)}, 3+ virate {sum(o['virate'] >= 3 for o in g)}, mediana {statistics.median(o['sec'] for o in g):.1f} s")
 
 if sys.argv[1] == "--riassumi": riassumi([json.loads(pathlib.Path(f).read_text()) for f in sys.argv[2:]])
 else: asyncio.run(main(int(sys.argv[1]), int(sys.argv[2]), [float(x) for x in sys.argv[3:7]] if len(sys.argv) > 4 else None))

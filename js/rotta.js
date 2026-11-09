@@ -102,6 +102,21 @@
     return { g: b - rotLay(w.tws), d: Math.hypot(x - mk.x, y - mk.y) };
   }
 
+  // ---- layline in acqua (1.2.23, docs/PROPOSTA-LAYLINE.md, pezzo 2) ----
+  // Aiuto disattivabile (⚙ «Layline»): nelle regate fuori dalla Scuola (R.rotta), non negli esercizi, fino al giro della boa di bolina.
+  // «regate» (di partenza): non nel torneo; «tutte»: anche nel torneo (decisione di Ale: nel torneo parte spenta ma si può accendere).
+  const layDir = w => { const a = rotLay(w.tws); return [-1, 1].map(k => norm360(w.twd + 180 + k * a)); }; // direzioni dalla boa verso le due layline
+  function layVisibile(){ if (!R || !R.rotta || R.es || riv.on) return false; const me = R.boats[0];
+    return (opt.layline === "tutte" || (opt.layline === "regate" && !R.tor)) && me.leg <= 1 && me.fin === null && !me.dnf; }
+  function layDisegna(v){
+    if (!layVisibile()) return;
+    const mk = R.marks[0], L = R.up * 1.3, lw = Math.max(0.12, 1.4 / v.ppm);
+    ctx.strokeStyle = "rgba(255,230,120,.75)"; ctx.lineWidth = lw; ctx.setLineDash([4 * lw, 4 * lw]);
+    for (const d of layDir(windAt(mk.x, mk.y))){ ctx.beginPath(); ctx.moveTo(mk.x, mk.y); ctx.lineTo(mk.x + Math.sin(d * D2R) * L, mk.y - Math.cos(d * D2R) * L); ctx.stroke(); }
+    ctx.setLineDash([]);
+  }
+  $("laySel").onchange = e => { opt.layline = e.target.value; };
+
   // ---- dove hai perso ----
   function rotSpiega(ott){ // confronto col giocatore (riv.all a 10 al secondo): secondi per lato e fino a due motivi
     const me = R.boats[0], o = rot.barche[0], fine = me.fin;
@@ -173,9 +188,9 @@
     const tu = riv.all.filter(f => f.t >= rot.barche[0].taglio.t); ctx.strokeStyle = "rgba(80,150,255,.85)"; ctx.beginPath(); tu.forEach((f, i) => i ? ctx.lineTo(f.b[0][0], f.b[0][1]) : ctx.moveTo(f.b[0][0], f.b[0][1])); ctx.stroke();
     const punto = (x, y, r, c) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); };
     for (let s = P[0].t + 30; s < P[P.length - 1].t; s += 30){ const q = P.find(q => q.t >= s); if (q) punto(q.x, q.y, 2.2 * lw, "rgba(60,200,90,1)"); const f = tu.find(f => f.t >= s); if (f) punto(f.b[0][0], f.b[0][1], 2.2 * lw, "rgba(80,150,255,1)"); }
-    { const mk = R.marks[0], w = rotVento(mk.x, mk.y, rotRaffiche(Math.max(rot.reg[0].t, Math.min(T, rot.reg[rot.reg.length - 1].t)))), a = rotLay(w.tws), L = R.up * 1.3; // le layline col vento di adesso
+    { const mk = R.marks[0], w = rotVento(mk.x, mk.y, rotRaffiche(Math.max(rot.reg[0].t, Math.min(T, rot.reg[rot.reg.length - 1].t)))), L = R.up * 1.3; // le layline col vento di adesso (layDir, come in acqua)
       ctx.strokeStyle = "rgba(255,230,120,.8)"; ctx.setLineDash([3 * lw, 3 * lw]);
-      for (const k of [-1, 1]){ const d = (w.twd + 180 + k * a) * D2R; ctx.beginPath(); ctx.moveTo(mk.x, mk.y); ctx.lineTo(mk.x + Math.sin(d) * L, mk.y - Math.cos(d) * L); ctx.stroke(); }
+      for (const dd of layDir(w)){ const d = dd * D2R; ctx.beginPath(); ctx.moveTo(mk.x, mk.y); ctx.lineTo(mk.x + Math.sin(d) * L, mk.y - Math.cos(d) * L); ctx.stroke(); }
       ctx.setLineDash([]); }
     if (T >= P[0].t){ const q = P.find(q => q.t >= T) || P[P.length - 1]; punto(q.x, q.y, 4 * lw, "rgba(60,200,90,.6)"); } // dove saresti adesso con la rotta ottimale
   }

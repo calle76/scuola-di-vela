@@ -22,11 +22,11 @@ E2 passo di simulazione
 ~~ collaudo_riquadro_bandiere.py | tutti | Q7: costo del disegno misurato con l'orologio (3,8% sul PC in Firefox, OK su GitHub)
 Q7 costo del disegno
 
-== collaudo_partenze.py | chromium | criteri (1) e (2) noti (COLLAUDI.md); numeri della 1.2.15 (guida nuova degli avversari)
-criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 0.0% non meno dei principianti 0.0%', '(2) raffiche, 12 nodi principianti 300 s: ritardo mediano 7.8 s', '(2) raffiche, 12 nodi esperti 300 s: ritardo mediano 6.2 s', '(1) raffiche, 12 nodi: esperti 3.3% non meno dei principianti 0.0%']
+== collaudo_partenze.py | chromium | criterio (1) noto (COLLAUDI.md); dalla 1.2.19 il (2) (ritardi a 300 s nelle raffiche) passa; righe del giro su GitHub della 1.2.22 (9 nov 2026)
+criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 0.0% non meno dei principianti 0.0%', '(1) raffiche, 12 nodi: esperti 3.3% non meno dei principianti 0.0%']
 
-== collaudo_partenze.py | firefox | criteri (1) e (2) noti (COLLAUDI.md); numeri della 1.2.15 (guida nuova degli avversari)
-criteri della partenza: FALLITO; fuori criterio: ['(2) raffiche, 12 nodi principianti 300 s: ritardo mediano 6.0 s', '(2) raffiche, 12 nodi esperti 300 s: ritardo mediano 6.0 s', '(1) raffiche, 12 nodi: esperti 3.3% non meno dei principianti 1.7%']
+== collaudo_partenze.py | firefox | criterio (1) noto (COLLAUDI.md); dalla 1.2.19 il (2) (ritardi a 300 s nelle raffiche) passa; righe del giro su GitHub della 1.2.22 (9 nov 2026)
+criteri della partenza: FALLITO; fuori criterio: ['(1) bastone, 10 nodi: esperti 1.7% non meno dei principianti 1.7%', '(1) raffiche, 12 nodi: esperti 1.7% non meno dei principianti 0.0%']
 
 == collaudo_virate2.py | chromium | avversari oltre la bolina + 15° sopra la soglia del 5%, noto dalla 1.0.31 (quasi tutte manovre volute della guida); numeri della 1.1.2
 ESITO: FALLITO

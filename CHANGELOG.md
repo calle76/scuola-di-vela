@@ -17,6 +17,25 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.23 — Layline in acqua (disattivabile)
+
+**Cosa vedi:** nelle regate fuori dalla Scuola, fino al giro della boa di bolina, due linee gialle tratteggiate partono dalla boa: sono le layline, da cui di bolina si arriva alla boa senza virare. L'angolo viene dalla polare della barca, circa 48° dal vento con lo scarroccio. Seguono il vento alla boa, quindi coi salti girano.
+
+Nelle impostazioni (⚙), accanto a «Suoni», c'è la riga **«Layline»** con tre scelte: «no», «regate» (non nel torneo; quella di partenza), «anche torneo». In navigazione libera la riga non c'è, perché le layline valgono solo in regata. Nel torneo partono spente ma si possono accendere (decisione di Ale). Non si vedono nelle regate della Scuola né negli esercizi.
+
+- **Come** (`docs/PROPOSTA-LAYLINE.md`, pezzo 2; `js/rotta.js`, sezione «layline in acqua»): la vista della rotta ottimale usa le stesse linee (`layDir`).
+- **Collaudo** (`tests/collaudo_layline.py`, nuovo):
+  - **P1, dove si vede:** 12 casi giusti su 12 (tre scelte per regata a tema, Scuola, torneo ed esercizio); spariscono dopo il giro della boa. I pixel gialli disegnati sono 1749 con le linee e 1340 senza.
+  - **P2, l'angolo:** coincide con la polare in 12 venti; con un salto di 10° le linee girano di 10°. Una barca della polare partita dalla layline a 100 m passa a 0,21 m dalla boa.
+  - **P3, impostazioni a 1360x650:** la riga su una sua linea faceva scorrere il riquadro di 23 px nel caso peggiore (`collaudo_suoni.py` S6); accanto a «Suoni» e nascosta in navigazione libera, scorre di 0 px. `collaudo_pannello.py` e `collaudo_ricarica.py` OK.
+  - **P4, pagina caricata come la carica un giocatore:** la riga c'è, il disegno cambia (485 pixel gialli contro 225), nessun errore.
+- **Gli avversari con la layline (pezzo 4): misurati e non adottati.**
+  - Contare il loro scarroccio prima di puntare la boa toglie al massimo il 6% delle virate vicino alla boa (soglia −10%).
+  - Con margine 2° e 4° arrivano 1,1-1,5 s più tardi (soglia +1 s).
+  - Il codice resta spento (`LAY_MARG`), con i numeri nel §5 della proposta.
+- **La lezione della layline (pezzo 3)** è scritta come testo, con le fonti F77 e F78, in `PROPOSTA-LIVELLO-DERIVA.md`. Entra con Deriva, oggi nascosta.
+- **`tests/fallimenti_noti.txt`:** la voce di `collaudo_partenze` era rimasta quella della 1.2.15 e chiedeva ancora i ritardi nelle raffiche, che la 1.2.19 ha corretto. Il giro su GitHub della 1.2.22 la segnava come «fallimento noto cambiato». Aggiornata con le righe di quel giro: resta noto solo il criterio (1).
+
 ## 1.2.22 — Rotta ottimale a regata finita, con le layline
 
 **Cosa vedi:** fuori dalla Scuola (regate a tema e torneo), a regata finita, c'è il pulsante **«Rotta ottimale»**. Apre la moviola con la vista dall'alto di tutto il campo:

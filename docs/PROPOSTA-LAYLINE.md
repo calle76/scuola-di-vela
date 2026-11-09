@@ -76,3 +76,35 @@ Fra i valori che passano si sceglie quello con meno virate (L1). A parità, il m
 ## 4. Costo
 
 Mezza giornata per il codice. Per la misura, col termostato, 3 valori sulla scelta e 1 sulla conferma: circa 2 ore.
+
+## 5. Esito del pezzo 4 (semi 1041-1070, 360 regate del torneo nuovo): non passa, non adottato
+
+| `LAY_MARG` | L1 virate entro 40 m dalla boa 1 | L2 arrivo mediano | L3 mediana entro 40 m | L4 fermate | L5 boa toccata | L6 contatti | L7 sbagliate / non arrivate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| spento (1.2.22) | 1838 | 201,3 s | 24,8 s | 11 | 54 | 181 | 0 / 0 |
+| 0° | 1750 (−4,8%) ✗ | 202,0 s | 24,3 s | **19** ✗ | 57 | 171 | 0 / 0 |
+| 2° | 1750 (−4,8%) ✗ | **202,4 s** ✗ | 24,7 s | 13 | 48 | 180 | 0 / 0 |
+| 4° | 1725 (−6,1%) ✗ | **202,8 s** ✗ | 24,8 s | 3 | 44 | 186 | 0 / 0 |
+
+Soglie: L1 almeno −10% (≤1654), L2 ≤202,3 s, L4 ≤13.
+
+**Nessun valore passa L1:** contare lo scarroccio toglie al massimo il 6% delle virate vicino alla boa, e con 2° e 4° gli avversari arrivano più tardi. La conferma non si fa. Il codice resta nel gioco **spento** (`LAY_MARG` null, come la 1.2.22), con l'aggancio `__sv.lay` per riprovare.
+
+**Note:**
+- In una prima prova su 2 semi il ritocco cambiava anche l'avvicinamento alla linea di partenza, che usa la stessa guida, e gli avversari arrivavano 7-10 s dopo. Prima della griglia è stato limitato al dopo via (`b.leg` ≥ 1), come diceva la proposta.
+- Le virate in più vicino alla boa non dipendono solo dalla layline: ci sono anche il punto di passaggio a destra della boa (`targetOf`) e il «bordo più vicino» negli ultimi 30 m. Sono una voce per gli avversari, non per questa proposta.
+
+## 6. Esito dei pezzi 2 e 3 (1.2.23)
+
+**Pezzo 2, adottato.** `tests/collaudo_layline.py`:
+- **P1, dove si vede:** 12 casi giusti su 12. Spariscono dopo il giro della boa. Pixel gialli disegnati: 1749 con le linee, 1340 senza.
+- **P2, l'angolo:** uguale alla polare in 12 venti; con un salto di 10° le linee girano di 10°. Una barca della polare partita dalla layline a 100 m passa a 0,21 m dalla boa.
+- **P4, pagina senza `#collaudo`:** 485 pixel gialli contro 225, nessun errore.
+- **P3, pannello e impostazioni:**
+  - la riga su una linea sua faceva scorrere il riquadro ⚙ di 23 px nel caso peggiore (`collaudo_suoni.py` S6, navigazione libera con la registrazione accesa);
+  - ora sta accanto a «Suoni» ed è nascosta in navigazione libera, dove le layline non servono: 0 px;
+  - `collaudo_pannello.py` OK.
+
+  Le scelte sono state accorciate in «no», «regate», «anche torneo»; la spiegazione sta nel testo che compare passando sopra.
+
+**Pezzo 3:** il testo della lezione e del quiz è in `PROPOSTA-LIVELLO-DERIVA.md` («Lezione della layline»). Entra con Deriva.

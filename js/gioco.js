@@ -9,11 +9,11 @@
   let gustLevel = 0, gustTimer = 0, gustAll = false; // gustAll: torneo dell'1b, le raffiche nascono attorno a tutte le barche
   const gusts = [], wake = [];
   const ctl = { sheet: 0.4, tiller: 0 };
-  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false };
+  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false, layline: "regate" }; // layline (1.2.23): "no", "regate" (non nel torneo), "tutte"
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.22"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.23"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);

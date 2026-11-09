@@ -113,3 +113,31 @@ La lezione 21 usa F15 (appendice A sui punteggi, 44.3 sulla penalità), già cit
 ## 10. Decisioni per Ale
 
 Decise il 6 novembre: prova con medaglie e due strade. Resta **la soglia del torneo, §2**, da chiedere con i numeri degli avversari corretti. Tutto il resto è scelto da Claude e si cambia a basso costo, salvo che Ale dica altrimenti.
+
+## Lezione della layline (aggiunta il 9 novembre 2026; `PROPOSTA-LAYLINE.md`, pezzo 3)
+
+Entra con Deriva (oggi nascosta), dopo la lezione 22. Fonti parafrasate: F77 e F78 (Dellenbaugh). La geometria viene dalla polare della barca del gioco.
+
+**Testo (bozza):**
+1. **Cos'è.** La layline è la linea da cui, di bolina, arrivi alla boa senza virare più. Ce ne sono due, una per mura. Sull'acqua non è disegnata: la immagini. (F77)
+2. **Perché la bolina ha un angolo giusto.** Di bolina non vince chi stringe di più il vento, ma chi arriva prima alla boa: troppo stretta la barca rallenta, troppo larga va dalla parte sbagliata. Con questa barca il compromesso migliore, contando anche lo scarroccio, è una rotta di circa 48° dal vento. È lì che parte la layline. (La sigla di questa idea, VMG, arriva con Tattica: `DECISIONI.md`, 9 novembre.)
+3. **Due errori.**
+   - Se viri prima della layline, arrivi sotto la boa e devi fare altre due virate.
+   - Se la superi, navighi metri che non servono.
+
+   Tutti e due costano. (F78)
+4. **Il vento la sposta.** Se il vento gira, la layline gira con lui (F77):
+   - chi è già sulla layline e prende un **buono** (il vento gira a favore) si ritrova oltre: strada in più;
+   - chi prende uno **scarso** arriva corto: virate in più.
+
+   Per questo in genere conviene arrivare sulla layline solo quando sei vicino alla boa. (F77; la spiegazione col buono e lo scarso è geometria nostra.)
+5. **Come la riconosci.** Il modo più semplice: se la tua barca vira di circa 90°, sei sulla layline quando vedi la boa poco a proravia del traverso. Poi: la prua che avevi sull'altra mura; le barche che arrivano sull'altra mura. Meglio usarne più di uno insieme, e non fidarsi di una misura vecchia se il vento è cambiato. (F78)
+6. **Nel gioco.** Le linee tratteggiate dalla boa sono un aiuto: si spengono nelle impostazioni, e nel torneo partono spente. Dopo la regata, «Rotta ottimale» ti dice se sei andato oltre la layline o se hai virato troppe volte vicino alla boa.
+
+**Esercizio (da scrivere quando si fa la lezione):** come quello della lezione 22, una bolina breve verso la boa con le linee spente. La lezione è fatta se arrivi alla boa con una sola virata negli ultimi 80 m.
+
+**Quiz (bozza, 4 domande):**
+- Cos'è la layline? → La linea da cui si arriva alla boa senza virare.
+- Sei sulla layline e il vento ti dà un buono: cosa succede? → Ti ritrovi oltre la layline e fai strada in più.
+- Perché conviene arrivare sulla layline vicino alla boa? → Perché il vento può girare e spostarla.
+- Con una virata di circa 90°, dove vedi la boa quando sei sulla layline? → Poco a proravia del traverso.

@@ -9,7 +9,7 @@
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
 | 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
-| 1b | **Layline, pezzi 2-4:** aiuto in acqua disattivabile (nel torneo spento all'inizio, attivabile), lezione con fonte, avversari con la layline della polare (oggi PASSO_A 56°). Il pezzo 1 è nella rotta ottimale | `PROPOSTA-LAYLINE.md` | via di Ale in anticipo (9 nov); in corso |
+| 1b | **Avversari: virate in più vicino alla boa** (circa 1,7 virate per passaggio entro 40 m dalla boa 1; contare lo scarroccio ne toglie al massimo il 6%). Da guardare: il punto di passaggio a destra della boa e il «bordo più vicino» negli ultimi 30 m | `PROPOSTA-LAYLINE.md` §5 | da proporre |
 | 2 | **Cono d'ombra delle vele** (copertura, vento sporco) nelle regate non didattiche | `RICERCA-CONO-D-OMBRA.md` (letteratura trovata, F75-F76) | da proporre (prossima voce) |
 | 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
 | 4 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa, e al via: poggiare all'ultimo, virare sulla rotta di una mure a dritta), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 101, 102, 105, 106 | da proporre |
@@ -20,6 +20,6 @@
 | 9 | **Contenuti da verificare:** i 45° prima della strambata, la posizione dei filetti; poi le 11 scelte del gioco da dichiarare (60° di scuffia, «una o due lunghezze» nell'esame…) | `CONTENUTI-DA-VERIFICARE.md` | da proporre |
 | 10 | **Suoni:** giudizio di Ale all'ascolto | `CHANGELOG.md` 1.2.9 | aspetta Ale |
 | 11 | **`collaudo_boma2` in Firefox:** guardare nei prossimi giri se la caduta è sparita (altri 9 collaudi con la stessa riga) | `CHANGELOG.md` 1.2.12 | da guardare |
-| 12 | **Livello Deriva** (stessa barca, momento clou e coach): manca il via e la soglia del torneo | `PROPOSTA-LIVELLO-DERIVA.md` §10 | dopo la prova della Scuola |
+| 12 | **Livello Deriva** (stessa barca, momento clou e coach; la lezione della layline è già scritta): manca il via e la soglia del torneo | `PROPOSTA-LIVELLO-DERIVA.md` §10 | dopo la prova della Scuola |
 | 13 | **In Firefox il gioco scatta**, in Chromium no: misurare i fotogrammi al secondo | osservazione 107 | bassa priorità: secondo Ale dipende dal suo PC, poco potente; da misurare solo se capita anche su altri PC |
 | 14 | **Copia di sicurezza del progetto fuori da GitHub** | — | la fa Ale, quando vuole |

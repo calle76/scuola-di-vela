@@ -113,6 +113,7 @@ TESTS=(
     "collaudo_regate.py (bastone)|py|chiaro|0|regate|collaudo_regate.py 6 0"
     "collaudo_regate.py (raffiche)|py|chiaro|0|regate|collaudo_regate.py 6 1"
     "collaudo_partenze.py|py|ambiguo|0||collaudo_partenze.py"
+    "collaudo_layline.py|py|chiaro|0||collaudo_layline.py"
     "collaudo_non_partite.py (bastone)|py|chiaro|1||collaudo_non_partite.py 0"
     "collaudo_non_partite.py (raffiche)|py|chiaro|1||collaudo_non_partite.py 1"
     "collaudo_non_partite.py (salti)|py|chiaro|1||collaudo_non_partite.py 2"
@@ -169,6 +170,7 @@ nota() {
         "collaudo_pilota_lezioni.py (senza #collaudo)") echo "«3 tentativi su 3 con entrambi i passi completati»" ;;
         "collaudo_lezioni.py") echo "ogni passo deve risultare completato, salvo i casi di attesa noti scritti nello script" ;;
         "collaudo_regate.py (bastone)"|"collaudo_regate.py (raffiche)") echo "nessun avversario deve restare «BLOCCATA» (semi 1-6, passi fissi: stesso risultato a ogni giro); la riga «riepilogo» dà la mediana d'arrivo, confrontabile fra versioni" ;;
+        "collaudo_layline.py") echo "ESITO: OK: P1 12 casi su 12 e pixel gialli con le linee più che senza, P2 angolo della polare e barca entro 2 m dalla boa, P4 pagina senza #collaudo (1.2.23, PROPOSTA-LAYLINE.md)" ;;
         "collaudo_partenze.py") echo "con 3 e 5 minuti ritardo mediano entro circa 12s, distanza minima almeno 20 m, avvicinamento minimo almeno 14 m (dal 13 ottobre 2026 a passi fissi con i semi 1-10: stesso risultato a ogni giro); riga «anticipi allo sparo: OK» (ogni barca anticipata di nuovo dietro la linea entro 60 s; metri oltre la linea, frequenza, anticipo e la riga «oltre 10 m» solo stampati)" ;;
         "collaudo_aggressiva.py") echo "almeno il 90% degli incontri evitabili a ogni distanza (semi fissi)" ;;
         "collaudo_strambata.py (6 nodi)") echo "nessuna scuffia" ;;

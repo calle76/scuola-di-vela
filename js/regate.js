@@ -304,7 +304,7 @@
     b.boardT += dt;
     if (hold){ desired = twd + (pre ? HOLD_S * b.holdA : 62); } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
     else if (pre){ desired = b.preDesired; }
-    else if (Math.abs(rel) < ai.up){ // bolina: bordi alternati
+    else if (Math.abs(rel) < ai.up + (LAY_MARG === null || b.leg < 1 ? 0 : layLee(w.tws, ai.up) + LAY_MARG)){ // solo dopo il via: l'avvicinamento alla linea resta com'era // bolina: bordi alternati (1.2.23: fino alla layline col proprio scarroccio)
       const near = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
       if (near){ // vicino al bersaglio: il bordo che punta più vicino
         const best = Math.abs(norm180(twd - ai.up - brg)) < Math.abs(norm180(twd + ai.up - brg)) ? 1 : -1;
@@ -316,6 +316,8 @@
       desired = twd - b.side * ai.down;
     } else {
       desired = brg; b.side = sgn(norm180(twd - brg)); b.boardT = Math.min(b.boardT, b.boardMax * 0.5);
+      if (LAY_MARG !== null && b.leg >= 1 && Math.abs(rel) < 90){ const ns = sgn(norm180(twd - brg)); desired = brg + ns * layLee(w.tws, Math.abs(rel)); // 1.2.23: sopravento dello scarroccio, mai più stretta della bolina
+        if (Math.abs(norm180(desired - twd)) < ai.up) desired = twd - ns * ai.up; }
       // bersaglio a proravia del traverso ma sull'altra mura: virare direttamente da un'andatura larga non riesce (manca l'abbrivio).
       // Come un timoniere: prima orza fino alla bolina, poi vira, poi poggia verso il bersaglio.
       const newSide = sgn(norm180(twd - brg));
@@ -384,6 +386,10 @@
   // PASSO_M: metri sopra la boa della rotta «sul bordo» (Deriva, §11); SOPRA_M: metri sopra la boa per contare «sopra» (docs/PROPOSTA-BOA-PIANTATA.md); ipotesi nostre
   let PASSO_M = 3, SOPRA_M = 2;
   let M_DIR = 3, R_DIR = 15; // 1.2.20, giro diretto (docs/PROPOSTA-BOA-PIANTATA.md §8-10): margine sopra la boa di bolina e raggio della zona, in metri; ipotesi nostre, scelte sui semi 861-890 e confermate sui 891-920 (fermate 70 -> 30)
+  // 1.2.23 (docs/PROPOSTA-LAYLINE.md, pezzo 4): la layline degli avversari è la loro rotta sul fondo di bolina, ai.up più lo scarroccio della polare
+  // (ROT_POL, js/rotta-dati.js) più LAY_MARG gradi; puntando un bersaglio a proravia del traverso la prua sta sopravento dello scarroccio. null = spento (fino alla 1.2.22)
+  let LAY_MARG = null;
+  function layLee(tws, a){ const r = rotRiga(tws), x = Math.max(0, Math.min(r.length - 1.001, (a - 30) / 5)), i = Math.floor(x), f = x - i; return r[i][1] * (1 - f) + r[i + 1][1] * f; } // scarroccio in gradi con la prua a «a» gradi dal vento
   const PASSO_SX = 3; // metri: da sinistra della boa la retta verso il punto 0 deve passare sotto la boa di tanto (PROPOSTA-DERIVA-SU-MAIN §6; prima usava PASSO_M)
   const U_ABBRIVIO = 1.6; // 1.1.1 (B1): m/s fino ai quali si prende abbrivio prima di virare (circa 3,1 nodi); ipotesi nostra
   const V_AVV = 0.1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, A): m/s di avvicinamento sotto i quali, con gli scafi a più di una lunghezza, l'altra barca non è un pericolo; ipotesi nostra, scelta sui semi 1-20 (con 0,3: contatti +25%), confermata sui semi 21-40
