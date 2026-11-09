@@ -4,6 +4,8 @@
 
 *Ordine deciso da Claude su delega di Ale (8 novembre, notte: «per l'elenco delle cose da fare decidi tu»).*
 
+**Dal 9 novembre (Ale):** le voci sugli avversari (2-6) si misurano soprattutto sulle regate di Deriva (salti di vento, giri di penalità, poi quelle del torneo); la Scuola ha due regate corte che si fanno una volta, e lì basta che non peggiorino (`DECISIONI.md`).
+
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
 | 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
