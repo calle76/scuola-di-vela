@@ -121,3 +121,39 @@ Soglie sul riferimento: G1 ≤32 (metà di 65), G2 ≤381, G3 ≤27,8 s, G4 ≤6
 Soglie: G1 ≤35, G2 ≤374, G3 ≤27,5 s, G4 ≤54, G5 ≤2 e 0, G6 ≤284. Passano tutte. G7: `polare.js` e `raffiche_e_virate.js` identici, `impronta1b.js` al bit, `collaudo_giro_boa.py` nel CHANGELOG. Nel gioco `M_DIR` 3, `R_DIR` 15; per misurare il gioco senza giro diretto: `misura_boa_avversari.py PRIMO ULTIMO 3 2 -1 15`.
 
 Restano circa 30 fermate su 1620 passaggi: non sono state guardate una per una.
+
+## 11. Difetto trovato dopo la 1.2.20: avversari che girano per il campo (9 novembre, sera; scritto prima di correggere e misurare)
+
+**Cosa:** `collaudo_regate.py 6 1` (regata nelle raffiche della Scuola), seme 2: Verde e Blu «BLOCCATA», con la 1.2.20 e dopo. Con la 1.2.19 arrivano, ma Verde in 417 s (mediana 185 s).
+
+**Perché (traccia di Verde):**
+1. 22 m a destra e 7 m sotto la boa scatta «sul bordo» e Verde punta il punto oltre la boa (`rp` 1).
+2. Con raffiche e salti passa proprio sopra la boa, a meno di 1,5 m: `roundCheck` lì non conta niente, quindi il giro non risulta né giusto né sbagliato.
+3. Poi manca di più di 8 m il punto oltre la boa.
+4. Da quel momento nessuna regola la rimanda a riprovare: la regola «girata male» chiede un giro sbagliato (`rnd` < 0), che qui non c'è.
+
+Il giro diretto della 1.2.20 non lo crea: cambia la traiettoria, e la barca lenta diventa bloccata.
+
+**Correzione (difetto chiaro, `DECISIONI.md` «difetti piccoli senza proposta»):** con `rp` 1, chi è già oltre la boa (`oltre`) senza averla girata (`rnd` ≤ 0 invece di < 0) va al punto 2 e riprova.
+- Alla boa 1 chi la gira bene attraversa la semiretta sopra la boa prima di essere 8 m a sinistra, quindi cambia lato prima: per lui non cambia niente.
+
+**Criteri (scritti prima di misurare):**
+- `collaudo_regate.py` 6 0, 6 1 e `--lungo` (semi 7-30) su tutte e due le regate: nessuna «BLOCCATA».
+- Torneo, `misura_boa_avversari.py` sui semi 891-920 contro la 1.2.22 senza correzione: G1-G6 entro le soglie del §5.
+- `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+
+**Esito (1.2.22):**
+- `collaudo_regate` 6 0, 6 1, `--lungo` su tutte e due: nessuna «BLOCCATA» (6+6+24+24 corse, 180 arrivi su 180).
+- Torneo, semi 891-920, 240 regate del torneo nuovo più le 120 di confronto, senza → con:
+
+  | | senza | con | soglia §5 |
+  | --- | --- | --- | --- |
+  | G1 fermate | 20 | 20 | non applicata: la correzione non serve a togliere fermate |
+  | G2 passaggi con 3+ virate | 243 | 252 | +3,7%, entro +10% |
+  | G3 mediana | 24,6 s | 24,6 s | entro +1 s |
+  | G4 boa toccata | 78 | 78 | entro 86 |
+  | G5 sbagliate / non arrivate | 0 / 0 | 0 / 0 | |
+  | G6 contatti | 210 | 211 | entro +10% |
+
+  I passaggi oltre 60 s vicino alla boa salgono da 37 a 49: sono le barche che ora tornano a riprovare invece di andarsene.
+- La misura si è fatta con `TORNEO=nuovo`: senza, lo strumento usa il formato del torneo fino alla 1.2.20.

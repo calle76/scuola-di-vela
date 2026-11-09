@@ -116,6 +116,7 @@
   const font = (w, px) => `${w} ${px}px "Barlow Semi Condensed", sans-serif`; // caratteri del disegno sul mare
   const viewOn = () => mode === "mission" || mode === "race";
   function view(){
+    const rv = rotVista(); if (rv) return rv; // 1.2.22: con la rotta ottimale aperta, tutto il campo di regata (js/rotta.js)
     const ppm = Math.min(W, H) / 48 * camZoom * zoomQ;
     const rot = opt.view === "prua" ? -S.h * D2R : 0;
     return { ppm, rot, cx: W / 2 + viewOff[0], cy: H * (opt.view === "prua" ? 0.6 : 0.5) + viewOff[1] };
@@ -233,7 +234,7 @@
       else if (active && mode !== "free"){ ctx.strokeStyle = "rgba(255,226,122,.8)"; ctx.lineWidth = 0.15; ctx.setLineDash([0.8, 0.8]); ctx.beginPath(); ctx.arc(m.x, m.y, 12, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
       ctx.strokeStyle = "rgba(255,255,255,.5)"; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.arc(m.x, m.y, 1 + 0.15 * Math.sin(simTime * 2), 0, Math.PI * 2); ctx.stroke();
     });
-    if (mode === "race") drawRaceWorld(v);
+    if (mode === "race"){ drawRaceWorld(v); rotDisegna(v); } // 1.2.22: la rotta ottimale, solo a moviola aperta da «Rotta ottimale»
     drawGhost();
     if (mode === "lesson" && st) scenaBarche(st).forEach(b => drawOther(b.S, { alpha: 17, awa: -b.S.boomSide * 40 }, 0, 1)); // 1.1.9: barche di scena (lezioni D), ferme o in movimento (1.2.0)
     drawBoat();

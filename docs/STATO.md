@@ -2,11 +2,11 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 9 novembre 2026, pomeriggio.*
+*Aggiornato: 9 novembre 2026, sera.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.21** (tag `v1.2.21`, da pushare con la 1.2.20; la 1.2.19 è pushata). Novità nel `CHANGELOG.md`.
+- **Ultima versione chiusa: 1.2.22** (tag `v1.2.22`; da pushare con la 1.2.20 e la 1.2.21; la 1.2.19 è pushata). Novità nel `CHANGELOG.md`.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
 
@@ -40,7 +40,9 @@
 
 - Decisione di Ale: nelle regate non didattiche la fisica c'è tutta (raffiche e salti insieme, poi il cono d'ombra); il tipo di gara lo dice il formato. Le regate a tema restano didattiche.
 - **1.2.21**: torneo ampliato. Regate 1-2 col punteggio, 3-4 coi giri di penalità, vento sempre misto. Avversari squalificati 0,3-1,4%, contatti per regata da −26% a +9% (`PROPOSTA-TORNEO-AMPLIATO.md` §7).
-- Ricerca sul cono d'ombra: la letteratura c'è (F75, F76; `RICERCA-CONO-D-OMBRA.md`). La proposta è la prossima voce.
+- Ricerca sul cono d'ombra: la letteratura c'è (F75, F76; `RICERCA-CONO-D-OMBRA.md`).
+- **1.2.22**: rotta ottimale a regata finita (fuori dalla Scuola), con le layline e «dove hai perso». Mai più lenta di una barca vera su 1821 casi, calcolo circa 1 s (`PROPOSTA-ROTTA-OTTIMALE.md` §8).
+- Decisioni di Ale: layline in quattro pezzi (il primo è nella 1.2.22), VMG come idea in Deriva e come strumento con Tattica, nomi dei livelli «Gennaker» e «Tattica».
 
 ## Dove sta cosa
 

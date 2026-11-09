@@ -149,7 +149,7 @@
     setGusts(rc.gusts, !!rc.tor);
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, punti: !!rc.tor && !rc.giri, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -171,7 +171,7 @@
       R.boats.push(b);
     });
     if (es) rec.key = null; else recStart(recK("r" + i) + "b"); // senza chiave il fantasma non si salva (recSave)
-    rivReset();
+    rivReset(); rotReset(); // 1.2.22: registrazione del vento per la rotta ottimale (js/rotta.js)
     $("rTitle").textContent = es ? "Esercizio: " + LESSONS[es.lezione].steps[es.passo].title : rc.title;
     R.brief = es ? es.def.brief : introRegata(rc, liv);
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();
@@ -235,7 +235,8 @@
       if (b.diretto){ const hh = (windOf(b) - b.ai.up - 3) * D2R; return { x: b.S.x + 30 * Math.sin(hh), y: b.S.y - 30 * Math.cos(hh), kind: "mark" }; } // la bolina col vento del posto
       if (sopraDaSinistra) b.rp = 2;
       else if (!b.rp && (near(0, 4) || sopra || sulBordo)) b.rp = 1;
-      else if (b.rp === 1 && ((oltre && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
+      else if (b.rp === 1 && ((oltre && (b.rnd || 0) <= 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
+      // 1.2.22 (docs/PROPOSTA-BOA-PIANTATA.md §11): anche chi è già oltre senza giro contato (rnd 0: passata a meno di 1,5 m dalla boa, dove roundCheck non conta) riprova; prima girava per il campo
       else if (b.rp === 2 && near(2, 8)) b.rp = 0;
       const [x, y] = fromWF(P[b.rp || 0][0], P[b.rp || 0][1]); return { x, y, kind: "mark" };
     }
@@ -988,6 +989,7 @@
       else toast(ant.length ? "Partenza! Richiamo individuale: " + chi + (ant.length > 1 ? " devono" : " deve") + " tornare dietro la linea" : "Partenza!", ant.length ? 4.5 : 2.6);
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
+    rotCapture(dt);
     aggiornaVirate();
     contacts();
     if (R.giri){ boeToccate(); giriPenalita(); }
@@ -1123,7 +1125,7 @@
     if (!on) return void ($("finOv").hidden = true);
     $("finText").textContent = $("rDoneText").textContent; $("finList").innerHTML = $("standings").innerHTML;
     $("finPen").hidden = !R.penList.length; $("finPen").innerHTML = R.penList.length ? "<b>Penalità</b><br>" + R.penList.join("<br>") : ""; // 1.0.49: tutte le penalità col motivo (richiesta di Ale)
-    $("finTor").hidden = $("rTor").hidden; $("finRev").hidden = !rivCount(); $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
+    $("finTor").hidden = $("rTor").hidden; $("finRev").hidden = !rivCount(); $("finRot").hidden = !rivCount() || !R.rotta || !rot.barche[0] || !rot.barche[0].taglio || R.boats[0].fin === null; $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
     if ($("finOv").hidden){ $("finOv").hidden = false; releaseKeys(); setTimeout(() => (!$("finRestart").hidden ? $("finRestart") : $("finTor")).focus(), 0); }
   }
   $("rWind").onclick = () => startRace(raceIdx, otherWind()); // 1.0.75: «Cambia vento» di nuovo nelle regate (Ale, 1 nov 2026), mai nel torneo (rc.tor)

@@ -9,9 +9,8 @@
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
 | 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
-| 1c | **Layline, pezzi 2-4:** aiuto in acqua disattivabile (nel torneo spento all'inizio, attivabile), lezione con fonte, avversari con la layline della polare (oggi PASSO_A 56°). Il pezzo 1 è nella rotta ottimale | `DECISIONI.md` 9 nov; `PIANO-GENERALE.md` livello 4 | da proporre |
+| 1b | **Layline, pezzi 2-4:** aiuto in acqua disattivabile (nel torneo spento all'inizio, attivabile), lezione con fonte, avversari con la layline della polare (oggi PASSO_A 56°). Il pezzo 1 è nella rotta ottimale | `DECISIONI.md` 9 nov; `PIANO-GENERALE.md` livello 4 | da proporre |
 | 2 | **Cono d'ombra delle vele** (copertura, vento sporco) nelle regate non didattiche | `RICERCA-CONO-D-OMBRA.md` (letteratura trovata, F75-F76) | da proporre (prossima voce) |
-| 1b | **La rotta ottimale a regata finita** (coach: con il momento clou spiega dove avresti potuto migliorare; isocrone col vento registrato, «col senno di poi») | `PROPOSTA-ROTTA-OTTIMALE.md` (idea di Ale, 9 nov) | via di Ale (9 nov): fuori dalla Scuola, prima del cono d'ombra; in corso |
 | 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
 | 4 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa, e al via: poggiare all'ultimo, virare sulla rotta di una mure a dritta), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 101, 102, 105, 106 | da proporre |
 | 5 | **In poppa gli avversari vanno a zig-zag** a 150-155° dal vento, più lenti della poppa piena | osservazione 95 | da proporre |

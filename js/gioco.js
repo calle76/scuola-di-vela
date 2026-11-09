@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.21"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.22"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -38,12 +38,15 @@
   // ---- salti di vento dell'1b (1.0.28) ----
   let shiftSt = null, shiftDeg = 0; // stato del generatore (newShift, js/motore.js) e gradi di cui il vento è girato rispetto al medio
   function setShifts(kind){ shiftSt = kind ? newShift(kind, Math.random) : null; shiftDeg = shiftSt ? stepShift(shiftSt, 0, Math.random) : 0; }
-  function windAt(x, y){
+  // 1.2.22: il vento da uno stato dato (raffiche gs, salto sd, tempo del gioco sim); windAt lo chiede con lo stato di adesso, la rotta ottimale
+  // (js/rotta.js) con quello registrato. Stessi conti di prima, nello stesso ordine: la regata non cambia (criterio S6 della proposta)
+  const windAt = (x, y) => ventoDa(gusts, shiftSt ? shiftDeg : 0, simTime, x, y);
+  function ventoDa(gs, sd, sim, x, y){
     let k = 0, sh = 0;
-    for (const g of gusts){ const d2 = gustGeom(g, x, y); if (d2 < 1){ const f = (g.big ? Math.min(1, (1 - d2) * 4) : (1 - d2) ** 2) * g.life; k += f * g.k; sh += f * g.sh; } } // la raffica garantita ha un fronte netto
-    const osc = gustLevel ? Math.sin(simTime / 45) * 3 + Math.sin(simTime / 17) * 1.5 : 0;
+    for (const g of gs){ const d2 = gustGeom(g, x, y); if (d2 < 1){ const f = (g.big ? Math.min(1, (1 - d2) * 4) : (1 - d2) ** 2) * g.life; k += f * g.k; sh += f * g.sh; } } // la raffica garantita ha un fronte netto
+    const osc = gustLevel ? Math.sin(sim / 45) * 3 + Math.sin(sim / 17) * 1.5 : 0;
     const twd = env.twd + sh + osc;
-    return { twd: norm360(shiftSt ? twd + shiftDeg : twd), tws: env.tws * (1 + k) };
+    return { twd: norm360(twd + sd), tws: env.tws * (1 + k) };
   }
   function gustAt(x, y){
     let k = 0;

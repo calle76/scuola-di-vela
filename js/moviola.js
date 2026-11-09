@@ -54,7 +54,7 @@
     if (!riv.on) return;
     R.boats.forEach((b, k) => Object.assign(b.S, riv.bk.S[k]));
     riv.bk.wake.forEach((items, a) => a.push(...items)); riv.bk = null;
-    riv.on = false; $("movBar").hidden = true; releaseKeys(); finShow();
+    riv.on = false; rot.on = false; $("movBar").hidden = true; releaseKeys(); finShow();
   }
   function rivTacche(){ // un segno = una tacca sul cursore
     const d = Math.max(0.1, rivDur());
@@ -67,13 +67,13 @@
     const L = (p, q) => p + (q - p) * f;
     R.boats.forEach((bt, k) => {
       const p = a.b[k], q = b.b[k], s = bt.S, n = f < 0.5 ? p : q;
-      s.x = L(p[0], q[0]); s.y = L(p[1], q[1]); s.h = norm360(p[2] + norm180(q[2] - p[2]) * f); s.heel = L(p[3], q[3]); s.u = L(p[4], q[4]);
+      s.x = L(p[0], q[0]); s.y = L(p[1], q[1]); s.h = p[8] !== q[8] ? n[2] : norm360(p[2] + norm180(q[2] - p[2]) * f); // 1.2.22: alla scuffiata e alla raddrizzata la prua cambia di colpo, non si mescola (collaudo_moviola V1, 9,84° con la 1.2.21) s.heel = L(p[3], q[3]); s.u = L(p[4], q[4]);
       s.dispBoom = L(p[5], q[5]); s.boom = L(p[6], q[6]); s.boomSide = n[7]; s.capsized = !!n[8]; s.hike = n[9];
     });
     $("movPos").value = Math.round(1000 * riv.pos / Math.max(0.1, rivDur()));
     $("movT").textContent = rivTempo(T) + (riv.tagliata ? " (tenuti gli ultimi 60 minuti)" : "");
     const g = rivSegnoVicino(T);
-    $("movTit").textContent = g ? "Segno " + (riv.segni.indexOf(g) + 1) + " di " + riv.segni.length + " — " + g.label : "Tutta la regata" + (riv.segni.length ? " — " + riv.segni.length + (riv.segni.length === 1 ? " segno" : " segni") + ": ↑ ↓ per saltarci" : "");
+    $("movTit").textContent = rot.on && rot.res ? rot.res.testo : g ? "Segno " + (riv.segni.indexOf(g) + 1) + " di " + riv.segni.length + " — " + g.label : "Tutta la regata" + (riv.segni.length ? " — " + riv.segni.length + (riv.segni.length === 1 ? " segno" : " segni") + ": ↑ ↓ per saltarci" : "");
     const T0 = T + 0.05;
     $("movPrev").disabled = !riv.segni.some(x => x.t - RIV_PRIMA < T - 0.5); $("movNext").disabled = !riv.segni.some(x => x.t - RIV_PRIMA > T0);
   }

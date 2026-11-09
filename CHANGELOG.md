@@ -17,6 +17,52 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Prototipo del fiocco, tappa C chiusa, quarto compito: la barca a due non si modella e il sovrainvelamento si dichiara.** Il prototipo resta con lo scafo e il timoniere del gioco a una vela (135 kg, un velista da 75 kg) e il 37% di vela in più: una raffica da 20 nodi fa scuffiare e a 15 nodi la virata non riesce. Il banco di confronto proposto (quattro configurazioni da 135 a 250 kg, 108 raffiche, 12 soglie di scuffia, 132 equilibri di polare, 288 virate, 36 giri nel browser) **non è stato eseguito**, perché i conti che già avevamo bastavano a decidere, e `step()` e `sperimentale/fiocco.html` **non sono stati toccati** (`git diff` vuoto). Tre ragioni: (1) la coppia raddrizzante del prototipo vale **83,7 kgf·m** al massimo, a 22,6° di sbandamento, contro i **circa 60 kgf·m** che la fonte dà a una deriva a due **senza** trapezio, quindi quella barca sarebbe **meno** stabile di questa, e l'unica configurazione che risolve il sovrainvelamento è quella **col trapezio** (circa 220 kgf·m), che per il livello 2 sarebbe una **seconda novità principale**; (2) nel motore la **massa non entra nella resistenza dello scafo**, quindi una barca più pesante andrebbe a regime più **veloce** perché sbanda meno, e per ritarare `hullK2` e `hullK4` non c'è fonte (polari pubbliche di derive non risultano, F10 non letta); (3) il **peso dell'equipaggio dovrebbe diventare un'azione del prodiere** (lezione 2.5), non l'automatismo da 0,9 s di oggi. Annotata anche, senza cambiarlo, l'incoerenza del timone: a 6 nodi il motore dà 21,2 kgf di resistenza dello scafo contro i 19 della fonte (vicina) ma solo 2,9 kgf di timone a 15° contro 12, e arriva a 10,9 solo vicino a 30°; soprattutto **la pala non stalla mai**, così la barra a fondo fa girare 1,93 volte più in fretta che a 15° ed è sempre la scelta migliore, mentre nella realtà no. Conseguenza per il gioco: **il livello 2 va giocato con vento da leggero a medio** (sopra i 12-15 nodi circa, limite da decidere con le lezioni). Con questo la tappa C è chiusa: proposta e criteri in `sperimentale/PROPOSTA-C4.md`, decisione e stato finale del prototipo in fondo a `FISICA-E-TARATURE.md`.
 
 
+## 1.2.22 — Rotta ottimale a regata finita, con le layline
+
+**Cosa vedi:** fuori dalla Scuola (regate a tema e torneo), a regata finita, c'è il pulsante **«Rotta ottimale»**. Apre la moviola con la vista dall'alto di tutto il campo:
+- in verde la rotta più veloce che c'era col vento di quella regata, dal punto in cui hai tagliato la linea;
+- in blu la tua, con un punto ogni 30 s su tutte e due;
+- tratteggiate in giallo le due layline della boa di bolina, che si spostano col vento del momento.
+
+Sotto c'è un riassunto: i secondi persi in bolina e in poppa (o nei laschi), più fino a due motivi riconosciuti dal vento:
+- non hai virato su uno scarso;
+- raffiche lasciate;
+- lato del campo con la rotazione del vento;
+- troppe virate in bolina;
+- virata per la boa oltre la layline, oppure troppe virate vicino alla boa.
+
+Il testo dice sempre che la rotta è «col senno di poi»: conosce il vento prima che arrivi e ignora le altre barche. Il nome è quello tecnico dei programmi di rotta (*routing*); Ale l'aveva chiamata «strada migliore».
+
+- **Come** (`docs/PROPOSTA-ROTTA-OTTIMALE.md`, `js/rotta.js`, `js/rotta-dati.js`):
+  - durante la regata si registrano raffiche, salto e tempo del gioco ogni 0,5 s, solo in lettura; `windAt` ora passa da `ventoDa`, che rifà il vento da uno stato registrato con gli stessi conti;
+  - a regata finita si calcolano le isocrone con la polare della barca del gioco (`tests/fisica/polare_tabella.js`, velocità di equilibrio e scarroccio da 4 a 20 nodi);
+  - una virata costa 2 s, misurati con `tests/fisica/costo_manovre.js` (1,9-2,7 s); un'abbattuta 1 s, un minimo nostro, perché nel gioco strambare quasi non costa (0,0 s misurati).
+- **Misure** (`tests/misura_rotta_ottimale.py`; le 4 regate del torneo, principianti ed esperti, giocatore col pilota; per ogni barca la rotta dal suo taglio della linea):
+  - **S1, la rotta ottimale non è mai più lenta della barca vera:** 0 casi su 915 sui semi 981-1010 e 0 su 906 sui 1011-1040 (soglia 1%).
+  - **S2, vantaggio mediano sulla barca più veloce della regata:** 12,9% e 11,8% (soglia 20%).
+  - **S3, vento ricostruito:** scarto massimo 0,0000 nodi e 0,0026° (soglia 0,05 nodi e 0,5°).
+  - **S4, tempo di calcolo**, misurato da solo sul PC:
+    - Chromium: mediana 1,08 s, massimo 1,41 s;
+    - Firefox: mediana 1,27 s, massimo 1,74 s (soglia 3 s).
+
+    Nelle misure lunghe col termostato 40 calcoli su circa 1900 risultano di circa 6,2 s: sono le pause da 5 s del termostato, che il cronometro conta.
+  - **S6, la regata non cambia:** 0 regate diverse su 40 con la registrazione spenta; `polare.js` e `raffiche_e_virate.js` identici, `impronta1b.js` al bit.
+  - **S7, motivi guardati con le immagini su 20 regate:**
+    - dove l'immagine lo permette (layline, lato del campo, virate vicino alla boa) i motivi corrispondono alle tracce;
+    - quelli sul vento (scarso, raffiche) non si vedono nell'immagine, perché il vento non è disegnato;
+    - trovato e corretto un difetto: in poppa contava come «virate» le abbattute, che nel gioco quasi non costano. Ora quel motivo vale solo di bolina.
+    - Le 10 regate «del torneo» di S7 erano tutte la regata 1 (bastone): il collaudo non chiudeva la regata, e il torneo non andava avanti.
+- **Da sapere:** con la moviola aperta il pannello a destra sfora di 20 px, anche col solo «Rivedi» (non viene da qui).
+- **Due difetti trovati dai collaudi e corretti:**
+  - **Avversari che giravano per il campo** (`collaudo_regate.py 6 1`, regata nelle raffiche della Scuola, seme 2: Verde e Blu «BLOCCATA» dalla 1.2.20; con la 1.2.19 Verde arrivava ma in 417 s).
+    - Causa: un avversario che punta il punto oltre la boa passa a meno di 1,5 m dalla boa, dove il giro non si conta, poi manca quel punto, e nessuna regola lo rimanda a riprovare. Il giro diretto della 1.2.20 ha solo cambiato la traiettoria.
+    - Correzione: chi è già oltre la boa senza averla girata riprova dal punto 2 (`js/regate.js`, `PROPOSTA-BOA-PIANTATA.md` §11, criteri scritti prima).
+    - Esito: `collaudo_regate` 6 0, 6 1 e `--lungo` su tutte e due le regate, nessuna «BLOCCATA», 180 arrivi su 180; Verde e Blu del seme 2 arrivano in 212 e 215 s.
+    - Torneo (semi 891-920, con e senza correzione): fermate 20 → 20, passaggi con 3+ virate 243 → 252 (+3,7%), mediana 24,6 → 24,6 s, boa toccata 78 → 78, contatti 210 → 211, sbagliate e non arrivate 0.
+  - **Moviola: la prua mescolata alla raddrizzata** (`collaudo_moviola.py` V1: 9,84° contro la soglia di 5° dalla 1.2.21, quando il pilota ha cominciato a scuffiare di più con le raffiche in tutto il torneo).
+    - Quando la barca si raddrizza la prua cambia di colpo, e la moviola la mescolava fra il fotogramma prima e quello dopo.
+    - Ora al cambio fra scuffiata e dritta non si mescola (`js/moviola.js`). V1: 1,40°.
+
 ## 1.2.21 — Torneo ampliato: vento vero e regate coi giri di penalità
 
 **Cosa vedi:** nel torneo il vento è sempre quello di un campo di regata vero, con raffiche e salti insieme, a 10 o 12 nodi. Le regate si distinguono per il formato: la 1 e la 2 con la penalità sul punteggio (bastone e triangolo), la 3 e la 4 con i giri di penalità (bastone e triangolo). Chi arriva senza aver fatto i giri è squalificato: prende i punti di chi non arriva e in tabella c'è «Sq». Un torneo lasciato a metà con la versione di prima si chiude senza punti, come a ogni cambio di versione.

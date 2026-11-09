@@ -48,6 +48,7 @@ CORSA = """([k, reg, liv, seme, par]) => {
            barche: ai.map(b => ({ nome: b.name, fin: b.fin, dnf: !!b.dnf, dsq: !!b.dsq, sbagliate: b.wrongMarks || 0 })), giri: !!R.giri, t: Math.round(R.t) };
 }"""
 NOMI = {(k, c): f"{'bastone' if k == 0 else 'triangolo'}-{['costante', 'raffiche', 'salti'][c]}" for k in (0, 1) for c in (0, 1, 2)}
+# Senza TORNEO=nuovo il torneo a condizioni con un nome (fino alla 1.2.20: con RADICE= su una copia di allora); dalla 1.2.21 il torneo è quello nuovo e serve TORNEO=nuovo.
 # TORNEO=nuovo (1.2.21, docs/PROPOSTA-TORNEO-AMPLIATO.md §4): le 4 regate del torneo ampliato (vento misto, 10 o 12 nodi secondo il seme), più le regate 3 e 4
 # senza giri (col punteggio) per il confronto della durata (T3)
 NUOVO = {(0, None): "R1-bastone-punti", (1, None): "R2-triangolo-punti", (2, None): "R3-bastone-giri", (3, None): "R4-triangolo-giri",

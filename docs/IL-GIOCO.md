@@ -46,7 +46,7 @@ Senza finire il torneo non si passa mai. Ripetere una cosa senza migliorare non 
 | Competizione | piazzamenti nelle regate e nel torneo |
 | Abilità | prove con medaglie del livello; dal Fiocco anche le manovre da rifare riuscite |
 
-**Il coach (Ale, 6 novembre 2026) [deciso]:** in Deriva registratore, moviola e momento clou da rivedere, mai obbligatorio. Dal Fiocco domande e manovre da rifare, con un tetto di punti: nascono dagli errori, quindi non possono essere obbligatorie, e nel torneo una penalità deve costare più di quanto si recupera col coach.
+**Il coach (Ale, 6 novembre 2026) [deciso]:** in Deriva registratore, moviola e momento clou da rivedere, mai obbligatorio; dalla 1.2.22, fuori dalla Scuola, la **rotta ottimale** a regata finita con le layline e «dove hai perso» (`PROPOSTA-ROTTA-OTTIMALE.md`). Dal Fiocco domande e manovre da rifare, con un tetto di punti: nascono dagli errori, quindi non possono essere obbligatorie, e nel torneo una penalità deve costare più di quanto si recupera col coach.
 
 ## 4. Deriva non è un doppione della Scuola (Ale, 6 novembre 2026) [deciso]
 
