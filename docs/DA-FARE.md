@@ -9,7 +9,8 @@
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
 | 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
-| 2 | **Torneo ampliato: regate con i giri di penalità** accanto a quelle con la penalità sul punteggio (decisione di Ale, 9 nov). Nella stessa proposta: una condizione di vento con raffiche **e** salti insieme (domanda di Ale: «nella realtà non c'è tutto assieme?»), oggi separati | `DECISIONI.md` 9 nov; `PROPOSTA-TORNEO-AMPLIATO.md` | proposta scritta, aspetta il via di Ale |
+| 2 | **Torneo ampliato: regate con i giri di penalità** accanto a quelle con la penalità sul punteggio (decisione di Ale, 9 nov). Nella stessa proposta: una condizione di vento con raffiche **e** salti insieme (domanda di Ale: «nella realtà non c'è tutto assieme?»), oggi separati | `DECISIONI.md` 9 nov; `PROPOSTA-TORNEO-AMPLIATO.md` | proposta riscritta col vento sempre misto, aspetta il via di Ale |
+| 2b | **Cono d'ombra delle vele** (copertura, vento sporco) nelle regate non didattiche | `RICERCA-CONO-D-OMBRA.md` (letteratura trovata, F75-F76) | da proporre, dopo il torneo |
 | 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
 | 4 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa, e al via: poggiare all'ultimo, virare sulla rotta di una mure a dritta), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 101, 102, 105, 106 | da proporre |
 | 5 | **In poppa gli avversari vanno a zig-zag** a 150-155° dal vento, più lenti della poppa piena | osservazione 95 | da proporre |

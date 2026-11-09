@@ -1,35 +1,48 @@
-# Proposta: torneo ampliato, giri di penalità e vento misto (9 novembre 2026)
+# Proposta: torneo ampliato e vento vero (9 novembre 2026, riscritta lo stesso giorno)
 
-Voce 2 di `DA-FARE.md`. Decisione di Ale del 9 novembre (`DECISIONI.md`): «ampliare il torneo, ci sono regate con punti di penalità e aggiungiamo quelle con giri di penalità». Domanda di Ale: «ogni gara ha una particolarità, salti di vento o raffiche. Ma nella realtà non c'è tutto assieme?»
+Voce 2 di `DA-FARE.md`.
+
+**Ale, 9 novembre:**
+- «ampliare il torneo, ci sono regate con punti di penalità e aggiungiamo quelle con giri di penalità»;
+- poi: «rispecchiare la realtà nei tornei che non sia didattica: i venti e raffiche sempre assieme … La parte fisica deve esserci sempre se non è didattica che insegna una cosa alla volta. Le altre cose: giri di penalità, punti di penalità, numero delle boe… scrivono il tipo di gara».
 
 **Fermata 1: niente codice finché Ale non dà il via.**
 
-## 1. Com'è oggi (letto nel codice, `js/regate.js`, sezione torneo)
+## 1. La regola (da registrare in `DECISIONI.md`)
 
-- **Regate.** Il torneo ha 4 regate, sempre con la penalità sul punteggio: +1 contatto con colpa vale il 20% dei punti di chi non arriva (regola 44.3).
-  - Le regate 1 e 3 sono a bastone, la 2 e la 4 a triangolo.
-  - Le condizioni sono «10 nodi costanti», «raffiche» (12 nodi) e «salti di vento». La quarta regata è sorteggiata fra le tre.
-- **Le regate con i giri ci sono già fuori dal torneo** (1.0.61-1.2.18), sia per il giocatore sia per gli avversari:
-  - due giri per un contatto con colpa, uno per la boa toccata (solo il giocatore);
+- **Didattica** (Scuola, prove, lezioni, regate a tema fuori dal torneo): una cosa alla volta, come oggi.
+- **Non didattica** (il torneo, poi Deriva): la fisica c'è **tutta, sempre**.
+  - Raffiche e salti di vento insieme.
+  - Più avanti il cono d'ombra delle vele: è una proposta a parte, vedi `RICERCA-CONO-D-OMBRA.md`.
+- **Che tipo di gara è** lo dice il **formato**, come in un bando: penalità sul punteggio o giri, percorso (bastone o triangolo), numero delle boe.
+
+**Da confermare con Ale:** le regate a tema di Deriva fuori dal torneo («nelle raffiche», «nei salti di vento», «con i giri di penalità») restano didattiche. Servono ad allenare una cosa sola; il torneo è il banco vero.
+
+## 2. Com'è oggi (letto nel codice, `js/regate.js`, sezione torneo)
+
+- **Regate:** 4, sempre con la penalità sul punteggio (+1 contatto con colpa vale il 20% dei punti di chi non arriva, regola 44.3). La 1 e la 3 a bastone, la 2 e la 4 a triangolo.
+- **Vento:** una condizione per regata: «10 nodi costanti», «raffiche» (12 nodi) oppure «salti di vento». La quarta è sorteggiata fra le tre.
+  - Le raffiche girano già un po' il vento: fino a ±6° ciascuna, più un'oscillazione lenta di circa ±4,5°.
+  - I salti sono un'altra cosa: una dozzina di gradi ogni due minuti circa, oppure una rotazione sempre dalla stessa parte (una regata su tre).
+- **Le regate con i giri esistono già fuori dal torneo** (1.0.61-1.2.18), per il giocatore e per gli avversari:
+  - due giri per un contatto con colpa;
+  - un giro per la boa toccata (solo il giocatore);
   - squalifica per chi arriva coi giri non fatti.
-- **Il vento.**
-  - Le raffiche portano già un piccolo cambio di direzione: ognuna gira il vento fino a ±6° (fino a ±10° per le raffiche forti), più un'oscillazione lenta di circa ±4,5°.
-  - I «salti» sono un'altra cosa: un'oscillazione di una dozzina di gradi ogni due minuti circa, oppure una rotazione sempre dalla stessa parte (una regata su tre).
-  - Oggi raffiche e salti non stanno mai insieme.
 
-## 2. La domanda di Ale: raffiche e salti insieme
-
-Sì, nella realtà di solito stanno insieme. Le fonti trovate sono articoli di riviste di regata e forum (secondarie, da aggiungere a `FONTI-PUBBLICHE.md` se si adotta):
-- spesso la raffica arriva con un cambio di direzione (salto sul fronte della raffica);
-- con vento medio e forte conviene giocare soprattutto i salti, con vento leggero soprattutto le raffiche.
-
-Fonti: [Speed & Smarts, «Go for puffs in light air, shifts in breeze»](https://canadianboating.ca/sailing/racing/speed-smarts-go-for-puffs-in-light-air-shifts-in-breeze/), [Sailing World, «Why wind shifts matter more than you think»](https://www.sailingworld.com/racing/why-wind-shifts-matter-more/), [forum Daysailer](https://forum.daysailer.org/forum/viewtopic.php?p=33170).
-
-Le condizioni separate restano utili per **imparare** una cosa alla volta, come fa la Scuola. Nel torneo invece una condizione mista è più vicina al vero.
+**Nella realtà raffiche e salti vengono insieme:** spesso la raffica arriva con un cambio di direzione. Fonti: riviste di regata e un forum, secondarie:
+- [Speed & Smarts](https://canadianboating.ca/sailing/racing/speed-smarts-go-for-puffs-in-light-air-shifts-in-breeze/)
+- [Sailing World](https://www.sailingworld.com/racing/why-wind-shifts-matter-more/)
+- [forum Daysailer](https://forum.daysailer.org/forum/viewtopic.php?p=33170)
 
 ## 3. Modello più semplice
 
-**A. Regate con i giri nel torneo.** Il torneo resta di 4 regate:
+**A. Vento: sempre raffiche e salti insieme.** In tutte e 4 le regate del torneo si accendono i due generatori che esistono già, senza costanti nuove. Da una regata all'altra cambia solo quello che cambia anche in un campo di regata vero:
+- la forza del vento, sorteggiata fra 10 e 12 nodi (i due valori che il torneo usa già e su cui sono misurati gli avversari);
+- il tipo di salto, oscillante o persistente (una su tre, come oggi).
+
+Le tre condizioni con un nome spariscono dal torneo; restano per le regate a tema e le prove.
+
+**B. Formato: è questo che distingue le regate.**
 
 | Regata | Penalità | Percorso |
 | --- | --- | --- |
@@ -38,47 +51,49 @@ Le condizioni separate restano utili per **imparare** una cosa alla volta, come 
 | 3 | giri | bastone |
 | 4 | giri | triangolo |
 
-- Prima i punti, poi i giri, così ogni sistema di penalità si prova sia a bastone sia a triangolo. Dipende solo dal numero della regata, come oggi il percorso.
-- **Nelle regate con i giri:**
-  - si usa la regata dei giri che esiste già: stesse regole, stesse bandiere, stessi avversari che scontano;
-  - nessuna penalità sul punteggio;
-  - chi è squalificato per i giri non fatti prende i punti di chi non arriva (5, come il ritiro; appendice A5.2).
-- **Tabella dei risultati:** un segno nuovo per la squalifica («Sq»).
-- **Il punto in più dei meriti** «senza penalità» vale se non ci sono né punti di penalità né giri da fare.
+- Prima i punti, poi i giri: ogni sistema di penalità si prova su entrambi i percorsi. Come oggi per il percorso, il formato dipende solo dal numero della regata.
+- **Nelle regate coi giri:** si usa la regata dei giri che esiste già (regole, bandiere, avversari che scontano), senza penalità sul punteggio.
+- **Squalifica** per giri non fatti: i punti di chi non arriva (5, come il ritiro; appendice A5.2).
+- **Tabella:** un segno nuovo, «Sq».
+- **Il punto di merito «senza penalità»** vale solo senza punti di penalità **e** senza giri da fare.
+- La breve di ogni regata dice il formato («Regata 3 di 4: bastone, giri di penalità») e il vento del giorno.
+- **Numero delle boe:** oggi il torneo ha due percorsi fissi. Cambiare i giri del percorso o aggiungere boe resta per dopo (è nel formato, ma allunga le regate e tocca la guida degli avversari alla boa 2). Questa proposta non lo fa.
 
-**B. Condizione mista «raffiche e salti».** Una quarta condizione: 12 nodi con raffiche e salti insieme. È solo l'unione delle due che esistono, senza costanti nuove. La quarta regata, che oggi si sorteggia fra tre condizioni, diventa sempre «raffiche e salti»: l'ultima regata è la più completa.
-
-**Cosa non si tocca:** la fisica, chi cede, la guida degli avversari, il tempo fra regate, lo scarto, la finestra d'arrivo, le regate fuori dal torneo.
+**Cosa non si tocca:** la fisica della barca, chi cede, la guida degli avversari, lo scarto, la finestra d'arrivo, le regate fuori dal torneo, la Scuola.
 
 **Rischi:**
-- Due regate su quattro coi giri allungano il torneo: i giri costano tempo.
-- Con raffiche e salti insieme gli avversari potrebbero fare più contatti (misurato: nei salti fuori torneo +25% con la 1.2.19).
-- Un torneo salvato a metà con la versione vecchia deve continuare con le sue regate: si legge il campo `ver` già salvato.
+- Con raffiche e salti insieme gli avversari potrebbero fare più contatti: nei salti fuori torneo +25% con la 1.2.19.
+- Le regate coi giri durano di più.
+- Un torneo salvato a metà con la versione vecchia deve finire con le sue regate: lo dice il campo `ver` già salvato.
 
 ## 4. Criteri (soglie nostre, scritte prima di misurare)
 
-Misura con lo strumento delle regate del torneo (`misura_boa_avversari.py` esteso), giocatore guidato dal pilota, principianti ed esperti. Scelta delle soglie sui semi 921-950, conferma sui 951-980.
+**Come si misura:**
+- strumento: `misura_boa_avversari.py` esteso alle regate nuove;
+- giocatore guidato dal pilota, principianti ed esperti;
+- riferimento: il torneo di oggi, sugli stessi semi;
+- soglie scelte sui semi 921-950, conferma sui semi 951-980.
 
+**Soglie:**
 - **T1, funziona:** `collaudo_torneo.py` verde, con casi nuovi:
-  - regata 3 e 4 coi giri;
-  - squalifica che vale 5 punti;
-  - torneo vecchio salvato a metà che continua come prima;
-  - tabella con «Sq».
-- **T2, squalifiche degli avversari** nelle regate con i giri del torneo: al massimo il 5% delle barche. Se sono di più, gli avversari non riescono a scontare in gruppo.
+  - regate 3 e 4 coi giri;
+  - la squalifica vale 5 punti;
+  - un torneo vecchio salvato a metà continua come prima;
+  - la tabella mostra «Sq».
+- **T2, squalifiche degli avversari** nelle regate coi giri: al massimo il 5% delle barche.
 - **T3, durata:** arrivo mediano delle regate coi giri al massimo +15% rispetto alle stesse regate col punteggio.
-- **T4, vento misto:** contatti dopo il via al massimo +15% rispetto alle raffiche sole, e nessun aumento delle non arrivate.
-- **T5, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici; le regate fuori dal torneo invariate.
-- **T6, pannello** a 1360x650 senza pixel in eccesso con la tabella del torneo nel caso peggiore.
+- **T4, vento misto:** contatti dopo il via al massimo +15% rispetto al torneo di oggi; non arrivate non aumentano; fermate alla boa (`misura_boa_avversari`) al massimo +20%.
+- **T5, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici; regate fuori dal torneo invariate.
+- **T6, pannello** a 1360x650 senza pixel in eccesso, con la tabella del torneo nel caso peggiore.
+
+Se T4 non passa, il vento misto resta fuori e si riporta perché: prima si correggono gli avversari.
 
 ## 5. Cosa serve da Ale
 
-1. **Il via, oppure un ordine diverso delle regate** (per esempio giri nelle regate 2 e 4).
-2. **Visibile subito o nascosto?** Il torneo oggi si apre nella Scuola, dopo l'attestato. La decisione del 4 novembre vuole il lavoro su Deriva nascosto. Si può:
-   - cambiare il torneo per tutti, con la versione 1.2.21;
-   - tenerlo dietro una prova nascosta finché Deriva non si apre.
-
-   Raccomando di cambiarlo per tutti: è il torneo che diventerà quello di Deriva, e così le regate di Ale e Lucio lo provano subito.
+1. **Il via** (o un altro ordine delle regate).
+2. **Le regate a tema fuori dal torneo restano didattiche?** (§1)
+3. **Visibile subito o nascosto?** Il torneo oggi si apre nella Scuola, dopo l'attestato, e la decisione del 4 novembre vuole il lavoro di Deriva nascosto. Raccomando di cambiarlo per tutti, come versione 1.2.21: è il torneo che diventerà quello di Deriva, e le regate di Ale e Lucio lo provano subito.
 
 ## 6. Costo
 
-Circa mezza giornata: codice del torneo e testi (breve, lezione del torneo), collaudo esteso, poi la misura col termostato (circa 2 ore di calcolo).
+Circa mezza giornata di codice, testi e collaudo, più circa 2 ore di calcolo col termostato.
