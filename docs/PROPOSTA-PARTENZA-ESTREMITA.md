@@ -137,3 +137,15 @@ Ale (`DECISIONI.md`, 9 novembre): gli avversari si migliorano per le regate che 
 **Si riportano senza decidere:** l'intervallo al 95% dei contatti (bootstrap sui semi), il totale di tutte e quattro le regate e i numeri regata per regata.
 
 Se tutto passa: versione 1.2.19, con i collaudi del criterio 6 e le rigiocate del criterio 7. Fra le rigiocate ci sono anche le due regate dei giri dell'8 sera (osservazioni 108-109).
+
+## 12. Si decide sulle regate del torneo (9 novembre 2026, mattina; Ale: «è meglio giocare i tornei: sono più complessi … le regate della scuola non coprono cose che hanno le regate nel torneo»)
+
+Scritto mentre gira la misura del §10, **senza averne letto nessun numero**. **Sostituisce la regola di decisione del §11**: soglie uguali, cambia il gruppo di regate.
+
+**Regate del torneo** (torneo dell'1b, quello che diventerà di Deriva): le 6 combinazioni di percorso (bastone, triangolo) e condizione (10 nodi costanti, raffiche, salti di vento). Direzione del vento (seme % 8) × 45°. Principianti ed esperti; 1, 3 e 5 minuti; semi 681-760. Sono 2880 regate per il riferimento e 2880 con la correzione (X_RIPOS −25, T_RIPOS 40 s). Ogni regata parte da un torneo nuovo, con flotta e caratteri sorteggiati col seme.
+
+**Decide (soglie del §6, sul riferimento delle stesse regate del torneo):** oltre l'estremità ≤3% e almeno dimezzate; anticipate ≤ +2 punti; mediana del taglio ≤ +1 s e tagli dopo 10 s non in aumento; contatti ≤ +10%.
+
+**Controllo sulla Scuola** (bastone e raffiche della misura del §10): anticipate ≤ +2 punti, mediana ≤ +1 s, contatti ≤ +10%. Se non passa, non si adotta.
+
+**Solo riportati:** salti di vento e giri di penalità fuori torneo (la regata dei giri non si misura più: nel torneo la penalità è sul punteggio, non ci sono i giri), intervallo al 95% dei contatti, numeri per combinazione.
