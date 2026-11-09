@@ -276,13 +276,19 @@
           if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)) b.goStart = true; } // il margine fa arrivare dopo lo zero, mai prima
       }
       b.holdA = holdAngle(by);
+      const [rx, ry] = fromWF(b.waitX + lat * (yF - yW), yF); // il punto di ritrovo, dove si torna per riposizionarsi (A)
+      if (b.goStart) b.ripos = false;
+      else if (b.ripos && Math.hypot(s.x - rx, s.y - ry) < 8) b.ripos = false; // tornata al ritrovo: rifà l'avvicinamento
       if (b.goStart){ pre = true; b.preDesired = lineAim;
         // Deriva, fetta 4: chi taglierebbe la linea oltre lo spillo stringe il vento; se non basta, cambia mure verso il centro. Mandarla alla guida generale la faceva correre via lungo la linea (partenze, seme 5)
         if (R.t > -FUORI_T && R.t < 0 && by > 0){ const margine = -(LINE_HALF - 2); if (bx - lat * by < margine) b.preDesired = bx - Math.tan((ai.up - 2) * D2R) * by >= margine ? twd + HOLD_S * (ai.up - 2) : twd - HOLD_S * (ai.up + 4); }
         if (by < 1 && R.t < -1) hold = true; } // partita: se è in anticipo non supera la linea prima dello zero
       // ancora in avvicinamento, con la logica generale perché sa fare i bordi; si lasca quando lo scivolamento simulato finirebbe
       // dentro la fascia d'attesa, cioè quando è il momento di smettere di spingere per fermarsi lì
+      else if (b.ripos) dest = { x: rx, y: ry }; // A: riposizionamento in corso
       else if (Math.hypot(s.x - px, s.y - py) > (far ? 8 : 6) && glideY(b, w) > 2 * L) dest = { x: px, y: py };
+      else if (X_RIPOS !== null && -R.t > T_RIPOS && by < 3 * L && bx - lat * by < X_RIPOS){ // A: vicino alla linea, scivolata verso l'estremo sinistro, con tempo per rimediare
+        b.ripos = true; b.riposN = (b.riposN || 0) + 1; dest = { x: rx, y: ry }; }
       else { pre = true; hold = true; } // in attesa: si frena su tutta la linea e sui prolungamenti, non solo vicino agli estremi
       if (pre) b.boardT = 0; // il timer dei bordi non deve scadere durante l'attesa, altrimenti si vira appena tagliata la linea
     }
@@ -412,6 +418,10 @@
   }
   const GYBE_MIN = 10, SCARTO_MAX = 25; // secondi, ipotesi nostre
   const FUORI_T = 15; // Deriva, fetta 4: secondi prima del via in cui si guarda dove si taglierà la linea; ipotesi nostra
+  // 1.2.19 (docs/PROPOSTA-PARTENZA-ESTREMITA.md, parte A): chi in attesa taglierebbe la linea più a sinistra di X_RIPOS (metri dal centro) con più di T_RIPOS s
+  // al via torna al punto di ritrovo e rifà l'avvicinamento: prima scivolava oltre lo spillo (14% delle partenze del torneo, ora 2%). Ipotesi nostre, scelte sui
+  // semi 601-640 fra -33/-29/-25 e 30/40/50 s; decise sulle regate del torneo, semi 681-760 (§12). __sv.ripos(null) le spegne per le misure
+  let X_RIPOS = -25, T_RIPOS = 40;
   const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
   // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)
   function passaggio(b, nd){

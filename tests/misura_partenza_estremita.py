@@ -4,7 +4,8 @@
 # istante del taglio valido, riposizionamenti; per la regata: contatti fra -60 s e +20 s.
 # Più processi: SALVA=file.json per ognuno, poi python tests/misura_partenza_estremita.py --riassumi file1.json file2.json ...
 # Uso: python tests/misura_partenza_estremita.py PRIMO ULTIMO [X_RIPOS T_RIPOS POPPA]   (senza costanti: riposizionamento spento)
-# REGATE=2,3 sceglie le regate (0 bastone, 1 raffiche, 2 salti, 3 giri; senza: 0,1,2).
+# REGATE=2,3 sceglie le regate (0 bastone, 1 raffiche, 2 salti, 3 giri; senza: 0,1,2); REGATE=torneo le 6 regate del torneo
+#   (bastone e triangolo per costante, raffiche, salti; vento (seme % 8) x 45°), ognuna da un torneo nuovo.
 #   X_RIPOS in metri dal centro (negativo, es. -33), T_RIPOS in secondi; POPPA 1 = parte B accesa. BROWSER=firefox per l'altro browser.
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
@@ -14,9 +15,17 @@ PAR = None if sys.argv[1] == "--riassumi" else [float(sys.argv[3]), float(sys.ar
 CORSA = """([reg, liv, cd, seme, par]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   if (par && sv.ripos) sv.ripos(par[0], par[1], par[2]); else if (sv.ripos) sv.ripos(null);
-  sv.fast(0); sv.openItem(["r", reg]); sel('aiLevel', liv);
-  (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
-  sv.simTime = 0; sel('cdSel', String(cd));
+  const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
+  if (Array.isArray(reg)){ // torneo: [k percorso 0 bastone 1 triangolo, c condizione]; torneo nuovo a ogni regata (ritiro da quello di prima)
+    sv.fast(0); sel('aiLevel', liv); sel('cdSel', String(cd)); window.confirm = () => true;
+    if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
+    semina(); sv.torApri(); document.getElementById('torGo').click();
+    const T = sv.tor; T.ris.length = 0; if (reg[0]) T.ris.push([0, 1, 2, 3].map(i => ({ fin: i + 1, pp: 0 })));
+    T.regate[reg[0]] = { c: reg[1], wind: (seme % 8) * 45 };
+    semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
+  } else {
+    sv.fast(0); sv.openItem(["r", reg]); sel('aiLevel', liv); semina();
+    sv.simTime = 0; sel('cdSel', String(cd)); }
   const R = sv.R; if (R.t >= 0) return null;
   const ux = R.cb.x - R.pin.x, uy = R.cb.y - R.pin.y, un = Math.hypot(ux, uy), lx = b => ((b.S.x - R.center.x) * ux + (b.S.y - R.center.y) * uy) / un;
   const ai = R.boats.filter(b => !b.me), out = {};
@@ -32,7 +41,9 @@ CORSA = """([reg, liv, cd, seme, par]) => {
   return { barche: out, contatti };
 }"""
 NOMI = ["bastone", "raffiche", "salti", "giri"]  # REGATE=2,3 per scegliere (3 = giri di penalità, regata di Deriva)
-REGATE = [(int(k), NOMI[int(k)]) for k in os.environ.get("REGATE", "0,1,2").split(",")]
+TORNEO = [([k, c], f"torneo-{'bastone' if k == 0 else 'triangolo'}-{['costante', 'raffiche', 'salti'][c]}") for k in (0, 1) for c in (0, 1, 2)]
+NOMI += [n for _, n in TORNEO]
+REGATE = TORNEO if os.environ.get("REGATE") == "torneo" else [(int(k), NOMI[int(k)]) for k in os.environ.get("REGATE", "0,1,2").split(",")]
 
 async def main():
     async with async_playwright() as p:

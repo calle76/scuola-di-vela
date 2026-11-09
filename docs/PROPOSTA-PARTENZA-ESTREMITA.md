@@ -1,6 +1,6 @@
 # Proposta: barche che in attesa scivolano oltre l'estremità sinistra della linea (8 novembre 2026, notte)
 
-Voce 2 di `DA-FARE.md`; osservazioni 93, 96, 100 di `OSSERVAZIONI-GIOCANDO.md`. **Fermata 1: nessun codice scritto.** Fermata 2 (9 novembre): **non adottata**, la conferma non passa sui contatti (§9).
+Voce 2 di `DA-FARE.md`; osservazioni 93, 96, 100 di `OSSERVAZIONI-GIOCANDO.md`. **Fermata 1: nessun codice scritto.** Fermata 2 (9 novembre, notte): non adottata, la conferma non passa sui contatti (§9). **Adottata il 9 novembre mattina nella 1.2.19** sulle regate del torneo (§12-13).
 
 ## 1. Era già stato risolto?
 
@@ -149,3 +149,39 @@ Scritto mentre gira la misura del §10, **senza averne letto nessun numero**. **
 **Controllo sulla Scuola** (bastone e raffiche della misura del §10): anticipate ≤ +2 punti, mediana ≤ +1 s, contatti ≤ +10%. Se non passa, non si adotta.
 
 **Solo riportati:** salti di vento e giri di penalità fuori torneo (la regata dei giri non si misura più: nel torneo la penalità è sul punteggio, non ci sono i giri), intervallo al 95% dei contatti, numeri per combinazione.
+
+## 13. Esito (9 novembre 2026): adottata, versione 1.2.19
+
+**Regate del torneo**, semi 681-760, 2880 regate per lato. Decidono:
+
+| | 1.2.18 | con la correzione | soglia | |
+| --- | --- | --- | --- | --- |
+| oltre l'estremità allo sparo | 1236 (14,3%) | 172 (2,0%) | ≤3% e almeno dimezzate | ✓ |
+| anticipate | 158 (1,8%) | 176 (2,0%) | ≤ +2 punti | ✓ |
+| mediana del taglio | 2,10 s | 1,93 s | ≤ +1 s | ✓ |
+| tagli dopo 10 s | 1154 | 620 | non in aumento | ✓ |
+| contatti fra −60 e +20 s | 1040 | 1104 (+6,2%) | ≤ +10% | ✓ |
+
+- Intervallo al 95% dei contatti (bootstrap sui semi): da −1,2% a +14,1%.
+- Barche non partite entro 60 s: 2 → 10 su 8640. Non è fra i criteri; lo riporto per il rischio scritto nel §7.
+- Bastone e triangolo danno partenze identiche, perché il percorso conta solo dopo i primi 60 s: le regate indipendenti sono quindi 1440. È un difetto del disegno della misura, che ho visto solo dopo.
+
+**Controllo sulla Scuola** (bastone e raffiche, semi 681-760, 960 regate): anticipate 0,6% → 0,3%, mediana 2,10 → 1,93 s, contatti 397 → 411 (+3,5%). ✓
+
+**Solo riportato:** con salti di vento, bastone, raffiche e salti insieme, sui semi 681-760, i contatti vanno da 559 a 613 (+9,7%, intervallo da +3,0% a +17,1%). Nei soli salti di vento fuori torneo vanno da 162 a 202 (+25%).
+
+**Non-regressione (criterio 6):**
+- `polare.js` e `raffiche_e_virate.js` identici, `impronta1b.js` al bit (25 corse).
+- `collaudo_regate.py` 6 0 e 6 1: OK, 18 arrivi su 18.
+- `collaudo_partenze.py` FALLITO come prima. Sulla 1.2.18 (stessa macchina) i criteri fuori sono 4: (1) esperti non meno richiamati dei principianti nel bastone e nelle raffiche; (2) ritardo mediano a 300 s di 7,8 e 6,2 s nelle raffiche. Sulla 1.2.19 ne restano 2: i due (1), identici. I due (2) passano (2,2 s e 1,4 s).
+- `collaudo_versione.py`: OK.
+
+**Criterio 7, rigiocate** (`rigioca_regata.py`, 20 semi ciascuna; 1.2.18 → 1.2.19). Barche oltre l'estremità allo sparo, su 60:
+- 17:25: 5 → 1
+- 22:14: 8 → 2
+- giri 21:52: 3 → 1
+- giri 22:00: 4 → 0
+
+In tutto 20 → 4. Contatti 158 → 155. La riga «R5: NON valido» di `scene_strane` esce uguale prima e dopo.
+
+Parte B tolta dal codice: non è servita.
