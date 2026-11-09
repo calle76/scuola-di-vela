@@ -9,7 +9,7 @@
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
 | 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
-| 1b | **Layline, pezzi 2-4:** aiuto in acqua disattivabile (nel torneo spento all'inizio, attivabile), lezione con fonte, avversari con la layline della polare (oggi PASSO_A 56°). Il pezzo 1 è nella rotta ottimale | `DECISIONI.md` 9 nov; `PIANO-GENERALE.md` livello 4 | da proporre |
+| 1b | **Layline, pezzi 2-4:** aiuto in acqua disattivabile (nel torneo spento all'inizio, attivabile), lezione con fonte, avversari con la layline della polare (oggi PASSO_A 56°). Il pezzo 1 è nella rotta ottimale | `PROPOSTA-LAYLINE.md` | via di Ale in anticipo (9 nov); in corso |
 | 2 | **Cono d'ombra delle vele** (copertura, vento sporco) nelle regate non didattiche | `RICERCA-CONO-D-OMBRA.md` (letteratura trovata, F75-F76) | da proporre (prossima voce) |
 | 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
 | 4 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa, e al via: poggiare all'ultimo, virare sulla rotta di una mure a dritta), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 101, 102, 105, 106 | da proporre |
