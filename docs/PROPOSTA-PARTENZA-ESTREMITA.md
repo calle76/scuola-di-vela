@@ -106,3 +106,14 @@ Non fatti, perché servivano solo per l'adozione: il criterio 7 (rigiocate 17:25
 1. Lasciare così.
 2. Rimisurare i contatti con più semi (per esempio 80 per gruppo) per capire se il +15% è rumore. Sarebbe una proposta nuova con soglie nuove, scritte prima.
 3. Un riposizionamento che eviti chi ha già precedenza mentre passa in mezzo al gruppo, per ridurre i contatti: sarebbe la causa del rischio 1 del §7.
+
+## 10. Strada 2: rimisurare i contatti con più semi (9 novembre 2026, mattina; Ale: «fai la strada 2»)
+
+Domanda: il +15% di contatti della conferma è un effetto vero o rumore? Stessa correzione del §9 (X_RIPOS −25, T_RIPOS 40 s, senza B), nessuna costante cambiata.
+
+**Misura.** Semi nuovi **681-760** (80 semi, mai usati): 1440 regate per il riferimento 1.2.18 e 1440 con la correzione, stesse condizioni del §6. In più, per ogni regata si salvano i contatti, così da confrontare regata per regata (stesso seme, stessa regata) e calcolare l'intervallo al 95% della differenza di contatti (bootstrap sui semi, 10 000 ricampionamenti).
+
+**Criteri (soglie scritte prima di misurare, gli stessi del §6):**
+1. Oltre l'estremità ≤3% e almeno dimezzate; 2. anticipate ≤ +2 punti; 3. mediana del taglio ≤ +1 s e tagli dopo 10 s non in aumento; 4. **contatti ≤ +10%** sul riferimento degli stessi semi.
+
+**Decisione:** se 1-4 passano sui semi 681-760, la correzione si adotta (versione 1.2.19, con i collaudi del criterio 6 e le rigiocate del criterio 7). Altrimenti resta fuori. L'intervallo al 95% e il totale dei tre gruppi di semi (601-760, 160 semi) si riportano ma non decidono.
