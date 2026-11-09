@@ -3,7 +3,7 @@
 # preparazione 60 s, il giocatore guidato dal pilota (usa la guida degli avversari, come in misura_triangolo.py), fino all'arrivo di tutti
 # o a 900 s. Per ogni avversario e ogni boa, mentre la punta ed è entro 40 m: secondi, virate, fermate (3 s di fila sotto 1 nodo),
 # boa toccata (scafo a meno del raggio della boa, 0,9 m). Per la regata: contatti dopo il via, boe sbagliate, non arrivate, tempi.
-# Uso: python tests/misura_boa_avversari.py PRIMO ULTIMO [PASSO_M SOPRA_M]  (senza costanti: quelle del gioco)
+# Uso: python tests/misura_boa_avversari.py PRIMO ULTIMO [PASSO_M SOPRA_M [M_DIR R_DIR]]  (senza costanti: quelle del gioco; M_DIR negativo = giro diretto spento); DIAG=1 annota dove avvengono le fermate
 #   SALVA=file.json per più processi, poi --riassumi f1.json f2.json ...
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
@@ -11,15 +11,14 @@ URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve()
 CORSA = """([k, c, liv, seme, par]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
-  if (sv.boa) sv.boa(par ? par[0] : null, par ? par[1] : null);
-  if (sv.ripos) sv.ripos(null);
+  if (sv.boa) sv.boa(par ? par[0] : null, par ? par[1] : null, par && par.length > 2 ? par[2] : null, par && par.length > 3 ? par[3] : null);
   sv.fast(0); sel('aiLevel', liv); sel('cdSel', '60'); window.confirm = () => true;
   if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
   semina(); sv.torApri(); document.getElementById('torGo').click();
   const T = sv.tor; T.ris.length = 0; if (k) T.ris.push([0, 1, 2, 3].map(i => ({ fin: i + 1, pp: 0 })));
   T.regate[k] = { c, wind: (seme % 8) * 45 };
   semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
-  const R = sv.R, dt = 1 / 60, KN = 0.5144; R.tor = false; // senza finestra d'arrivo: si misura fino all'arrivo
+  const R = sv.R, dt = 1 / 60, KN = 0.5144, DIAG = DIAGNOSI; R.tor = false; // senza finestra d'arrivo: si misura fino all'arrivo
   const ai = R.boats.filter(b => !b.me), boe = {};
   const dHull = (b, m) => { const P = sv.hullWorld(b.S); let dentro = true, best = 1e9;
     for (let i = 0; i < P.length; i++){ const [x0, y0] = P[i], [x1, y1] = P[(i + 1) % P.length], ex = x1 - x0, ey = y1 - y0, l2 = ex * ex + ey * ey;
@@ -37,7 +36,9 @@ CORSA = """([k, c, liv, seme, par]) => {
       const m = R.marks[j], o = boe[b.name + j];
       if (Math.hypot(b.S.x - m.x, b.S.y - m.y) < 40){
         o.sec += dt; if (b.virando && !vir[b.name]) o.virate++;
-        if (b.S.u < KN){ o.lento += dt; if (o.lento >= 3 && o.lento - dt < 3) o.ferme++; o.maxFermo = Math.max(o.maxFermo, o.lento); } else o.lento = 0;
+        if (b.S.u < KN){ o.lento += dt; if (o.lento >= 3 && o.lento - dt < 3){ o.ferme++;
+          if (DIAG){ const th = -((seme % 8) * 45) * Math.PI / 180, ex = b.S.x - m.x, ey = b.S.y - m.y, wx = ex * Math.cos(th) - ey * Math.sin(th), wy = ex * Math.sin(th) + ey * Math.cos(th), vic = R.boats.filter(q => q !== b).map(q => Math.hypot(q.S.x - b.S.x, q.S.y - b.S.y));
+            (o.dove = o.dove || []).push({ t: +R.t.toFixed(1), dx: +wx.toFixed(1), dy: +wy.toFixed(1), rp: b.rp || 0, cede: b.cedeA ? b.cedeA.name : null, sconta: !!b.sconta, vicina: +Math.min(...vic).toFixed(1) }); } } o.maxFermo = Math.max(o.maxFermo, o.lento); } else o.lento = 0;
         if (dHull(b, m) < 0.9) o.tocco = true;
       }
       vir[b.name] = b.virando;
@@ -57,7 +58,7 @@ async def main(A, B, PAR):
         for (k, c), nome in NOMI.items():
             for liv in ("principianti", "esperti"):
                 for seme in range(A, B + 1):
-                    r = await pg.evaluate(CORSA, [k, c, liv, seme, PAR])
+                    r = await pg.evaluate(CORSA.replace("DIAGNOSI", "true" if os.environ.get("DIAG") else "false"), [k, c, liv, seme, PAR])
                     r.update(reg=nome, liv=liv, seme=seme); tutte.append(r)
             print(f"  {nome} fatta", flush=True)
         await br.close()
@@ -79,9 +80,13 @@ def riassumi(ds):
     for nome in NOMI.values():
         g = [o for r in R if r["reg"] == nome for o in r["boe"] if o["sec"] > 0]
         if g: print(f"   {nome}: fermate {sum(o['ferme'] for o in g)}, 3+ virate {sum(o['virate'] >= 3 for o in g)}, mediana {statistics.median(o['sec'] for o in g):.1f} s, toccate {sum(o['tocco'] for o in g)}, contatti {sum(r['contatti'] for r in R if r['reg'] == nome)}")
+    D = [(o["boa"], x) for o in B for x in o.get("dove", [])]
+    if D:
+        print(f"   fermate annotate {len(D)} (dx, dy dalla boa nel riferimento del vento, y negativo = sopravento; rp punto puntato):")
+        for j, x in D: print(f"     boa {j + 1} t {x['t']:6.1f}  dx {x['dx']:6.1f} dy {x['dy']:6.1f}  rp {x['rp']}  cede {x['cede']}  sconta {x['sconta']}  vicina {x['vicina']} m")
     for j in (0, 1):
         g = [o for o in B if o["boa"] == j]
         if g: print(f"   boa {j + 1}: passaggi {len(g)}, fermate {sum(o['ferme'] for o in g)}, 3+ virate {sum(o['virate'] >= 3 for o in g)}, mediana {statistics.median(o['sec'] for o in g):.1f} s")
 
 if sys.argv[1] == "--riassumi": riassumi([json.loads(pathlib.Path(f).read_text()) for f in sys.argv[2:]])
-else: asyncio.run(main(int(sys.argv[1]), int(sys.argv[2]), [float(sys.argv[3]), float(sys.argv[4])] if len(sys.argv) > 4 else None))
+else: asyncio.run(main(int(sys.argv[1]), int(sys.argv[2]), [float(x) for x in sys.argv[3:7]] if len(sys.argv) > 4 else None))

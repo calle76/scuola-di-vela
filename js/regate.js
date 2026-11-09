@@ -222,11 +222,17 @@
                     : [[9 + o, -R.up - 3], [-16 - o, -R.up - 10 - o * 0.5], [-10, -R.up + 14]];
       const near = (k, r) => Math.hypot(wx - P[k][0], wy - P[k][1]) < r;
       // il punto 1 si punta solo da sopra la boa: da più in basso la bolina porterebbe la barca proprio sopra la boa
-      const sopra = due ? wx - mx < -2 && wy - my < -3 : wy < -R.up - 2 && wx > 3, oltre = due ? wy - my > 8 : wx < -8;
+      const sopra = due ? wx - mx < -2 && wy - my < -3 : wy < -R.up - SOPRA_M && wx > 3, oltre = due ? wy - my > 8 : wx < -8;
       // Deriva (docs/PROPOSTA-AVVERSARI-DERIVA.md, §11): chi può già puntare il punto oltre la boa senza virare, passando sopra la boa, non cerca il punto 0: mancandolo di poco virava indietro e si piantava (regata di Ale, 17:59)
       const dxP = wx - P[1][0], dyP = wy - P[1][1], sulBordo = !due && wx > 3 && dxP > 0 && dyP > 0 && Math.atan2(dxP, dyP) >= PASSO_A * D2R && wy - dyP * wx / dxP < my - PASSO_M;
       // docs/PROPOSTA-DERIVA-SU-MAIN.md §6: da sinistra della boa la retta verso il punto 0 passava sopra la boa, cioè dal lato sbagliato: prima si va al punto 2, sotto e a sinistra
-      const sopraDaSinistra = !due && !b.rp && wx < -3 && wy + (P[0][1] - wy) * (0 - wx) / (P[0][0] - wx) < my + PASSO_M;
+      const sopraDaSinistra = !due && !b.rp && wx < -3 && wy + (P[0][1] - wy) * (0 - wx) / (P[0][0] - wx) < my + PASSO_SX;
+      // giro diretto (docs/PROPOSTA-BOA-PIANTATA.md §8): mure a dritta, a destra della boa e vicina, se di bolina passa sopra la boa con margine punta subito oltre
+      // e tiene la bolina finché non l'ha superata; prima virava verso il punto 0 e, cambiato bersaglio a metà virata, rivirava senza velocità
+      const tanB = Math.tan((b.ai.up + 3) * D2R), diretto = M_DIR !== null && !due && !b.rp && wx > 0 && norm180(b.S.h - windOf(b)) < 0 && Math.hypot(wx - mx, wy - my) < R_DIR && wy - wx / tanB < my - M_DIR;
+      if (diretto){ b.rp = 1; b.diretto = true; }
+      if (b.diretto && (b.rp !== 1 || wx < -3)) b.diretto = false;
+      if (b.diretto){ const hh = (windOf(b) - b.ai.up - 3) * D2R; return { x: b.S.x + 30 * Math.sin(hh), y: b.S.y - 30 * Math.cos(hh), kind: "mark" }; } // la bolina col vento del posto
       if (sopraDaSinistra) b.rp = 2;
       else if (!b.rp && (near(0, 4) || sopra || sulBordo)) b.rp = 1;
       else if (b.rp === 1 && ((oltre && (b.rnd || 0) < 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
@@ -373,7 +379,11 @@
   // rotta e scarta solo all'ultimo; mai dentro l'angolo morto. Prima ogni avversario scartava qualsiasi barca davanti entro 14-22 m, anche
   // avendo la precedenza, orzando fin dentro l'angolo morto: 72 piantate su 124 avendo la precedenza (tests/misura_avversari.py, semi 1-20).
   const D_CEDE = 30, T_CEDE = 15, ULTIMO = 1.5; // ipotesi nostre: 30 m come la regola 10 degli avversari dell'1a; 15 s di preavviso
-  const PASSO_A = 56, PASSO_M = 3; // Deriva, §11: gradi dal vento per arrivare senza virare, metri sopra la boa; ipotesi nostre
+  const PASSO_A = 56; // Deriva, §11: gradi dal vento per arrivare senza virare; ipotesi nostra
+  // PASSO_M: metri sopra la boa della rotta «sul bordo» (Deriva, §11); SOPRA_M: metri sopra la boa per contare «sopra» (docs/PROPOSTA-BOA-PIANTATA.md); ipotesi nostre
+  let PASSO_M = 3, SOPRA_M = 2;
+  let M_DIR = 3, R_DIR = 15; // 1.2.20, giro diretto (docs/PROPOSTA-BOA-PIANTATA.md §8-10): margine sopra la boa di bolina e raggio della zona, in metri; ipotesi nostre, scelte sui semi 861-890 e confermate sui 891-920 (fermate 70 -> 30)
+  const PASSO_SX = 3; // metri: da sinistra della boa la retta verso il punto 0 deve passare sotto la boa di tanto (PROPOSTA-DERIVA-SU-MAIN §6; prima usava PASSO_M)
   const U_ABBRIVIO = 1.6; // 1.1.1 (B1): m/s fino ai quali si prende abbrivio prima di virare (circa 3,1 nodi); ipotesi nostra
   const V_AVV = 0.1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, A): m/s di avvicinamento sotto i quali, con gli scafi a più di una lunghezza, l'altra barca non è un pericolo; ipotesi nostra, scelta sui semi 1-20 (con 0,3: contatti +25%), confermata sui semi 21-40
   function cedeAvv1b(b, desired, twd, side, ai){

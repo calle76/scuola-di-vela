@@ -96,3 +96,28 @@ Questa barca punta subito il punto oltre la boa (`rp` 1) e, finché non ha super
 **Criteri:** gli stessi del §5 (G1-G7, soglie uguali, sul riferimento degli stessi semi). Scelta sui **semi 861-890**, conferma sui **semi 891-920**, mai usati. Regola di scelta come nel §5.
 
 **Nota sulla misura:** bastone e triangolo hanno la stessa prima bolina e quindi danno passaggi identici alla boa 1. I passaggi indipendenti sono circa la metà di quelli contati. Le soglie sono relative, quindi il confronto resta valido; lo si riporta.
+
+## 9. Esito della scelta del giro diretto (semi 861-890, 360 regate del torneo, 1620 passaggi)
+
+| (`M_DIR`, `R_DIR`) | G1 fermate | G2 3+ virate | G3 mediana | G4 boa toccata | G5 sbagliate / non arrivate | G6 contatti |
+| --- | --- | --- | --- | --- | --- | --- |
+| oggi (spento) | 65 | 347 | 26,8 s | 59 | 3 / 0 | 233 |
+| (2, 15) | 17 | 283 | 26,1 s | **74** ✗ | 3 / 0 | 215 |
+| (3, 15) | **21** | 302 | 26,3 s | 54 | 3 / 0 | 218 |
+| (4, 15) | **33** ✗ | 323 | 26,5 s | 62 | 3 / 0 | 218 |
+| (2, 30) | 19 | 283 | 26,3 s | **78** ✗ | 2 / 0 | 212 |
+| (3, 30) | 22 | 303 | 26,4 s | 54 | 2 / 0 | 215 |
+| (4, 30) | 32 | 321 | 26,6 s | 62 | 3 / 0 | 217 |
+
+Soglie sul riferimento: G1 ≤32 (metà di 65), G2 ≤381, G3 ≤27,8 s, G4 ≤64 (59 + 10%), G5 sbagliate ≤5 e non arrivate 0, G6 ≤256. Passano (3, 15), (3, 30) e (4, 30); con 2 m la barca passa troppo vicina e tocca la boa. **Scelta: (3, 15)**, la meno fermate fra quelle che passano. Conferma sui semi 891-920.
+
+## 10. Conferma (semi 891-920, mai usati): passa, adottata nella 1.2.20
+
+| | G1 fermate | G2 3+ virate | G3 mediana | G4 boa toccata | G5 sbagliate / non arrivate | G6 contatti |
+| --- | --- | --- | --- | --- | --- | --- |
+| oggi (spento) | 70 | 340 | 26,5 s | 49 | 0 / 0 | 259 |
+| (3, 15) | **30** | 314 | 26,1 s | 49 | 0 / 0 | 253 |
+
+Soglie: G1 ≤35, G2 ≤374, G3 ≤27,5 s, G4 ≤54, G5 ≤2 e 0, G6 ≤284. Passano tutte. G7: `polare.js` e `raffiche_e_virate.js` identici, `impronta1b.js` al bit, `collaudo_giro_boa.py` nel CHANGELOG. Nel gioco `M_DIR` 3, `R_DIR` 15; per misurare il gioco senza giro diretto: `misura_boa_avversari.py PRIMO ULTIMO 3 2 -1 15`.
+
+Restano circa 30 fermate su 1620 passaggi: non sono state guardate una per una.
