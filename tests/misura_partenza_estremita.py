@@ -4,6 +4,7 @@
 # istante del taglio valido, riposizionamenti; per la regata: contatti fra -60 s e +20 s.
 # Più processi: SALVA=file.json per ognuno, poi python tests/misura_partenza_estremita.py --riassumi file1.json file2.json ...
 # Uso: python tests/misura_partenza_estremita.py PRIMO ULTIMO [X_RIPOS T_RIPOS POPPA]   (senza costanti: riposizionamento spento)
+# REGATE=2,3 sceglie le regate (0 bastone, 1 raffiche, 2 salti, 3 giri; senza: 0,1,2).
 #   X_RIPOS in metri dal centro (negativo, es. -33), T_RIPOS in secondi; POPPA 1 = parte B accesa. BROWSER=firefox per l'altro browser.
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
@@ -30,28 +31,31 @@ CORSA = """([reg, liv, cd, seme, par]) => {
   for (const b of ai) out[b.name].ripos = b.riposN || 0, out[b.name].poppa = b.poppaN || 0;
   return { barche: out, contatti };
 }"""
-REGATE = [(0, "bastone"), (1, "raffiche"), (2, "salti")]
+NOMI = ["bastone", "raffiche", "salti", "giri"]  # REGATE=2,3 per scegliere (3 = giri di penalità, regata di Deriva)
+REGATE = [(int(k), NOMI[int(k)]) for k in os.environ.get("REGATE", "0,1,2").split(",")]
 
 async def main():
     async with async_playwright() as p:
         br = await getattr(p, os.environ.get("BROWSER", "chromium")).launch()
         pg = await br.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)
-        tutte = []; contatti = 0; regate = 0
+        tutte = []; contatti = 0; regate = 0; perReg = []
         for reg, nome in REGATE:
             for liv in ("principianti", "esperti"):
                 for cd in (60, 180, 300):
                     for seme in range(A, B + 1):
                         r = await pg.evaluate(CORSA, [reg, liv, cd, seme, PAR])
                         if not r: print("non partita", nome, liv, cd, seme); continue
-                        regate += 1; contatti += r["contatti"]
+                        regate += 1; contatti += r["contatti"]; perReg.append([nome, liv, cd, seme, r["contatti"]])
                         for n, o in r["barche"].items(): o.update(reg=nome, liv=liv, cd=cd, seme=seme, nome=n); tutte.append(o)
             print(f"  {nome} fatta", flush=True)
         await br.close()
     nome = os.environ.get("SALVA")
-    if nome: pathlib.Path(nome).write_text(json.dumps({"tutte": tutte, "contatti": contatti, "regate": regate, "errori": len(errs)}))
+    PERREG.extend(perReg)
+    if nome: pathlib.Path(nome).write_text(json.dumps({"tutte": tutte, "contatti": contatti, "regate": regate, "errori": len(errs), "perRegata": perReg}))
     riassumi(tutte, contatti, regate, len(errs))
 
+PERREG = []
 def riassumi(tutte, contatti, regate, nerr):
     N = len(tutte); fuori = [o for o in tutte if abs(o["x0"]) > 35]; ocs = [o for o in tutte if o["ocs0"]]
     tagli = [o["taglio"] for o in tutte if o["taglio"] is not None]; nonp = N - len(tagli)
@@ -62,10 +66,12 @@ def riassumi(tutte, contatti, regate, nerr):
     print(f"4. contatti fra -60 e +20 s: {contatti} ({contatti/regate:.3f} per regata)")
     print(f"5. riposizionamenti {sum(o['ripos'] for o in tutte)} (barche {sum(o['ripos'] > 0 for o in tutte)}), giri in poppa {sum(o['poppa'] for o in tutte)}")
     print(f"   x del taglio sotto -10: {sum(o['xTaglio'] is not None and o['xTaglio'] < -10 for o in tutte)} su {len(tagli)}")
-    for reg in ("bastone", "raffiche", "salti"):
-        g = [o for o in tutte if o["reg"] == reg]; print(f"   {reg}: oltre l'estremità {sum(abs(o['x0']) > 35 for o in g)}, anticipate {sum(o['ocs0'] for o in g)}, dopo 10 s {sum((o['taglio'] or 99) > 10 for o in g)}")
+    for reg in NOMI:
+        g = [o for o in tutte if o["reg"] == reg]
+        if not g: continue
+        cr = sum(x[4] for x in PERREG if x[0] == reg); print(f"   {reg}: oltre l'estremità {sum(abs(o['x0']) > 35 for o in g)}, anticipate {sum(o['ocs0'] for o in g)}, dopo 10 s {sum((o['taglio'] or 99) > 10 for o in g)}, contatti {cr}")
 if sys.argv[1] == "--riassumi":  # unisce i file salvati con SALVA (corse divise fra più processi)
     T, C, Rg, E = [], 0, 0, 0
-    for f in sys.argv[2:]: d = json.loads(pathlib.Path(f).read_text()); T += d["tutte"]; C += d["contatti"]; Rg += d["regate"]; E += d["errori"]
+    for f in sys.argv[2:]: d = json.loads(pathlib.Path(f).read_text()); T += d["tutte"]; C += d["contatti"]; Rg += d["regate"]; E += d["errori"]; PERREG += d.get("perRegata", [])
     PAR = "vedi file"; riassumi(T, C, Rg, E)
 else: asyncio.run(main())

@@ -117,3 +117,23 @@ Domanda: il +15% di contatti della conferma è un effetto vero o rumore? Stessa 
 1. Oltre l'estremità ≤3% e almeno dimezzate; 2. anticipate ≤ +2 punti; 3. mediana del taglio ≤ +1 s e tagli dopo 10 s non in aumento; 4. **contatti ≤ +10%** sul riferimento degli stessi semi.
 
 **Decisione:** se 1-4 passano sui semi 681-760, la correzione si adotta (versione 1.2.19, con i collaudi del criterio 6 e le rigiocate del criterio 7). Altrimenti resta fuori. L'intervallo al 95% e il totale dei tre gruppi di semi (601-760, 160 semi) si riportano ma non decidono.
+
+## 11. Criterio sulle regate di Deriva (9 novembre 2026, mattina; Ale: «sì, scrivi il criterio sulle regate di Deriva»)
+
+Ale (`DECISIONI.md`, 9 novembre): gli avversari si migliorano per le regate che si giocano davvero, da Deriva in poi. La Scuola ha due regate corte che si fanno una volta.
+
+**Scritto mentre la misura del §10 gira, senza averne letto nessun numero.** Questo paragrafo **sostituisce la regola di decisione del §10**: le soglie sono le stesse, cambia il gruppo di regate su cui si giudica.
+
+**Regate di Deriva:** salti di vento (regata 2) e giri di penalità (regata 3, che finora non era misurata). Stessi semi 681-760, stesse condizioni (principianti ed esperti; 1, 3 e 5 minuti): 960 regate per il riferimento e 960 con la correzione (X_RIPOS −25, T_RIPOS 40 s).
+
+**Decide (soglie del §6, calcolate sul riferimento delle sole regate di Deriva, stessi semi):**
+1. oltre l'estremità ≤3% e almeno dimezzate;
+2. anticipate ≤ +2 punti;
+3. mediana del taglio ≤ +1 s, tagli dopo 10 s non in aumento;
+4. contatti ≤ +10%.
+
+**Controllo sulla Scuola** (bastone e raffiche, stessi semi), basta che non peggiorino: anticipate ≤ +2 punti, mediana ≤ +1 s, contatti ≤ +10%. Se il controllo non passa, la correzione non si adotta.
+
+**Si riportano senza decidere:** l'intervallo al 95% dei contatti (bootstrap sui semi), il totale di tutte e quattro le regate e i numeri regata per regata.
+
+Se tutto passa: versione 1.2.19, con i collaudi del criterio 6 e le rigiocate del criterio 7. Fra le rigiocate ci sono anche le due regate dei giri dell'8 sera (osservazioni 108-109).
