@@ -97,3 +97,24 @@ Se T4 non passa, il vento misto resta fuori e si riporta perché: prima si corre
 ## 6. Costo
 
 Circa mezza giornata di codice, testi e collaudo, più circa 2 ore di calcolo col termostato.
+
+## 7. Fermata 2: adottata nella 1.2.21 (via di Ale, 9 novembre: «via, didattiche sì, torneo per tutti»)
+
+Misura: 4 regate del torneo nuovo (240 per gruppo di semi) e, per T3, le regate 3 e 4 senza giri (120 per gruppo). Il riferimento è il torneo della 1.2.20 (360 regate per gruppo, copia del tag `v1.2.20`).
+
+| | semi 921-950 | semi 951-980 | soglia |
+| --- | --- | --- | --- |
+| T2 avversari squalificati, regate coi giri | 5 su 360 (1,4%) | 1 su 360 (0,3%) | ≤5% |
+| T3 arrivo mediano, giri contro punteggio (bastone / triangolo) | +2,1% / +2,2% | +2,6% / +1,4% | ≤+15% |
+| T4 contatti per regata (1.2.20 → nuovo) | 0,708 → 0,525 | 0,497 → 0,542 (+9%) | ≤+15% |
+| T4 fermate alla boa per regata | 0,042 → 0,025 | 0,089 → 0,062 | ≤+20% |
+| T4 non arrivate | 0 → 0 | 0 → 0 | non aumentano |
+
+T1: `collaudo_torneo.py` (casi nuovi C12, squalifica in C1, «Sq» in C6). T5: `polare.js`, `raffiche_e_virate.js` identici, `impronta1b.js` al bit. T6: C6 senza pixel in eccesso.
+
+**Differenza dalla proposta:** il §3 diceva che un torneo salvato a metà con la versione vecchia avrebbe finito le sue regate. Il gioco invece, già prima, a ogni cambio di versione chiude il torneo in corso senza punti e lo dice (`torApri`). Si è lasciato così, senza codice in più.
+
+**Note:**
+- I due gruppi del riferimento differiscono molto fra loro (contatti 0,708 contro 0,497 per regata): con 30 semi il caso pesa.
+- Il pilota non fa i giri: nel collaudo la barca del giocatore guidata dal pilota è spesso squalificata nelle regate 3 e 4. Gli avversari invece li fanno.
+- Boe sbagliate: 2 nel torneo nuovo sui semi 921-950, 0 nel riferimento. Non c'era soglia; lo si riporta.

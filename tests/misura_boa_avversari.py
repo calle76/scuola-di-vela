@@ -8,15 +8,15 @@
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent) / "index.html").as_uri() + "#collaudo"
-CORSA = """([k, c, liv, seme, par]) => {
+CORSA = """([k, reg, liv, seme, par]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
   if (sv.boa) sv.boa(par ? par[0] : null, par ? par[1] : null, par && par.length > 2 ? par[2] : null, par && par.length > 3 ? par[3] : null);
   sv.fast(0); sel('aiLevel', liv); sel('cdSel', '60'); window.confirm = () => true;
   if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
   semina(); sv.torApri(); document.getElementById('torGo').click();
-  const T = sv.tor; T.ris.length = 0; if (k) T.ris.push([0, 1, 2, 3].map(i => ({ fin: i + 1, pp: 0 })));
-  T.regate[k] = { c, wind: (seme % 8) * 45 };
+  const T = sv.tor; T.ris.length = 0; for (let j = 0; j < k; j++) T.ris.push([0, 1, 2, 3].map(i => ({ fin: i + 1, pp: 0 })));
+  T.regate[k] = { ...reg, wind: (seme % 8) * 45 };
   semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
   const R = sv.R, dt = 1 / 60, KN = 0.5144, DIAG = DIAGNOSI; R.tor = false; // senza finestra d'arrivo: si misura fino all'arrivo
   const ai = R.boats.filter(b => !b.me), boe = {};
@@ -45,9 +45,13 @@ CORSA = """([k, c, liv, seme, par]) => {
     }
   }
   return { boe: Object.values(boe).map(o => ({ ...o, sec: +o.sec.toFixed(1), maxFermo: +o.maxFermo.toFixed(1) })), contatti,
-           barche: ai.map(b => ({ nome: b.name, fin: b.fin, dnf: !!b.dnf, sbagliate: b.wrongMarks || 0 })), t: Math.round(R.t) };
+           barche: ai.map(b => ({ nome: b.name, fin: b.fin, dnf: !!b.dnf, dsq: !!b.dsq, sbagliate: b.wrongMarks || 0 })), giri: !!R.giri, t: Math.round(R.t) };
 }"""
 NOMI = {(k, c): f"{'bastone' if k == 0 else 'triangolo'}-{['costante', 'raffiche', 'salti'][c]}" for k in (0, 1) for c in (0, 1, 2)}
+# TORNEO=nuovo (1.2.21, docs/PROPOSTA-TORNEO-AMPLIATO.md §4): le 4 regate del torneo ampliato (vento misto, 10 o 12 nodi secondo il seme), più le regate 3 e 4
+# senza giri (col punteggio) per il confronto della durata (T3)
+NUOVO = {(0, None): "R1-bastone-punti", (1, None): "R2-triangolo-punti", (2, None): "R3-bastone-giri", (3, None): "R4-triangolo-giri",
+         (2, False): "R3-bastone-senza-giri", (3, False): "R4-triangolo-senza-giri"}
 
 async def main(A, B, PAR):
     async with async_playwright() as p:
@@ -55,10 +59,12 @@ async def main(A, B, PAR):
         pg = await br.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(URL); await pg.wait_for_timeout(400)
         tutte = []
-        for (k, c), nome in NOMI.items():
+        nuovo = os.environ.get("TORNEO") == "nuovo"
+        for (k, c), nome in (NUOVO if nuovo else NOMI).items():
             for liv in ("principianti", "esperti"):
                 for seme in range(A, B + 1):
-                    r = await pg.evaluate(CORSA.replace("DIAGNOSI", "true" if os.environ.get("DIAG") else "false"), [k, c, liv, seme, PAR])
+                    reg = ({"tws": 12 if seme % 2 else 10} | ({} if c is None else {"giri": c})) if nuovo else {"c": c}
+                    r = await pg.evaluate(CORSA.replace("DIAGNOSI", "true" if os.environ.get("DIAG") else "false"), [k, reg, liv, seme, PAR])
                     r.update(reg=nome, liv=liv, seme=seme); tutte.append(r)
             print(f"  {nome} fatta", flush=True)
         await br.close()
@@ -76,7 +82,15 @@ def riassumi(ds):
     print(f"G4 boa toccata: {sum(o['tocco'] for o in B)}")
     fin = [b["fin"] for b in ba if b["fin"] is not None]
     print(f"G5 boe sbagliate {sum(b['sbagliate'] for b in ba)}, non arrivate {sum(b['fin'] is None for b in ba)} su {len(ba)}, arrivo mediano {statistics.median(fin):.1f} s")
-    print(f"G6 contatti dopo il via: {sum(r['contatti'] for r in R)}")
+    print(f"G6 contatti dopo il via: {sum(r['contatti'] for r in R)}  ({sum(r['contatti'] for r in R) / len(R):.3f} per regata; fermate per regata {sum(o['ferme'] for o in B) / len(R):.3f})")
+    G = [r for r in R if r.get("giri")]
+    if G:
+        bg = [b for r in G for b in r["barche"]]
+        print(f"T2 avversari squalificati nelle regate coi giri: {sum(b['dsq'] for b in bg)} su {len(bg)} ({sum(b['dsq'] for b in bg) / len(bg):.1%})")
+    nomi = sorted({r["reg"] for r in R}, key=lambda n: [r["reg"] for r in R].index(n))
+    for nome in nomi:
+        fz = [b["fin"] for r in R if r["reg"] == nome for b in r["barche"] if b["fin"] is not None and not b.get("dsq")]
+        if fz: print(f"   {nome}: arrivo mediano {statistics.median(fz):.1f} s, contatti per regata {statistics.mean(r['contatti'] for r in R if r['reg'] == nome):.3f}")
     for nome in NOMI.values():
         g = [o for r in R if r["reg"] == nome for o in r["boe"] if o["sec"] > 0]
         if g: print(f"   {nome}: fermate {sum(o['ferme'] for o in g)}, 3+ virate {sum(o['virate'] >= 3 for o in g)}, mediana {statistics.median(o['sec'] for o in g):.1f} s, toccate {sum(o['tocco'] for o in g)}, contatti {sum(r['contatti'] for r in R if r['reg'] == nome)}")

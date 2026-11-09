@@ -14,6 +14,8 @@
 #   C4 ritiro: 10 tornei ritirati dopo 0-3 regate: nel salvataggio né torneo né piazzamento, il resto identico a prima.
 #   C6 pannello a 1360x650 nel caso peggiore (regata del torneo finita con penalità, errori, distacchi; riquadro con 4 regate,
 #      scarti, non arrivate): 0 pixel di eccesso.
+#   C12 (1.2.21, docs/PROPOSTA-TORNEO-AMPLIATO.md T1), dentro C2: regate 1-2 col punteggio, 3-4 coi giri (nessun punto di penalità lì), raffiche e salti in tutte;
+#      squalifica per giri non fatti = 5 punti (C1) e «Sq» nella tabella (C6).
 #   C10 (aggiunto alla fermata 2, PRIMA di misurare): raffiche attorno a tutte le barche nella regata con raffiche del torneo.
 #      Quota del tempo di regata passato dentro una raffica (vento > 1,12 volte il medio, come readI): la media degli avversari
 #      almeno metà di quella del giocatore, su 20 regate. Per confronto, la stessa misura nella «Regata nelle raffiche» dell'1a.
@@ -57,7 +59,8 @@ def serie(ris):
 def da_barche(boats):  # dallo stato delle barche a fine regata: finestra d'arrivo 50% del tempo della prima
     fins = [b["fin"] for b in boats if b["fin"] is not None]
     lim = min(fins) * 1.5 if fins else None
-    return [{"fin": (round(b["fin"] * 10) / 10 if b["fin"] is not None and lim is not None and b["fin"] <= lim else None), "pp": b["pp"]} for b in boats]
+    return [{"fin": (round(b["fin"] * 10) / 10 if b["fin"] is not None and not b.get("dsq") and lim is not None and b["fin"] <= lim else None), "pp": b["pp"],
+             "dsq": bool(b.get("dsq")), "g": b.get("g", 0)} for b in boats]  # 1.2.21: squalificata per i giri non fatti = punti di chi non arriva
 
 # ---- C1: casi a mano ----
 def R(*places_pp):  # regata da posti voluti: (posto, penalità) per barca, posto None = non arrivata; tempi = 100 + 10 * posto
@@ -71,6 +74,7 @@ CASI_PUNTI = [  # (descrizione, regata, punti attesi)
     ("tetto: due penalità alla terza = 5", R((3, 2), (1, 0), (2, 0), (4, 0)), [5, 1, 2, 4]),
     ("non arrivata con penalità resta 5", R((None, 1), (1, 0), (2, 0), (3, 0)), [5, 1, 2, 3]),
     ("tutte non arrivate", R((None, 0), (None, 0), (None, 0), (None, 0)), [5, 5, 5, 5]),
+    ("squalificata per i giri non fatti (1.2.21): 5 punti, gli altri salgono", [{"fin": None, "pp": 0, "dsq": True}, {"fin": 110, "pp": 0}, {"fin": 120, "pp": 0}, {"fin": 130, "pp": 0}], [5, 1, 2, 3]),
 ]
 # serie: (descrizione, regate, ordine atteso, scarti attesi per barca, totali attesi per barca); P(...) = posto di ogni barca, senza penalità.
 # Valori attesi ricavati a mano dalle regole, prima di lanciare (i conti sono nei commenti).
@@ -122,10 +126,11 @@ CORRI = """async (modo) => {   // modo: "pilota" (guida fino all'arrivo o alla f
   if (me.fin === null && !me.dnf) return { fallita: "pilota non arrivato in 1500 s" };
   const regin = [...R.boats].map(b => b.name);
   document.getElementById("rTor").click();                            // chiude la regata (avversari fino in fondo) e mostra la classifica
-  const boats = R.boats.map(b => ({ name: b.name, fin: b.fin, pp: b.pp || 0, dnf: !!b.dnf, ret: !!b.ret }));
+  const boats = R.boats.map(b => ({ name: b.name, fin: b.fin, pp: b.pp || 0, dnf: !!b.dnf, ret: !!b.ret, dsq: !!b.dsq, g: b.me ? R.need || 0 : 0 }));
+  const formato = { giri: R.giri, punti: R.punti, raffiche: sv.gustLevel ? sv.gustLevel() : null, salti: sv.salti ? sv.salti() : null, contatti: R.penList.filter(t => /contatto/.test(t)).length };
   const righe = [...document.querySelectorAll("#torBody table.tor tbody tr")].map(tr => [...tr.children].map(td => td.textContent));
   const score = document.querySelector("#torBody .score"), mer = [...document.querySelectorAll("#torBody p")].map(p => p.textContent).find(t => t.startsWith("Meriti"));
-  return { boats, righe, mosso, finale: score ? score.textContent : null, meriti: mer || null, cond: R.boats.length,
+  return { boats, righe, mosso, formato, finale: score ? score.textContent : null, meriti: mer || null, cond: R.boats.length,
            prog: (() => { try { return JSON.parse(localStorage.getItem(sv.store)); } catch(e){ return null; } })() };
 }"""
 NOMI = ["Tu", "Rossa", "Verde", "Blu"]
@@ -134,7 +139,7 @@ fmt = lambda v: str(round(v * 10) / 10).replace(".0", "").replace(".", ",")
 def confronta(tag, ris, righe):
     cl = serie(ris); diff = 0
     for n, x in enumerate(cl):
-        cells = [fmt(v) + ("*" if ris[j][x["i"]]["pp"] else "") + ("°" if ris[j][x["i"]]["fin"] is None else "") for j, v in enumerate(x["p"])]
+        cells = [("Sq" if ris[j][x["i"]].get("dsq") else fmt(v)) + ("*" if ris[j][x["i"]]["pp"] else "") + ("°" if ris[j][x["i"]]["fin"] is None and not ris[j][x["i"]].get("dsq") else "") for j, v in enumerate(x["p"])]
         cells = [("(" + c + ")" if j == x["sc"] else c) for j, c in enumerate(cells)]
         atteso = [f"{n + 1}°", NOMI[x["i"]]] + cells + [fmt(x["tot"])]
         if n >= len(righe) or righe[n] != atteso:
@@ -158,6 +163,7 @@ async def prepara(pg, seme, carriera):
     await pg.evaluate("__sv.store = localStorage.getItem('scuolaVelaModo') === 'carriera' ? 'scuolaVelaCarriera.v1' : 'scuolaVelaSim.v1'")
     await pg.evaluate("__sv.torApri()")
 
+FORM = [0, 0, 0, 0, 0]   # regate guardate, formati sbagliati, contatti nelle regate coi giri, punti di penalità lì (devono essere 0), squalifiche lì
 async def c2(b, semi, carriera):
     print(f"\n== C2: tornei col pilota, semi {semi[0]}-{semi[-1]}, {'carriera' if carriera else 'gioco libero'}", flush=True)
     regate = diff = 0
@@ -169,6 +175,9 @@ async def c2(b, semi, carriera):
             if "fallita" in r: no(f"C2 seme {seme} regata {k + 1}: {r['fallita']}"); break
             if r["mosso"] == 0: no(f"C2 seme {seme} regata {k + 1}: il pilota non ha mosso la barra")
             ris.append(da_barche(r["boats"])); regate += 1; ultimo = r
+            f = r["formato"]; FORM[0] += 1   # C12 (1.2.21): regate 1-2 col punteggio, 3-4 coi giri; raffiche sempre (i salti si vedono nella breve)
+            if f["giri"] != (k >= 2) or f["punti"] != (k < 2) or not f["raffiche"] or not f["salti"]: FORM[1] += 1; no(f"C12 seme {seme} regata {k + 1}: formato {f}")
+            if k >= 2: FORM[2] += f["contatti"]; FORM[3] += sum(b["pp"] for b in r["boats"]); FORM[4] += sum(b["dsq"] for b in r["boats"])
             d, cl = confronta(f"C2 seme {seme} regata {k + 1}", ris, r["righe"]); diff += d
         if len(ris) == 4:
             cl = serie(ris); pos = [x["i"] for x in cl].index(0) + 1
@@ -176,7 +185,7 @@ async def c2(b, semi, carriera):
             pr = ultimo["prog"] or {}
             if "torneo" in pr: no(f"C2 seme {seme}: torneo finito ma ancora nel salvataggio")
             if carriera:
-                mer = [6, 4, 3, 2][pos - 1] + (1 if metro.tutti(r[0]["pp"] == 0 for r in ris) else 0)
+                mer = [6, 4, 3, 2][pos - 1] + (1 if metro.tutti(r[0]["pp"] == 0 and not r[0]["g"] and not r[0]["dsq"] for r in ris) else 0)
                 if ultimo["meriti"] != f"Meriti di Competizione del torneo: {mer}.": diff += 1; no(f"C2 seme {seme}: meriti del gioco «{ultimo['meriti']}», nostri {mer}")
                 if (pr.get("torneoFatto") or {}).get("mer", -1) < mer: no(f"C2 seme {seme}: torneoFatto {pr.get('torneoFatto')} con meriti {mer}")
             pp = sum(r[0]["pp"] for r in ris); na = sum(1 for r in ris for x in r if x["fin"] is None)
@@ -184,6 +193,9 @@ async def c2(b, semi, carriera):
         if errs: no(f"C2 seme {seme}: errore nella pagina {errs[0]}")
         await ctx.close()
     print(f"  C2: {diff} differenze; regate concluse {regate} su {4 * len(semi)}", flush=True)
+    print(f"  C12: formato giusto in {FORM[0] - FORM[1]} regate su {FORM[0]}; nelle regate coi giri {FORM[2]} contatti, punti di penalità {FORM[3]}, squalifiche {FORM[4]}", flush=True)
+    if FORM[0] == 0 or FORM[1]: no(f"C12 formato: {FORM[1]} sbagliati su {FORM[0]}")
+    if FORM[3]: no(f"C12: {FORM[3]} punti di penalità nelle regate coi giri")
     return regate, diff
 
 async def c3(b, n):
@@ -315,7 +327,7 @@ async def c6(b):
     print(f"  riquadro d'inizio: {intro} px che scorrono", flush=True)
     if intro > 0: no(f"C6 riquadro d'inizio: {intro} px")
     for k in range(3): await pg.evaluate(CORRI, "ritiro")
-    await pg.evaluate("""() => { const T = __sv.tor; T.ris.forEach((r, j) => { r[0].pp = 2; r[1].fin = null; r[2].pp = 1; }); }""")
+    await pg.evaluate("""() => { const T = __sv.tor; T.ris.forEach((r, j) => { r[0].pp = 2; r[1].fin = null; r[2].pp = 1; }); T.ris[2][3].fin = null; T.ris[2][3].dsq = true; }""")
     await pg.evaluate("""() => { document.getElementById('torGo').click(); const R = __sv.R, me = R.boats[0];
       __sv.run(1 / 60, 60 * 400);
       Object.assign(__sv.reg, { capsizes: 2, gybesV: 1, irons: 2, ironsSec: 14, wrongMarks: 1, contacts: 3, contactsPen: 2, ocs: 1, outLine: 2 });

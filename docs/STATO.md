@@ -2,11 +2,11 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 9 novembre 2026, tarda mattina.*
+*Aggiornato: 9 novembre 2026, pomeriggio.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.20** (tag `v1.2.20`, da pushare; la 1.2.19 è pushata). Novità nel `CHANGELOG.md`.
+- **Ultima versione chiusa: 1.2.21** (tag `v1.2.21`, da pushare con la 1.2.20; la 1.2.19 è pushata). Novità nel `CHANGELOG.md`.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
 
@@ -35,6 +35,12 @@
 - **1.2.19**: in attesa del via gli avversari non scivolano più oltre lo spillo. Nel torneo le barche oltre l'estremità allo sparo passano dal 14,3% al 2,0%, i contatti salgono del 6,2% (`PROPOSTA-PARTENZA-ESTREMITA.md` §10-13).
 - Osservazioni 108-109: due regate dei giri dell'8 sera.
 - **1.2.20**: gli avversari non si piantano più a destra della prima boa («giro diretto»). Nel torneo, conferma sui semi 891-920: fermate vicino alla boa 70 → 30, boa toccata 49 → 49, contatti 259 → 253 (`PROPOSTA-BOA-PIANTATA.md` §8-10). La prima prova (allargare le soglie) non era passata.
+
+## Cosa è stato fatto il 9 novembre, pomeriggio
+
+- Decisione di Ale: nelle regate non didattiche la fisica c'è tutta (raffiche e salti insieme, poi il cono d'ombra); il tipo di gara lo dice il formato. Le regate a tema restano didattiche.
+- **1.2.21**: torneo ampliato. Regate 1-2 col punteggio, 3-4 coi giri di penalità, vento sempre misto. Avversari squalificati 0,3-1,4%, contatti per regata da −26% a +9% (`PROPOSTA-TORNEO-AMPLIATO.md` §7).
+- Ricerca sul cono d'ombra: la letteratura c'è (F75, F76; `RICERCA-CONO-D-OMBRA.md`). La proposta è la prossima voce.
 
 ## Dove sta cosa
 

@@ -368,7 +368,7 @@
   //   può aspettare finché è chiaro che l'altra non si scansa), 15 chi acquista la precedenza dà all'inizio spazio (salvo se è per una manovra dell'altra), 16.1 chi
   //   ha la precedenza e cambia rotta dà spazio. 43.1(c): chi ha la precedenza è esonerato dalla 14 se il contatto non causa danni o lesioni.
   // Gioco (js/regate.js, chiCede, 1.0.40): applica 10, 11, 12 e 13 (collaudo_regole.py, collaudo_semaforo.py); 14, 15 e 16 no, e non ci sono danni: il testo lo dice.
-  // Dalla 1.2.0 un esercizio per D1-D3 con una barca di scena che si muove (meccanismo A, copione). Penalità per un contatto con colpa: +15 s, due giri nella «Regata con i giri di penalità», +1 punto nel torneo (toast in js/regate.js). Dalla 1.2.1 D5-D7 hanno un esercizio
+  // Dalla 1.2.0 un esercizio per D1-D3 con una barca di scena che si muove (meccanismo A, copione). Penalità per un contatto con colpa: +15 s, due giri nella «Regata con i giri di penalità», +1 punto nelle regate 1-2 del torneo e due giri nelle 3-4 dalla 1.2.21 (toast in js/regate.js). Dalla 1.2.1 D5-D7 hanno un esercizio
   // in regata (meccanismo B: una lezione che apre una regata), che servirà anche al gruppo C; dalla 1.2.4 la lezione 3 dell'array (Lezione 3 nel menu dalla 1.2.14) non parla più di precedenze.
   const LD1 = [
     { title: "Chi lascia strada", ...PAUSE, zoom: 1.4, scenaH: 45, me: "Tu: mure a sinistra",
@@ -376,7 +376,7 @@
       text: ["Due barche con <em>mure diverse</em> si incrociano: la barca <em>mure a sinistra</em> lascia strada a quella <em>mure a dritta</em>. È la regola 10 del regolamento di regata.",
              "Qui tu sei mure a sinistra: puoi passarle dietro poggiando un poco, oppure virare per tempo. Lasciare strada vuol dire che l'altra deve poter tenere la sua rotta senza manovrare per evitarti."] },
     { title: "Penalità e semaforo", ...PAUSE, zoom: 2,
-      text: ["Nelle regate di questo gioco chi non lascia strada e provoca un contatto prende una penalità: 15 secondi, due giri nella regata con i giri di penalità, un punto in più nel torneo.",
+      text: ["Nelle regate di questo gioco chi non lascia strada e provoca un contatto prende una penalità: 15 secondi, due giri nella regata con i giri di penalità; nel torneo un punto in più nelle regate 1 e 2 e due giri nelle regate 3 e 4.",
              "Nelle impostazioni puoi accendere il <em>semaforo di precedenza</em>: quando un'altra barca si avvicina, sul tuo scafo il rosso vuol dire che devi lasciare strada, il verde che hai la precedenza. Avere la precedenza non è il permesso di urtare."] },
     { title: "Passale dietro", tiller: true, autoTrim: true, hud: 1, hintKind: "sail", scenaH: 45, me: "Tu",
       scenaMobile: [{ x: 29.7, y: 1.5, h: 315, u: 2.2, col: "#C0392B", label: "Mure a dritta" }],

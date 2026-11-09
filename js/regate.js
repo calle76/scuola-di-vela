@@ -149,7 +149,7 @@
     setGusts(rc.gusts, !!rc.tor);
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, punti: !!rc.tor && !rc.giri, giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -821,7 +821,7 @@
       // mure di ciascuna col vento nel suo punto
       const cc = chiCede(A, B), guilty = cc.cede;
       const why = motivoContatto(cc, guilty);
-      if (R.tor) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri){ if (guilty.me) giriDebito(); else guilty.gDebt = (guilty.gDebt || 0) + 2; } else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
+      if (R.punti) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri){ if (guilty.me) giriDebito(); else guilty.gDebt = (guilty.gDebt || 0) + 2; } else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
       for (const o of [A, B]){ o.S.u *= 0.6; }
       const dx = mtv.nx, dy = mtv.ny, push = mtv.pen / 2 + 0.15; // si separano di 0,3 m fra gli scafi
       A.S.x += dx * push; A.S.y += dy * push; B.S.x -= dx * push; B.S.y -= dy * push;
@@ -834,8 +834,8 @@
         regAdd("contacts"); if (guilty.me) regAdd("contactsPen");
         const other = A.me ? B : A;
         if (guilty.me) R.rqMotivo = "contatto con la " + other.name;
-        toast(guilty.me ? "Contatto! Penalità " + (R.tor ? "+1 punto" : R.giri ? "due giri" : "+15 s") : "Contatto: penalità a " + other.name);
-        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.tor ? ". Penalità di 1 punto sul punteggio della regata." : R.giri && guilty.me ? ". Penalità: due giri nello stesso verso, ciascuno con una virata e una strambata." : R.giri ? ". Penalità alla " + guilty.name + ": due giri." : ". Penalità di 15 secondi.");
+        toast(guilty.me ? "Contatto! Penalità " + (R.punti ? "+1 punto" : R.giri ? "due giri" : "+15 s") : "Contatto: penalità a " + other.name);
+        R.lastRule = (guilty.me ? "Contatto con " + other.name + ": tu " : "Contatto: " + guilty.name + " ") + why + (R.punti ? ". Penalità di 1 punto sul punteggio della regata." : R.giri && guilty.me ? ". Penalità: due giri nello stesso verso, ciascuno con una virata e una strambata." : R.giri ? ". Penalità alla " + guilty.name + ": due giri." : ". Penalità di 15 secondi.");
       }
     }
   }
@@ -1135,23 +1135,29 @@
   // parità con A8; un contatto con colpa è una penalità sul punteggio (44.3(c)), non 15 s. Finestra d'arrivo (appendice S, 12.3):
   // chi non arriva entro TOR_FIN volte il tempo della prima non arriva. Il torneo si salva in progress.torneo dopo ogni regata;
   // la regata lasciata a metà (pagina chiusa, menu) vale come ritiro (1.0.50). Le altre regate restano con i 15 s.
+  // 1.2.21 (docs/PROPOSTA-TORNEO-AMPLIATO.md, decisioni di Ale del 9 novembre 2026): il torneo non è didattico, quindi il vento è sempre quello vero, raffiche
+  // e salti insieme (forza sorteggiata fra 10 e 12 nodi, salto oscillante o persistente come in startRace); le regate si distinguono per il formato:
+  // 1 e 2 con la penalità sul punteggio (R.punti), 3 e 4 con i giri di penalità (R.giri, come la regata dei giri); squalifica per giri non fatti = punti di chi non arriva.
   const TOR_N = 4, TOR_FIN = 0.5; // TOR_FIN: ipotesi nostra, la finestra la scrivono le istruzioni di regata
-  const TOR_COND = [{ nome: "10 nodi costanti", tws: 10, gusts: 0 }, { nome: "raffiche", tws: 12, gusts: 1 }, { nome: "salti di vento", tws: 10, gusts: 0, shifts: true }];
+  const TOR_GIRI = k => k >= 2; // regate coi giri di penalità: la 3 e la 4
   let tor = null; // il torneo in corso: lo stesso oggetto di progress.torneo
   const torTri = k => k % 2 === 1; // percorsi misti (1.0.55, DECISIONI 27 ottobre 2026): dipende solo dal numero della regata, nessun numero a caso in più
-  const torNome = k => "regata " + (k + 1) + " di " + TOR_N + " (" + TOR_COND[tor.regate[k].c].nome + (torTri(k) ? ", triangolo" : "") + ")";
+  const torGiri = (T, k) => T.regate[k].giri ?? TOR_GIRI(k); // .giri solo dalle misure (tests/misura_torneo_ampliato.py)
+  const torFormato = (T, k) => (torTri(k) ? "triangolo" : "bastone") + ", " + (torGiri(T, k) ? "giri di penalità" : "penalità sul punteggio") + ", " + T.regate[k].tws + " nodi";
+  const torNome = k => "regata " + (k + 1) + " di " + TOR_N + " (" + torFormato(tor, k) + ")";
   const fmtPt = v => String(Math.round(v * 10) / 10).replace(".", ",");
   function torNuovo(){
     const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv);
-    return { ver: VERSIONE, liv, regate: [0, 1, 2, Math.floor(Math.random() * 3)].map(c => ({ c, wind: Math.floor(Math.random() * 8) * 45 })), // la quarta sorteggiata fra le tre
+    return { ver: VERSIONE, liv, regate: [0, 1, 2, 3].map(() => ({ wind: Math.floor(Math.random() * 8) * 45, tws: Math.random() < 0.5 ? 10 : 12 })), // 1.2.21: forza del vento sorteggiata
              av: FLEET_LOOK.map((l, k) => ({ ai: aiParams(liv), char: carattere(k, aggro) })), ris: [] };
   }
   function torRc(){
-    const k = tor.ris.length, g = tor.regate[k], c = TOR_COND[g.c];
-    return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: c.tws, gusts: c.gusts, shifts: c.shifts, tor: true, precedenze: true, tri: torTri(k), up: torTri(k) ? TRI_L : undefined };
+    const k = tor.ris.length, g = tor.regate[k];
+    return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: g.tws, gusts: 1, shifts: true, tor: true, giri: torGiri(tor, k), precedenze: true, tri: torTri(k), up: torTri(k) ? TRI_L : undefined };
   }
   const torBrief = () => "Torneo, " + torNome(tor.ris.length) + ". Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
-    (FLEET_LOOK.length + 2) + ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3). Chi non arriva entro metà del tempo della prima, contato dal suo arrivo, non si classifica. ";
+    (FLEET_LOOK.length + 2) + (torGiri(tor, tor.ris.length) ? ". In questa regata un contatto con colpa costa due giri di penalità e toccare una boa un giro (regola 44.2); chi arriva senza averli fatti è squalificato e prende i punti di chi non arriva"
+      : ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3)") + ". Chi non arriva entro metà del tempo della prima, contato dal suo arrivo, non si classifica. ";
   // punti di una regata, nell'ordine delle barche: r = [{ fin, pp }], fin = tempo d'arrivo o null (non arrivata o ritirata), pp = penalità
   function torPunti(r){
     const dnf = r.length + 1, pen = Math.round(2 * dnf) / 10; // A5.2; 44.3(c): 20% dei punti di chi non arriva, al decimo
@@ -1182,9 +1188,9 @@
     for (const b of R.boats) if (b.fin === null && !b.dnf){ b.dnf = true; if (b.me) toast("Finestra d'arrivo chiusa: non sei arrivato"); }
   }
   function torArrivo(){ // il giocatore ha finito la sua regata: arrivato, ritirato o fuori dalla finestra
-    const me = R.boats[0], pen = me.pp ? " Penalità sul punteggio: +" + me.pp + (me.pp > 1 ? " punti." : " punto.") : "";
+    const me = R.boats[0], pen = me.pp ? " Penalità sul punteggio: +" + me.pp + (me.pp > 1 ? " punti." : " punto.") : R.need ? " Giri di penalità fatti: " + R.need + "." : "";
     $("rDone").hidden = false; $("rTor").hidden = false; $("rRet").hidden = true; $("hint").hidden = true; // finita la regata il suggerimento non serve: fa posto al risultato
-    $("rDoneText").textContent = (me.fin !== null ? "Arrivato " + (1 + R.boats.filter(b => b.fin !== null && b.fin < me.fin).length) + "° in " + fmtTime(Math.round(me.fin)) + "." + pen
+    $("rDoneText").textContent = me.dsq ? "Squalificato: non hai fatto i giri di penalità (regole 44.2 e 60.5): " + (R.boats.length + 1) + " punti." : (me.fin !== null ? "Arrivato " + (1 + R.boats.filter(b => b.fin !== null && !b.dsq && b.fin < me.fin).length) + "° in " + fmtTime(Math.round(me.fin)) + "." + pen
       : (me.ret ? "Ti sei ritirato" : "Non sei arrivato entro la finestra d'arrivo") + ": " + (R.boats.length + 1) + " punti."); // gli errori sono già nella riga sopra
   }
   // chiude la regata del torneo: le barche che navigano ancora arrivano (simulazione accelerata, senza il giocatore) o restano
@@ -1194,7 +1200,8 @@
     const dt = 1 / 60;
     for (let k = 0; k < 60 * 1800 && R.boats.some(b => b.fin === null && !b.dnf); k++){ updateGusts(dt); updateRace(dt); simTime += dt; }
     R.torOk = true;
-    tor.ris.push(R.boats.map(b => ({ fin: b.fin !== null && b.fin <= R.torLim ? Math.round(b.fin * 10) / 10 : null, pp: b.pp || 0 })));
+    tor.ris.push(R.boats.map(b => Object.assign({ fin: b.fin !== null && !b.dsq && b.fin <= R.torLim ? Math.round(b.fin * 10) / 10 : null, pp: b.pp || 0 },
+      b.dsq ? { dsq: true } : {}, b.me && R.need ? { g: R.need } : {}))); // dsq: squalificata per i giri non fatti (fin null: punti di chi non arriva); g: giri di penalità del giocatore
     if (tor.ris.length === TOR_N) torFine();
     saveProgress();
   }
@@ -1208,7 +1215,7 @@
   }
   const torEsciOk = () => !torInCorso() || confirm("Uscire dalla regata? Conta come ritirata: prendi " + (R.boats.length + 1) + " punti, come chi non arriva.");
   function torFine(){ // dopo la quarta regata: piazzamento finale, meriti di Competizione dell'1b (solo carriera), torneo chiuso
-    const pos = torSerie(tor.ris).findIndex(x => x.i === 0) + 1, mer = modo === "carriera" ? [6, 4, 3, 2][pos - 1] + (tor.ris.every(r => !r[0].pp) ? 1 : 0) : 0;
+    const pos = torSerie(tor.ris).findIndex(x => x.i === 0) + 1, mer = modo === "carriera" ? [6, 4, 3, 2][pos - 1] + (tor.ris.every(r => !r[0].pp && !r[0].g && !r[0].dsq) ? 1 : 0) : 0;
     const old = progress.torneoFatto || { pos: 9, mer: 0 };
     progress.torneoFatto = { pos: Math.min(pos, old.pos), mer: Math.max(mer, old.mer) }; // il migliore di sempre, piazzamento e meriti
     tor.fine = { pos, mer }; delete progress.torneo;
@@ -1222,17 +1229,17 @@
   function torTabella(T, nomi){ // la classifica della serie finora, come tabella
     const k = T.ris.length, cl = torSerie(T.ris);
     return `<table class="tor"><thead><tr><th></th><th>Barca</th>${T.ris.map((r, j) => `<th>R${j + 1}</th>`).join("")}<th>Totale</th></tr></thead><tbody>${cl.map((x, n) =>
-        `<tr class="${x.i ? "" : "me"}"><td>${n + 1}°</td><td>${nomi[x.i]}</td>${x.p.map((v, j) => { const c = fmtPt(v) + (T.ris[j][x.i].pp ? "*" : "") + (T.ris[j][x.i].fin === null ? "°" : "");
+        `<tr class="${x.i ? "" : "me"}"><td>${n + 1}°</td><td>${nomi[x.i]}</td>${x.p.map((v, j) => { const o = T.ris[j][x.i], c = (o.dsq ? "Sq" : fmtPt(v)) + (o.pp ? "*" : "") + (o.fin === null && !o.dsq ? "°" : "");
           return `<td>${j === x.sc ? "(" + c + ")" : c}</td>`; }).join("")}<td><b>${fmtPt(x.tot)}</b></td></tr>`).join("")}</tbody></table>
-        <p class="tor-leg">* penalità sul punteggio · ° non arrivata o ritirata · fra parentesi lo scarto${k < TOR_N ? ", che conta dopo la quarta regata" : ""}</p>`;
+        <p class="tor-leg">* penalità sul punteggio · ° non arrivata o ritirata · Sq squalificata, giri non fatti (${T.ris[0].length + 1} punti) · fra parentesi lo scarto${k < TOR_N ? ", che conta dopo la quarta regata" : ""}</p>`;
   }
   function torMostra(nota){
     const T = tor || torNuovo(), k = T.ris.length, inGioco = mode === "race";
     const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + CHAR_TEXT[a.char]).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
     const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
-    const testa = !k ? `<p>Quattro regate, due a bastone e due a triangolo, contro gli stessi tre avversari (${T.liv}): ${car}. Vento: ${T.regate.map((g, j) => (j + 1) + ") " + TOR_COND[g.c].nome + (torTri(j) ? " (triangolo)" : " (bastone)")).join(", ")}.</p>
-      <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Un contatto con colpa vale 1 punto in più nella regata. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
+    const testa = !k ? `<p>Quattro regate contro gli stessi tre avversari (${T.liv}): ${car}. Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
+      <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Nelle regate 1 e 2 un contatto con colpa vale 1 punto in più; nelle 3 e 4 costa due giri, e chi arriva senza averli fatti è squalificato. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Torneo</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
       ${nota ? `<p class="manca">${nota}</p>` : ""}${fine}${testa}${tab}
