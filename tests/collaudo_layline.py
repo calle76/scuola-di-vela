@@ -77,7 +77,7 @@ async def main():
         await pg.evaluate("() => { const e = document.getElementById('laySel'); e.value = 'no'; e.dispatchEvent(new Event('change')); }"); await pg.wait_for_timeout(500)
         pg_off = await pg.evaluate(GIALLI)
         await pg.screenshot(path=str(pathlib.Path(__file__).resolve().parent / "output" / "layline_giocatore.png"))
-        (ok if riga == "regate" and pg_on > pg_off + 150 and not e2 else no)(f"P4 pagina senza #collaudo: riga «Layline» {riga}, pixel gialli {pg_on} con e {pg_off} senza, errori {e2[:1]}")
+        (ok if riga == "regate" and pg_on > pg_off + 80 and not e2 else no)  # 1.2.24: margine 150 -> 80 pixel perché le linee in acqua sono lunghe metà (osservazione 110); con la 1.2.23 erano 485 contro 225, con la 1.2.24 430 contro 299(f"P4 pagina senza #collaudo: riga «Layline» {riga}, pixel gialli {pg_on} con e {pg_off} senza, errori {e2[:1]}")
         await b.close()
     print("ESITO:", "OK" if not errori else f"FALLITO ({len(errori)})"); sys.exit(1 if errori else 0)
 asyncio.run(main())

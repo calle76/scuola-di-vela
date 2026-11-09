@@ -98,3 +98,16 @@ Corretto (`b.leg` ≥ 1). La griglia si rifà sugli stessi semi con le **stesse 
 | 10° | 10,1 s (−18%) ✗ | 206,2 s | 171 | 1,94 | 0 | 57 / 2 / 0 |
 
 **Passa solo `DOWN_E` 0°, che si sceglie.** Boa toccata e boe sbagliate sono proprio sulla soglia, quindi la conferma è decisiva. Conferma sui semi 1161-1190.
+
+## 7. Conferma (semi 1161-1190, mai usati): passa, adottata nella 1.2.24
+
+| | spento | `DOWN_E` 0° | soglia |
+| --- | --- | --- | --- |
+| Q1 poppa, persi mediana | 11,0 s | 6,5 s (−41%) | almeno −30% |
+| Q2 arrivo mediano | 203,6 s | 201,8 s | non peggiora |
+| Q3 contatti dopo il via | 137 | 149 (+8,8%) | +10% |
+| Q4 cambi di mure in poppa | 2,06 | 1,86 | +1 |
+| Q5 scuffiate | 0 | 0 | +10% e +3 |
+| Q6 boa toccata / sbagliate / non arrivate | 57 / 2 / 0 | 59 / 1 / 0 | ≤62 / ≤4 / non aumentano |
+
+Q7 e Q8 nel CHANGELOG. I contatti salgono quasi fino alla soglia (+8,8%): da tenere d'occhio nelle prossime correzioni, che misurano sulla 1.2.24.

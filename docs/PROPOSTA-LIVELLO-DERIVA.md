@@ -132,12 +132,14 @@ Entra con Deriva (oggi nascosta), dopo la lezione 22. Fonti parafrasate: F77 e F
 
    Per questo in genere conviene arrivare sulla layline solo quando sei vicino alla boa. (F77; la spiegazione col buono e lo scarso è geometria nostra.)
 5. **Come la riconosci.** Il modo più semplice: se la tua barca vira di circa 90°, sei sulla layline quando vedi la boa poco a proravia del traverso. Poi: la prua che avevi sull'altra mura; le barche che arrivano sull'altra mura. Meglio usarne più di uno insieme, e non fidarsi di una misura vecchia se il vento è cambiato. (F78)
-6. **Nel gioco.** Le linee tratteggiate dalla boa sono un aiuto: si spengono nelle impostazioni, e nel torneo partono spente. Dopo la regata, «Rotta ottimale» ti dice se sei andato oltre la layline o se hai virato troppe volte vicino alla boa.
+6. **Quando serve.** La layline serve solo quando alla boa non si può andare dritti: di bolina, dove si deve virare, e in poppa piena, se conviene strambare (F77: «su una bolina o una poppa»). Al lasco, come fra la boa 1 e la boa 2 del triangolo, si va dritti alla boa e la layline non c'è. (Aggiunto il 9 novembre su richiesta di Ale, osservazione 111.)
+7. **Nel gioco.** Le linee tratteggiate dalla boa sono un aiuto: si spengono nelle impostazioni, e nel torneo partono spente. Dopo la regata, «Rotta ottimale» ti dice se sei andato oltre la layline o se hai virato troppe volte vicino alla boa.
 
 **Esercizio (da scrivere quando si fa la lezione):** come quello della lezione 22, una bolina breve verso la boa con le linee spente. La lezione è fatta se arrivi alla boa con una sola virata negli ultimi 80 m.
 
-**Quiz (bozza, 4 domande):**
+**Quiz (bozza, 5 domande):**
 - Cos'è la layline? → La linea da cui si arriva alla boa senza virare.
 - Sei sulla layline e il vento ti dà un buono: cosa succede? → Ti ritrovi oltre la layline e fai strada in più.
 - Perché conviene arrivare sulla layline vicino alla boa? → Perché il vento può girare e spostarla.
 - Con una virata di circa 90°, dove vedi la boa quando sei sulla layline? → Poco a proravia del traverso.
+- Fra la boa 1 e la boa 2 del triangolo, al lasco, serve la layline? → No: si va dritti alla boa senza virare né strambare.

@@ -2,11 +2,11 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 9 novembre 2026, sera.*
+*Aggiornato: 10 novembre 2026, notte.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.23** (tag `v1.2.23`, da pushare; fino alla 1.2.22 è pushata). Novità nel `CHANGELOG.md`.
+- **Ultima versione chiusa: 1.2.24** (tag `v1.2.24`, da pushare con la 1.2.23). Novità nel `CHANGELOG.md`.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
 
@@ -48,6 +48,13 @@
 
 - **1.2.23**: layline in acqua, disattivabile (riga «Layline» nelle impostazioni; nel torneo parte spenta). Gli avversari con la layline misurati e non adottati (virate −6% al massimo, soglia −10%). Lezione della layline scritta per Deriva (`PROPOSTA-LAYLINE.md`).
 - Letto il giro su GitHub della 1.2.22: niente di nuovo tranne `collaudo_segnali` G2 in Firefox (il collaudo aveva troppe poche regate senza richiamo: corretto il collaudo, non il gioco) e la voce vecchia di `collaudo_partenze` in `tests/fallimenti_noti.txt` (aggiornata).
+
+## Cosa è stato fatto la notte fra il 9 e il 10 novembre
+
+- Diagnosi degli avversari con la rotta ottimale (`PROPOSTA-AVVERSARI-ROTTA.md`): la bolina pesa il 64% del tempo perso, la poppa il 15%.
+- **1.2.24**: avversari in poppa all'angolo della polare (poppa persi −41% in conferma); layline in acqua lunghe metà bolina (osservazione 110); «layline» nell'intestazione della registrazione.
+- Osservazioni 110-113 dalle regate di Ale del 9 sera (layline, partenza di Rossa, confusione alla boa 1 nel triangolo).
+- Proposta bolina (`PROPOSTA-AVVERSARI-BOLINA.md`, virare sugli scarsi): soglie scritte; misura in corso o fatta (vedi la proposta).
 
 ## Dove sta cosa
 

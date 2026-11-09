@@ -311,9 +311,9 @@
         if (best !== b.side && b.boardT > 8){ b.side = best; b.boardT = 0; } // isteresi: niente virate a raffica
       } else if (b.boardT > b.boardMax) cambiaBordo(b, ai);
       desired = twd - b.side * ai.up;
-    } else if (Math.abs(rel) > 180 - (180 - ai.down)){ // bersaglio in poppa piena: lasco con abbattute
+    } else if (Math.abs(rel) > (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155)){ // bersaglio in poppa piena: lasco con abbattute (1.2.24: angolo dalla polare)
       if (b.boardT > b.boardMax) cambiaBordo(b, ai);
-      desired = twd - b.side * ai.down;
+      desired = twd - b.side * (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155); // solo dopo il via: prima della partenza resta com'era
     } else {
       desired = brg; b.side = sgn(norm180(twd - brg)); b.boardT = Math.min(b.boardT, b.boardMax * 0.5);
       if (LAY_MARG !== null && b.leg >= 1 && Math.abs(rel) < 90){ const ns = sgn(norm180(twd - brg)); desired = brg + ns * layLee(w.tws, Math.abs(rel)); // 1.2.23: sopravento dello scarroccio, mai più stretta della bolina
@@ -389,6 +389,10 @@
   // 1.2.23 (docs/PROPOSTA-LAYLINE.md, pezzo 4): la layline degli avversari è la loro rotta sul fondo di bolina, ai.up più lo scarroccio della polare
   // (ROT_POL, js/rotta-dati.js) più LAY_MARG gradi; puntando un bersaglio a proravia del traverso la prua sta sopravento dello scarroccio. null = spento (fino alla 1.2.22)
   let LAY_MARG = null;
+  // 1.2.24 (docs/PROPOSTA-AVVERSARI-ROTTA.md §2): in poppa l'angolo della VMG migliore della polare (circa 170°), meno DOWN_E, più la differenza personale
+  // di oggi (ai.down − 155: esperti da −5 a 0, principianti da −13 a −5). null = come fino alla 1.2.23 (ai.down fisso, 142-155°); solo dopo il via
+  let DOWN_E = 0; // 1.2.24: scelto sui semi 1131-1160 e confermato sui 1161-1190 (poppa persi 11,0 -> 6,5 s; PROPOSTA-AVVERSARI-ROTTA.md §6-7)
+  function vmgPoppa(tws){ const r = rotRiga(tws); let best = -1, a = 170; ROT_TWA.forEach((t, n) => { if (t < 120) return; const v = r[n][0] * Math.cos((180 - t) * D2R); if (v > best){ best = v; a = t; } }); return a; }
   function layLee(tws, a){ const r = rotRiga(tws), x = Math.max(0, Math.min(r.length - 1.001, (a - 30) / 5)), i = Math.floor(x), f = x - i; return r[i][1] * (1 - f) + r[i + 1][1] * f; } // scarroccio in gradi con la prua a «a» gradi dal vento
   const PASSO_SX = 3; // metri: da sinistra della boa la retta verso il punto 0 deve passare sotto la boa di tanto (PROPOSTA-DERIVA-SU-MAIN §6; prima usava PASSO_M)
   const U_ABBRIVIO = 1.6; // 1.1.1 (B1): m/s fino ai quali si prende abbrivio prima di virare (circa 3,1 nodi); ipotesi nostra

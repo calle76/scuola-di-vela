@@ -90,6 +90,18 @@
     return { tempo: p.t, t0: tg.t, lati, punti: [{ t: tg.t, x: tg.x, y: tg.y, s: 0 }].concat(cat) };
   }
 
+  // per la barca k, lato per lato, il tempo vero e quello della rotta ottimale partendo da dove e quando quella barca ha cominciato il lato
+  // (misura degli avversari, docs/PROPOSTA-AVVERSARI-ROTTA.md): [{ lato, vero, ott, manOtt }], solo i lati finiti
+  function rotLatiBarca(k){
+    const o = rot.barche[k], b = R.boats[k]; if (!o || !o.taglio || rot.reg.length < 2) return [];
+    const inizi = [o.taglio].concat(o.giri), fini = o.giri.map(g => g.t).concat(b.fin !== null && !b.dsq ? [b.fin - (b.pen || 0)] : []), canc = R.marks.slice(o.taglio.leg - 1).map(rotCancBoa).concat([rotCancArrivo()]), out = [];
+    for (let j = 0; j < fini.length && j < canc.length; j++){
+      const a = inizi[j], q = rotLato({ x: a.x, y: a.y, t: a.t, s: 0 }, canc[j]); if (!q) continue;
+      let man = 0; for (let r = q; r && r.par; r = r.par) if (r.par.s && r.s !== r.par.s) man++;
+      out.push({ lato: j, vero: fini[j] - a.t, ott: q.t - a.t, manOtt: man }); }
+    return out;
+  }
+
   // ---- layline (1.2.22; Ale, 9 novembre: «la layline … come si può inserire nel gioco?», pezzo 1: nella rotta ottimale) ----
   // Dalla boa di bolina, una per mura: da lì di bolina si arriva alla boa senza virare. L'angolo è quello della VMG di bolina migliore della
   // polare del gioco, scarroccio compreso (rotta sul fondo, circa 48° dal vento con 6-15 nodi), col vento alla boa in quell'istante: coi salti si sposta.
@@ -105,12 +117,13 @@
   // ---- layline in acqua (1.2.23, docs/PROPOSTA-LAYLINE.md, pezzo 2) ----
   // Aiuto disattivabile (⚙ «Layline»): nelle regate fuori dalla Scuola (R.rotta), non negli esercizi, fino al giro della boa di bolina.
   // «regate» (di partenza): non nel torneo; «tutte»: anche nel torneo (decisione di Ale: nel torneo parte spenta ma si può accendere).
+  const LAY_LUNGA = 0.5; // 1.2.24 (osservazione 110, Ale: «non è troppo lunga?»): in acqua lunghe metà bolina; nella vista della rotta ottimale restano 1,3 volte
   const layDir = w => { const a = rotLay(w.tws); return [-1, 1].map(k => norm360(w.twd + 180 + k * a)); }; // direzioni dalla boa verso le due layline
   function layVisibile(){ if (!R || !R.rotta || R.es || riv.on) return false; const me = R.boats[0];
     return (opt.layline === "tutte" || (opt.layline === "regate" && !R.tor)) && me.leg <= 1 && me.fin === null && !me.dnf; }
   function layDisegna(v){
     if (!layVisibile()) return;
-    const mk = R.marks[0], L = R.up * 1.3, lw = Math.max(0.12, 1.4 / v.ppm);
+    const mk = R.marks[0], L = R.up * LAY_LUNGA, lw = Math.max(0.12, 1.4 / v.ppm);
     ctx.strokeStyle = "rgba(255,230,120,.75)"; ctx.lineWidth = lw; ctx.setLineDash([4 * lw, 4 * lw]);
     for (const d of layDir(windAt(mk.x, mk.y))){ ctx.beginPath(); ctx.moveTo(mk.x, mk.y); ctx.lineTo(mk.x + Math.sin(d * D2R) * L, mk.y - Math.cos(d * D2R) * L); ctx.stroke(); }
     ctx.setLineDash([]);
