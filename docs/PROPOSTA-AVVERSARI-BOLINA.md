@@ -145,3 +145,43 @@ Si allarga solo `R_DIR`; nient'altro cambia.
 - **A7, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
 
 Fra i valori che passano si sceglie quello che perde meno negli ultimi 40 m. Se nessuno passa, `R_DIR` resta 15.
+
+## 10. Esito del §9 (semi 1341-1370): nessun effetto, non adottato
+
+| `R_DIR` | ultimi 40 m: persi media (mediana), virate | bolina persi media | arrivo | contatti | boa toccata / sbagliate |
+| --- | --- | --- | --- | --- | --- |
+| 15 (1.2.24) | 12,1 s (7,6), 1,65 | 27,1 s | 198,9 s | 122 | 60 / 1 |
+| 40 | 12,1 s (7,7), 1,66 | 27,1 s | 199,2 s | 120 | 57 / 1 |
+| 80 | 12,2 s (7,7), 1,66 | 27,2 s | 199,1 s | 117 | 57 / 1 |
+
+**A1 non passa:** gli ultimi 40 m non cambiano. Il giro diretto chiede che la bolina passi almeno 3 m **sopra** la boa, quindi oltre la layline: chi arriva sulla layline o sotto non lo fa scattare, da qualunque distanza. `R_DIR` resta 15.
+
+**Prossimo passo:** guardare come arrivano gli avversari negli ultimi 40 m:
+- mure all'ingresso;
+- lato della boa;
+- quante volte cambiano punto di passaggio;
+- dove virano.
+
+Poi una proposta mirata sul punto di passaggio a destra della boa e sul «bordo più vicino» degli ultimi 30 m.
+
+## 11. Difetto trovato: il punto di passaggio rimbalza fra 0 e 2 (scritto prima di correggere e misurare)
+
+**Cosa** (strumento del §10, semi 1341-1342): negli ultimi 40 m gli avversari cambiano punto di passaggio in media 7 volte (mure a dritta) e 14 volte (mure a sinistra) per passaggio. Nei casi peggiori la sequenza è `2, 0, 2, 0, …`, fino a 345 cambi in un passaggio (Rossa, esperti, seme 1342, regata 4: 47 s persi).
+
+**Perché** (`targetOf`, `js/regate.js`):
+1. Chi è a sinistra della boa e punterebbe il punto 0 passando sopra la boa va al punto 2, sotto e a sinistra (`sopraDaSinistra`, `PROPOSTA-DERIVA-SU-MAIN.md` §6).
+2. Arrivato entro 8 m dal punto 2 torna al punto 0 (`near(2, 8)`).
+3. Al fotogramma dopo è di nuovo «a sinistra con la retta sopra la boa», quindi torna al punto 2.
+
+Il bersaglio cambia a ogni fotogramma e la barca gira a vuoto attorno al punto 2.
+
+**Correzione** (difetto chiaro, `DECISIONI.md` «difetti piccoli»): `sopraDaSinistra` non scatta se la barca è già entro 12 m dal punto 2. Da lì va al punto 0, come vuole la regola 2.
+
+**Criteri (scritti prima di misurare;** semi **1371-1400**, conferma **1401-1430**, mai usati; contro la 1.2.24):
+- **D1, cambi di punto di passaggio negli ultimi 40 m:** media al massimo 2 per passaggio.
+- **D2, ultimi 40 m:** secondi persi in media non aumentano.
+- **D3, arrivo mediano degli avversari:** non peggiora.
+- **D4, contatti dopo il via:** al massimo +10%.
+- **D5, boe:** boa toccata al massimo il più grande fra +10% e +5; sbagliate al massimo +2; non arrivate non aumentano.
+- **D6, Scuola:** `collaudo_regate.py` 6 0, 6 1 e `--lungo`, nessuna «BLOCCATA»; `collaudo_giro_boa.py` OK.
+- **D7, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
