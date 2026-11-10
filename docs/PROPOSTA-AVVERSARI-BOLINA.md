@@ -48,3 +48,25 @@ In bolina, con le mure `s`, il vento è **scarso** di `d` gradi quando gira cont
 - **B7, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
 
 Fra i valori che passano si sceglie quello che perde meno in bolina (B1). A parità, quello con meno virate. Se nessuno passa, gli avversari restano come sono e lo si riporta.
+
+## 4. Esito della scelta (semi 1191-1220, 240 regate del torneo sulla 1.2.24): nessuno passa B1
+
+| `SCARSO_AI` | B1 bolina, persi mediana | B2 arrivo | B3 virate per lato | B4 contatti | B5 boa toccata / sbagliate / non arrivate |
+| --- | --- | --- | --- | --- | --- |
+| spento | 23,4 s | 198,1 s | 3,72 | 165 | 61 / 0 / 0 |
+| 6° | 20,0 s (**−14,6%** ✗) | 197,4 s | 3,14 | 138 | 33 / 0 / 0 |
+| 8° | 20,2 s (−13,7% ✗) | 197,8 s | 3,13 | 144 | 51 / 0 / 0 |
+| 10° | 21,7 s (−7,3% ✗) | 199,3 s ✗ | 3,08 | 143 | 56 / 0 / 0 |
+
+- **Soglie:** B1 ≤19,9 s (−15%), B2 ≤198,1 s.
+- **6° e 8°** migliorano tutti gli altri numeri: arrivo, virate, contatti, boa toccata. Mancano la soglia B1 di 0,4 e 1,3 punti. La soglia non si cambia: **non adottato**. Il codice resta spento (`SCARSO_AI` null).
+
+## 5. Seconda prova, dichiarata prima di misurare (10 novembre, notte)
+
+**Una sola prova in più.** Come la seconda prova della boa (`PROPOSTA-BOA-PIANTATA.md` §8), si cambia una cosa sola: la durata della media del vento.
+- **Perché:** con 60 s la media sta indietro di circa mezza oscillazione dei salti.
+- **`T_MEDIA` ∈ {30, 120}** s, con `SCARSO_AI` 6° (il migliore del §4).
+- **Criteri:** gli stessi B1-B7, soglie uguali.
+- **Semi nuovi:** scelta **1251-1280**, conferma **1281-1310**. Il riferimento è il gioco della 1.2.24 sugli stessi semi.
+
+Se nessuna delle due passa, la bolina degli avversari resta com'è e lo si riporta, senza altre prove questa notte.
