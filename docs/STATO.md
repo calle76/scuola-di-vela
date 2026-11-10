@@ -72,6 +72,11 @@
   - `collaudo_moviola` in Firefox: il pilota resta indietro dopo un contatto e chiude fuori tempo, come succedeva in Chromium dalla 1.2.15. Voce dei fallimenti noti aggiornata.
   - `collaudo_registratore_barche` in Firefox «NON VALIDO»: nessuna barca ferma nelle regate vere, perché gli avversari non si piantano quasi più. Corretto il collaudo: le fermate le misurano i 10 casi costruiti.
   - `collaudo_suoni_si_sentono` in Chromium: boa e sartiame poco sopra o sotto la soglia, già aperto (`DA-FARE.md` voce 8).
+- **Sessione sui collaudi** (Ale: prima del cono d'ombra):
+  - sei collaudi che nessuno lanciava sono entrati nel giro (86 in tutto); `collaudo_triangolo` era rotto dalla 1.2.21 per un campo cambiato nel torneo, riparato; `collaudo_avversari_deriva` e il T2b del triangolo falliscono in modo noto dalla nascita;
+  - `collaudo_moviola` V3 non dipende più dall'arrivo del pilota;
+  - censimento dei collaudi che dipendono dal caso in fondo a `COLLAUDI.md`: resta stretto solo il V4 della moviola.
+- **Aspetta Ale:** il giro completo sul PC (`tests/lancia_tutti.sh`), come punto di partenza pulito.
 - **Prossimo passo:** proposta del cono d'ombra (`RICERCA-CONO-D-OMBRA.md`).
 
 ## Dove sta cosa

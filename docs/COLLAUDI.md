@@ -258,3 +258,26 @@ Da `docs/PROPOSTA-TEST-DEI-TEST.md`. Tre cose per sapere se un collaudo verde vu
 
 
 **Collaudi entrati nel giro il 10 novembre 2026** (esistevano ma `lancia_tutti.sh` non li lanciava): `collaudo_triangolo.py` (era rotto dalla 1.2.21: usava il campo `c` delle regate del torneo invece di `tws`; riparato, T2h 16 su 16, T2b noto dalla 1.0.55), `collaudo_avversari_deriva.py`, `collaudo_distacchi_testo.py`, `collaudo_penalita_testo.py`, `collaudo_orologio_giri.py`, `collaudo_rotta.py`. Resta fuori **solo** `collaudo_impronta.py`: è uno strumento per le pulizie del codice, che ha bisogno di un riferimento scritto a mano prima della pulizia.
+
+## Censimento: quali collaudi dipendono dal caso nelle regate (10 novembre 2026, sulla 1.2.24)
+
+Fatto sulle uscite del giro su GitHub della 1.2.24, nei due browser, prima del cono d'ombra. Un collaudo «dipende dal caso» se per valere ha bisogno che nelle regate vere succeda qualcosa (un contatto, una barca ferma, il pilota che arriva). Quando gli avversari o la fisica cambiano, sono questi i primi a cadere senza che il gioco abbia un difetto.
+
+| Collaudo | Di cosa ha bisogno | Oggi | Minimo | Giudizio |
+| --- | --- | --- | --- | --- |
+| `collaudo_moviola` V3 | il pilota arriva in ogni regata | 7-8 su 8 | (era 8 su 8) | **corretto il 10 nov**: ora basta metà |
+| `collaudo_moviola` V4 | segni di contatto o boa nelle regate | 12-18 automatici (28-34 con le O) | 20 in tutto, cioè 4 automatici | margine stretto: da guardare dopo il cono |
+| `collaudo_registratore_barche` G4 | una barca ferma nelle regate vere | 0-1 | (era 1) | **corretto il 10 nov**: lo misurano i casi costruiti |
+| `collaudo_registratore_barche` G3 | contatti nelle regate vere | 34-41 | 10 | largo |
+| `collaudo_competizione --tastiera` | il pilota da tastiera arriva | sì | sì | resta «da controllare» a mano |
+| `collaudo_riquadro_regata` | semi con tre avversari prudenti | 8-10 | 1 | largo (non dipende dalla regata, solo dal sorteggio) |
+| `collaudo_riquadro_bandiere` Q4e | contatti senza colpa del giocatore | 8-10 su 20 | 2 | largo |
+| `collaudo_boa` F0 | il pilota arriva | 59-60 su 60 | 54 | largo |
+| `collaudo_distacchi` | il pilota arriva entro 900 s | sempre | — | largo |
+| `collaudo_giri_avversari` | debiti di giri presi dagli avversari | 162-176 contatti | — | largo |
+| `collaudo_contatto_senza_colpa`, `collaudo_regola21`, `collaudo_segnali`, `collaudo_semaforo` | casi guidati o costruiti | pieni | — | non a rischio |
+| `collaudo_torneo` | niente dal caso, tranne i tempi veri di C11 (noto) | — | — | non a rischio |
+| `collaudo_giro_boa`, `collaudo_medaglie`, `collaudo_fasce` | regate senza avversari, o casi costruiti | — | — | non a rischio (il cono non tocca la Scuola) |
+
+**Regola per i collaudi nuovi:** un controllo non deve aver bisogno che un evento capiti per caso. Se serve un contatto, una fermata o un arrivo, si costruisce il caso; le regate vere servono solo a contare, con un minimo largo.
+
