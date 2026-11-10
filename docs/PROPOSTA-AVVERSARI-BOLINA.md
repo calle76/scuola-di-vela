@@ -89,3 +89,22 @@ Se nessuna delle due passa, la bolina degli avversari resta com'è e lo si ripor
 - **I contatti di riferimento cambiano molto da un gruppo di semi all'altro:** 165 sui semi 1191-1220, 106 sui 1251-1280. Il +35% e il +54% vanno letti con questo in mente, ma restano sopra soglia.
 
 **Prossimo passo proposto:** misurare quanto pesa ognuna delle tre cause sopra, togliendone una alla volta a mano, prima di proporre altro. È una diagnosi, non una correzione.
+
+## 7. Diagnosi delle cause in bolina (10 novembre, mattina; Ale: «parti dalla diagnosi della bolina senza chiedere»)
+
+Non è una correzione: il gioco non cambia. Nello strumento (`misura_avversari_rotta.py`) si toglie **una causa alla volta**, solo durante la misura, e si guarda quanto cala il tempo perso in bolina rispetto alla rotta ottimale.
+
+Il tempo perso è diviso in due:
+- **ultimi 40 m:** dall'ingresso nel cerchio di 40 m dalla boa 1 al giro, contro la rotta ottimale da quel punto;
+- **il resto della bolina.**
+
+Semi **1311-1340**, mai usati, le 4 regate del torneo, principianti ed esperti, gioco della 1.2.24.
+
+| Prova | Cosa si toglie |
+| --- | --- |
+| riferimento | niente |
+| `DIAGUP=45` | angolo di bolina: tutti a 45° di prua, circa la bolina della polare con lo scarroccio (oggi esperti 45-48°, principianti 49-54°) |
+| `DIAGTRIM=0` | errore di regolazione della vela: `ai.trim` a 0 (oggi ±2° gli esperti, ±6° i principianti) |
+| tutte e due | i due insieme |
+
+Le virate vicino alla boa e i bordi a tempo non si possono togliere senza cambiare la guida. Il loro peso si legge dalla parte «ultimi 40 m» e da quello che resta nelle prove sopra.
