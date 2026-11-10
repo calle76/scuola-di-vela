@@ -149,7 +149,7 @@
     setGusts(rc.gusts, !!rc.tor);
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, ombra: OMBRA && !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -514,6 +514,7 @@
     }
     aiControl(b, dt);
     const w = windAt(s.x, s.y);
+    if (R.ombra) w.tws *= 1 - ombraSu(b); // 1.2.25: cono d'ombra
     for (let i = 0; i < 3; i++) b.info = step(s, b.ctl, w, dt / 3);
     if (s.heel > BOAT.capsizeAt || s.heel < -45){ s.capsized = true; s.capAt = simTime; s.capSide = s.heel > 0 ? s.boomSide : -s.boomSide; s.heel = 0; s.u = 0; }
     s.dispBoom += (s.boomSide * s.boom - s.dispBoom) * Math.min(1, dt * 6);
@@ -574,6 +575,49 @@
   }
   // sovrapposizione dei contorni di due scafi: { pen, nx, ny } con la normale da B ad A, oppure null se non si toccano
   function hullOverlap(A, B){ const m = polySep(hullWorld(A), hullWorld(B), A.x, A.y, B.x, B.y); return m.pen > 0 ? m : null; }
+  // ---- cono d'ombra delle vele (1.2.25, docs/PROPOSTA-CONO-D-OMBRA.md; F75) ----
+  // Solo nelle regate non didattiche (R.ombra: oggi il torneo). Cambia il vento che una barca riceve, non la barca: step() non si tocca.
+  // L'asse parte da chi copre e va sottovento lungo il suo vento apparente, girato di OMB_ASSE gradi verso la sua poppa (F75, bolina).
+  // Vento tolto sull'asse (F75, Caponnetto: spinta del coperto un quinto, due quinti e metà a 0,5, 1 e 2 altezze d'albero; la radice è una conversione nostra),
+  // poi in linea retta fino a zero a 10 lunghezze (ipotesi nostra); di lato in linea retta fino a zero a una lunghezza (F75, Hooper).
+  // OMB_H (altezza d'albero) e OMB_ALFA (incidenza da cui la vela fa ombra piena) sono ipotesi nostre. Più barche: vale la più forte (ipotesi nostra).
+  let OMBRA = true; // false solo dalle misure (sv.ombra): il torneo com'era fino alla 1.2.24
+  const OMB_H = 5.5, OMB_ASSE = 5, OMB_FINE = 10 * BOAT.length, OMB_LARGA = BOAT.length, OMB_ALFA = 10;
+  const OMB_CURVA = [[0.5 * OMB_H, 0.54], [OMB_H, 0.38], [2 * OMB_H, 0.29], [OMB_FINE, 0]];
+  function ombraAsse(d){ // quota di vento tolta sull'asse a d metri da chi copre
+    if (d <= OMB_CURVA[0][0]) return OMB_CURVA[0][1];
+    for (let k = 1; k < OMB_CURVA.length; k++) if (d <= OMB_CURVA[k][0]){ const [d0, v0] = OMB_CURVA[k - 1], [d1, v1] = OMB_CURVA[k]; return v0 + (v1 - v0) * (d - d0) / (d1 - d0); }
+    return 0;
+  }
+  // direzione (gradi, verso cui va) dell'asse del cono di a, e quanto lavora la sua vela (0-1); null se non fa ombra
+  function ombraDir(a){
+    const inf = a.me ? info : a.info; if (!inf || a.S.capsized) return null;
+    const porta = Math.min(1, Math.abs(inf.alpha) / OMB_ALFA); if (porta <= 0) return null;
+    const va = norm360(inf.awFrom + 180), aPoppa = norm180(a.S.h + 180 - va);
+    return { dir: va + sgn(aPoppa) * Math.min(OMB_ASSE, Math.abs(aPoppa)), porta };
+  }
+  function ombraDi(a, x, y){ // quota di vento che la barca a toglie nel punto (x, y)
+    const o = ombraDir(a); if (!o) return 0;
+    const ux = Math.sin(o.dir * D2R), uy = -Math.cos(o.dir * D2R), dx = x - a.S.x, dy = y - a.S.y, lungo = dx * ux + dy * uy;
+    if (lungo <= 0 || lungo >= OMB_FINE) return 0;
+    const lato = Math.abs(dx * uy - dy * ux); if (lato >= OMB_LARGA) return 0;
+    return ombraAsse(lungo) * (1 - lato / OMB_LARGA) * o.porta;
+  }
+  function ombraSu(b){ // la più forte fra le ombre delle altre barche; lascia in b.cop la quota e in b.copDa chi copre
+    let k = 0, da = null;
+    for (const a of R.boats){ if (a === b) continue; const q = ombraDi(a, b.S.x, b.S.y); if (q > k){ k = q; da = a; } }
+    b.cop = k; b.copDa = da; return k;
+  }
+  function drawOmbre(){ // aiuto disattivabile: dietro ogni barca il cono, più scuro dove toglie più vento (coordinate del mare)
+    if (!R || !R.ombra || !opt.cono) return;
+    for (const a of R.boats){
+      const o = ombraDir(a); if (!o) continue;
+      const ux = Math.sin(o.dir * D2R), uy = -Math.cos(o.dir * D2R), px = -uy * OMB_LARGA, py = ux * OMB_LARGA, x0 = a.S.x, y0 = a.S.y, x1 = x0 + ux * OMB_FINE, y1 = y0 + uy * OMB_FINE;
+      const g = ctx.createLinearGradient(x0, y0, x1, y1); g.addColorStop(0, "rgba(10,30,50," + (0.26 * o.porta).toFixed(3) + ")"); g.addColorStop(2 * OMB_H / OMB_FINE, "rgba(10,30,50," + (0.14 * o.porta).toFixed(3) + ")"); g.addColorStop(1, "rgba(10,30,50,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + ux * OMB_H * 0.5 + px, y0 + uy * OMB_H * 0.5 + py); ctx.lineTo(x1 + px * 0.4, y1 + py * 0.4); ctx.lineTo(x1 - px * 0.4, y1 - py * 0.4); ctx.lineTo(x0 + ux * OMB_H * 0.5 - px, y0 + uy * OMB_H * 0.5 - py); ctx.closePath(); ctx.fill();
+    }
+  }
+
   // ---- chi cede (1.0.40, docs/PROPOSTA-REGOLE-PRECEDENZA-1B.md) ----
   // Una sola funzione per penalità, testo di fine regata e semaforo: valgono 10, 11, 12 e 13 di F15, con le definizioni sui contorni degli scafi
   // (fino alla 1.0.78 la barca dell'1a aveva solo la 10 e le stesse mure col più sopravento in y).
@@ -1169,7 +1213,8 @@
   }
   const torBrief = () => "Torneo, " + torNome(tor.ris.length) + ". Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
     (FLEET_LOOK.length + 2) + (torGiri(tor, tor.ris.length) ? ". In questa regata un contatto con colpa costa due giri di penalità e toccare una boa un giro (regola 44.2); chi arriva senza averli fatti è squalificato e prende i punti di chi non arriva"
-      : ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3)") + ". Chi non arriva entro metà del tempo della prima, contato dal suo arrivo, non si classifica. ";
+      : ". Un contatto con colpa vale 1 punto in più in questa regata invece dei 15 s (penalità sul punteggio, regola 44.3)") + ". Chi non arriva entro metà del tempo della prima, contato dal suo arrivo, non si classifica. " +
+    (OMBRA ? "Le vele si tolgono il vento: sottovento a un'altra barca, nel suo cono d'ombra, ne arriva meno, fino a circa metà quando è vicinissima, e l'effetto finisce a una decina di lunghezze. Di bolina conviene non restare sottovento e dietro a un'altra; in poppa chi sta dietro copre chi sta davanti. È un modello semplice, tratto da misure in galleria del vento su barche più grandi. " : "");
   // punti di una regata, nell'ordine delle barche: r = [{ fin, pp }], fin = tempo d'arrivo o null (non arrivata o ritirata), pp = penalità
   function torPunti(r){
     const dnf = r.length + 1, pen = Math.round(2 * dnf) / 10; // A5.2; 44.3(c): 20% dei punti di chi non arriva, al decimo
@@ -1293,6 +1338,7 @@
       if (next === k + 1){ ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 0.2; ctx.beginPath(); ctx.arc(mk.x, mk.y, Math.max(1.8, 6 / v.ppm), 0, Math.PI * 2); ctx.stroke(); }
       drawRoundArrow(mk, 7, "rgba(255,226,122,.9)");
     });
+    drawOmbre(); // 1.2.25: coni d'ombra, sotto le barche
     // avversari
     for (const b of R.boats){ if (b.me) continue; drawWakeOf(b.wake, b.S.u); drawOther(b.S, b.info, b.ctl.tiller, 1); }
   }

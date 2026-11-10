@@ -111,6 +111,50 @@ Circa mezza giornata per codice, disegno e collaudo nuovo; circa un'ora e mezza 
 2. **La fisica del cono si può spegnere?** Proposta: **no**, come le raffiche; si spegne solo il disegno.
 3. **Va bene la prima fetta così,** senza vento girato nella scia e senza la zona favorevole sottovento? Si possono aggiungere dopo, con una proposta loro.
 
-## 10. Esito
+## 10. Esito (10 novembre 2026, fermata 2): tutti i criteri passano, versione 1.2.25
 
-(da scrivere dopo il via)
+Via di Ale («ok va bene così, procedi fino alla fine»), con le tre decisioni del §9 come proposte: cono disegnato acceso nel torneo, fisica non spegnibile, prima fetta così.
+
+**Una differenza dalla proposta:** nella registrazione non c'è una colonna in più nelle righe delle barche ma due eventi, `coperta nome da nome2 N%` e `libera nome` (più del 10% di vento tolto da 2 s). Le righe delle barche restano uguali, così i programmi che le leggono non cambiano.
+
+| Criterio | Soglia | Misurato | |
+| --- | --- | --- | --- |
+| K1 spinta libera / coperta a 0,5 / 1 / 2 H | entro il 15% da 4,8 / 2,6 / 2,0 | 4,73 / 2,60 / 1,98 | ✓ |
+| K2 a una lunghezza di lato | almeno 99% | 100,0% | ✓ |
+| K3 fuori dal cono | zero esatto | zero in 6 punti su 6 | ✓ |
+| K4 l'asse segue il vento apparente | almeno 10° | 13,7° | ✓ |
+| K5 vela che sbatte / scuffiata | al massimo 10% / zero | 7,6% / zero | ✓ |
+| K6 dentro il cono, 10 varianti | almeno −10% di velocità in 9 | da −27% a −29% in 10 | ✓ |
+| K6 fuori dal cono, 10 varianti | meno dell'1% in 9 | 0,00% in 10 | ✓ |
+| K7 Scuola identica al bit | tutte | 80 regate del menu su 80; impronta del gioco: 67 scene, diversa solo la regata del torneo | ✓ |
+| K8 episodi di barca coperta | almeno 200 | 985 (6,0% del tempo di regata) | ✓ |
+| K9 arrivo mediano degli avversari | al massimo +5% | 201,6 → 199,1 s (−1,2%) | ✓ |
+| K10 non arrivati o squalificati | al massimo +2 | 0 → 0 e 4 → 3 | ✓ |
+| K11 contatti dopo il via | al massimo +15% | 149 → 128 (−14%) | ✓ |
+| K12 taglio della linea, mediana / oltre 10 s | +1 s / +20% | 2,6 → 2,4 s / 114 → 104 | ✓ |
+| K13 `collaudo_torneo.py` | verde come prima | veloce e giocatore OK; misura: cade solo C11 R7 (uscita dal menu 3,16 s contro 2), misura di tempo già nota sul PC sotto carico | ✓ |
+| K14 pannello e pagina vera | senza eccesso, senza errori | `collaudo_pannello` a 1360×650 e 1360×768 OK; finestra delle impostazioni 0 px in torneo, regata del menu e navigazione libera; pagina senza `#collaudo` OK | ✓ (dopo una correzione, sotto) |
+| K15 costo del passo | al massimo +3% | −0,8% (0,0982 → 0,0974 ms, 8 blocchi alternati) | ✓ |
+
+Solo riportati (senza cono → col cono): bolina persi media 29,4 → 27,6 s; poppa persi mediana 6,7 → 6,6 s; boa toccata 60 → 46; distacco fra primo e ultimo avversario, mediana, 33,9 → 27,8 s.
+
+**Un difetto mio trovato dai collaudi e corretto:** la casella nuova allungava la finestra delle impostazioni, che in lezione e in navigazione libera sforava a 650 px (`collaudo_registratore`). Ora la casella compare solo nel torneo; `collaudo_cono.py` lo controlla nelle tre modalità.
+
+**Cosa non mi aspettavo: col cono gli avversari non rallentano, vanno un po' meglio.** Pensavo che il cono rallentasse la flotta. Ho quindi misurato tre gruppi di semi, la stessa regata con e senza cono:
+
+| Gruppo | Regate | Arrivo degli avversari, differenza media | Contatti |
+| --- | --- | --- | --- |
+| semi 1521-1550 (quello dichiarato) | 240 | −2,5 s ±1,0 | 149 → 128 |
+| semi 1551-1580 (aggiunto per conferma) | 240 | −2,8 s ±1,0 | 144 → 105 |
+| semi 1491-1502 (quelli del guardiano) | 96 | +1,7 s ±1,3 | 60 → 61 |
+| tutti insieme | 576 | circa −2 s ±0,6 (l'1% del tempo di regata) | 353 → 294 (−17%) |
+
+- **Il guadagno è nella prima bolina** (−3,0 s ±0,6 sui due gruppi grandi) e, nel primo gruppo, quasi solo dei principianti (−4,6 s ±1,5; esperti −0,4 ±1,4).
+- **Non è un cono finto:** nel ciclo del gioco gli avversari coperti oltre il 20% ricevono in media il 78% del vento apparente libero, e il valore coincide col ricalcolo entro 0,007 m/s (400 campioni).
+- **La causa non è dimostrata.** Ipotesi: dopo il via le barche in gruppo si disturbano (cedono, poggiano, si toccano); col cono chi sta dietro e sottovento rallenta e si stacca prima, e il gruppo si scioglie. I contatti in meno (−17%) vanno in questa direzione.
+- **Dipende dal gruppo di semi:** su uno dei tre la differenza è di segno opposto, dentro l'incertezza.
+- **Lettura prudente: il cono non peggiora gli avversari,** che era il rischio da controllare; in media li aiuta di poco.
+
+**Il guardiano su questa modifica ha dato un allarme più forte del vero.** Contro il riferimento della 1.2.24 ha segnato l'arrivo mediano a +4,75 s (soglia 1,78) e il lasco a +0,75 s (soglia 0,5). Sugli stessi semi il confronto regata per regata dà +1,7 s ±1,3: la mediana su 96 regate salta molto quando una modifica rimescola le regate. Il suo riferimento è riscritto sulla 1.2.25. Da ricordare: quando il guardiano suona, prima di concludere si fa il confronto regata per regata su un gruppo grande.
+
+**Resta da fare, dichiarato nel §2:** avversari che cercano il vento libero, vento girato nella scia, zona favorevole sottovento.

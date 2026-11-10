@@ -19,6 +19,34 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.25 — Il cono d'ombra delle vele, nel torneo
+
+**Cosa vedi:**
+- **Nel torneo le vele si tolgono il vento.** Una barca che ne ha un'altra fra sé e il vento riceve meno vento e rallenta: al via in seconda fila, di bolina sottovento e dietro a un'altra, in poppa davanti a chi insegue. Vale per te e per gli avversari.
+- **Il cono è disegnato sul mare,** come una scia scura sottovento a ogni barca. Si spegne dalle impostazioni («Cono d'ombra delle vele»); il vento coperto resta, come le raffiche.
+- **Il testo prima di ogni regata del torneo lo spiega.**
+- **Scuola, prove, lezioni e regate del menu non cambiano.**
+
+**Com'è fatto** (`docs/PROPOSTA-CONO-D-OMBRA.md`; fonti F75 e F76):
+- Il cono parte da chi copre e va sottovento lungo il suo vento apparente, girato di 5° verso poppa.
+- Vento tolto sull'asse: 54% vicinissimo, 38% a un'altezza d'albero, 29% a due, zero a 10 lunghezze di barca. Di lato finisce a una lunghezza.
+- Una vela che sbatte fa poca ombra, una barca scuffiata nessuna. Fra più barche vale l'ombra più forte.
+- **Ipotesi nostre, dichiarate:** altezza d'albero 5,5 m; da «spinta» (quello che misurano le fonti) a «vento» con la radice; le misure sono su yacht grandi.
+- **Mancano, dichiarati:** il vento che gira dentro la scia, la zona favorevole sottovento e avanti, e gli avversari che cercano il vento libero (per ora non reagiscono al cono).
+- La registrazione delle regate ha due eventi nuovi, `coperta` e `libera`, e `cono=` nell'intestazione.
+
+**Misurato** (criteri K1-K15, scritti prima):
+- **Il cono fa quello che dicono le fonti** (`tests/collaudo_cono.py`, nuovo): spinta libera / coperta 4,73 / 2,60 / 1,98 contro 4,8 / 2,6 / 2,0 di F75; fuori dal cono zero esatto; in navigazione, dentro il cono a 1,3-1,75 lunghezze si perde il 27-29% di velocità, fuori lo 0,00%.
+- **La Scuola è identica al bit alla 1.2.24:** 67 scene dell'impronta del gioco (diversa solo la regata del torneo) e 80 regate del menu su 80.
+- **Nel torneo** (240 regate, semi 1521-1550, senza cono → col cono): 985 episodi di barca coperta, il 6,0% del tempo di regata; arrivo mediano degli avversari 201,6 → 199,1 s; contatti 149 → 128; boa toccata 60 → 46; taglio della linea 2,6 → 2,4 s; non arrivati 0 → 0.
+- **Il cono non rallenta gli avversari, li aiuta di poco.** Su tre gruppi di semi, 576 regate confrontate una per una: arrivo circa 2 s prima (±0,6; un gruppo su tre di segno opposto, dentro l'incertezza), contatti −17%. Il guadagno è nella prima bolina. La causa non è dimostrata: probabilmente il gruppo dopo il via si scioglie prima.
+- **Costo:** il passo di gioco non cambia (−0,8%, dentro il rumore).
+- Barca congelata (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`) identica.
+
+- **Un difetto mio trovato dai collaudi e corretto prima di chiudere:** la casella nuova faceva sforare la finestra delle impostazioni a 650 px in lezione e in navigazione libera; ora compare solo nel torneo.
+
+**Collaudi:** `collaudo_cono.py` nuovo, nel giro; il riferimento del guardiano degli avversari è riscritto sulla 1.2.25 (il torneo cambia per scelta; contro la 1.2.24 il guardiano segnava arrivo mediano +4,75 s, ma regata per regata sugli stessi semi sono +1,7 s ±1,3); voci note di `collaudo_triangolo` aggiornate (T2b 121 su 174 in Chromium, 139 su 173 in Firefox).
+
 ## 1.2.24 — Avversari più veloci in poppa; layline più corte
 
 **Cosa vedi:**

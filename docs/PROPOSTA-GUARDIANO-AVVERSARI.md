@@ -73,3 +73,7 @@ Il guardiano deve:
 - **Il rumore è grande.** Una modifica che non cambia niente sposta l'arrivo mediano di quasi 1 s e la boa toccata da 18 a 27. Il guardiano vede quindi solo i peggioramenti grossi, come le due prove sopra; uno di mezzo secondo gli sfugge. Per quelli resta la misura lunga (`misura_avversari_rotta.py`, 240 regate).
 - **Boa toccata:** la soglia (+18) è il doppio del riferimento: su questo numero il guardiano è debole.
 - **G9 non si è mosso in nessuna prova** (la partenza non dipende da queste modifiche): controlla che un cambio alle partenze non passi inosservato, ma non è stato provato.
+
+## 7. Prima prova vera: il cono d'ombra (1.2.25)
+
+Contro il riferimento della 1.2.24 il guardiano ha suonato: arrivo mediano +4,75 s (soglia 1,78), lasco +0,75 s (soglia 0,5). Il confronto regata per regata sugli stessi 96 regate dà però +1,7 s ±1,3, e due gruppi da 240 regate danno −2,5 e −2,8 s (`PROPOSTA-CONO-D-OMBRA.md` §10). **Cosa insegna:** con una modifica che rimescola le regate la mediana su 96 regate salta di alcuni secondi; il guardiano resta un campanello, e quando suona si fa il confronto regata per regata su un gruppo grande prima di concludere. Riferimento riscritto sulla 1.2.25.

@@ -2,13 +2,14 @@
 # Le 4 regate del torneo (vento con raffiche e salti, 10 o 12 nodi secondo il seme), principianti ed esperti, preparazione 60 s, giocatore col pilota,
 # fino all'arrivo di tutti o a 900 s. Per ogni avversario e ogni lato: tempo vero contro la rotta ottimale partita da dove e quando lui ha cominciato il
 # lato (rotLatiBarca, js/rotta.js), virate vere contro cambi di mure della rotta ottimale; poi il ritardo al taglio della linea dopo il via.
-# Uso: python tests/misura_avversari_rotta.py PRIMO ULTIMO   (RLAY=metri: virata sulla layline di dritta, PROPOSTA-AVVERSARI-BOLINA.md §13; DOWNE=gradi, DOWNE=off spento, assente = il gioco com'è; SCARSOAI e TMEDIA solo con la patch sperimentale/avversari-bolina-scarsi; LAYMARG come negli altri strumenti; SALVA=file.json, poi --riassumi f1 f2 ...)
+# Uso: python tests/misura_avversari_rotta.py PRIMO ULTIMO   (OMBRA=0: torneo senza cono d'ombra, com'era la 1.2.24; RLAY=metri: virata sulla layline di dritta, PROPOSTA-AVVERSARI-BOLINA.md §13; DOWNE=gradi, DOWNE=off spento, assente = il gioco com'è; SCARSOAI e TMEDIA solo con la patch sperimentale/avversari-bolina-scarsi; LAYMARG come negli altri strumenti; SALVA=file.json, poi --riassumi f1 f2 ...)
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent) / "index.html").as_uri() + "#collaudo"
 CORSA = """([k, liv, seme]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
+  if (sv.ombra && OMBRAENV !== null) sv.ombra(OMBRAENV); // PROPOSTA-CONO-D-OMBRA.md: OMBRA=0 è il torneo senza cono (1.2.24)
   if (sv.layDx) sv.layDx(RLAY); // PROPOSTA-AVVERSARI-BOLINA.md §13: null = spento (1.2.24)
   if (sv.boa && RDIR !== null) sv.boa(3, 2, 3, RDIR); // PROPOSTA-AVVERSARI-BOLINA.md §9: raggio del giro diretto
   if (sv.lay) sv.lay(LAYMARG); if (sv.down && DOWNE !== undefined) sv.down(DOWNE); if (sv.scarso && SCARSOAI !== undefined) sv.scarso(SCARSOAI, TMEDIA);
@@ -21,7 +22,7 @@ CORSA = """([k, liv, seme]) => {
   const R = sv.R, dt = 1 / 60; R.tor = false;
   for (const b of R.boats) if (!b.me){ if (DIAGUP !== null) b.ai.up = DIAGUP; if (DIAGTRIM !== null) b.ai.trim = DIAGTRIM; } // diagnosi (PROPOSTA-AVVERSARI-BOLINA.md §7): solo nella misura
   const ent = {};
-  const ai = R.boats.map((b, i) => i).filter(i => !R.boats[i].me), vir = {}, prev = {}, mure = {}, cambi = {}, scuf = {}, cap = {}, tocca = {}, layU = {};
+  const ai = R.boats.map((b, i) => i).filter(i => !R.boats[i].me), vir = {}, prev = {}, mure = {}, cambi = {}, scuf = {}, cap = {}, tocca = {}, layU = {}, copS = {}, copEp = {}, copRun = {};
   for (const i of ai){ vir[i] = []; prev[i] = false; cambi[i] = []; scuf[i] = 0; cap[i] = false; tocca[i] = new Set(); }
   let nPen = R.penList.length, contatti = 0;
   const dHull = (b, m) => { const P = sv.hullWorld(b.S); let dentro = true, best = 1e9;
@@ -39,18 +40,19 @@ CORSA = """([k, liv, seme]) => {
         if (j === 0 && !ent[i] && Math.hypot(b.S.x - R.marks[0].x, b.S.y - R.marks[0].y) < 40) { const [ex, ey] = toWF(b.S.x - R.marks[0].x, b.S.y - R.marks[0].y); ent[i] = { t: R.t, x: b.S.x, y: b.S.y, vir0: vir[i][0] || 0, mure: Math.sign(sv.norm180(sv.windAt(b.S.x, b.S.y).twd - b.S.h)), ex: +ex.toFixed(1), ey: +ey.toFixed(1), rp: [b.rp || 0], vp: [] }; }
         if (j === 0 && ent[i]){ const e = ent[i]; if ((b.rp || 0) !== e.rp[e.rp.length - 1]) e.rp.push(b.rp || 0); if (b.virando && !prev[i]){ const [vx, vy] = toWF(b.S.x - R.marks[0].x, b.S.y - R.marks[0].y); e.vp.push([+vx.toFixed(1), +vy.toFixed(1)]); } }
         if (j === 0 && b.diretto === 'lay') layU[i] = true;
+        if ((b.cop || 0) > 0.10){ copS[i] = (copS[i] || 0) + dt; copRun[i] = (copRun[i] || 0) + dt; if (copRun[i] >= 2 && copRun[i] - dt < 2) copEp[i] = (copEp[i] || 0) + 1; } else copRun[i] = 0;   // K8: episodi di barca coperta (oltre il 10% da 2 s)
         const mk = R.marks[Math.min(j, R.marks.length - 1)]; if (j < R.marks.length && Math.hypot(b.S.x - mk.x, b.S.y - mk.y) < 6 && dHull(b, mk) < 0.9) tocca[i].add(j); }
       prev[i] = b.virando; }
   }
   const m40 = i => { const e = ent[i], g = sv.rot.barche[i].giri[0]; if (!e || !g) return null; const q = rotLato({ x: e.x, y: e.y, t: e.t, s: 0 }, rotCancBoa(R.marks[0]));
     return q ? { vero: g.t - e.t, ott: q.t - e.t, vir: (vir[i][0] || 0) - e.vir0, mure: e.mure, ex: e.ex, ey: e.ey, rp: e.rp, vp: e.vp, lay: !!layU[i] } : null; };
-  const barche = ai.map(i => ({ nome: R.boats[i].name, m40: m40(i), scuffiate: scuf[i], toccate: tocca[i].size, sbagliate: R.boats[i].wrongMarks || 0, taglio: sv.rot.barche[i].taglio ? sv.rot.barche[i].taglio.t : null, fin: R.boats[i].fin, dsq: !!R.boats[i].dsq,
+  const barche = ai.map(i => ({ nome: R.boats[i].name, m40: m40(i), copS: copS[i] || 0, copEp: copEp[i] || 0, scuffiate: scuf[i], toccate: tocca[i].size, sbagliate: R.boats[i].wrongMarks || 0, taglio: sv.rot.barche[i].taglio ? sv.rot.barche[i].taglio.t : null, fin: R.boats[i].fin, dsq: !!R.boats[i].dsq,
     lati: sv.rotLatiBarca(i).map(L => ({ ...L, vir: vir[i][L.lato] || 0, cambi: cambi[i][L.lato] || 0 })) }));
   return { barche, contatti };
 }"""
 
 def js_corsa(E):   # la corsa con le manopole dell'ambiente (o di un dizionario: collaudo_guardiano_avversari.py)
-    return CORSA.replace("RLAY", E.get("RLAY") or "null").replace("RDIR", E.get("RDIR") or "null").replace("DIAGUP", E.get("DIAGUP") or "null").replace("DIAGTRIM", E.get("DIAGTRIM") or "null").replace("LAYMARG", E.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(E.get("DOWNE", ""), E.get("DOWNE", ""))).replace("TMEDIA", E.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(E.get("SCARSOAI", ""), E.get("SCARSOAI", "")))
+    return CORSA.replace("OMBRAENV", {"": "null", "0": "false", "1": "true"}[E.get("OMBRA", "")]).replace("RLAY", E.get("RLAY") or "null").replace("RDIR", E.get("RDIR") or "null").replace("DIAGUP", E.get("DIAGUP") or "null").replace("DIAGTRIM", E.get("DIAGTRIM") or "null").replace("LAYMARG", E.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(E.get("DOWNE", ""), E.get("DOWNE", ""))).replace("TMEDIA", E.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(E.get("SCARSOAI", ""), E.get("SCARSOAI", "")))
 
 async def main(A, B):
     async with async_playwright() as p:
@@ -103,6 +105,8 @@ def riassumi(ds):
                 fasce = {}
                 for x, y in V: fasce[(("sinistra" if x < -3 else "destra" if x > 3 else "sopra/sotto"), ("sopra" if y < 0 else "sotto 0-15" if y < 15 else "sotto 15-40"))] = fasce.get((("sinistra" if x < -3 else "destra" if x > 3 else "sopra/sotto"), ("sopra" if y < 0 else "sotto 0-15" if y < 15 else "sotto 15-40")), 0) + 1
                 print("   dove virano negli ultimi 40 m (x rispetto alla boa, y: negativo sopravento):", ", ".join(f"{a}/{b} {n}" for (a, b), n in sorted(fasce.items(), key=lambda z: -z[1])))
+    print(f"  CONO D'OMBRA: K8 episodi di barca coperta {sum(b.get('copEp', 0) for b in ba)}; tempo coperto {sum(b.get('copS', 0) for b in ba) / max(1e-9, sum((b['fin'] or 900) for b in ba)):.1%} del tempo di regata degli avversari; "
+          f"primo-ultimo avversario arrivato, mediana {statistics.median([max(f) - min(f) for f in ([b['fin'] for b in r['barche'] if b['fin'] is not None] for r in R) if len(f) > 1]):.1f} s")
     print(f"  SCARSO_AI {ds[0].get('scarso') or 'spento'}: B1 bolina persi mediana {statistics.median(x['vero'] - x['ott'] for x in bol):.2f} s; B3 virate per lato di bolina {statistics.mean(x['vir'] for x in bol):.2f}")
     print(f"  DOWN_E {ds[0].get('down') or 'come il gioco'}: Q1 poppa persi mediana {statistics.median(x['vero'] - x['ott'] for x in pop):.2f} s; Q2 arrivo mediano {statistics.median(fin):.1f} s; "
           f"Q3 contatti dopo il via {sum(r.get('contatti', 0) for r in R)}; Q4 cambi di mure per lato di poppa {statistics.mean(x.get('cambi', 0) for x in pop):.2f}; "

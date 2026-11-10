@@ -18,7 +18,7 @@
   const sesEv = (type, det) => { ses.cnt[type] = (ses.cnt[type] || 0) + 1; sesLine("E " + sesT() + " " + type + (det ? " " + det : "")); };
   const sesTyping = () => { const a = document.activeElement; return !!a && (a.tagName === "TEXTAREA" || a.isContentEditable || (a.tagName === "INPUT" && !["checkbox", "radio", "range", "button"].includes(a.type))); };
   const sesSet = () => "frecce=" + opt.helm + " vista=" + opt.view + " barra_al_centro=" + (opt.autoCenter ? "sì" : "no") + " barra_al_centro_prove=" + (opt.autoCenterComp ? "sì" : "no") +
-    " scotta_automatica=" + (opt.autoSheet ? "sì" : "no") + " suggerimenti=" + (opt.hint ? "sì" : "no") + " frecce_vento=" + (opt.arrows ? "sì" : "no") + " rosa_angolo_morto=" + (opt.dead ? "sì" : "no") + " tutti_strumenti=" + (opt.allInstr ? "sì" : "no") + " layline=" + opt.layline +
+    " scotta_automatica=" + (opt.autoSheet ? "sì" : "no") + " suggerimenti=" + (opt.hint ? "sì" : "no") + " frecce_vento=" + (opt.arrows ? "sì" : "no") + " rosa_angolo_morto=" + (opt.dead ? "sì" : "no") + " tutti_strumenti=" + (opt.allInstr ? "sì" : "no") + " layline=" + opt.layline + " cono=" + (opt.cono ? "sì" : "no") +
     " fantasma=" + (opt.ghost ? "sì" : "no") + " vento=" + Math.round(env.twd) + "° " + Math.round(env.tws * KN) + "kn raffiche=" + gustLevel + " avversari=" + opt.aiLevel + " preparazione=" + opt.countdown + "s" + (LAB ? labSet() : "");
   const sesMode = () => mode + (mode === "lesson" ? lessonIdx : mode === "mission" ? missionIdx : mode === "race" ? raceIdx : "");
   const sesModeName = () => mode === "lesson" ? "lezione " + (lessonIdx + 1) + " «" + LESSONS[lessonIdx].title + "»" : mode === "mission" ? "«" + $("mTitle").textContent + "»"
@@ -41,7 +41,7 @@
   function sesAltre(dSim, riga){
     const L = ses.L;
     if (mode !== "race" || !R){ L.AR = null; return; }
-    if (R !== L.AR){ L.AR = R; L.A = {}; R.boats.forEach(b => { if (!b.me) L.A[b.name] = sesAvv(b); }); L.ct = Object.assign({}, R.contacts); L.pl = R.penList.length; } // accesa a regata in corso: le voci già presenti non si scrivono
+    if (R !== L.AR){ L.AR = R; L.A = {}; L.cop = {}; R.boats.forEach(b => { if (!b.me) L.A[b.name] = sesAvv(b); }); L.ct = Object.assign({}, R.contacts); L.pl = R.penList.length; } // accesa a regata in corso: le voci già presenti non si scrivono
     for (const b of R.boats){
       if (b.me) continue;
       const A = L.A[b.name], n = b.name, kn = Math.abs(b.S.u) * KN;
@@ -61,6 +61,10 @@
       Object.assign(A, { leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba });
     }
     for (const key in R.contacts) if (L.ct[key] !== R.contacts[key]){ const [i, j] = key.split("-"); sesEv("contatto_barche", R.boats[i].name + " " + R.boats[j].name); }
+    // 1.2.25 (docs/PROPOSTA-CONO-D-OMBRA.md): una barca coperta da un'altra per più del 10% del vento da almeno 2 s di gioco, e quando torna libera
+    if (R.ombra && dSim > 0) for (const b of R.boats){ const C = L.cop[b.name] || (L.cop[b.name] = { t: 0, on: false }), k = b.fin === null && !b.dnf ? b.cop || 0 : 0;
+      if (k > 0.10){ C.t += dSim; if (!C.on && C.t >= 2){ C.on = true; sesEv("coperta", b.name + " da " + b.copDa.name + " " + Math.round(k * 100) + "%"); } }
+      else { if (C.on) sesEv("libera", b.name); C.on = false; C.t = 0; } }
     L.ct = Object.assign({}, R.contacts);
     for (; L.pl < R.penList.length; L.pl++) sesLine("Q " + sesT() + " " + R.penList[L.pl]);
     if (riga) for (const b of R.boats){
@@ -188,6 +192,7 @@
   "#    stato: - | ocs partenza anticipata | scuf scuffiata | arr arrivata | dsq squalificata (1.2.16) | dnf non arrivata | via sta partendo | cede:Nome a chi sta lasciando strada (separati da virgole)",
   "#  E avv_fermo/avv_riparte nome   sotto 0,5 nodi per 5 s di gioco dopo il via (con lato e posizione), poi sopra 1 nodo; avv_lato nome N; avv_arrivo nome Ns;",
   "#    avv_ocs, avv_scuffia, avv_penalita nome +15s o +1pt, avv_boa_lato_sbagliato nome; contatto_barche nome1 nome2 (anche con «Tu»), uno per contatto",
+  "#  E coperta nome da nome2 N%   (dalla 1.2.25, solo nel torneo) nel cono d'ombra di nome2 con più del 10% di vento tolto da 2 s; libera nome quando ne esce",
   "#  Q t testo   motivo di una penalità, la stessa voce dell'elenco a fine regata",
   "#  L t lezione.passo «titolo»   passo di lezione mostrato",
   "#  H t testo   suggerimento del pannello cambiato (rimasto almeno 0,3 s)",

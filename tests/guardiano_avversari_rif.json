@@ -1,24 +1,24 @@
 {
- "versione": "1.2.24",
+ "versione": "1.2.25",
  "semi": [
   1491,
   1502
  ],
  "numeri": {
-  "G1 arrivo mediano (s)": 197.9000000000475,
-  "G2 bolina persi media (s)": 27.318702259936718,
-  "G3 poppa persi mediana (s)": 6.389869140564727,
-  "G4 lasco persi media (s)": 7.884535967638525,
-  "G5 contatti dopo il via": 60,
-  "G6 boa toccata": 18,
+  "G1 arrivo mediano (s)": 202.65000000005128,
+  "G2 bolina persi media (s)": 28.29673564054753,
+  "G3 poppa persi mediana (s)": 6.596000068938338,
+  "G4 lasco persi media (s)": 8.636487366070659,
+  "G5 contatti dopo il via": 61,
+  "G6 boa toccata": 15,
   "G6 boe sbagliate": 0,
   "G7 non arrivati": 0,
-  "G7 squalificati": 1,
+  "G7 squalificati": 0,
   "G8 scuffiate": 0,
-  "G9 taglio mediano (s)": 2.266666666664537,
-  "(info) virate per lato di bolina": 3.763888888888889,
-  "(info) ultimi 40 m dalla boa 1, persi media (s)": 10.329239973953678,
+  "G9 taglio mediano (s)": 2.0333333333312047,
+  "(info) virate per lato di bolina": 3.8020833333333335,
+  "(info) ultimi 40 m dalla boa 1, persi media (s)": 11.58753585951069,
   "(info) regate": 96,
-  "(info) impronta": "70a720a66f4c"
+  "(info) impronta": "8c8917c40480"
  }
 }

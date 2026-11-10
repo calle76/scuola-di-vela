@@ -2,11 +2,11 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 10 novembre 2026, pomeriggio.*
+*Aggiornato: 10 novembre 2026, sera.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.24** (tag `v1.2.24`, da pushare con la 1.2.23). Novità nel `CHANGELOG.md`.
+- **Ultima versione chiusa: 1.2.25** (tag `v1.2.25`, da pushare). Novità nel `CHANGELOG.md`.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
 
@@ -78,7 +78,14 @@
   - censimento dei collaudi che dipendono dal caso in fondo a `COLLAUDI.md`: resta stretto solo il V4 della moviola.
 - **Giro completo su GitHub dopo la sessione** (10 novembre, 87 collaudi, 49 minuti, 1.2.24): **nessun fallito** nei due browser. Noti: partenze, virate2, triangolo T2b, avversari di Deriva. `collaudo_suoni_si_sentono` questa volta passa (boa 7,9-10,6 dB su 6; sartiame 2,2-4,8 su 2): resta ballerino, voce 8 aperta. Il guardiano in Firefox non è identico al bit al riferimento (scritto in Chromium) ma sta nelle soglie. È il punto di partenza per il cono d'ombra.
 - **Esploratore:** ora gioca anche le 4 regate del torneo (regate 100-103). Aspetta il giro lungo di Ale su GitHub (semi 1-100, 4 scimmie da 600 s, due browser).
-- **Proposta del cono d'ombra scritta, fermata 1** (`PROPOSTA-CONO-D-OMBRA.md`): meno vento a chi è coperto, lungo il vento apparente di chi copre, numeri da F75; solo nel torneo; avversari che per ora non reagiscono; criteri K1-K15. **Aspetta il via di Ale e tre decisioni** (§9: cono disegnato acceso o spento nel torneo, fisica non spegnibile, prima fetta senza vento girato).
+- **1.2.25, il cono d'ombra delle vele nel torneo** (`PROPOSTA-CONO-D-OMBRA.md` §10; via di Ale: «procedi fino alla fine»):
+  - meno vento a chi è coperto, numeri da F75; cono disegnato sul mare, disattivabile (casella solo nel torneo); la fisica non si spegne; Scuola identica al bit;
+  - criteri K1-K15 tutti passati; `tests/collaudo_cono.py` nuovo, nel giro;
+  - **gli avversari non peggiorano:** su 576 regate arrivano circa 2 s prima (±0,6) e si toccano il 17% in meno; la causa non è dimostrata;
+  - non reagiscono ancora al cono: arriva col lavoro sugli avversari.
+- **Esploratore sulla 1.2.24** (giro su GitHub, 3200 corse e 8 scimmie, due browser): nessun errore, nessun numero rotto; nel torneo non arriva circa il 2% degli avversari (finestra d'arrivo chiusa o squalifica). È la fotografia di prima del cono.
+- **Aspetta Ale:** push, giro dei collaudi e dell'esploratore su GitHub sulla 1.2.25, e **giocare il torneo col cono** mandando le registrazioni (ora hanno gli eventi `coperta` e `libera`).
+- **Poi:** gli avversari tutti insieme (bolina, boa, uscire dal vento sporco), con le registrazioni.
 
 ## Dove sta cosa
 

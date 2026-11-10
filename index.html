@@ -182,6 +182,7 @@ dialog#setDlg::backdrop{background:rgba(13,25,36,.5)}
 .optrow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.95rem}
 select{font:inherit;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .check{display:flex;gap:8px;align-items:center;font-size:.95rem;cursor:pointer}
+.check[hidden]{display:none}
 .check input{width:18px;height:18px;accent-color:var(--ink)}
 #setDlg .set-body{padding-bottom:12px} #setDlg .set-body > .opts{gap:2px} #rigaScelte{display:flex;flex-wrap:wrap;gap:4px 10px} #freeOpts{flex-direction:row;flex-wrap:wrap;gap:4px 10px;flex:3 1 auto} #freeOpts[hidden]{display:none} #suoniRiga,#layRiga{flex:1 1 auto} #freeOpts:not([hidden]) ~ #layRiga{display:none} #freeOpts .optrow,#freeOpts:not([hidden]) + #suoniRiga{flex-direction:column;align-items:stretch;gap:2px;flex:1 1 auto} /* 0.18: vento su una riga, la finestra sta in 1360x650; 0.19.1: gap 6→4px (11 spazi nel caso peggiore, -22px) per il margine a 650px di altezza; 1.0.24: a capo, la scelta «Barca» sta su una riga sua; 1.2.6: «Suoni» sulla stessa riga del vento (#rigaScelte, finestra larga 520 px invece di 480 perché le quattro scelte ci stiano), la riga in più della 1.2.5 faceva scorrere la finestra di 21 px a 650 */
 #sesBox{display:flex;gap:8px;align-items:center} #sesBox[hidden]{display:none} #sesNote{flex:1;font:inherit;font-size:.9rem;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);resize:none}
@@ -319,6 +320,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
         <label class="check"><input autocomplete="off" type="checkbox" id="showHint" checked> Suggerimenti (nelle prove e in navigazione libera)</label>
         <label class="check" title="La vela si regola da sola (prove e navigazione libera). Se la usi, la prova non vale record né medaglia. I tasti della scotta la spengono."><input autocomplete="off" type="checkbox" id="autoSheetOpt"> Scotta automatica (la prova non vale medaglia)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showArrows" checked> Frecce del vento reale e apparente e della velocità</label>
+        <label class="check" id="conoRiga" hidden title="Dietro ogni barca, la zona dove la sua vela toglie vento alle altre. Il vento coperto c'è anche a cono nascosto."><input autocomplete="off" type="checkbox" id="showCono" checked> Cono d'ombra delle vele</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="showDead" checked> Rosa dell'angolo morto, in basso a sinistra</label>
         <label class="check" title="Rosso: devi lasciare strada. Verde: hai la precedenza, non il permesso di urtare. In tutte le regate e nel torneo."><input autocomplete="off" type="checkbox" id="showSem"> Semaforo di precedenza sullo scafo (regate)</label>
         <label class="check"><input autocomplete="off" type="checkbox" id="allInstr"> Numeri di vento, sbandamento e scarroccio nel pannello, sempre</label>

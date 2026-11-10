@@ -54,11 +54,11 @@ ESITO: FALLITO
 FALLITO G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 22.0 s su 14 casi, minimo-massimo 19.5-24.6
 casi sbagliati: ['G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 22.0 s su 14 casi, minimo-massimo 19.5-24.6']
 
-== collaudo_triangolo.py | chromium | T2b fuori soglia dalla nascita del collaudo (1.0.55: 129 su 168): la strada resta ferma tra l'abeam e la fine del giro (PROPOSTA-TORNEI-1B.md §8.8). Numeri della 1.2.24 (10 nov 2026), quando il collaudo è entrato nel giro
-FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 121 su 169 confronti (159 col segno giusto), entro 3 s dopo il via 24/56, dopo la boa 1 60/60, dopo la boa 2 37/53, errore massimo 11.1 s, giocatore arrivato in 20 regate su 20
+== collaudo_triangolo.py | chromium | T2b fuori soglia dalla nascita del collaudo (1.0.55: 129 su 168): la strada resta ferma tra l'abeam e la fine del giro (PROPOSTA-TORNEI-1B.md §8.8). Numeri della 1.2.25 (col cono d'ombra il torneo cambia; nella 1.2.24 erano 121 su 169)
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 121 su 174 confronti (162 col segno giusto), entro 3 s dopo il via 20/59, dopo la boa 1 59/59, dopo la boa 2 42/56, errore massimo 14.6 s, giocatore arrivato in 20 regate su 20
 
-== collaudo_triangolo.py | firefox | come in Chromium (T2b, noto dalla 1.0.55); numeri della 1.2.24
-FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 120 su 170 confronti (160 col segno giusto), entro 3 s dopo il via 27/59, dopo la boa 1 58/59, dopo la boa 2 35/52, errore massimo 16.8 s, giocatore arrivato in 20 regate su 20
+== collaudo_triangolo.py | firefox | come in Chromium (T2b, noto dalla 1.0.55); numeri della 1.2.25 (nella 1.2.24 erano 120 su 170)
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 139 su 173 confronti (164 col segno giusto), entro 3 s dopo il via 31/58, dopo la boa 1 60/60, dopo la boa 2 48/55, errore massimo 11.6 s, giocatore arrivato in 20 regate su 20
 
 == collaudo_avversari_deriva.py | chromium | casi 81 e 83 fuori soglia dalla nascita (PROPOSTA-AVVERSARI-DERIVA.md, V8, 6 nov 2026), identici dalla 1.2.15 alla 1.2.24: da riprendere col lavoro sugli avversari dopo il cono d'ombra
 FALLITO caso 81: 6 su 10 (soglia 9)

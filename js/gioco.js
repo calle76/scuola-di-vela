@@ -9,11 +9,11 @@
   let gustLevel = 0, gustTimer = 0, gustAll = false; // gustAll: torneo dell'1b, le raffiche nascono attorno a tutte le barche
   const gusts = [], wake = [];
   const ctl = { sheet: 0.4, tiller: 0 };
-  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false, layline: "regate" }; // layline (1.2.23): "no", "regate" (non nel torneo), "tutte"
+  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false, layline: "regate", cono: true }; // layline (1.2.23): "no", "regate" (non nel torneo), "tutte"
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.24"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.25"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -290,7 +290,7 @@
       : `<p class="gl-empty">Nessun termine trovato. Prova con una parola più breve.</p>`;
   }
   function openGloss(){ releaseKeys(); $("glSearch").value = ""; renderGloss(); $("gloss").showModal(); }
-  $("openSet").onclick = () => { releaseKeys(); $("setDlg").showModal(); };
+  $("openSet").onclick = () => { releaseKeys(); $("conoRiga").hidden = !(mode === "race" && R && R.ombra); $("setDlg").showModal(); }; // 1.2.25: la casella del cono solo dove il cono c'è (altrove la finestra a 650 px sforava)
   $("setClose").onclick = () => $("setDlg").close();
   $("glClose").onclick = () => $("gloss").close();
   $("glSearch").addEventListener("input", e => renderGloss(e.target.value));
@@ -699,6 +699,7 @@
   $("autoSheetOpt").onchange = e => { opt.autoSheet = e.target.checked; };
   $("showHint").onchange = e => { opt.hint = e.target.checked; if (mode !== "lesson") $("hint").hidden = !opt.hint; };
   $("showArrows").onchange = e => opt.arrows = e.target.checked;
+  $("showCono").onchange = e => opt.cono = e.target.checked; // 1.2.25
   $("showDead").onchange = e => opt.dead = e.target.checked;
   $("showSem").onchange = e => opt.sem = e.target.checked; // 1.0.40: spento di default
   $("allInstr").onchange = e => { opt.allInstr = e.target.checked; setHud(hudLevel); };
@@ -792,6 +793,7 @@
     }
     updateGusts(dt);
     Object.assign(local, windAt(S.x, S.y));
+    if (mode === "race" && R && R.ombra) local.tws *= 1 - ombraSu(R.boats[0]); // 1.2.25: cono d'ombra (js/regate.js)
     if (!S.capsized){
       const n = 4; for (let i = 0; i < n; i++) info = step(S, ctl, local, dt / n);
       detectManeuvers();
