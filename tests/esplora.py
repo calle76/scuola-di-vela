@@ -1,7 +1,7 @@
 # Esploratore: raccoglie dati, non promuove né boccia. Da lanciare più volte (anche per ore) con semi diversi e poi incollare il riepilogo.
 # Non è in lancia_tutti.sh (il nome non comincia per collaudo_): è lungo e i suoi numeri non hanno soglie, li leggiamo insieme dopo.
 # Parte 1 (sempre): pagina con #collaudo, passi fissi di 1/60 s, la barca del giocatore la guida __sv.pilota. Per ogni seme gira
-#   ogni regata di RACES con avversari principianti ed esperti; ogni secondo simulato cerca numeri non finiti (NaN, Infinity) nello
+#   ogni regata di RACES e, dal 10 novembre 2026, le 4 regate del torneo (nel riepilogo «regata 100»-«103») con avversari principianti ed esperti; ogni secondo simulato cerca numeri non finiti (NaN, Infinity) nello
 #   stato di tutte le barche e conta i secondi senza cambio di tratto (barca «ferma»). Una riga JSON per corsa.
 # Parte 2 (--scimmia N): pagina senza #collaudo, come la carica un giocatore, 1360x650; N secondi reali di tasti e clic a caso
 #   (seme fisso), annotando errori della pagina e pagina che scorre (pixel in più di 1360x650).
@@ -27,9 +27,19 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
   window.__seed = v => { s = v; }; })();"""   # lo stesso generatore di collaudo_competizione.py
 
 CORSA = """([race, seme, liv]) => {
-  const sv = __sv; sv.fast(0); sv.openItem(["r", race]);
+  const sv = __sv; sv.fast(0);
+  if (race >= 100){   // 10 nov 2026: le 4 regate del torneo (race 100-103), che fino a oggi l'esploratore non giocava mai. Torneo nuovo dal seme (vento e forza
+    // sorteggiati dal gioco), risultati finti per le regate prima, poi la regata vera: all'arrivo il torneo registra il risultato come quando si gioca
+    const sel = document.getElementById("aiLevel"); sel.value = liv; sel.dispatchEvent(new Event("change")); window.confirm = () => true;
+    if (sv.tor){ sv.torApri(); document.getElementById("torRit").click(); }
+    __seed(seme); sv.torApri(); document.getElementById("torGo").click();
+    for (let j = 0; j < race - 100; j++) sv.tor.ris.push([0, 1, 2, 3].map(i => ({ fin: i + 1, pp: 0 })));
+    __seed(seme); sv.simTime = 0; sv.openItem(["r", "t"]);
+  } else {
+  sv.openItem(["r", race]);
   __seed(seme); sv.simTime = 0;
   const sel = document.getElementById("aiLevel"); sel.value = liv; sel.dispatchEvent(new Event("change"));   // riparte col seme
+  }
   const R = sv.R, me = R.boats[0], dt = 1 / 60;
   let visti = 0;   // numeri controllati: se resta 0 il controllo non ha misurato niente
   const nonFiniti = o => { const num = o ? Object.entries(o).filter(([k, v]) => typeof v === "number") : []; visti += num.length; return num.filter(([k, v]) => !isFinite(v)).map(([k]) => k); };
@@ -68,7 +78,7 @@ async def parte1(b, semi, casi=None):
     await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
     corse = []
     n_regate = await pg.evaluate("RACES.length")   # 1 nov 2026: prima range(3) fisso, e la regata dei giri (dalla 1.0.61) non si esplorava mai
-    elenco = casi or [(seme, race, liv) for seme in semi for race in range(n_regate) for liv in ("principianti", "esperti")]
+    elenco = casi or [(seme, race, liv) for seme in semi for race in list(range(n_regate)) + [100, 101, 102, 103] for liv in ("principianti", "esperti")]   # 100-103: torneo, regate 1-4
     for seme, race, liv in elenco:
         if True:
             if True:

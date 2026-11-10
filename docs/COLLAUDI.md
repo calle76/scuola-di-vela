@@ -114,6 +114,7 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 - Un ultimo passo fa `esplora.py --riassumi` su tutti i pezzi e mette il risultato nella pagina del giro e nell'allegato `esplora-riepilogo`.
 - Non dà verde o rosso sul gioco: è rosso solo se un pezzo si rompe.
 - Consiglio: semi 1-100, 10 per pezzo, 4 giri di scimmia da 600 s per browser, entrambi i browser.
+- **Dal 10 novembre 2026 l'esploratore gioca anche le 4 regate del torneo** (nel riepilogo «regata 100»-«103»: torneo nuovo dal seme, risultati finti per le regate prima, poi la regata vera). Ogni seme sono 16 corse invece di 8: un pezzo dura circa il doppio.
 
 **Fallimenti noti (1 novembre 2026).** `tests/fallimenti_noti.txt` elenca i fallimenti già noti e accettati, browser per browser, con le righe esatte che il collaudo stampa.
 - Se un collaudo fallisce esattamente così, `lancia_tutti.sh` lo mette fra i **NOTI** e il giro non esce con 1. Se un numero cambia, anche in meglio, o fallisce un controllo in più, torna **FALLITO** e dice cosa è cambiato. Si guarda, e solo dopo si aggiorna la voce, dicendolo.
