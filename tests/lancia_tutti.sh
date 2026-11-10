@@ -92,6 +92,7 @@ TESTS=(
     "collaudo_semaforo.py|py|chiaro|0||collaudo_semaforo.py"
     "collaudo_torneo.py (veloce)|py|chiaro|0||collaudo_torneo.py --veloce"
     "collaudo_torneo.py (misura)|py|chiaro|1||collaudo_torneo.py"
+    "collaudo_guardiano_avversari.py|py|chiaro|1||collaudo_guardiano_avversari.py"
     "collaudo_torneo.py (giocatore)|py|chiaro|0||collaudo_torneo.py --giocatore"
     "collaudo_raddrizzata.py|py|chiaro|1||collaudo_raddrizzata.py"
     "collaudo_virate2.py|py|chiaro|1||collaudo_virate2.py"

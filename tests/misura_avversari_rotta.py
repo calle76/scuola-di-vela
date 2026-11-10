@@ -49,6 +49,9 @@ CORSA = """([k, liv, seme]) => {
   return { barche, contatti };
 }"""
 
+def js_corsa(E):   # la corsa con le manopole dell'ambiente (o di un dizionario: collaudo_guardiano_avversari.py)
+    return CORSA.replace("RLAY", E.get("RLAY") or "null").replace("RDIR", E.get("RDIR") or "null").replace("DIAGUP", E.get("DIAGUP") or "null").replace("DIAGTRIM", E.get("DIAGTRIM") or "null").replace("LAYMARG", E.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(E.get("DOWNE", ""), E.get("DOWNE", ""))).replace("TMEDIA", E.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(E.get("SCARSOAI", ""), E.get("SCARSOAI", "")))
+
 async def main(A, B):
     async with async_playwright() as p:
         br = await getattr(p, os.environ.get("BROWSER", "chromium")).launch()
@@ -58,7 +61,7 @@ async def main(A, B):
         for k in range(4):
             for liv in ("principianti", "esperti"):
                 for seme in range(A, B + 1):
-                    r = await pg.evaluate(CORSA.replace("RLAY", os.environ.get("RLAY") or "null").replace("RDIR", os.environ.get("RDIR") or "null").replace("DIAGUP", os.environ.get("DIAGUP") or "null").replace("DIAGTRIM", os.environ.get("DIAGTRIM") or "null").replace("LAYMARG", os.environ.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(os.environ.get("DOWNE", ""), os.environ.get("DOWNE", ""))).replace("TMEDIA", os.environ.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(os.environ.get("SCARSOAI", ""), os.environ.get("SCARSOAI", ""))), [k, liv, seme])
+                    r = await pg.evaluate(js_corsa(os.environ), [k, liv, seme])
                     tutte.append({"reg": k, "liv": liv, "seme": seme, "barche": r["barche"], "contatti": r["contatti"]})
             print(f"  regata {k + 1} fatta", flush=True)
         await br.close()
@@ -113,5 +116,6 @@ def riassumi(ds):
         for nomeq, g in (("quarto migliore", bol[:q]), ("quarto peggiore", bol[-q:])):
             print(f"  bolina, {nomeq}: persi media {statistics.mean(x['vero'] - x['ott'] for x in g):.1f} s, virate vere {statistics.mean(x['vir'] for x in g):.1f}, della rotta ottimale {statistics.mean(x['manOtt'] for x in g):.1f}")
 
-if sys.argv[1] == "--riassumi": riassumi([json.loads(pathlib.Path(f).read_text()) for f in sys.argv[2:]])
-else: asyncio.run(main(int(sys.argv[1]), int(sys.argv[2])))
+if __name__ == "__main__":
+    if sys.argv[1] == "--riassumi": riassumi([json.loads(pathlib.Path(f).read_text()) for f in sys.argv[2:]])
+    else: asyncio.run(main(int(sys.argv[1]), int(sys.argv[2])))

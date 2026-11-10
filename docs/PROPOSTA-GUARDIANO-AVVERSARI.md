@@ -53,6 +53,23 @@ Il guardiano deve:
 - In `lancia_tutti.sh` fra i collaudi lunghi (circa 5-6 minuti), non in `--veloce`.
 - Esce con 1 se un numero peggiora oltre la soglia, 2 se la misura non è valida (meno di 96 regate finite, errori della pagina).
 
-## 6. Esito
+## 6. Esito (10 novembre, semi 1491-1502, 96 regate per prova, 1.2.24)
 
-(da scrivere)
+| | 1.2.24 | `R_DIR` 40 | `R_DIR` 80 | **soglia** | poppa 1.2.23 | layline di dritta |
+| --- | --- | --- | --- | --- | --- | --- |
+| G1 arrivo mediano | 197,9 s | 198,3 | 198,8 | **+1,78** | 200,5 ✗ | 201,3 ✗ |
+| G2 bolina persi media | 27,3 s | 28,0 | 27,9 | **+1,3** | 27,3 | 30,0 ✗ |
+| G3 poppa persi mediana | 6,4 s | 7,1 | 7,1 | **+1,51** | 10,9 ✗ | 7,1 |
+| G4 lasco persi media | 7,9 s | 8,0 | 7,9 | **+0,5** (minimo) | 8,3 | 7,9 |
+| G5 contatti | 60 | 56 | 56 | **+6** (10%) | 58 | 57 |
+| G6 boa toccata / sbagliate | 18 / 0 | 27 / 0 | 27 / 0 | **+18 / +2** | 18 / 0 | 37 ✗ / 0 |
+| G7 non arrivati / squalificati | 0 / 1 | 0 / 0 | 0 / 0 | **+1 / +1** | 0 / 0 | 2 ✗ / 1 |
+| G8 scuffiate | 0 | 0 | 0 | **+2** | 0 | 0 |
+| G9 taglio mediano | 2,27 s | 2,27 | 2,27 | **+0,5** | 2,27 | 2,27 |
+
+**La contro-prova passa al primo tentativo, con 12 semi:** la poppa della 1.2.23 fallisce su G1 e G3, la layline di dritta su G1, G2, G6 e G7. Le due modifiche neutre passano.
+
+**Cosa non convince:**
+- **Il rumore è grande.** Una modifica che non cambia niente sposta l'arrivo mediano di quasi 1 s e la boa toccata da 18 a 27. Il guardiano vede quindi solo i peggioramenti grossi, come le due prove sopra; uno di mezzo secondo gli sfugge. Per quelli resta la misura lunga (`misura_avversari_rotta.py`, 240 regate).
+- **Boa toccata:** la soglia (+18) è il doppio del riferimento: su questo numero il guardiano è debole.
+- **G9 non si è mosso in nessuna prova** (la partenza non dipende da queste modifiche): controlla che un cambio alle partenze non passi inosservato, ma non è stato provato.
