@@ -204,3 +204,34 @@ Il bersaglio cambia a ogni fotogramma e la barca gira a vuoto attorno al punto 2
 - **Il motivo:** per lasciare la boa a sinistra devono passarle sotto per arrivare al punto 0, a destra, e lì virare.
 
 **Prossima ipotesi:** arrivare sulla layline mure a dritta prima dei 40 m. Chi sta a sinistra vira sulla layline di destra quando la incrocia, invece di puntare il punto 0. È una proposta nuova, con soglie sue.
+
+## 13. Correzione: arrivare sulla layline mure a dritta (10 novembre, scritta prima di misurare; via di Ale già dato)
+
+**Cosa succede oggi** (§12): due terzi dei passaggi entrano nei 40 m dalla boa 1 mure a sinistra, venendo da sinistra. Puntano il punto 0, a destra della boa e un po' sopra, cioè **oltre** la layline di dritta. Ci arrivano vicino, con la regola del «bordo più vicino» degli ultimi 30 m e virate ogni 8 s al massimo, poi virano e puntano il punto 1. Perdono 11-14 s negli ultimi 40 m, contro 8-9 s di chi entra mure a dritta.
+
+**Modello più semplice.** Chi è mure a sinistra, a destra della boa, sulla prima bolina, **vira appena la sua bolina di dritta passa sopra la boa** di almeno 3 m (la stessa prova del giro diretto della 1.2.20: angolo `ai.up` + 3° di scarroccio, `M_DIR` = 3 m). Da lì tiene la bolina di dritta fino a oltre la boa, come il giro diretto (`b.diretto`), poi segue i punti di passaggio di sempre.
+- Vale solo entro `R_LAY` metri dalla boa.
+- **Uscita:** se un salto di vento la porta sotto la layline (la bolina di dritta passa più di 2 m sotto la boa) lascia il giro diretto e torna a puntare il punto 0.
+- Il giro diretto della 1.2.20 (mure a dritta entro 15 m) non cambia. Vale in tutte le regate dopo il via, Scuola compresa (lì basta che non peggiori, `DECISIONI.md` 9 novembre).
+
+**Costanti (ipotesi nostre):**
+- `R_LAY` ∈ {50, 100, 200} m: 50 è poco più del cerchio della misura, 100 i due terzi della bolina del torneo, 200 in pratica tutta.
+- Uscita sotto la layline: 2 m.
+
+**Misura:** `misura_avversari_rotta.py` con `RLAY` (gioco spento = 1.2.24). Scelta sui **semi 1431-1460**, conferma sui **semi 1461-1490**, mai usati; 240 regate del torneo per gruppo.
+
+**Il metro misura davvero (L0):** lo strumento conta i passaggi in cui la regola è scattata. Se scatta in meno di 100 passaggi su circa 720, la prova non vale e lo si dice.
+
+**Criteri (soglie nostre,** contro la 1.2.24 sugli stessi semi):
+- **L1, ultimi 40 m dalla boa 1:** secondi persi in media almeno **−15%**. Se tutti i passaggi mure a sinistra perdessero come quelli mure a dritta si arriverebbe a circa −24%: −15% vuol dire prenderne più di metà.
+- **L2, bolina intera:** secondi persi in media non aumentano (virare prima non deve costare altrove).
+- **L3, arrivo mediano degli avversari:** non peggiora.
+- **L4, virate negli ultimi 40 m:** non aumentano.
+- **L5, contatti dopo il via:** al massimo +10%.
+- **L6, boe:** boa toccata al massimo il più grande fra +10% e +5; sbagliate al massimo +2; non arrivate non aumentano.
+- **L7, Scuola:** `collaudo_regate.py` 6 0, 6 1 e `--lungo`, nessuna «BLOCCATA»; `collaudo_giro_boa.py` OK.
+- **L8, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+
+Fra i valori di `R_LAY` che passano L1-L6 sulla scelta si prende quello che perde meno negli ultimi 40 m; poi la conferma, con le stesse soglie. Se nessuno passa, il gioco resta la 1.2.24 e la patch va in `sperimentale/`.
+
+**Rischi:** con i salti, virare sulla layline lontano dalla boa fa arrivare lunghi o corti (L2 lo vede); più barche mure a dritta sulla layline vuol dire più incroci vicino alla boa (L5, L6).
