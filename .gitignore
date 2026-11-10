@@ -26,3 +26,6 @@ RESOCONTO.md
 
 # registrazioni delle regate scaricate da Ale e Lucio (servono a tests/rigioca_regata.py e alle misure): restano sul PC, non vanno su GitHub
 registrazioni/
+
+# suoni registrati del 4 novembre (prova, 1.2.9-1.2.10): restano sul PC, non vanno su GitHub (Ale, 10 novembre 2026)
+sperimentale/suoni-registrati/
