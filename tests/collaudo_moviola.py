@@ -25,7 +25,7 @@ RUN = """async ([seme, conMov]) => {
   if (!conMov){ document.getElementById("rTor").click(); return out; }
   racePanel();
   out.bottone = !document.getElementById("finRev").hidden;
-  out.tPrimo = tPrimo; out.tArrivo = me.fin === null ? null : me.fin - me.pen;
+  out.tPrimo = tPrimo; out.tArrivo = me.fin === null ? null : me.fin - me.pen; out.tFine = R.t;   // tFine: l'istante in cui la regata del giocatore è finita, anche a finestra chiusa
   out.f0 = riv.all[0].t; out.f1 = riv.all[riv.all.length - 1].t; out.copie = riv.all.length;
   // V4: i segni attesi sono le O premute e ogni contatto o boa toccata dell'elenco delle penalità (anche prima del via, anche fra avversari)
   const attesiAuto = R.penList.filter(x => / contatto con | hai toccato /.test(x)).length;
@@ -114,9 +114,12 @@ async def main():
     chk("V1 fedeltà su tutta la regata: posizione entro 0,5 m e prua entro 5°, almeno 500 confronti (confronti %d, prima del via %d)" % (nc, ncp),
         nc >= 500 and ncp > 0 and max(r["errPos"] for r in nuovo) <= 0.5 and max(r["errH"] for r in nuovo) <= 5,
         "massimo %.3f m, %.2f°" % (max(r["errPos"] for r in nuovo), max(r["errH"] for r in nuovo)))
-    chk("V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (%d regate arrivate)" % sum(1 for r in nuovo if r["tArrivo"] is not None),
-        metro.tutti((r["tArrivo"] is not None and abs(r["f0"] - r["tPrimo"]) <= 0.2 and abs(r["f1"] - r["tArrivo"]) <= 0.2 for r in nuovo), minimo=n),
-        "scarti massimi: inizio %.2f s, fine %.2f s; copie per regata %d-%d" % (max(abs(r["f0"] - r["tPrimo"]) for r in nuovo), max(abs(r["f1"] - (r["tArrivo"] or 1e9)) for r in nuovo), min(r["copie"] for r in nuovo), max(r["copie"] for r in nuovo)))
+    # 10 nov 2026: V3 non dipende più dal pilota. Se il giocatore non arriva (finestra d'arrivo chiusa: Firefox seme 8 dalla 1.2.24, Chromium seme 5 dalla 1.2.15
+    # alla 1.2.23) la moviola deve coprire fino alla chiusura; perché il caso «arrivo» resti misurato, almeno metà delle regate devono essere arrivate
+    arrivate = sum(1 for r in nuovo if r["tArrivo"] is not None); fineDi = lambda r: r["tArrivo"] if r["tArrivo"] is not None else r["tFine"]
+    chk("V3 copertura: dalle prime bandiere (entro 0,2 s) alla fine della regata del giocatore, arrivo o finestra chiusa (entro 0,2 s) (%d regate arrivate su %d, almeno metà)" % (arrivate, len(nuovo)),
+        2 * arrivate >= n and metro.tutti((abs(r["f0"] - r["tPrimo"]) <= 0.2 and abs(r["f1"] - fineDi(r)) <= 0.2 for r in nuovo), minimo=n),
+        "scarti massimi: inizio %.2f s, fine %.2f s; copie per regata %d-%d" % (max(abs(r["f0"] - r["tPrimo"]) for r in nuovo), max(abs(r["f1"] - fineDi(r)) for r in nuovo), min(r["copie"] for r in nuovo), max(r["copie"] for r in nuovo)))
     tot = sum(r["segni"] for r in nuovo)
     chk("V4 segni: le 2 O di ogni regata a 40 e 90 s (entro 0,2 s) e un segno per ogni contatto o boa toccata dell'elenco, con le tacche sul cursore; almeno 20 segni (segni %d, automatici %d, prima del via %d)" % (tot, sum(r["segniAuto"] for r in nuovo), sum(r["segniPrimaDelVia"] for r in nuovo)),
         tot >= 20 and metro.tutti((r["segniMan"] == 2 and all(abs(a - b) <= 0.2 for a, b in zip(r["orariO"], [40, 90])) and r["segniAuto"] == r["attesiAuto"] and r["tacche"] == r["segni"] for r in nuovo), minimo=n))

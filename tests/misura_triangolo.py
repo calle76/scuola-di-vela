@@ -14,7 +14,7 @@ CORSA = """([seme, L]) => {
   const sel = document.getElementById("aiLevel"); sel.value = "principianti"; sel.dispatchEvent(new Event("change"));
   sv.torApri(); document.getElementById("torGo").click();            // regata 1 (bastone): serve solo a creare il torneo
   sv.tor.ris.push(sv.tor.ris.length ? [] : [{ fin: 1, pp: 0 }, { fin: 2, pp: 0 }, { fin: 3, pp: 0 }, { fin: 4, pp: 0 }]);
-  sv.tor.regate[1] = { c: seme % 3, wind: (seme % 8) * 45 };
+  sv.tor.regate[1] = { tws: seme % 2 ? 12 : 10, wind: (seme % 8) * 45 };
   __seed(seme); sv.simTime = 0; sv.openItem(["r", "t"]);              // regata 2: il triangolo
   const R = sv.R; R.tor = false;                                       // senza finestra d'arrivo (C9 si misura fuori dalla finestra)
   if (!R.tri) return { errore: "non è un triangolo" };

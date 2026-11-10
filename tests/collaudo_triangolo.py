@@ -20,8 +20,8 @@ APRI = """([seme, vento, tri]) => {   // apre la regata 2 del torneo (triangolo)
   const sv = __sv; sv.fast(0); __seed(seme); sv.simTime = 0;
   const sel = document.getElementById("aiLevel"); sel.value = "principianti"; sel.dispatchEvent(new Event("change"));
   sv.torApri(); document.getElementById("torGo").click();
-  if (tri){ sv.tor.ris.push([{ fin: 1, pp: 0 }, { fin: 2, pp: 0 }, { fin: 3, pp: 0 }, { fin: 4, pp: 0 }]); sv.tor.regate[1] = { c: seme % 3, wind: vento }; }
-  else sv.tor.regate[0] = { c: 0, wind: vento };
+  if (tri){ sv.tor.ris.push([{ fin: 1, pp: 0 }, { fin: 2, pp: 0 }, { fin: 3, pp: 0 }, { fin: 4, pp: 0 }]); sv.tor.regate[1] = { tws: seme % 2 ? 12 : 10, wind: vento }; }
+  else sv.tor.regate[0] = { tws: 10, wind: vento };
   __seed(seme); sv.simTime = 0; sv.openItem(["r", "t"]); return !!sv.R.tri; }"""
 # giro: bearing da `a` a `b` in passi di 2° (b può essere minore: allora decresce) attorno alla boa k (raggio 8 m); ritorna lato e boe sbagliate
 GIRO = """([k, da, a]) => {
