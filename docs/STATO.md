@@ -76,7 +76,8 @@
   - sei collaudi che nessuno lanciava sono entrati nel giro (86 in tutto); `collaudo_triangolo` era rotto dalla 1.2.21 per un campo cambiato nel torneo, riparato; `collaudo_avversari_deriva` e il T2b del triangolo falliscono in modo noto dalla nascita;
   - `collaudo_moviola` V3 non dipende più dall'arrivo del pilota;
   - censimento dei collaudi che dipendono dal caso in fondo a `COLLAUDI.md`: resta stretto solo il V4 della moviola.
-- **Aspetta Ale:** il giro completo sul PC (`tests/lancia_tutti.sh`), come punto di partenza pulito.
+- **Giro completo su GitHub dopo la sessione** (10 novembre, 87 collaudi, 49 minuti, 1.2.24): **nessun fallito** nei due browser. Noti: partenze, virate2, triangolo T2b, avversari di Deriva. `collaudo_suoni_si_sentono` questa volta passa (boa 7,9-10,6 dB su 6; sartiame 2,2-4,8 su 2): resta ballerino, voce 8 aperta. Il guardiano in Firefox non è identico al bit al riferimento (scritto in Chromium) ma sta nelle soglie. È il punto di partenza per il cono d'ombra.
+- **Esploratore:** ora gioca anche le 4 regate del torneo (regate 100-103). Aspetta il giro lungo di Ale su GitHub (semi 1-100, 4 scimmie da 600 s, due browser).
 - **Prossimo passo:** proposta del cono d'ombra (`RICERCA-CONO-D-OMBRA.md`).
 
 ## Dove sta cosa
