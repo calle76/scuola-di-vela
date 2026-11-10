@@ -9,6 +9,7 @@ URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve()
 CORSA = """([k, liv, seme]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
+  if (sv.boa && RDIR !== null) sv.boa(3, 2, 3, RDIR); // PROPOSTA-AVVERSARI-BOLINA.md §9: raggio del giro diretto
   if (sv.lay) sv.lay(LAYMARG); if (sv.down && DOWNE !== undefined) sv.down(DOWNE); if (sv.scarso && SCARSOAI !== undefined) sv.scarso(SCARSOAI, TMEDIA);
   sv.fast(0); sel('aiLevel', liv); sel('cdSel', '60'); window.confirm = () => true;
   if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
@@ -17,6 +18,8 @@ CORSA = """([k, liv, seme]) => {
   T.regate[k] = { tws: seme % 2 ? 12 : 10, wind: (seme % 8) * 45 };
   semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
   const R = sv.R, dt = 1 / 60; R.tor = false;
+  for (const b of R.boats) if (!b.me){ if (DIAGUP !== null) b.ai.up = DIAGUP; if (DIAGTRIM !== null) b.ai.trim = DIAGTRIM; } // diagnosi (PROPOSTA-AVVERSARI-BOLINA.md §7): solo nella misura
+  const ent = {};
   const ai = R.boats.map((b, i) => i).filter(i => !R.boats[i].me), vir = {}, prev = {}, mure = {}, cambi = {}, scuf = {}, cap = {}, tocca = {};
   for (const i of ai){ vir[i] = []; prev[i] = false; cambi[i] = []; scuf[i] = 0; cap[i] = false; tocca[i] = new Set(); }
   let nPen = R.penList.length, contatti = 0;
@@ -32,10 +35,13 @@ CORSA = """([k, liv, seme]) => {
     for (const i of ai){ const b = R.boats[i], j = b.leg - 1; if (b.fin === null && j >= 0){ if (b.virando && !prev[i]) vir[i][j] = (vir[i][j] || 0) + 1;
         if (!b.S.capsized){ const m = Math.sign(sv.norm180(sv.windAt(b.S.x, b.S.y).twd - b.S.h)); if (m && mure[i] && m !== mure[i]) cambi[i][j] = (cambi[i][j] || 0) + 1; if (m) mure[i] = m; }
         if (b.S.capsized && !cap[i]) scuf[i]++; cap[i] = b.S.capsized;
+        if (j === 0 && !ent[i] && Math.hypot(b.S.x - R.marks[0].x, b.S.y - R.marks[0].y) < 40) ent[i] = { t: R.t, x: b.S.x, y: b.S.y, vir0: vir[i][0] || 0 };
         const mk = R.marks[Math.min(j, R.marks.length - 1)]; if (j < R.marks.length && Math.hypot(b.S.x - mk.x, b.S.y - mk.y) < 6 && dHull(b, mk) < 0.9) tocca[i].add(j); }
       prev[i] = b.virando; }
   }
-  const barche = ai.map(i => ({ nome: R.boats[i].name, scuffiate: scuf[i], toccate: tocca[i].size, sbagliate: R.boats[i].wrongMarks || 0, taglio: sv.rot.barche[i].taglio ? sv.rot.barche[i].taglio.t : null, fin: R.boats[i].fin, dsq: !!R.boats[i].dsq,
+  const m40 = i => { const e = ent[i], g = sv.rot.barche[i].giri[0]; if (!e || !g) return null; const q = rotLato({ x: e.x, y: e.y, t: e.t, s: 0 }, rotCancBoa(R.marks[0]));
+    return q ? { vero: g.t - e.t, ott: q.t - e.t, vir: (vir[i][0] || 0) - e.vir0 } : null; };
+  const barche = ai.map(i => ({ nome: R.boats[i].name, m40: m40(i), scuffiate: scuf[i], toccate: tocca[i].size, sbagliate: R.boats[i].wrongMarks || 0, taglio: sv.rot.barche[i].taglio ? sv.rot.barche[i].taglio.t : null, fin: R.boats[i].fin, dsq: !!R.boats[i].dsq,
     lati: sv.rotLatiBarca(i).map(L => ({ ...L, vir: vir[i][L.lato] || 0, cambi: cambi[i][L.lato] || 0 })) }));
   return { barche, contatti };
 }"""
@@ -49,11 +55,11 @@ async def main(A, B):
         for k in range(4):
             for liv in ("principianti", "esperti"):
                 for seme in range(A, B + 1):
-                    r = await pg.evaluate(CORSA.replace("LAYMARG", os.environ.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(os.environ.get("DOWNE", ""), os.environ.get("DOWNE", ""))).replace("TMEDIA", os.environ.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(os.environ.get("SCARSOAI", ""), os.environ.get("SCARSOAI", ""))), [k, liv, seme])
+                    r = await pg.evaluate(CORSA.replace("RDIR", os.environ.get("RDIR") or "null").replace("DIAGUP", os.environ.get("DIAGUP") or "null").replace("DIAGTRIM", os.environ.get("DIAGTRIM") or "null").replace("LAYMARG", os.environ.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(os.environ.get("DOWNE", ""), os.environ.get("DOWNE", ""))).replace("TMEDIA", os.environ.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(os.environ.get("SCARSOAI", ""), os.environ.get("SCARSOAI", ""))), [k, liv, seme])
                     tutte.append({"reg": k, "liv": liv, "seme": seme, "barche": r["barche"], "contatti": r["contatti"]})
             print(f"  regata {k + 1} fatta", flush=True)
         await br.close()
-    d = {"regate": tutte, "errori": errs[:3], "down": os.environ.get("DOWNE"), "scarso": (os.environ.get("SCARSOAI") or "") + (" T_MEDIA " + os.environ["TMEDIA"] if os.environ.get("TMEDIA") else "")}
+    d = {"regate": tutte, "errori": errs[:3], "diag": f"up={os.environ.get('DIAGUP') or '-'} trim={os.environ.get('DIAGTRIM') or '-'} R_DIR={os.environ.get('RDIR') or 'gioco'}", "down": os.environ.get("DOWNE"), "scarso": (os.environ.get("SCARSOAI") or "") + (" T_MEDIA " + os.environ["TMEDIA"] if os.environ.get("TMEDIA") else "")}
     if os.environ.get("SALVA"): pathlib.Path(os.environ["SALVA"]).write_text(json.dumps(d))
     riassumi([d])
 
@@ -73,6 +79,12 @@ def riassumi(ds):
     ba = [b for r in R for b in r["barche"]]; fin = [b["fin"] for b in ba if b["fin"] is not None and not b["dsq"]]
     pop = [x for _, t, x in L if t == "poppa"]
     bol = [x for _, t, x in L if t == "bolina"]
+    M = [b["m40"] for r in R for b in r["barche"] if b.get("m40")]
+    if M:
+        b1 = [x for r in R for b in r["barche"] for x in b["lati"] if x["lato"] == 0 and b.get("m40")]
+        print(f"  DIAGNOSI {ds[0].get('diag', '')}: bolina persi media {statistics.mean(x['vero'] - x['ott'] for x in bol):.2f} s (mediana {statistics.median(x['vero'] - x['ott'] for x in bol):.2f}); "
+              f"ultimi 40 m dalla boa 1: persi media {statistics.mean(m['vero'] - m['ott'] for m in M):.2f} s (mediana {statistics.median(m['vero'] - m['ott'] for m in M):.2f}), virate {statistics.mean(m['vir'] for m in M):.2f}, su {len(M)} passaggi; "
+              f"quota degli ultimi 40 m sulla prima bolina {sum(m['vero'] - m['ott'] for m in M) / max(1e-9, sum(x['vero'] - x['ott'] for x in b1)):.0%}")
     print(f"  SCARSO_AI {ds[0].get('scarso') or 'spento'}: B1 bolina persi mediana {statistics.median(x['vero'] - x['ott'] for x in bol):.2f} s; B3 virate per lato di bolina {statistics.mean(x['vir'] for x in bol):.2f}")
     print(f"  DOWN_E {ds[0].get('down') or 'come il gioco'}: Q1 poppa persi mediana {statistics.median(x['vero'] - x['ott'] for x in pop):.2f} s; Q2 arrivo mediano {statistics.median(fin):.1f} s; "
           f"Q3 contatti dopo il via {sum(r.get('contatti', 0) for r in R)}; Q4 cambi di mure per lato di poppa {statistics.mean(x.get('cambi', 0) for x in pop):.2f}; "

@@ -108,3 +108,40 @@ Semi **1311-1340**, mai usati, le 4 regate del torneo, principianti ed esperti, 
 | tutte e due | i due insieme |
 
 Le virate vicino alla boa e i bordi a tempo non si possono togliere senza cambiare la guida. Il loro peso si legge dalla parte «ultimi 40 m» e da quello che resta nelle prove sopra.
+
+## 8. Esito della diagnosi (semi 1311-1340, 240 regate del torneo, 1.2.24)
+
+| Prova | Bolina, persi media (mediana) | Principianti / esperti, mediana | Ultimi 40 m dalla boa 1: persi media (mediana), virate | Quota degli ultimi 40 m sulla prima bolina |
+| --- | --- | --- | --- | --- |
+| riferimento | 28,0 s (23,6) | 29,6 / 18,0 s | 11,4 s (6,9), 1,68 | 41% |
+| angolo 45° | 26,4 s (21,0) | 23,9 / 18,3 s | 10,7 s (6,4), 1,61 | 41% |
+| vela regolata | 26,6 s (22,5) | 24,4 / 21,9 s | 11,8 s (6,6), 1,73 | 44% |
+| tutte e due | 22,9 s (20,3) | 19,6 / 21,1 s | 8,8 s (5,7), 1,44 | 38% |
+
+**Cosa vuol dire:**
+- **Ultimi 40 m prima della boa 1: il pezzo più grosso.** Lì gli avversari perdono 11,4 s a passaggio in media, con 1,7 virate. È il 41% di quello che perdono nella prima bolina: è la confusione dell'osservazione 113.
+- **Angolo e regolazione insieme valgono il 18%** (−5,1 s), ma soprattutto per i principianti, che arrivano al livello degli esperti. È la **differenza fra livelli**, voluta (`aiParams`): non si corregge.
+- **Il resto, circa il 40%,** sta in mezzo alla bolina: bordi a tempo e salti non giocati. La prova «sugli scarsi» (§4-6) ne ha preso solo una parte.
+
+**Quindi la correzione da provare è l'avvicinamento alla boa.**
+
+## 9. Correzione: avvicinamento alla boa con il giro diretto da più lontano (scritta prima di misurare)
+
+**Modello.** Il giro diretto della 1.2.20 (`PROPOSTA-BOA-PIANTATA.md` §8) scatta solo entro `R_DIR` = 15 m dalla boa. Chi è mure a dritta, a destra della boa, e di bolina passa sopra la boa di almeno 3 m, va oltre la boa tenendo la bolina, invece di puntare prima il punto di passaggio a destra della boa.
+
+Da più lontano lo stesso vale **sulla layline**: chi ci arriva mure a dritta non ha bisogno del punto di passaggio. Oggi lo punta, ci gira intorno negli ultimi 30 m e vira due volte.
+
+Si allarga solo `R_DIR`; nient'altro cambia.
+
+**Costante:** `R_DIR` ∈ {40, 80} m (oggi 15). Ipotesi nostra: 40 m è il raggio della misura, 80 m è metà della bolina del torneo.
+
+**Criteri** (soglie nostre, `misura_avversari_rotta.py` con `RDIR`, contro la 1.2.24 sugli stessi semi). Scelta sui **semi 1341-1370**, conferma sui **semi 1371-1400**, mai usati.
+- **A1, ultimi 40 m:** secondi persi in media almeno −25%.
+- **A2, arrivo mediano degli avversari:** non peggiora.
+- **A3, virate negli ultimi 40 m:** non aumentano.
+- **A4, contatti dopo il via:** al massimo +10%.
+- **A5, boe:** boa toccata al massimo il più grande fra +10% e +5; sbagliate al massimo +2; non arrivate non aumentano.
+- **A6, Scuola:** `collaudo_regate.py` 6 0, 6 1 e `--lungo`, nessuna «BLOCCATA».
+- **A7, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+
+Fra i valori che passano si sceglie quello che perde meno negli ultimi 40 m. Se nessuno passa, `R_DIR` resta 15.
