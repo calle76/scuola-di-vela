@@ -78,7 +78,7 @@
   - censimento dei collaudi che dipendono dal caso in fondo a `COLLAUDI.md`: resta stretto solo il V4 della moviola.
 - **Giro completo su GitHub dopo la sessione** (10 novembre, 87 collaudi, 49 minuti, 1.2.24): **nessun fallito** nei due browser. Noti: partenze, virate2, triangolo T2b, avversari di Deriva. `collaudo_suoni_si_sentono` questa volta passa (boa 7,9-10,6 dB su 6; sartiame 2,2-4,8 su 2): resta ballerino, voce 8 aperta. Il guardiano in Firefox non è identico al bit al riferimento (scritto in Chromium) ma sta nelle soglie. È il punto di partenza per il cono d'ombra.
 - **Esploratore:** ora gioca anche le 4 regate del torneo (regate 100-103). Aspetta il giro lungo di Ale su GitHub (semi 1-100, 4 scimmie da 600 s, due browser).
-- **Prossimo passo:** proposta del cono d'ombra (`RICERCA-CONO-D-OMBRA.md`).
+- **Proposta del cono d'ombra scritta, fermata 1** (`PROPOSTA-CONO-D-OMBRA.md`): meno vento a chi è coperto, lungo il vento apparente di chi copre, numeri da F75; solo nel torneo; avversari che per ora non reagiscono; criteri K1-K15. **Aspetta il via di Ale e tre decisioni** (§9: cono disegnato acceso o spento nel torneo, fisica non spegnibile, prima fetta senza vento girato).
 
 ## Dove sta cosa
 
