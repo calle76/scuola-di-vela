@@ -8,9 +8,9 @@
 
 | # | Cosa | Dove se ne parla | Stato |
 | --- | --- | --- | --- |
-| 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** e il giro GitHub della 1.2.18 (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107) | `STATO.md` | aspetta i file |
+| 1 | **Leggere le registrazioni di Lucio sulla 1.2.16-1.2.18** (le 6 regate di Ale dell'8 sera sono lette: osservazioni 100-107; il giro GitHub della 1.2.24 è letto, `STATO.md`) | `STATO.md` | aspetta i file |
 | 1b | **Avversari: virate in più vicino alla boa** (circa 1,7 virate per passaggio entro 40 m dalla boa 1; contare lo scarroccio ne toglie al massimo il 6%). Da guardare: il punto di passaggio a destra della boa e il «bordo più vicino» negli ultimi 30 m | `PROPOSTA-LAYLINE.md` §5 | ferma con la bolina (Ale, 10 nov): si riprende con nuove registrazioni |
-| 2 | **Cono d'ombra delle vele** (copertura, vento sporco) nelle regate non didattiche | `RICERCA-CONO-D-OMBRA.md` (letteratura trovata, F75-F76) | da proporre **dopo la bolina degli avversari** (10 nov, Ale: bolina ferma alla 1.2.24, si riprende con nuove registrazioni) (la poppa è nella 1.2.24; la bolina «sugli scarsi» non è passata, `PROPOSTA-AVVERSARI-BOLINA.md` §6) (Ale, 9 nov: gli avversari devono prima saperci stare) |
+| 2 | **Cono d'ombra delle vele** (copertura, vento sporco) nelle regate non didattiche | `RICERCA-CONO-D-OMBRA.md` (letteratura trovata, F75-F76) | **prossima** (10 nov, Ale: prima del lavoro sugli avversari, dopo il collaudo guardiano, che è fatto) (la poppa è nella 1.2.24; la bolina «sugli scarsi» non è passata, `PROPOSTA-AVVERSARI-BOLINA.md` §6) (Ale, 9 nov: gli avversari devono prima saperci stare) |
 | 3 | **Barche affiancate che si tengono** (anche tre alla boa, e la boa presa larga cedendo al giocatore): idea nuova «chi si libera resti libero» | `PROPOSTA-COPPIE.md` §12; osservazioni 94, 97, 104 | da riproporre |
 | 4 | **Avversari che virano o orzano addosso a una vicina** (anche passando sotto la boa, e al via: poggiare all'ultimo, virare sulla rotta di una mure a dritta), con la colpa all'altra perché le regole 15 e 16 sono rimandate | osservazioni 101, 102, 105, 106 | da proporre |
 | 6 | **Torneo in Firefox: chiudendo la scheda a metà, il ritiro può non salvarsi** (`collaudo_torneo` C11) | osservazione 86 | proposta fatta; Ale: dopo la prova della Scuola, poi senza nuovo via |

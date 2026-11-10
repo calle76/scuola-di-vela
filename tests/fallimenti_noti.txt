@@ -50,8 +50,8 @@ ESITO: FALLITO
   misura C1: NO
 ESITO: FALLITO
 
-== collaudo_moviola.py (8 regate) | chromium | 1.2.15: al seme 5 del torneo il pilota cede 60 s accanto a Rossa e chiude fuori tempo (V3); la correzione provata alzava le penalità (PROPOSTA-DERIVA-SU-MAIN.md §6)
-FALLITO V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (7 regate arrivate) scarti massimi: inizio 0.02 s, fine 999999700.83 s; copie per regata 3142-4108
+== collaudo_moviola.py (8 regate) | firefox | 1.2.24 (giro GitHub del 10 nov 2026, rifatto uguale sul PC): al seme 8 del torneo il pilota resta indietro dopo un contatto con la Rossa e la finestra d'arrivo si chiude (V3); è il pilota, non la moviola. In Chromium era lo stesso dalla 1.2.15 al seme 5, dalla 1.2.24 passa
+FALLITO V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (7 regate arrivate) scarti massimi: inizio 0.02 s, fine 999999761.03 s; copie per regata 2812-3592
 casi sbagliati: ["V3 copertura: dalle prime bandiere (entro 0,2 s) all'arrivo del giocatore (entro 0,2 s) (7 regate arrivate)"]
 
 == collaudo_giri_avversari.py (120 regate) | firefox | Firefox, 1.2.18: G4 trova 14 casi di due giri di fila contro i 15 che il metro chiede (mediana 22,0 s, dentro 12-30): dalla 1.2.18 gli avversari girano anche prima del via e i giri si interrompono più spesso in gruppo, le coppie di giri di fila sono meno. Chromium verde con 120 regate (18 casi)

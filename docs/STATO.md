@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 10 novembre 2026, tarda mattina.*
+*Aggiornato: 10 novembre 2026, pomeriggio.*
 
 ## Versione
 
@@ -66,6 +66,13 @@
   - correzione del rimbalzo fra punti di passaggio (§11-12): il difetto era vero ma non costava tempo, e in conferma peggiora.
 - **Provata e non adottata anche la layline di dritta** (§13-14, semi 1431-1460): la regola scatta in quasi tutti i passaggi, ma peggiora tutto (ultimi 40 m 11,1 → 12,8-13,0 s, arrivo +2,5-3,5 s, boa toccata 22 → 44-55). Chi arriva da sinistra incrocia la layline quasi sul punto 0: non c'era niente da anticipare. Patch in `sperimentale/avversari-layline-dritta/`.
 - **Ale: bolina degli avversari ferma** (`DECISIONI.md`); si riprende con nuove registrazioni. Pulizia di file e cartelle fatta (commit `907413c`).
+- **Ale: il cono d'ombra prima degli avversari** (`DECISIONI.md`): guardiano → cono d'ombra → registrazioni di Ale e Lucio → avversari tutti insieme.
+- **Collaudo guardiano degli avversari** (`PROPOSTA-GUARDIANO-AVVERSARI.md`, `tests/collaudo_guardiano_avversari.py`): 96 regate del torneo contro il riferimento della 1.2.24, circa 6 minuti, fra i lunghi. Boccia la poppa della 1.2.23 e la layline di dritta, lascia passare le modifiche neutre. Vede solo i peggioramenti grossi (il rumore sposta l'arrivo di circa 1 s).
+- **Letto il giro su GitHub della 1.2.24** (10 novembre): niente del gioco. Tre collaudi:
+  - `collaudo_moviola` in Firefox: il pilota resta indietro dopo un contatto e chiude fuori tempo, come succedeva in Chromium dalla 1.2.15. Voce dei fallimenti noti aggiornata.
+  - `collaudo_registratore_barche` in Firefox «NON VALIDO»: nessuna barca ferma nelle regate vere, perché gli avversari non si piantano quasi più. Corretto il collaudo: le fermate le misurano i 10 casi costruiti.
+  - `collaudo_suoni_si_sentono` in Chromium: boa e sartiame poco sopra o sotto la soglia, già aperto (`DA-FARE.md` voce 8).
+- **Prossimo passo:** proposta del cono d'ombra (`RICERCA-CONO-D-OMBRA.md`).
 
 ## Dove sta cosa
 

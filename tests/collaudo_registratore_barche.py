@@ -123,7 +123,9 @@ async def regate(b, elenco):
           f"dimensione massima {tot['b_per_min']:.1f} kB al minuto registrato ({tot['max_rt']:.1f} se si dividesse per il tempo di regata senza il conto alla rovescia)", flush=True)
     if tot["nB"] == 0: non_validi.append("G2: nessuna riga B")
     if tot["contatti"] < 10 and not VELOCE: non_validi.append(f"G3: solo {tot['contatti']} contatti nelle regate vere (servono almeno 10)")
-    if tot["fermi"] == 0 and not VELOCE: non_validi.append("G4: nessuna barca ferma nelle regate vere")
+    # 10 nov 2026: dalla 1.2.20 gli avversari non si piantano quasi più (giro GitHub della 1.2.24: 1 episodio in Chromium, 0 in Firefox); il «nessuna barca ferma»
+    # dipendeva da ciò che si misura. G4 si misura sui 10 casi costruiti (costruiti(), tutti devono passare); qui resta solo l'informazione
+    if tot["fermi"] == 0 and not VELOCE: print("  G4: nessuna barca ferma nelle regate vere; la registrazione delle fermate la misurano i casi costruiti", flush=True)
 
 async def costruiti(b, n):
     print(f"\n== G3, G4 costruiti: {n} casi ciascuno", flush=True)
