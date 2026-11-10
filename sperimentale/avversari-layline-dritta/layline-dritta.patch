@@ -1,0 +1,36 @@
+diff --git a/js/avvio.js b/js/avvio.js
+index 8601029..2a2af67 100644
+--- a/js/avvio.js
++++ b/js/avvio.js
+@@ -34,7 +34,7 @@
+       if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
+       me.capW = 0; me.info = info; me.me = false; aiControl(me, dt); me.me = true; return ctl.tiller; },
+     suoni: { reg: suoniReg, val: suoniVal, agg: suoniAgg, imposta: suoniImposta, get liv(){ return suoniLiv; }, get attivi(){ return suoniAttivi(); }, get fonte(){ return suoniFonte; }, get decodificaMs(){ return sReg ? sReg.ms : null; }, get ambFonte(){ return sAmbFonte; }, get ambMs(){ return sAmbMs; }, muta: suoniMuta, suona, gabbiano: () => sGabbiano(), scricchiolio: h => sScricchiolio(h), reset: seme => { sGabb = sScr = null; if (seme !== undefined) sSeme = seme; }, get master(){ return sMaster; }, get actx(){ return actx; } }, // 1.2.5; fonte e decodifica 1.2.7
+-    openItem, chiCede, hullWorld, hullOverlap, estraiEsame, meriti, torPunti, torSerie, torChiudi, torEsci, torApri, get tor(){ return tor; }, set triL(v){ TRI_L = v; }, lay: m => { LAY_MARG = m; }, down: e => { DOWN_E = e; }, vmgPoppa, layDir, layVisibile, apriEsercizio, get LESSONS(){ return LESSONS; }, rotLay, rotRiga, rot, rotCalcola, rotLatiBarca, rotSpiega, rotTesto, rotRaffiche, ventoDa, norm180, ripos: (x, t) => { X_RIPOS = x; if (t !== undefined) T_RIPOS = t; }, gustLevel: () => gustLevel, salti: () => !!shiftSt, boa: (p, q, m, r) => { PASSO_M = p ?? 3; SOPRA_M = q ?? 2; M_DIR = m == null ? 3 : (m < 0 ? null : m); R_DIR = r ?? 15; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
++    openItem, chiCede, hullWorld, hullOverlap, estraiEsame, meriti, torPunti, torSerie, torChiudi, torEsci, torApri, get tor(){ return tor; }, set triL(v){ TRI_L = v; }, lay: m => { LAY_MARG = m; }, down: e => { DOWN_E = e; }, vmgPoppa, layDir, layVisibile, apriEsercizio, get LESSONS(){ return LESSONS; }, rotLay, rotRiga, rot, rotCalcola, rotLatiBarca, rotSpiega, rotTesto, rotRaffiche, ventoDa, norm180, ripos: (x, t) => { X_RIPOS = x; if (t !== undefined) T_RIPOS = t; }, gustLevel: () => gustLevel, salti: () => !!shiftSt, layDx: r => { R_LAY = r; }, boa: (p, q, m, r) => { PASSO_M = p ?? 3; SOPRA_M = q ?? 2; M_DIR = m == null ? 3 : (m < 0 ? null : m); R_DIR = r ?? 15; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
+     completeStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; }, get base(){ return base; },
+     ctl, autoSheet, opt, autoK: (h0, k) => { AUTO_HEEL0 = h0; AUTO_K = k; }, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get riquadro(){ return R && R.segnali ? rqDati() : null; }, get rqRect(){ return R ? R.rqRect : null; }, get rqRect2(){ return R ? R.rqRect2 : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
+     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
+diff --git a/js/regate.js b/js/regate.js
+index 8183026..41888f9 100644
+--- a/js/regate.js
++++ b/js/regate.js
+@@ -231,6 +231,10 @@
+       // e tiene la bolina finché non l'ha superata; prima virava verso il punto 0 e, cambiato bersaglio a metà virata, rivirava senza velocità
+       const tanB = Math.tan((b.ai.up + 3) * D2R), diretto = M_DIR !== null && !due && !b.rp && wx > 0 && norm180(b.S.h - windOf(b)) < 0 && Math.hypot(wx - mx, wy - my) < R_DIR && wy - wx / tanB < my - M_DIR;
+       if (diretto){ b.rp = 1; b.diretto = true; }
++      // PROPOSTA-AVVERSARI-BOLINA.md §13: mure a sinistra, a destra della boa entro R_LAY, vira appena la bolina di dritta passa sopra la boa e la tiene come il giro diretto;
++      // se un salto la porta sotto la layline (bolina di dritta più di LAY_ESCE m sotto la boa) torna al punto 0. null = spento (1.2.24)
++      else if (R_LAY !== null && !due && !b.rp && !b.diretto && wx > 0 && norm180(b.S.h - windOf(b)) > 0 && Math.hypot(wx - mx, wy - my) < R_LAY && wy - wx / tanB < my - 3){ b.rp = 1; b.diretto = "lay"; }
++      if (b.diretto === "lay" && wx > 0 && wy - wx / tanB > my + LAY_ESCE){ b.diretto = false; b.rp = 0; }
+       if (b.diretto && (b.rp !== 1 || wx < -3)) b.diretto = false;
+       if (b.diretto){ const hh = (windOf(b) - b.ai.up - 3) * D2R; return { x: b.S.x + 30 * Math.sin(hh), y: b.S.y - 30 * Math.cos(hh), kind: "mark" }; } // la bolina col vento del posto
+       if (sopraDaSinistra) b.rp = 2;
+@@ -385,6 +389,7 @@
+   const PASSO_A = 56; // Deriva, §11: gradi dal vento per arrivare senza virare; ipotesi nostra
+   // PASSO_M: metri sopra la boa della rotta «sul bordo» (Deriva, §11); SOPRA_M: metri sopra la boa per contare «sopra» (docs/PROPOSTA-BOA-PIANTATA.md); ipotesi nostre
+   let PASSO_M = 3, SOPRA_M = 2;
++  let R_LAY = null; const LAY_ESCE = 2; // PROPOSTA-AVVERSARI-BOLINA.md §13: raggio della virata sulla layline di dritta e uscita sotto la layline, in metri; ipotesi nostre
+   let M_DIR = 3, R_DIR = 15; // 1.2.20, giro diretto (docs/PROPOSTA-BOA-PIANTATA.md §8-10): margine sopra la boa di bolina e raggio della zona, in metri; ipotesi nostre, scelte sui semi 861-890 e confermate sui 891-920 (fermate 70 -> 30)
+   // 1.2.23 (docs/PROPOSTA-LAYLINE.md, pezzo 4): la layline degli avversari è la loro rotta sul fondo di bolina, ai.up più lo scarroccio della polare
+   // (ROT_POL, js/rotta-dati.js) più LAY_MARG gradi; puntando un bersaglio a proravia del traverso la prua sta sopravento dello scarroccio. null = spento (fino alla 1.2.22)

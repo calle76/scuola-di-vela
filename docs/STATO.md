@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 10 novembre 2026, mattina.*
+*Aggiornato: 10 novembre 2026, tarda mattina.*
 
 ## Versione
 
@@ -64,10 +64,8 @@
 - **Provate e non adottate:**
   - giro diretto da più lontano (§9-10): nessun effetto;
   - correzione del rimbalzo fra punti di passaggio (§11-12): il difetto era vero ma non costava tempo, e in conferma peggiora.
-- **Prossimo passo (via di Ale già dato, non chiedere):** proposta nuova, «arrivare sulla layline mure a dritta».
-  - chi arriva mure a sinistra da sinistra (due terzi dei passaggi, 11-14 s persi negli ultimi 40 m contro 8-9) vira sulla layline di dritta appena la incrocia, invece di puntare il punto 0;
-  - soglie scritte prima, semi nuovi da 1431, strumento `misura_avversari_rotta.py`.
-- **Poi:** cono d'ombra (`RICERCA-CONO-D-OMBRA.md`).
+- **Provata e non adottata anche la layline di dritta** (§13-14, semi 1431-1460): la regola scatta in quasi tutti i passaggi, ma peggiora tutto (ultimi 40 m 11,1 → 12,8-13,0 s, arrivo +2,5-3,5 s, boa toccata 22 → 44-55). Chi arriva da sinistra incrocia la layline quasi sul punto 0: non c'era niente da anticipare. Patch in `sperimentale/avversari-layline-dritta/`.
+- **Proposta a Ale:** fermare la bolina degli avversari (tre prove di fila senza effetto) e passare al cono d'ombra (`RICERCA-CONO-D-OMBRA.md`). Decide Ale.
 
 ## Dove sta cosa
 

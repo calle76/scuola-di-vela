@@ -235,3 +235,25 @@ Il bersaglio cambia a ogni fotogramma e la barca gira a vuoto attorno al punto 2
 Fra i valori di `R_LAY` che passano L1-L6 sulla scelta si prende quello che perde meno negli ultimi 40 m; poi la conferma, con le stesse soglie. Se nessuno passa, il gioco resta la 1.2.24 e la patch va in `sperimentale/`.
 
 **Rischi:** con i salti, virare sulla layline lontano dalla boa fa arrivare lunghi o corti (L2 lo vede); più barche mure a dritta sulla layline vuol dire più incroci vicino alla boa (L5, L6).
+
+## 14. Esito del §13 (semi 1431-1460, 240 regate del torneo): peggiora tutto, non adottato
+
+L0 vale: la regola scatta in 630-644 passaggi su 720.
+
+| | 1.2.24 | `R_LAY` 50 | 100 | 200 | soglia |
+| --- | --- | --- | --- | --- | --- |
+| L1 ultimi 40 m, persi media (mediana) | 11,1 s (7,9) | **12,8 s** (8,2) ✗ | **13,0 s** (8,5) ✗ | **13,0 s** (8,5) ✗ | −15% |
+| L2 bolina intera, persi media | 27,8 s | **29,5 s** ✗ | **29,6 s** ✗ | **29,6 s** ✗ | non aumenta |
+| L3 arrivo mediano | 199,4 s | **201,9 s** ✗ | **202,9 s** ✗ | **202,6 s** ✗ | non peggiora |
+| L4 virate negli ultimi 40 m | 1,74 | 1,74 | 1,77 ✗ | 1,77 ✗ | non aumentano |
+| L5 contatti dopo il via | 155 | 161 | 163 | 158 | +10% |
+| L6 boa toccata / sbagliate | 22 / 1 | **46** / **3** ✗ | **44** / **5** ✗ | **55** / **7** ✗ | +5 / +2 |
+
+**Nessun valore passa: niente conferma, il gioco resta la 1.2.24.** Patch in `sperimentale/avversari-layline-dritta/` (si applica sulla 1.2.24 con `git apply`; lo strumento accetta ancora `RLAY`).
+
+**Perché non funziona** (seme 1431 guardato passaggio per passaggio, prima della griglia):
+- **L'ipotesi del §12 era sbagliata a metà.** Chi entra mure a sinistra da sinistra (529 su 720 qui) incrocia la layline di dritta quasi sul punto 0: il punto dove vira cambia di uno o due metri. Non c'è un «virare prima» da guadagnare negli ultimi 40 m.
+- **Tenere la bolina «giro diretto» fino oltre la boa costa:** la stima della layline (`ai.up` + 3° di scarroccio, 3 m di margine) è troppo stretta, e le barche toccano la boa il doppio delle volte (22 → 44-55). Il punto 0 e il punto 1 di oggi, più larghi, vanno meglio.
+- Con la griglia sono emerse due cose da tenere: chi entra mure a dritta perde quanto chi entra mure a sinistra (11,6 contro 11,0 s su questi semi; nel §12 erano 8-9 contro 11-14 s), quindi la differenza fra le mure non è stabile fra gruppi di semi; e il rimbalzo del punto di passaggio (§11) c'è ancora, ma il §12 ha già mostrato che non costa tempo.
+
+**Cosa resta.** Negli ultimi 40 m gli avversari perdono circa 11 s, ma non è né il giro diretto (§10), né il rimbalzo (§11-12), né la layline (§13-14). La parte che resta da guardare è il giro vero e proprio: il punto 1 sta 16 m e più oltre la boa e 10 m sopra, e la misura finisce al passaggio del cancello della boa. Proposta: **fermare qui la bolina degli avversari** (tre prove di fila senza effetto) e passare alla voce successiva di `DA-FARE.md`, il cono d'ombra, lasciando la bolina com'è: è la scelta di Ale.
