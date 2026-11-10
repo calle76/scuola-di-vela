@@ -65,7 +65,7 @@
   - giro diretto da più lontano (§9-10): nessun effetto;
   - correzione del rimbalzo fra punti di passaggio (§11-12): il difetto era vero ma non costava tempo, e in conferma peggiora.
 - **Provata e non adottata anche la layline di dritta** (§13-14, semi 1431-1460): la regola scatta in quasi tutti i passaggi, ma peggiora tutto (ultimi 40 m 11,1 → 12,8-13,0 s, arrivo +2,5-3,5 s, boa toccata 22 → 44-55). Chi arriva da sinistra incrocia la layline quasi sul punto 0: non c'era niente da anticipare. Patch in `sperimentale/avversari-layline-dritta/`.
-- **Proposta a Ale:** fermare la bolina degli avversari (tre prove di fila senza effetto) e passare al cono d'ombra (`RICERCA-CONO-D-OMBRA.md`). Decide Ale.
+- **Ale: bolina degli avversari ferma** (`DECISIONI.md`); si riprende con nuove registrazioni. Pulizia di file e cartelle fatta (commit `907413c`).
 
 ## Dove sta cosa
 
