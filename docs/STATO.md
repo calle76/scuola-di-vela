@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 10 novembre 2026, notte.*
+*Aggiornato: 10 novembre 2026, mattina.*
 
 ## Versione
 
@@ -55,6 +55,19 @@
 - **1.2.24**: avversari in poppa all'angolo della polare (poppa persi −41% in conferma); layline in acqua lunghe metà bolina (osservazione 110); «layline» nell'intestazione della registrazione.
 - Osservazioni 110-113 dalle regate di Ale del 9 sera (layline, partenza di Rossa, confusione alla boa 1 nel triangolo).
 - Proposta bolina (`PROPOSTA-AVVERSARI-BOLINA.md`, virare sugli scarsi): **non adottata**. Al meglio −14,6% di tempo perso in bolina contro la soglia di −15%; la seconda prova dichiarata va peggio. Patch in `sperimentale/avversari-bolina-scarsi/`. Proposto prima di altro: una diagnosi delle cause in bolina (virate alla boa, angolo dei principianti, regolazione della vela).
+
+## Cosa è stato fatto il 10 novembre, mattina (avversari in bolina; il gioco resta la 1.2.24)
+
+- **Diagnosi** (`PROPOSTA-AVVERSARI-BOLINA.md` §8):
+  - gli ultimi 40 m prima della boa 1 sono il 41% del tempo perso nella prima bolina;
+  - angolo e regolazione valgono il 18%, ma sono la differenza voluta fra livelli.
+- **Provate e non adottate:**
+  - giro diretto da più lontano (§9-10): nessun effetto;
+  - correzione del rimbalzo fra punti di passaggio (§11-12): il difetto era vero ma non costava tempo, e in conferma peggiora.
+- **Prossimo passo (via di Ale già dato, non chiedere):** proposta nuova, «arrivare sulla layline mure a dritta».
+  - chi arriva mure a sinistra da sinistra (due terzi dei passaggi, 11-14 s persi negli ultimi 40 m contro 8-9) vira sulla layline di dritta appena la incrocia, invece di puntare il punto 0;
+  - soglie scritte prima, semi nuovi da 1431, strumento `misura_avversari_rotta.py`.
+- **Poi:** cono d'ombra (`RICERCA-CONO-D-OMBRA.md`).
 
 ## Dove sta cosa
 
