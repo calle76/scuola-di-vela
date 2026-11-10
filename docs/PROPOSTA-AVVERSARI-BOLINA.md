@@ -185,3 +185,22 @@ Il bersaglio cambia a ogni fotogramma e la barca gira a vuoto attorno al punto 2
 - **D5, boe:** boa toccata al massimo il più grande fra +10% e +5; sbagliate al massimo +2; non arrivate non aumentano.
 - **D6, Scuola:** `collaudo_regate.py` 6 0, 6 1 e `--lungo`, nessuna «BLOCCATA»; `collaudo_giro_boa.py` OK.
 - **D7, non-regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+
+## 12. Esito del §11: il rimbalzo sparisce, ma non serve; non adottato
+
+| | semi 1371-1400: 1.2.24 → corretto | semi 1401-1430: 1.2.24 → corretto | soglia |
+| --- | --- | --- | --- |
+| D1 cambi di punto di passaggio (dritta / sinistra) | 9,4 / 8,3 → 1,4 / 1,3 | 7,7 / 11,3 → 1,2 / 1,6 | ≤2 |
+| D2 ultimi 40 m, persi media | 10,3 → **11,0 s** ✗ | 11,5 → **12,1 s** ✗ | non aumentano |
+| D3 arrivo mediano | 198,2 → 198,2 s | 198,7 → **199,2 s** ✗ | non peggiora |
+| D4 contatti | 150 → 151 | 140 → 138 | +10% |
+| D5 boa toccata / sbagliate | 47 / 2 → 49 / 2 | 82 / 1 → 82 / **4** ✗ | +5 / +2 |
+
+**Non adottato.** Il rimbalzo fra i punti 0 e 2 era un difetto vero, ma non costava tempo: le due prue alternate davano più o meno la stessa rotta. Toglierlo fa perdere qualche decimo in più. Il codice torna quello della 1.2.24.
+
+**Cosa resta dalla diagnosi:**
+- **Due terzi dei passaggi arrivano mure a sinistra da sinistra della boa:** 486 su 720, contro 234 mure a dritta.
+- **Sono quelli che perdono di più negli ultimi 40 m:** 11-14 s, contro 8-9 s di chi arriva mure a dritta.
+- **Il motivo:** per lasciare la boa a sinistra devono passarle sotto per arrivare al punto 0, a destra, e lì virare.
+
+**Prossima ipotesi:** arrivare sulla layline mure a dritta prima dei 40 m. Chi sta a sinistra vira sulla layline di destra quando la incrocia, invece di puntare il punto 0. È una proposta nuova, con soglie sue.
