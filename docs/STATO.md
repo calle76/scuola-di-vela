@@ -54,7 +54,7 @@
 - Diagnosi degli avversari con la rotta ottimale (`PROPOSTA-AVVERSARI-ROTTA.md`): la bolina pesa il 64% del tempo perso, la poppa il 15%.
 - **1.2.24**: avversari in poppa all'angolo della polare (poppa persi −41% in conferma); layline in acqua lunghe metà bolina (osservazione 110); «layline» nell'intestazione della registrazione.
 - Osservazioni 110-113 dalle regate di Ale del 9 sera (layline, partenza di Rossa, confusione alla boa 1 nel triangolo).
-- Proposta bolina (`PROPOSTA-AVVERSARI-BOLINA.md`, virare sugli scarsi): soglie scritte; misura in corso o fatta (vedi la proposta).
+- Proposta bolina (`PROPOSTA-AVVERSARI-BOLINA.md`, virare sugli scarsi): **non adottata**. Al meglio −14,6% di tempo perso in bolina contro la soglia di −15%; la seconda prova dichiarata va peggio. Patch in `sperimentale/avversari-bolina-scarsi/`. Proposto prima di altro: una diagnosi delle cause in bolina (virate alla boa, angolo dei principianti, regolazione della vela).
 
 ## Dove sta cosa
 

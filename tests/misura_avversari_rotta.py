@@ -2,14 +2,14 @@
 # Le 4 regate del torneo (vento con raffiche e salti, 10 o 12 nodi secondo il seme), principianti ed esperti, preparazione 60 s, giocatore col pilota,
 # fino all'arrivo di tutti o a 900 s. Per ogni avversario e ogni lato: tempo vero contro la rotta ottimale partita da dove e quando lui ha cominciato il
 # lato (rotLatiBarca, js/rotta.js), virate vere contro cambi di mure della rotta ottimale; poi il ritardo al taglio della linea dopo il via.
-# Uso: python tests/misura_avversari_rotta.py PRIMO ULTIMO   (DOWNE=gradi, DOWNE=off spento, assente = il gioco com'è; LAYMARG come negli altri strumenti; SALVA=file.json, poi --riassumi f1 f2 ...)
+# Uso: python tests/misura_avversari_rotta.py PRIMO ULTIMO   (DOWNE=gradi, DOWNE=off spento, assente = il gioco com'è; SCARSOAI e TMEDIA solo con la patch sperimentale/avversari-bolina-scarsi; LAYMARG come negli altri strumenti; SALVA=file.json, poi --riassumi f1 f2 ...)
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent) / "index.html").as_uri() + "#collaudo"
 CORSA = """([k, liv, seme]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
-  if (sv.lay) sv.lay(LAYMARG); if (sv.down && DOWNE !== undefined) sv.down(DOWNE);
+  if (sv.lay) sv.lay(LAYMARG); if (sv.down && DOWNE !== undefined) sv.down(DOWNE); if (sv.scarso && SCARSOAI !== undefined) sv.scarso(SCARSOAI, TMEDIA);
   sv.fast(0); sel('aiLevel', liv); sel('cdSel', '60'); window.confirm = () => true;
   if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
   semina(); sv.torApri(); document.getElementById('torGo').click();
@@ -49,11 +49,11 @@ async def main(A, B):
         for k in range(4):
             for liv in ("principianti", "esperti"):
                 for seme in range(A, B + 1):
-                    r = await pg.evaluate(CORSA.replace("LAYMARG", os.environ.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(os.environ.get("DOWNE", ""), os.environ.get("DOWNE", ""))), [k, liv, seme])
+                    r = await pg.evaluate(CORSA.replace("LAYMARG", os.environ.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(os.environ.get("DOWNE", ""), os.environ.get("DOWNE", ""))).replace("TMEDIA", os.environ.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(os.environ.get("SCARSOAI", ""), os.environ.get("SCARSOAI", ""))), [k, liv, seme])
                     tutte.append({"reg": k, "liv": liv, "seme": seme, "barche": r["barche"], "contatti": r["contatti"]})
             print(f"  regata {k + 1} fatta", flush=True)
         await br.close()
-    d = {"regate": tutte, "errori": errs[:3], "down": os.environ.get("DOWNE")}
+    d = {"regate": tutte, "errori": errs[:3], "down": os.environ.get("DOWNE"), "scarso": (os.environ.get("SCARSOAI") or "") + (" T_MEDIA " + os.environ["TMEDIA"] if os.environ.get("TMEDIA") else "")}
     if os.environ.get("SALVA"): pathlib.Path(os.environ["SALVA"]).write_text(json.dumps(d))
     riassumi([d])
 
@@ -72,7 +72,9 @@ def riassumi(ds):
                   f"media {statistics.mean(pers):5.1f} s, quota delle perdite {sum(pers) / tot:5.1%}; virate vere {statistics.mean(x['vir'] for x in g):.1f} contro {statistics.mean(x['manOtt'] for x in g):.1f} della rotta ottimale")
     ba = [b for r in R for b in r["barche"]]; fin = [b["fin"] for b in ba if b["fin"] is not None and not b["dsq"]]
     pop = [x for _, t, x in L if t == "poppa"]
-    print(f"  DOWN_E {ds[0].get('down') or 'spento'}: Q1 poppa persi mediana {statistics.median(x['vero'] - x['ott'] for x in pop):.2f} s; Q2 arrivo mediano {statistics.median(fin):.1f} s; "
+    bol = [x for _, t, x in L if t == "bolina"]
+    print(f"  SCARSO_AI {ds[0].get('scarso') or 'spento'}: B1 bolina persi mediana {statistics.median(x['vero'] - x['ott'] for x in bol):.2f} s; B3 virate per lato di bolina {statistics.mean(x['vir'] for x in bol):.2f}")
+    print(f"  DOWN_E {ds[0].get('down') or 'come il gioco'}: Q1 poppa persi mediana {statistics.median(x['vero'] - x['ott'] for x in pop):.2f} s; Q2 arrivo mediano {statistics.median(fin):.1f} s; "
           f"Q3 contatti dopo il via {sum(r.get('contatti', 0) for r in R)}; Q4 cambi di mure per lato di poppa {statistics.mean(x.get('cambi', 0) for x in pop):.2f}; "
           f"Q5 scuffiate {sum(b.get('scuffiate', 0) for b in ba)}; Q6 boa toccata {sum(b.get('toccate', 0) for b in ba)}, sbagliate {sum(b.get('sbagliate', 0) for b in ba)}, non arrivate {sum(b['fin'] is None for b in ba)}")
     tg = [b["taglio"] for r in R for b in r["barche"] if b["taglio"] is not None]

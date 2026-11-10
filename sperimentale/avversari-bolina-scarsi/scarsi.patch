@@ -1,0 +1,45 @@
+diff --git a/js/avvio.js b/js/avvio.js
+index 8601029..3d2039d 100644
+--- a/js/avvio.js
++++ b/js/avvio.js
+@@ -34,7 +34,7 @@
+       if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
+       me.capW = 0; me.info = info; me.me = false; aiControl(me, dt); me.me = true; return ctl.tiller; },
+     suoni: { reg: suoniReg, val: suoniVal, agg: suoniAgg, imposta: suoniImposta, get liv(){ return suoniLiv; }, get attivi(){ return suoniAttivi(); }, get fonte(){ return suoniFonte; }, get decodificaMs(){ return sReg ? sReg.ms : null; }, get ambFonte(){ return sAmbFonte; }, get ambMs(){ return sAmbMs; }, muta: suoniMuta, suona, gabbiano: () => sGabbiano(), scricchiolio: h => sScricchiolio(h), reset: seme => { sGabb = sScr = null; if (seme !== undefined) sSeme = seme; }, get master(){ return sMaster; }, get actx(){ return actx; } }, // 1.2.5; fonte e decodifica 1.2.7
+-    openItem, chiCede, hullWorld, hullOverlap, estraiEsame, meriti, torPunti, torSerie, torChiudi, torEsci, torApri, get tor(){ return tor; }, set triL(v){ TRI_L = v; }, lay: m => { LAY_MARG = m; }, down: e => { DOWN_E = e; }, vmgPoppa, layDir, layVisibile, apriEsercizio, get LESSONS(){ return LESSONS; }, rotLay, rotRiga, rot, rotCalcola, rotLatiBarca, rotSpiega, rotTesto, rotRaffiche, ventoDa, norm180, ripos: (x, t) => { X_RIPOS = x; if (t !== undefined) T_RIPOS = t; }, gustLevel: () => gustLevel, salti: () => !!shiftSt, boa: (p, q, m, r) => { PASSO_M = p ?? 3; SOPRA_M = q ?? 2; M_DIR = m == null ? 3 : (m < 0 ? null : m); R_DIR = r ?? 15; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
++    openItem, chiCede, hullWorld, hullOverlap, estraiEsame, meriti, torPunti, torSerie, torChiudi, torEsci, torApri, get tor(){ return tor; }, set triL(v){ TRI_L = v; }, lay: m => { LAY_MARG = m; }, down: e => { DOWN_E = e; }, scarso: (e, t) => { SCARSO_AI = e; if (t) T_MEDIA = t; }, vmgPoppa, layDir, layVisibile, apriEsercizio, get LESSONS(){ return LESSONS; }, rotLay, rotRiga, rot, rotCalcola, rotLatiBarca, rotSpiega, rotTesto, rotRaffiche, ventoDa, norm180, ripos: (x, t) => { X_RIPOS = x; if (t !== undefined) T_RIPOS = t; }, gustLevel: () => gustLevel, salti: () => !!shiftSt, boa: (p, q, m, r) => { PASSO_M = p ?? 3; SOPRA_M = q ?? 2; M_DIR = m == null ? 3 : (m < 0 ? null : m); R_DIR = r ?? 15; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
+     completeStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; }, get base(){ return base; },
+     ctl, autoSheet, opt, autoK: (h0, k) => { AUTO_HEEL0 = h0; AUTO_K = k; }, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get riquadro(){ return R && R.segnali ? rqDati() : null; }, get rqRect(){ return R ? R.rqRect : null; }, get rqRect2(){ return R ? R.rqRect2 : null; }, get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
+     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
+diff --git a/js/regate.js b/js/regate.js
+index 8183026..987d12f 100644
+--- a/js/regate.js
++++ b/js/regate.js
+@@ -249,6 +249,7 @@
+   function aiControl(b, dt){
+     const s = b.S, w = windAt(s.x, s.y), twd = w.twd, twa = norm180(twd - s.h), side = sgn(twa), A = Math.abs(twa);
+     const ai = b.ai;
++    if (SCARSO_AI !== null && b.leg >= 1) b.twdM = b.twdM === undefined ? twd : norm360(b.twdM + norm180(twd - b.twdM) * Math.min(1, dt / T_MEDIA)); // 1.2.25: vento medio sentito
+     let desired, hold = false;
+     const tgt = targetOf(b);
+     let dest = tgt;
+@@ -309,7 +310,8 @@
+       if (near){ // vicino al bersaglio: il bordo che punta più vicino
+         const best = Math.abs(norm180(twd - ai.up - brg)) < Math.abs(norm180(twd + ai.up - brg)) ? 1 : -1;
+         if (best !== b.side && b.boardT > 8){ b.side = best; b.boardT = 0; } // isteresi: niente virate a raffica
+-      } else if (b.boardT > b.boardMax) cambiaBordo(b, ai);
++      } else if (SCARSO_AI !== null && b.leg >= 1 && b.boardT > BORDO_MIN_AI && b.side * norm180(twd - b.twdM) <= -(SCARSO_AI + (ai.boardMin >= 35 ? 0 : 4))) cambiaBordo(b, ai); // 1.2.25: scarso, si vira
++      else if (b.boardT > b.boardMax * (SCARSO_AI === null || b.leg < 1 ? 1 : 2)) cambiaBordo(b, ai);
+       desired = twd - b.side * ai.up;
+     } else if (Math.abs(rel) > (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155)){ // bersaglio in poppa piena: lasco con abbattute (1.2.24: angolo dalla polare)
+       if (b.boardT > b.boardMax) cambiaBordo(b, ai);
+@@ -391,6 +393,9 @@
+   let LAY_MARG = null;
+   // 1.2.24 (docs/PROPOSTA-AVVERSARI-ROTTA.md §2): in poppa l'angolo della VMG migliore della polare (circa 170°), meno DOWN_E, più la differenza personale
+   // di oggi (ai.down − 155: esperti da −5 a 0, principianti da −13 a −5). null = come fino alla 1.2.23 (ai.down fisso, 142-155°); solo dopo il via
++  // 1.2.25 (docs/PROPOSTA-AVVERSARI-BOLINA.md §2, F41): in bolina si vira sullo scarso rispetto al vento medio sentito (media mobile su T_MEDIA s):
++  // scarso di SCARSO_AI gradi (principianti +4°) e bordo di almeno BORDO_MIN_AI s; i bordi a tempo restano, lunghi il doppio. null = come fino alla 1.2.24
++  let SCARSO_AI = null, T_MEDIA = 60; const BORDO_MIN_AI = 10;
+   let DOWN_E = 0; // 1.2.24: scelto sui semi 1131-1160 e confermato sui 1161-1190 (poppa persi 11,0 -> 6,5 s; PROPOSTA-AVVERSARI-ROTTA.md §6-7)
+   function vmgPoppa(tws){ const r = rotRiga(tws); let best = -1, a = 170; ROT_TWA.forEach((t, n) => { if (t < 120) return; const v = r[n][0] * Math.cos((180 - t) * D2R); if (v > best){ best = v; a = t; } }); return a; }
+   function layLee(tws, a){ const r = rotRiga(tws), x = Math.max(0, Math.min(r.length - 1.001, (a - 30) / 5)), i = Math.floor(x), f = x - i; return r[i][1] * (1 - f) + r[i + 1][1] * f; } // scarroccio in gradi con la prua a «a» gradi dal vento

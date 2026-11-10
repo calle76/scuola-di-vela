@@ -70,3 +70,22 @@ Fra i valori che passano si sceglie quello che perde meno in bolina (B1). A pari
 - **Semi nuovi:** scelta **1251-1280**, conferma **1281-1310**. Il riferimento è il gioco della 1.2.24 sugli stessi semi.
 
 Se nessuna delle due passa, la bolina degli avversari resta com'è e lo si riporta, senza altre prove questa notte.
+
+## 6. Esito della seconda prova (semi 1251-1280): non passa, stop
+
+| `T_MEDIA` (con `SCARSO_AI` 6°) | B1 bolina, persi mediana | B2 arrivo | B3 virate per lato | B4 contatti | B5 boa toccata / sbagliate / non arrivate |
+| --- | --- | --- | --- | --- | --- |
+| spento (1.2.24) | 22,7 s | 197,5 s | 3,79 | 106 | 51 / 0 / 0 |
+| 30 s | 21,5 s (−5,2% ✗) | 198,0 s ✗ | 3,17 | **143** (+35% ✗) | 55 / 0 / 0 |
+| 120 s | 22,1 s (−2,5% ✗) | 198,8 s ✗ | 3,38 | **163** (+54% ✗) | 37 / 0 / 0 |
+
+**Non passa niente.** Come scritto nel §5, la bolina degli avversari resta quella della 1.2.24. Il codice non è nel gioco: sta in `sperimentale/avversari-bolina-scarsi/scarsi.patch` (si applica sulla 1.2.24).
+
+**Cosa si è imparato:**
+- **Virare sugli scarsi aiuta ma poco:** −14,6% al meglio, e solo con la media di 60 s. Con 30 o 120 s quasi niente. Il resto della perdita in bolina sta altrove:
+  - le virate vicino alla boa (`PROPOSTA-LAYLINE.md` §5, osservazione 113);
+  - l'angolo di bolina dei principianti, 49-54° di prua contro i 45-46° della polare;
+  - la regolazione della vela (`ai.trim`, sbagliata a caso di ±2-6°).
+- **I contatti di riferimento cambiano molto da un gruppo di semi all'altro:** 165 sui semi 1191-1220, 106 sui 1251-1280. Il +35% e il +54% vanno letti con questo in mente, ma restano sopra soglia.
+
+**Prossimo passo proposto:** misurare quanto pesa ognuna delle tre cause sopra, togliendone una alla volta a mano, prima di proporre altro. È una diagnosi, non una correzione.
