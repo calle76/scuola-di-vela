@@ -157,3 +157,31 @@ Il giro diretto della 1.2.20 non lo crea: cambia la traiettoria, e la barca lent
 
   I passaggi oltre 60 s vicino alla boa salgono da 37 a 49: sono le barche che ora tornano a riprovare invece di andarsene.
 - La misura si è fatta con `TORNEO=nuovo`: senza, lo strumento usa il formato del torneo fino alla 1.2.20.
+
+## 12. Difetto trovato dall'esploratore sulla 1.2.25: Verde rimbalza fra due punti (11 novembre; scritto prima di correggere e misurare)
+
+**Cosa:** `esplora.py 28 28` in Chromium, regata 2 (salti di vento della Scuola), esperti: Verde (prudente) non arriva in 756 s. Arriva con le versioni fino alla 1.2.23 (395 s con la 1.2.22 e la 1.2.23), non con la 1.2.24 e le seguenti. Nel giro su GitHub era comparso solo in Chromium (0 su 200 corse in Firefox).
+
+**Perché (traccia di Verde, strumento in scratchpad, non nel repo):** Verde arriva alla boa 1 verso il secondo 210 e poi per più di 500 s gira a 7-20 m dalla boa. Il vento è girato di circa 14° a sinistra del medio. Il punto di passaggio `rp` fa 2, 0, 2, 0…:
+1. A sinistra della boa (x < −3) e sotto di essa, `sopraDaSinistra` (la retta verso il punto 0 passerebbe sopra la boa) mette `rp` a 2: si va al punto sotto e a sinistra.
+2. A meno di 8 m dal punto 2 la regola `rp === 2 && near(2, 8)` rimette `rp` a 0.
+3. Ma da lì (a 8 m dal punto 2, non sul punto) la retta verso il punto 0 passa ancora sopra la boa: `sopraDaSinistra` è vera di nuovo e `rp` torna a 2. Si ripete ogni 5-10 s, con virate e abbrivio perso.
+La 1.2.24 non ha cambiato questa parte: ha cambiato la traiettoria (poppa), e un caso già possibile è capitato.
+
+**Correzione (difetto chiaro, `DECISIONI.md` «difetti piccoli senza proposta»):** `sopraDaSinistra` vale una volta sola per ogni boa: quando `rp` torna da 2 a 0 si segna `b.p2`, e con `b.p2` la regola non scatta più (si azzera al cambio di boa). Chi ha già fatto il giro largo riprova dal punto 0 come dice il commento di `targetOf` («per riprovare dal punto 0 passando sotto la boa»).
+
+**Criteri (scritti prima di misurare):**
+- K1: seme 28, regata 2, esperti, Chromium: Verde arriva (prima no).
+- K2: sui semi 1-40 delle regate 0, 1, 2 della Scuola e delle 100-103 del torneo (principianti e esperti): nessuna barca che arrivava ora non arriva; le barche non arrivate non aumentano.
+- K3: le corse che cambiano sono poche (attese: solo quelle con un rimbalzo), e in nessuna cambia l'arrivo del giocatore per più di quanto cambi per effetto degli avversari (il pilota di prova non reagisce a Verde, quindi atteso uguale).
+- K4: il tempo mediano degli avversari delle corse che cambiano scende o resta (non sale).
+- Sono ipotesi nostre, non cambiano dopo aver visto i numeri.
+
+## 13. Esito (11 novembre 2026): adottata nella 1.2.27
+
+- K1: passa. Seme 28, regata 2, esperti: Verde arriva a 388,7 s (prima non arrivava in 756 s).
+- K2: passa. Su 153 corse in comune (semi 1-9; previsti 1-40, ma le misure sono state fermate a 73 °C, sopra il limite di 72 °C) nessuna barca che arrivava ora non arriva; non arrivate 3 e 3.
+- K3: 24 corse su 153 hanno barche con arrivi diversi, più di quelle attese (le scrivevo «poche»); in 9 cambia anche il «Tu», perché il pilota di prova reagisce alle altre barche. Avversari con arrivo diverso: 28 su 459.
+- K4: passa. Mediana −1,0 s (media −1,8 s; 18 più veloci, 10 più lenti; da −33 a +23 s).
+- Non provato: la conferma su semi mai guardati (qui nessuna soglia è stata scelta sui dati, ma il campione è piccolo). Se il giro su GitHub mostra non arrivati nuovi nelle regate della Scuola, tornare qui.
+- Lo strumento di diagnosi (traccia di Verde ogni 5 s con la destinazione) non è nel repo: era in scratchpad.

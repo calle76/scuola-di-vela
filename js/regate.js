@@ -226,7 +226,7 @@
       // Deriva (docs/PROPOSTA-AVVERSARI-DERIVA.md, §11): chi può già puntare il punto oltre la boa senza virare, passando sopra la boa, non cerca il punto 0: mancandolo di poco virava indietro e si piantava (regata di Ale, 17:59)
       const dxP = wx - P[1][0], dyP = wy - P[1][1], sulBordo = !due && wx > 3 && dxP > 0 && dyP > 0 && Math.atan2(dxP, dyP) >= PASSO_A * D2R && wy - dyP * wx / dxP < my - PASSO_M;
       // docs/PROPOSTA-DERIVA-SU-MAIN.md §6: da sinistra della boa la retta verso il punto 0 passava sopra la boa, cioè dal lato sbagliato: prima si va al punto 2, sotto e a sinistra
-      const sopraDaSinistra = !due && !b.rp && wx < -3 && wy + (P[0][1] - wy) * (0 - wx) / (P[0][0] - wx) < my + PASSO_SX;
+      const sopraDaSinistra = !due && !b.rp && !b.p2 && wx < -3 && wy + (P[0][1] - wy) * (0 - wx) / (P[0][0] - wx) < my + PASSO_SX;
       // giro diretto (docs/PROPOSTA-BOA-PIANTATA.md §8): mure a dritta, a destra della boa e vicina, se di bolina passa sopra la boa con margine punta subito oltre
       // e tiene la bolina finché non l'ha superata; prima virava verso il punto 0 e, cambiato bersaglio a metà virata, rivirava senza velocità
       const tanB = Math.tan((b.ai.up + 3) * D2R), diretto = M_DIR !== null && !due && !b.rp && wx > 0 && norm180(b.S.h - windOf(b)) < 0 && Math.hypot(wx - mx, wy - my) < R_DIR && wy - wx / tanB < my - M_DIR;
@@ -237,7 +237,7 @@
       else if (!b.rp && (near(0, 4) || sopra || sulBordo)) b.rp = 1;
       else if (b.rp === 1 && ((oltre && (b.rnd || 0) <= 0) || near(1, 8))) b.rp = 2; // girata male, o passata sotto la boa: si riprova
       // 1.2.22 (docs/PROPOSTA-BOA-PIANTATA.md §11): anche chi è già oltre senza giro contato (rnd 0: passata a meno di 1,5 m dalla boa, dove roundCheck non conta) riprova; prima girava per il campo
-      else if (b.rp === 2 && near(2, 8)) b.rp = 0;
+      else if (b.rp === 2 && near(2, 8)){ b.rp = 0; b.p2 = true; } // 1.2.27: p2 = già passato dal punto 2 per questa boa, sopraDaSinistra non lo rimanda più (docs/PROPOSTA-BOA-PIANTATA.md §12)
       const [x, y] = fromWF(P[b.rp || 0][0], P[b.rp || 0][1]); return { x, y, kind: "mark" };
     }
     if (!b.me){ const [x, y] = fromWF(b.startX * 0.8, 0); return { x, y, kind: "finish" }; }
@@ -539,7 +539,7 @@
       if (k < 0){ b.wrongMarks = (b.wrongMarks || 0) + 1; if (b.me) regAdd("wrongMarks"); }
       if (b.rnd >= 1){
         if (b.me) toast(!R.tri ? "Boa girata: ora all'arrivo" : ultima ? "Boa 2 girata: ora all'arrivo" : "Boa 1 girata: ora la boa 2");
-        b.leg++; b.rnd = 0; b.rndA = undefined; b.rp = 0;
+        b.leg++; b.rnd = 0; b.rndA = undefined; b.rp = 0; b.p2 = false;
       }
       else if (k < 0 && b.me) roundToast(-1);
       else if (k > 0 && b.me) toast("Hai rimediato: ora girala lasciandola a sinistra");

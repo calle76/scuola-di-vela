@@ -19,6 +19,14 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.27 — Un avversario non rimbalza più per sempre vicino alla boa
+
+Trovato dall'esploratore sulla 1.2.25 (seme 28, regata 2 della Scuola, esperti, Chromium: Verde non arriva in 756 s). Compare dalla 1.2.24 (fino alla 1.2.23 arriva a 395 s), ma la causa è più vecchia: `docs/PROPOSTA-BOA-PIANTATA.md` §12-13.
+- **Causa:** Verde, a sinistra della boa 1, è mandato al punto 2 (sotto e a sinistra) da `sopraDaSinistra`; a meno di 8 m dal punto 2 torna al punto 0; da lì `sopraDaSinistra` scatta di nuovo e lo rimanda al punto 2. Rimbalza ogni 5-10 s per tutta la regata.
+- **Correzione:** `sopraDaSinistra` vale una volta sola per boa (`b.p2`, azzerato al cambio di boa). 3 righe in `js/regate.js`.
+- **Misura:** K1 passa (seme 28: Verde arriva a 388,7 s). Su 153 corse (semi 1-9, tutte le regate della Scuola e del torneo, principianti e esperti): nessuna barca che arrivava ora non arriva (K2), non arrivate 3 e 3, 28 avversari su 459 cambiano arrivo (18 più veloci, 10 più lenti; mediana −1 s, da −33 a +23 s; K4). Il campione è più piccolo del previsto (1-40): le misure si sono fermate a 73 °C del processore, oltre il limite scelto.
+- La Scuola non è identica al bit (le sue regate hanno gli stessi avversari): cambia solo dove c'era un rimbalzo.
+
 ## 1.2.26 — Lezione 11 (salti di vento) più chiara
 
 Segnalata da Ale: nella lezione non si capiva cosa spiegasse e l'esercizio non si riusciva a superare. Causa: i testi dicevano «prendi la media della Prua» e «scarso di una decina rispetto alla media» senza dire quale fosse la media né se la Prua dovesse salire o scendere, e durante l'esercizio il gioco non diceva mai se si era scarsi o buoni (bisognava dedurlo da solo dalla sola Prua, mentre il vento gira).
