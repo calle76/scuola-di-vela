@@ -66,6 +66,12 @@
       cls = Math.abs(off) < 6 ? "good" : "bad";
       msg = "Rotta da tenere " + deg3(S.course) + ", ora " + deg3(S.h) + (Math.abs(off) < 6 ? ": in rotta." : off > 0 ? ": la prua è troppo a dritta." : ": la prua è troppo a sinistra.");
     }
+    if (mode === "lesson" && st.scarsoHint && !stepDone && !S.capsized && !base.daBuono && simTime - (base.tScarso ?? -1e9) < 1){ // 1.2.26: lezione B5, quanto sei scarso o buono (lo stesso numero che controlla il passo)
+      const sc = Math.round(base.scarso);
+      if (sc >= 7){ cls = "good"; msg = "Sei scarso di " + sc + "°: vira adesso."; }
+      else if (sc <= -3){ cls = ""; msg = "Sei buono di " + -sc + "°: resta su queste mure."; }
+      else { cls = ""; msg = "Sei vicino alla media: aspetta di essere scarso (almeno 7°)."; }
+    }
     if (mode === "lesson" && st.turnHint && !S.capsized && S.u > -0.05 && S.heel <= 25 && Math.abs(S.r) > 3){
       const a = norm180(local.twd - S.h), orza = Math.sign(a) === Math.sign(S.r);
       cls = "good"; msg = orza ? "Stai orzando: la prua va verso il vento." : "Stai poggiando: la prua si allontana dal vento.";

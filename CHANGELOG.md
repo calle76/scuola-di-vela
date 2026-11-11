@@ -19,6 +19,13 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.26 — Lezione 11 (salti di vento) più chiara
+
+Segnalata da Ale: nella lezione non si capiva cosa spiegasse e l'esercizio non si riusciva a superare. Causa: i testi dicevano «prendi la media della Prua» e «scarso di una decina rispetto alla media» senza dire quale fosse la media né se la Prua dovesse salire o scendere, e durante l'esercizio il gioco non diceva mai se si era scarsi o buoni (bisognava dedurlo da solo dalla sola Prua, mentre il vento gira).
+- Testi riscritti: la lezione dice in due frasi che di bolina si tiene l'angolo e cambia la Prua; scarso = la Prua si allontana dal vento, buono = si avvicina; col vento da nord la Prua media è circa 050° (dritta) o 310° (sinistra), scarso se arriva a 060°/300°.
+- Nel passo «Vira sullo scarso» il suggerimento in basso dice di quanti gradi sei scarso o buono («Sei scarso di 9°: vira adesso»), con lo stesso numero che controlla il passo (`base.scarso`). La regola del passo non cambia (due virate da scarsi di almeno 7°, mai da buoni di 3°).
+- Collaudo: `collaudo_pilota_lezioni.py --solo 11`.
+
 ## 1.2.25 — Il cono d'ombra delle vele, nel torneo
 
 **Cosa vedi:**
