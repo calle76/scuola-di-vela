@@ -60,6 +60,9 @@ FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni
 == collaudo_triangolo.py | firefox | come in Chromium (T2b, noto dalla 1.0.55); numeri della 1.2.25 (nella 1.2.24 erano 120 su 170)
 FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 139 su 173 confronti (164 col segno giusto), entro 3 s dopo il via 31/58, dopo la boa 1 60/60, dopo la boa 2 48/55, errore massimo 11.6 s, giocatore arrivato in 20 regate su 20
 
+== collaudo_triangolo.py | firefox | Come la voce sopra, ma sui computer di GitHub: Firefox dà numeri un po' diversi (135 su 173 invece di 139; in locale due prove di fila dànno 139 tutte e due, quindi è la macchina, non il caso). Aggiunta l'11 novembre 2026 (DA-FARE voce 19)
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 135 su 173 confronti (163 col segno giusto), entro 3 s dopo il via 29/58, dopo la boa 1 60/60, dopo la boa 2 46/55, errore massimo 15.7 s, giocatore arrivato in 20 regate su 20
+
 == collaudo_avversari_deriva.py | chromium | casi 81 e 83 fuori soglia dalla nascita (PROPOSTA-AVVERSARI-DERIVA.md, V8, 6 nov 2026), identici dalla 1.2.15 alla 1.2.24: da riprendere col lavoro sugli avversari dopo il cono d'ombra
 FALLITO caso 81: 6 su 10 (soglia 9)
 FALLITO caso 83: 7 su 10 (soglia 9)
