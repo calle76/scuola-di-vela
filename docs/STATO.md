@@ -84,6 +84,7 @@
   - **gli avversari non peggiorano:** su 576 regate arrivano circa 2 s prima (±0,6) e si toccano il 17% in meno; la causa non è dimostrata;
   - non reagiscono ancora al cono: arriva col lavoro sugli avversari.
 - **Esploratore sulla 1.2.24** (giro su GitHub, 3200 corse e 8 scimmie, due browser): nessun errore, nessun numero rotto; nel torneo non arriva circa il 2% degli avversari (finestra d'arrivo chiusa o squalifica). È la fotografia di prima del cono.
+- **Giro su GitHub e esploratore sulla 1.2.25 letti (11 novembre, zip nella cartella del repo, non committati):** 88 collaudi per browser, nessun fallito del gioco. Da registrare (voci 15-21 di `DA-FARE.md`): avversario fermo 753 s nella regata dei salti (Chromium, seme 28); nel torneo la regata coi giri (102) ha più non arrivati (3,5% e 2,8%) delle altre; suoni, sartiame 2,2/1,9/4,3 dB; T2b in Firefox confrontato troppo alla lettera; timone2 in Firefox errore di apertura di Playwright; lezioni 5.8 e 6.3 sopra la soglia. Niente è stato corretto. Rumore noto: E2 e Q7 (misure di tempo su GitHub).
 - **Aspetta Ale:** push, giro dei collaudi e dell'esploratore su GitHub sulla 1.2.25, e **giocare il torneo col cono** mandando le registrazioni (ora hanno gli eventi `coperta` e `libera`).
 - **Poi:** gli avversari tutti insieme (bolina, boa, uscire dal vento sporco), con le registrazioni.
 
