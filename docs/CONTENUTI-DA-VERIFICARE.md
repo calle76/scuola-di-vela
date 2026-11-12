@@ -438,3 +438,15 @@ I nomi delle classi di deriva compaiono **solo qui**, mai nel gioco (vedi `PROGE
 
 Confermate (Vero) senza note: 1, 2, 3, 5 («3-4 ×2», nota non letta), 6, 9, 10, 13, 14, 15, 17, 19, 20, 21.
 
+
+### Ricerca di fonti scritte sui punti del foglio (12 novembre 2026): solo riassunti dei risultati di ricerca, **pagine non lette**
+
+Fonti trovate sono quasi tutte forum e guide di club: **nessuna è sufficiente da sola**. Per promuoverle servono le pagine lette per intero.
+
+| Punto | Cosa dicono i risultati | Esito |
+| --- | --- | --- |
+| 11 fiocco a collo | Manualistica e siti italiani (`yachtdigest.com/en/virata-velocita-fiocco`, `corsaridishiv.yolasite.com`): con poco vento e la prua ferma nel vento si trattiene la scotta del fiocco, che aiuta la prua a cadere sulle nuove mure; poi si molla subito, altrimenti la barca arretra. Forum inglesi (sailboatowners, Hobie, Mirror): aiuta se c'è poco abbrivio, ma su barche molto leggere rallenta | **Confermato in linea di massima** (il velista e due fonti), con la riserva «dipende dalla barca». Resta fuori dal prototipo (`SPERIMENTALE.md:44`) |
+| 16 virata fallita | Guide di club e forum (Paper Tiger, sailboatowners, Pitt «The Missed Tack»): invertire la barra mentre la barca arretra, o mettere la vela a collo, e mollare appena passata la prua nel vento. Il «centrare la barra e lasciar scadere» non compare nei riassunti | **Non confermato né smentito**: la nostra sequenza è coerente con le fonti sulla barra invertita. Da leggere per intero: manuale Yachting Australia (`issuu.com/yainstructorhandbook/docs/140714_yassr_text`), dispensa MIT PE 810 (`ocw.mit.edu`, f7fdc138…booklet.pdf) |
+| 7 randa che copre il fiocco | Più fonti (Wikipedia «Wing and wing», Sailing World «Downwind Under Jib and Main»): in poppa piena la randa toglie il vento al fiocco, che si affloscia; in lasco largo il fiocco sta dal lato opposto e lavora. Snipe e altre derive usano un'asta sul fiocco | **Confermato** (poppa sì, lasco no), e anche la nota del velista sullo Snipe: **l'asta esiste ma non è per tutte** |
+| 4 stallo del timone | Solo forum, quasi tutte barche con chiglia: da 17° a 35°, dipende dalla velocità e dal tipo di pala. Nessuna misura su deriva | **Nessuna fonte utile**; il 22° del motore resta tra F4 (15°) e F35 (30°) |
+| 12 lascare in raffica / regata | Fonti concordi su «lasca, sporgiti, cazza». Un solo post separa la regata (tenere la vela cazzata, sporgersi, abbassare il carrello) | **Non confermato**: nessuna fonte separa chiaramente regata e scuola |
