@@ -19,6 +19,15 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.29 — La lezione sulle raffiche non dice più di orzare per scaricare
+
+Dal foglio di un velista e dalla ricerca di fonti scritte (`docs/PROPOSTA-LEZIONE-RAFFICA.md`, `docs/FONTI-PUBBLICHE.md` F79-F84): quattro articoli letti per intero dicono che la prima mossa in raffica è lascare e che stringere il vento durante la raffica non conviene (uno orza solo dopo, per ri-trimmare). Solo testi, nessun numero del motore cambia:
+
+- **Lezione «Assorbire una raffica»** (`js/contenuti.js`): tolto «di bolina puoi anche orzare leggermente», aggiunto «Non stringere il vento: guadagni poco e perdi velocità»; la frase di fine passo dice che lascare è la prima mossa e che stringere il vento di solito non conviene.
+- **Domanda d'esame sulla raffica** (stesso file): la spiegazione non dice più che si può orzare per scaricare.
+- Il passo si completa come prima (basta lascare).
+- Limiti dichiarati: fonti soprattutto su Laser e piccole derive; nessuna fonte su raffiche al traverso o in poppa né sulla differenza regata/scuola.
+
 ## 1.2.28 — Il riquadro «Errore interno» non resta più da una regata all'altra
 
 Segnalato da Ale con tre foto (registrazioni di Lucio, Firefox, torneo 11 novembre sulla 1.2.27): dopo la regata 2 compare «Errore interno: TypeError: can't access property "t" of undefined» e resta sul pannello per le regate 3 e 4 (le registrazioni 18:10 e 18:22 lo riportano già a t=-180).

@@ -220,9 +220,9 @@
       text: ["Il vento non è mai costante. Le chiazze più scure e increspate sull'acqua sono <em>raffiche</em>: lì il vento è più forte e spesso gira di qualche grado. Viaggiano col vento, quindi le vedi arrivare da sopravento.",
              "Più vento vuol dire più forza sulla vela, e la barca si inclina: è lo <em>sbandamento</em>, che vedi sull'indicatore in basso a sinistra. Il timoniere si sporge fuori bordo per contrastarlo, ma con un attimo di ritardo. Al traverso e al lasco, in raffica <em>poggia</em> anche un poco: orzare ti farebbe sbandare di più."] },
     { title: "Assorbire una raffica", tiller: true, sheet: true, hud: 3, env: { tws: 12, gusts: 1 }, hintKind: "tt", bigGust: 0.45,
-      text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco (e di bolina puoi anche <em>orzare</em> leggermente) per tenere lo sbandamento sotto i 20°. Passata la raffica, cazza di nuovo."],
+      text: ["Naviga di bolina con la vela regolata e aspetta una raffica. Quando ci entri, <em>lasca</em> un poco per tenere lo sbandamento sotto i 20°. Non stringere il vento: guadagni poco e perdi velocità. Passata la raffica, cazza di nuovo."],
       cond: (I, S, B) => I.gustK > 0.3 && I.twa <= 75 && I.heel < 20 && I.kn > 2 && (B.lasca || 0) >= 0.05, hold: 3, // 1.1.3: anche lascare in raffica; la barca dell'1b orzava da sola e scaricava la vela // 1.0.15: nel cuore della raffica (+30%) e di bolina; prima bastava il bordo (+12%) e si completava da solo
-      done: "Ben fatto. Lascare riduce la forza sulla vela; orzare di poco la scarica. È la tecnica principale per navigare con vento rafficato." },
+      done: "Ben fatto. Lascare riduce la forza sulla vela ed è la prima mossa in una raffica; stringere il vento di solito non conviene. È la tecnica principale per navigare con vento rafficato." },
     { title: "La scuffia", allow: ["capsizes"], noRight: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
       text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: vela tutta cazzata, e in raffica non lascare."],
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
@@ -748,7 +748,7 @@
       ["Che cosa significa bordeggiare?", "Risalire il vento a zig-zag, virando fra un tratto e l'altro", ["Navigare vicino alla costa", "Navigare in poppa", "Fare il giro di una boa"], "Ogni tratto di bolina fra due virate si chiama bordo."],
       ["Con quale comando il timoniere annuncia la virata?", "«Pronti a virare?», poi «Viro!»", ["«Pronti all'abbattuta?», poi «Abbatto!»", "«Barra!»", "«Molla!»"], "Per la strambata si usa invece «Pronti all'abbattuta?» e poi «Abbatto!»."] ],
     [ ["Come si riconosce una raffica in arrivo?", "Una chiazza d'acqua più scura e increspata che arriva da sopravento", ["Onde più alte da sottovento", "Un cambio di colore del cielo", "Non si può riconoscere"], "Le raffiche viaggiano col vento: si vedono arrivare da sopravento."],
-      ["Entri in una raffica e la barca sbanda molto. Qual è la prima cosa da fare?", "Lascare la scotta", ["Cazzare la scotta", "Poggiare con decisione", "Centrare la barra"], "Lascare riduce la forza sulla vela; di bolina si può anche orzare di poco per scaricarla."],
+      ["Entri in una raffica e la barca sbanda molto. Qual è la prima cosa da fare?", "Lascare la scotta", ["Cazzare la scotta", "Poggiare con decisione", "Centrare la barra"], "Lascare riduce la forza sulla vela ed è la prima mossa; stringere il vento di solito non conviene."],
       ["Che cosa significa scuffiare?", "Rovesciarsi", ["Fermarsi nell'angolo morto", "Virare male", "Andare all'indietro"], "Succede alle derive quando lo sbandamento diventa eccessivo."],
       ["Come si raddrizza una deriva scuffiata?", "Salendo sulla lama di deriva e facendo leva col proprio peso", ["Tirando la scotta da dentro l'acqua", "Aspettando che il vento la raddrizzi", "Spingendo sull'albero"], "Col peso sulla lama la barca ruota e torna dritta; poi si risale a bordo."] ]
   ];
