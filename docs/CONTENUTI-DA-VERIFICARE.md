@@ -422,3 +422,19 @@ I nomi delle classi di deriva compaiono **solo qui**, mai nel gioco (vedi `PROGE
 **Il fiocco è un ostacolo alle andature molto larghe** (la scotta cade lasca): su una deriva a due olimpica, misurata in galleria del vento e in mare, il fiocco aggiunge spinta fino a circa 100° di vento apparente e da circa 120° è un ostacolo — ma con lo spinnaker issato (F4 in `FONTI-PUBBLICHE.md`).
 
 **Restano senza fonte:** il limite della scotta del fiocco a 80°; da quale andatura serve davvero il fiocco a farfalla e se sulle derive a due si usa l'asta; la soglia vera a cui la randa comincia a coprire il fiocco.
+
+## Foglio di un velista (F41, 12 novembre 2026): una persona sola, da confrontare con fonti scritte
+
+| Affermazione del foglio | Risposta | Cosa fare |
+| --- | --- | --- |
+| 4: oltre circa 15° di barra il timone stalla | **Falso**, «oltre 30/35°» | Annotato accanto a F4 (15°) e F35 (30°). `stallA` resta 22° finché Ale non decide |
+| 7: alle andature larghe e in poppa la randa copre il fiocco | **Dipende**: «di poppa sì, di lasco no» | Se la frase entra nel gioco, solo per la poppa |
+| 8: sulle derive a due si usa l'asta per il fiocco a farfalla | **Dipende**: «poche derive usano l'asta» | Già «senza fonte» (sezione sul prototipo); non presentarla come normale |
+| 11: in virata si lascia il fiocco | **Dipende**: con poco vento il fiocco «a collo» (contrario) aiuta la virata (lettura incerta) | Cercare una fonte scritta; il fiocco a collo non è nel prototipo (`SPERIMENTALE.md`) |
+| 12: in raffica la prima mossa è lascare la randa | **Vero**, «tranne in regata» | Lezione «Assorbire una raffica»: precisare che in regata la raffica si sfrutta (vedi 13, Vero) |
+| 16: dopo una virata fallita si centra la barra e si lascia scadere la prua | **Falso**, senza nota | Non si sa quale parte sia sbagliata; il gioco usa «barra verso il boma finché arretra, poi centra e cazza» (sezione Lezione 5, già da confermare). Cercare un'altra fonte |
+| 18: una deriva che orza da sola non naviga a meno di 40°-45° dal vento | nessuna casella, «di quale tipo?» | Frase ambigua: non conta |
+| 22: strambata e abbattuta sono sinonimi | nessuna casella, «in gergo sì, tecnicamente no» | Conferma la lezione 5 (`js/contenuti.js:174`) |
+
+Confermate (Vero) senza note: 1, 2, 3, 5 («3-4 ×2», nota non letta), 6, 9, 10, 13, 14, 15, 17, 19, 20, 21.
+

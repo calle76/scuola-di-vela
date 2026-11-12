@@ -40,6 +40,7 @@ Costo di cambiamento:
 | Barca dell'1b congelata | 23 ott | alto | Impronte, avversari, torneo | `archivio/PROPOSTA-CONGELAMENTO-1B.md` |
 | I numeri che dipendono dalla barca si derivano dalla barca, non si scrivono a mano | ott | medio | Sostituirli dopo vuol dire trovarli tutti | `archivio/STATO-2026-10-27.md` |
 | Valori numerici misurati da pubblicazioni scientifiche, citati, si possono usare nel motore | 16 ott | basso | — | `CLAUDE.md` |
+| Foglio di un velista (F41, una persona, 12 nov): non è un verdetto; `stallA` resta 22° (il velista dice oltre 30/35°, in linea con F35); niente modifiche a `js/` prima di fonti scritte | 12 nov | medio | Ritarare il timone dell'1b e rifare `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` | `DA-FARE.md` voce 24, `FONTI-PUBBLICHE.md` F41 |
 
 ## Comandi
 
