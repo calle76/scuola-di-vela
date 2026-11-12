@@ -423,7 +423,7 @@ I nomi delle classi di deriva compaiono **solo qui**, mai nel gioco (vedi `PROGE
 
 **Restano senza fonte:** il limite della scotta del fiocco a 80°; da quale andatura serve davvero il fiocco a farfalla e se sulle derive a due si usa l'asta; la soglia vera a cui la randa comincia a coprire il fiocco.
 
-## Foglio di un velista (F41, 12 novembre 2026): una persona sola, da confrontare con fonti scritte
+## Foglio di un velista (F79, 12 novembre 2026): una persona sola, da confrontare con fonti scritte
 
 | Affermazione del foglio | Risposta | Cosa fare |
 | --- | --- | --- |
@@ -439,14 +439,14 @@ I nomi delle classi di deriva compaiono **solo qui**, mai nel gioco (vedi `PROGE
 Confermate (Vero) senza note: 1, 2, 3, 5 («3-4 ×2», nota non letta), 6, 9, 10, 13, 14, 15, 17, 19, 20, 21.
 
 
-### Ricerca di fonti scritte sui punti del foglio (12 novembre 2026): solo riassunti dei risultati di ricerca, **pagine non lette**
+### Ricerca di fonti scritte sui punti del foglio (12 novembre 2026)
 
-Fonti trovate sono quasi tutte forum e guide di club: **nessuna è sufficiente da sola**. Per promuoverle servono le pagine lette per intero.
+Le fonti sono in `FONTI-PUBBLICHE.md` (F79-F85). Lette per intero: F80 (MIT) e F85 (Yacht Digest). Delle altre ho solo il riassunto di un sub-agente (F81-F84): da rileggere prima di citarle nel gioco. Non leggibili: Yachting Australia (404), Corsari di Shiv (403). Il racconto di Norton («The Missed Tack») non è una procedura e non conta.
 
-| Punto | Cosa dicono i risultati | Esito |
-| --- | --- | --- |
-| 11 fiocco a collo | Manualistica e siti italiani (`yachtdigest.com/en/virata-velocita-fiocco`, `corsaridishiv.yolasite.com`): con poco vento e la prua ferma nel vento si trattiene la scotta del fiocco, che aiuta la prua a cadere sulle nuove mure; poi si molla subito, altrimenti la barca arretra. Forum inglesi (sailboatowners, Hobie, Mirror): aiuta se c'è poco abbrivio, ma su barche molto leggere rallenta | **Confermato in linea di massima** (il velista e due fonti), con la riserva «dipende dalla barca». Resta fuori dal prototipo (`SPERIMENTALE.md:44`) |
-| 16 virata fallita | Guide di club e forum (Paper Tiger, sailboatowners, Pitt «The Missed Tack»): invertire la barra mentre la barca arretra, o mettere la vela a collo, e mollare appena passata la prua nel vento. Il «centrare la barra e lasciar scadere» non compare nei riassunti | **Non confermato né smentito**: la nostra sequenza è coerente con le fonti sulla barra invertita. Da leggere per intero: manuale Yachting Australia (`issuu.com/yainstructorhandbook/docs/140714_yassr_text`), dispensa MIT PE 810 (`ocw.mit.edu`, f7fdc138…booklet.pdf) |
-| 7 randa che copre il fiocco | Più fonti (Wikipedia «Wing and wing», Sailing World «Downwind Under Jib and Main»): in poppa piena la randa toglie il vento al fiocco, che si affloscia; in lasco largo il fiocco sta dal lato opposto e lavora. Snipe e altre derive usano un'asta sul fiocco | **Confermato** (poppa sì, lasco no), e anche la nota del velista sullo Snipe: **l'asta esiste ma non è per tutte** |
-| 4 stallo del timone | Solo forum, quasi tutte barche con chiglia: da 17° a 35°, dipende dalla velocità e dal tipo di pala. Nessuna misura su deriva | **Nessuna fonte utile**; il 22° del motore resta tra F4 (15°) e F35 (30°) |
-| 12 lascare in raffica / regata | Fonti concordi su «lasca, sporgiti, cazza». Un solo post separa la regata (tenere la vela cazzata, sporgersi, abbassare il carrello) | **Non confermato**: nessuna fonte separa chiaramente regata e scuola |
+| Punto | Esito |
+| --- | --- |
+| **4** stallo del timone | **Il velista (30/35°) coincide con F35, che già avevamo** (stessa pubblicazione del 470, calcolo al computer: 30° a 2-8 m/s, 35° a 10 m/s). Non è una conferma indipendente. Attenzione: F35 misura l'angolo della **pala** nel flusso dietro lo scafo, non quello della barra. Altre fonti scritte solide non trovate (non lette: Molland e Turnock, *Marine Rudders*; Larsson-Eliasson). Il 22° resta una scelta nostra tra F4 e F35 |
+| **7** randa che copre il fiocco | Solo riassunti di siti generici: in poppa piena la randa toglie il vento al fiocco, in lasco largo no; Snipe e altre derive usano un'asta sul fiocco. Da leggere per intero |
+| **11** fiocco a collo | F85 conferma: aiuta la prua a cadere sulle nuove mure se la virata si ferma, può far arretrare la barca, si molla appena fatta la virata. Non tratta le derive. Non confermato per derive leggere con poco vento (forum dicono che rallenta) |
+| **12** lascare in raffica | F81, F82, F84: lasca, sporgiti, non stringere il vento. **F83 dissente** (lascare prima di sporgersi cede leva; sequenze diverse per vento leggero, medio e forte). Nessuna fonte distingue regata e scuola: la differenza vera sta nel vento e nel peso già fuori bordo. La frase del foglio («sempre lasciare») va precisata, non smentita |
+| **16** virata fallita | F80: si **spinge** la barra verso il lato in cui si vuole girare la prua e si aspetta l'arretramento, poi si esce su una rotta dove la vela si può regolare. Il foglio diceva «si *centra* la barra e si lascia scadere»: il Falso del velista ha una ragione. La sequenza del gioco (barra verso il boma finché arretra, poi centrata) è coerente con F80 |
