@@ -19,6 +19,13 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.28 — Il riquadro «Errore interno» non resta più da una regata all'altra
+
+Segnalato da Ale con tre foto (registrazioni di Lucio, Firefox, torneo 11 novembre sulla 1.2.27): dopo la regata 2 compare «Errore interno: TypeError: can't access property "t" of undefined» e resta sul pannello per le regate 3 e 4 (le registrazioni 18:10 e 18:22 lo riportano già a t=-180).
+- **Causa del riquadro che resta:** `errBox` si accendeva alla prima eccezione e non si spegneva mai (nemmeno a regata nuova), e un errore uguale non lo riaccendeva. Corretto: `errPulisci()` (`js/avvio.js`) a ogni partenza di regata (`js/regate.js`).
+- **Causa dell'errore vero: NON trovata.** Non si riproduce (Firefox, torneo col pilota, scuffia dopo l'arrivo, apertura e chiusura di rotta ottimale e moviola: nessun errore). La registrazione della regata 2 (17:56) non è nella cartella. Ora il riquadro e la registrazione dicono anche il file e la riga («[rotta.js:203]»), così la prossima volta si trova.
+- Punteggio del torneo controllato sulle foto: corretto (il 5° della regata 3 di Tu è lo scarto, vedi `docs/STATO.md`).
+
 ## 1.2.27 — Un avversario non rimbalza più per sempre vicino alla boa
 
 Trovato dall'esploratore sulla 1.2.25 (seme 28, regata 2 della Scuola, esperti, Chromium: Verde non arriva in 756 s). Compare dalla 1.2.24 (fino alla 1.2.23 arriva a 395 s), ma la causa è più vecchia: `docs/PROPOSTA-BOA-PIANTATA.md` §12-13.

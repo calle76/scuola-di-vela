@@ -171,7 +171,7 @@
       R.boats.push(b);
     });
     if (es) rec.key = null; else recStart(recK("r" + i) + "b"); // senza chiave il fantasma non si salva (recSave)
-    rivReset(); rotReset(); // 1.2.22: registrazione del vento per la rotta ottimale (js/rotta.js)
+    errPulisci(); rivReset(); rotReset(); // 1.2.28: via il vecchio riquadro d'errore; 1.2.22: registrazione del vento per la rotta ottimale (js/rotta.js)
     $("rTitle").textContent = es ? "Esercizio: " + LESSONS[es.lezione].steps[es.passo].title : rc.title;
     R.brief = es ? es.def.brief : introRegata(rc, liv);
     $("rDone").hidden = true; $("rTor").hidden = true; finShow();

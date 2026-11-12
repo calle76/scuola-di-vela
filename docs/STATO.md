@@ -6,7 +6,7 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.27** (tag `v1.2.27`, da pushare: avversario che rimbalzava per sempre vicino alla boa, `PROPOSTA-BOA-PIANTATA.md` §12-13). Prima: 1.2.26 (tag `v1.2.26`; 11 novembre: lezione 11 sui salti di vento riscritta e col suggerimento «sei scarso di N°», segnalata da Ale perché non si capiva e l'esercizio non si superava; pilota 10/10). Prima: 1.2.25 (tag `v1.2.25`). Novità nel `CHANGELOG.md`.
+- **Ultima versione chiusa: 1.2.28** (12 novembre: il riquadro «Errore interno» non resta più fra le regate e dice file e riga; causa dell'errore non trovata, `DA-FARE.md` voce 22; tag `v1.2.28`, da pushare). Prima: 1.2.27 (tag `v1.2.27`, da pushare: avversario che rimbalzava per sempre vicino alla boa, `PROPOSTA-BOA-PIANTATA.md` §12-13). Prima: 1.2.26 (tag `v1.2.26`; 11 novembre: lezione 11 sui salti di vento riscritta e col suggerimento «sei scarso di N°», segnalata da Ale perché non si capiva e l'esercizio non si superava; pilota 10/10). Prima: 1.2.25 (tag `v1.2.25`). Novità nel `CHANGELOG.md`.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
 

@@ -7,8 +7,10 @@
   function frame(now){
     requestAnimationFrame(frame);
     try { tick(now); }
-    catch (err){ if (String(err) !== lastErr){ lastErr = String(err); console.error(err); $("errBox").hidden = false; $("errBox").textContent = "Errore interno: " + lastErr + ". Il gioco prosegue; se qualcosa non risponde, torna al menu."; } }
+    catch (err){ if (String(err) !== lastErr){ lastErr = String(err); console.error(err); const dove = /([\w-]+\.js):(\d+)/.exec(String(err && err.stack || "")); // 1.2.28: file e riga dell'errore (Firefox e Chromium li danno diversi nel testo, uguali qui)
+      $("errBox").hidden = false; $("errBox").textContent = "Errore interno: " + lastErr + (dove ? " [" + dove[1] + ":" + dove[2] + "]" : "") + ". Il gioco prosegue; se qualcosa non risponde, torna al menu."; } }
   }
+  function errPulisci(){ lastErr = ""; $("errBox").hidden = true; $("errBox").textContent = ""; } // 1.2.28: il riquadro dell'errore non resta più da una regata alla successiva
   function tick(now){
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (mode === "menu"){ suoniAgg(dt, true, true); return; } // 1.2.5: nel menu i suoni continui tacciono
