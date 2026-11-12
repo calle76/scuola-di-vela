@@ -162,4 +162,4 @@ Da prendere **prima** di cominciare il livello a cui servono.
 | Come entra il fiocco a farfalla | Livello 3 | idem |
 | Barche vere (per categoria) dei livelli 4 e oltre | Livello 4 | idem |
 | Gioco a più persone: quale gradino e se sì | Prima di toccare registrazione e istantanee | `PROPOSTA-REGATA-COME-FONTE.md` §8 |
-| Avversari con tratti diversi (errore, lettura del vento, aggressività) estratti a caso nel torneo; equipaggio in due o tre con tratti propri come idea per Deriva | 12 nov (Ale, idea; Claude d'accordo, da proporre) | costo basso per i tratti degli avversari, alto per l'equipaggio (barca a due) |
+| Avversari con tratti diversi (errore, lettura del vento, aggressività) estratti a caso nel torneo; equipaggio con tratti propri per Deriva (idea di Ale, 12 nov) | Prima della proposta (non ha ancora il via) | `DA-FARE.md` voce 23 |
