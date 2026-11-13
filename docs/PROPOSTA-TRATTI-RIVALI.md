@@ -223,3 +223,47 @@ Ale: «chi è meno bravo direi che è più lento nelle manovre, meno preciso», 
 - **T5 (nuovo, rischio del timone):** scuffie e boe toccate dai rivali non più del doppio della 1.2.30 più 5; un timone troppo pronto o troppo pigro potrebbe far serpeggiare la barca.
 
 **Semi:** scelta sui 2101-2115 (si possono ritoccare solo le ampiezze delle manovre, dicendolo); conferma sui 2161-2190, mai usati. Se T1d non passa sui semi di scelta, le manovre si tolgono e resta A con due tratti.
+
+## 13. Semi di scelta 2101-2115 col modello del §12 (13 novembre, sera)
+
+Il confronto è con la 1.2.30 sugli stessi semi: 120 regate e 360 barche-regata. Picco di temperatura **72 °C**, con due misure insieme: d'ora in poi ne gira una sola.
+
+| Criterio | Soglia | Principianti | Esperti |
+| --- | --- | --- | --- |
+| T1a partenza (difetto meno dote) | 0,5 s e 0,15 s | **0,99 s** sì | **0,42 s** sì |
+| T1b bolina (dote/difetto) | ≤ 0,85 | **0,54** sì | **0,82** sì, di poco |
+| T1d manovre (dote/difetto, tutti i lati) | ≤ 0,85 | **1,14 NO** | **1,37 NO** |
+| T2 arrivo dei rivali | ≤ +3% | −1,0% sì (tutta la flotta) | |
+| T4 primo-ultimo | ±20% | +0% sì | |
+| T5 scuffie / boe toccate | ≤ doppio + 5 | 0 contro 0; 28 contro 40: sì | |
+
+Due informazioni senza soglia:
+- **contatti dopo il via:** 49 contro 73;
+- **nello stesso torneo la dote batte il difetto:**
+
+  | | Principianti | Esperti |
+  | --- | --- | --- |
+  | Partenza | 9 su 11 | 6 su 12 |
+  | Bolina | 5 su 8 | 9 su 13 |
+  | Manovre | 6 su 8 | 1 su 4 |
+
+**Le manovre vanno al contrario:** chi «vira svelta e precisa» perde di più. **Causa probabile, letta nel motore:**
+- il timone frena, perché la resistenza della pala cresce col quadrato del seno del suo angolo (`js/motore.js`), e oltre l'angolo di stallo la pala stalla;
+- un timone più pronto, con meno gradi per dare tutto timone, si muove di più: la barca serpeggia e frena.
+
+Quindi «preciso» non vuol dire «più timone». Vuol dire tenere la rotta col timone giusto.
+
+**Diagnosi a coppie, prima di decidere.** Non è una versione. Tutti i rivali hanno la stessa regolazione del timone e si confrontano gli stessi semi (2101-2105) con il centro di oggi; i numeri casuali sono identici. Le varianti, come scarto dal centro in frazioni della fascia del §12:
+
+| Prontezza (mr) | Precisione (mg) | Cosa provano |
+| --- | --- | --- |
+| −0,5 | −0,5 | la dote del §12 |
+| +0,5 | +0,5 | il difetto del §12 |
+| −0,5 | 0 | solo più pronta |
+| 0 | +0,5 | solo timone più dolce |
+| −0,5 | +0,5 | pronta e dolce |
+| 0 | −0,5 | solo timone più brusco |
+
+Se una direzione rende i rivali più veloci, il tratto «manovre» si rifà su quella e si rimisura sui semi di scelta, dicendolo: la direzione del tratto cambia, quindi non è un semplice ritocco delle ampiezze. Se nessuna direzione dà una differenza chiara, le manovre si tolgono e resta A con due tratti.
+
+Manopola di diagnosi: `__sv.manovre([mr, mg])`. Con `null` resta il sorteggio, e si toglie prima di chiudere.
