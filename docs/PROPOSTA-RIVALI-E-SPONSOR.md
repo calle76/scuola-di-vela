@@ -208,3 +208,29 @@ Tutte **[proposta]**, da scartare senza problemi.
 13. Quali delle sette idee della sezione 9 attirano?
 
 **Da dove cominciare, [proposta].** La scheda del rivale e i tratti realizzabili subito (sezioni 3 e 4, già vicini alla voce 23) non toccano la fisica e si collaudano come le partenze della 0.17. Sponsor e rivali che salgono e scendono conviene discuterli dopo, quando torneo e meriti saranno più stabili.
+
+## 11. Serie B e A, sponsor e materiale (13 novembre 2026, dalla domanda di Ale)
+
+**La domanda di Ale.** Uno sponsor povero dà una barca lenta, ma contro gli altri sarebbe una sconfitta annunciata. Come funziona nella realtà? Ci sono tornei più o meno difficili nella stessa classe? Se vado bene in un torneo «lento», arriva lo sponsor che mi porta nell'altro, o viceversa? Nella classe col fiocco si potrebbe partire da una serie B, salire in A e scendere, prima di tornare alle derive? E con due serie gli avversari si moltiplicano.
+
+**Cosa dicono le fonti (lette solo negli estratti della ricerca, da leggere per intero prima di scrivere testi nel gioco).**
+- **Nella stessa classe le barche sono uguali.** Negli eventi monotipo il regolamento della classe le rende uguali; cambiano età della barca, vele e preparazione. Nella lega tedesca a squadre le barche le fornisce l'organizzazione, tutte uguali (F88).
+- **Tornei più o meno difficili esistono:** regate zonali, nazionali e campionato italiano; una classifica nazionale (ranking) somma i risultati, e le regole di accesso cambiano da classe a classe (F89).
+- **Serie con promozioni e retrocessioni esistono, ma nelle leghe a squadre:** la lega tedesca ha 1ª e 2ª divisione, con promozioni e retrocessioni ogni anno, e decine di circoli in qualificazione (F88).
+- **Barche diverse nella stessa regata:** si corre in tempo compensato, con un coefficiente per barca; il primo all'arrivo può non vincere (F90).
+
+**[proposta] Come lo farei nel gioco.**
+1. **Due serie per ogni livello di barca, B e A.** Si comincia in B. A fine stagione i primi salgono in A e gli ultimi di A scendono in B, giocatore compreso. È un modello «a lega» (F88); le regate zonali e nazionali (F89) dicono la stessa cosa con altre parole: la difficoltà la fanno gli avversari, non la barca.
+2. **Lo sponsor non sposta di serie: dà materiale e obiettivi.** Lo sponsor povero dà una barca un po' più lenta (vele vecchie), e gli obiettivi sono tarati su quella («finisci nella prima metà della B»); superandoli arriva un'offerta migliore. Così le due idee stanno insieme: la differenza di materiale è piccola (da fissare con i collaudi, ipotesi 1-3% di velocità), gli obiettivi bassi evitano la sconfitta annunciata.
+3. **Il tempo compensato (F90) resta un'idea di riserva:** serve solo se un giorno si correrà con barche davvero diverse nella stessa flotta. Non serve per vele vecchie contro vele nuove.
+4. **Fra i livelli:** stare in A con la barca col fiocco apre il livello dopo; uno sponsor può proporre una stagione su un'altra barca, anche tornando indietro.
+5. **Avversari:** due serie da 8-10 rivali, una ventina di schede. In acqua sempre tre; i tornei non giocati si calcolano a numeri (§6). Ogni rivale ha nome, colore di barca, dote e difetto (1.2.31); chi sale con te lo ritrovi nella serie dopo, e può correggere il difetto (si scrive sulla scheda).
+
+**Costanti nuove (ipotesi):** quanti salgono e scendono a fine stagione, quanti tornei fa una stagione, quanto è più lenta la barca dello sponsor povero.
+
+**Domande per Ale:**
+1. Va bene il modello a due serie per ogni livello?
+2. Lo sponsor dà materiale e obiettivi, ma non cambia serie: d'accordo?
+3. I nomi dei rivali li scrivi tu, con una breve storia, o li propongo io in una lista che controlli?
+
+**Stato:** solo proposta (fermata 1). Si comincia dopo la 1.2.31, dai nomi e dal gruppo fisso di rivali salvato fra i tornei.
