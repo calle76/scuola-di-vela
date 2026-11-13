@@ -33,3 +33,20 @@
 | 27 | **Lezioni 18-19: insegnare a stare fermi prima del via** (Lucio, 13 nov: l'esercizio della 19 parte fermo in modo poco realistico; la barca lasciata a sé va indietro). Passo nuovo con esercizio nella 18, esercizio della 19 da 30 s prima del via | `PROPOSTA-LEZIONE-STARE-FERMI.md` | proposta (fermata 1), **in sospeso** (Ale, 13 nov) |
 | 28 | **Il nome del giocatore** (Ale, 13 nov: «posso inserire il mio nome all'inizio del gioco?»): chiesto all'avvio della carriera, salvato nel browser, al posto di «Tu» in classifica, scheda e registrazioni | `PROPOSTA-RIVALI-E-SPONSOR.md` §13 | Proposta scritta il 13 nov (fermata 1); va con i nomi dei rivali (1.2.32) |
 | 29 | **Riordinare questa lista con Ale** (13 nov: «ce ne sono tante, non vorrei andassero perse; alcune ora mi interessano di meno; sta prendendo forma un gioco diverso»): rileggerla insieme, voce per voce, e segnare per ognuna «avanti», «in sospeso» o «archivio», senza cancellare niente | — | Da fare alla prossima sessione con Ale |
+| 30 | **Carriera a circuiti con un gruppo fisso di rivali** (Ale, 13 nov): circuito zonale e nazionale per ogni livello di barca, sponsor che dà materiale e obiettivi, venti rivali con nome (approvati) che salgono, scendono e possono correggere il difetto | `PROPOSTA-RIVALI-E-SPONSOR.md` §11-12 | proposta; primo passo con la voce 28 (1.2.32: nomi e gruppo fisso salvato fra i tornei) |
+
+## Proposta di riordino (13 novembre, per la voce 29: da decidere con Ale, niente è cambiato)
+
+Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio consiglio voce per voce, da confermare o cambiare:
+
+| Voce | Consiglio | Perché |
+| --- | --- | --- |
+| 23, 28, 30 | **avanti, per primi** | sono il gioco nuovo: tratti dei rivali (1.2.31 in misura), nomi, circuiti |
+| 2, 4 | **avanti, dopo** | rivali che regatano meglio (bolina, boa, vento sporco, manovre addosso agli altri): servono alla carriera |
+| 9 | **avanti, piccola** | onestà dei contenuti: sette frasi da dichiarare come scelte del gioco; aspetta una risposta sulla domanda d'esame |
+| 6 | **avanti, piccola** | difetto vero: il ritiro dal torneo in Firefox può non salvarsi |
+| 12 | **da ripensare** | il livello Deriva era pensato prima dei circuiti: forse diventa il primo circuito zonale |
+| 3, 7, 17, 22, 26, 27 | **in sospeso** | aspettano qualcosa (registrazioni, tempi di Ale, una nuova comparsa dell'errore) o le hai sospese tu |
+| 1, 8, 11, 13, 18, 20 | **archivio** | registrazioni vecchie o bordi dei collaudi che non cambiano il gioco; si riaprono se tornano |
+| 10, 14 | **le fai tu** | giudizio dei suoni all'ascolto, copia di sicurezza del progetto |
+
