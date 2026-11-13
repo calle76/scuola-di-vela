@@ -67,6 +67,8 @@ Nuovi tratti in acqua (errori, scelta del lato), memoria che cambia il comportam
 
 ## 10. Misure (13 novembre, mattina): versione NON chiusa, manca un pezzo di S1
 
+**Aggiornamento del 13 novembre, pomeriggio: versione CHIUSA, vedi §11.**
+
 | Criterio | Soglia | Misurato | Esito |
 | --- | --- | --- | --- |
 | S1 la guida non cambia | 40 tornei (160 regate), 0 differenze | **30 tornei (120 regate), 0 differenze** (semi 1-30), più la prova breve (semi 1-3, 12 regate, 0 differenze) | **incompleto:** misura fermata dal caldo, mancano i semi 31-40 |
@@ -84,3 +86,14 @@ Nuovi tratti in acqua (errori, scelta del lato), memoria che cambia il comportam
 Tutte le misure si sono fermate appena sopra i 72 °C.
 
 **Per chiudere la 1.2.30** mancano i semi 31-40 di S1 e S2 (circa 25 minuti a PC freddo), poi S5: la pagina senza `#collaudo`, in Chromium e Firefox. Il comando è in `STATO.md`.
+
+## 11. Chiusura (13 novembre, pomeriggio)
+
+| Criterio | Soglia | Misurato | Esito |
+| --- | --- | --- | --- |
+| S1 la guida non cambia | 40 tornei, 0 differenze | **40 tornei (160 regate), 0 differenze**: semi 1-30 al mattino, 31-38 in una corsa fermata per il caldo (ogni differenza viene stampata subito: nessuna), 35-40 in una corsa completa | sì |
+| S2 la scheda dice il vero | 0 celle sbagliate su almeno 160 regate, ogni tipo almeno una volta | 0 celle sbagliate; nell'ultima corsa (24 regate) arrivo, partenza, boa e contatto 72 ciascuno, fuori linea 11, davanti 36, dietro 25, colpa sua 16, colpa tua 11 | sì |
+| S3, S3b, S4 | come al §10 | rifatti nell'ultima corsa: uguali, torneo vecchio aperto, 0 px in eccesso con «Indietro» dentro | sì |
+| S5 pagina come la carica Ale | senza `#collaudo`, Chromium e Firefox | salvataggio di 3 regate del torneo messo nella pagina prima del caricamento, menu, «Torneo», «I rivali», le tre linguette: in tutti e due i browser riquadro dentro lo schermo, 0 px di scorrimento e di larghezza in eccesso, una scheda visibile, «Indietro» torna al torneo, 0 errori della pagina | sì |
+
+**Il caldo:** l'ultima corsa è andata con un freno (`freno.py` nella cartella di lavoro: sospende i processi del collaudo sopra i 64 °C e li riprende sotto i 55): 53 pause, picco 70 °C.
