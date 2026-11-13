@@ -236,3 +236,39 @@ Tutte **[proposta]**, da scartare senza problemi.
 **Stato:** solo proposta (fermata 1). Si comincia dopo la 1.2.31, dai nomi e dal gruppo fisso di rivali salvato fra i tornei.
 
 **Nomi delle serie (Ale, 13 novembre):** «A» e «B» erano solo per farsi capire; si usano i nomi della realtà (F89). Nel gioco: **circuito zonale** (la B) e **circuito nazionale** (la A). Si sale con la classifica del circuito zonale, come col ranking vero; si scende se si finisce in fondo a quella nazionale (semplificazione nostra, da dichiarare: nella realtà chi va male nelle nazionali non viene «retrocesso», semplicemente non si qualifica di nuovo).
+
+## 12. Nomi dei rivali, proposta da controllare (13 novembre 2026)
+
+Ale: «i nomi proponili tu, poi li controllo». Venti rivali inventati, dieci per circuito. Nome e cognome comuni, abbinamenti scelti per non coincidere con velisti noti (controllati a memoria sui nomi delle squadre olimpiche italiane recenti: da ricontrollare con una ricerca prima di metterli nel gioco). La riga di storia dice da dove viene, **mai** com'è in acqua: doti, difetti e carattere sono sorteggiati (1.2.31) e una storia che li contraddice sarebbe falsa.
+
+**Circuito zonale**
+| Nome | Storia |
+| --- | --- |
+| Marta Ferraresi | commessa, regata da tre anni |
+| Davide Lunardi | ex canottiere, alla vela da poco |
+| Irene Moretto | allena i bambini del suo circolo |
+| Tommaso Brunelli | sedici anni, il più giovane della flotta |
+| Lucia Pavan | in pensione, ha fatto crociera tutta la vita |
+| Nicola Serafini | ingegnere, prende appunti dopo ogni regata |
+| Sara Fontana | ha cominciato tardi, a quarant'anni |
+| Pietro Gallo | pescatore, esce in mare tutte le mattine |
+| Elena Zanin | studentessa di medicina, regata quando può |
+| Matteo Carraro | torna a regatare dopo dieci anni di pausa |
+
+**Circuito nazionale**
+| Nome | Storia |
+| --- | --- |
+| Chiara Benedetti | ha vinto il circuito zonale due anni fa |
+| Andrea Tosi | velaio, le vele se le cuce da sé |
+| Federica Marchi | viene dalle barche d'altura |
+| Luca Ravasi | lavora in un cantiere di barche |
+| Anna Corradini | istruttrice di vela d'estate |
+| Stefano Valli | regata da trent'anni |
+| Alice Barbieri | vent'anni, salita dal circuito zonale l'anno scorso |
+| Giorgio Pellegrini | si allena con un allenatore tutto l'anno |
+| Valentina Sartori | viene dalla tavola a vela |
+| Riccardo Bassi | ha fatto il servizio civile in una scuola di vela |
+
+**Come si legge in gioco:** «Marta Ferraresi (barca rossa)». Il colore resta, perché in acqua serve a riconoscere la barca.
+
+**Una conseguenza da sistemare:** con i nomi propri le frasi dei tratti non possono più essere al femminile della barca («brava in partenza» per Davide non va). Diventano frasi senza genere: «parte bene» / «parte tardi», «stringe bene di bolina» / «di bolina va larga», «lascia subito nelle raffiche» / «lascia tardi nelle raffiche»; il carattere: «prudente», «normale», «attacca in partenza».
