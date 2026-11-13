@@ -181,3 +181,25 @@ Cambi di mure dopo il via, per barca (senza soglia): 5,4 prima, 5,8 con la prima
 **Decisione presa da me secondo le regole:** K1 non è raggiunto, quindi la correzione non resta. `js/regate.js` è identico a `main` (diff vuoto); `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` sono identici. La conferma sui semi 581-600 non serve: il «prima» è stato misurato, il «dopo» della prima versione è stato scartato senza guardarlo.
 
 **Cosa ne ricavo per la prossima volta:** in questo gioco una coppia non si scioglie con una manovra di una barca sola, perché la guida delle due barche le riporta vicine (bordi a tempo, stessa boa). Se si riprende, la strada da provare è che chi si libera **resti libero**: dopo la virata, un bordo minimo o una rotta che non torni verso l'altra. Va misurato prima, con lo stesso `misura_coppie.py`.
+
+## 13. Terzo modello: chi si libera resta libero (fermata 1, 13 novembre 2026, sera)
+
+Ale ha chiesto cos'era la voce 3 e ha detto «vai avanti»; questa è la proposta da riprendere, **senza codice**. Parte da quello che il §12 ha misurato. La virata di chi cede funziona (63 casi su 92), ma poi la coppia si riforma per due motivi:
+- le coppie nate da un cambio di mure salgono da 18 a 28;
+- anche chi ha la precedenza vira (13 casi contro 8), e le due barche si ritrovano vicine sulle mure nuove.
+
+**Modello** (il §11 com'era, più due regole):
+1. **Bordo minimo dopo la virata che libera.** Chi ha virato per liberarsi non rivira per `T_LIBERO` secondi, anche se il suo bordo a tempo scade. Restano le eccezioni di sempre: vicino al bersaglio (`near`, 30 m) e sulla layline.
+2. **Chi ha la precedenza non la insegue.** Per `T_LIBERO` secondi dopo che l'altra si è liberata virando, chi aveva la precedenza non vira verso di lei. In pratica rimanda la sua virata a tempo, se dopo la virata passerebbe a meno di 3 lunghezze (12,6 m) dalla barca appena liberata. È la stessa prova della voce 4 (`PROPOSTA-MANOVRE-ADDOSSO.md`, parte A), con una distanza più larga.
+
+**Costante nuova:** `T_LIBERO`, ipotesi nostra, senza fonte. Si sceglie fra 10, 15 e 20 s sui semi 561-580; la conferma è sui 581-600, mai guardati.
+
+**Criteri:** gli stessi K1-K6 del §5, con le soglie **non cambiate**: K1 almeno -40% di coppie dopo il via, in tutti e due i browser. Da riportare senza soglia:
+- le coppie nate da un cambio di mure, prima e dopo;
+- quante volte chi aveva la precedenza vira entro `T_LIBERO`.
+
+**Con la voce 4.** Le due proposte toccano la stessa guida, e la parte A della voce 4 da sola potrebbe già togliere una parte delle coppie riformate. Se Ale dà il via a tutte e due, si misurano tre versioni sugli stessi semi: solo la 4, solo la 3, tutte e due. Così si vede quanto vale ciascuna, ed entra solo quello che passa i criteri.
+
+**Rischi:**
+- un bordo minimo più lungo può portare oltre la layline: lo controlla K4, l'arrivo mediano;
+- K1 potrebbe ancora non arrivare a -40%, perché 28 coppie su 88 nascono prima del via e restano alla voce 2.
