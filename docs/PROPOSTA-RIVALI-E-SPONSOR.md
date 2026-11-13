@@ -285,3 +285,5 @@ Ale: «posso inserire il mio nome all'inizio del gioco?».
 - **Vincoli:** al massimo 20 caratteri; solo testo, mai interpretato come codice nella pagina. Vuoto vale «Tu».
 - **Criteri:** N1 il nome compare in tutti i posti elencati (collaudo che li conta, almeno 5); N2 con il nome vuoto la pagina è identica a oggi (impronta); N3 un nome di 20 caratteri non fa uscire niente dal riquadro a 1360x650; N4 un nome con caratteri come `<b>` si vede come testo.
 - **Versione:** insieme ai nomi dei rivali, 1.2.32.
+
+**Ricerca dei nomi (13 novembre, pomeriggio):** quattro ricerche, cinque nomi alla volta con «vela» e «velista». Nessuno dei venti nomi è comparso come velista. Sono comparsi solo cognomi o nomi simili: Benini Floriani, Federico Marchi, Carlo Barbieri, un equipaggio Carraro. È una ricerca debole, perché le ricerche con più nomi insieme trovano poco: va rifatta nome per nome prima di mettere i nomi nel gioco.
