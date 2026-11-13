@@ -7,7 +7,7 @@
 ## Versione
 
 - **Ultima versione chiusa: 1.2.32** (notte del 13 novembre: rotta ottimale più leggibile, col filo dello stesso istante e la barra laterale nascosta con B; tag `v1.2.32`). Da pushare insieme alla 1.2.30 e alla 1.2.31: `git push origin main --tags`.
-- **1.2.33 (nomi dei rivali e del giocatore) NON chiusa**, ramo `nomi-rivali`, cartella di lavoro nella scratchpad: il collaudo dei nomi passa, il guardiano degli avversari no (G7 squalificati 0 → 2, soglia +1); diagnosi in `PROPOSTA-RIVALI-E-SPONSOR.md` §15.
+- **1.2.33 (nomi dei rivali e del giocatore) NON chiusa**, ramo `nomi-rivali`, cartella di lavoro nella scratchpad: tutto passa tranne il guardiano degli avversari, che però boccia anche la 1.2.32 con un solo numero casuale in più: è nel rumore e non sa giudicare i nomi (DA-FARE voce 33). Gruppo dei rivali bilanciato (3 doti, 4 medie, 3 difetti per area). Decide Ale: `PROPOSTA-RIVALI-E-SPONSOR.md` §15.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - La **Scuola** (1b, barca con la sola randa) è **chiusa come contenuti** (Ale, 13 novembre): restano cose da sistemare rigiocando. **Deriva** come livello non è ancora aperto (lezioni 21-22, punti, prova, regola di passaggio, momento clou), ma molti suoi pezzi sono già nel gioco fuori dalla Scuola: torneo, rivali, cono d'ombra, rotta ottimale, layline. Cosa diventa la cornice di Deriva (forse il primo circuito zonale) è da decidere: `DA-FARE.md` voce 12.
 
