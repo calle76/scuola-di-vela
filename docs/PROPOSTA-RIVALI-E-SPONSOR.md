@@ -275,6 +275,11 @@ Ale: «i nomi proponili tu, poi li controllo». Venti rivali inventati, dieci pe
 
 **Ale, 13 novembre:** «vanno bene». I venti nomi sono approvati; resta da fare la ricerca per escludere coincidenze con velisti noti.
 
+**Ricerca nome per nome (13 novembre, sera).** Una ricerca sul web per ognuno dei venti nomi, scritto fra virgolette insieme a «vela regata» (per Valentina Sartori anche «windsurf»). Risultato:
+- **Matteo Carraro coincide con un velista vero:** compare nei comunicati della Federazione Italiana Vela sul 51° Trofeo Princesa Sofia, a Palma, in equipaggio («Omari-Carraro», 16° dopo la quarta giornata). **Va cambiato.** Proposta: **Matteo Bortolin** (stessa storia: torna a regatare dopo dieci anni di pausa), cercato allo stesso modo: nessun risultato. Da approvare da Ale.
+- Gli altri diciannove: nessun risultato col nome intero. Escono solo nomi vicini ma diversi (Tommaso Bruni, Chiara Benini Floriani, Marco Serafini, il Trofeo Pellegrini, che è una regata e non una persona).
+- **Limite:** un motore di ricerca che non trova niente non prova che la persona non esista; esclude solo i velisti che compaiono nelle notizie e nei comunicati, cioè quelli «noti».
+
 ## 13. Il nome del giocatore (proposta, fermata 1)
 
 Ale: «posso inserire il mio nome all'inizio del gioco?».
