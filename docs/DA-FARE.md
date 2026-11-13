@@ -19,7 +19,7 @@
 | 9 | **Contenuti da verificare:** i 45° prima della strambata, la posizione dei filetti; poi le 11 scelte del gioco da dichiarare (60° di scuffia, «una o due lunghezze» nell'esame…) | `CONTENUTI-DA-VERIFICARE.md` | proposta scritta il 13 nov (`PROPOSTA-SCELTE-DICHIARATE.md`, fermata 1): aspetta il via di Ale e le domande del §4 |
 | 10 | **Suoni:** giudizio di Ale all'ascolto | `CHANGELOG.md` 1.2.9 | aspetta Ale |
 | 11 | **`collaudo_boma2` in Firefox:** guardare nei prossimi giri se la caduta è sparita (altri 9 collaudi con la stessa riga) | `CHANGELOG.md` 1.2.12 | da guardare |
-| 12 | **Livello Deriva** (stessa barca, momento clou e coach; la lezione della layline è già scritta): manca il via e la soglia del torneo | `PROPOSTA-LIVELLO-DERIVA.md` §10 | dopo la prova della Scuola |
+| 12 | **Livello Deriva** (stessa barca, momento clou e coach; la lezione della layline è già scritta): manca il via e la soglia del torneo | `PROPOSTA-LIVELLO-DERIVA.md` §10 | la Scuola è chiusa come contenuti (Ale, 13 nov): non si aspetta più; da ripensare coi circuiti (forse il primo circuito zonale). Idea per il momento clou: il minuto in cui il filo della rotta ottimale si allunga di più (voce 32) |
 | 13 | **In Firefox il gioco scatta**, in Chromium no: misurare i fotogrammi al secondo | osservazione 107 | bassa priorità: secondo Ale dipende dal suo PC, poco potente; da misurare solo se capita anche su altri PC |
 | 14 | **Copia di sicurezza del progetto fuori da GitHub** | — | la fa Ale, quando vuole |
 | 17 | **Pilota incastrato prima del via nel torneo** (3 casi in 3200 corse, tutti nelle regate 102-103; «Tu tratto 0», osservazione 79 già nota): ora toccano anche le regate 3-4 del torneo | giro esploratore sulla 1.2.25 | noto (osservazione 79), da riprendere |

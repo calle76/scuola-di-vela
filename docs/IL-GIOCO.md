@@ -16,7 +16,7 @@ Ogni livello ha una sola novità grande.
 
 | Livello | Barca | Novità | Stato |
 | --- | --- | --- | --- |
-| **La scuola** | deriva in singolo | tutta la teoria, le regole, le prove | **[fatto]**, in prova da Ale (`CHECK-SCUOLA-1.2.11.md`) |
+| **La scuola** | deriva in singolo | tutta la teoria, le regole, le prove | **[fatto]**, chiusa come contenuti (Ale, 13 novembre 2026): niente da aggiungere, solo cose da sistemare rigiocando |
 | **Deriva** | la stessa, senza fiocco | gareggiare e rivedersi | **[proposta]**, `PROPOSTA-LIVELLO-DERIVA.md`; nascosta finché Ale non dice di mostrarla |
 | **Fiocco** | deriva a due, randa e fiocco | il fiocco | prototipo in `sperimentale/`, non nel gioco |
 | Dopo | gennaker, equipaggio da tre | una per volta | solo una direzione (`VISIONE-LIVELLI-E-CARRIERA.md` §2) |

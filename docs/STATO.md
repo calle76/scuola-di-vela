@@ -8,7 +8,7 @@
 
 - **Ultima versione chiusa: 1.2.31** (13 novembre sera: i rivali del torneo hanno doti e difetti in partenza e in bolina; tag `v1.2.31`; con la 1.2.30 da pushare: `git push origin main --tags`).
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
-- Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
+- La **Scuola** (1b, barca con la sola randa) è **chiusa come contenuti** (Ale, 13 novembre): restano cose da sistemare rigiocando. **Deriva** come livello non è ancora aperto (lezioni 21-22, punti, prova, regola di passaggio, momento clou), ma molti suoi pezzi sono già nel gioco fuori dalla Scuola: torneo, rivali, cono d'ombra, rotta ottimale, layline. Cosa diventa la cornice di Deriva (forse il primo circuito zonale) è da decidere: `DA-FARE.md` voce 12.
 
 ## 13 novembre, sera
 
