@@ -12,7 +12,7 @@
 
 ## 13 novembre, pomeriggio
 
-- **1.2.30 chiusa e fusa in `main`** (S1 40 tornei 0 differenze, S5 Chromium e Firefox senza `#collaudo`: `PROPOSTA-SCHEDA-RIVALI.md` §11). Per il caldo c'è un freno che sospende i collaudi sopra i 64 °C (`freno.py` nella cartella di lavoro di Claude; da mettere in `tests/` se serve ancora).
+- **1.2.30 chiusa e fusa in `main`** (S1 40 tornei 0 differenze, S5 Chromium e Firefox senza `#collaudo`: `PROPOSTA-SCHEDA-RIVALI.md` §11). Per il caldo c'è un freno che sospende i collaudi sopra i 64 °C (`tests/freno.py`: `python3 tests/freno.py 64 55 comando...`).
 - **1.2.31 (tratti dei rivali) NON chiusa, ramo `tratti-rivali`** (cartella di lavoro separata, commit `e5235bf`): la conferma su semi nuovi non passa. Partenza passa di poco, la bolina solo per i principianti, la poppa no; le raffiche sono state tolte prima, perché quelle del torneo sono troppo deboli. Con le fasce raddoppiate, partenza e bolina si vedono. **Aspetta la scelta di Ale fra A, B e C** (`PROPOSTA-TRATTI-RIVALI.md` §9-11; consiglio A: due tratti, partenza e bolina, fasce doppie, poi una conferma nuova).
 - **Proposte nuove (fermata 1):** carriera a circuiti zonale e nazionale, sponsor come materiale e obiettivi, venti nomi di rivali (approvati da Ale), nome del giocatore (`PROPOSTA-RIVALI-E-SPONSOR.md` §11-13; DA-FARE voci 28 e 30). Fonti F88-F92.
 - **Lista:** voce 24 chiusa (punto 7, F91-F92); consiglio di riordino in fondo a `DA-FARE.md`, da fare con Ale (voce 29).
