@@ -325,3 +325,18 @@ Via di Ale: «sì, fai anche i nomi. e tutto ciò che puoi».
 | N3 | Spazio | nome di 20 caratteri e i rivali dal nome più lungo: finestra del torneo, scheda e impostazioni nel 1360×650, 0 px di eccesso, in Chromium e Firefox, senza `#collaudo` |
 | N4 | Sicurezza del testo | il nome `<b>x</b>` si legge come testo, in tutti i posti |
 | N5 | Non-regressione | `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici; la Scuola non cambia, perché i nomi ci sono solo nel torneo |
+
+## 15. Misure della 1.2.33 (13-14 novembre, notte)
+
+**Passano:**
+- M1-M3 e N1-N4: `collaudo_nomi_rivali.py`, 200 tornei creati e 20 corsi, in Chromium e Firefox, ESITO OK;
+- N3: con i nomi più lunghi e un nome di 20 caratteri, finestra del torneo, scheda, impostazioni e pannello stanno nel 1360×650, senza `#collaudo`, nei due browser;
+- N5: `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici, `collaudo_versione` passa.
+
+**M4 non passa.** `collaudo_guardiano_avversari`, semi 1491-1502: G7 squalificati **0 → 2**, soglia +1. Tutto il resto è dentro, alcuni numeri meglio: contatti dopo il via 61 → 39, arrivo −2,4 s. La soglia non si cambia.
+
+**Diagnosi, dichiarata prima di misurare.** I nomi non toccano la guida, ma cambiano l'ordine dei numeri casuali: il sorteggio dei nomi e i tratti del gruppo fisso. Quindi in queste 96 regate i rivali hanno tratti diversi da prima. Si misurano la 1.2.32, che ha la stessa guida della 1.2.31 senza nomi, e la 1.2.33 su semi mai usati, 1503-1514, con lo stesso guardiano:
+- se anche la 1.2.32 ha squalificati su quei semi, quelli dei semi 1491-1502 sono il caso;
+- se ne ha solo la 1.2.33, il difetto è vero e si cerca.
+
+**In tutti e due i casi la 1.2.33 resta sul ramo `nomi-rivali`** finché il guardiano non passa sui suoi semi, e la decisione spetta ad Ale.

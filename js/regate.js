@@ -133,8 +133,8 @@
   // attorno allo stesso centro (§11). Provate e tolte: le raffiche (§9), la poppa (§10-11), le manovre del timone (§13-14): non si vedevano
   const TRATTI = ["partenza", "bolina"];
   const TRATTI_TESTO = { partenza: ["parte bene", "parte tardi"], bolina: ["stringe bene di bolina", "di bolina va larga"] };
-  function aiTratti(level){
-    const r = () => Math.random(), tr = TRATTI.map(() => Math.floor(r() * 3)); // 0 dote, 1 media, 2 difetto
+  function aiTratti(level, dati){ // dati: i tratti già sorteggiati di un rivale del gruppo fisso (1.2.33)
+    const r = () => Math.random(), tr = dati ? dati.slice() : TRATTI.map(() => Math.floor(r() * 3)); // 0 dote, 1 media, 2 difetto
     const u2 = a => 0.5 + ((tr[a] + r()) / 3 - 0.5) * 2; // da -0,5 (il migliore) a 1,5 (il peggiore): la fascia di aiParams va da 0 a 1
     const e = level === "esperti", segno = r() < 0.5 ? -1 : 1;
     return { up: (e ? 45 : 49) + u2(1) * (e ? 3 : 5), down: e ? 150 + r() * 5 : 142 + r() * 8, trim: segno * u2(1) * (e ? 2 : 6),
@@ -143,6 +143,21 @@
   // «parte bene; di bolina va larga» (frasi senza genere: servono anche coi nomi propri, PROPOSTA-RIVALI-E-SPONSOR §12); "" per i tornei salvati prima della 1.2.31
   const trattiTesto = ai => !ai || !ai.tr ? "" : TRATTI.filter((t, i) => ai.tr[i] !== 1).map(t => TRATTI_TESTO[t][ai.tr[TRATTI.indexOf(t)] / 2]).join("; ") || "nella media";
   const conTratti = (ai, char) => CHAR_TEXT[char] + (trattiTesto(ai) ? "; " + trattiTesto(ai) : "");
+  // 1.2.33 (docs/PROPOSTA-RIVALI-E-SPONSOR.md §12-14): i dieci rivali del circuito zonale, inventati (ricerca nome per nome nel §12), con la riga di storia.
+  // La storia dice da dove viene, mai com'è in acqua. Nel torneo se ne sorteggiano tre; i tratti di ciascuno si sorteggiano la prima volta e restano (progress.rivali)
+  const RIVALI_ZONALE = [["Marta Ferraresi", "commessa, regata da tre anni"], ["Davide Lunardi", "ex canottiere, alla vela da poco"], ["Irene Moretto", "allena i bambini del suo circolo"],
+    ["Tommaso Brunelli", "sedici anni, il più giovane della flotta"], ["Lucia Pavan", "in pensione, ha fatto crociera tutta la vita"], ["Nicola Serafini", "ingegnere, prende appunti dopo ogni regata"],
+    ["Sara Fontana", "ha cominciato tardi, a quarant'anni"], ["Pietro Gallo", "pescatore, esce in mare tutte le mattine"], ["Elena Zanin", "studentessa di medicina, regata quando può"],
+    ["Matteo Bortolin", "torna a regatare dopo dieci anni di pausa"]];
+  const COLORI_BARCA = ["rossa", "verde", "blu"]; // come FLEET_LOOK
+  const storiaDi = nome => (RIVALI_ZONALE.find(r => r[0] === nome) || [])[1] || "";
+  function rivaleTr(nome){ const g = progress.rivali || (progress.rivali = {}); if (!g[nome] || !Array.isArray(g[nome].tr)) g[nome] = { tr: TRATTI.map(() => Math.floor(Math.random() * 3)) }; return g[nome].tr; }
+  const escH = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const mioNome = () => nomeGet().trim() || "Tu"; // 1.2.33 (§13): vuoto vale «Tu»
+  const cognome = n => n.split(" ").slice(-1)[0];
+  const avNome = (T, n) => (T.av[n] && T.av[n].nome) || FLEET_LOOK[n].name; // nei tornei salvati senza nomi restano i colori
+  const avNomeBarca = (T, n) => T.av[n] && T.av[n].nome ? T.av[n].nome + " (barca " + COLORI_BARCA[n] + ")" : "la " + FLEET_LOOK[n].name;
+  const laN = (b, M) => FLEET_LOOK.some(l => l.name === b.name) ? (M ? "La " : "la ") + b.name : b.name; // «la Rossa», ma «Marta Ferraresi»
   // es (1.2.1, meccanismo B di docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md): la regata è l'esercizio di un passo di lezione. es = { def, lezione, passo, esito }:
   // def.regata (indice in RACES), def.cd (preparazione, s), def.avversari, def.boa (stato di partenza: [dx, dy, gradi dal vento] attorno alla boa, coordinate del vento,
   // regata già partita), def.linea (1.2.2, stato di partenza: [dx, dy, gradi dal vento, velocità m/s] dal centro della linea, dy > 0 dietro; vela tutta lascata), def.obiettivo (riga del pannello), def.brief, def.fatto(R, me) e def.fallito(R, me) (l'obiettivo, separato dallo stato di partenza).
@@ -169,6 +184,7 @@
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
     const me = { me: true, name: "Tu", S, ctl, info: null, wake, leg: 0, ocs: false, pen: 0, fin: null, prevWY: spots[0].y };
+    if (rc.tor) me.name = mioNome(); // 1.2.33
     R.boats.push(me);
     if (es && es.def.boa){ R.phase = "race"; me.leg = 1; }
     const slots = [-24, 2, 24].sort(() => Math.random() - 0.5);
@@ -178,10 +194,10 @@
       const [x, y] = fromWF(spot.x, spot.y);
       const bs = newBoat(x, y, norm360(env.twd + spot.s * 90));
       Object.assign(bs, { hullColor: look.hull, sailColor: look.sail, sailorColor: look.sailor });
-      const b = { me: false, name: look.name, S: bs, ctl: { sheet: 0.4, tiller: 0 }, info: null, wake: [], wakeT: 0, leg: 0, ocs: false, pen: 0, fin: null,
+      const b = { me: false, name: look.name, sigla: look.name, S: bs, ctl: { sheet: 0.4, tiller: 0 }, info: null, wake: [], wakeT: 0, leg: 0, ocs: false, pen: 0, fin: null,
                   prevWY: spot.y, rOff: Math.random() * 6, ai: aiParams(liv), side: 1, boardT: 0, boardMax: 40, startX: slots[k] + (Math.random() - 0.5) * 6,
                   char: carattere(k, aggro) };
-      if (rc.tor) Object.assign(b, { ai: { ...tor.av[k].ai }, char: tor.av[k].char }); // nel torneo la flotta resta la stessa per tutta la serie
+      if (rc.tor) Object.assign(b, { ai: { ...tor.av[k].ai }, char: tor.av[k].char, name: avNome(tor, k), etich: tor.av[k].nome ? cognome(tor.av[k].nome) : look.name }); // nel torneo la flotta resta la stessa per tutta la serie; 1.2.33: col nome, in acqua il cognome
       b.info = step(bs, b.ctl, env, 0); bs.dispBoom = bs.boomSide * bs.boom;
       R.boats.push(b);
     });
@@ -202,7 +218,7 @@
       (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Boa a 300 m" : "") +
       ". Partenza tra la barca giuria e la boa arancione, " + (rc.tri ? "girare la boa 1 e poi la boa 2, tutte e due lasciandole a sinistra, e tornare a tagliare la stessa linea" : "girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea") + ". Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
-        : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + (rc.tor ? conTratti(b.ai, b.char) : CHAR_TEXT[b.char])).join(", ") +
+        : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map((b, k) => (rc.tor ? avNomeBarca(tor, k) : "la " + b.name) + " è " + (rc.tor ? conTratti(b.ai, b.char) : CHAR_TEXT[b.char])).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
     if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. I suoni della giuria accompagnano le bandiere, ma i tempi contano sulle bandiere (regola 26).";
     if (rc.precedenze) t += " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
@@ -771,7 +787,7 @@
     if (sg !== 0) b.gS = sg;
     if (b.gCum >= 360 && b.gTk > 0 && b.gGy > 0){ // un giro fatto
       b.gDebt--; b.gFatti = (b.gFatti || 0) + 1; b.gCum = 0; b.gTk = 0; b.gGy = 0;
-      if (b.gDebt <= 0){ b.gCum = null; b.sconta = false; b.gV = 0; b.boardT = 0; R.penList.push("La " + b.name + ", penalità scontata: i giri sono fatti."); return null; }
+      if (b.gDebt <= 0){ b.gCum = null; b.sconta = false; b.gV = 0; b.boardT = 0; R.penList.push(laN(b, true) + ", penalità scontata: i giri sono fatti."); return null; }
     }
     // la sequenza, nel senso del giro: prua a 'U' dal vento, dall'altra parte del vento 'U', 'D' (poppa larga), dall'altra parte 'D' passando dalla poppa; q = angolo dal vento visto nel verso del giro
     const q = norm180(twd - s.h) * b.gV, U = ai.up, D = ai.down, x = q > D + GIRO_AI_ERR ? q - 360 : q;
@@ -781,7 +797,7 @@
   function giriMancantiAI(b){ // un avversario taglia l'arrivo con il debito aperto: squalificato, come il giocatore (1.2.18, scelta A di Ale; fino alla 1.2.17 +15 s per giro)
     const m = b.gDebt; if (!(m > 0)) return;
     b.dsq = true; b.gDebt = 0; b.gCum = null; b.sconta = false;
-    R.penList.push("La " + b.name + ", giri di penalità non fatti (" + m + "): squalifica (regole 44.2 e 60.5).");
+    R.penList.push(laN(b, true) + ", giri di penalità non fatti (" + m + "): squalifica (regole 44.2 e 60.5).");
   }
 
   // ---- boa toccata (livello 2a, 1.0.62, docs/PROPOSTA-LIVELLO-2A.md fetta 2; F15 31 e 44.1) ----
@@ -899,7 +915,7 @@
       A.S.x += dx * push; A.S.y += dy * push; B.S.x -= dx * push; B.S.y -= dy * push;
       // 1.0.49 (docs/PROPOSTA-AVVERSARI-1B.md, punto C): ogni penalità col motivo, per l'elenco a fine regata, e un messaggio quando si toccano due avversari
       const altra = guilty === A ? B : A;
-      R.penList.push((guilty.me ? "Tu" : "La " + guilty.name) + ", contatto con " + (altra.me ? "te" : "la " + altra.name) + ": " + why + ".");
+      R.penList.push((guilty.me ? "Tu" : laN(guilty, true)) + ", contatto con " + (altra.me ? "te" : laN(altra)) + ": " + why + ".");
       rivMark("Contatto a " + rivTempo(R.t) + ". " + R.penList[R.penList.length - 1], true);
       if (!A.me && !B.me) toast("Contatto fra " + A.name + " e " + B.name + ": penalità alla " + guilty.name);
       if (A.me || B.me){
@@ -1184,7 +1200,7 @@
     if (!R) return;
     const rank = ranking();
     const gap = b => { const s = distacco(b); if (s === null) return ""; const r = Math.round(s); return " · " + (r > 0 ? r + " s avanti" : r < 0 ? -r + " s dietro" : "alla pari"); }; // 1.0.33; 1.0.54: in parole invece del segno (check di Ale)
-    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${b.name}</b> <span>${legName(b)}${b.pen ? " · " + b.pen / 15 + " penalità (+" + b.pen + " s)" : ""}${b.pp ? " · " + b.pp + " penalità (+" + b.pp + " pt)" : ""}${gap(b)}</span></li>`).join("");
+    $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${escH(b.name)}</b> <span>${legName(b)}${b.pen ? " · " + b.pen / 15 + " penalità (+" + b.pen + " s)" : ""}${b.pp ? " · " + b.pp + " penalità (+" + b.pp + " pt)" : ""}${gap(b)}</span></li>`).join("");
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
     finShow();
   }
@@ -1220,10 +1236,11 @@
   const torFormato = (T, k) => (torTri(k) ? "triangolo" : "bastone") + ", " + (torGiri(T, k) ? "giri di penalità" : "penalità sul punteggio") + ", " + T.regate[k].tws + " nodi";
   const torNome = k => "regata " + (k + 1) + " di " + TOR_N + " (" + torFormato(tor, k) + ")";
   const fmtPt = v => String(Math.round(v * 10) / 10).replace(".", ",");
+  function torScegli(){ const pool = RIVALI_ZONALE.map(r => r[0]); return FLEET_LOOK.map(() => pool.splice(Math.floor(Math.random() * pool.length), 1)[0]); } // tre nomi diversi
   function torNuovo(){
     const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv);
     return { ver: VERSIONE, liv, regate: [0, 1, 2, 3].map(() => ({ wind: Math.floor(Math.random() * 8) * 45, tws: Math.random() < 0.5 ? 10 : 12 })), // 1.2.21: forza del vento sorteggiata
-             av: FLEET_LOOK.map((l, k) => ({ ai: aiTratti(liv), char: carattere(k, aggro) })), ris: [] };
+             av: torScegli().map((nome, k) => ({ nome, ai: aiTratti(liv, rivaleTr(nome)), char: carattere(k, aggro) })), ris: [] };
   }
   function torRc(){
     const k = tor.ris.length, g = tor.regate[k];
@@ -1330,17 +1347,18 @@
     const schede = FLEET_LOOK.map((l, n) => {
       const i = n + 1, f = torFatti(T, i), a = T.av[n];
       const riga = (tit, g) => `<tr><td>${tit}</td>${f.map(x => `<td>${g(x)}</td>`).join("")}</tr>`;
-      const tab = `<table class="tor"><thead><tr><th>${l.name}</th>${f.map((x, j) => `<th>R${j + 1}</th>`).join("")}</tr></thead><tbody>
+      const nome = avNome(T, n), storia = a.nome ? storiaDi(a.nome) + " · barca " + COLORI_BARCA[n] : "";
+      const tab = `<table class="tor"><thead><tr><th>${a.nome ? cognome(a.nome) : l.name}</th>${f.map((x, j) => `<th>R${j + 1}</th>`).join("")}</tr></thead><tbody>
         ${riga("Arrivo", x => x.pos ? x.pos + "°" : "non arr.")}${riga("Partenza", x => x.fuori ? "fuori linea" : cella(x.part, "davanti", "dietro"))}
         ${riga("Boa 1", x => cella(x.boa, "davanti", "dietro"))}${riga("Contatto", x => x.c ? (x.c.includes("t") ? "colpa tua" : "") + (x.c.includes("t") && x.c.includes("s") ? " e " : "") + (x.c.includes("s") ? "colpa sua" : "") : "–")}</tbody></table>`;
       const fuori = f.filter(x => x.fuori).length, tocc = f.filter(x => x.c).length, colpaSua = f.filter(x => x.c.includes("s")).length, colpaTua = f.filter(x => x.c.includes("t")).length;
       const frasi = torFrase("Partenza", f.map(x => x.fuori ? null : x.part), "davanti a te", "dietro di te") + (fuori ? `<li>Partenza: fuori linea in ${torRegate(fuori)} su ${f.length}</li>` : "")
         + torFrase("Boa 1", f.map(x => x.boa), "davanti a te", "dietro di te")
         + `<li>Contatti con te: ${tocc ? `${torRegate(tocc)} su ${f.length} (colpa sua in ${colpaSua}, colpa tua in ${colpaTua})` : "nessuno"}</li>`;
-      return `<div class="tor-sch"${n === torSchedaN ? "" : " hidden"}><h3>${l.name}: ${CHAR_TEXT[a.char]}</h3>${trattiTesto(a.ai) ? `<p class="tor-tratti">${trattiTesto(a.ai)}</p>` : ""}${tab}<ul>${frasi}</ul></div>`;
+      return `<div class="tor-sch"${n === torSchedaN ? "" : " hidden"}><h3>${nome}: ${CHAR_TEXT[a.char]}</h3>${storia ? `<p class="tor-storia">${storia}</p>` : ""}${trattiTesto(a.ai) ? `<p class="tor-tratti">${trattiTesto(a.ai)}</p>` : ""}${tab}<ul>${frasi}</ul></div>`;
     }).join("");
     // una scheda per volta (13 nov: le tre insieme non stanno nei 650 px di altezza), coi pulsanti dei tre colori
-    const linguette = FLEET_LOOK.map((l, n) => `<button class="tor-ling${n === torSchedaN ? " primary" : ""}" data-n="${n}">${l.name}</button>`).join("");
+    const linguette = FLEET_LOOK.map((l, n) => `<button class="tor-ling${n === torSchedaN ? " primary" : ""}" data-n="${n}">${avNome(T, n)}</button>`).join("");
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">I rivali</h2><span>dopo la regata ${k} di ${TOR_N}</span></div>
       <p class="tor-leg">Solo fatti visti in queste regate, non giudizi: davanti o dietro sono rispetto a te. – vuol dire dato non registrato. Il carattere in titolo è quello vero, dichiarato prima della regata.</p>
       <div class="row tor-lings">${linguette}</div>${schede}<div class="row"><button class="primary" id="torIndietro">Indietro</button></div>`;
@@ -1350,19 +1368,21 @@
   let torSchedaN = 0; // la scheda aperta (0 Rossa, 1 Verde, 2 Blu); resta quella finché la pagina è aperta
   function torMostra(nota){
     const T = tor || torNuovo(), k = T.ris.length, inGioco = mode === "race";
-    const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + conTratti(a.ai, a.char)).join(", ");
+    const nomi = [escH(mioNome()), ...FLEET_LOOK.map((l, i) => avNome(T, i))], car = T.av.map((a, i) => avNomeBarca(T, i) + " è " + conTratti(a.ai, a.char)).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
     const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
     const testa = !k ? `<p>Quattro regate contro gli stessi tre avversari (${T.liv}): ${car}. Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
       <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Nelle regate 1 e 2 un contatto con colpa vale 1 punto in più; nelle 3 e 4 costa due giri, e chi arriva senza averli fatti è squalificato. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
+    const nomeIn = !k && !T.fine ? `<p class="tor-nome"><label for="torNomeIn">Il tuo nome in classifica (facoltativo):</label> <input id="torNomeIn" type="text" maxlength="20" autocomplete="off" placeholder="Tu" value="${escH(nomeGet())}"></p>` : ""; // 1.2.33 (§13-14)
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Torneo</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
-      ${nota ? `<p class="manca">${nota}</p>` : ""}${fine}${testa}${tab}
+      ${nota ? `<p class="manca">${nota}</p>` : ""}${fine}${testa}${nomeIn}${tab}
       <div class="row">${T.fine ? `<button class="primary" id="torMenu">Torna al menu</button><button id="torRivali">I rivali</button>`
         : `<button class="primary" id="torGo">${k ? "Corri la regata " + (k + 1) : "Inizia il torneo"}</button>${tor ? `<button id="torRit">Ritirati dal torneo</button>` : ""}${k ? `<button id="torRivali">I rivali</button>` : ""}<button id="torMenu">${inGioco ? "Menu" : "Chiudi"}</button>`}</div>`;
     const chiudi = () => $("torDlg").close();
     $("torMenu").onclick = () => { if (inGioco && !torEsciOk()) return; chiudi(); if (T.fine) tor = null; if (inGioco || T.fine) showMenu(); };
     if ($("torRivali")) $("torRivali").onclick = () => torSchedeMostra(T, nota);
+    if ($("torNomeIn")) $("torNomeIn").oninput = e => nomeSet(e.target.value);
     if ($("torGo")) $("torGo").onclick = () => { if (!tor){ tor = progress.torneo = T; saveProgress(); } chiudi(); openItem(["r", "t"]); };
     if ($("torRit")) $("torRit").onclick = () => { if (!confirm("Ritirarti dal torneo? Il torneo non conta: niente punti e niente piazzamento.")) return;
       delete progress.torneo; tor = null; saveProgress(); chiudi(); showMenu(); };
@@ -1426,7 +1446,7 @@
   function drawRaceScreen(v){
     if (!R) return;
     ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    for (const b of R.boats){ if (b.me) continue; const [sx, sy] = toScreen(v, b.S.x, b.S.y); ctx.fillStyle = "rgba(10,24,36,.6)"; const w = ctx.measureText(b.name).width + 10; ctx.fillRect(sx - w / 2, sy - 58, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(b.name, sx, sy - 49); }
+    for (const b of R.boats){ if (b.me) continue; const [sx, sy] = toScreen(v, b.S.x, b.S.y); ctx.fillStyle = "rgba(10,24,36,.6)"; const et = b.etich || b.name, w = ctx.measureText(et).width + 10; ctx.fillRect(sx - w / 2, sy - 58, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(et, sx, sy - 49); } // 1.2.33: nel torneo il cognome
     R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + 10, gy - 10); });
     drawOrologio(R.boats[0], ranking());
     ctx.restore();

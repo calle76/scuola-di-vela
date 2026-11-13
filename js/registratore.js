@@ -36,15 +36,16 @@
   // Un contatto è un nuovo valore in R.contacts (la definizione del gioco); il motivo è la voce nuova di R.penList (righe Q).
   // «Fermo»: sotto FERMO_KN per FERMO_S secondi di gioco dopo il via; «riparte» sopra RIPARTE_KN (ipotesi nostre, isteresi).
   const FERMO_KN = 0.5, RIPARTE_KN = 1, FERMO_S = 5;
-  const sesStato = b => [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dsq && "dsq", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + b.cedeA.name].filter(Boolean).join(",") || "-";
+  const regNome = b => b.me ? "Tu" : (b.sigla || b.name); // 1.2.33: nelle righe del file il nome di sempre, senza spazi (Tu, Rossa, Verde, Blu); i nomi del torneo stanno nell'intestazione
+  const sesStato = b => [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dsq && "dsq", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + regNome(b.cedeA)].filter(Boolean).join(",") || "-";
   const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0, still: 0, fermo: false });
   function sesAltre(dSim, riga){
     const L = ses.L;
     if (mode !== "race" || !R){ L.AR = null; return; }
-    if (R !== L.AR){ L.AR = R; L.A = {}; L.cop = {}; R.boats.forEach(b => { if (!b.me) L.A[b.name] = sesAvv(b); }); L.ct = Object.assign({}, R.contacts); L.pl = R.penList.length; } // accesa a regata in corso: le voci già presenti non si scrivono
+    if (R !== L.AR){ L.AR = R; L.A = {}; L.cop = {}; R.boats.forEach(b => { if (!b.me) L.A[regNome(b)] = sesAvv(b); }); L.ct = Object.assign({}, R.contacts); L.pl = R.penList.length; } // accesa a regata in corso: le voci già presenti non si scrivono
     for (const b of R.boats){
       if (b.me) continue;
-      const A = L.A[b.name], n = b.name, kn = Math.abs(b.S.u) * KN;
+      const A = L.A[regNome(b)], n = regNome(b), kn = Math.abs(b.S.u) * KN;
       if (b.leg > A.leg) sesEv("avv_lato", n + " " + b.leg);
       if (b.ocs && !A.ocs) sesEv("avv_ocs", n);
       if (b.S.capsized && !A.cap) sesEv("avv_scuffia", n);
@@ -60,17 +61,17 @@
       }
       Object.assign(A, { leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba });
     }
-    for (const key in R.contacts) if (L.ct[key] !== R.contacts[key]){ const [i, j] = key.split("-"); sesEv("contatto_barche", R.boats[i].name + " " + R.boats[j].name); }
+    for (const key in R.contacts) if (L.ct[key] !== R.contacts[key]){ const [i, j] = key.split("-"); sesEv("contatto_barche", regNome(R.boats[i]) + " " + regNome(R.boats[j])); }
     // 1.2.25 (docs/PROPOSTA-CONO-D-OMBRA.md): una barca coperta da un'altra per più del 10% del vento da almeno 2 s di gioco, e quando torna libera
-    if (R.ombra && dSim > 0) for (const b of R.boats){ const C = L.cop[b.name] || (L.cop[b.name] = { t: 0, on: false }), k = b.fin === null && !b.dnf ? b.cop || 0 : 0;
-      if (k > 0.10){ C.t += dSim; if (!C.on && C.t >= 2){ C.on = true; sesEv("coperta", b.name + " da " + b.copDa.name + " " + Math.round(k * 100) + "%"); } }
-      else { if (C.on) sesEv("libera", b.name); C.on = false; C.t = 0; } }
+    if (R.ombra && dSim > 0) for (const b of R.boats){ const C = L.cop[regNome(b)] || (L.cop[regNome(b)] = { t: 0, on: false }), k = b.fin === null && !b.dnf ? b.cop || 0 : 0;
+      if (k > 0.10){ C.t += dSim; if (!C.on && C.t >= 2){ C.on = true; sesEv("coperta", regNome(b) + " da " + regNome(b.copDa) + " " + Math.round(k * 100) + "%"); } }
+      else { if (C.on) sesEv("libera", regNome(b)); C.on = false; C.t = 0; } }
     L.ct = Object.assign({}, R.contacts);
     for (; L.pl < R.penList.length; L.pl++) sesLine("Q " + sesT() + " " + R.penList[L.pl]);
     if (riga) for (const b of R.boats){
       if (b.me) continue;
       const st = sesStato(b);
-      sesLine(["B", sesT(), b.name, b.S.x.toFixed(1), b.S.y.toFixed(1), Math.round(b.S.h), (b.S.u * KN).toFixed(1), Math.round(norm180(windAt(b.S.x, b.S.y).twd - b.S.h)), b.leg, st].join(" "));
+      sesLine(["B", sesT(), regNome(b), b.S.x.toFixed(1), b.S.y.toFixed(1), Math.round(b.S.h), (b.S.u * KN).toFixed(1), Math.round(norm180(windAt(b.S.x, b.S.y).twd - b.S.h)), b.leg, st].join(" "));
     }
   }
   function sesTick(dt, noDraw){
@@ -292,6 +293,7 @@
     const d = ses.start, file = d.getFullYear() + p2(d.getMonth() + 1) + p2(d.getDate()) + "-" + p2(d.getHours()) + p2(d.getMinutes());
     const testo = ["# SCUOLA DI VELA - registrazione di regata, formato 3",
       "# gioco " + VERSIONE + " · " + ses.nome + " · inizio " + ses.quando + " · pezzo " + ses.pz + (fine ? " (" + fine + ")" : "") + " · da t=" + ses.p0.toFixed(1) + " a t=" + ses.ult.toFixed(1) + " (secondi di regata)",
+      ...(nomeGet().trim() ? ["# giocatore: " + nomeGet().trim()] : []), // 1.2.33
       "# impostazioni all'inizio: " + ses.set0, "# " + ses.sit,
       "# marcatori fin qui: " + (ses.marks.map(m => "M" + m.n + " a " + regClock(m.t)).join(" · ") || "nessuno"),
       ...SES_LEGENDA, ...REG_LEGENDA, ...ses.lines, ""].join("\n");
@@ -307,7 +309,7 @@
     Object.assign(ses, sesNuova());
     const d = ses.start = new Date();
     Object.assign(ses, { auto: true, set0: sesSet(), taglio: PEZZO_0, pz: 1, p0: R.t, ult: R.t, nome: sesModeName(), quando: p2(d.getDate()) + "/" + p2(d.getMonth() + 1) + " " + p2(d.getHours()) + ":" + p2(d.getMinutes()),
-      sit: "barche: " + R.boats.map(b => b.name + (b.char ? " (" + b.char + ")" : "")).join(", ") });
+      sit: "barche: " + R.boats.map(b => regNome(b) + (b.sigla && b.sigla !== b.name ? " = " + b.name : "") + (b.char ? " (" + b.char + ")" : "")).join(", ") });
     sesBase(); ses.on = true; sesEv("registrazione_automatica"); sesMarksUi();
   }
   function sesChiudi(motivo){
@@ -316,7 +318,7 @@
     sesLine("E " + t + " registrazione_chiusa " + motivo);
     if (motivo === "arrivo" || motivo === "interrotta"){ // riga di controllo: classifica secondo il gioco, per chi ha già tagliato l'arrivo
       const arr = sesAutoR.boats.filter(b => b.fin !== null).sort((a, b) => a.fin - b.fin);
-      for (const b of sesAutoR.boats) sesLine(["F", t, b.name, b.fin !== null ? arr.indexOf(b) + 1 : "-", b.fin !== null ? b.fin.toFixed(1) : "-", b.pen || 0, b.pp || 0, sesStato(b)].join(" "));
+      for (const b of sesAutoR.boats) sesLine(["F", t, regNome(b), b.fin !== null ? arr.indexOf(b) + 1 : "-", b.fin !== null ? b.fin.toFixed(1) : "-", b.pen || 0, b.pp || 0, sesStato(b)].join(" "));
     }
     // una regata aperta e richiusa subito non contiene niente: nel menu si confondeva col pezzo 1 di quella vera (regata di Ale, 6 novembre)
     if (motivo === "arrivo" || ses.pz > 1 || ses.ult - ses.p0 >= REG_MIN) regSigilla(motivo === "arrivo" ? "ultimo" : "interrotto");

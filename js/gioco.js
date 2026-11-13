@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.2.32"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.2.33"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -165,11 +165,15 @@
     const m = meriti(progress), pc = (v, max) => Math.round(100 * v / max);
     const rows = MERITI.map(([k, nome, max, min]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-m="${k}">${m.pt[k]} / ${max}</span> · <span class="${m.pt[k] >= min ? "ok" : "no"}">servono ${min}</span></span></div>`).join("");
     const sug = m.sugg.length ? m.sugg[giroSug++ % m.sugg.length] : null;
-    return `<div><div class="part-head"><h2>Libretto</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
+    return `<div><div class="part-head"><h2>Libretto${nomeGet().trim() ? " di " + escH(nomeGet().trim()) : ""}</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
       <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES_CARRIERA.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Attestato ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Aprilo</button></p>`
         : `<p class="manca" id="libManca">${m.superato ? "Scuola superata." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
   loadProgress();
+  // 1.2.33 (PROPOSTA-RIVALI-E-SPONSOR §13-14): il nome del giocatore, uguale in carriera e nel gioco libero (i progressi sono separati); «Azzera i progressi» lo cancella
+  const NOME_KEY = "scuolaVelaSim.nome";
+  const nomeGet = () => { try { return (localStorage.getItem(NOME_KEY) || "").slice(0, 20); } catch(e){ return ""; } };
+  const nomeSet = v => { try { const t = String(v).slice(0, 20); if (t.trim()) localStorage.setItem(NOME_KEY, t); else localStorage.removeItem(NOME_KEY); } catch(e){} };
   const saveProgress = () => { if (LAB) return; try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   // ---- menu principale e attestato ----
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
@@ -204,7 +208,7 @@
   function openAttest(){
     const B = progress.brevetto, m = meriti(progress), q = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
     $("atBody").innerHTML = `${NAVE}<p class="sc">Scuola di vela</p><hr><p class="titolo">Attestato del gioco</p><h2 id="atTitle">La scuola</h2><p class="ruolo">superata</p>
-      <label for="atName">Nome (facoltativo)</label><input id="atName" maxlength="60" autocomplete="off" value="${q(B.nome || "")}">
+      <label for="atName">Nome (facoltativo)</label><input id="atName" maxlength="60" autocomplete="off" value="${q(B.nome || nomeGet().trim())}">
       <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${progress.exam.n || 20}.</p>
       <ul>${MERITI.map(([k, nome, max]) => `<li>${nome}: ${m.pt[k]} / ${max}</li>`).join("")}</ul>
       <p class="legal">Nessun valore legale: non sostituisce un corso di vela né la patente nautica.</p>
@@ -272,7 +276,7 @@
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));
     $("modoSel").onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.v !== modo) setModo(b.dataset.v); };
-    $("resetProg").onclick = () => { if (confirm(modo === "carriera" ? "Azzerare i progressi della carriera, fantasmi compresi? Il gioco libero non cambia." : "Azzerare i progressi del gioco libero, fantasmi compresi? La carriera non cambia.")){ progress = { done: {}, best: {}, clean: {} }; ghosts = {}; saveProgress(); saveGhosts(); showMenu(); } };
+    $("resetProg").onclick = () => { if (confirm(modo === "carriera" ? "Azzerare i progressi della carriera, fantasmi compresi? Il gioco libero non cambia." : "Azzerare i progressi del gioco libero, fantasmi compresi? La carriera non cambia.")){ progress = { done: {}, best: {}, clean: {} }; ghosts = {}; nomeSet(""); saveProgress(); saveGhosts(); showMenu(); } };
     window.scrollTo(0, 0); wipeNote = false; // il messaggio compare una volta sola
   }
   $("toMenu").onclick = () => { if (torEsciOk()) showMenu(); };
@@ -290,7 +294,8 @@
       : `<p class="gl-empty">Nessun termine trovato. Prova con una parola più breve.</p>`;
   }
   function openGloss(){ releaseKeys(); $("glSearch").value = ""; renderGloss(); $("gloss").showModal(); }
-  $("openSet").onclick = () => { releaseKeys(); $("conoRiga").hidden = !(mode === "race" && R && R.ombra); $("setDlg").showModal(); }; // 1.2.25: la casella del cono solo dove il cono c'è (altrove la finestra a 650 px sforava)
+  $("openSet").onclick = () => { releaseKeys(); $("conoRiga").hidden = !(mode === "race" && R && R.ombra); $("setNome").value = nomeGet(); $("setDlg").showModal(); }; // 1.2.25; 1.2.33 il nome
+  $("setNome").oninput = e => nomeSet(e.target.value); // 1.2.33 (PROPOSTA-RIVALI-E-SPONSOR §13-14): salvato coi progressi, vuoto vale «Tu»: la casella del cono solo dove il cono c'è (altrove la finestra a 650 px sforava)
   $("setClose").onclick = () => $("setDlg").close();
   $("glClose").onclick = () => $("gloss").close();
   $("glSearch").addEventListener("input", e => renderGloss(e.target.value));
@@ -660,7 +665,7 @@
   function semRelease(a){ semHeld.delete(a); const b = $("sem").querySelector(`[data-a="${a}"]`); b && b.classList.remove("held"); }
   addEventListener("keydown", e => {
     if (briefing && !$("gloss").open && !$("setDlg").open && e.key === "Enter"){ e.preventDefault(); hideBrief(); return; }
-    if (mode === "menu" || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || e.target.tagName === "INPUT" && e.target.type === "search" || e.target.closest?.("#lab")) return; // 1.0.4: i tasti dentro il laboratorio non guidano la barca
+    if (mode === "menu" || briefing || $("gloss").open || $("quiz").open || $("setDlg").open || e.target.tagName === "INPUT" && (e.target.type === "search" || e.target.type === "text") || e.target.closest?.("#lab")) return; // 1.0.4: i tasti dentro il laboratorio non guidano la barca
     let k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     if (KEYSEM[k]){ // 1.0.30: W e S valgono sempre come ↑ e ↓; i pulsanti della lezione 1 restano com'erano
       if (allowSem.length){ semPress(KEYSEM[k]); e.preventDefault(); return; }
