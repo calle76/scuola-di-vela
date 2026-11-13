@@ -19,6 +19,15 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.31 — I rivali del torneo hanno una dote e un difetto
+
+Secondo passo della voce 23 (`docs/PROPOSTA-TRATTI-RIVALI.md` §8-9; via di Ale del 13 novembre: tratti detti subito, come qualità a parole e non come gradi). Solo nel torneo.
+
+- **Una dote e un difetto per rivale** (`aiTratti`, `js/regate.js`), in due aree diverse fra partenza, bolina e poppa; nella terza è nella media. Si usano i valori di sempre (`startM`; `up` e `trim`; `down`) presi nel terzo migliore o peggiore della fascia del livello. Per ogni area dote, media e difetto capitano una volta su tre, quindi ogni valore ha ancora la distribuzione di prima e cambia solo l'abbinamento. Nessun comportamento nuovo in acqua.
+- **Dove si leggono:** nella presentazione del torneo, prima di ogni regata e sulla scheda dei rivali («parte bene, ma in poppa va piano»), con frasi senza genere che vanno bene anche coi nomi propri della 1.2.32. Un torneo salvato prima della 1.2.31 continua senza tratti.
+- **Il terzo tratto doveva essere le raffiche** (un rivale che lascia in ritardo). Provato e tolto: con le raffiche del torneo (20-40% di vento in più) anche 10 s di ritardo costano solo 5 s d'arrivo e nessuna scuffia, quindi l'etichetta non avrebbe corrisposto a niente (`PROPOSTA-TRATTI-RIVALI.md` §9).
+- **Misure:** vedi `docs/PROPOSTA-TRATTI-RIVALI.md` §9-10.
+
 ## 1.2.30 — La scheda dei rivali nel torneo
 
 Primo passo della scheda dei rivali (`docs/PROPOSTA-SCHEDA-RIVALI.md`; risposte di Ale del 12 novembre: «dove si vede meglio», i quattro fatti, memoria solo mostrata). La guida degli avversari non cambia.
