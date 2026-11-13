@@ -168,3 +168,35 @@ Quindi solo la bolina dei principianti si nota con una certa sicurezza; il resto
 **Perché.** Le fasce di oggi sono strette rispetto a tutto il resto che decide una regata: salti di vento, posizione in partenza, incroci con le altre barche. Per esempio, gli esperti hanno il margine di partenza fra 0 e 1 s e l'angolo di bolina fra 45° e 48°: un terzo della fascia vale 0,33 s o 1°.
 
 **Esito: la 1.2.31 così com'è non si chiude.** Mostrare «stringe bene di bolina» su un esperto che va come gli altri sarebbe un'etichetta falsa. La decisione spetta ad Ale (§11).
+
+## 11. Diagnosi: fasce raddoppiate (13 novembre, pomeriggio) e scelta per Ale
+
+**Prova di diagnosi**, non una versione: le fasce di dote, media e difetto sono allargate del doppio attorno al centro della fascia di oggi. Per esempio, la bolina degli esperti va da 43,5° a 49,5° invece che da 45° a 48°; il margine di partenza non scende sotto 0. La manopola è `__sv.trattiAmp(2)`; il valore 1 lascia tutto identico a prima. Semi di scelta 2101-2115: 120 regate, 360 barche-regata.
+
+| Tratto | Per barca-regata (rapporto o differenza) | Nello stesso torneo la dote fa meglio |
+| --- | --- | --- |
+| Partenza | principianti +1,66 s, esperti **+4,25 s** | principianti 7 su 10, esperti **6 su 6** |
+| Bolina | principianti **0,47**, esperti **0,63** | principianti 7 su 11, esperti 5 su 10 |
+| Poppa | principianti 0,79, esperti **1,16** | principianti 7 su 10, esperti 3 su 7 |
+
+Il resto, sempre contro la 1.2.30 sugli stessi semi:
+- T2: arrivo dei rivali **+0,5%**;
+- T4: primo-ultimo invariato;
+- scuffie: 0.
+
+**Lettura.**
+- Con le fasce doppie, partenza e bolina si vedono bene anche per barca-regata: rapporti 0,47-0,63, cioè chi ha la dote perde in bolina circa la metà di chi ha il difetto. La flotta nel complesso resta la stessa.
+- **La poppa non si vede nemmeno così**: in poppa l'angolo conta poco, perché vicino ai 170° la velocità utile cambia poco con qualche grado.
+- I confronti dentro lo stesso torneo sono pochi, perché i semi sono 15: sono un indizio, non una misura.
+
+**Opzioni (decide Ale):**
+- **A (la mia proposta): due tratti, partenza e bolina, con le fasce doppie.** Ogni area è sorteggiata da sola: dote, media o difetto, una volta su tre ciascuna. La scheda dice solo quello che non è nella media, per esempio «parte bene; di bolina va larga», oppure «nella media». Il carattere (prudente, normale, aggressiva) resta com'è. Poi la conferma completa su semi nuovi, 2161-2190, con gli stessi criteri.
+- **B: tre tratti come prima, con le fasce doppie,** ma la poppa non passa: si tornerebbe ad A.
+- **C: fermare la 1.2.31** e tenere i tratti nascosti come oggi, finché non ci saranno i circuiti e le raffiche più forti.
+
+**Cosa cambia in A rispetto al via del 13 novembre:**
+- i tratti sono due invece di tre;
+- non c'è più per forza «una dote e un difetto»: un rivale può avere due doti, due difetti o essere nella media;
+- le differenze fra i rivali dello stesso livello sono più grandi di oggi, anche se la media della flotta resta quella.
+
+Per questo serve un via nuovo.
