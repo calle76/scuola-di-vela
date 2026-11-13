@@ -85,6 +85,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 
 /* ---- gioco ---- */
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;height:100vh;height:100dvh}
+.layout.largo{grid-template-columns:minmax(0,1fr)} .layout.largo > .panel{display:none} /* 1.2.32: rotta ottimale con la mappa larga */
 .stage{position:relative;background:var(--sea-a);min-height:0}
 canvas{display:block;width:100%;height:100%;touch-action:none}
 canvas:focus{outline:none}
@@ -344,7 +345,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
   <div class="stage">
     <canvas id="c" tabindex="0" aria-label="Vista dall'alto della deriva sul mare. Clicca qui per usare la tastiera."></canvas>
     <div class="overlay finOv" id="finOv" hidden role="dialog" aria-labelledby="finText"><p id="finText"></p><ol class="standings" id="finList"></ol><p class="finPen" id="finPen" hidden></p><div class="finBtns"><button id="finRestart">Ricomincia</button><button id="finWind">Cambia vento</button><button id="finTor" hidden>Classifica del torneo</button><button id="finRev" hidden>Rivedi</button><button id="finRot" hidden title="La rotta più veloce col vento che c'è stato (col senno di poi) e dove hai perso">Rotta ottimale</button></div></div>
-    <div class="overlay movBar" id="movBar" hidden role="region" aria-label="Moviola"><p id="movTit"></p><input type="range" id="movPos" min="0" max="1000" value="0" aria-label="Posizione nella regata"><div class="movSegni" id="movSegni" aria-hidden="true"></div><p class="movKeys"><span id="movT"></span> · ← →: 5 s · ↑ ↓: segni · spazio: pausa · 1 2 3 4 5: velocità · R: inizio · Esc: chiudi</p><div class="finBtns"><button id="movPrev">◀ Segno prima</button><button id="movPlay">Pausa</button><button id="movSpd">1×</button><button id="movNext">Segno dopo ▶</button><button id="movEsc">Chiudi</button></div></div>
+    <div class="overlay movBar" id="movBar" hidden role="region" aria-label="Moviola"><p id="movTit"></p><input type="range" id="movPos" min="0" max="1000" value="0" aria-label="Posizione nella regata"><div class="movSegni" id="movSegni" aria-hidden="true"></div><p class="movKeys"><span id="movT"></span> · ← →: 5 s · ↑ ↓: segni · spazio: pausa · 1 2 3 4 5: velocità · R: inizio · Esc: chiudi</p><div class="finBtns"><button id="movPrev">◀ Segno prima</button><button id="movPlay">Pausa</button><button id="movSpd">1×</button><button id="movNext">Segno dopo ▶</button><button id="movLargo" hidden>Allarga la mappa (B)</button><button id="movEsc">Chiudi</button></div></div>
     <div class="overlay" id="capOverlay" hidden><p id="capText">Hai scuffiato: la barca è rovesciata e i comandi non rispondono finché non la raddrizzi.</p><button id="capBtn">Raddrizza la barca</button></div>
     <div class="overlay briefOv" id="briefOv" hidden role="dialog" aria-labelledby="bTitle">
       <h2 id="bTitle"></h2>

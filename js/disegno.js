@@ -251,6 +251,7 @@
     // sopra il mondo, in coordinate schermo
     ctx.font = font(600, 13); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
     marks.forEach((m, i) => { if (m.fin) return; const [sx, sy] = toScreen(v, m.x, m.y); ctx.fillText(m.label + (m.round && mode === "mission" && i === S.markIdx ? " · lasciala a sinistra" : ""), sx + 10, sy - 8); });
+    if (mode === "race") rotEtichette(v); // 1.2.32: i minuti dei fili della rotta ottimale
     const act = mode === "race" ? null : goal(); // in regata la freccia la disegna drawRaceScreen, sopra l'orologio
     if (act) offscreenArrow(v, act);
     const fm = marks.find(m => m.fin);

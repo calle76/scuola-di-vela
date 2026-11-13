@@ -177,7 +177,7 @@
   // ---- schermata ----
   function rotTesto(ott, sp){
     const me = R.boats[0], fmt = s => rivTempo(s), tu = me.fin !== null && !me.dsq ? me.fin - rot.barche[0].taglio.t : null, ot = ott.tempo - ott.t0;
-    let t = `In verde la rotta ottimale (col senno di poi), in blu la tua; un punto ogni 30 s; tratteggiate in giallo le layline della boa di bolina col vento di quel momento. Rotta ottimale ${fmt(ot)} dal tuo taglio della linea` + (tu !== null ? `, tu ${fmt(tu)} (${tu - ot >= 0 ? "+" : "−"}${Math.round(Math.abs(tu - ot))} s). ` : ". ");
+    let t = `In verde la rotta ottimale (col senno di poi), in blu la tua; un punto ogni 30 s; ogni minuto un filo bianco unisce dove eri tu e dove saresti stato con la rotta ottimale nello stesso istante; tratteggiate in giallo le layline della boa di bolina col vento di quel momento. Rotta ottimale ${fmt(ot)} dal tuo taglio della linea` + (tu !== null ? `, tu ${fmt(tu)} (${tu - ot >= 0 ? "+" : "−"}${Math.round(Math.abs(tu - ot))} s). ` : ". ");
     t += sp.lati.filter(L => L.tu !== null).map(L => `${L.nome} ${L.tu - L.ott >= 0 ? "+" : "−"}${Math.round(Math.abs(L.tu - L.ott))} s`).join(", ") + ".";
     if (sp.motivi.length) t += " " + sp.motivi.map(m => m.txt).join(" ");
     return t + " Conosce il vento prima che arrivi e ignora le altre barche.";
@@ -186,6 +186,41 @@
     if (!R || !R.rotta || riv.on) return;
     if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, testo: rotTesto(ott, rotSpiega(ott)) } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." }; }
     rot.on = true; rot.box = null; rivApri(); $("movTit").textContent = rot.res.testo;
+    $("movLargo").hidden = !rot.res.ott; rotLargo(false);
+  }
+  // 1.2.32 (docs/PROPOSTA-ROTTA-LEGGIBILE.md): la barra laterale del gioco si nasconde (pulsante o B) e la mappa prende tutta la finestra;
+  // torna sempre quando la rotta ottimale si chiude (rivChiudi)
+  function rotLargo(on){
+    rot.largo = !!on; document.querySelector(".layout").classList.toggle("largo", rot.largo);
+    $("movLargo").textContent = rot.largo ? "Rimetti la barra (B)" : "Allarga la mappa (B)";
+    dispatchEvent(new Event("resize"));
+  }
+  // 1.2.32: il filo dello stesso istante, ogni ROT_FILO s dal tuo taglio della linea, finché esistono tutte e due le rotte
+  const ROT_FILO = 60; // secondi, scelta nostra di sola grafica
+  function rotFili(){
+    if (!rot.res || !rot.res.ott) return [];
+    const P = rot.res.ott.punti, tu = riv.all.filter(f => f.t >= rot.barche[0].taglio.t), out = [];
+    if (!tu.length) return out;
+    const fine = Math.min(P[P.length - 1].t, tu[tu.length - 1].t);
+    for (let s = P[0].t + ROT_FILO; s <= fine; s += ROT_FILO){
+      const q = rotIstante(P, s, q => [q.x, q.y]), f = rotIstante(tu, s, f => f.b[0]);
+      if (q && f) out.push({ s: s - P[0].t, v: { x: q[0], y: q[1], t: s }, b: { x: f[0], y: f[1], t: s } });
+    }
+    return out;
+  }
+  // la posizione all'istante T fra i due punti vicini (i punti della rotta ottimale sono circa uno al secondo: senza, il filo univa istanti diversi fino a 1 s)
+  function rotIstante(A, T, xy){
+    let lo = 0, hi = A.length - 1; if (!A.length || T < A[0].t || T > A[hi].t) return null;
+    while (hi - lo > 1){ const m = (lo + hi) >> 1; if (A[m].t <= T) lo = m; else hi = m; }
+    const a = xy(A[lo]), b = xy(A[hi]), f = A[hi].t > A[lo].t ? (T - A[lo].t) / (A[hi].t - A[lo].t) : 0;
+    return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+  }
+  function rotEtichette(v){ // il tempo accanto al punto verde di ogni filo, in coordinate schermo
+    if (!rot.on || !riv.on || !rot.res || !rot.res.ott) return;
+    ctx.save(); ctx.font = font(600, 11); ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    for (const F of rotFili()){ const [x, y] = toScreen(v, F.v.x, F.v.y), m = Math.round(F.s / 60) + ":00";
+      ctx.fillStyle = "rgba(0,0,0,.45)"; ctx.fillText(m, x + 7, y + 1); ctx.fillStyle = "rgba(170,240,180,1)"; ctx.fillText(m, x + 6, y); }
+    ctx.restore();
   }
   function rotVista(){ // la vista dall'alto, nord in su, che contiene campo e tracce, sopra la barra della moviola; null se la rotta non è aperta
     if (!rot.on || !riv.on || !rot.res || !rot.res.ott) return null;
@@ -200,11 +235,14 @@
     ctx.lineWidth = lw; ctx.strokeStyle = "rgba(60,200,90,.9)"; ctx.beginPath(); P.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y)); ctx.stroke();
     const tu = riv.all.filter(f => f.t >= rot.barche[0].taglio.t); ctx.strokeStyle = "rgba(80,150,255,.85)"; ctx.beginPath(); tu.forEach((f, i) => i ? ctx.lineTo(f.b[0][0], f.b[0][1]) : ctx.moveTo(f.b[0][0], f.b[0][1])); ctx.stroke();
     const punto = (x, y, r, c) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); };
-    for (let s = P[0].t + 30; s < P[P.length - 1].t; s += 30){ const q = P.find(q => q.t >= s); if (q) punto(q.x, q.y, 2.2 * lw, "rgba(60,200,90,1)"); const f = tu.find(f => f.t >= s); if (f) punto(f.b[0][0], f.b[0][1], 2.2 * lw, "rgba(80,150,255,1)"); }
+    for (let s = P[0].t + 30; s < P[P.length - 1].t; s += 30){ const q = rotIstante(P, s, q => [q.x, q.y]); if (q) punto(q[0], q[1], 2.2 * lw, "rgba(60,200,90,1)"); const f = rotIstante(tu, s, f => f.b[0]); if (f) punto(f[0], f[1], 2.2 * lw, "rgba(80,150,255,1)"); } // 1.2.32: all'istante esatto, come i fili
     { const mk = R.marks[0], w = rotVento(mk.x, mk.y, rotRaffiche(Math.max(rot.reg[0].t, Math.min(T, rot.reg[rot.reg.length - 1].t)))), L = R.up * 1.3; // le layline col vento di adesso (layDir, come in acqua)
       ctx.strokeStyle = "rgba(255,230,120,.8)"; ctx.setLineDash([3 * lw, 3 * lw]);
       for (const dd of layDir(w)){ const d = dd * D2R; ctx.beginPath(); ctx.moveTo(mk.x, mk.y); ctx.lineTo(mk.x + Math.sin(d) * L, mk.y - Math.cos(d) * L); ctx.stroke(); }
       ctx.setLineDash([]); }
+    ctx.strokeStyle = "rgba(255,255,255,.75)"; ctx.lineWidth = lw * 0.9; // 1.2.32: i fili dello stesso istante
+    for (const F of rotFili()){ ctx.beginPath(); ctx.moveTo(F.v.x, F.v.y); ctx.lineTo(F.b.x, F.b.y); ctx.stroke(); }
+    ctx.lineWidth = lw;
     if (T >= P[0].t){ const q = P.find(q => q.t >= T) || P[P.length - 1]; punto(q.x, q.y, 4 * lw, "rgba(60,200,90,.6)"); } // dove saresti adesso con la rotta ottimale
   }
   $("finRot").onclick = rotApri;

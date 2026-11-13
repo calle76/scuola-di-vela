@@ -19,6 +19,16 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.32 — Rotta ottimale più leggibile
+
+Voce 32 di `DA-FARE.md`, osservazione 122 (`docs/PROPOSTA-ROTTA-LEGGIBILE.md`; via di Ale del 13 novembre: il filo e la barra nascosta, non lo zoom né le linee più grosse).
+
+- **Il filo dello stesso istante.** Nella rotta ottimale, ogni minuto dal tuo taglio della linea, un filo bianco unisce dove eri tu e dove saresti stato con la rotta ottimale nello stesso istante, col minuto scritto accanto («1:00», «2:00»). Si vede a colpo d'occhio dove il distacco cresce e dove cala.
+- **«Allarga la mappa (B)».** Solo con la rotta ottimale aperta, un pulsante nella barra della moviola, o il tasto B, nasconde la barra laterale del gioco e la mappa prende tutta la finestra; lo stesso pulsante o B la rimettono, e chiudendo la rotta torna sempre. Lo schermo intero del browser resta F11, come prima.
+- **Punti all'istante esatto.** I punti ogni 30 s ora stanno all'istante giusto: prima si prendeva il primo punto registrato dopo quell'istante, fino a circa 1 s più tardi sulla rotta ottimale, che ha un punto al secondo. Così fili e punti coincidono.
+- **Collaudo nuovo** `tests/collaudo_rotta_leggibile.py`: le 4 regate del torneo, giocatore col pilota, rotta ottimale aperta dalla schermata finale; controlla i fili (posizioni ricalcolate per conto suo), la barra nascosta e rimessa (B, pulsante, Esc, Chiudi), che B non faccia niente fuori dalla rotta e lo spazio a 1360x650.
+- **Misure:** vedi `docs/PROPOSTA-ROTTA-LEGGIBILE.md` §«Esito».
+
 ## 1.2.31 — I rivali del torneo hanno doti e difetti
 
 Secondo passo della voce 23 (`docs/PROPOSTA-TRATTI-RIVALI.md` §8-12; via di Ale del 13 novembre: tratti detti subito, come qualità a parole e non come gradi; «chi è meno bravo è più lento nelle manovre, meno preciso», provato e tolto). Solo nel torneo.
