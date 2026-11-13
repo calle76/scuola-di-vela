@@ -2,13 +2,24 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 13 novembre 2026, pomeriggio.*
+*Aggiornato: 13 novembre 2026, sera.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.30** (13 novembre: la scheda dei rivali nel torneo; tag `v1.2.30`, da pushare con `git push origin main --tags`).
+- **Ultima versione chiusa: 1.2.31** (13 novembre sera: i rivali del torneo hanno doti e difetti in partenza e in bolina; tag `v1.2.31`; con la 1.2.30 da pushare: `git push origin main --tags`).
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
+
+## 13 novembre, sera
+
+- **1.2.31 chiusa e fusa in `main`.** Ale ha scelto A e ha proposto le manovre al posto della poppa. Le manovre, cioè la prontezza e la precisione del timone, sono state provate e tolte: nel gioco spostano l'arrivo di pochi secondi, in nessuna direzione chiara (`PROPOSTA-TRATTI-RIVALI.md` §12-14). Restano due tratti con fasce doppie. Conferma sui semi 2161-2190: 8 criteri su 8; guardiano degli avversari OK, ma G9 (taglio) +0,47 su +0,5, di poco (§15).
+- **Fonti lette con Ale (F86-F102):**
+  - circuiti zonale e nazionale, ranking della classe Snipe e della FIV, lega tedesca;
+  - partenza e lato favorito, layline;
+  - Chieffi, dalle trascrizioni dei video passate da Ale: vento mediano, pressione e salti, cono in poppa di 2 lunghezze a 10-12 nodi.
+
+  Cosa farne: DA-FARE voce 31. La ricerca dei nomi dei rivali è rifatta: Matteo Carraro diventa Matteo Bortolin (approvato).
+- **Proposte nuove (fermata 1):** voce 4, rivali che virano addosso (`PROPOSTA-MANOVRE-ADDOSSO.md`); voce 3, chi si libera resta libero (`PROPOSTA-COPPIE.md` §13). Voce 32: rotta ottimale più leggibile (osservazione 122, era rimasta fuori dalla lista).
 
 ## 13 novembre, pomeriggio
 
