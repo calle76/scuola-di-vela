@@ -145,3 +145,26 @@ Era il rischio scritto al §4 («le raffiche del torneo potrebbero essere troppo
 **Conferma:** tutto (T1a, T1b, T1c nuovo, T2, T4) sui semi 2131-2160, mai usati, per la 1.2.31 e per la 1.2.30.
 
 **Per dopo:** le raffiche possono tornare come tratto nei circuiti con vento più forte, quando ci saranno.
+
+## 10. Conferma sui semi 2131-2160 (13 novembre, pomeriggio): versione NON chiusa
+
+Semi 2131-2160, mai usati: 240 regate e 720 barche-regata per versione, contro la 1.2.30 sugli stessi semi. Picco 63 °C.
+
+| Criterio | Soglia | Misurato | Esito |
+| --- | --- | --- | --- |
+| T1a partenza | ≥ 0,5 s principianti, ≥ 0,15 s esperti | principianti 2,32 − 1,72 = **0,60 s**; esperti 1,83 − 1,55 = **0,28 s** (sui semi di scelta erano 1,65 e 3,18) | sì, di poco |
+| T1b bolina | rapporto ≤ 0,85 | principianti **0,65**; esperti **1,09**: chi «stringe bene» perde di più di chi «va larga» | **no per gli esperti** |
+| T1c poppa | rapporto ≤ 0,85 | principianti **0,96**, esperti **0,94** | **no** |
+| T2 arrivo dei rivali | ≤ +3% | 196,2 s contro 195,2 s (**+0,5%**) | sì |
+| T4 primo-ultimo | ±20% | 6,0 contro 6,0 (**+0%**) | sì |
+| T3 (solo informazione) | — | 0 scuffie su 720 | — |
+
+**Cosa vede un giocatore in un torneo intero.** È solo informazione, non un criterio dichiarato: la media delle 4 regate di ogni rivale. Contando le volte in cui, nello stesso torneo, il rivale con la dote fa meglio di quello col difetto:
+- principianti: bolina **17 su 22**, partenza **13 su 19**, poppa **11 su 23**;
+- esperti: bolina **10 su 23**, partenza **10 su 19**, poppa **11 su 21**.
+
+Quindi solo la bolina dei principianti si nota con una certa sicurezza; il resto è come tirare una moneta.
+
+**Perché.** Le fasce di oggi sono strette rispetto a tutto il resto che decide una regata: salti di vento, posizione in partenza, incroci con le altre barche. Per esempio, gli esperti hanno il margine di partenza fra 0 e 1 s e l'angolo di bolina fra 45° e 48°: un terzo della fascia vale 0,33 s o 1°.
+
+**Esito: la 1.2.31 così com'è non si chiude.** Mostrare «stringe bene di bolina» su un esperto che va come gli altri sarebbe un'etichetta falsa. La decisione spetta ad Ale (§11).
