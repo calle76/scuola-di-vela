@@ -94,6 +94,7 @@ TESTS=(
     "collaudo_torneo.py (misura)|py|chiaro|1||collaudo_torneo.py"
     "collaudo_cono.py|py|chiaro|0||collaudo_cono.py"
     "collaudo_guardiano_avversari.py|py|chiaro|1||collaudo_guardiano_avversari.py"
+    "collaudo_rotta_leggibile.py|py|chiaro|0||collaudo_rotta_leggibile.py --semi 2"
     "collaudo_triangolo.py|py|chiaro|1||collaudo_triangolo.py"
     "collaudo_avversari_deriva.py|py|chiaro|0||collaudo_avversari_deriva.py"
     "collaudo_distacchi_testo.py|py|chiaro|1||collaudo_distacchi_testo.py"

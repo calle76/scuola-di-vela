@@ -38,7 +38,7 @@ La rotta ottimale si apre a regata finita. Nella vista dall'alto (`rotVista` e `
 | L4 | Barra rimessa | B di nuovo, il pulsante, Esc o «Chiudi»: la barra torna, e la pagina è identica a prima di aprire la rotta (larghezze uguali al pixel) |
 | L5 | Fuori dalla rotta ottimale | B non fa niente nel gioco, nella moviola normale e nelle lezioni; il pulsante non c'è |
 | L6 | Pannello 1360×650 | 0 px di eccesso, con la barra e senza |
-| L7 | Non-regressione | `polare.js` e `raffiche_e_virate.js` identici; `collaudo_rotta.py` come prima; le regate non cambiano, perché si tocca solo il disegno |
+| L7 | Non-regressione | `polare.js` e `raffiche_e_virate.js` identici; le regate non cambiano, perché si tocca solo il disegno (nota del 13 novembre notte: `collaudo_rotta.py` è il collaudo della lezione «Tenere la rotta», non della rotta ottimale; non c'entra) |
 | L8 | Giocatore vero | in Chromium e Firefox, senza `#collaudo`: rotta aperta, B, fotografia della mappa allargata, B, Esc; 0 errori della pagina |
 
 ## Rischi
@@ -50,3 +50,25 @@ La rotta ottimale si apre a regata finita. Nella vista dall'alto (`rotVista` e `
 ## Cosa serve da Ale
 
 Il via. Versione prevista: 1.2.32, oppure 1.2.33 se prima vengono i nomi dei rivali. Si toccano solo `js/rotta.js`, `js/moviola.js` per il tasto e il pulsante, e `index.html` per il pulsante e lo stile.
+
+## Esito (13-14 novembre, notte): 1.2.32 chiusa
+
+Via di Ale: «ok via alla mappa, falla prima dei nomi».
+
+**Un difetto trovato dal collaudo, nel mio codice, prima di chiudere.** I punti della rotta ottimale sono circa uno al secondo. Prendendo «il primo punto dopo l'istante», il filo univa istanti diversi fino a 0,96 s, e L1 non passava. Ora la posizione si calcola all'istante esatto, interpolando fra i due punti vicini (`rotIstante`). Lo stesso vale per i punti ogni 30 s, che prima avevano lo stesso scarto: così fili e punti coincidono.
+
+**Un difetto nel collaudo, corretto e dichiarato.** Il controllo «filo a minuto pieno» usava una divisione esatta: 179,99999999 s risultava «non pieno», e 8 regate su 20 in Chromium e 2 su 20 in Firefox davano FALLITO pur con le posizioni giuste al millimetro. Ora c'è una tolleranza per gli arrotondamenti. La soglia sulle posizioni (5 cm) non è cambiata.
+
+| # | Esito |
+| --- | --- |
+| L1 | 20 regate per browser (le 4 del torneo × semi 2301-2305, esperti): estremi dei fili a **0,000 m** dalle posizioni ricalcolate dal collaudo; da 2 a 3 fili per regata, lunghi da 18 a 88 m |
+| L2 | fili = minuti interi della rotta più corta in 20 regate su 20, nei due browser |
+| L3-L4 | barra nascosta con B e col pulsante: tela da 970 a 1360 px, cioè tutta la finestra; rimessa con B, Esc e «Chiudi», con la tela di nuovo larga uguale al pixel |
+| L5 | B nella schermata finale, fuori dalla rotta: niente; nel menu della pagina senza `#collaudo`: niente |
+| L6 | 0 px di eccesso a 1360×650, con la barra e senza |
+| L7 | `polare.js` e `raffiche_e_virate.js` identici, `impronta1b.js` 25 su 25, `collaudo_versione` passa |
+| L8 | pagina senza `#collaudo` in Chromium e Firefox: versione 1.2.32, pulsante presente e nascosto, 0 errori. Il percorso completo (regata, rotta, barra) si prova solo col pilota, cioè con `#collaudo`: un giocatore vero lo vedrà alla prima regata del torneo |
+
+Picco 61 °C. Fotografie in `tests/output/rotta_leggibile_*.png`.
+
+**Nota per Ale.** Con la barra nascosta la mappa cresce di circa un terzo, ma non quanto la finestra: in altezza il limite resta la barra della moviola, col suo testo lungo. Se serve più spazio, la prossima idea è accorciare quel testo, per esempio mostrandolo con un pulsante.

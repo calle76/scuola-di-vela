@@ -54,6 +54,7 @@
     if (!riv.on) return;
     R.boats.forEach((b, k) => Object.assign(b.S, riv.bk.S[k]));
     riv.bk.wake.forEach((items, a) => a.push(...items)); riv.bk = null;
+    if (rot.largo) rotLargo(false); $("movLargo").hidden = true; // 1.2.32: chiusa la rotta ottimale, la barra laterale torna sempre
     riv.on = false; rot.on = false; $("movBar").hidden = true; releaseKeys(); finShow();
   }
   function rivTacche(){ // un segno = una tacca sul cursore
@@ -93,7 +94,7 @@
     if (!ok.length) return; const g = d > 0 ? ok[0] : ok[ok.length - 1]; riv.pos = rivPosDi(g.t - RIV_PRIMA); riv.playing = true; rivMostra(); };
   const rivPausa = () => { if (!riv.playing && riv.pos >= rivDur()) riv.pos = 0; riv.playing = !riv.playing; rivMostra(); };
   const rivVel = v => { riv.speed = v; rivMostra(); };
-  $("finRev").onclick = rivApri; $("movEsc").onclick = rivChiudi; $("movPrev").onclick = () => rivSegno(-1); $("movNext").onclick = () => rivSegno(1);
+  $("finRev").onclick = rivApri; $("movLargo").onclick = () => rotLargo(!rot.largo); $("movEsc").onclick = rivChiudi; $("movPrev").onclick = () => rivSegno(-1); $("movNext").onclick = () => rivSegno(1);
   $("movPlay").onclick = rivPausa; $("movSpd").onclick = () => rivVel(RIV_VEL[(RIV_VEL.indexOf(riv.speed) + 1) % RIV_VEL.length]);
   $("movPos").oninput = e => { if (!riv.on) return; /* 1.0.60: a moviola chiusa il cursore non fa niente (collaudo_ricarica lo sposta lo stesso) */ riv.playing = false; riv.pos = e.target.value / 1000 * rivDur(); rivMostra(); };
   addEventListener("keydown", e => { // durante la moviola i tasti sono solo suoi: la barca non si guida
@@ -110,4 +111,5 @@
     else if (e.key === " "){ e.preventDefault(); rivPausa(); }
     else if ("12345".includes(e.key) && e.key.length === 1){ rivVel(RIV_VEL[+e.key - 1]); }
     else if (e.key.toLowerCase() === "r"){ riv.pos = 0; rivMostra(); }
+    else if (e.key.toLowerCase() === "b" && rot.on && !$("movLargo").hidden){ e.preventDefault(); rotLargo(!rot.largo); } // 1.2.32: solo con la rotta ottimale aperta
   }, true);
