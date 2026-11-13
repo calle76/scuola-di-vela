@@ -292,3 +292,36 @@ Ale: «posso inserire il mio nome all'inizio del gioco?».
 - **Versione:** insieme ai nomi dei rivali, 1.2.32.
 
 **Ricerca dei nomi (13 novembre, pomeriggio):** quattro ricerche, cinque nomi alla volta con «vela» e «velista». Nessuno dei venti nomi è comparso come velista. Sono comparsi solo cognomi o nomi simili: Benini Floriani, Federico Marchi, Carlo Barbieri, un equipaggio Carraro. È una ricerca debole, perché le ricerche con più nomi insieme trovano poco: va rifatta nome per nome prima di mettere i nomi nel gioco.
+
+## 14. Primo passo: nomi dei rivali e del giocatore (1.2.33), cosa entra e criteri (13 novembre, notte, scritti prima del codice)
+
+Via di Ale: «sì, fai anche i nomi. e tutto ciò che puoi».
+
+**Cosa entra** (solo nel torneo; la Scuola e le altre regate restano con Rossa, Verde e Blu):
+1. **I dieci rivali del circuito zonale** del §12, con nome e riga di storia. A ogni torneo nuovo se ne sorteggiano tre, tutti diversi. Le barche restano rossa, verde e blu, e il colore si dice accanto al nome. I dieci del circuito nazionale si usano quando ci sarà il circuito nazionale.
+2. **Gruppo fisso salvato fra i tornei.** La prima volta che un rivale compare, si sorteggiano i suoi tratti (partenza e bolina, 1.2.31) e si salvano con i progressi. Ogni volta che ritorna ha gli stessi tratti. Il carattere (prudente, normale, aggressiva) resta sorteggiato a ogni torneo come oggi: è come corre quel torneo. «Azzera i progressi» cancella anche il gruppo.
+3. **Dove si leggono i nomi:**
+   - presentazione del torneo e testo prima di ogni regata;
+   - classifica del torneo;
+   - scheda dei rivali, con titolo, storia e pulsanti;
+   - classifica e messaggi durante la regata (contatti, penalità);
+   - sulla barca in acqua.
+
+   In acqua va **solo il cognome**, per non allungare la scritta: Ale ha notato che le scritte a volte coprono le barche. Spostarle è da vedere insieme.
+4. **Il nome del giocatore** (§13), salvato con i progressi, al massimo 20 caratteri, mai interpretato come codice. Vuoto vale «Tu».
+   - Si scrive in **Impostazioni** e nella **finestra del torneo prima della prima regata**, dove serve. Il §13 diceva «all'avvio della carriera»: lo sposto lì perché oggi il nome serve solo nel torneo. Lo dichiaro e lo segnalo ad Ale.
+   - Compare nella classifica del torneo, nella classifica e nei messaggi della regata del torneo, nella riga d'intestazione delle registrazioni, nel libretto («Libretto di …») e come valore iniziale del nome sull'attestato.
+
+**Criteri, con soglie scritte prima del codice:**
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| M1 | In un torneo i tre rivali hanno tre nomi diversi della lista zonale; i nomi compaiono nella presentazione, nella classifica, nella scheda (titolo e storia), nella classifica della regata e in acqua (cognome) | 20 tornei su 20, ogni posto controllato dal collaudo |
+| M2 | Gruppo fisso: chi ritorna in un torneo dopo ha gli stessi tratti | in 200 tornei di fila, ogni nome ha sempre gli stessi tratti; e ogni nome è comparso almeno una volta (sennò il controllo non ha misurato) |
+| M3 | Sorteggio equilibrato | in 200 tornei ogni nome compare fra il 20% e il 40% dei tornei (atteso 30%) |
+| M4 | La guida non peggiora | `collaudo_guardiano_avversari` OK |
+| N1 | Il nome del giocatore compare in tutti i posti elencati | almeno 5 posti, contati dal collaudo |
+| N2 | Nome vuoto: si legge «Tu» come oggi | classifiche del torneo e della regata con «Tu» |
+| N3 | Spazio | nome di 20 caratteri e i rivali dal nome più lungo: finestra del torneo, scheda e impostazioni nel 1360×650, 0 px di eccesso, in Chromium e Firefox, senza `#collaudo` |
+| N4 | Sicurezza del testo | il nome `<b>x</b>` si legge come testo, in tutti i posti |
+| N5 | Non-regressione | `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici; la Scuola non cambia, perché i nomi ci sono solo nel torneo |
