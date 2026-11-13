@@ -128,6 +128,21 @@
       ? { up: 45 + r() * 3, down: 150 + r() * 5, trim: (r() - 0.5) * 4, gain: 18, boardMin: 35, boardMax: 90, react: 5, startM: 0.5 + (r() - 0.5) * 1 }
       : { up: 49 + r() * 5, down: 142 + r() * 8, trim: (r() - 0.5) * 12, gain: 26, boardMin: 25, boardMax: 60, react: 3, startM: 1.5 + (r() - 0.5) * 3 };
   }
+  // 1.2.31 (docs/PROPOSTA-TRATTI-RIVALI.md §11-14): nel torneo ogni rivale ha due aree, partenza e bolina, sorteggiate ciascuna da sola:
+  // dote (terzo migliore), media o difetto (terzo peggiore), una volta su tre. Le fasce di startM e di up e |trim| sono larghe il doppio di aiParams
+  // attorno allo stesso centro (§11). Provate e tolte: le raffiche (§9), la poppa (§10-11), le manovre del timone (§13-14): non si vedevano
+  const TRATTI = ["partenza", "bolina"];
+  const TRATTI_TESTO = { partenza: ["parte bene", "parte tardi"], bolina: ["stringe bene di bolina", "di bolina va larga"] };
+  function aiTratti(level){
+    const r = () => Math.random(), tr = TRATTI.map(() => Math.floor(r() * 3)); // 0 dote, 1 media, 2 difetto
+    const u2 = a => 0.5 + ((tr[a] + r()) / 3 - 0.5) * 2; // da -0,5 (il migliore) a 1,5 (il peggiore): la fascia di aiParams va da 0 a 1
+    const e = level === "esperti", segno = r() < 0.5 ? -1 : 1;
+    return { up: (e ? 45 : 49) + u2(1) * (e ? 3 : 5), down: e ? 150 + r() * 5 : 142 + r() * 8, trim: segno * u2(1) * (e ? 2 : 6),
+             gain: e ? 18 : 26, react: e ? 5 : 3, boardMin: e ? 35 : 25, boardMax: e ? 90 : 60, startM: Math.max(0, u2(0)) * (e ? 1 : 3), tr };
+  }
+  // «parte bene; di bolina va larga» (frasi senza genere: servono anche coi nomi propri, PROPOSTA-RIVALI-E-SPONSOR §12); "" per i tornei salvati prima della 1.2.31
+  const trattiTesto = ai => !ai || !ai.tr ? "" : TRATTI.filter((t, i) => ai.tr[i] !== 1).map(t => TRATTI_TESTO[t][ai.tr[TRATTI.indexOf(t)] / 2]).join("; ") || "nella media";
+  const conTratti = (ai, char) => CHAR_TEXT[char] + (trattiTesto(ai) ? "; " + trattiTesto(ai) : "");
   // es (1.2.1, meccanismo B di docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md): la regata è l'esercizio di un passo di lezione. es = { def, lezione, passo, esito }:
   // def.regata (indice in RACES), def.cd (preparazione, s), def.avversari, def.boa (stato di partenza: [dx, dy, gradi dal vento] attorno alla boa, coordinate del vento,
   // regata già partita), def.linea (1.2.2, stato di partenza: [dx, dy, gradi dal vento, velocità m/s] dal centro della linea, dy > 0 dietro; vela tutta lascata), def.obiettivo (riga del pannello), def.brief, def.fatto(R, me) e def.fallito(R, me) (l'obiettivo, separato dallo stato di partenza).
@@ -187,7 +202,7 @@
       (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Boa a 300 m" : "") +
       ". Partenza tra la barca giuria e la boa arancione, " + (rc.tri ? "girare la boa 1 e poi la boa 2, tutte e due lasciandole a sinistra, e tornare a tagliare la stessa linea" : "girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea") + ". Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
-        : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + CHAR_TEXT[b.char]).join(", ") +
+        : " Ogni avversario ha il suo carattere: " + R.boats.filter(b => !b.me).map(b => "la " + b.name + " è " + (rc.tor ? conTratti(b.ai, b.char) : CHAR_TEXT[b.char])).join(", ") +
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
     if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. I suoni della giuria accompagnano le bandiere, ma i tempi contano sulle bandiere (regola 26).";
     if (rc.precedenze) t += " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
@@ -1208,7 +1223,7 @@
   function torNuovo(){
     const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv);
     return { ver: VERSIONE, liv, regate: [0, 1, 2, 3].map(() => ({ wind: Math.floor(Math.random() * 8) * 45, tws: Math.random() < 0.5 ? 10 : 12 })), // 1.2.21: forza del vento sorteggiata
-             av: FLEET_LOOK.map((l, k) => ({ ai: aiParams(liv), char: carattere(k, aggro) })), ris: [] };
+             av: FLEET_LOOK.map((l, k) => ({ ai: aiTratti(liv), char: carattere(k, aggro) })), ris: [] };
   }
   function torRc(){
     const k = tor.ris.length, g = tor.regate[k];
@@ -1322,7 +1337,7 @@
       const frasi = torFrase("Partenza", f.map(x => x.fuori ? null : x.part), "davanti a te", "dietro di te") + (fuori ? `<li>Partenza: fuori linea in ${torRegate(fuori)} su ${f.length}</li>` : "")
         + torFrase("Boa 1", f.map(x => x.boa), "davanti a te", "dietro di te")
         + `<li>Contatti con te: ${tocc ? `${torRegate(tocc)} su ${f.length} (colpa sua in ${colpaSua}, colpa tua in ${colpaTua})` : "nessuno"}</li>`;
-      return `<div class="tor-sch"${n === torSchedaN ? "" : " hidden"}><h3>${l.name}: ${CHAR_TEXT[a.char]}</h3>${tab}<ul>${frasi}</ul></div>`;
+      return `<div class="tor-sch"${n === torSchedaN ? "" : " hidden"}><h3>${l.name}: ${CHAR_TEXT[a.char]}</h3>${trattiTesto(a.ai) ? `<p class="tor-tratti">${trattiTesto(a.ai)}</p>` : ""}${tab}<ul>${frasi}</ul></div>`;
     }).join("");
     // una scheda per volta (13 nov: le tre insieme non stanno nei 650 px di altezza), coi pulsanti dei tre colori
     const linguette = FLEET_LOOK.map((l, n) => `<button class="tor-ling${n === torSchedaN ? " primary" : ""}" data-n="${n}">${l.name}</button>`).join("");
@@ -1335,7 +1350,7 @@
   let torSchedaN = 0; // la scheda aperta (0 Rossa, 1 Verde, 2 Blu); resta quella finché la pagina è aperta
   function torMostra(nota){
     const T = tor || torNuovo(), k = T.ris.length, inGioco = mode === "race";
-    const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + CHAR_TEXT[a.char]).join(", ");
+    const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + conTratti(a.ai, a.char)).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
     const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}</p>` : "";
     const testa = !k ? `<p>Quattro regate contro gli stessi tre avversari (${T.liv}): ${car}. Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
