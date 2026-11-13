@@ -234,3 +234,5 @@ Tutte **[proposta]**, da scartare senza problemi.
 3. I nomi dei rivali li scrivi tu, con una breve storia, o li propongo io in una lista che controlli?
 
 **Stato:** solo proposta (fermata 1). Si comincia dopo la 1.2.31, dai nomi e dal gruppo fisso di rivali salvato fra i tornei.
+
+**Nomi delle serie (Ale, 13 novembre):** «A» e «B» erano solo per farsi capire; si usano i nomi della realtà (F89). Nel gioco: **circuito zonale** (la B) e **circuito nazionale** (la A). Si sale con la classifica del circuito zonale, come col ranking vero; si scende se si finisce in fondo a quella nazionale (semplificazione nostra, da dichiarare: nella realtà chi va male nelle nazionali non viene «retrocesso», semplicemente non si qualifica di nuovo).
