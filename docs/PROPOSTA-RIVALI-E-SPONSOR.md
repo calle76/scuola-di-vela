@@ -272,3 +272,16 @@ Ale: «i nomi proponili tu, poi li controllo». Venti rivali inventati, dieci pe
 **Come si legge in gioco:** «Marta Ferraresi (barca rossa)». Il colore resta, perché in acqua serve a riconoscere la barca.
 
 **Una conseguenza da sistemare:** con i nomi propri le frasi dei tratti non possono più essere al femminile della barca («brava in partenza» per Davide non va). Diventano frasi senza genere: «parte bene» / «parte tardi», «stringe bene di bolina» / «di bolina va larga», «lascia subito nelle raffiche» / «lascia tardi nelle raffiche»; il carattere: «prudente», «normale», «attacca in partenza».
+
+**Ale, 13 novembre:** «vanno bene». I venti nomi sono approvati; resta da fare la ricerca per escludere coincidenze con velisti noti.
+
+## 13. Il nome del giocatore (proposta, fermata 1)
+
+Ale: «posso inserire il mio nome all'inizio del gioco?».
+
+- **Dove si chiede:** all'avvio della carriera, una casella sola («Come ti chiami?»), modificabile poi dalle impostazioni. Nel gioco libero si può lasciare vuota.
+- **Dove compare:** al posto di «Tu» nella classifica del torneo, sulla scheda dei rivali («davanti a Ale»), nel libretto e nell'attestato del brevetto, nelle registrazioni (riga d'intestazione).
+- **Salvataggio:** nel browser, come gli altri progressi. Si cancella con «Azzera i progressi».
+- **Vincoli:** al massimo 20 caratteri; solo testo, mai interpretato come codice nella pagina. Vuoto vale «Tu».
+- **Criteri:** N1 il nome compare in tutti i posti elencati (collaudo che li conta, almeno 5); N2 con il nome vuoto la pagina è identica a oggi (impronta); N3 un nome di 20 caratteri non fa uscire niente dal riquadro a 1360x650; N4 un nome con caratteri come `<b>` si vede come testo.
+- **Versione:** insieme ai nomi dei rivali, 1.2.32.

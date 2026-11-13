@@ -143,6 +143,8 @@ Costo di cambiamento:
 | Classifica (punteggio minimo del regolamento) separata dai meriti | 14 ott | medio | Torneo e libretto | `archivio/PROPOSTA-ESAME-E-BREVETTO.md` |
 | Esame non superato: ripasso completo delle lezioni sbagliate, con qualsiasi punteggio, poi si riprova | 14 ott (0.24) | basso | — | `archivio/PROPOSTA-ESAME-E-BREVETTO.md` |
 | Gli aiuti accesi o spenti valgono uguale per i meriti | 14 ott | basso | — | `archivio/PROPOSTA-ESAME-E-BREVETTO.md` |
+| Rivali del torneo: una dote e un difetto ciascuno, detti subito come qualità a parole (non gradi) | 13 nov | basso | Solo testo e un ritardo nelle raffiche | `PROPOSTA-TRATTI-RIVALI.md` §8 |
+| Carriera a circuiti: zonale e nazionale per ogni livello di barca, nomi come nella realtà; venti nomi di rivali approvati | 13 nov (proposta, il resto da decidere) | medio | Salvataggio dei rivali fra i tornei | `PROPOSTA-RIVALI-E-SPONSOR.md` §11-12 |
 
 ## Contenuti e confini legali
 
