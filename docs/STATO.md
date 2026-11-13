@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 13 novembre 2026, sera.*
+*Aggiornato: notte fra il 13 e il 14 novembre 2026.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.31** (13 novembre sera: i rivali del torneo hanno doti e difetti in partenza e in bolina; tag `v1.2.31`; con la 1.2.30 da pushare: `git push origin main --tags`).
+- **Ultima versione chiusa: 1.2.32** (notte del 13 novembre: rotta ottimale più leggibile, col filo dello stesso istante e la barra laterale nascosta con B; tag `v1.2.32`). Da pushare insieme alla 1.2.30 e alla 1.2.31: `git push origin main --tags`.
+- **1.2.33 (nomi dei rivali e del giocatore) NON chiusa**, ramo `nomi-rivali`, cartella di lavoro nella scratchpad: il collaudo dei nomi passa, il guardiano degli avversari no (G7 squalificati 0 → 2, soglia +1); diagnosi in `PROPOSTA-RIVALI-E-SPONSOR.md` §15.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - La **Scuola** (1b, barca con la sola randa) è **chiusa come contenuti** (Ale, 13 novembre): restano cose da sistemare rigiocando. **Deriva** come livello non è ancora aperto (lezioni 21-22, punti, prova, regola di passaggio, momento clou), ma molti suoi pezzi sono già nel gioco fuori dalla Scuola: torneo, rivali, cono d'ombra, rotta ottimale, layline. Cosa diventa la cornice di Deriva (forse il primo circuito zonale) è da decidere: `DA-FARE.md` voce 12.
 
