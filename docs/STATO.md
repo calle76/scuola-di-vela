@@ -2,25 +2,21 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 13 novembre 2026, mattina.*
+*Aggiornato: 13 novembre 2026, pomeriggio.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.29** (12 novembre: la lezione «Assorbire una raffica» e la domanda d'esame non dicono più di orzare per scaricare; solo testi, `PROPOSTA-LEZIONE-RAFFICA.md`; tag `v1.2.29`, da pushare; dal foglio di un velista F79 e fonti F80-F85, `DA-FARE.md` voce 24). Prima: 1.2.28 (12 novembre: il riquadro «Errore interno» non resta più fra le regate e dice file e riga; causa dell'errore non trovata, `DA-FARE.md` voce 22; tag `v1.2.28`, da pushare). Prima: 1.2.27 (tag `v1.2.27`, da pushare: avversario che rimbalzava per sempre vicino alla boa, `PROPOSTA-BOA-PIANTATA.md` §12-13). Prima: 1.2.26 (tag `v1.2.26`; 11 novembre: lezione 11 sui salti di vento riscritta e col suggerimento «sei scarso di N°», segnalata da Ale perché non si capiva e l'esercizio non si superava; pilota 10/10). Prima: 1.2.25 (tag `v1.2.25`). Novità nel `CHANGELOG.md`.
+- **Ultima versione chiusa: 1.2.30** (13 novembre: la scheda dei rivali nel torneo; tag `v1.2.30`, da pushare con `git push origin main --tags`).
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - Il livello in gioco è la **Scuola** (1b, barca con la sola randa); **Deriva** è in attesa (`DA-FARE.md`).
 
-## 13 novembre, mattina (autonomia, Ale assente)
+## 13 novembre, pomeriggio
 
-- **Ramo `scheda-rivali`, 1.2.30 non chiusa:** la scheda dei rivali (pulsante «I rivali» nel torneo, una scheda per volta). Il difetto di S1 era del collaudo, non del gioco. Misurato: S1 0 differenze su 30 tornei, S2 0 celle sbagliate, S3/S3b/S4 sì, fisica identica (`PROPOSTA-SCHEDA-RIVALI.md` §9-10). **Il PC arriva a 84 °C anche con un collaudo solo**: le misure si sono fermate sopra i 72 °C. Per chiudere, a PC freddo, sul ramo:
-  ```
-  git checkout scheda-rivali
-  mkdir -p /tmp/rif129/js && git show main:index.html > /tmp/rif129/index.html && for f in $(git ls-tree --name-only main js/); do git show main:$f > /tmp/rif129/$f; done
-  .venv-collaudi/bin/python tests/collaudo_scheda_rivali.py --semi 40 --da 31 --termostato 62 --rif /tmp/rif129
-  ```
-  poi la prova senza `#collaudo` in Chromium e Firefox, la fusione in `main` e il tag `v1.2.30`.
-- **Proposte nuove (fermata 1, aspettano il via):** `PROPOSTA-TRATTI-RIVALI.md` (voce 23: tratti bolina, partenza e raffiche per ogni rivale; le raffiche sono il tratto nuovo), `PROPOSTA-SCELTE-DICHIARATE.md` (voce 9: sette frasi delle lezioni che danno per fatti delle scelte del gioco). In sospeso per decisione di Ale: `PROPOSTA-ROTTA-ASSOLUTA.md` (26), `PROPOSTA-LEZIONE-STARE-FERMI.md` (27).
-- Letta la regata di Ale del 12 sera (osservazioni 123-124).
+- **1.2.30 chiusa e fusa in `main`** (S1 40 tornei 0 differenze, S5 Chromium e Firefox senza `#collaudo`: `PROPOSTA-SCHEDA-RIVALI.md` §11). Per il caldo c'è un freno che sospende i collaudi sopra i 64 °C (`freno.py` nella cartella di lavoro di Claude; da mettere in `tests/` se serve ancora).
+- **1.2.31 (tratti dei rivali) NON chiusa, ramo `tratti-rivali`** (cartella di lavoro separata, commit `e5235bf`): la conferma su semi nuovi non passa. Partenza passa di poco, la bolina solo per i principianti, la poppa no; le raffiche sono state tolte prima, perché quelle del torneo sono troppo deboli. Con le fasce raddoppiate, partenza e bolina si vedono. **Aspetta la scelta di Ale fra A, B e C** (`PROPOSTA-TRATTI-RIVALI.md` §9-11; consiglio A: due tratti, partenza e bolina, fasce doppie, poi una conferma nuova).
+- **Proposte nuove (fermata 1):** carriera a circuiti zonale e nazionale, sponsor come materiale e obiettivi, venti nomi di rivali (approvati da Ale), nome del giocatore (`PROPOSTA-RIVALI-E-SPONSOR.md` §11-13; DA-FARE voci 28 e 30). Fonti F88-F92.
+- **Lista:** voce 24 chiusa (punto 7, F91-F92); consiglio di riordino in fondo a `DA-FARE.md`, da fare con Ale (voce 29).
+- **Stasera:** leggere con Ale gli articoli F88-F90 e rifare la ricerca dei nomi uno per uno.
 
 ## Cosa aspetta Ale
 
