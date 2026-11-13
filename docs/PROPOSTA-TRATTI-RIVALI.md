@@ -200,3 +200,26 @@ Il resto, sempre contro la 1.2.30 sugli stessi semi:
 - le differenze fra i rivali dello stesso livello sono più grandi di oggi, anche se la media della flotta resta quella.
 
 Per questo serve un via nuovo.
+
+## 12. Via di Ale ad A, con le manovre al posto della poppa (13 novembre, sera)
+
+Ale: «chi è meno bravo direi che è più lento nelle manovre, meno preciso», poi «ok vai avanti». Quindi l'opzione A del §11, con un terzo tratto nuovo al posto della poppa.
+
+**Modello, scritto prima di misurare.**
+- **Tre aree, ognuna sorteggiata da sola:** partenza, bolina, manovre. In ciascuna il rivale è nel terzo migliore (dote), in quello di mezzo (media) o nel peggiore (difetto), una volta su tre.
+- **Partenza e bolina:** le fasce doppie della diagnosi del §11 (formula identica a `trattiAmp(2)`).
+- **Manovre (nuovo):** i due valori del timone che oggi sono fissi per livello, `react` (quanto in fretta il timone va dove deve: più alto = virata più svelta) e `gain` (quanti gradi di scarto servono per dare tutto timone: più basso = rotta tenuta più stretta). Con u da 0 (il migliore) a 1 (il peggiore):
+  - esperti: react 6 → 4, gain 15 → 21 (oggi 5 e 18, il centro);
+  - principianti: react 4 → 2, gain 22 → 30 (oggi 3 e 26, il centro).
+  Le ampiezze (±1 su react, ±3 e ±4 su gain) sono **ipotesi nostre**, nessuna fonte: scelte perché il centro resta quello di oggi e il migliore dei principianti resta sotto il peggiore degli esperti per la prontezza.
+- **Poppa:** l'angolo torna sorteggiato come nella 1.2.30, senza tratto.
+- **Scheda:** si dicono solo le aree fuori dalla media, per esempio «parte bene; vira lenta e imprecisa»; «nella media» se nessuna.
+
+**Criteri, soglie scritte prima di misurare** (contro la 1.2.30 sugli stessi semi):
+- **T1a partenza:** come prima, almeno 0,5 s (principianti) e 0,15 s (esperti) di differenza nel taglio della linea fra difetto e dote.
+- **T1b bolina:** come prima, rapporto dote/difetto ≤ 0,85 delle perdite di bolina sulla rotta ottimale, per entrambi i livelli.
+- **T1d manovre (nuovo):** rapporto dote/difetto ≤ 0,85 delle perdite su **tutti i lati** rispetto alla rotta ottimale, in mediana, per entrambi i livelli.
+- **T2:** arrivo mediano dei rivali entro +3%. **T4:** primo-ultimo entro ±20%.
+- **T5 (nuovo, rischio del timone):** scuffie e boe toccate dai rivali non più del doppio della 1.2.30 più 5; un timone troppo pronto o troppo pigro potrebbe far serpeggiare la barca.
+
+**Semi:** scelta sui 2101-2115 (si possono ritoccare solo le ampiezze delle manovre, dicendolo); conferma sui 2161-2190, mai usati. Se T1d non passa sui semi di scelta, le manovre si tolgono e resta A con due tratti.
