@@ -114,3 +114,34 @@ Il femminile è perché si parla della barca, come oggi il carattere («aggressi
 Se un'area non passa T1, la sua caratteristica non si mostra e lo dico: un'etichetta che non corrisponde a niente è peggio di nessuna etichetta.
 
 **Semi:** scelta delle costanti `RIT_M` e `RIT_D` sui semi 2101-2130, conferma sui semi 2131-2160. Ho ricontrollato: nei documenti i numeri fra 2100 e 2199 sono numeri di riga, non semi.
+
+**Seconda risposta di Ale (stesso giorno):** «parlavi dei giudizi, non delle qualità: organizzale come vuoi, le qualità e un commento, oppure un grado di valore se occupa meno spazio». Tengo le qualità dette a parole (una dote e un difetto in una riga), che sulla scheda occupano una riga sola come un grado.
+
+## 9. Misure sui semi di scelta (13 novembre, pomeriggio) e cambio del terzo tratto
+
+**Semi 2101-2130**, 4 regate del torneo, principianti ed esperti: 240 regate e 720 barche-regata per versione, contro la 1.2.30 sugli stessi semi. Le flotte sono diverse, perché cambia il sorteggio, ma hanno la stessa distribuzione. Misure fatte con il freno termico: picco 69 °C.
+
+| Criterio | Soglia | Misurato | Esito |
+| --- | --- | --- | --- |
+| T1a partenza | ritardo «parte tardi» − «parte bene» ≥ 0,5 s principianti, 0,15 s esperti | principianti 3,37 − 1,72 = **1,65 s**; esperti 4,48 − 1,30 = **3,18 s** | sì |
+| T1b bolina | «stringe» ≤ 0,85 × «va larga» (persi in bolina sulla rotta ottimale, mediana) | principianti 29,1% contro 41,0% (**0,71**); esperti 25,1% contro 30,6% (**0,82**) | sì |
+| T1c raffiche | «lenta» ≥ 1,10 × «pronta» (persi su tutti i lati) | principianti **0,86**, esperti **0,81**: le lente perdono *meno* | **no** |
+| T2 arrivo dei rivali | ≤ +3% sulla 1.2.30 | 201,2 s contro 201,1 s (**+0,0%**) | sì |
+| T3 scuffie | 0,5-5% | **0 su 720** | **no** |
+| T4 primo-ultimo rivale | ±20% | 6,0 contro 6,0 punti (**+0%**) | sì |
+
+**Perché le raffiche non si vedono (prova a coppie, semi 2101-2110, 240 barche-regata: stesse regate con il ritardo spento e acceso).**
+- Con 1 s e 2,5 s: le barche «lente» arrivano +0,7 s (mediana) rispetto al ritardo spento, cioè rumore. Lo sbandamento massimo è uguale e le scuffie sono 0.
+- Con 5 s e 10 s (prova di diagnosi, non una proposta): +5,3 s (mediana, 52 più lente e 18 più veloci), sbandamento +1,8°, scuffie 0.
+- La causa è che le raffiche del torneo sono deboli: dal 20% al 40% di vento in più (`spawnGust`, livello 1), su chiazze di 9-20 m. Con 10-12 nodi lo sbandamento dei rivali resta intorno ai 23°, lontano dai 60° della scuffia. Anche non lascando per niente, si perde poco.
+- Il confronto diretto (T1c) è falsato anche dalla partenza: chi ha il difetto nelle raffiche ha la dote o la media in partenza.
+
+Era il rischio scritto al §4 («le raffiche del torneo potrebbero essere troppo deboli»). Come stabilito lì, il tratto si toglie e le raffiche non si alzano.
+
+**Il terzo tratto diventa la poppa.** Come la bolina, è un valore che ogni rivale ha già: `down`, l'angolo in poppa, che dalla 1.2.24 sposta la prua rispetto all'angolo della VMG migliore (`DOWN_E`). Dote: «va forte in poppa», `down` nel terzo più alto della fascia. Difetto: «in poppa va piano», terzo più basso. Anche qui la distribuzione resta quella di prima e non c'è nessuna costante nuova, quindi i semi di scelta non servono.
+
+**T1c nuovo, scritto prima di misurare:** chi «va forte in poppa» perde in poppa, rispetto alla rotta ottimale, almeno il 15% in meno di chi «va piano», in mediana; si contano i lati di poppa delle regate a bastone (1 e 3). **T3** non ha più senso, perché le scuffie non sono più un effetto atteso: il numero si riporta solo come informazione.
+
+**Conferma:** tutto (T1a, T1b, T1c nuovo, T2, T4) sui semi 2131-2160, mai usati, per la 1.2.31 e per la 1.2.30.
+
+**Per dopo:** le raffiche possono tornare come tratto nei circuiti con vento più forte, quando ci saranno.
