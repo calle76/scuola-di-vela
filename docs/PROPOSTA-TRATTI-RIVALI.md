@@ -294,3 +294,29 @@ Semi 2101-2105, 40 regate per variante, 60 barche-regata per livello. Tutti i ri
 `react` e `gain` tornano fissi come nella 1.2.30, e la manopola di diagnosi è tolta.
 
 **Conferma:** semi 2161-2190, mai usati, contro la 1.2.30 sugli stessi semi (già misurata). Criteri T1a, T1b, T2, T4 e T5 come al §12. T1d non c'è più.
+
+## 15. Conferma sui semi 2161-2190: la 1.2.31 passa (13 novembre, sera)
+
+Modello del §14: due tratti, partenza e bolina, con fasce doppie, ciascuno sorteggiato da solo. Semi 2161-2190, mai usati: 240 regate, 720 barche-regata. Il confronto è con la 1.2.30 sugli stessi semi. Picco 69 °C, un processo solo.
+
+| Criterio | Soglia | Principianti | Esperti |
+| --- | --- | --- | --- |
+| T1a partenza (taglio dopo il via, difetto meno dote) | 0,5 s e 0,15 s | 2,43 − 1,83 = **0,60 s** sì | 2,27 − 0,82 = **1,45 s** sì |
+| T1b bolina (perdite dote/difetto) | ≤ 0,85 | 20,4% contro 47,0%: **0,43** sì | 14,3% contro 31,3%: **0,46** sì |
+| T2 arrivo dei rivali | ≤ +3% | 197,9 contro 197,1 s: **+0,4%** sì | |
+| T4 primo-ultimo nel torneo | ±20% | 6,5 contro 6,0: **+8,3%** sì (60 tornei) | |
+| T5 scuffie e boe toccate | ≤ doppio + 5 | 0 contro 0; 38 contro 38: sì | |
+
+**Tutti i criteri passano: 8 su 8.**
+
+Solo informazione: contatti dopo il via 71 contro 90. Nello stesso torneo la dote fa meglio del difetto:
+- principianti: partenza **12 su 14**, bolina **14 su 15**;
+- esperti: partenza **17 su 21**, bolina **14 su 17**.
+
+**Controlli di chiusura:**
+- `polare.js` e `raffiche_e_virate.js` identici carattere per carattere, `impronta1b.js` 25 corse su 25: il motore non è toccato;
+- `collaudo_versione` passa;
+- pagina caricata come la carica un giocatore, senza `#collaudo`, in Chromium e Firefox, nel caso peggiore per lo spazio: tutti e tre i rivali «prudente e sta alla larga; parte tardi; di bolina va larga». La scheda dei rivali e il riquadro del torneo prima della prima regata stanno nel 1360×650, con 0 px di scorrimento e 0 errori.
+- `collaudo_guardiano_avversari` (96 regate del torneo, semi 1491-1502, contro il riferimento della 1.2.25): **ESITO OK**. Arrivo mediano 202,7 → 197,8 s; bolina 28,3 → 25,1 s; poppa, lasco, contatti, boe, scuffie e non arrivati dentro le soglie. **G9, taglio mediano, 2,03 → 2,50 s con soglia +0,5: passa di poco**, ed è l'effetto voluto dei rivali che «partono tardi». Picco 72 °C, con le due pagine del collaudo. Il riferimento non è stato aggiornato: resta la 1.2.25.
+
+**La 1.2.31 è chiusa.**

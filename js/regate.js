@@ -128,24 +128,20 @@
       ? { up: 45 + r() * 3, down: 150 + r() * 5, trim: (r() - 0.5) * 4, gain: 18, boardMin: 35, boardMax: 90, react: 5, startM: 0.5 + (r() - 0.5) * 1 }
       : { up: 49 + r() * 5, down: 142 + r() * 8, trim: (r() - 0.5) * 12, gain: 26, boardMin: 25, boardMax: 60, react: 3, startM: 1.5 + (r() - 0.5) * 3 };
   }
-  // 1.2.31 (docs/PROPOSTA-TRATTI-RIVALI.md §8): nel torneo ogni rivale ha una dote e un difetto in due aree diverse; nella terza è nella media.
-  // Ogni valore resta uniforme sulla fascia di aiParams (dote, media e difetto 1/3 ciascuno per area): cambia solo l'abbinamento.
-  // Le aree sono partenza (startM), bolina (up e |trim|) e poppa (down: più alto = più vicino all'angolo della VMG, DOWN_E). Le raffiche (ritardo nel
-  // lascare) sono state provate e tolte: con le raffiche del torneo l'effetto non si vede (PROPOSTA-TRATTI-RIVALI.md §9)
-  const TRATTI = ["partenza", "bolina", "poppa"];
-  let TRATTI_AMP = 1; // diagnosi (PROPOSTA-TRATTI-RIVALI §10): allarga le fasce attorno al centro; 1 = le fasce di aiParams
-  const TRATTI_TESTO = { partenza: ["parte bene", "parte tardi"], bolina: ["stringe bene di bolina", "di bolina va larga"],
-                         poppa: ["va forte in poppa", "in poppa va piano"] };
+  // 1.2.31 (docs/PROPOSTA-TRATTI-RIVALI.md §11-14): nel torneo ogni rivale ha due aree, partenza e bolina, sorteggiate ciascuna da sola:
+  // dote (terzo migliore), media o difetto (terzo peggiore), una volta su tre. Le fasce di startM e di up e |trim| sono larghe il doppio di aiParams
+  // attorno allo stesso centro (§11). Provate e tolte: le raffiche (§9), la poppa (§10-11), le manovre del timone (§13-14): non si vedevano
+  const TRATTI = ["partenza", "bolina"];
+  const TRATTI_TESTO = { partenza: ["parte bene", "parte tardi"], bolina: ["stringe bene di bolina", "di bolina va larga"] };
   function aiTratti(level){
-    const r = () => Math.random(), dote = Math.floor(r() * 3), dif = (dote + 1 + Math.floor(r() * 2)) % 3;
-    const terzo = a => a === dote ? 0 : a === dif ? 2 : 1, u = a => { const x = (terzo(a) + r()) / 3; return TRATTI_AMP === 1 ? x : 0.5 + (x - 0.5) * TRATTI_AMP; }; // u: 0 il migliore della fascia, 1 il peggiore
+    const r = () => Math.random(), tr = TRATTI.map(() => Math.floor(r() * 3)); // 0 dote, 1 media, 2 difetto
+    const u2 = a => 0.5 + ((tr[a] + r()) / 3 - 0.5) * 2; // da -0,5 (il migliore) a 1,5 (il peggiore): la fascia di aiParams va da 0 a 1
     const e = level === "esperti", segno = r() < 0.5 ? -1 : 1;
-    return { up: (e ? 45 : 49) + u(1) * (e ? 3 : 5), down: e ? 155 - u(2) * 5 : 150 - u(2) * 8, trim: segno * u(1) * (e ? 2 : 6), gain: e ? 18 : 26,
-             boardMin: e ? 35 : 25, boardMax: e ? 90 : 60, react: e ? 5 : 3, startM: TRATTI_AMP === 1 ? u(0) * (e ? 1 : 3) : Math.max(0, u(0)) * (e ? 1 : 3),
-             dote: TRATTI[dote], dif: TRATTI[dif] };
+    return { up: (e ? 45 : 49) + u2(1) * (e ? 3 : 5), down: e ? 150 + r() * 5 : 142 + r() * 8, trim: segno * u2(1) * (e ? 2 : 6),
+             gain: e ? 18 : 26, react: e ? 5 : 3, boardMin: e ? 35 : 25, boardMax: e ? 90 : 60, startM: Math.max(0, u2(0)) * (e ? 1 : 3), tr };
   }
-  // «parte bene, ma in poppa va piano» (frasi senza genere: servono anche coi nomi propri, PROPOSTA-RIVALI-E-SPONSOR §12); "" per i tornei salvati prima della 1.2.31
-  const trattiTesto = ai => ai && ai.dote ? TRATTI_TESTO[ai.dote][0] + ", ma " + TRATTI_TESTO[ai.dif][1] : "";
+  // «parte bene; di bolina va larga» (frasi senza genere: servono anche coi nomi propri, PROPOSTA-RIVALI-E-SPONSOR §12); "" per i tornei salvati prima della 1.2.31
+  const trattiTesto = ai => !ai || !ai.tr ? "" : TRATTI.filter((t, i) => ai.tr[i] !== 1).map(t => TRATTI_TESTO[t][ai.tr[TRATTI.indexOf(t)] / 2]).join("; ") || "nella media";
   const conTratti = (ai, char) => CHAR_TEXT[char] + (trattiTesto(ai) ? "; " + trattiTesto(ai) : "");
   // es (1.2.1, meccanismo B di docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md): la regata è l'esercizio di un passo di lezione. es = { def, lezione, passo, esito }:
   // def.regata (indice in RACES), def.cd (preparazione, s), def.avversari, def.boa (stato di partenza: [dx, dy, gradi dal vento] attorno alla boa, coordinate del vento,
