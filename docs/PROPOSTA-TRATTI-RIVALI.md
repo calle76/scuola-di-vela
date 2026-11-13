@@ -87,3 +87,30 @@ Lettura del vento, memoria che cambia il comportamento, pool di rivali, sponsor,
 1. **Il via.**
 2. **Tratti detti subito (A) o scoperti giocando (B)?** Propongo A.
 3. **Bastano tre tratti** (bolina, partenza, raffiche)? La lettura del vento resta fuori finché non c'è la diagnosi della bolina.
+
+## 8. Il via di Ale e il modello rivisto (13 novembre 2026)
+
+Ale: «via ai tratti, detti subito se è la soluzione più semplice. Ma non dovevano essere debole, medio e forte, ma caratteristiche tipo bravo in partenza». Quindi: **via, modo A (detti subito)**, e i tratti diventano **caratteristiche dette a parole**, non gradi. Questa sezione sostituisce i §2 e §3 dove sono diversi.
+
+**Il modello.** A inizio torneo ogni rivale riceve **una dote e un difetto**, in due aree diverse fra le tre (partenza, bolina, raffiche); nella terza area è nella media e la scheda non dice niente. Area della dote a caso fra le tre, area del difetto a caso fra le due rimaste, indipendente per ogni rivale.
+
+| Area | Dote | Difetto | Cosa cambia in acqua |
+| --- | --- | --- | --- |
+| Partenza | «brava in partenza» | «parte tardi» | `startM` nel terzo migliore o peggiore della fascia del livello |
+| Bolina | «stringe bene di bolina» | «di bolina va larga» | `up` e l'errore di regolazione `|trim|` nel terzo migliore o peggiore |
+| Raffiche | «pronta a lascare nelle raffiche» | «lenta a lascare nelle raffiche» | ritardo 0 s (come oggi) o `RIT_D`; nella media `RIT_M` |
+
+Il femminile è perché si parla della barca, come oggi il carattere («aggressiva in partenza»). Il carattere resta com'è e si legge accanto. Esempio di scheda: «Rossa: brava in partenza, ma lenta a lascare nelle raffiche. Prudente e sta alla larga.»
+
+**Perché così la flotta resta la stessa.** Per ogni area, un rivale ha la dote con probabilità 1/3, il difetto con 1/3 e la media con 1/3. Quindi `startM`, `up` e `|trim|` hanno ancora la distribuzione uniforme sulla fascia di oggi: cambia solo l'abbinamento (nessuno è bravo o scarso in tutto). L'unico peggioramento medio viene dalle raffiche, dove oggi tutti sono «pronti»: lo misura T2.
+
+**Dove vale:** solo nel torneo, come prima. Un torneo salvato prima della 1.2.31 (senza tratti) continua con i valori che ha e la scheda non mostra caratteristiche.
+
+**Criteri rivisti (soglie nostre, scritte prima di misurare).** T2-T7 restano come al §3. T1 diventa, area per area, dote contro difetto, in mediana su tutte le barche-regata:
+- **T1a partenza:** i rivali «bravi in partenza» tagliano la linea dopo il colpo con un ritardo minore di quelli che «partono tardi»: almeno 0,5 s fra i principianti e 0,15 s fra gli esperti (metà della larghezza di un terzo della fascia).
+- **T1b bolina:** chi «stringe bene» perde in bolina, rispetto alla rotta ottimale (`rotLatiBarca`), almeno il 15% in meno di chi «va larga».
+- **T1c raffiche:** chi è «lento a lascare» perde nei lati con raffiche almeno il 10% in più di chi è «pronto»; in più sbanda di più (sbandamento massimo mediano più alto).
+
+Se un'area non passa T1, la sua caratteristica non si mostra e lo dico: un'etichetta che non corrisponde a niente è peggio di nessuna etichetta.
+
+**Semi:** scelta delle costanti `RIT_M` e `RIT_D` sui semi 2101-2130, conferma sui semi 2131-2160. Ho ricontrollato: nei documenti i numeri fra 2100 e 2199 sono numeri di riga, non semi.
