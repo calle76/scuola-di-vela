@@ -40,6 +40,9 @@ async def main():
                 conta[a["nome"]] += 1
                 if a["nome"] in tr and tr[a["nome"]] != a["tr"]: falli.append(f"M2 {a['nome']}: tratti {a['tr']} invece di {tr[a['nome']]} (torneo {t})")
                 tr.setdefault(a["nome"], a["tr"])
+        for area in (0, 1):  # gruppo bilanciato (§15): per area 3 doti, 4 medie, 3 difetti
+            v = sorted(tr[n][area] for n in tr)
+            if len(tr) == 10 and v != [0, 0, 0, 1, 1, 1, 1, 2, 2, 2]: falli.append(f"M2 gruppo non bilanciato nell'area {area}: {v}")
         mai = [n for n in LISTA if conta[n] == 0]
         if mai: falli.append(f"M2 non misurato: mai comparsi {mai}")
         fuori = {n: c for n, c in conta.items() if not 40 <= c <= 80}

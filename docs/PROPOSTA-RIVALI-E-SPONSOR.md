@@ -340,3 +340,45 @@ Via di Ale: «sì, fai anche i nomi. e tutto ciò che puoi».
 - se ne ha solo la 1.2.33, il difetto è vero e si cerca.
 
 **In tutti e due i casi la 1.2.33 resta sul ramo `nomi-rivali`** finché il guardiano non passa sui suoi semi, e la decisione spetta ad Ale.
+
+**Esito della diagnosi** (guardiano con `--misura`, semi 1503-1514, 96 regate per versione):
+
+| | 1.2.32 | 1.2.33 | 1.2.33 senza gruppo fisso (copia di diagnosi) |
+| --- | --- | --- | --- |
+| Arrivo mediano | 196,6 s | **202,1 s** | 197,3 s |
+| Bolina persi, media | 24,3 s | 28,8 s | 27,9 s |
+| Boa toccata | 18 | **34** | 27 |
+| Non arrivati / squalificati | 0 / 2 | 2 / 0 | 0 / 1 |
+| Contatti dopo il via | 48 | 38 | 33 |
+
+Sui semi del guardiano (1491-1502), la copia senza gruppo fisso passa: **ESITO OK**, squalificati 0, contatti 61 → 28.
+
+**Lettura.**
+- Gli squalificati sono il caso: la 1.2.32 ne ha 2 sui semi nuovi.
+- Il peggioramento vero, sui semi nuovi arrivo +5,4 s e boe toccate quasi il doppio, viene dal **gruppo fisso**. I dieci rivali hanno i tratti sorteggiati una volta per tutta la carriera, quindi la forza della flotta dipende da un solo sorteggio di 20 tratti: un giocatore può trovarsi per sempre una flotta più lenta o più veloce della media. Va contro il T2 della 1.2.31: la media della flotta deve restare quella di prima.
+
+**Correzione, scritta prima di misurare: gruppo bilanciato.**
+- Quando il gruppo nasce, per ciascuna area (partenza, bolina) i dieci rivali ricevono esattamente **3 doti, 4 medie e 3 difetti**, mescolati a caso. Chi sia bravo in cosa cambia da giocatore a giocatore; la flotta nel complesso è sempre la stessa.
+- Criterio: guardiano OK sui semi 1491-1502, e sui semi 1503-1514 dentro le soglie del guardiano rispetto alla 1.2.32 (stesse soglie di G1-G9).
+- Non si sceglie niente su questi semi: la correzione è una sola e non ha numeri da tarare.
+
+**Gruppo bilanciato, misurato:**
+- `collaudo_nomi_rivali` OK, gruppo bilanciato verificato;
+- guardiano sui semi 1491-1502 **FALLITO per G5**: contatti dopo il via 61 → 76, soglia +6. Gli altri numeri sono dentro;
+- sui semi 1503-1514, contro la 1.2.32: arrivo +3,9 s e bolina +3,9 s oltre le soglie; contatti −22, boe toccate −9, squalificati −2.
+
+**La 1.2.33 non è chiusa.**
+
+**Il metro, una prova dichiarata prima di misurare.** Tre varianti della 1.2.33 con la stessa guida danno 39, 28 e 76 contatti sugli stessi semi. Il sospetto è che il guardiano, con 96 regate, risponda a qualunque cambio nell'ordine dei numeri casuali più delle sue soglie. Prova: la 1.2.32 con un solo `Math.random()` in più a inizio torneo, che non cambia niente nel gioco, sui semi 1491-1502. Se il guardiano boccia anche questa, non è adatto a giudicare un cambio che sposta i numeri casuali senza toccare la guida, e la decisione spetta ad Ale.
+
+**Esito della prova del metro:** la 1.2.32 con un solo `Math.random()` in più, cioè lo stesso gioco con i numeri casuali spostati, sui semi 1491-1502 dà **guardiano FALLITO**:
+- boe sbagliate 0 → 6, soglia +2;
+- inoltre arrivo −5,2 s, contatti 61 → 49, boa toccata 15 → 26.
+
+Quindi le soglie del guardiano stanno dentro il rumore del caso per qualunque cambio che sposta i numeri casuali. Il guardiano era stato tarato su modifiche alla guida, che di solito non spostano i sorteggi delle regate, e non sa giudicare un cambio come i nomi.
+
+**Stato:** la 1.2.33 resta sul ramo `nomi-rivali`, con il gruppo bilanciato. Tutto il resto passa (nomi, nome del giocatore, spazio, non-regressione).
+
+**Per Ale, due strade:**
+- **A (la mia proposta):** chiudere la 1.2.33 così, dichiarando che il guardiano non è adatto a questo cambio, con la prova qui sopra. Poi rifare il guardiano, voce nuova della lista: misurare il rumore (la versione di riferimento con 3-5 spostamenti dei numeri casuali) e mettere le soglie sopra quel rumore, oppure usare più semi.
+- **B:** rifare prima il guardiano, poi rimisurare la 1.2.33 e chiuderla solo se passa.

@@ -151,7 +151,17 @@
     ["Matteo Bortolin", "torna a regatare dopo dieci anni di pausa"]];
   const COLORI_BARCA = ["rossa", "verde", "blu"]; // come FLEET_LOOK
   const storiaDi = nome => (RIVALI_ZONALE.find(r => r[0] === nome) || [])[1] || "";
-  function rivaleTr(nome){ const g = progress.rivali || (progress.rivali = {}); if (!g[nome] || !Array.isArray(g[nome].tr)) g[nome] = { tr: TRATTI.map(() => Math.floor(Math.random() * 3)) }; return g[nome].tr; }
+  // il gruppo nasce tutto insieme e bilanciato (§15): per ogni area 3 doti, 4 medie e 3 difetti mescolati, così la flotta nel complesso è sempre la stessa
+  // (sorteggiati uno per uno, la forza della flotta dipendeva da un solo sorteggio per tutta la carriera: arrivo +5 s sui semi 1503-1514)
+  function rivaleTr(nome){
+    const g = progress.rivali || (progress.rivali = {});
+    if (RIVALI_ZONALE.some(([n]) => !g[n] || !Array.isArray(g[n].tr))){
+      const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+      const col = TRATTI.map(() => mescola([0, 0, 0, 1, 1, 1, 1, 2, 2, 2]));
+      RIVALI_ZONALE.forEach(([n], i) => { g[n] = { tr: col.map(c => c[i]) }; });
+    }
+    return g[nome].tr;
+  }
   const escH = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const mioNome = () => nomeGet().trim() || "Tu"; // 1.2.33 (§13): vuoto vale «Tu»
   const cognome = n => n.split(" ").slice(-1)[0];
