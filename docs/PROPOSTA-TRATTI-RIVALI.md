@@ -267,3 +267,30 @@ Quindi «preciso» non vuol dire «più timone». Vuol dire tenere la rotta col 
 Se una direzione rende i rivali più veloci, il tratto «manovre» si rifà su quella e si rimisura sui semi di scelta, dicendolo: la direzione del tratto cambia, quindi non è un semplice ritocco delle ampiezze. Se nessuna direzione dà una differenza chiara, le manovre si tolgono e resta A con due tratti.
 
 Manopola di diagnosi: `__sv.manovre([mr, mg])`. Con `null` resta il sorteggio, e si toglie prima di chiudere.
+
+## 14. Diagnosi delle manovre: nessuna direzione chiara, le manovre si tolgono (13 novembre, sera)
+
+Semi 2101-2105, 40 regate per variante, 60 barche-regata per livello. Tutti i rivali hanno la stessa regolazione del timone e il confronto è a coppie con il centro (0, 0). Picco 59-64 °C, un processo solo.
+
+| Variante (mr, mg) | Principianti: arrivo, mediana | Esperti: arrivo, mediana |
+| --- | --- | --- |
+| −0,5, −0,5 (la dote del §12) | −0,8 s | +0,9 s |
+| +0,5, +0,5 (il difetto del §12) | −2,8 s | +1,6 s |
+| −0,5, 0 (solo più pronta) | +0,6 s | −0,2 s |
+| 0, +0,5 (solo più dolce) | −2,0 s | **+5,6 s** |
+| −0,5, +0,5 (pronta e dolce) | −1,4 s | +1,4 s |
+| 0, −0,5 (solo più brusca) | **−3,6 s** | +1,9 s |
+
+**Lettura.**
+- Gli arrivi sono di circa 200 s. In ogni variante si mescolano barche più veloci e più lente: per esempio 21 contro 37, oppure 45 contro 14.
+- Per i principianti quasi ogni cambio fa guadagnare 1-4 s; per gli esperti quasi ogni cambio ne fa perdere 1-6. Il centro di oggi sembra vicino al meglio per gli esperti.
+- **Nessuna direzione vale per tutti e due i livelli**, e le differenze stanno nel rumore che c'è anche fra due regate quasi uguali. L'effetto «al contrario» dei semi di scelta (§13) era in gran parte rumore.
+
+**Decisione, secondo la regola scritta al §13 prima di misurare:** le manovre si tolgono. Resta l'opzione A del §11, scelta da Ale:
+- due tratti, partenza e bolina;
+- fasce doppie;
+- ogni area sorteggiata da sola.
+
+`react` e `gain` tornano fissi come nella 1.2.30, e la manopola di diagnosi è tolta.
+
+**Conferma:** semi 2161-2190, mai usati, contro la 1.2.30 sugli stessi semi (già misurata). Criteri T1a, T1b, T2, T4 e T5 come al §12. T1d non c'è più.
