@@ -19,6 +19,16 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.30 — La scheda dei rivali nel torneo
+
+Primo passo della scheda dei rivali (`docs/PROPOSTA-SCHEDA-RIVALI.md`; risposte di Ale del 12 novembre: «dove si vede meglio», i quattro fatti, memoria solo mostrata). La guida degli avversari non cambia.
+
+- **Pulsante «I rivali»** nel riquadro del torneo, dalla prima regata finita e a torneo finito. Per ogni rivale, regata per regata: arrivo, partenza (davanti o dietro di te, o fuori linea), prima boa (davanti o dietro di te), contatti con te e di chi era la colpa. Sotto, due o tre frasi di conteggio («davanti a te in 2 regate su 3»), niente giudizi. Una scheda per volta, coi pulsanti dei tre colori.
+- **Dati nuovi nel salvataggio del torneo** (`tor.ris`, `js/regate.js`): secondi alla linea e alla boa 1, fuori linea, contatti col giocatore. Si registrano solo leggendo: nessun numero casuale in più. Un torneo salvato prima si apre con le caselle «–».
+- **Collaudo nuovo** `tests/collaudo_scheda_rivali.py`: S1 la guida non cambia (tornei interi col pilota contro la 1.2.29), S2 ogni cella della scheda contro un calcolo fatto dal collaudo, S3 e S3b torneo a metà e torneo salvato prima, S4 spazio a 1360x650. Ha un termostato (`--termostato`), perché il PC di Ale arriva a 84 °C.
+- **Misure:** vedi `docs/PROPOSTA-SCHEDA-RIVALI.md` §10.
+- Due difetti trovati strada facendo, entrambi nel collaudo e non nel gioco: le regate cambiavano col tempo passato fra l'una e l'altra (ora il seme si rimette prima di ogni regata); la misura dello spazio guardava l'elemento sbagliato.
+
 ## 1.2.29 — La lezione sulle raffiche non dice più di orzare per scaricare
 
 Dal foglio di un velista e dalla ricerca di fonti scritte (`docs/PROPOSTA-LEZIONE-RAFFICA.md`, `docs/FONTI-PUBBLICHE.md` F79-F84): quattro articoli letti per intero dicono che la prima mossa in raffica è lascare e che stringere il vento durante la raffica non conviene (uno orza solo dopo, per ri-trimmare). Solo testi, nessun numero del motore cambia:
