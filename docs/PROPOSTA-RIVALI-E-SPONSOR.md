@@ -253,7 +253,7 @@ Ale: «i nomi proponili tu, poi li controllo». Venti rivali inventati, dieci pe
 | Sara Fontana | ha cominciato tardi, a quarant'anni |
 | Pietro Gallo | pescatore, esce in mare tutte le mattine |
 | Elena Zanin | studentessa di medicina, regata quando può |
-| Matteo Carraro | torna a regatare dopo dieci anni di pausa |
+| Matteo Bortolin | torna a regatare dopo dieci anni di pausa |
 
 **Circuito nazionale**
 | Nome | Storia |
@@ -276,7 +276,7 @@ Ale: «i nomi proponili tu, poi li controllo». Venti rivali inventati, dieci pe
 **Ale, 13 novembre:** «vanno bene». I venti nomi sono approvati; resta da fare la ricerca per escludere coincidenze con velisti noti.
 
 **Ricerca nome per nome (13 novembre, sera).** Una ricerca sul web per ognuno dei venti nomi, scritto fra virgolette insieme a «vela regata» (per Valentina Sartori anche «windsurf»). Risultato:
-- **Matteo Carraro coincide con un velista vero:** compare nei comunicati della Federazione Italiana Vela sul 51° Trofeo Princesa Sofia, a Palma, in equipaggio («Omari-Carraro», 16° dopo la quarta giornata). **Va cambiato.** Proposta: **Matteo Bortolin** (stessa storia: torna a regatare dopo dieci anni di pausa), cercato allo stesso modo: nessun risultato. Da approvare da Ale.
+- **Matteo Carraro coincide con un velista vero:** compare nei comunicati della Federazione Italiana Vela sul 51° Trofeo Princesa Sofia, a Palma, in equipaggio («Omari-Carraro», 16° dopo la quarta giornata). **Va cambiato.** Proposta: **Matteo Bortolin** (stessa storia: torna a regatare dopo dieci anni di pausa), cercato allo stesso modo: nessun risultato. **Ale, 13 novembre sera: «Bortolin va bene».**
 - Gli altri diciannove: nessun risultato col nome intero. Escono solo nomi vicini ma diversi (Tommaso Bruni, Chiara Benini Floriani, Marco Serafini, il Trofeo Pellegrini, che è una regata e non una persona).
 - **Limite:** un motore di ricerca che non trova niente non prova che la persona non esista; esclude solo i velisti che compaiono nelle notizie e nei comunicati, cioè quelli «noti».
 
