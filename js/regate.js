@@ -1322,13 +1322,17 @@
       const frasi = torFrase("Partenza", f.map(x => x.fuori ? null : x.part), "davanti a te", "dietro di te") + (fuori ? `<li>Partenza: fuori linea in ${torRegate(fuori)} su ${f.length}</li>` : "")
         + torFrase("Boa 1", f.map(x => x.boa), "davanti a te", "dietro di te")
         + `<li>Contatti con te: ${tocc ? `${torRegate(tocc)} su ${f.length} (colpa sua in ${colpaSua}, colpa tua in ${colpaTua})` : "nessuno"}</li>`;
-      return `<div class="tor-sch"><h3>${l.name}: ${CHAR_TEXT[a.char]}</h3>${tab}<ul>${frasi}</ul></div>`;
+      return `<div class="tor-sch"${n === torSchedaN ? "" : " hidden"}><h3>${l.name}: ${CHAR_TEXT[a.char]}</h3>${tab}<ul>${frasi}</ul></div>`;
     }).join("");
+    // una scheda per volta (13 nov: le tre insieme non stanno nei 650 px di altezza), coi pulsanti dei tre colori
+    const linguette = FLEET_LOOK.map((l, n) => `<button class="tor-ling${n === torSchedaN ? " primary" : ""}" data-n="${n}">${l.name}</button>`).join("");
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">I rivali</h2><span>dopo la regata ${k} di ${TOR_N}</span></div>
       <p class="tor-leg">Solo fatti visti in queste regate, non giudizi: davanti o dietro sono rispetto a te. – vuol dire dato non registrato. Il carattere in titolo è quello vero, dichiarato prima della regata.</p>
-      ${schede}<div class="row"><button class="primary" id="torIndietro">Indietro</button></div>`;
+      <div class="row tor-lings">${linguette}</div>${schede}<div class="row"><button class="primary" id="torIndietro">Indietro</button></div>`;
+    $("torBody").querySelectorAll(".tor-ling").forEach(b => b.onclick = () => { torSchedaN = +b.dataset.n; torSchedeMostra(T, nota); });
     $("torIndietro").onclick = () => torMostra(nota);
   }
+  let torSchedaN = 0; // la scheda aperta (0 Rossa, 1 Verde, 2 Blu); resta quella finché la pagina è aperta
   function torMostra(nota){
     const T = tor || torNuovo(), k = T.ris.length, inGioco = mode === "race";
     const nomi = ["Tu", ...FLEET_LOOK.map(l => l.name)], car = T.av.map((a, i) => "la " + FLEET_LOOK[i].name + " è " + CHAR_TEXT[a.char]).join(", ");

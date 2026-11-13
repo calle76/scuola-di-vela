@@ -48,3 +48,39 @@ Nuovi tratti in acqua (errori, scelta del lato), memoria che cambia il comportam
 ## 8. Domande per Ale
 1. **Dove si vede la scheda?** A fine regata (accanto al risultato), a fine torneo, o in una schermata a parte dal menu del torneo?
 2. **Bastano questi quattro fatti** (arrivo, partenza, boa 1, contatti), o ne togli o aggiungi?
+
+**Risposte di Ale (12 novembre, dalla chat):** la scheda «dove si vede meglio, anche una schermata a parte»; i quattro fatti vanno bene. Implementata su un ramo (`scheda-rivali`) la sera del 12, non chiusa; ripresa e chiusa il 13 in autonomia.
+
+## 9. Fermata 2: cosa è cambiato rispetto alla proposta (scritto prima della misura finale)
+
+- **Dove si vede:** pulsante «I rivali» nel riquadro del torneo, dopo la prima regata e a torneo finito. Schermata a parte nello stesso riquadro, con «Indietro» che torna alla classifica.
+- **Una scheda per volta** (13 nov), con tre pulsanti Rossa, Verde, Blu. Le tre schede insieme non stanno nei 650 px: nel caso peggiore il riquadro scorreva e la Blu restava sotto il bordo. **Il primo metro aveva sbagliato elemento:** misurava lo scorrimento del contenuto (0 px), mentre a scorrere era il riquadro intero. L'ha mostrato l'immagine. Ora il collaudo misura il riquadro, il contenuto e la posizione di «Indietro».
+- **Colonne:** tabella a larghezze fisse, celle centrate (prima erano allineate a caso: la prima colonna dei risultati a sinistra, le altre a destra).
+- **S1 sbagliava per colpa del collaudo, non del gioco.** Diagnosi su 3 tornei (12 regate):
+  - la pagina nuova senza aprire la scheda, contro la 1.2.29: 0 regate diverse;
+  - aprire e chiudere la scheda consuma 0 numeri casuali;
+  - la 1.2.29 contro se stessa con 300 ms di attesa fra le regate: 9 regate diverse su 12. Fra una regata e l'altra la pagina consuma numeri casuali a ogni fotogramma.
+
+  Correzione nel collaudo: il seme si rimette prima di ogni regata, uguale nelle due pagine.
+- **Collaudo nuovo, S3b:** un torneo salvato prima della 1.2.30 (senza i campi nuovi) si apre senza errori, con gli arrivi pieni e il resto «–».
+- **Termostato nel collaudo** (`--termostato GRADI`, `--da PRIMO`): il PC di Ale arriva a 84 °C anche con un collaudo solo.
+
+## 10. Misure (13 novembre, mattina): versione NON chiusa, manca un pezzo di S1
+
+| Criterio | Soglia | Misurato | Esito |
+| --- | --- | --- | --- |
+| S1 la guida non cambia | 40 tornei (160 regate), 0 differenze | **30 tornei (120 regate), 0 differenze** (semi 1-30), più la prova breve (semi 1-3, 12 regate, 0 differenze) | **incompleto:** misura fermata dal caldo, mancano i semi 31-40 |
+| S2 la scheda dice il vero | 0 celle sbagliate su almeno 160 regate; ogni tipo di cella confrontato almeno una volta | 0 celle sbagliate su 120 regate. Conteggi per tipo solo nella prova breve: arrivo, partenza, boa e contatto 36 ciascuno, fuori linea 11, davanti 15, dietro 8, colpa sua 8, colpa tua 8, parità non giudicate 2 | incompleto come S1; i tipi sono tutti misurati |
+| S3 torneo a metà | scheda uguale dopo la chiusura | uguale | sì |
+| S3b torneo salvato prima | si apre, arrivi pieni, il resto «–» | sì | sì |
+| S4 spazio a 1360x650 | 0 px in eccesso, riquadro intero, tre schede | 0 px, «Indietro» dentro, una scheda visibile, 4 regate | sì |
+| S6 fisica | identica | `polare.js`, `raffiche_e_virate.js`, `impronta1b.js`: OK, identici | sì |
+| S5 pagina come la carica Ale, Firefox | — | **non fatto** (script pronto, non lanciato per il caldo) | da fare |
+
+**Il caldo.** Un collaudo solo, con due pagine in Chromium, porta il PC a onde di 65-84 °C. Prove fatte:
+- termostato a 62 °C prima di ogni regata: picchi di 73-78 °C durante la regata;
+- tutto su un core solo: quel core resta a 71-73 °C, e la misura avanza a fatica.
+
+Tutte le misure si sono fermate appena sopra i 72 °C.
+
+**Per chiudere la 1.2.30** mancano i semi 31-40 di S1 e S2 (circa 25 minuti a PC freddo), poi S5: la pagina senza `#collaudo`, in Chromium e Firefox. Il comando è in `STATO.md`.

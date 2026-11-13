@@ -4,13 +4,25 @@
 #   S2 la scheda dice il vero: ogni cella (arrivo, partenza, boa 1, contatto) confrontata con un calcolo fatto QUI, campionando a ogni passo lo stato
 #      delle barche (leg, ocs) e leggendo i contatti dall'elenco delle penalità. Soglia: 0 celle sbagliate su almeno 160 regate; le celle
 #      confrontate si contano per tipo e ognuna deve essere > 0 (il metro non deve dipendere da ciò che misura). Parità entro 0,05 s: non giudicate, contate.
+#      Il seme si rimette prima di ogni regata (seme*100+regata), uguale nelle due pagine: le regate non dipendono dal tempo passato fra l'una e l'altra.
 #   S3 torneo a metà: pagina chiusa dopo la regata 2 e riaperta, scheda uguale.
-# Uso: python collaudo_scheda_rivali.py [--semi N] [--rif cartella]   (la pagina di riferimento: git archive HEAD index.html js | tar -x -C cartella)
+# Uso: python collaudo_scheda_rivali.py [--semi N] [--da PRIMO] [--termostato GRADI] [--rif cartella]   (la pagina di riferimento: index.html e js/ della 1.2.29, presi con git show main:FILE)
 import asyncio, json, pathlib, sys
 from playwright.async_api import async_playwright
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
 N = int(sys.argv[sys.argv.index("--semi") + 1]) if "--semi" in sys.argv else 40
 RIF = (pathlib.Path(sys.argv[sys.argv.index("--rif") + 1]) / "index.html").as_uri() if "--rif" in sys.argv else None
+DA = int(sys.argv[sys.argv.index("--da") + 1]) if "--da" in sys.argv else 1   # primo seme (13 nov: per riprendere una misura fermata dal termostato)
+TERMO = int(sys.argv[sys.argv.index("--termostato") + 1]) if "--termostato" in sys.argv else None   # °C: prima di ogni regata aspetta che i core scendano sotto
+import subprocess
+def caldo():   # temperatura massima dei core (sensors), None se non si legge
+    try: return max(float(l.split()[2].strip("+°C")) for l in subprocess.run(["sensors"], capture_output=True, text=True).stdout.splitlines() if l.startswith("Core"))
+    except Exception: return None
+async def termostato():
+    if TERMO is None: return
+    attesa = 0
+    while (c := caldo()) is not None and c > TERMO and attesa < 600: await asyncio.sleep(5); attesa += 5
+    if attesa: print(f"  termostato: {attesa} s di pausa", flush=True)
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
@@ -47,6 +59,10 @@ async def torneo(pg, seme, scheda):
     await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); }", seme)
     reg = []
     for k in range(4):
+        # 13 nov: il seme si rimette prima di ogni regata. Fra una regata e l'altra la pagina consuma numeri casuali a ogni fotogramma, quindi
+        # senza questo una pausa di 300 ms (o l'apertura della scheda, che di suo ne consuma 0) cambia le regate dopo: 9 su 12 nella prova.
+        await termostato()
+        await pg.evaluate("s => __seed(s)", seme * 100 + k + 1)
         r = await pg.evaluate(CORRI)
         if "fallita" in r: no(f"seme {seme} regata {k + 1}: {r['fallita']}"); return reg
         if scheda: r["scheda"] = await pg.evaluate(SCHEDA)
@@ -93,14 +109,14 @@ async def main():
         # S2 (e S1 se c'è il riferimento)
         diff = 0; reg_tot = 0
         pg = await pagina(b, BASE); pr = await pagina(b, RIF) if RIF else None
-        for seme in range(1, N + 1):
+        for seme in range(DA, N + 1):
             nuovo = await torneo(pg, seme, True)
             for k, r in enumerate(nuovo): atteso_e_confronto(seme, k, r); reg_tot += 1
             if pr:
                 vecchio = await torneo(pr, seme, False)
                 for k, (a, v) in enumerate(zip(nuovo, vecchio)):
                     if a["fin"] != v["fin"]: diff += 1; no(f"S1 seme {seme} R{k+1}: tempi diversi dalla pagina di riferimento")
-            if seme % 5 == 0: print(f"  semi 1-{seme} fatti, {len(errori)} errori", flush=True)
+            if seme % 5 == 0 or TERMO is not None: print(f"  semi {DA}-{seme} fatti, {len(errori)} errori", flush=True)
             await pg.reload(); await pg.wait_for_timeout(100)
             if pr: await pr.reload(); await pr.wait_for_timeout(100)
         print(f"\nS2: {reg_tot} regate; celle confrontate {CONTA}")
@@ -120,6 +136,40 @@ async def main():
         dopo = await pg.evaluate(SCHEDA)
         print("S3:", "scheda uguale dopo la chiusura" if prima == dopo and prima else f"DIVERSA o vuota: {prima} / {dopo}")
         if prima != dopo or not prima: no("S3 la scheda cambia dopo la chiusura della pagina")
+        # S3b: torneo salvato da una versione di prima (senza l, b, x, c): si apre senza errori, arrivo pieno, il resto «–»
+        n_err = len(errori)
+        await pg.evaluate("""() => { const p = JSON.parse(localStorage.getItem('scuolaVelaSim.v1')); p.torneo.ris.forEach(r => r.forEach(x => { delete x.l; delete x.b; delete x.x; delete x.c; }));
+          localStorage.setItem('scuolaVelaSim.v1', JSON.stringify(p)); }""")
+        await pg.reload(); await pg.wait_for_timeout(200)
+        await pg.evaluate("() => { __sv.fast(0); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); }")
+        vecchio = await pg.evaluate(SCHEDA)
+        celle = [c for s in vecchio for riga in s["righe"] if riga[0] != "Arrivo" for c in riga[1:]]
+        arrivi = [c for s in vecchio for riga in s["righe"] if riga[0] == "Arrivo" for c in riga[1:]]
+        ok3b = len(errori) == n_err and len(celle) == 3 * 3 * 2 and all(c == "–" for c in celle) and len(arrivi) == 6 and all(c != "–" for c in arrivi)
+        print("S3b:", "torneo vecchio aperto, arrivi pieni e il resto vuoto" if ok3b else f"NO: {vecchio}")
+        if not ok3b: no("S3b torneo salvato senza i campi nuovi")
+        # S4: spazio a 1360x650 nel caso peggiore (4 regate, contatti con colpa di tutte e due, fuori linea), ognuna delle tre schede.
+        # Si misura lo scorrimento del riquadro intero e del contenuto, e che il pulsante «Indietro» sia dentro lo schermo (prima misura del 13 nov: il riquadro scorreva, non il contenuto).
+        await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); }", 11)
+        await pg.evaluate("() => document.getElementById('torRit') && document.getElementById('torRit').click()")
+        await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); }", 11)
+        for k in range(3): await pg.evaluate(CORRI)
+        await pg.evaluate("""() => { __sv.tor.ris.forEach((r, j) => r.forEach((x, i) => { if (i){ x.c = "ts"; if (j % 2) x.x = true; else { x.l = 1; } x.b = 100; } })); }""")
+        await pg.evaluate(CORRI)
+        out = []
+        for n in range(3):
+            out.append(await pg.evaluate("""n => { if (!document.getElementById('torIndietro')) document.getElementById('torRivali').click();
+              document.querySelectorAll('.tor-ling')[n].click();
+              const d = document.getElementById('torDlg'), q = document.getElementById('torBody'), r = d.getBoundingClientRect(), ind = document.getElementById('torIndietro').getBoundingClientRect();
+              const vis = [...q.querySelectorAll('.tor-sch')].filter(s => !s.hidden);
+              return { dentro: r.top >= 0 && r.bottom <= innerHeight, scorreRiquadro: d.scrollHeight - d.clientHeight, scorreContenuto: q.scrollHeight - q.clientHeight,
+                       larg: Math.max(d.scrollWidth - d.clientWidth, q.scrollWidth - q.clientWidth), indietro: ind.bottom <= r.bottom && ind.bottom <= innerHeight,
+                       visibili: vis.length, regate: vis.length ? vis[0].querySelectorAll('thead th').length - 1 : 0 }; }""", n))
+            await pg.screenshot(path=str(pathlib.Path(__file__).resolve().parent / "output" / f"scheda_rivali_{n}.png"))
+        print("S4:", out)
+        for n, o in enumerate(out):
+            if not o["dentro"] or o["scorreRiquadro"] > 0 or o["scorreContenuto"] > 0 or o["larg"] > 0 or not o["indietro"] or o["visibili"] != 1 or o["regate"] != 4:
+                no(f"S4 scheda {n}: {o}")
         await b.close()
     print("\nESITO:", "OK" if not errori else f"FALLITO ({len(errori)})")
 asyncio.run(main())
