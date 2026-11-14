@@ -149,6 +149,8 @@ Costo di cambiamento:
 | Rivali del torneo: due tratti, partenza e bolina, ogni area sorteggiata da sola (opzione A); manovre al posto della poppa provate e tolte | 13 nov sera (Ale: A, poi «chi è meno bravo è più lento nelle manovre») | basso | Solo `aiTratti` | `PROPOSTA-TRATTI-RIVALI.md` §11-15 |
 | 1.2.33 chiusa col guardiano degli avversari che non passa, dichiarato non adatto (nel rumore del caso); il guardiano si rifà dopo | 14 nov mattina (Ale: «ok A») | basso | Rifare il guardiano e rimisurare | `PROPOSTA-RIVALI-E-SPONSOR.md` §15; `DA-FARE.md` voce 33 |
 | **Si resta su Deriva**: farla maturare (carriere, regate, rapporti fra regatanti) come base dei livelli successivi, senza allargare ad altre barche per ora; idea in più: tornei online almeno fra Ale e Lucio | 14 nov pomeriggio (Ale: «restiamo sul livello deriva sviluppandone carriere e regate e rapporti tra regatanti … gioco online almeno per me con Lucio in tornei dedicati … un bel livello che poi farà da base per quelli successivi») | medio | Le proposte dei circuiti (§16) e della voce 35 partono da qui | `PROPOSTA-RIVALI-E-SPONSOR.md` §16; `DA-FARE.md` voci 35-36 |
+| 1.2.34 chiusa con F2 (scritte vicine alla barca giusta, da lontano) all'88,6% contro una soglia del 90%; niente iniziale da lontano per ora | 14 nov sera (Ale: «chiudi. proviamo così») | basso | Aggiungere l'iniziale da lontano e rimisurare | `PROPOSTA-ETICHETTE-BARCHE.md`, Esito |
+| Nella stagione zonale entra anche Lucio, dodicesimo della flotta del circuito, con le sue tappe corse a parte e scambiate con un file | 14 nov sera (Ale: «aggiungere Lucio alla stagione») | basso finché è proposta | Riscrivere le due proposte | `PROPOSTA-STAGIONE-ZONALE.md`, `PROPOSTA-TORNEI-ONLINE.md` |
 
 ## Contenuti e confini legali
 

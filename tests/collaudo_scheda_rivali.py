@@ -79,7 +79,8 @@ def atteso_e_confronto(seme, k, r):
         # arrivo
         pos = 1 + sum(1 for j in range(len(fin)) if valido(j) and fin[j][0] < fin[i][0]) if valido(i) else 0
         att = f"{pos}°" if pos else "non arr."; CONTA["arrivo"] += 1
-        if cella("Arrivo") != att: no(f"seme {seme} R{k+1} {sch['h']}: arrivo {cella('Arrivo')} invece di {att}")
+        if valido(i) and any(j != i and valido(j) and abs(fin[j][0] - fin[i][0]) < 0.05 for j in range(len(fin))): att = None; CONTA["ambigue"] += 1   # il gioco salva l'arrivo al decimo: parità entro 0,05 s non giudicate (14 nov, seme 19)
+        if att and cella("Arrivo") != att: no(f"seme {seme} R{k+1} {sch['h']}: arrivo {cella('Arrivo')} invece di {att}")
         # partenza
         c, m = cam[i], cam[0]; CONTA["partenza"] += 1
         if c["x"]: att = "fuori linea"; CONTA["fuori"] += 1
@@ -98,7 +99,8 @@ def atteso_e_confronto(seme, k, r):
         if att and cella("Boa 1") != att: no(f"seme {seme} R{k+1} {sch['h']}: boa 1 {cella('Boa 1')} invece di {att}")
         # contatto: dall'elenco delle penalità (testo del gioco)
         nome = r["nomi"][i]; CONTA["contatto"] += 1
-        t = any(p.startswith("Tu, contatto con la " + nome) for p in r["pen"]); s = any(p.startswith("La " + nome + ", contatto con te") for p in r["pen"])
+        col = nome in ("Rossa", "Verde", "Blu"); chi, Chi = ("la " + nome, "La " + nome) if col else (nome, nome)   # dalla 1.2.33 nel torneo il nome proprio, senza articolo
+        t = any(p.startswith("Tu, contatto con " + chi + ":") for p in r["pen"]); s = any(p.startswith(Chi + ", contatto con te") for p in r["pen"])
         att = "–" if not (t or s) else (("colpa tua" if t else "") + (" e " if t and s else "") + ("colpa sua" if s else ""))
         CONTA["colpa_tua"] += t; CONTA["colpa_sua"] += s
         if cella("Contatto") != att: no(f"seme {seme} R{k+1} {sch['h']}: contatto {cella('Contatto')} invece di {att}")
