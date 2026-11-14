@@ -29,6 +29,7 @@ Voce 38 di `DA-FARE.md`, passo 1; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 1
 - **Finestre:** tabella del torneo a 6 righe; con 5 rivali i pulsanti delle schede mostrano il cognome.
 - **Corretto:** il messaggio di un contatto fra due rivali diceva «penalità alla Pietro Gallo» (dalla 1.2.33).
 - **Collaudo nuovo** `tests/collaudo_sei_barche.py`; `tests/misura_etichette.py` con `SEI=1`. Misure: `docs/PROPOSTA-NAZIONALE.md`, Esito.
+- **Chiusa con un criterio che non passa, per scelta di Ale** («A, chiudi la 1.2.38»): N2 chiedeva 0 contatti nei primi 25 s. Con 6 barche sono 34 regate su 100, ma con 4 barche erano già 16 su 100: per coppia di barche la frequenza è la stessa. È un difetto vecchio della guida prima del via (voci 4 e 17 di `DA-FARE.md`).
 
 ## 1.2.37 — La stagione con un amico
 

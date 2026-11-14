@@ -101,3 +101,5 @@ Ramo `sei-barche`. `tests/collaudo_sei_barche.py` (25 tornei a 4 e 25 a 6 sugli 
 - **oppure prima sistemare le manovre dei rivali prima del via** (voci 4 e 17), poi rimisurare.
 
 **Corretto strada facendo:** «penalità alla Pietro Gallo» nel messaggio di un contatto fra due rivali (dalla 1.2.33).
+
+**Decisione di Ale (14 novembre, notte): «A, chiudi la 1.2.38».** Chiusa con N2 dichiarato: contatti nei primi 25 s in 34 regate su 100 con 6 barche (16 su 100 con 4, nel gioco di prima). Le manovre dei rivali prima del via restano nelle voci 4 e 17.
