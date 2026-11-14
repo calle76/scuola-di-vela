@@ -1453,10 +1453,36 @@
     if (R.t > -10 && R.t < 0){ ctx.font = font(700, 64); ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.fillText(String(Math.ceil(-R.t)), W / 2, H * 0.3); }
     if (me.ocs){ ctx.font = font(700, 16); ctx.fillStyle = "#FFD447"; ctx.fillText(R.t < 3 ? "Partenza anticipata: torna dietro la linea" : "Non sei partito: torna dietro la linea e tagliala tra giuria e boa", W / 2, 88); }
   }
+  // ---- scritte sopra le barche (1.2.34, PROPOSTA-ETICHETTE-BARCHE.md) ----
+  // Sopra la barca (58 px) se lì non copre lo scafo di un'altra barca, altrimenti sotto; se nessuno dei due posti è libero, trasparente.
+  // Un cambio di posto resta almeno ETICH_FERMA secondi di regata, per non far saltare la scritta su e giù.
+  const ETICH_ALFA = 0.4, ETICH_FERMA = 1;
+  function rettTocca(x, y, w, h, P){
+    const dentro = (px, py) => px >= x && px <= x + w && py >= y && py <= y + h;
+    if (P.some(([px, py]) => dentro(px, py))) return true;
+    const inPoli = (qx, qy) => { let c = false; for (let a = 0, b = P.length - 1; a < P.length; b = a++){ const [xa, ya] = P[a], [xb, yb] = P[b]; if ((ya > qy) !== (yb > qy) && qx < (xb - xa) * (qy - ya) / (yb - ya) + xa) c = !c; } return c; };
+    if (inPoli(x, y) || inPoli(x + w, y) || inPoli(x, y + h) || inPoli(x + w, y + h)) return true;
+    for (let a = 0, b = P.length - 1; a < P.length; b = a++){ // un lato dello scafo che attraversa il rettangolo (Liang-Barsky)
+      const [x0, y0] = P[b], dx = P[a][0] - x0, dy = P[a][1] - y0; let t0 = 0, t1 = 1, ok = true;
+      for (const [pp, qq] of [[-dx, x0 - x], [dx, x + w - x0], [-dy, y0 - y], [dy, y + h - y0]]){
+        if (pp === 0){ if (qq < 0){ ok = false; break; } } else { const r = qq / pp; if (pp < 0){ if (r > t1){ ok = false; break; } if (r > t0) t0 = r; } else { if (r < t0){ ok = false; break; } if (r < t1) t1 = r; } } }
+      if (ok) return true; }
+    return false;
+  }
+  function etichPosto(b, i, sx, sy, w, scafi){
+    const yS = sy - 58, yG = sy + 40, copre = y => scafi.some((P, j) => j !== i && rettTocca(sx - w / 2, y, w, 18, P));
+    const q = b.etq || (b.etq = { su: true, t: -1e9 }), libSu = !copre(yS), libGiu = !copre(yG), puo = R.t - q.t >= ETICH_FERMA || R.t < q.t;
+    if (puo && q.su && !libSu && libGiu){ q.su = false; q.t = R.t; }
+    else if (puo && !q.su && (libSu || !libGiu)){ q.su = true; q.t = R.t; } // torna sopra appena è libero, o se anche sotto è coperto
+    return { y: q.su ? yS : yG, piena: q.su ? libSu : libGiu };
+  }
   function drawRaceScreen(v){
     if (!R) return;
     ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    for (const b of R.boats){ if (b.me) continue; const [sx, sy] = toScreen(v, b.S.x, b.S.y); ctx.fillStyle = "rgba(10,24,36,.6)"; const et = b.etich || b.name, w = ctx.measureText(et).width + 10; ctx.fillRect(sx - w / 2, sy - 58, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(et, sx, sy - 49); } // 1.2.33: nel torneo il cognome
+    const scafi = R.boats.map(b => hullWorld(b.S).map(([x, y]) => toScreen(v, x, y)));
+    R.boats.forEach((b, i) => { if (b.me) return; const [sx, sy] = toScreen(v, b.S.x, b.S.y), et = b.etich || b.name, w = ctx.measureText(et).width + 10; // 1.2.33: nel torneo il cognome
+      const p = etichPosto(b, i, sx, sy, w, scafi); ctx.globalAlpha = p.piena ? 1 : ETICH_ALFA;
+      ctx.fillStyle = "rgba(10,24,36,.6)"; ctx.fillRect(sx - w / 2, p.y, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(et, sx, p.y + 9); ctx.globalAlpha = 1; });
     R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + 10, gy - 10); });
     drawOrologio(R.boats[0], ranking());
     ctx.restore();

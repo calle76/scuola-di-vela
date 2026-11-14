@@ -1,6 +1,7 @@
 # Misura per PROPOSTA-ETICHETTE-BARCHE.md, criterio E1: quante volte la scritta sopra un avversario copre lo scafo di un'altra barca.
 # 20 regate del torneo (4 regate x 5 semi 2301-2305, principianti nei semi dispari, esperti nei pari), pilota per il giocatore,
 # un disegno ogni 6 passi di simulazione, da 60 s prima del via all'arrivo di tutti (o 900 s). Non tocca il gioco.
+# Conta solo le scritte piene (le trasparenti della 1.2.34 a parte) e, dalla 1.2.34, i cambi di posto sopra/sotto (E3).
 # Uso: python tests/misura_etichette.py [salva.json]   (BROWSER=firefox per Firefox)
 import asyncio, json, os, pathlib, sys
 from playwright.async_api import async_playwright
@@ -15,8 +16,8 @@ JS = """([k, liv, seme]) => {
   semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
   const R = sv.R, dt = 1 / 60;
   const P = CanvasRenderingContext2D.prototype, fr0 = P.fillRect; let cattura = null;
-  P.fillRect = function(x, y, w, h){ if (cattura && h === 18 && /^rgba\\(10, ?24, ?36, ?0?\\.6\\)$/.test(this.fillStyle)) cattura.push([x, y, w, h]); return fr0.call(this, x, y, w, h); };
-  const orig = window.drawRaceScreen; let disegni = 0, copre = 0, copreMe = 0, casi = 0, etichette = 0;
+  P.fillRect = function(x, y, w, h){ if (cattura && h === 18 && /^rgba\\(10, ?24, ?36, ?0?\\.6\\)$/.test(this.fillStyle)) cattura.push([x, y, w, h, this.globalAlpha]); return fr0.call(this, x, y, w, h); };
+  const orig = window.drawRaceScreen; let disegni = 0, copre = 0, copreMe = 0, casi = 0, etichette = 0, trasp = 0, sotto = 0, cambi = 0, salti = 0; const ultimo = {}, posto = {};
   const dentroPoli = (P, x, y) => { let c = false; for (let i = 0, j = P.length - 1; i < P.length; j = i++){ const [xi, yi] = P[i], [xj, yj] = P[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
   const tocca = (r, P) => { const [x, y, w, h] = r; if (P.some(([px, py]) => px >= x && px <= x + w && py >= y && py <= y + h)) return true;
     for (let a = 0; a <= 4; a++) for (let b = 0; b <= 2; b++) if (dentroPoli(P, x + w * a / 4, y + h * b / 2)) return true; return false; };
@@ -24,14 +25,15 @@ JS = """([k, liv, seme]) => {
     const scafi = R.boats.map(b => sv.hullWorld(b.S).map(([x, y]) => toScreen(v, x, y)));
     const av = R.boats.map((b, i) => i).filter(i => !R.boats[i].me); etichette += rr.length;
     let f = false, fm = false;
-    rr.forEach(r => { const cx = r[0] + r[2] / 2;
+    R.boats.forEach((b, i) => { if (!b.etq) return; if (i in posto && posto[i] !== b.etq.su){ cambi++; if (i in ultimo && R.t - ultimo[i] < 1 - 1e-6) salti++; ultimo[i] = R.t; } posto[i] = b.etq.su; if (!b.etq.su) sotto++; });
+    rr.forEach(r => { if (r[4] < 1){ trasp++; return; } const cx = r[0] + r[2] / 2;
       const prop = av.reduce((m, i) => { const [sx] = toScreen(v, R.boats[i].S.x, R.boats[i].S.y); return Math.abs(sx - cx) < Math.abs(m[1] - cx) ? [i, sx] : m; }, [-1, 1e9])[0];
       R.boats.forEach((b, i) => { if (i !== prop && tocca(r, scafi[i])){ f = true; casi++; if (b.me) fm = true; } }); });
     if (f) copre++; if (fm) copreMe++; };
   let n = 0;
   while (R.t < 900 && R.boats.some(b => b.fin === null && !b.dnf)){ if (R.boats[0].fin === null) sv.pilota(dt); if (++n % 6) sv.run(dt, 1); else sv.frame(dt); }
   window.drawRaceScreen = orig; P.fillRect = fr0;
-  return { disegni, copre, copreMe, casi, etichette, t: R.t };
+  return { disegni, copre, copreMe, casi, etichette, trasp, sotto, cambi, salti, t: R.t };
 }"""
 async def main():
     out = []
@@ -43,9 +45,11 @@ async def main():
             for seme in range(2301, 2306):
                 liv = "principianti" if seme % 2 else "esperti"
                 r = await pg.evaluate(JS, [k, liv, seme]); r.update(reg=k, seme=seme, liv=liv); out.append(r)
-                print(f"  regata {k + 1} seme {seme} {liv}: disegni {r['disegni']}, con una scritta su uno scafo {r['copre']} (sul tuo {r['copreMe']}), scritte disegnate {r['etichette']}", flush=True)
+                print(f"  regata {k + 1} seme {seme} {liv}: disegni {r['disegni']}, con una scritta su uno scafo {r['copre']} (sul tuo {r['copreMe']}), scritte disegnate {r['etichette']}, trasparenti {r['trasp']}, sotto {r['sotto']}, cambi di posto {r['cambi']} (sotto 1 s: {r['salti']})", flush=True)
         await br.close()
     D = sum(r["disegni"] for r in out); C = sum(r["copre"] for r in out); M = sum(r["copreMe"] for r in out); E = sum(r["etichette"] for r in out)
-    print(f"TOTALE: {len(out)} regate, {D} disegni, scritte {E}; disegni con una scritta sopra uno scafo {C} ({100 * C / max(D, 1):.1f}%), sopra il tuo {M}; errori {errs[:3]}")
-    if len(sys.argv) > 1: pathlib.Path(sys.argv[1]).write_text(json.dumps(out))
-asyncio.run(main())
+    T = sum(r["trasp"] for r in out); K = sum(r["cambi"] for r in out); X = sum(r["salti"] for r in out)
+    print(f"TOTALE: {len(out)} regate, {D} disegni, scritte {E} (trasparenti {T}); disegni con una scritta piena sopra uno scafo {C} ({100 * C / max(D, 1):.1f}%), sopra il tuo {M}; cambi di posto {K}, di cui a meno di 1 s dal precedente {X}; errori {errs[:3]}")
+    if len(sys.argv) > 1 and not sys.argv[1].startswith("--"): pathlib.Path(sys.argv[1]).write_text(json.dumps(out))
+    return {"regate": len(out), "disegni": D, "copre": C, "copreMe": M, "etichette": E, "trasp": T, "cambi": K, "salti": X, "errori": errs}
+if __name__ == "__main__": asyncio.run(main())

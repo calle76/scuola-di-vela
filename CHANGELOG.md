@@ -19,6 +19,16 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.34 — Le scritte sopra le barche non coprono le barche
+
+Voce 34 di `DA-FARE.md`, nota di Ale del 13 novembre («a volte quelle scritte coprono le barche»); `docs/PROPOSTA-ETICHETTE-BARCHE.md`; via di Ale del 14 novembre: «via all 34».
+
+- **La scritta sopra un avversario** (colore, o cognome nel torneo) sta sopra la barca come prima, ma se lì copre lo scafo di un'altra barca, compresa la tua, scende sotto. Se anche sotto copre qualcosa, resta sopra e diventa trasparente.
+- **Niente sfarfallio:** dopo un cambio di posto la scritta resta ferma almeno 1 s di regata. Se nel frattempo copre una barca, è trasparente.
+- **Solo disegno:** le regate non cambiano.
+- **Collaudo nuovo** `tests/collaudo_etichette.py`, con la misura `tests/misura_etichette.py`: 20 regate fisse del torneo, controllando le scritte mentre il gioco le disegna.
+- **Misure:** vedi `docs/PROPOSTA-ETICHETTE-BARCHE.md`, Esito.
+
 ## 1.2.33 — I rivali del torneo hanno un nome, e anche tu
 
 Primo passo della carriera a circuiti (voci 28 e 30 di `DA-FARE.md`; `docs/PROPOSTA-RIVALI-E-SPONSOR.md` §12-14; via di Ale del 13 novembre: «sì, fai anche i nomi»). Solo nel torneo: la Scuola e le altre regate restano con Rossa, Verde e Blu.
