@@ -131,3 +131,32 @@ La traccia verde «dalla tua partenza» e la tua blu restano come oggi.
 **Costo:** meno di metà della versione completa, circa mezza giornata.
 
 **Cosa serve da Ale:** il via, e quando farla. Consiglio: dopo il nazionale, insieme ai punti da sistemare.
+
+## 9. Lucio vuole anche la rotta intera (14 novembre 2026, sera; fermata 1)
+
+Ale: «Lucio vuole tutta la rotta ideale oltre alla partenza ideale». Si uniscono il §8 e la proposta originale, ma senza la parte delicata del §3 (B-C):
+
+**Cosa vede il giocatore.** Nella vista «Rotta ottimale»:
+- il segno del punto ideale della linea e la freccia della direzione, come nel §8;
+- **una terza traccia, viola: la rotta migliore intera**, dallo sparo e dal punto ideale fino all'arrivo, con i segni ogni 30 s e, come per la verde, i fili ogni minuto verso la tua barca;
+- nel testo, i tempi dallo sparo, per esempio: «Migliore in assoluto 2:58, migliore dalla tua partenza 3:04, tu 3:05: in partenza hai perso 6 s, dopo 1 s».
+
+**Modello.**
+1. Come nel §8: 7 punti della linea, uno ogni 10 m, allo sparo; per ciascuno la rotta di oggi fino alla boa 1; si sceglie il più veloce.
+2. Da quel punto si calcola la rotta intera, una volta sola, con lo stesso calcolo della verde.
+
+Il punto migliore fino alla boa 1 potrebbe non essere il migliore sull'intero percorso. Dopo la boa 1 le rotte ripartono tutte dalla stessa boa, quindi la differenza dovrebbe essere piccola: lo misura A2.
+
+**Criteri** (quelli del §8, più questi; soglie nostre):
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| A1 | La viola non è mai più lenta della verde | tempo dallo sparo della viola ≤ quello della verde (che parte dal tuo punto e dal tuo istante), in 100 regate su 100 |
+| A2 | Scegliere sulla boa 1 basta | in 20 regate, calcolando la rotta intera da tutti e 7 i punti: il punto scelto è il migliore sull'intero percorso, o al massimo 1 s più lento del migliore, in 18 su 20 |
+| A3 | Costo | 7 rotte fino alla boa 1 più una intera: al massimo 2 s in Chromium e Firefox |
+
+**Cosa dire nel gioco** (§2): la viola considera la barca già lanciata allo sparo e ignora le altre barche, proprio dove all'estremità favorita ci si affolla.
+
+**Costo:** circa una giornata, come la proposta originale, ma con il rischio più basso.
+
+**Cosa serve da Ale e Lucio:** il via, e quando farla (consiglio: subito dopo il nazionale).
