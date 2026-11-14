@@ -19,6 +19,18 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.37 — La stagione con un amico
+
+Voce 36 di `DA-FARE.md`; `docs/PROPOSTA-STAGIONE-ZONALE.md`, «Lucio dodicesimo»; via di Ale del 14 novembre sera: «ok vai con Lucio dodicesimo».
+
+- **Stagione con un amico** (finestra della stagione, «Con un amico»): chi crea riceve un codice, per esempio `7K2M9Q-E`, e l'amico lo scrive in «Ho un codice». Dal codice escono, uguali nelle due pagine, le tappe, i venti, il gruppo dei 10 rivali con le loro doti, le batterie e i rivali di ogni tappa con carattere e numeri di guida. Le regate non sono identiche al bit: raffiche e salti si sorteggiano durante la regata.
+- **Siete in 12:** batteria gialla, chi ha creato e 3 rivali; bianca, l'amico e 3 rivali; arancione, 4 rivali a numeri. In acqua non vi incontrate.
+- **Un file piccolo** dopo ogni tappa: «Salva il mio risultato» e «Carica quello dell'amico». Il file contiene solo l'ordine d'arrivo della propria batteria e il nome in classifica. L'ordine della tappa si calcola con un sorteggio fisso, quindi con gli stessi file le due pagine danno la stessa classifica. Senza il file dell'amico, lui è «in attesa» e non prende punti.
+- **File sbagliati rifiutati** con un messaggio: altra stagione, altra versione, il tuo stesso file, file rovinato.
+- **Limiti:** niente fantasma dell'amico; una tappa si può rifare lasciando la stagione e rientrando col codice; se ti ritiri da una tappa sei ultimo della tua batteria.
+- **La stagione da solo non cambia.** La classifica del circuito ha le righe un po' più basse, per far stare 12 righe nei 650 px.
+- **Collaudo nuovo** `tests/collaudo_stagione_amico.py`. Misure: `docs/PROPOSTA-STAGIONE-ZONALE.md`, Esito di Lucio dodicesimo.
+
 ## 1.2.36 — La stagione del circuito zonale
 
 Voce 37 di `DA-FARE.md`; `docs/PROPOSTA-STAGIONE-ZONALE.md`; via di Ale del 14 novembre sera («ok B ora e A al nazionale», «ok come consigli tu»).

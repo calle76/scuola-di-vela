@@ -1250,11 +1250,15 @@
   const fmtPt = v => String(Math.round(v * 10) / 10).replace(".", ",");
   function torScegli(){ const pool = RIVALI_ZONALE.map(r => r[0]); return FLEET_LOOK.map(() => pool.splice(Math.floor(Math.random() * pool.length), 1)[0]); } // tre nomi diversi
   function torNuovo(S){ // S: la stagione (1.2.36): la tappa in corso dà livello, rivali della tua batteria e forza del vento
-    const tp = S ? stTappa(S) : null, liv = S ? S.liv : opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv);
-    const T = { ver: VERSIONE, liv, regate: [0, 1, 2, 3].map(() => ({ wind: Math.floor(Math.random() * 8) * 45, tws: tp ? tp.tws : Math.random() < 0.5 ? 10 : 12 })), // 1.2.21: forza del vento sorteggiata
-             av: (tp ? tp.bat[0].slice(1) : torScegli()).map((nome, k) => ({ nome, ai: aiTratti(liv, rivaleTr(nome)), char: carattere(k, aggro) })), ris: [] };
-    if (tp) T.st = S.tappe.indexOf(tp);
-    return T;
+    const tp = S ? stTappa(S) : null, M = Math.random;
+    if (tp && S.codice) Math.random = stRnd(S.seme, 200 + S.tappe.indexOf(tp)); // 1.2.37: con un amico venti, carattere e numeri di guida escono dal codice
+    try {
+      const liv = S ? S.liv : opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv);
+      const T = { ver: VERSIONE, liv, regate: [0, 1, 2, 3].map(() => ({ wind: Math.floor(Math.random() * 8) * 45, tws: tp ? tp.tws : Math.random() < 0.5 ? 10 : 12 })), // 1.2.21: forza del vento sorteggiata
+               av: (tp ? tp.bat[0].slice(1) : torScegli()).map((nome, k) => ({ nome, ai: aiTratti(liv, S && S.gruppo ? S.gruppo[nome] : rivaleTr(nome)), char: carattere(k, aggro) })), ris: [] };
+      if (tp) T.st = S.tappe.indexOf(tp);
+      return T;
+    } finally { Math.random = M; }
   }
   function torRc(){
     const k = tor.ris.length, g = tor.regate[k];
@@ -1364,7 +1368,7 @@
     const schede = FLEET_LOOK.map((l, n) => {
       const i = n + 1, f = torFatti(T, i), a = T.av[n];
       const riga = (tit, g) => `<tr><td>${tit}</td>${f.map(x => `<td>${g(x)}</td>`).join("")}</tr>`;
-      const S = progress.stagione, cl = T.st !== undefined && S && S.tappe.some(t => t.ord) ? stClassifica(S) : null, pc = cl ? cl.findIndex(x => x.id === a.nome) : -1; // 1.2.36
+      const S = progress.stagione, cl = T.st !== undefined && S && S.tappe.some(stFatta) ? stClassifica(S) : null, pc = cl ? cl.findIndex(x => x.id === a.nome) : -1; // 1.2.36
       const nome = avNome(T, n), storia = a.nome ? storiaDi(a.nome) + " · barca " + COLORI_BARCA[n] + (pc >= 0 ? " · nel circuito " + (pc + 1) + "° con " + cl[pc].tot + " punti" : "") : "";
       const tab = `<table class="tor"><thead><tr><th>${a.nome ? cognome(a.nome) : l.name}</th>${f.map((x, j) => `<th>R${j + 1}</th>`).join("")}</tr></thead><tbody>
         ${riga("Arrivo", x => x.pos ? x.pos + "°" : "non arr.")}${riga("Partenza", x => x.fuori ? "fuori linea" : cella(x.part, "davanti", "dietro"))}
@@ -1390,8 +1394,8 @@
     const nomi = [escH(mioNome()), ...FLEET_LOOK.map((l, i) => avNome(T, i))], car = T.av.map((a, i) => avNomeBarca(T, i)).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
     const S = progress.stagione, inSt = T.st !== undefined && S, tp = inSt ? S.tappe[T.st] : null; // 1.2.36: il torneo è una tappa della stagione
-    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}${tp && tp.ord ? ` Nella tappa sei ${tp.ord.indexOf("*") + 1}° su ${tp.ord.length} della flotta del circuito: la classifica è in «Il circuito».` : ""}</p>` : "";
-    const testaSt = inSt && !k ? `<p><b>Stagione, tappa ${T.st + 1} di ${ST_N}: ${tp.posto}.</b> Corri nella batteria ${ST_BAT[0]}; le altre due corrono lo stesso giorno e contano per la classifica del circuito.</p>` : "";
+    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}${tp && stFatta(tp) ? ` Nella tappa sei ${stOrdine(S, tp).indexOf("*") + 1}° su ${stOrdine(S, tp).length} della flotta del circuito: la classifica è in «Il circuito».` : ""}</p>` : "";
+    const testaSt = inSt && !k ? `<p><b>Stagione, tappa ${T.st + 1} di ${ST_N}: ${tp.posto}.</b> Corri nella batteria ${ST_BAT[(tp.col || [0])[0]]}; le altre ${S.codice ? "sono quella dell'amico e una" : "due"} corrono lo stesso giorno e contano per la classifica del circuito.</p>` : "";
     const testa = !k ? testaSt + `<p>Quattro regate contro gli stessi tre avversari (${T.liv}): ${car}. Chi sono e come vanno: pulsante «I rivali». Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
       <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Nelle regate 1 e 2 un contatto con colpa vale 1 punto in più; nelle 3 e 4 costa due giri, e chi arriva senza averli fatti è squalificato. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
@@ -1417,41 +1421,77 @@
     me.dnf = me.ret = true; };
 
   // ---- stagione del circuito zonale (1.2.36, docs/PROPOSTA-STAGIONE-ZONALE.md) ----
-  // 4 tappe; ogni tappa è un torneo con i 3 rivali della tua batteria. Le altre due batterie corrono «a numeri»: ordine estratto uno per volta col peso
+  // 4 tappe; ogni tappa è un torneo con i 3 rivali della tua batteria. Le altre batterie corrono «a numeri»: ordine estratto uno per volta col peso
   // e^(ST_B·forza) (Plackett-Luce), forza = dote +1, media 0, difetto −1 in partenza e in bolina; tu 0. I 4 posti usciti per la tua batteria si riempiono
   // nell'ordine vero del torneo. ST_B tarato sui semi 1-10 (fermata 2), confermato sui semi 11-20. Punti = posto nella tappa, nessuno scarto.
   // Batterie sorteggiate all'inizio, nella tua prima chi non hai ancora incontrato. Solo classifica e racconto: la guida dei rivali non cambia.
+  // 1.2.37, con un amico (Lucio dodicesimo): tutto esce da un codice (sorteggio fisso, stRnd), anche il gruppo dei rivali (S.gruppo). "*" sei tu, "@" l'amico;
+  // nel codice e nei file chi crea è "A" e chi entra "B". Si salva solo l'ordine vero della propria batteria (t.mio) e quello dell'amico (S.amico.tappe):
+  // l'ordine della tappa si ricalcola ogni volta (stOrdine), con lo stesso sorteggio nelle due pagine.
   const ST_N = 4, ST_B = 0.2, ST_POSTI = ["Lago delle Ginestre", "Golfo dei Gabbiani", "Baia del Faro", "Isola dei Pini"], ST_BAT = ["gialla", "bianca", "arancione"]; // posti inventati
-  const stTappa = S => S.tappe.find(t => !t.ord); // la prossima tappa da correre
-  const stForza = id => id === "*" ? 0 : rivaleTr(id).reduce((a, v) => a + 1 - v, 0); // "*" = il giocatore
-  function stEstrai(ids){
-    const w = ids.map(id => Math.exp(ST_B * stForza(id))), idx = ids.map((_, i) => i), o = [];
-    while (idx.length){ let r = Math.random() * idx.reduce((a, i) => a + w[i], 0), k = 0; for (; k < idx.length - 1; k++){ r -= w[idx[k]]; if (r < 0) break; } o.push(ids[idx.splice(k, 1)[0]]); }
+  const ST_ALFA = "0123456789ABCDEFGHJKMNPQRSTVWXYZ", ST_TIPO = "scuola-di-vela-stagione";
+  const stFatta = t => !!(t.ord || t.mio);
+  const stTappa = S => S.tappe.find(t => !stFatta(t)); // la prossima tappa da correre
+  const stForza = (id, S) => id === "*" || id === "@" ? 0 : (S && S.gruppo ? S.gruppo[id] : rivaleTr(id)).reduce((a, v) => a + 1 - v, 0);
+  function stRnd(seme, k){ let s = (seme ^ Math.imul(k, 0x9E3779B9)) | 0; // lo stesso generatore dei collaudi (mulberry32)
+    return () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function stEstrai(ids, S, rnd = Math.random){
+    const w = ids.map(id => Math.exp(ST_B * stForza(id, S))), idx = ids.map((_, i) => i), o = [];
+    while (idx.length){ let r = rnd() * idx.reduce((a, i) => a + w[i], 0), k = 0; for (; k < idx.length - 1; k++){ r -= w[idx[k]]; if (r < 0) break; } o.push(ids[idx.splice(k, 1)[0]]); }
     return o;
   }
-  function stNuova(){
-    const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, visti = {};
-    const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-    RIVALI_ZONALE.forEach(([n]) => rivaleTr(n)); // il gruppo dei rivali c'è prima delle batterie
-    const tappe = ST_POSTI.map(posto => {
-      const m = mescola(RIVALI_ZONALE.map(r => r[0])).sort((a, b) => (visti[a] || 0) - (visti[b] || 0)), mia = m.slice(0, 3), resto = m.slice(3);
-      mia.forEach(n => { visti[n] = (visti[n] || 0) + 1; });
-      return { posto, tws: Math.random() < 0.5 ? 10 : 12, bat: [["*", ...mia], resto.slice(0, 4), resto.slice(4)] };
-    });
-    return { ver: VERSIONE, liv, tappe };
+  const stRiempi = (o, bat, vero) => o.map((id, p) => bat.includes(id) ? p : -1).filter(p => p >= 0).forEach((p, j) => { o[p] = vero[j]; });
+  const stCodice = (seme, liv) => Array.from({ length: 6 }, (_, i) => ST_ALFA[(seme >>> (25 - 5 * i)) & 31]).join("") + "-" + (liv === "esperti" ? "E" : "P");
+  function stLeggiCodice(txt){ // { seme, liv } oppure null
+    const m = String(txt || "").toUpperCase().replace(/[\s_]/g, "").replace(/O/g, "0").replace(/[IL]/g, "1").match(/^([0-9A-Z]{6})-?([EP])$/);
+    if (!m || [...m[1]].some(c => !ST_ALFA.includes(c))) return null;
+    return { seme: [...m[1]].reduce((a, c) => a * 32 + ST_ALFA.indexOf(c), 0), liv: m[2] === "E" ? "esperti" : "principianti" };
   }
-  function stChiudiTappa(T){ // T: il torneo finito della tappa; null se ti sei ritirato (ultimo della tappa)
+  function stNuova(cod){ // cod: { seme, liv, io: "A" | "B" } per la stagione con un amico (1.2.37)
+    if (!cod){
+      const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, visti = {};
+      const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+      RIVALI_ZONALE.forEach(([n]) => rivaleTr(n)); // il gruppo dei rivali c'è prima delle batterie
+      const tappe = ST_POSTI.map(posto => {
+        const m = mescola(RIVALI_ZONALE.map(r => r[0])).sort((a, b) => (visti[a] || 0) - (visti[b] || 0)), mia = m.slice(0, 3), resto = m.slice(3);
+        mia.forEach(n => { visti[n] = (visti[n] || 0) + 1; });
+        return { posto, tws: Math.random() < 0.5 ? 10 : 12, bat: [["*", ...mia], resto.slice(0, 4), resto.slice(4)] };
+      });
+      return { ver: VERSIONE, liv, tappe };
+    }
+    const rnd = stRnd(cod.seme, 1), nomi = RIVALI_ZONALE.map(r => r[0]), vA = {}, vB = {};
+    const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    const col = TRATTI.map(() => mescola([0, 0, 0, 1, 1, 1, 1, 2, 2, 2])), gruppo = {};
+    nomi.forEach((n, i) => { gruppo[n] = col.map(c => c[i]); });
+    const altro = cod.io === "A" ? "B" : "A", loc = id => id === cod.io ? "*" : id === altro ? "@" : id;
+    const tappe = ST_POSTI.map(posto => {
+      const m = mescola(nomi.slice()).sort((a, b) => (vA[a] || 0) - (vA[b] || 0)), a = m.slice(0, 3), r = m.slice(3).sort((x, y) => (vB[x] || 0) - (vB[y] || 0)), b = r.slice(0, 3);
+      a.forEach(n => { vA[n] = (vA[n] || 0) + 1; }); b.forEach(n => { vB[n] = (vB[n] || 0) + 1; });
+      const can = [["A", ...a], ["B", ...b], r.slice(3)], mio = cod.io === "A" ? 0 : 1;
+      return { posto, tws: rnd() < 0.5 ? 10 : 12, bat: [can[mio], can[1 - mio], can[2]].map(x => x.map(loc)), col: mio ? [1, 0, 2] : [0, 1, 2] };
+    });
+    return { ver: VERSIONE, liv: cod.liv, codice: stCodice(cod.seme, cod.liv), seme: cod.seme, io: cod.io, gruppo, canon: ["A", "B", ...nomi].map(loc), tappe };
+  }
+  function stOrdine(S, t){ // l'ordine di arrivo della tappa (null se non l'hai ancora corsa); con l'amico senza file: lui «in attesa», fuori dall'ordine
+    if (t.ord || !t.mio) return t.ord || null;
+    const j = S.tappe.indexOf(t), am = S.amico && S.amico.tappe[j], o = stEstrai(S.canon.filter(id => am || id !== "@"), S, stRnd(S.seme, 100 + j));
+    stRiempi(o, t.bat[0], t.mio); if (am) stRiempi(o, t.bat[1], am);
+    return o;
+  }
+  function stChiudiTappa(T){ // T: il torneo finito della tappa; null se ti sei ritirato (ultimo della tappa; con l'amico ultimo della batteria)
     const S = progress.stagione, tp = S && stTappa(S);
     if (!tp) return;
-    let o = stEstrai(tp.bat.flat());
-    if (T){
-      const nomi = ["*", ...T.av.map(a => a.nome)], vero = torSerie(T.ris).map(x => nomi[x.i]);
-      o.map((id, p) => tp.bat[0].includes(id) ? p : -1).filter(p => p >= 0).forEach((p, j) => { o[p] = vero[j]; });
-      tp.cont = {};
+    if (S.codice){
+      tp.mio = T ? (() => { const nomi = ["*", ...T.av.map(a => a.nome)]; return torSerie(T.ris).map(x => nomi[x.i]); })() : [...tp.bat[0].slice(1), "*"];
+    } else {
+      let o = stEstrai(tp.bat.flat());
+      if (T){ const nomi = ["*", ...T.av.map(a => a.nome)]; stRiempi(o, tp.bat[0], torSerie(T.ris).map(x => nomi[x.i])); }
+      else o = [...o.filter(id => id !== "*"), "*"];
+      tp.ord = o;
+    }
+    if (T){ tp.cont = {};
       T.av.forEach((a, n) => { const c = T.ris.map(r => r[n + 1].c || ""), k = c.filter(x => x).length;
-        if (k) tp.cont[a.nome] = { n: k, s: c.filter(x => x.includes("s")).length, t: c.filter(x => x.includes("t")).length }; });
-    } else o = [...o.filter(id => id !== "*"), "*"];
-    tp.ord = o;
+        if (k) tp.cont[a.nome] = { n: k, s: c.filter(x => x.includes("s")).length, t: c.filter(x => x.includes("t")).length }; }); }
     if (!stTappa(S)){
       const pos = stClassifica(S).findIndex(x => x.id === "*") + 1, old = progress.stagioneFatta;
       S.fine = { pos };
@@ -1460,9 +1500,12 @@
     }
     saveProgress();
   }
-  function stClassifica(S){ // [{ id, p, tot }] dal primo; parità: più piazzamenti migliori, poi l'ultima tappa (come A8 di F15)
-    const fatte = S.tappe.filter(t => t.ord), migliori = x => x.p.slice().sort((u, v) => u - v);
-    return S.tappe[0].bat.flat().map(id => { const p = fatte.map(t => t.ord.indexOf(id) + 1); return { id, p, tot: p.reduce((a, v) => a + v, 0) }; }).sort((a, b) => {
+  // [{ id, p, tot, manca }] dal primo; p: posto per tappa (null = in attesa). Prima chi ha tutte le tappe; parità: più piazzamenti migliori, poi l'ultima tappa (A8 di F15)
+  function stClassifica(S){
+    const ord = S.tappe.filter(stFatta).map(t => stOrdine(S, t)), migliori = x => x.p.slice().sort((u, v) => u - v);
+    return S.tappe[0].bat.flat().map(id => { const p = ord.map(o => o.includes(id) ? o.indexOf(id) + 1 : null);
+      return { id, p, tot: p.reduce((a, v) => a + (v || 0), 0), manca: p.includes(null) }; }).sort((a, b) => {
+      if (a.manca !== b.manca) return a.manca ? 1 : -1;
       if (a.tot !== b.tot) return a.tot - b.tot;
       const ma = migliori(a), mb = migliori(b);
       for (let k = 0; k < ma.length; k++) if (ma[k] !== mb[k]) return ma[k] - mb[k];
@@ -1470,44 +1513,84 @@
       return 0;
     });
   }
-  const stNome = id => id === "*" ? escH(mioNome()) : id;
+  const stNome = (id, S) => id === "*" ? escH(mioNome()) : id === "@" ? escH((S && S.amico && S.amico.nome) || "Il tuo amico") : id;
   // al massimo tre frasi, su fatti contati (fermata 2): bestia nera, contatti, lotta per il primo posto, in forma, sempre davanti
   function stFrasi(S){
-    const fatte = S.tappe.filter(t => t.ord), n = fatte.length, cl = stClassifica(S), riv = cl.map(x => x.id).filter(id => id !== "*"), out = [];
-    const davanti = (a, b) => fatte.filter(t => t.ord.indexOf(a) < t.ord.indexOf(b)).length;
-    if (n >= 2){ const x = riv.find(id => davanti(id, "*") === n); if (x) out.push(`La tua bestia nera: ${x}, davanti a te in ${n} tappe su ${n}.`); }
-    const tocchi = riv.map(id => [id, fatte.reduce((a, t) => { const q = (t.cont || {})[id]; return q ? { n: a.n + q.n, s: a.s + q.s, t: a.t + q.t } : a; }, { n: 0, s: 0, t: 0 })])
+    const ord = S.tappe.filter(stFatta).map(t => stOrdine(S, t)), n = ord.length, cl = stClassifica(S), riv = cl.map(x => x.id).filter(id => id !== "*"), out = [], N = id => stNome(id, S);
+    const davanti = (a, b) => ord.filter(o => o.includes(a) && o.includes(b) && o.indexOf(a) < o.indexOf(b)).length;
+    if (n >= 2){ const x = riv.find(id => davanti(id, "*") === n); if (x) out.push(`La tua bestia nera: ${N(x)}, davanti a te in ${n} tappe su ${n}.`); }
+    const tocchi = riv.map(id => [id, S.tappe.filter(stFatta).reduce((a, t) => { const q = (t.cont || {})[id]; return q ? { n: a.n + q.n, s: a.s + q.s, t: a.t + q.t } : a; }, { n: 0, s: 0, t: 0 })])
       .filter(([, c]) => c.n >= 2).sort((a, b) => b[1].n - a[1].n);
-    if (tocchi.length){ const [x, c] = tocchi[0]; out.push(`Con ${x} ti sei toccato in ${c.n} regate: colpa sua in ${c.s}, tua in ${c.t}.`); }
-    if (n >= 2 && cl[1].tot - cl[0].tot <= 2){
+    if (tocchi.length){ const [x, c] = tocchi[0]; out.push(`Con ${N(x)} ti sei toccato in ${c.n} regate: colpa sua in ${c.s}, tua in ${c.t}.`); }
+    if (n >= 2 && !cl[1].manca && cl[1].tot - cl[0].tot <= 2){
       const d = cl[1].tot - cl[0].tot, dd = d ? d + (d > 1 ? " punti" : " punto") + " fra " : "pari punti, ";
       const io = cl[0].id === "*" || cl[1].id === "*", altro = cl[0].id === "*" ? cl[1].id : cl[0].id;
-      out.push(io ? `Tu e ${altro} vi giocate il primo posto del circuito: ${d ? dd + "voi" : "pari punti"}.` : `${cl[0].id} e ${cl[1].id} si giocano il primo posto del circuito: ${d ? dd + "loro" : "pari punti"}.`);
+      out.push(io ? `Tu e ${N(altro)} vi giocate il primo posto del circuito: ${d ? dd + "voi" : "pari punti"}.` : `${N(cl[0].id)} e ${N(cl[1].id)} si giocano il primo posto del circuito: ${d ? dd + "loro" : "pari punti"}.`);
     }
-    if (n >= 3){ const x = riv.find(id => fatte.slice(-3).every(t => t.ord.indexOf(id) < 3)); if (x) out.push(`${x} è in forma: tre podi di fila.`); }
-    if (n >= 2){ const x = riv.find(id => davanti("*", id) === n); if (x) out.push(`Sei sempre arrivato davanti a ${x}: ${n} tappe su ${n}.`); }
+    if (n >= 3){ const x = riv.find(id => ord.slice(-3).every(o => o.includes(id) && o.indexOf(id) < 3)); if (x) out.push(`${N(x)} è in forma: tre podi di fila.`); }
+    if (n >= 2){ const x = riv.find(id => davanti("*", id) === n); if (x) out.push(`Sei sempre arrivato davanti a ${N(x)}: ${n} tappe su ${n}.`); }
     return out.slice(0, 3);
   }
-  const stVincitori = tp => tp.bat.map((b, i) => `batteria ${ST_BAT[i]}${i ? "" : " (la tua)"}: ${stNome(tp.ord.find(id => b.includes(id)))}`).join(" · ");
+  const stVincitori = (S, tp) => { const o = stOrdine(S, tp), col = tp.col || [0, 1, 2];
+    return tp.bat.map((b, i) => `batteria ${ST_BAT[col[i]]}${i ? i === 1 && S.codice ? " (dell'amico)" : "" : " (la tua)"}: ${i === 1 && S.codice && !o.includes("@") ? "in attesa" : stNome(o.find(id => b.includes(id)), S)}`).join(" · "); };
+  // il file per l'amico (1.2.37): nel file "A" e "B" al posto di "*" e "@", così vale uguale nelle due pagine
+  function stFile(S){
+    const can = id => id === "*" ? S.io : id;
+    return JSON.stringify({ tipo: ST_TIPO, ver: VERSIONE, codice: S.codice, ruolo: S.io, nome: nomeGet().trim().slice(0, 20), tappe: S.tappe.map(t => t.mio ? t.mio.map(can) : null) });
+  }
+  function stCarica(S, testo){ // "" se il file è entrato, altrimenti il motivo per cui è rifiutato (la stagione non cambia)
+    let f; try { f = JSON.parse(testo); } catch(e){ return "Il file non si legge: non è un risultato della stagione."; }
+    if (!f || f.tipo !== ST_TIPO) return "Il file non è un risultato della stagione.";
+    if (f.ver !== VERSIONE) return "File della versione " + escH(f.ver) + ", qui c'è la " + VERSIONE + ": aggiornate il gioco tutti e due.";
+    if (f.codice !== S.codice) return "Il file è di un'altra stagione (codice " + escH(f.codice) + ").";
+    const altro = S.io === "A" ? "B" : "A";
+    if (f.ruolo !== altro) return "Questo è il tuo risultato, non quello dell'amico.";
+    if (!Array.isArray(f.tappe) || f.tappe.length !== ST_N) return "Il file è rovinato.";
+    const tappe = f.tappe.map((o, j) => { if (o === null) return null; const bat = S.tappe[j].bat[1].map(id => id === "@" ? altro : id);
+      return Array.isArray(o) && o.length === bat.length && bat.every(id => o.includes(id)) ? o.map(id => id === altro ? "@" : id) : undefined; });
+    if (tappe.includes(undefined)) return "File rovinato: un arrivo non torna con la batteria dell'amico.";
+    S.amico = { nome: String(f.nome || "").slice(0, 20) || "Il tuo amico", tappe };
+    saveProgress(); return "";
+  }
   let stBozza = null; // la stagione proposta prima di cominciarla: resta la stessa finché la finestra è aperta
-  function stMostra(nota, nuova){ // nuova: dal pulsante «Stagione»: si propone una stagione nuova (quella finita resta salvata finché non se ne comincia un'altra)
-    const S = nuova ? stBozza || (stBozza = stNuova()) : progress.stagione;
-    const fatte = S.tappe.filter(t => t.ord), k = fatte.length;
-    const elenco = `<p>${S.tappe.map((t, j) => `${j + 1}) ${t.posto}, ${t.tws} nodi: ${t.ord ? `${t.ord.indexOf("*") + 1}°` : "con " + t.bat[0].slice(1).join(", ")}`).join("<br>")}</p>`;
-    const spiega = nuova ? `<p>Quattro tappe. A ogni tappa la flotta del circuito, tu e 10 rivali, si divide in tre batterie: tu corri nella tua un torneo di 4 regate contro 3 rivali; le altre due corrono lo stesso giorno e il gioco calcola il loro arrivo dalle doti dei rivali e da un sorteggio. Il posto nella tappa vale i punti: 1 al primo, 11 all'ultimo. Dopo 4 tappe vince chi ne ha meno; i primi 3 hanno diritto al nazionale.</p>` : "";
-    const cl = k ? stClassifica(S) : [];
-    const tab = k ? `<table class="tor st"><thead><tr><th></th><th>Regatante</th>${fatte.map((t, j) => `<th>T${j + 1}</th>`).join("")}<th>Totale</th></tr></thead><tbody>${cl.map((x, n) =>
-      `<tr class="${x.id === "*" ? "me" : ""}"><td>${n + 1}°</td><td>${stNome(x.id)}</td>${x.p.map(v => `<td>${v}</td>`).join("")}<td><b>${x.tot}</b></td></tr>`).join("")}</tbody></table>
-      <p class="tor-leg">Tappa ${k}, ${stVincitori(fatte[k - 1])}</p>` : "";
+  function stMostra(nota, nuova, msg){ // nuova: dal pulsante «Stagione»: si propone una stagione nuova (quella finita resta salvata finché non se ne comincia un'altra)
+    const S = nuova ? stBozza || (stBozza = stNuova()) : progress.stagione, am = !!S.codice;
+    const fatte = S.tappe.filter(stFatta), k = fatte.length, n = S.tappe[0].bat.flat().length;
+    const cl = k ? stClassifica(S) : [], pos = cl.findIndex(x => x.id === "*") + 1;
+    const elenco = `<p>${S.tappe.map((t, j) => `${j + 1}) ${t.posto}, ${t.tws} nodi: ${stFatta(t) ? `${stOrdine(S, t).indexOf("*") + 1}°` : "con " + t.bat[0].slice(1).join(", ")}`).join("<br>")}</p>`;
+    const spiega = !nuova ? "" : am ? `<p>Stagione con un amico, livello ${S.liv}. ${S.io === "A" ? "Manda all'amico il codice <b>" + S.codice + "</b>: scrivendolo in «Ho un codice» avrà le stesse tappe, gli stessi venti e gli stessi rivali." : "Codice " + S.codice + "."} Siete in 12: tu e l'amico correte ognuno nella sua batteria, quando volete; dopo ogni tappa vi mandate il file del risultato e la classifica del circuito vi mette insieme. Punti: 1 al primo, 12 all'ultimo.</p>`
+      : `<p>Quattro tappe. A ogni tappa la flotta del circuito, tu e 10 rivali, si divide in tre batterie: tu corri nella tua un torneo di 4 regate contro 3 rivali; le altre due corrono lo stesso giorno e il gioco calcola il loro arrivo dalle doti dei rivali e da un sorteggio. Il posto nella tappa vale i punti: 1 al primo, 11 all'ultimo. Dopo 4 tappe vince chi ne ha meno; i primi 3 hanno diritto al nazionale.</p>`;
+    const tab = k ? `<table class="tor st"><thead><tr><th></th><th>Regatante</th>${fatte.map((t, j) => `<th>T${j + 1}</th>`).join("")}<th>Totale</th></tr></thead><tbody>${cl.map((x, i) =>
+      `<tr class="${x.id === "*" ? "me" : ""}"><td>${x.manca ? "" : i + 1 + "°"}</td><td>${stNome(x.id, S)}</td>${x.p.map(v => `<td>${v === null ? "–" : v}</td>`).join("")}<td><b>${x.tot}</b></td></tr>`).join("")}</tbody></table>
+      ${msg ? `<p class="manca st-p">${msg}</p>` : `<p class="tor-leg">Tappa ${k}, ${stVincitori(S, fatte[k - 1])}${cl.some(x => x.manca) ? " · – in attesa del file dell'amico" : ""}</p>`}` : ""; // il messaggio del file al posto dei vincitori: le 12 righe stanno nei 650 px
     const frasi = k ? stFrasi(S) : [];
-    const fine = S.fine ? `<p><b>Stagione finita: ${S.fine.pos}° su ${cl.length}.</b> ${S.fine.pos <= 3 ? "Fra i primi 3: diritto al nazionale. Il nazionale non c'è ancora: arriverà in una versione successiva." : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
-    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Il circuito zonale</h2><span>${S.fine ? "stagione finita" : k ? "dopo la tappa " + k + " di " + ST_N : "stagione da cominciare"}</span></div>
-      ${fine}${spiega}${k ? tab : elenco}${frasi.length ? `<ul class="st-frasi">${frasi.map(f => `<li>${f}</li>`).join("")}</ul>` : ""}${k && !S.fine ? `<p class="tor-leg">Prossima: ${elenco.replace(/<\/?p>/g, "").split("<br>")[k]}</p>` : ""}
-      <div class="row">${nuova ? `<button class="primary" id="stInizia">Inizia la stagione</button>` : ""}<button${nuova ? "" : ` class="primary"`} id="stIndietro">Indietro</button>${!nuova && !S.fine ? `<button id="stLascia">Lascia la stagione</button>` : ""}</div>`;
-    $("stIndietro").onclick = () => torMostra(nota);
-    if ($("stInizia")) $("stInizia").onclick = () => { progress.stagione = S; stBozza = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
+    const fine = S.fine ? `<p class="st-p"><b>Stagione finita: ${pos}° su ${n}.</b> ${pos <= 3 ? "Fra i primi 3: diritto al nazionale. Il nazionale non c'è ancora: arriverà in una versione successiva." : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
+    const btnAm = am && !nuova ? `<button id="stSalva">Salva il mio risultato</button><button id="stCarica">Carica quello dell'amico</button><input type="file" id="stFileIn" accept=".json,application/json" hidden>` : "";
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Il circuito zonale</h2><span>${am && !nuova ? "codice " + S.codice + " · " : ""}${S.fine ? "stagione finita" : k ? "dopo la tappa " + k + " di " + ST_N : "stagione da cominciare"}</span></div>
+      ${msg && !k ? `<p class="manca">${msg}</p>` : ""}${fine}${spiega}${k ? tab : elenco}${frasi.length ? `<ul class="st-frasi">${frasi.map(f => `<li>${f}</li>`).join("")}</ul>` : ""}${k && !S.fine ? `<p class="tor-leg">Prossima: ${elenco.replace(/<\/?p>/g, "").split("<br>")[k]}</p>` : ""}
+      <div class="row">${nuova ? `<button class="primary" id="stInizia">Inizia la stagione</button>${am ? "" : `<button id="stAmico">Con un amico</button>`}` : ""}<button${nuova ? "" : ` class="primary"`} id="stIndietro">Indietro</button>${btnAm}${!nuova && !S.fine ? `<button id="stLascia">Lascia la stagione</button>` : ""}</div>`;
+    $("stIndietro").onclick = () => { if (nuova && am) stBozza = null; torMostra(nota); };
+    if ($("stInizia")) $("stInizia").onclick = () => { progress.stagione = S; stBozza = null; delete progress.torneo; tor = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
+    if ($("stAmico")) $("stAmico").onclick = () => stAmicoMostra(nota);
     if ($("stLascia")) $("stLascia").onclick = () => { if (!confirm("Lasciare la stagione? La classifica del circuito si perde; il torneo della tappa in corso non conta.")) return;
       delete progress.stagione; delete progress.torneo; tor = null; torBozza = null; saveProgress(); torMostra(nota); };
+    if ($("stSalva")) $("stSalva").onclick = () => { const a = document.createElement("a"), u = URL.createObjectURL(new Blob([stFile(S)], { type: "application/json" }));
+      a.href = u; a.download = "stagione-" + S.codice + "-" + S.io + ".json"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); };
+    if ($("stCarica")) { const inp = $("stFileIn"); $("stCarica").onclick = () => inp.click();
+      inp.onchange = () => { const f = inp.files[0]; if (!f) return; const r = new FileReader();
+        r.onload = () => { const e = stCarica(S, String(r.result)); stMostra(nota, false, e || "Risultato dell'amico caricato."); }; r.readAsText(f); }; }
+  }
+  function stAmicoMostra(nota, msg){ // 1.2.37: creare una stagione con un codice, o entrare in quella di un amico
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Stagione con un amico</h2><span></span></div>${msg ? `<p class="manca">${msg}</p>` : ""}
+      <p>La stessa stagione per due: stesse tappe, stessi venti, stessi rivali. Ognuno corre nella sua batteria quando vuole; dopo ogni tappa vi scambiate un file piccolo (messaggio o posta) e la classifica del circuito vi mette insieme. In acqua non vi incontrate.</p>
+      <div class="row"><button class="primary" id="stCrea">Crea un codice da mandare</button></div>
+      <p class="tor-nome"><label for="stCodIn">Ho un codice:</label> <input id="stCodIn" type="text" maxlength="10" autocomplete="off" placeholder="7K2M9Q-E"> <button id="stEntra">Entra</button></p>
+      <div class="row"><button id="stIndietro">Indietro</button></div>`;
+    $("stCrea").onclick = () => { stBozza = stNuova({ seme: Math.floor(Math.random() * 1073741824), liv: opt.aiLevel === "esperti" ? "esperti" : "principianti", io: "A" }); stMostra(nota, true); };
+    $("stEntra").onclick = () => { const c = stLeggiCodice($("stCodIn").value);
+      if (!c) return stAmicoMostra(nota, "Il codice non si legge: sono 6 lettere o cifre, un trattino e una E o una P (per esempio 7K2M9Q-E).");
+      stBozza = stNuova(Object.assign(c, { io: "B" })); stMostra(nota, true); };
+    $("stIndietro").onclick = () => { stBozza = null; stMostra(nota, true); };
   }
   // ---- disegno della regata ----
   function drawRaceWorld(v){

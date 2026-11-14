@@ -245,3 +245,28 @@ Si manda come si vuole. «Carica il risultato dell'amico» lo legge. Il file è 
 | Z11 | File sbagliati rifiutati | un file di un'altra stagione, di un'altra versione, del proprio ruolo, rovinato o con un ordine impossibile: rifiutato con un messaggio, stagione invariata, 5 casi su 5 |
 | Z15 | Stessa classifica nelle due pagine | 20 stagioni con due pagine (chi crea, chi entra) e i file scambiati: classifica del circuito identica dopo ogni tappa |
 | — | La stagione da solo non cambia | `collaudo_stagione.py` OK; impronta del guardiano identica |
+
+## Esito di Lucio dodicesimo (14 novembre, sera): 1.2.37
+
+`tests/collaudo_stagione_amico.py`, Chromium e Firefox insieme:
+
+| # | Esito | Soglia |
+| --- | --- | --- |
+| Z8 | **20 codici su 20**: stessa stagione in Chromium e Firefox, per chi crea e per chi entra (tappe, venti, gruppo, batterie, venti delle regate, rivali, carattere, numeri di guida); il codice si rilegge uguale | 20 su 20 ✓ |
+| Z15 | **20 stagioni su 20**, pagina A in Chromium e pagina B in Firefox, file scambiati dopo ogni tappa (80 tappe): classifica identica dopo ogni tappa | ✓ |
+| Z9 | in ogni tappa, nelle due pagine: la tua batteria e quella dell'amico nell'ordine dei rispettivi file | 0 errori ✓ |
+| Z10 | dopo lo scambio 12 concorrenti e 78 punti per tappa; prima, l'amico «in attesa» e 11 concorrenti | ✓ |
+| Z11 | **5 su 5** rifiutati con un messaggio (altra stagione, altra versione, proprio file, file rovinato, arrivo impossibile), stagione invariata | ✓ |
+| Z7 | 0 px di eccesso: finestra «Con un amico», presentazione col codice, circuito di 12 righe, circuito col messaggio di rifiuto più lungo e 3 frasi; file salvato e caricato dai pulsanti veri | ✓ |
+| — | 2 tappe corse col pilota con un codice: la batteria salvata nell'ordine del torneo; pagina senza `#collaudo` in Chromium e Firefox: si entra col codice scritto in minuscolo, 0 errori | ✓ |
+| — | La stagione da solo non cambia: `collaudo_stagione.py` con gli stessi numeri della 1.2.36; impronta del guardiano `2c0e3804a20d`; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici | ✓ |
+
+**Da dire:**
+- **Il caso peggiore del pannello** (3 frasi insieme al messaggio di rifiuto più lungo) non capitava nelle stagioni provate, che a fine stagione avevano 1 frase. Il collaudo aggiunge nella finestra le frasi mancanti, con il testo più lungo possibile.
+  - Alla prima misura sforava di 30 px. Ho abbassato le righe della tabella, ridotto gli spazi e accorciato due messaggi: ora 0.
+  - Il messaggio del file prende il posto della riga dei vincitori delle batterie.
+- **Errori trovati e corretti:**
+  - un amico senza nome compariva in classifica come «Tu»: ora è «Il tuo amico»;
+  - nel collaudo, il file salvato si confrontava con uno preso prima di cambiare il nome.
+- **I file scambiati non sono passati da una persona all'altra:** nel collaudo li passa il collaudo, da una pagina all'altra dello stesso PC. Salvataggio e caricamento dai pulsanti veri sono provati in Chromium.
+- Fotografie: `tests/output/stagione_amico_codice.png`, `stagione_amico_presentazione.png`, `stagione_amico_circuito.png`, `stagione_amico_rifiuto.png`.
