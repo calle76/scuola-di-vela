@@ -79,3 +79,25 @@ F89 (ranking e regate nazionali; la regola per cui si sale dai circuiti zonali a
    - **rivali nazionali più forti** (4-4-2, consiglio) oppure uguali allo zonale;
    - **il dodicesimo** del nazionale: il migliore del tuo zonale (consiglio) oppure un undicesimo nome nuovo;
    - **un'opzione di prova** per correre il torneo a 6 anche fuori dal nazionale (consiglio sì, nel gioco libero: serve anche ai collaudi).
+
+## Esito del passo 1 (14 novembre, sera): 1.2.38 fatta, NON chiusa (N2 non passa)
+
+Ramo `sei-barche`. `tests/collaudo_sei_barche.py` (25 tornei a 4 e 25 a 6 sugli stessi semi 880-904, pilota per il giocatore, preparazione 60 s), `misura_etichette.py` con `SEI=1`:
+
+| # | Esito | Soglia |
+| --- | --- | --- |
+| N1 | 1000 partenze da 6: vincoli violati **0**, ripiego **0**; il ripiego a due file, provato a mano con 5 e 6 barche, rispetta le distanze | ✓ |
+| N2 | contatti nei primi 25 s: **34** in 100 regate da 6. **Anche con 4 barche, cioè il gioco di oggi: 16** | 0 ✗ |
+| N3 | regate ferme 0 su 100; contatti per coppia per regata **0,165** con 6, **0,172** con 4: rapporto **0,96** | ≤ 2 ✓ |
+| N4 | 600 passi: Chromium 55 → 78 ms (**1,42**), Firefox 59 → 97 ms (**1,64**) | ≤ 1,8 ✓ |
+| N5 | 20 regate da 6: 300 090 scritte, **0** piene sopra uno scafo, **0** sopra la tua; 383 trasparenti; cambi di posto a meno di 1 s: 0 | ✓ |
+| N6 | pannello di regata con 6 barche 0 px; finestra del torneo a 6 righe 0 px; 5 schede 0 px (alla prima prova la 1 sforava di 20 px: i pulsanti con 5 nomi interi andavano su due righe, ora c'è solo il cognome) | ✓ |
+| N7 | impronta del guardiano `2c0e3804a20d`, identica; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici; `collaudo_stagione` e `collaudo_stagione_amico` OK; `collaudo_versione` OK | ✓ |
+
+**Perché N2 non passa.** La soglia «0 contatti nei primi 25 s» l'ho scritta credendo che col gioco di oggi fosse 0, e non l'avevo misurato. Non è così: con 4 barche succede in 16 regate su 100. Il caso guardato da vicino (6 barche) non dipende da dove nascono le barche: dopo 20 s un rivale vira addosso alla barca del pilota (regola 13, colpa sua). Per coppia di barche la frequenza è la stessa con 4 e con 6 (16 su 600 coppie-regata contro 34 su 1500, cioè 0,027 e 0,023). Le 6 barche quindi non peggiorano: il difetto c'è già, e sta nella guida prima del via (voce 4, «virano addosso»; voce 17). La soglia resta quella scritta.
+
+**Strade per Ale:**
+- **chiudere la 1.2.38 dichiarando N2**: il difetto è vecchio, e con 6 barche non cresce per coppia;
+- **oppure prima sistemare le manovre dei rivali prima del via** (voci 4 e 17), poi rimisurare.
+
+**Corretto strada facendo:** «penalità alla Pietro Gallo» nel messaggio di un contatto fra due rivali (dalla 1.2.33).

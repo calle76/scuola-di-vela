@@ -19,6 +19,17 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.38 — Regate a 6 barche (di prova)
+
+Voce 38 di `DA-FARE.md`, passo 1; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre sera: «via come consigli tu».
+
+- **Torneo a 6 barche, di prova:** nel gioco libero, nella finestra del torneo, «Barche in acqua: 4 · 6, di prova». Con 6 corri contro 5 rivali; servirà al circuito nazionale (passo 2). Tutte le altre regate restano a 4.
+- **Due barche nuove:** viola e grigia.
+- **Partenza con più di 4 barche:** la zona dietro la linea va da un capo all'altro della linea (±35 m) ed è 6 m più profonda. Il ripiego, se le barche non trovano posto, è su due file a 20 m. Con 4 barche niente cambia.
+- **Finestre:** tabella del torneo a 6 righe; con 5 rivali i pulsanti delle schede mostrano il cognome.
+- **Corretto:** il messaggio di un contatto fra due rivali diceva «penalità alla Pietro Gallo» (dalla 1.2.33).
+- **Collaudo nuovo** `tests/collaudo_sei_barche.py`; `tests/misura_etichette.py` con `SEI=1`. Misure: `docs/PROPOSTA-NAZIONALE.md`, Esito.
+
 ## 1.2.37 — La stagione con un amico
 
 Voce 36 di `DA-FARE.md`; `docs/PROPOSTA-STAGIONE-ZONALE.md`, «Lucio dodicesimo»; via di Ale del 14 novembre sera: «ok vai con Lucio dodicesimo».
