@@ -200,3 +200,48 @@ Ale: «ok come consigli tu». Quindi: 10 rivali, 4 tappe, nomi dei posti scritti
 - **Pannello:** alla prima prova la classifica sforava di 1 px dopo 2 tappe e di 63 px a fine stagione. Righe della tabella più basse e il risultato finale su una riga sola: ora 0.
 - **Un errore mio nel codice:** un commento messo a metà della riga dell'aggancio `#collaudo` spegneva il resto della riga. L'ha trovato subito il collaudo.
 - Fotografie: `tests/output/stagione_presentazione.png`, `stagione_tappa1.png`, `stagione_circuito.png`, `stagione_finita.png`, `stagione_tappa_vera.png`.
+
+## Lucio dodicesimo: fermata 2, dettagli (14 novembre, sera, scritti prima del codice)
+
+Ale: «ok vai con Lucio dodicesimo». Versione **1.2.37**. Riprende l'«Aggiunta» su Lucio scritta sopra, adattata alle batterie.
+
+**Il codice.**
+- Chi crea la stagione «con un amico» riceve un codice di 8 caratteri, per esempio `7K2M9Q-E`: 6 per il sorteggio e 1 per il livello (P principianti, E esperti).
+- L'amico lo scrive in «Ho un codice».
+- Dal codice escono, uguali nelle due pagine:
+  - le 4 tappe e il loro vento;
+  - il gruppo dei 10 rivali con le loro doti (proprio di questa stagione, non quello della carriera);
+  - le batterie;
+  - per ogni tappa, la direzione del vento delle 4 regate e i rivali della tua batteria con il loro carattere e i loro numeri di guida.
+- Le regate vere non saranno identiche al bit, perché raffiche e salti si sorteggiano durante la regata e ognuno guida a modo suo. È quello che diceva già `PROPOSTA-TORNEI-ONLINE.md`.
+
+**Batterie a 12.** Gialla: chi ha creato il codice e 3 rivali. Bianca: l'amico e 3 rivali. Arancione: 4 rivali a numeri. Nella tua batteria e in quella dell'amico entrano prima i rivali che ciascuno non ha ancora incontrato.
+
+**Ordine della tappa.**
+- Si estrae come nella 1.2.36, ma con un sorteggio fisso, che esce dal codice e dal numero della tappa. I posti della batteria gialla si riempiono con l'ordine vero di chi l'ha corsa, quelli della bianca con l'ordine vero dell'amico.
+- **Con gli stessi due risultati, le due pagine danno la stessa classifica.** È più di quanto scritto prima («possono differire di poco»), e diventa il criterio Z15.
+- Se il risultato dell'amico non è ancora arrivato, l'amico è «in attesa» e non prende punti. I suoi 3 rivali si mettono a numeri come gli altri, per ora. All'arrivo del file la tappa si ricalcola.
+
+**Il file.** Dopo ogni tappa: «Salva il mio risultato» scarica un file piccolo (`stagione-CODICE.json`). Contiene:
+- tipo, versione del gioco, codice, ruolo (chi ha creato o chi è entrato);
+- il nome in classifica;
+- l'ordine della propria batteria per ogni tappa corsa.
+
+Si manda come si vuole. «Carica il risultato dell'amico» lo legge. Il file è cumulativo: l'ultimo contiene tutte le tappe.
+
+**Limiti dichiarati in questo passo:**
+- **Il fantasma dell'amico non c'è:** sarà un passo dopo, se serve.
+- **Rifare una tappa** lasciando la stagione e rientrando con lo stesso codice è possibile. Fra amici basta dirlo.
+- **A fine stagione** la classifica cambia ancora se arriva un file dell'amico.
+- **La stagione da solo** della 1.2.36 resta identica.
+
+**Soglie** (Z8-Z11 come scritte sopra, più Z15; gli altri criteri della stagione restano):
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| Z8 | Stesso codice, stessa stagione | Chromium contro Firefox, 20 codici: tappe, venti, gruppo, batterie e, per ogni tappa, direzioni del vento, rivali, carattere e numeri di guida identici, 20 su 20 |
+| Z9 | Il risultato dell'amico entra com'è | 20 tappe scambiate: l'amico davanti a tutti i rivali della sua batteria che ha battuto e dietro agli altri, 20 su 20 |
+| Z10 | Conti | somma dei punti di ogni tappa = 78 con tutti e due; 66 sugli 11 presenti con l'amico in attesa |
+| Z11 | File sbagliati rifiutati | un file di un'altra stagione, di un'altra versione, del proprio ruolo, rovinato o con un ordine impossibile: rifiutato con un messaggio, stagione invariata, 5 casi su 5 |
+| Z15 | Stessa classifica nelle due pagine | 20 stagioni con due pagine (chi crea, chi entra) e i file scambiati: classifica del circuito identica dopo ogni tappa |
+| — | La stagione da solo non cambia | `collaudo_stagione.py` OK; impronta del guardiano identica |
