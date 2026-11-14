@@ -184,4 +184,16 @@ Ho scelto **12 semi** (circa 6-7 minuti invece di 13), perché anche con 24 la c
 
 **Da dove viene il rumore.** Dalla 1.2.31 ogni torneo sorteggia i tratti dei rivali (partenza e bolina): un numero casuale in più cambia i tratti di tutta la flotta, e con loro velocità, contatti e boe. Il guardiano del 10 novembre era stato tarato sulla 1.2.24, quando i tratti non c'erano.
 
-**Idea per un metro migliore, da proporre e non fatta:** misurare la guida con i tratti fissati a «medi» per tutti i rivali. Così un sorteggio spostato cambierebbe solo il vento, e il rumore dovrebbe scendere molto. Resta valido il §7: quando un numero esce dal rumore, si fa il confronto regata per regata su un gruppo grande.
+**Idea provata come verifica, senza cambiare niente: tratti fissati a «medi».** Con la manopola `MEDI=1` (`misura_avversari_rotta.py`, solo nel collaudo) tutti i rivali hanno tratti medi, regolazione centrata e carattere «normale». 4 corse (`SPOSTA` 0-3, 12 semi) contro le stesse 4 con i tratti sorteggiati, cioè di quanto ballano i numeri:
+
+| | tratti sorteggiati | tratti medi |
+| --- | --- | --- |
+| G1 arrivo mediano | 6,7 s | **3,5 s** |
+| G2 bolina persi | 4,3 s | 7,0 s |
+| G3 poppa persi | 0,6 s | 1,1 s |
+| G4 lasco persi | 0,8 s | 0,5 s |
+| G5 contatti | 48 | **25** |
+| G6 boa toccata / sbagliate | 19 / 6 | 12 / 2 |
+| G9 taglio | 0,37 s | 0,28 s |
+
+Il ballo dell'arrivo e dei contatti si dimezza, ma quello della bolina no: il rumore viene in buona parte dal caso delle regate stesse (vento, incontri fra barche), non solo dai tratti. Da sola l'idea non basta a fare del guardiano un metro che boccia. Se si vuole tornarci, servono anche più semi, cioè più tempo per ogni giro. Picco 69 °C. Resta valido il §7: quando un numero esce dal rumore, si fa il confronto regata per regata su un gruppo grande.

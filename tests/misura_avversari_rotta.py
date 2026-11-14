@@ -20,6 +20,7 @@ CORSA = """([k, liv, seme]) => {
   T.regate[k] = { tws: seme % 2 ? 12 : 10, wind: (seme % 8) * 45 };
   semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
   const R = sv.R, dt = 1 / 60; R.tor = false;
+  if (MEDI) for (const b of R.boats) if (!b.me){ const e = liv === "esperti"; Object.assign(b.ai, { up: e ? 46.5 : 51.5, trim: 0, down: e ? 152.5 : 146, startM: e ? 0.5 : 1.5 }); b.char = "normale"; } // diagnosi del rumore (PROPOSTA-GUARDIANO-AVVERSARI.md §9): tratti e carattere medi per tutti
   for (const b of R.boats) if (!b.me){ if (DIAGUP !== null) b.ai.up = DIAGUP; if (DIAGTRIM !== null) b.ai.trim = DIAGTRIM; } // diagnosi (PROPOSTA-AVVERSARI-BOLINA.md §7): solo nella misura
   const ent = {};
   const ai = R.boats.map((b, i) => i).filter(i => !R.boats[i].me), vir = {}, prev = {}, mure = {}, cambi = {}, scuf = {}, cap = {}, tocca = {}, layU = {}, copS = {}, copEp = {}, copRun = {};
@@ -52,7 +53,7 @@ CORSA = """([k, liv, seme]) => {
 }"""
 
 def js_corsa(E):   # la corsa con le manopole dell'ambiente (o di un dizionario: collaudo_guardiano_avversari.py)
-    return CORSA.replace("OMBRAENV", {"": "null", "0": "false", "1": "true"}[E.get("OMBRA", "")]).replace("RLAY", E.get("RLAY") or "null").replace("RDIR", E.get("RDIR") or "null").replace("DIAGUP", E.get("DIAGUP") or "null").replace("DIAGTRIM", E.get("DIAGTRIM") or "null").replace("LAYMARG", E.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(E.get("DOWNE", ""), E.get("DOWNE", ""))).replace("TMEDIA", E.get("TMEDIA") or "0").replace("SPOSTA", str(int(E.get("SPOSTA") or 0))).replace("SCARSOAI", {"": "undefined", "off": "null"}.get(E.get("SCARSOAI", ""), E.get("SCARSOAI", "")))
+    return CORSA.replace("OMBRAENV", {"": "null", "0": "false", "1": "true"}[E.get("OMBRA", "")]).replace("RLAY", E.get("RLAY") or "null").replace("RDIR", E.get("RDIR") or "null").replace("DIAGUP", E.get("DIAGUP") or "null").replace("DIAGTRIM", E.get("DIAGTRIM") or "null").replace("LAYMARG", E.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(E.get("DOWNE", ""), E.get("DOWNE", ""))).replace("TMEDIA", E.get("TMEDIA") or "0").replace("SPOSTA", str(int(E.get("SPOSTA") or 0))).replace("MEDI", "true" if E.get("MEDI") == "1" else "false").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(E.get("SCARSOAI", ""), E.get("SCARSOAI", "")))
 
 async def main(A, B):
     async with async_playwright() as p:
