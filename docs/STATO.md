@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 14 novembre 2026, mattina.*
+*Aggiornato: 14 novembre 2026, pomeriggio.*
 
 ## Versione
 
 - **Ultima versione chiusa: 1.2.33** (14 novembre mattina, strada A di Ale: dieci rivali zonali con nome e storia nel torneo, gruppo fisso bilanciato, il nome del giocatore; tag `v1.2.33`). Il guardiano degli avversari, rifatto il 14 mattina, è **solo informativo**: con lo stesso gioco l'arrivo mediano balla di oltre 6 s fra una corsa e l'altra, e la contro-prova non passa (`PROPOSTA-GUARDIANO-AVVERSARI.md` §9). Proposta di Claude in attesa del via: scritte sopra le barche che non coprono le barche (voce 34). E1 è già misurato: oggi una scritta copre uno scafo nel 3,4% dei disegni, circa 4,5 s per regata sopra la tua barca. Prima, notte del 13: 1.2.32, rotta ottimale più leggibile (filo dello stesso istante, barra laterale nascosta con B). Da pushare dalla 1.2.30 alla 1.2.33: `git push origin main --tags`.
+- **1.2.34 (scritte sopra le barche) NON chiusa**, ramo `etichette`: tutto passa tranne F2, cioè da lontano le scritte vicine alla barca giusta all'88,6% contro una soglia del 90% (la 1.2.33 era al 45%). Decide Ale: chiudere così, oppure aggiungere l'iniziale da lontano (`PROPOSTA-ETICHETTE-BARCHE.md`, Esito). **1.2.35 (testi dei rivali) pronta** sul ramo `testi-rivali`, che parte dalla 1.2.34: si chiude subito dopo. Cartelle di lavoro nella scratchpad.
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - La **Scuola** (1b, barca con la sola randa) è **chiusa come contenuti** (Ale, 13 novembre): restano cose da sistemare rigiocando. **Deriva** come livello non è ancora aperto (lezioni 21-22, punti, prova, regola di passaggio, momento clou), ma molti suoi pezzi sono già nel gioco fuori dalla Scuola: torneo, rivali, cono d'ombra, rotta ottimale, layline. Cosa diventa la cornice di Deriva (forse il primo circuito zonale) è da decidere: `DA-FARE.md` voce 12.
 
