@@ -153,6 +153,7 @@ Costo di cambiamento:
 | Nella stagione zonale entra anche Lucio, dodicesimo della flotta del circuito, con le sue tappe corse a parte e scambiate con un file | 14 nov sera (Ale: «aggiungere Lucio alla stagione») | basso finché è proposta | Riscrivere le due proposte | `PROPOSTA-STAGIONE-ZONALE.md`, `PROPOSTA-TORNEI-ONLINE.md` |
 | Stagione zonale a batterie (tu sempre in una da 4, le altre a numeri e raccontate); flotta più grande in acqua solo al nazionale | 14 nov sera (Ale: «ok B ora e A al nazionale») | basso finché è proposta | Riscrivere la proposta | `PROPOSTA-STAGIONE-ZONALE.md`, «le batterie» |
 | Nazionale: via ai due passi (regate a 6, poi stagione nazionale), rivali nazionali più forti (4-4-2), dodicesimo = il migliore del tuo zonale, torneo a 6 di prova nel gioco libero; lavoro su un ramo a parte fino alla chiusura | 14 nov sera (Ale: «via come consigli tu», «vuoi tenerla separata in una copia sperimentale?») | basso | Rifare la proposta | `PROPOSTA-NAZIONALE.md` |
+| Dopo il nazionale il gioco è «quasi completo»: poi si sistemano i tanti punti aperti. Rotta ottimale in assoluto (voce 26) ridotta a punto ideale della linea e direzione | 14 nov sera (Ale: «dopo i nazionali il gioco è quasi completo, mancano tanti punti pero da mettere a posto … potrebbe bastare la posizione di partenza ideale e la direzione») | basso | — | `PROPOSTA-ROTTA-ASSOLUTA.md` §8 |
 
 ## Contenuti e confini legali
 

@@ -99,3 +99,35 @@ Circa una giornata:
 
 - F86 (OneSails, «La partenza in regata»): partire vicino all'estremità favorita ma lontano dalla confusione; misurare quanto la linea è storta rispetto al vento. È una lista di metodo: non spiega come capire quale estremità è favorita.
 - Che l'estremità più al vento sia quella favorita è geometria (la linea storta rispetto al vento), non un'affermazione nautica da verificare. Le lezioni del gioco non la usano ancora.
+
+## 8. Versione semplice, idea di Ale (14 novembre 2026, sera; fermata 1)
+
+Ale: «per l'idea della rotta ottimale direi che potrebbe bastare la posizione di partenza ideale e la direzione». Al posto di una terza traccia intera:
+
+**Cosa vede il giocatore.** Nella vista «Rotta ottimale», sulla linea di partenza:
+- un **segno nel punto ideale della linea**, cioè il punto da cui, allo sparo, si sarebbe arrivati prima alla boa di bolina;
+- una **freccia corta con la direzione ideale** di partenza, cioè le mure con cui partire;
+- una riga nel testo, per esempio: «Partenza ideale: vicino allo spillo, mure a dritta. Da lì, alla boa 1 si arrivava 7 s prima che dal tuo punto». Se il tuo punto era già quello giusto, lo dice.
+
+La traccia verde «dalla tua partenza» e la tua blu restano come oggi.
+
+**Modello più semplice.** Niente fronte di partenza nuovo (§3 B-C), che era la parte delicata.
+- Si usa il calcolo di oggi, quello che fa la rotta verde dal tuo punto, partendo allo sparo da **7 punti della linea**, uno ogni 10 m da un capo all'altro, solo fino alla boa 1.
+- Il punto ideale è quello col tempo più breve alla boa 1, e la direzione è quella del primo bordo della sua rotta.
+- Come dal §2, la barca si considera già lanciata allo sparo, e le altre barche non esistono: va detto nel testo.
+
+**Costanti nuove (nostre):** 7 punti, 10 m di passo; solo il primo lato.
+
+**Criteri (soglie nostre, scritte prima di misurare):**
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| P1 | Il punto ideale non è peggio del tuo | in 100 regate col pilota: tempo alla boa 1 dal punto ideale ≤ tempo dal punto del giocatore (stesso calcolo, stesso istante), 100 su 100 |
+| P2 | Il metro funziona | con la linea storta apposta di 10° (vento girato di 10° prima dello sparo, 20 regate), il punto ideale è all'estremità più al vento in almeno 18 su 20 (geometria) |
+| P3 | Costo | il calcolo in più dura al massimo 1 s in Chromium e Firefox |
+| P4 | Niente cambia nel resto | rotta verde, fili e «dove hai perso» identici a prima; impronta del guardiano identica |
+| P5 | Pannello | 0 px di eccesso a 1360×650 con la riga in più |
+
+**Costo:** meno di metà della versione completa, circa mezza giornata.
+
+**Cosa serve da Ale:** il via, e quando farla. Consiglio: dopo il nazionale, insieme ai punti da sistemare.
