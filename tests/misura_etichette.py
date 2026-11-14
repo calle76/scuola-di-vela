@@ -1,4 +1,4 @@
-# Misura per PROPOSTA-ETICHETTE-BARCHE.md, criterio E1 di PROPOSTA-ETICHETTE-BARCHE.md: quante volte, oggi, la scritta sopra un avversario copre lo scafo di un'altra barca.
+# Misura per PROPOSTA-ETICHETTE-BARCHE.md, criterio E1: quante volte la scritta sopra un avversario copre lo scafo di un'altra barca.
 # 20 regate del torneo (4 regate x 5 semi 2301-2305, principianti nei semi dispari, esperti nei pari), pilota per il giocatore,
 # un disegno ogni 6 passi di simulazione, da 60 s prima del via all'arrivo di tutti (o 900 s). Non tocca il gioco.
 # Uso: python tests/misura_etichette.py [salva.json]   (BROWSER=firefox per Firefox)
