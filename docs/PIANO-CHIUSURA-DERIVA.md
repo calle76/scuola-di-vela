@@ -42,17 +42,13 @@ Poi si passa al livello del Fiocco.
 1. **Questo ordine** (rotta, cornice, finale, sponsor, rivali, punti da sistemare, uscita): **deciso, sì** (Ale, 14 nov notte: «va bene»).
 2. **Quando si supera Deriva: deciso A** (Ale, 14 nov notte: «per Deriva va bene A»). Si supera con il diritto al nazionale (fra i primi 3 dello zonale) oppure con la strada del merito (zonale finito senza ritiro e quasi tutti i punti di Deriva); la strada del merito supera Deriva ma non apre il nazionale, che si apre solo col diritto. Nazionale e finale restano la carriera dentro Deriva.
    **Sponsor che porta al Fiocco: deciso** (Ale, stessa sera: «primi 3 del nazionale»). Chi finisce fra i primi 3 del nazionale riceve l'offerta dello sponsor grande: la barca col fiocco, cioè il livello dopo. Finché il Fiocco non c'è, l'offerta resta scritta. Nel gioco libero il Fiocco, quando esisterà, sarà sempre aperto. Entra nella tappa 4 (sponsor).
-3. **Retrocessione: no, al suo posto lo sponsor scelto stagione per stagione** (Ale, 14 nov notte: «non tanto retrocessione ma scegliere lo sponsor stagione per stagione. se vado male e ho solo sponsor per zonale... torno lì»). In carriera, a fine stagione arrivano le offerte degli sponsor, in base al risultato; ne scegli una, e il circuito dello sponsor è quello della stagione dopo. Andando male restano solo offerte per lo zonale, e si torna lì. Proposta per le offerte (soglie nostre, da confermare):
-
-   | Fine stagione | Offerte |
-   | --- | --- |
-   | zonale, primi 3 | zonali e una nazionale (è il «diritto al nazionale» di oggi; Deriva superata, decisione 2) |
-   | zonale, dal 4° | solo zonali |
-   | nazionale, primi 3 | nazionali e lo sponsor grande del Fiocco |
-   | nazionale, dal 4° al 9° | nazionali e zonali |
-   | nazionale, ultimi 3 (10°-12°) | solo zonali: si torna allo zonale |
-
-   Lo sponsor dà un nome e un obiettivo per la stagione, niente materiale (decisione 5). Nel gioco libero tutto resta aperto.
+3. **Retrocessione: no, al suo posto lo sponsor scelto stagione per stagione** (Ale, 14 nov notte: «non tanto retrocessione ma scegliere lo sponsor stagione per stagione. se vado male e ho solo sponsor per zonale... torno lì»). In carriera, a fine stagione arrivano le offerte degli sponsor, in base al risultato; ne scegli una, e il circuito dello sponsor è quello della stagione dopo. Andando male restano solo offerte per lo zonale, e si torna lì. **Precisato da Ale la stessa notte: contratti con durata e obiettivi.** «Dipende dagli obiettivi: lo sponsor A ti propone due stagioni con questi obiettivi, lo sponsor B una sola stagione con questi obiettivi… Quando finisce lo sponsor, se va male arrivano sponsor minori, se no si può rinnovare o arrivano proposte migliori, o salto di categoria (il fiocco). Più in basso della Deriva zonale non c'è nulla.» Il modello, da dettagliare nella proposta della tappa 4:
+   - ogni offerta è un **contratto**: circuito (zonale o nazionale), durata (1 o 2 stagioni), 1-3 obiettivi (per esempio un posto in classifica, un podio di tappa, finire davanti a un rivale);
+   - gli sponsor stanno su **gradini**, per esempio: zonale piccolo, zonale, nazionale, nazionale grande, e sopra il Fiocco;
+   - a fine contratto, coi **obiettivi raggiunti**: rinnovo, o offerte dal gradino sopra (dal nazionale grande, con i primi 3 del nazionale, il salto al Fiocco: decisione 2); **raggiunti in parte**: offerte dello stesso gradino; **mancati**: offerte del gradino sotto;
+   - **il fondo è lo zonale:** più in basso non si scende, e c'è sempre almeno un'offerta zonale;
+   - la prima stagione zonale si corre senza sponsor; le prime offerte arrivano alla sua fine;
+   - lo sponsor dà nome e obiettivi, niente materiale (decisione 5). Nel gioco libero tutto resta aperto.
 4. **Mostrare Deriva:** è nascosta dal 4 novembre fino alla prova della Scuola, e la Scuola è chiusa dal 13. Consiglio: si mostra quando la cornice (tappa 2) è pronta.
 5. **Sponsor senza materiale:** consiglio sì; il materiale torna in discussione col Fiocco.
 
