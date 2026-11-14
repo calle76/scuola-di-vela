@@ -42,3 +42,15 @@ Vale per le scritte in acqua. Nella rotta ottimale (vista dall'alto) non ci sono
 ## Cosa serve da Ale
 
 Il via. Si toccano solo `js/regate.js` (`drawRaceScreen`) e un collaudo nuovo. Versione prevista: 1.2.34.
+
+## E1 misurato sulla versione di oggi (14 novembre, mattina; il gioco non è stato toccato)
+
+`tests/misura_etichette.py`: 20 regate del torneo (4 regate × semi 2301-2305, principianti nei semi dispari, esperti nei pari), in Chromium. La pagina si ridisegna ogni 6 passi, cioè ogni 0,1 s di regata, da 60 s prima del via all'arrivo di tutti. Lo strumento intercetta le scritte mentre il gioco le disegna e le confronta col contorno dello scafo delle altre barche sullo schermo.
+
+- **54 335 disegni, in 1870 almeno una scritta copre lo scafo di un'altra barca: il 3,4%.** La soglia di E1 era almeno 50, quindi il problema è reale e il metro lo vede.
+- **In 903 di questi la barca coperta è la tua.** In media sono circa 9 s per regata con una scritta sopra una barca, e circa 4,5 s sopra la tua.
+- Da regata a regata il numero varia molto: da 11 a 304 disegni, e da 0 a 155 sopra la tua. Il problema si concentra nelle regate in cui si parte o si gira la boa vicini.
+- 0 errori della pagina, picco 62 °C.
+- Due coppie di regate danno numeri uguali, «regata 2 / regata 4, seme 2303» e «regata 1 / regata 3, seme 2305»: in quei tornei le due regate hanno lo stesso campo e lo stesso vento. Lo segnalo, ma per E1 non cambia niente.
+
+Con questo metro, E2 chiede: al massimo 187 disegni con una scritta piena sopra uno scafo (il 10% di 1870), e 0 sopra la tua barca, sulle stesse 20 regate.
