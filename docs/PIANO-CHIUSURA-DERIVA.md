@@ -49,7 +49,7 @@ Poi si passa al livello del Fiocco.
    - **il fondo è lo zonale:** più in basso non si scende, e c'è sempre almeno un'offerta zonale;
    - la prima stagione zonale si corre senza sponsor; le prime offerte arrivano alla sua fine;
    - lo sponsor dà nome e obiettivi, niente materiale (decisione 5). Nel gioco libero tutto resta aperto.
-4. **Mostrare Deriva:** è nascosta dal 4 novembre fino alla prova della Scuola, e la Scuola è chiusa dal 13. Consiglio: si mostra quando la cornice (tappa 2) è pronta.
+4. **Mostrare Deriva: deciso** (Ale, 14 nov notte: «ok va bene»): si mostra quando la cornice (tappa 2) è pronta, non prima.
 5. **Sponsor senza materiale:** consiglio sì; il materiale torna in discussione col Fiocco.
 
 ## Rischi

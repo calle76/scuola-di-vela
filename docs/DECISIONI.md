@@ -160,6 +160,7 @@ Costo di cambiamento:
 | Lo sponsor grande che porta al Fiocco arriva a chi finisce fra i primi 3 del nazionale; finché il Fiocco non c'è, l'offerta è solo scritta | 14 nov notte (Ale: «primi 3 del nazionale») | basso | — | `PIANO-CHIUSURA-DERIVA.md`; `PROPOSTA-RIVALI-E-SPONSOR.md` §11, §16 |
 | Niente retrocessione automatica: in carriera, a fine stagione si sceglie uno sponsor fra le offerte arrivate col risultato; il circuito dello sponsor è quello della stagione dopo, e andando male restano solo sponsor zonali | 14 nov notte (Ale: «scegliere lo sponsor stagione per stagione. se vado male e ho solo sponsor per zonale... torno lì») | medio | Cambia come si apre il nazionale in carriera | `PIANO-CHIUSURA-DERIVA.md`, decisione 3 |
 | Sponsor come contratti: durata (1-2 stagioni) e obiettivi; a fine contratto, se va male sponsor minori, se va bene rinnovo, proposte migliori o salto al Fiocco; sotto lo zonale non c'è niente | 14 nov notte (Ale: «lo sponsor A ti propone due stagioni con questi obbiettivi… più in basso della deriva zonale non c'è nulla») | medio | Rifare la tappa 4 | `PIANO-CHIUSURA-DERIVA.md`, decisione 3 |
+| Deriva si mostra in carriera quando la cornice (menu, lezioni, prova) è pronta, non prima | 14 nov notte (Ale: «ok va bene») | basso | — | `PIANO-CHIUSURA-DERIVA.md`, decisione 4 |
 
 ## Contenuti e confini legali
 
