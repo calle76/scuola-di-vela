@@ -50,7 +50,9 @@ Poi si passa al livello del Fiocco.
    - la prima stagione zonale si corre senza sponsor; le prime offerte arrivano alla sua fine;
    - lo sponsor dà nome e obiettivi, niente materiale (decisione 5). Nel gioco libero tutto resta aperto.
 4. **Mostrare Deriva: deciso** (Ale, 14 nov notte: «ok va bene»): si mostra quando la cornice (tappa 2) è pronta, non prima.
-5. **Sponsor senza materiale:** consiglio sì; il materiale torna in discussione col Fiocco.
+5. **Sponsor senza materiale: deciso** (Ale, 14 nov notte: «sponsor senza materiale va bene»): lo sponsor dà nome, durata e obiettivi; il materiale torna in discussione col Fiocco.
+
+**Via alla tappa 1** (Ale, 14 nov notte: «sì via alla rotta intera»): `PROPOSTA-ROTTA-ASSOLUTA.md` §9.
 
 ## Rischi
 
