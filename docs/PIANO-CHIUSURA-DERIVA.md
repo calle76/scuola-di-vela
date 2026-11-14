@@ -39,11 +39,9 @@ Poi si passa al livello del Fiocco.
 
 ## Decisioni per Ale (una per volta, con il mio consiglio)
 
-1. **Questo ordine** (rotta, cornice, finale, sponsor, rivali, punti da sistemare, uscita) va bene? Consiglio sì: è l'elenco della chat.
-2. **Quando si supera Deriva.** Prima dei circuiti la regola era «fra i primi 3 del torneo, oppure torneo finito e quasi tutti i punti» (6 novembre). Coi circuiti:
-   - **A (consiglio):** si supera con il diritto al nazionale, cioè fra i primi 3 dello zonale, oppure con la strada del merito; nazionale e finale restano la carriera dentro Deriva, da giocare anche dopo. Il Fiocco non c'è ancora, quindi la regola serve soprattutto a dire «ce l'hai fatta»;
-   - B: si supera vincendo la finale (molto più difficile, ed è il pilota a dire se è raggiungibile);
-   - C: si supera col diritto alla finale (primi 3 del nazionale).
+1. **Questo ordine** (rotta, cornice, finale, sponsor, rivali, punti da sistemare, uscita): **deciso, sì** (Ale, 14 nov notte: «va bene»).
+2. **Quando si supera Deriva: deciso A** (Ale, 14 nov notte: «per Deriva va bene A»). Si supera con il diritto al nazionale (fra i primi 3 dello zonale) oppure con la strada del merito (zonale finito senza ritiro e quasi tutti i punti di Deriva); la strada del merito supera Deriva ma non apre il nazionale, che si apre solo col diritto. Nazionale e finale restano la carriera dentro Deriva.
+   **Sponsor che porta al Fiocco: deciso** (Ale, stessa sera: «primi 3 del nazionale»). Chi finisce fra i primi 3 del nazionale riceve l'offerta dello sponsor grande: la barca col fiocco, cioè il livello dopo. Finché il Fiocco non c'è, l'offerta resta scritta. Nel gioco libero il Fiocco, quando esisterà, sarà sempre aperto. Entra nella tappa 4 (sponsor).
 3. **Retrocessione** (ultimi del nazionale che tornano allo zonale, `PROPOSTA-RIVALI-E-SPONSOR.md` §11): consiglio **no** per ora, si aggiunge dopo se il gioco la chiede.
 4. **Mostrare Deriva:** è nascosta dal 4 novembre fino alla prova della Scuola, e la Scuola è chiusa dal 13. Consiglio: si mostra quando la cornice (tappa 2) è pronta.
 5. **Sponsor senza materiale:** consiglio sì; il materiale torna in discussione col Fiocco.
