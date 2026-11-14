@@ -384,3 +384,28 @@ Quindi le soglie del guardiano stanno dentro il rumore del caso per qualunque ca
 - **B:** rifare prima il guardiano, poi rimisurare la 1.2.33 e chiuderla solo se passa.
 
 **Decisione di Ale (14 novembre, mattina): A.** La 1.2.33 si chiude con il guardiano dichiarato non adatto a questo cambio. Il guardiano si rifà dopo (voce 33 di `DA-FARE.md`).
+
+## 16. Carriera in profondità prima che in larghezza (proposta, 14 novembre 2026)
+
+Dalla conversazione con Ale del 14 novembre. Ale: «alla fine ci saranno: deriva, gennaker, barca a tre … con due livelli ognuno, non so … non vorrei ingigantire troppo il gioco»; poi: «ma un solo livello non ha carriera, sponsor … promozioni». È una proposta, non una decisione: si decide nel riordino della lista (voce 29).
+
+**Il problema.** Il gioco può crescere in due modi:
+- **in larghezza**, con barche e livelli nuovi: ogni barca vuole fisica verificata sulle fonti, lezioni, avversari ritarati e collaudi. Il solo prototipo del fiocco ha richiesto settimane;
+- **in profondità**, con storia dei rivali, classifiche e conseguenze: è testo, salvataggi e sorteggi sopra la barca che c'è già.
+
+**Proposta: la carriera sale di circuito, non di barca.**
+1. **Una barca sola (Deriva), tre gradini:**
+   - circuito **zonale**: rivali locali, primi sponsor piccoli che danno materiale;
+   - **nazionale**: ci si arriva con la classifica zonale; rivali nuovi e più forti, alcuni zonali salgono con te;
+   - **campionato finale**: pochi posti, uno sponsor grande.
+
+   Le promozioni sono il passaggio di circuito, e si può anche retrocedere. Gli sponsor danno materiale e obiettivi («arriva nei primi 5»), come nel §11.
+2. **La storia dei rivali** dà spessore a ogni gradino (voce 35): lo storico anche fra di loro; i tornei che non giochi «corsi» con un sorteggio pesato dai tratti, che alimentano la classifica del circuito; poche frasi invece delle statistiche («la più temuta»).
+3. **La seconda barca come grande promozione**, solo dopo che la carriera con Deriva è giocata e piace: per esempio la barca col fiocco, già studiata nel prototipo. Si ricomincia in basso con rivali nuovi e qualcuno dei vecchi.
+4. **Gennaker e barca a tre:** «forse un giorno», fuori dal piano.
+
+**Perché.** Carriera, sponsor e promozioni arrivano subito, con la fisica che c'è già. La parte che costa di più, una barca nuova, diventa un traguardo e non un prerequisito. Se ci si ferma dopo il punto 2, il gioco è comunque completo.
+
+**Rischi.** Con una barca sola i tre gradini devono essere diversi davvero: avversari più forti, campi e venti diversi, materiale che cambia qualcosa. Altrimenti la promozione è solo un nome. Il materiale degli sponsor tocca la fisica, quindi va trattato come una piccola barca nuova, con fonti e misure.
+
+**Cosa serve da Ale.** Decidere nel riordino (voce 29) se questo diventa il piano della voce 30.
