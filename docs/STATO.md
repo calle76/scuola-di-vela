@@ -14,13 +14,13 @@
   - 1.2.34: scritte sopra le barche.
 
   Da pushare: `git push origin main --tags` (da qui non si vede se i tag dalla 1.2.30 sono già su GitHub; il comando non fa danni se lo sono).
-- **Prossimo** (Ale, 14 nov sera: «dopo i nazionali il gioco è quasi completo»): scrivere il piano di chiusura di Deriva con l'elenco proposto in chat; la prima voce è la rotta in assoluto (voce 26, §9).
+- **Prossimo:** il piano di chiusura di Deriva è scritto (`PIANO-CHIUSURA-DERIVA.md`, fermata 1): aspetta le 5 decisioni di Ale. Prima tappa: la rotta in assoluto (voce 26, §8-9).
 - **L'elenco proposto in chat** per chiudere Deriva:
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;
   - poi il livello del fiocco.
 
-  Elenco proposto in chat, da scrivere come piano di chiusura di Deriva.
+  Scritto come piano: `PIANO-CHIUSURA-DERIVA.md`.
 - Il **guardiano degli avversari** è solo informativo (`PROPOSTA-GUARDIANO-AVVERSARI.md` §9).
 - **Proposte in attesa del via** (fermata 1): carriera in profondità (`PROPOSTA-RIVALI-E-SPONSOR.md` §16); storia e conseguenze dei rivali (voce 35).
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).

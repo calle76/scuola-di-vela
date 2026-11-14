@@ -42,6 +42,7 @@
 | 36 | **Tornei online fra Ale e Lucio** (Ale, 14 nov: «gioco online almeno per me con Lucio in tornei dedicati») | `PROPOSTA-REGATA-COME-FONTE.md` §8 (gradini 1-4, del 18 ottobre); `PROPOSTA-TORNEI-ONLINE.md` | **primo passo fatto: 1.2.37 chiusa il 14 nov sera** (stagione con un amico per corrispondenza: codice e file; restano il fantasma dell'amico e la diretta) |
 | 37 | **La prima stagione del circuito zonale** (Deriva: carriera, regate, rapporti fra regatanti; Ale, 14 nov): 4 tappe, classifica del circuito con tutti e 10 i rivali (i 7 non in acqua a numeri), diritto al nazionale, storico fra tutti in poche frasi | `PROPOSTA-STAGIONE-ZONALE.md`; voci 30 e 35 | **fatta: 1.2.36 chiusa il 14 nov sera** (stagione a batterie; Lucio e nazionale sono i passi dopo) |
 | 38 | **Il circuito nazionale, con batterie da 6 barche** (Ale, 14 nov: «A al nazionale», «passa al nazionale»): passo 1 regate a 6 barche (1.2.38), passo 2 stagione nazionale (1.2.39) | `PROPOSTA-NAZIONALE.md`; `PROPOSTA-RIVALI-E-SPONSOR.md` §7, §12, §16 | **fatta:** passo 1 = 1.2.38 (N2 dichiarato, scelta A di Ale); passo 2 = 1.2.39, stagione nazionale, chiusa il 14 nov notte. Si toglie alla prossima pulizia dell'elenco |
+| 39 | **Piano di chiusura di Deriva** (Ale, 14 nov notte: «scrivi il piano di chiusura di Deriva»): tappe 1-7, da rotta in assoluto a uscita | `PIANO-CHIUSURA-DERIVA.md` | fermata 1: aspetta le 5 decisioni di Ale |
 
 ## Proposta di riordino (13 novembre, per la voce 29: da decidere con Ale, niente è cambiato)
 
