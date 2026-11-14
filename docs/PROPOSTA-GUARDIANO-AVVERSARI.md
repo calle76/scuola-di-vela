@@ -139,3 +139,49 @@ Stima, scritta prima di misurare: con questa regola una versione che non cambia 
 ### Cosa serve da Ale
 
 Il via. Si toccano solo `tests/misura_avversari_rotta.py` (la manopola `SPOSTA`), `tests/collaudo_guardiano_avversari.py` (soglie, riferimento a mediana, regate salvate), il riferimento `tests/guardiano_avversari_rif.json` e `docs/COLLAUDI.md`. Non è una versione del gioco.
+
+## 9. Esito (14 novembre, mattina): il guardiano diventa solo informativo
+
+Via di Ale: «ok vai avanti fino alla fine dei lavori». Misure sulla 1.2.33: 14 corse da 192 regate (semi 1491-1514), una alla volta col freno, dalle 7:03 alle 10:10. Picco 73 °C in due corse: il freno ha messo in pausa il processo, ma il picco ha superato di 1 °C il limite di 72.
+
+**Il rumore dei sorteggi, 8 corse (`SPOSTA` 0-7):**
+
+| | 12 semi: da … a … | soglia | 24 semi: da … a … | soglia | soglia di prima (§6) |
+| --- | --- | --- | --- | --- | --- |
+| G1 arrivo mediano | 194,8 – 201,5 s | +6,74 | 196,9 – 203,2 s | +6,32 | +1,78 |
+| G2 bolina persi | 23,6 – 28,7 s | +5,05 | 25,2 – 28,9 s | +3,71 | +1,3 |
+| G3 poppa persi | 6,27 – 7,33 s | +1,07 | 6,54 – 7,49 s | +0,95 | +1,51 |
+| G4 lasco persi | 8,09 – 9,24 s | +1,14 | 8,22 – 8,81 s | +0,59 | +0,5 |
+| G5 contatti | 23 – 76 | +53 | 65 – 129 | +64 | +6 |
+| G6 boa toccata / sbagliate | 10 – 35 / 0 – 6 | +25 / +6 | 26 – 61 / 0 – 8 | +35 / +8 | +18 / +2 |
+| G7 non arrivati / squalificati | 0 / 0 – 1 | +1 / +1 | 0 / 0 – 2 | +1 / +2 | +1 / +1 |
+| G8 scuffiate | 0 | +2 (minimo) | 0 | +2 (minimo) | +2 |
+| G9 taglio mediano | 2,02 – 2,92 s | +0,90 | 2,07 – 2,55 s | +0,50 | +0,5 |
+
+Le soglie di prima stavano quasi tutte dentro il rumore. Con lo stesso gioco l'arrivo mediano balla di oltre 6 s, e i contatti vanno da 23 a 76.
+
+**Contro-prova:**
+
+| # | Criterio | 12 semi | 24 semi |
+| --- | --- | --- | --- |
+| Q1 | spostamenti mai guardati 8-11: passa 4 su 4 | **3 su 4** ✗ (`SPOSTA` 8: squalificati 0 → 2, soglia +1) | **3 su 4** ✗ (squalificati 0 → 3, soglia +2) |
+| Q2 | `DOWNE=off` fallisce | fallisce ✓ (poppa +4,4 s) | fallisce ✓ (poppa +5,4 s) |
+| Q3 | layline di dritta, `R_LAY` 100, fallisce | **passa** ✗ | **passa** ✗ |
+| Q4 | misura valida | ✓ 192 regate per corsa, 0 errori, 14 impronte diverse; una corsa normale del guardiano rifà al numero la corsa `SPOSTA` 0 (arrivo 201,49 s, 76 contatti) | ✓ |
+| Q5 | `js/` non toccato | ✓ | ✓ |
+
+**Su Q3, due cose da dire:**
+- La patch non si applicava più da sola sulla 1.2.33: un solo conflitto in `js/avvio.js`, dovuto ai nomi aggiunti nello stesso elenco. L'ho risolto a mano, solo nella copia, aggiungendo la riga `layDx`. La patch ha agito: 539 passaggi sulla layline.
+- Sulla 1.2.33 la layline di dritta **non è più chiaramente peggiore**. Confrontata con la corsa `SPOSTA` 0 sugli stessi semi (regata per regata), dà arrivo +0,4 s e contatti +4, contro i +3,5 s della 1.2.24. La contro-prova Q3 non aveva quindi più una modifica sicuramente peggiore da scoprire. Anche togliendola, però, Q1 non passa.
+
+**Decisione, con la regola scritta prima (§8, punto 4).** Né 12 né 24 semi passano la contro-prova, quindi **il guardiano diventa solo informativo**:
+- stampa i numeri e segna «OLTRE IL RUMORE», ma esce con 0;
+- esce con 2 solo se la misura non è valida.
+
+Ho scelto **12 semi** (circa 6-7 minuti invece di 13), perché anche con 24 la contro-prova non passa. Questa scelta non era scritta prima: la dichiaro qui. Il riferimento è in `tests/guardiano_avversari_rif.json`: mediana delle 8 corse sulla 1.2.33, 12 semi, `"informativo": true`.
+
+**Non fatto:** il confronto informativo con la 1.2.32 (punto 6 del §8). Era «solo se il caldo lo permette», e il picco di 73 °C dice di no.
+
+**Da dove viene il rumore.** Dalla 1.2.31 ogni torneo sorteggia i tratti dei rivali (partenza e bolina): un numero casuale in più cambia i tratti di tutta la flotta, e con loro velocità, contatti e boe. Il guardiano del 10 novembre era stato tarato sulla 1.2.24, quando i tratti non c'erano.
+
+**Idea per un metro migliore, da proporre e non fatta:** misurare la guida con i tratti fissati a «medi» per tutti i rivali. Così un sorteggio spostato cambierebbe solo il vento, e il rumore dovrebbe scendere molto. Resta valido il §7: quando un numero esce dal rumore, si fa il confronto regata per regata su un gruppo grande.

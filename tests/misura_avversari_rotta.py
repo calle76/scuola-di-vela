@@ -2,13 +2,13 @@
 # Le 4 regate del torneo (vento con raffiche e salti, 10 o 12 nodi secondo il seme), principianti ed esperti, preparazione 60 s, giocatore col pilota,
 # fino all'arrivo di tutti o a 900 s. Per ogni avversario e ogni lato: tempo vero contro la rotta ottimale partita da dove e quando lui ha cominciato il
 # lato (rotLatiBarca, js/rotta.js), virate vere contro cambi di mure della rotta ottimale; poi il ritardo al taglio della linea dopo il via.
-# Uso: python tests/misura_avversari_rotta.py PRIMO ULTIMO   (OMBRA=0: torneo senza cono d'ombra, com'era la 1.2.24; RLAY=metri: virata sulla layline di dritta, PROPOSTA-AVVERSARI-BOLINA.md §13; DOWNE=gradi, DOWNE=off spento, assente = il gioco com'è; SCARSOAI e TMEDIA solo con la patch sperimentale/avversari-bolina-scarsi; LAYMARG come negli altri strumenti; SALVA=file.json, poi --riassumi f1 f2 ...)
+# Uso: python tests/misura_avversari_rotta.py PRIMO ULTIMO   (OMBRA=0: torneo senza cono d'ombra, com'era la 1.2.24; RLAY=metri: virata sulla layline di dritta, PROPOSTA-AVVERSARI-BOLINA.md §13; DOWNE=gradi, DOWNE=off spento, assente = il gioco com'è; SCARSOAI e TMEDIA solo con la patch sperimentale/avversari-bolina-scarsi; LAYMARG come negli altri strumenti; SPOSTA=k: k numeri casuali buttati dopo ogni semina, PROPOSTA-GUARDIANO-AVVERSARI.md §8; SALVA=file.json, poi --riassumi f1 f2 ...)
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent) / "index.html").as_uri() + "#collaudo"
 CORSA = """([k, liv, seme]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
-  const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
+  const semina = () => { (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme); for (let q = 0; q < SPOSTA; q++) Math.random(); }; // numeri buttati dalla manopola dello spostamento: stesso gioco, altri sorteggi (PROPOSTA-GUARDIANO-AVVERSARI.md §8)
   if (sv.ombra && OMBRAENV !== null) sv.ombra(OMBRAENV); // PROPOSTA-CONO-D-OMBRA.md: OMBRA=0 è il torneo senza cono (1.2.24)
   if (sv.layDx) sv.layDx(RLAY); // PROPOSTA-AVVERSARI-BOLINA.md §13: null = spento (1.2.24)
   if (sv.boa && RDIR !== null) sv.boa(3, 2, 3, RDIR); // PROPOSTA-AVVERSARI-BOLINA.md §9: raggio del giro diretto
@@ -52,7 +52,7 @@ CORSA = """([k, liv, seme]) => {
 }"""
 
 def js_corsa(E):   # la corsa con le manopole dell'ambiente (o di un dizionario: collaudo_guardiano_avversari.py)
-    return CORSA.replace("OMBRAENV", {"": "null", "0": "false", "1": "true"}[E.get("OMBRA", "")]).replace("RLAY", E.get("RLAY") or "null").replace("RDIR", E.get("RDIR") or "null").replace("DIAGUP", E.get("DIAGUP") or "null").replace("DIAGTRIM", E.get("DIAGTRIM") or "null").replace("LAYMARG", E.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(E.get("DOWNE", ""), E.get("DOWNE", ""))).replace("TMEDIA", E.get("TMEDIA") or "0").replace("SCARSOAI", {"": "undefined", "off": "null"}.get(E.get("SCARSOAI", ""), E.get("SCARSOAI", "")))
+    return CORSA.replace("OMBRAENV", {"": "null", "0": "false", "1": "true"}[E.get("OMBRA", "")]).replace("RLAY", E.get("RLAY") or "null").replace("RDIR", E.get("RDIR") or "null").replace("DIAGUP", E.get("DIAGUP") or "null").replace("DIAGTRIM", E.get("DIAGTRIM") or "null").replace("LAYMARG", E.get("LAYMARG") or "null").replace("DOWNE", {"": "undefined", "off": "null"}.get(E.get("DOWNE", ""), E.get("DOWNE", ""))).replace("TMEDIA", E.get("TMEDIA") or "0").replace("SPOSTA", str(int(E.get("SPOSTA") or 0))).replace("SCARSOAI", {"": "undefined", "off": "null"}.get(E.get("SCARSOAI", ""), E.get("SCARSOAI", "")))
 
 async def main(A, B):
     async with async_playwright() as p:
