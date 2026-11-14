@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 14 novembre 2026, sera.*
+*Aggiornato: 14 novembre 2026, notte.*
 
 ## Versione
 
@@ -12,7 +12,13 @@
   - 1.2.34: scritte sopra le barche, chiusa con F2 all'88,6% per scelta di Ale.
 
   Da pushare dalla 1.2.30 alla 1.2.37: `git push origin main --tags`.
-- **Passi successivi della stagione, da proporre:** il circuito nazionale con una batteria da 6 barche (scelta di Ale: «A al nazionale»).
+- **1.2.38 (regate a 6 barche, passo 1 del nazionale) NON chiusa**, ramo `sei-barche` (commit `36b9ad4`; la cartella di lavoro era nella scratchpad della sessione: se non c'è più, rifarla con `git worktree add <cartella> sei-barche`). Passano N1 e N3-N7: partenze, contatti per coppia uguali a 4 barche, velocità 1,42-1,64 volte, scritte, pannello; con 4 barche tutto identico. **N2 no:** contatti nei primi 25 s in 34 regate su 100 con 6 barche, ma già in 16 su 100 con 4, cioè nel gioco di oggi. Per coppia di barche la frequenza è la stessa. **Decide Ale:** chiudere dichiarando N2, oppure prima le manovre dei rivali prima del via (voci 4 e 17). `PROPOSTA-NAZIONALE.md`, Esito sul ramo.
+- **Dopo il nazionale** (Ale, 14 nov sera: «dopo i nazionali il gioco è quasi completo»):
+  - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
+  - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;
+  - poi il livello del fiocco.
+
+  Elenco proposto in chat, da scrivere come piano di chiusura di Deriva.
 - Il **guardiano degli avversari** è solo informativo (`PROPOSTA-GUARDIANO-AVVERSARI.md` §9).
 - **Proposte in attesa del via** (fermata 1): carriera in profondità (`PROPOSTA-RIVALI-E-SPONSOR.md` §16); storia e conseguenze dei rivali (voce 35).
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
