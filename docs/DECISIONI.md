@@ -151,6 +151,7 @@ Costo di cambiamento:
 | **Si resta su Deriva**: farla maturare (carriere, regate, rapporti fra regatanti) come base dei livelli successivi, senza allargare ad altre barche per ora; idea in più: tornei online almeno fra Ale e Lucio | 14 nov pomeriggio (Ale: «restiamo sul livello deriva sviluppandone carriere e regate e rapporti tra regatanti … gioco online almeno per me con Lucio in tornei dedicati … un bel livello che poi farà da base per quelli successivi») | medio | Le proposte dei circuiti (§16) e della voce 35 partono da qui | `PROPOSTA-RIVALI-E-SPONSOR.md` §16; `DA-FARE.md` voci 35-36 |
 | 1.2.34 chiusa con F2 (scritte vicine alla barca giusta, da lontano) all'88,6% contro una soglia del 90%; niente iniziale da lontano per ora | 14 nov sera (Ale: «chiudi. proviamo così») | basso | Aggiungere l'iniziale da lontano e rimisurare | `PROPOSTA-ETICHETTE-BARCHE.md`, Esito |
 | Nella stagione zonale entra anche Lucio, dodicesimo della flotta del circuito, con le sue tappe corse a parte e scambiate con un file | 14 nov sera (Ale: «aggiungere Lucio alla stagione») | basso finché è proposta | Riscrivere le due proposte | `PROPOSTA-STAGIONE-ZONALE.md`, `PROPOSTA-TORNEI-ONLINE.md` |
+| Stagione zonale a batterie (tu sempre in una da 4, le altre a numeri e raccontate); flotta più grande in acqua solo al nazionale | 14 nov sera (Ale: «ok B ora e A al nazionale») | basso finché è proposta | Riscrivere la proposta | `PROPOSTA-STAGIONE-ZONALE.md`, «le batterie» |
 
 ## Contenuti e confini legali
 
