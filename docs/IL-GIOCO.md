@@ -48,6 +48,8 @@ Senza finire il torneo non si passa mai. Ripetere una cosa senza migliorare non 
 
 **Il cono d'ombra (1.2.25) [deciso]:** nel torneo, e poi in Deriva, le vele si tolgono il vento (`PROPOSTA-CONO-D-OMBRA.md`); il cono disegnato sul mare è un aiuto disattivabile, la fisica no. Scuola, prove e lezioni restano senza.
 
+**La stagione del circuito zonale (1.2.36) [deciso]:** 4 tappe; ogni tappa è un torneo contro i 3 rivali della tua batteria. Le altre due batterie corrono a numeri, con un ordine estratto dalle doti dei rivali. Classifica del circuito di 11, punti uguali al posto; al massimo 3 frasi su fatti contati; i primi 3 hanno diritto al nazionale, che non c'è ancora. Cambiano solo classifica e racconto, non la guida (`PROPOSTA-STAGIONE-ZONALE.md`).
+
 **Il coach (Ale, 6 novembre 2026) [deciso]:** in Deriva registratore, moviola e momento clou da rivedere, mai obbligatorio; dalla 1.2.22, fuori dalla Scuola, la **rotta ottimale** a regata finita con le layline e «dove hai perso» (`PROPOSTA-ROTTA-OTTIMALE.md`). Dal Fiocco domande e manovre da rifare, con un tetto di punti: nascono dagli errori, quindi non possono essere obbligatorie, e nel torneo una penalità deve costare più di quanto si recupera col coach.
 
 ## 4. Deriva non è un doppione della Scuola (Ale, 6 novembre 2026) [deciso]

@@ -176,3 +176,27 @@ Ale: «ok come consigli tu». Quindi: 10 rivali, 4 tappe, nomi dei posti scritti
 **Salvataggio:** `progress.stagione`, separata fra carriera e gioco libero come tutti i progressi. Se cambia la versione del gioco, la stagione resta e la tappa in corso ricomincia, con la stessa batteria.
 
 **Soglie:** quelle di Z1-Z7 e Z12-Z14 qui sopra, invariate. Per Z2 e Z14 le 20 tappe si corrono col pilota (80 regate). Per Z4 servono 20 stagioni intere: le tappe col pilota sarebbero 320 regate, troppe per il PC. Le tappe si chiudono allora con il risultato del torneo scritto dal collaudo, passando dalle stesse funzioni del gioco. Il collaudo lo dice.
+
+## Esito (14 novembre, sera): 1.2.36
+
+`tests/collaudo_stagione.py`, Chromium:
+
+| # | Esito | Soglia |
+| --- | --- | --- |
+| Z1 | semi 11-20 (conferma): ogni rivale vince almeno **1** stagione su 200; punti medi a fine stagione **19,6** con due doti, **28,3** con due difetti | ≥ 1; doti davanti ✓ |
+| Z2 | **20 tappe** corse col pilota (80 regate): la tua batteria sempre nell'ordine della classifica del torneo mostrata | 20 su 20 ✓ |
+| Z3 | 80 tappe ricontrollate: posti 1-11, somma 66, posto finale uguale al ricalcolo | ✓ |
+| Z4 | **173 frasi** ricontrollate su 20 stagioni, tutti e 5 i tipi visti, **0 false**; almeno una frase a fine stagione in **20 su 20** | 0 false, ≥ 18 ✓ |
+| Z5 | pagina ricaricata dopo 2 tappe: stagione e circuito uguali; «Azzera i progressi» la cancella | ✓ |
+| Z6 | impronta del guardiano identica al bit (`2c0e3804a20d`, 96 regate, semi 1491-1502, come 1.2.34 e 1.2.35); `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici; `collaudo_versione` OK | ✓ |
+| Z7 | 0 px di eccesso a 1360x650 in presentazione, tappa, circuito con 3 frasi e stagione finita con 3 frasi; pagina senza `#collaudo` in Chromium e Firefox: 1.2.36, 0 errori | ✓ |
+| Z12 | 800 tappe: 0 batterie sbagliate | ✓ |
+| Z13 | rivali incontrati in media **10 su 10** | ≥ 8 ✓ |
+| Z14 | il vincitore scritto di ogni batteria è giusto, in 80 tappe con risultati scritti e in 20 corse col pilota | 0 errori ✓ |
+
+**Da dire:**
+- **La taratura di B** l'ho fatta con una copia del calcolo in Node: a B = 0,2 il rivale meno fortunato vinceva 3 stagioni su 200, a 0,3 nessuna. Rifatta con le funzioni del gioco sugli stessi semi 1-10, a 0,2 il minimo è **1**, non 2: i gruppi di rivali nascono da un altro ordine di numeri casuali. La conferma sui semi 11-20 passa con la soglia scritta (≥ 1), ma al limite. Con B = 0,2 la forza conta poco: un rivale con due doti finisce in media circa 2 posti davanti a uno con due difetti.
+- **Lo spareggio all'ultima tappa** era al contrario nel ricalcolo del collaudo, non nel gioco: 3 frasi giudicate false alla prima prova. Corretto il collaudo e rilanciato.
+- **Pannello:** alla prima prova la classifica sforava di 1 px dopo 2 tappe e di 63 px a fine stagione. Righe della tabella più basse e il risultato finale su una riga sola: ora 0.
+- **Un errore mio nel codice:** un commento messo a metà della riga dell'aggancio `#collaudo` spegneva il resto della riga. L'ha trovato subito il collaudo.
+- Fotografie: `tests/output/stagione_presentazione.png`, `stagione_tappa1.png`, `stagione_circuito.png`, `stagione_finita.png`, `stagione_tappa_vera.png`.

@@ -19,6 +19,17 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.36 — La stagione del circuito zonale
+
+Voce 37 di `DA-FARE.md`; `docs/PROPOSTA-STAGIONE-ZONALE.md`; via di Ale del 14 novembre sera («ok B ora e A al nazionale», «ok come consigli tu»).
+
+- **Stagione di 4 tappe**, dalla finestra del torneo (pulsante «Stagione (4 tappe)»): Lago delle Ginestre, Golfo dei Gabbiani, Baia del Faro, Isola dei Pini, posti inventati. Ogni tappa è un torneo come prima, contro i 3 rivali della tua batteria. Il torneo singolo resta com'è, quando non c'è una stagione in corso.
+- **Batterie:** a ogni tappa la flotta del circuito (tu e i 10 rivali) si divide in tre batterie, gialla (la tua, 4 barche), bianca (4) e arancione (3), sorteggiate all'inizio. Nella tua entrano prima i rivali che non hai ancora incontrato: in una stagione li incontri tutti. Le altre due batterie corrono «a numeri»: l'ordine si estrae uno per volta, con un peso dato dalle doti di partenza e di bolina (B = 0,2). La tua batteria resta nell'ordine vero del torneo.
+- **Classifica del circuito** (pulsante «Il circuito»): punti = posto nella tappa, da 1 a 11, nessuno scarto. Accanto, chi ha vinto ogni batteria e al massimo tre frasi su fatti contati: bestia nera, contatti, lotta per il primo posto, in forma, sempre davanti. I primi 3 a fine stagione hanno «diritto al nazionale», per ora solo scritto e salvato. Nella scheda di ogni rivale c'è la sua posizione nel circuito.
+- **Solo classifica e racconto:** la guida dei rivali e le regate non cambiano.
+- **Salvataggio** con i progressi, separato fra carriera e gioco libero; «Azzera i progressi» lo cancella. Se cambia la versione del gioco la stagione resta e la tappa in corso ricomincia.
+- **Collaudo nuovo** `tests/collaudo_stagione.py`. Misure: `docs/PROPOSTA-STAGIONE-ZONALE.md`, Esito.
+
 ## 1.2.35 — I rivali si leggono in un posto solo, e si capiscono
 
 Osservazione di Ale del 14 novembre, giocando il torneo; via: «fallo dopo la 1.2.34». `docs/PROPOSTA-RIVALI-E-SPONSOR.md` §17.

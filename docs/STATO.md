@@ -6,9 +6,10 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.35** (14 novembre sera, tag `v1.2.35`): i rivali si leggono solo nel pulsante «I rivali», anche prima della prima regata; schede con tre righe chiare («Prima del via», «Partenza», «Bolina»). Subito prima, **1.2.34** (tag `v1.2.34`): le scritte sopra le barche non coprono le barche; da lontano sono in proporzione alla vista. Chiusa per scelta di Ale con F2 all'88,6% contro 90% («chiudi. proviamo così»). Da pushare dalla 1.2.30 alla 1.2.35: `git push origin main --tags`.
+- **Ultima versione chiusa: 1.2.36** (14 novembre sera, tag `v1.2.36`): **stagione del circuito zonale**, dalla finestra del torneo. Sono 4 tappe a batterie: tu corri nella tua, contro 3 rivali, e le altre due batterie corrono a numeri. Classifica di 11 e al massimo 3 frasi sui rapporti fra regatanti; i primi 3 hanno diritto al nazionale, per ora solo scritto (`PROPOSTA-STAGIONE-ZONALE.md`, Esito). Prima, lo stesso giorno: 1.2.35 (testi dei rivali) e 1.2.34 (scritte sopra le barche, chiusa con F2 all'88,6% per scelta di Ale). Da pushare dalla 1.2.30 alla 1.2.36: `git push origin main --tags`.
+- **Passi successivi della stagione, da proporre:** Lucio dodicesimo della flotta (già scritto nella proposta, «Aggiunta»); il circuito nazionale con una batteria da 6 barche (scelta di Ale: «A al nazionale»).
 - Il **guardiano degli avversari** è solo informativo (`PROPOSTA-GUARDIANO-AVVERSARI.md` §9).
-- **Proposte in attesa del via** (fermata 1): stagione del circuito zonale con Lucio dodicesimo della flotta (voce 37, `PROPOSTA-STAGIONE-ZONALE.md`); tornei con Lucio (voce 36, `PROPOSTA-TORNEI-ONLINE.md`); carriera in profondità (`PROPOSTA-RIVALI-E-SPONSOR.md` §16); storia e conseguenze dei rivali (voce 35).
+- **Proposte in attesa del via** (fermata 1): tornei con Lucio (voce 36, `PROPOSTA-TORNEI-ONLINE.md`); carriera in profondità (`PROPOSTA-RIVALI-E-SPONSOR.md` §16); storia e conseguenze dei rivali (voce 35).
 - **Online** (https://calle76.github.io/scuola-di-vela/): quella dell'ultimo push di Ale. La 1.2.18 e i 123 tag sono pushati (8 novembre sera).
 - La **Scuola** (1b, barca con la sola randa) è **chiusa come contenuti** (Ale, 13 novembre): restano cose da sistemare rigiocando. **Deriva** come livello non è ancora aperto (lezioni 21-22, punti, prova, regola di passaggio, momento clou), ma molti suoi pezzi sono già nel gioco fuori dalla Scuola: torneo, rivali, cono d'ombra, rotta ottimale, layline. Cosa diventa la cornice di Deriva (forse il primo circuito zonale) è da decidere: `DA-FARE.md` voce 12.
 
