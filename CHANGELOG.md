@@ -19,6 +19,17 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.39 — Il circuito nazionale
+
+Voce 38 di `DA-FARE.md`, passo 2; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre («come consigli tu»).
+
+- **Stagione nazionale:** nella finestra della stagione si sceglie il circuito, zonale o nazionale. Al nazionale si è in 12: tu, i dieci rivali nazionali (Chiara Benedetti … Riccardo Bassi) e il primo degli altri del tuo ultimo zonale. Quattro tappe in posti inventati, due batterie da 6: la tua corre il torneo a 6 barche contro 5 rivali, l'altra a numeri. Punti 1-12, stessa classifica, stesse frasi.
+- **Rivali più forti:** per ogni area 4 doti, 4 medie e 2 difetti (allo zonale 3-4-3).
+- **Chi entra:** nel gioco libero sempre; in carriera solo col diritto al nazionale (primi 3 dello zonale). I primi 3 del nazionale hanno il diritto alla finale, per ora solo scritto.
+- **Con un amico:** solo lo zonale, come prima.
+- **Corretto:** la stagione proposta nel gioco libero restava proposta anche passando in carriera, con rivali e diritti dell'altra modalità (dalla 1.2.36).
+- **Misure:** tutti i criteri passano (`PROPOSTA-NAZIONALE.md`, esito del passo 2). Il nazionale a numeri è più duro di poco: posto relativo medio 0,544 contro 0,507. Le regate non cambiano: impronta del guardiano `2c0e3804a20d`, fisica identica.
+
 ## 1.2.38 — Regate a 6 barche (di prova)
 
 Voce 38 di `DA-FARE.md`, passo 1; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre sera: «via come consigli tu».

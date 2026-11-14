@@ -156,16 +156,22 @@
     ["Tommaso Brunelli", "sedici anni, il più giovane della flotta"], ["Lucia Pavan", "in pensione, ha fatto crociera tutta la vita"], ["Nicola Serafini", "ingegnere, prende appunti dopo ogni regata"],
     ["Sara Fontana", "ha cominciato tardi, a quarant'anni"], ["Pietro Gallo", "pescatore, esce in mare tutte le mattine"], ["Elena Zanin", "studentessa di medicina, regata quando può"],
     ["Matteo Bortolin", "torna a regatare dopo dieci anni di pausa"]];
+  // 1.2.39 (docs/PROPOSTA-NAZIONALE.md, passo 2): i dieci del circuito nazionale (§12), più forti: per area 4 doti, 4 medie e 2 difetti
+  const RIVALI_NAZIONALE = [["Chiara Benedetti", "ha vinto il circuito zonale due anni fa"], ["Andrea Tosi", "velaio, le vele se le cuce da sé"], ["Federica Marchi", "viene dalle barche d'altura"],
+    ["Luca Ravasi", "lavora in un cantiere di barche"], ["Anna Corradini", "istruttrice di vela d'estate"], ["Stefano Valli", "regata da trent'anni"],
+    ["Alice Barbieri", "vent'anni, salita dal circuito zonale l'anno scorso"], ["Giorgio Pellegrini", "si allena con un allenatore tutto l'anno"],
+    ["Valentina Sartori", "viene dalla tavola a vela"], ["Riccardo Bassi", "ha fatto il servizio civile in una scuola di vela"]];
+  const MIX_ZONALE = [0, 0, 0, 1, 1, 1, 1, 2, 2, 2], MIX_NAZIONALE = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2]; // per area: doti (0), medie (1), difetti (2)
   const COLORI_BARCA = ["rossa", "verde", "blu", "viola", "grigia"]; // come FLEET_LOOK
-  const storiaDi = nome => (RIVALI_ZONALE.find(r => r[0] === nome) || [])[1] || "";
+  const storiaDi = nome => ([...RIVALI_ZONALE, ...RIVALI_NAZIONALE].find(r => r[0] === nome) || [])[1] || "";
   // il gruppo nasce tutto insieme e bilanciato (§15): per ogni area 3 doti, 4 medie e 3 difetti mescolati, così la flotta nel complesso è sempre la stessa
   // (sorteggiati uno per uno, la forza della flotta dipendeva da un solo sorteggio per tutta la carriera: arrivo +5 s sui semi 1503-1514)
   function rivaleTr(nome){
-    const g = progress.rivali || (progress.rivali = {});
-    if (RIVALI_ZONALE.some(([n]) => !g[n] || !Array.isArray(g[n].tr))){
+    const g = progress.rivali || (progress.rivali = {}), naz = RIVALI_NAZIONALE.some(r => r[0] === nome), lista = naz ? RIVALI_NAZIONALE : RIVALI_ZONALE; // 1.2.39: ogni gruppo nasce per conto suo
+    if (lista.some(([n]) => !g[n] || !Array.isArray(g[n].tr))){
       const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-      const col = TRATTI.map(() => mescola([0, 0, 0, 1, 1, 1, 1, 2, 2, 2]));
-      RIVALI_ZONALE.forEach(([n], i) => { g[n] = { tr: col.map(c => c[i]) }; });
+      const col = TRATTI.map(() => mescola((naz ? MIX_NAZIONALE : MIX_ZONALE).slice()));
+      lista.forEach(([n], i) => { g[n] = { tr: col.map(c => c[i]) }; });
     }
     return g[nome].tr;
   }
@@ -1260,7 +1266,7 @@
     const tp = S ? stTappa(S) : null, M = Math.random;
     if (tp && S.codice) Math.random = stRnd(S.seme, 200 + S.tappe.indexOf(tp)); // 1.2.37: con un amico venti, carattere e numeri di guida escono dal codice
     try {
-      const liv = S ? S.liv : opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv, tp ? AV_N : nAv);
+      const liv = S ? S.liv : opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, aggro = sorteggiaAggressiva(liv, tp ? tp.bat[0].length - 1 : nAv); // 1.2.39: al nazionale 5
       const T = { ver: VERSIONE, liv, regate: [0, 1, 2, 3].map(() => ({ wind: Math.floor(Math.random() * 8) * 45, tws: tp ? tp.tws : Math.random() < 0.5 ? 10 : 12 })), // 1.2.21: forza del vento sorteggiata
                av: (tp ? tp.bat[0].slice(1) : torScegli(nAv)).map((nome, k) => ({ nome, ai: aiTratti(liv, S && S.gruppo ? S.gruppo[nome] : rivaleTr(nome)), char: carattere(k, aggro) })), ris: [] };
       if (tp) T.st = S.tappe.indexOf(tp);
@@ -1402,7 +1408,7 @@
     const tab = k ? torTabella(T, nomi) : "";
     const S = progress.stagione, inSt = T.st !== undefined && S, tp = inSt ? S.tappe[T.st] : null; // 1.2.36: il torneo è una tappa della stagione
     const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}${tp && stFatta(tp) ? ` Nella tappa sei ${stOrdine(S, tp).indexOf("*") + 1}° su ${stOrdine(S, tp).length} della flotta del circuito: la classifica è in «Il circuito».` : ""}</p>` : "";
-    const testaSt = inSt && !k ? `<p><b>Stagione, tappa ${T.st + 1} di ${ST_N}: ${tp.posto}.</b> Corri nella batteria ${ST_BAT[(tp.col || [0])[0]]}; le altre ${S.codice ? "sono quella dell'amico e una" : "due"} corrono lo stesso giorno e contano per la classifica del circuito.</p>` : "";
+    const testaSt = inSt && !k ? `<p><b>Stagione, tappa ${T.st + 1} di ${ST_N}: ${tp.posto}.</b> Corri nella batteria ${ST_BAT[(tp.col || [0])[0]]}; ${stNaz(S) ? "l'altra corre" : "le altre " + (S.codice ? "sono quella dell'amico e una" : "due") + " corrono"} lo stesso giorno e conta${stNaz(S) ? "" : "no"} per la classifica del circuito ${stCircNome(S)}.</p>` : "";
     const testa = !k ? testaSt + `<p>Quattro regate contro gli stessi ${T.av.length === 5 ? "cinque" : "tre"} avversari (${T.liv}): ${car}. Chi sono e come vanno: pulsante «I rivali». Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
       <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Nelle regate 1 e 2 un contatto con colpa vale 1 punto in più; nelle 3 e 4 costa due giri, e chi arriva senza averli fatti è squalificato. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
@@ -1430,7 +1436,7 @@
     if (!me || !R.tor || R.phase === "done" || !confirm("Ritirarti da questa regata? Prendi " + (R.boats.length + 1) + " punti, come chi non arriva.")) return;
     me.dnf = me.ret = true; };
 
-  // ---- stagione del circuito zonale (1.2.36, docs/PROPOSTA-STAGIONE-ZONALE.md) ----
+  // ---- stagione del circuito zonale (1.2.36, docs/PROPOSTA-STAGIONE-ZONALE.md) e nazionale (1.2.39, docs/PROPOSTA-NAZIONALE.md) ----
   // 4 tappe; ogni tappa è un torneo con i 3 rivali della tua batteria. Le altre batterie corrono «a numeri»: ordine estratto uno per volta col peso
   // e^(ST_B·forza) (Plackett-Luce), forza = dote +1, media 0, difetto −1 in partenza e in bolina; tu 0. I 4 posti usciti per la tua batteria si riempiono
   // nell'ordine vero del torneo. ST_B tarato sui semi 1-10 (fermata 2), confermato sui semi 11-20. Punti = posto nella tappa, nessuno scarto.
@@ -1440,6 +1446,21 @@
   // l'ordine della tappa si ricalcola ogni volta (stOrdine), con lo stesso sorteggio nelle due pagine.
   const ST_N = 4, ST_B = 0.2, ST_POSTI = ["Lago delle Ginestre", "Golfo dei Gabbiani", "Baia del Faro", "Isola dei Pini"], ST_BAT = ["gialla", "bianca", "arancione"]; // posti inventati
   const ST_ALFA = "0123456789ABCDEFGHJKMNPQRSTVWXYZ", ST_TIPO = "scuola-di-vela-stagione";
+  // 1.2.39 (docs/PROPOSTA-NAZIONALE.md, passo 2): il circuito nazionale, S.circ = "naz" (senza circ è lo zonale, anche nelle stagioni salvate prima).
+  // 12 regatanti: tu, i 10 nazionali e il primo degli altri dell'ultimo zonale finito (progress.zonalePrimo); due batterie da 6, la tua corre il torneo a 6 barche.
+  // Con un amico solo lo zonale. In carriera il nazionale si apre col diritto (progress.nazionale); i primi 3 del nazionale hanno il diritto alla finale, solo scritto.
+  const ST_POSTI_NAZ = ["Lago dei Tre Venti", "Golfo delle Meduse", "Capo delle Rondini", "Porto dei Velai"]; // inventati
+  const stNaz = S => !!S && S.circ === "naz";
+  const stCircNome = S => stNaz(S) ? "nazionale" : "zonale";
+  const stNazAperto = () => modo !== "carriera" || !!progress.nazionale; // N9: nel gioco libero sempre (principio 2)
+  function stDodicesimo(){ // il primo degli altri dell'ultimo zonale finito; se non c'è, il rivale zonale con più doti (a parità, il primo di un sorteggio)
+    const S = progress.stagione;
+    if (S && S.fine && !stNaz(S)){ const x = stClassifica(S).find(x => x.id !== "*" && x.id !== "@"); if (x) return x.id; }
+    if (progress.zonalePrimo) return progress.zonalePrimo;
+    const m = RIVALI_ZONALE.map(r => r[0]);
+    for (let i = m.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [m[i], m[j]] = [m[j], m[i]]; }
+    return m.reduce((a, b) => stForza(b) > stForza(a) ? b : a);
+  }
   const stFatta = t => !!(t.ord || t.mio);
   const stTappa = S => S.tappe.find(t => !stFatta(t)); // la prossima tappa da correre
   const stForza = (id, S) => id === "*" || id === "@" ? 0 : (S && S.gruppo ? S.gruppo[id] : rivaleTr(id)).reduce((a, v) => a + 1 - v, 0);
@@ -1457,7 +1478,19 @@
     if (!m || [...m[1]].some(c => !ST_ALFA.includes(c))) return null;
     return { seme: [...m[1]].reduce((a, c) => a * 32 + ST_ALFA.indexOf(c), 0), liv: m[2] === "E" ? "esperti" : "principianti" };
   }
-  function stNuova(cod){ // cod: { seme, liv, io: "A" | "B" } per la stagione con un amico (1.2.37)
+  function stNuova(cod, circ){ // cod: { seme, liv, io: "A" | "B" } per la stagione con un amico (1.2.37); circ: "naz" per il nazionale (1.2.39, solo senza cod)
+    if (!cod && circ === "naz"){
+      const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, visti = {};
+      const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+      RIVALI_NAZIONALE.forEach(([n]) => rivaleTr(n));
+      const nomi = [...RIVALI_NAZIONALE.map(r => r[0]), stDodicesimo()];
+      const tappe = ST_POSTI_NAZ.map(posto => {
+        const m = mescola(nomi.slice()).sort((a, b) => (visti[a] || 0) - (visti[b] || 0)), mia = m.slice(0, 5);
+        mia.forEach(n => { visti[n] = (visti[n] || 0) + 1; });
+        return { posto, tws: Math.random() < 0.5 ? 10 : 12, bat: [["*", ...mia], m.slice(5)] };
+      });
+      return { ver: VERSIONE, circ: "naz", liv, tappe };
+    }
     if (!cod){
       const liv = opt.aiLevel === "nessuno" ? "principianti" : opt.aiLevel, visti = {};
       const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1503,10 +1536,12 @@
       T.av.forEach((a, n) => { const c = T.ris.map(r => r[n + 1].c || ""), k = c.filter(x => x).length;
         if (k) tp.cont[a.nome] = { n: k, s: c.filter(x => x.includes("s")).length, t: c.filter(x => x.includes("t")).length }; }); }
     if (!stTappa(S)){
-      const pos = stClassifica(S).findIndex(x => x.id === "*") + 1, old = progress.stagioneFatta;
+      const cl = stClassifica(S), pos = cl.findIndex(x => x.id === "*") + 1, naz = stNaz(S), chiave = naz ? "nazionaleFatto" : "stagioneFatta", old = progress[chiave];
       S.fine = { pos };
-      progress.stagioneFatta = { pos: old ? Math.min(old.pos, pos) : pos };
-      if (pos <= 3) progress.nazionale = true; // diritto al nazionale: per ora solo scritto (il nazionale non c'è ancora)
+      progress[chiave] = { pos: old ? Math.min(old.pos, pos) : pos };
+      if (naz){ if (pos <= 3) progress.finale = true; } // diritto alla finale: per ora solo scritto (la finale non c'è ancora)
+      else { if (pos <= 3) progress.nazionale = true; // diritto al nazionale (1.2.39: in carriera lo apre)
+        const x = cl.find(x => x.id !== "*" && x.id !== "@"); if (x) progress.zonalePrimo = x.id; } // il dodicesimo del nazionale
     }
     saveProgress();
   }
@@ -1563,25 +1598,33 @@
     saveProgress(); return "";
   }
   let stBozza = null; // la stagione proposta prima di cominciarla: resta la stessa finché la finestra è aperta
+  let stCircScelto = "zon"; // 1.2.39: il circuito scelto per la stagione nuova
+  let stBozzaModo = null; // la modalità (libero o carriera) in cui è nata stBozza
   function stMostra(nota, nuova, msg){ // nuova: dal pulsante «Stagione»: si propone una stagione nuova (quella finita resta salvata finché non se ne comincia un'altra)
-    const S = nuova ? stBozza || (stBozza = stNuova()) : progress.stagione, am = !!S.codice;
+    if (nuova && stBozza && (stBozzaModo !== modo || stNaz(stBozza) && !stNazAperto())) stBozza = null; // 1.2.39: la proposta vale nella modalità in cui è nata (rivali e diritti sono separati)
+    const S = nuova ? stBozza || (stBozzaModo = modo, stBozza = stNuova(null, stCircScelto === "naz" && stNazAperto() ? "naz" : "zon")) : progress.stagione, am = !!S.codice, naz = stNaz(S);
     const fatte = S.tappe.filter(stFatta), k = fatte.length, n = S.tappe[0].bat.flat().length;
     const cl = k ? stClassifica(S) : [], pos = cl.findIndex(x => x.id === "*") + 1;
     const elenco = `<p>${S.tappe.map((t, j) => `${j + 1}) ${t.posto}, ${t.tws} nodi: ${stFatta(t) ? `${stOrdine(S, t).indexOf("*") + 1}°` : "con " + t.bat[0].slice(1).join(", ")}`).join("<br>")}</p>`;
     const spiega = !nuova ? "" : am ? `<p>Stagione con un amico, livello ${S.liv}. ${S.io === "A" ? "Manda all'amico il codice <b>" + S.codice + "</b>: scrivendolo in «Ho un codice» avrà le stesse tappe, gli stessi venti e gli stessi rivali." : "Codice " + S.codice + "."} Siete in 12: tu e l'amico correte ognuno nella sua batteria, quando volete; dopo ogni tappa vi mandate il file del risultato e la classifica del circuito vi mette insieme. Punti: 1 al primo, 12 all'ultimo.</p>`
+      : naz ? `<p>Quattro tappe, in 12: tu, dieci rivali nazionali, più forti di quelli dello zonale, e ${stNome(S.tappe[0].bat.flat().find(id => !RIVALI_NAZIONALE.some(r => r[0] === id) && id !== "*"), S)}, che viene dal tuo zonale. A ogni tappa due batterie da 6: tu corri nella tua un torneo di 4 regate contro 5 rivali; l'altra corre lo stesso giorno e il gioco calcola il suo arrivo dalle doti dei rivali e da un sorteggio. Punti: 1 al primo, 12 all'ultimo. I primi 3 hanno diritto alla finale.</p>`
       : `<p>Quattro tappe. A ogni tappa la flotta del circuito, tu e 10 rivali, si divide in tre batterie: tu corri nella tua un torneo di 4 regate contro 3 rivali; le altre due corrono lo stesso giorno e il gioco calcola il loro arrivo dalle doti dei rivali e da un sorteggio. Il posto nella tappa vale i punti: 1 al primo, 11 all'ultimo. Dopo 4 tappe vince chi ne ha meno; i primi 3 hanno diritto al nazionale.</p>`;
     const tab = k ? `<table class="tor st"><thead><tr><th></th><th>Regatante</th>${fatte.map((t, j) => `<th>T${j + 1}</th>`).join("")}<th>Totale</th></tr></thead><tbody>${cl.map((x, i) =>
       `<tr class="${x.id === "*" ? "me" : ""}"><td>${x.manca ? "" : i + 1 + "°"}</td><td>${stNome(x.id, S)}</td>${x.p.map(v => `<td>${v === null ? "–" : v}</td>`).join("")}<td><b>${x.tot}</b></td></tr>`).join("")}</tbody></table>
       ${msg ? `<p class="manca st-p">${msg}</p>` : `<p class="tor-leg">Tappa ${k}, ${stVincitori(S, fatte[k - 1])}${cl.some(x => x.manca) ? " · – in attesa del file dell'amico" : ""}</p>`}` : ""; // il messaggio del file al posto dei vincitori: le 12 righe stanno nei 650 px
     const frasi = k ? stFrasi(S) : [];
-    const fine = S.fine ? `<p class="st-p"><b>Stagione finita: ${pos}° su ${n}.</b> ${pos <= 3 ? "Fra i primi 3: diritto al nazionale. Il nazionale non c'è ancora: arriverà in una versione successiva." : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
+    const fine = S.fine ? `<p class="st-p"><b>Stagione finita: ${pos}° su ${n}.</b> ${naz ? (pos <= 3 ? "Fra i primi 3: diritto alla finale. La finale non c'è ancora: arriverà in una versione successiva." : "Per il diritto alla finale bisogna finire fra i primi 3.")
+      : pos <= 3 ? "Fra i primi 3: diritto al nazionale." + (modo === "carriera" ? " Ora puoi correre il circuito nazionale: «Stagione», poi «Nazionale»." : "") : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
+    const scelta = nuova && !am ? `<div class="row st-circ"><span>Circuito:</span><button id="stZon"${naz ? "" : ' class="primary"'}>Zonale</button><button id="stNaz"${naz ? ' class="primary"' : ""}${stNazAperto() ? "" : " disabled"}>Nazionale</button>${stNazAperto() ? "" : "<span>si apre finendo fra i primi 3 di uno zonale</span>"}</div>` : ""; // 1.2.39
     const btnAm = am && !nuova ? `<button id="stSalva">Salva il mio risultato</button><button id="stCarica">Carica quello dell'amico</button><input type="file" id="stFileIn" accept=".json,application/json" hidden>` : "";
-    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Il circuito zonale</h2><span>${am && !nuova ? "codice " + S.codice + " · " : ""}${S.fine ? "stagione finita" : k ? "dopo la tappa " + k + " di " + ST_N : "stagione da cominciare"}</span></div>
-      ${msg && !k ? `<p class="manca">${msg}</p>` : ""}${fine}${spiega}${k ? tab : elenco}${frasi.length ? `<ul class="st-frasi">${frasi.map(f => `<li>${f}</li>`).join("")}</ul>` : ""}${k && !S.fine ? `<p class="tor-leg">Prossima: ${elenco.replace(/<\/?p>/g, "").split("<br>")[k]}</p>` : ""}
-      <div class="row">${nuova ? `<button class="primary" id="stInizia">Inizia la stagione</button>${am ? "" : `<button id="stAmico">Con un amico</button>`}` : ""}<button${nuova ? "" : ` class="primary"`} id="stIndietro">Indietro</button>${btnAm}${!nuova && !S.fine ? `<button id="stLascia">Lascia la stagione</button>` : ""}</div>`;
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Il circuito ${stCircNome(S)}</h2><span>${am && !nuova ? "codice " + S.codice + " · " : ""}${S.fine ? "stagione finita" : k ? "dopo la tappa " + k + " di " + ST_N : "stagione da cominciare"}</span></div>
+      ${msg && !k ? `<p class="manca">${msg}</p>` : ""}${fine}${scelta}${spiega}${k ? tab : elenco}${frasi.length ? `<ul class="st-frasi">${frasi.map(f => `<li>${f}</li>`).join("")}</ul>` : ""}${k && !S.fine ? `<p class="tor-leg">Prossima: ${elenco.replace(/<\/?p>/g, "").split("<br>")[k]}</p>` : ""}
+      <div class="row">${nuova ? `<button class="primary" id="stInizia">Inizia la stagione</button>${am || naz ? "" : `<button id="stAmico">Con un amico</button>`}` : ""}<button${nuova ? "" : ` class="primary"`} id="stIndietro">Indietro</button>${btnAm}${!nuova && !S.fine ? `<button id="stLascia">Lascia la stagione</button>` : ""}</div>`;
     $("stIndietro").onclick = () => { if (nuova && am) stBozza = null; torMostra(nota); };
-    if ($("stInizia")) $("stInizia").onclick = () => { progress.stagione = S; stBozza = null; delete progress.torneo; tor = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
+    if ($("stInizia")) $("stInizia").onclick = () => { if (naz && !stNazAperto()) return; progress.stagione = S; stBozza = null; delete progress.torneo; tor = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
     if ($("stAmico")) $("stAmico").onclick = () => stAmicoMostra(nota);
+    if ($("stZon")) $("stZon").onclick = () => { if (naz){ stCircScelto = "zon"; stBozza = null; stMostra(nota, true); } };
+    if ($("stNaz")) $("stNaz").onclick = () => { if (!naz && stNazAperto()){ stCircScelto = "naz"; stBozza = null; stMostra(nota, true); } };
     if ($("stLascia")) $("stLascia").onclick = () => { if (!confirm("Lasciare la stagione? La classifica del circuito si perde; il torneo della tappa in corso non conta.")) return;
       delete progress.stagione; delete progress.torneo; tor = null; torBozza = null; saveProgress(); torMostra(nota); };
     if ($("stSalva")) $("stSalva").onclick = () => { const a = document.createElement("a"), u = URL.createObjectURL(new Blob([stFile(S)], { type: "application/json" }));
@@ -1596,10 +1639,10 @@
       <div class="row"><button class="primary" id="stCrea">Crea un codice da mandare</button></div>
       <p class="tor-nome"><label for="stCodIn">Ho un codice:</label> <input id="stCodIn" type="text" maxlength="10" autocomplete="off" placeholder="7K2M9Q-E"> <button id="stEntra">Entra</button></p>
       <div class="row"><button id="stIndietro">Indietro</button></div>`;
-    $("stCrea").onclick = () => { stBozza = stNuova({ seme: Math.floor(Math.random() * 1073741824), liv: opt.aiLevel === "esperti" ? "esperti" : "principianti", io: "A" }); stMostra(nota, true); };
+    $("stCrea").onclick = () => { stBozzaModo = modo; stBozza = stNuova({ seme: Math.floor(Math.random() * 1073741824), liv: opt.aiLevel === "esperti" ? "esperti" : "principianti", io: "A" }); stMostra(nota, true); };
     $("stEntra").onclick = () => { const c = stLeggiCodice($("stCodIn").value);
       if (!c) return stAmicoMostra(nota, "Il codice non si legge: sono 6 lettere o cifre, un trattino e una E o una P (per esempio 7K2M9Q-E).");
-      stBozza = stNuova(Object.assign(c, { io: "B" })); stMostra(nota, true); };
+      stBozzaModo = modo; stBozza = stNuova(Object.assign(c, { io: "B" })); stMostra(nota, true); };
     $("stIndietro").onclick = () => { stBozza = null; stMostra(nota, true); };
   }
   // ---- disegno della regata ----
