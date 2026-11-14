@@ -77,3 +77,65 @@ Il guardiano deve:
 ## 7. Prima prova vera: il cono d'ombra (1.2.25)
 
 Contro il riferimento della 1.2.24 il guardiano ha suonato: arrivo mediano +4,75 s (soglia 1,78), lasco +0,75 s (soglia 0,5). Il confronto regata per regata sugli stessi 96 regate dà però +1,7 s ±1,3, e due gruppi da 240 regate danno −2,5 e −2,8 s (`PROPOSTA-CONO-D-OMBRA.md` §10). **Cosa insegna:** con una modifica che rimescola le regate la mediana su 96 regate salta di alcuni secondi; il guardiano resta un campanello, e quando suona si fa il confronto regata per regata su un gruppo grande prima di concludere. Riferimento riscritto sulla 1.2.25.
+
+## 8. Rifare il guardiano (voce 33 di `DA-FARE.md`): proposta, fermata 1
+
+14 novembre 2026, mattina. Ale: «ok, scrivi la proposta del guardiano». In `tests/` non è stato scritto niente.
+
+### Il difetto
+
+Le soglie del §3 sono state misurate con due modifiche neutre (`R_DIR` 40 e 80) che **non spostano i sorteggi**: le regate restano quasi le stesse. Basta però un numero casuale in più (i nomi della 1.2.33 sorteggiano i tre rivali) perché raffiche e partenze cambino da capo: sono altre 96 regate, e i numeri ballano più delle soglie. Due prove:
+- il cono d'ombra (1.2.25, §7): arrivo mediano +4,75 s sul guardiano, mentre il confronto regata per regata dava +1,7 s ±1,3;
+- la 1.2.32 con un solo `Math.random()` in più, cioè lo stesso gioco (`PROPOSTA-RIVALI-E-SPONSOR.md` §15): boe sbagliate 0 → 6, soglia +2.
+
+### Modello più semplice
+
+**1. Misurare il rumore dei sorteggi, non quello della guida.**
+- Una manopola nuova del collaudo, `SPOSTA=k`: dopo aver seminato il caso all'inizio della regata, il collaudo tira e butta via k numeri casuali. Il gioco è lo stesso, le regate no. Si tocca solo `tests/misura_avversari_rotta.py`; `js/` non si tocca.
+- Sulla versione di oggi (1.2.33) si corre il guardiano **8 volte**, con `SPOSTA` da 0 a 7.
+- Le corse usano **24 semi** (1491-1514, 192 regate per corsa). Ogni regata si salva da sola, così dalle stesse corse si calcolano anche i numeri sui primi 12 semi, senza correre di nuovo.
+
+**2. Il riferimento diventa la mediana delle 8 corse**, non una corsa sola: così il riferimento non porta il suo caso dentro il confronto.
+
+**3. Soglia di ogni numero** (G1-G9, gli stessi di oggi) = il più grande fra:
+- l'**intervallo** delle 8 corse (massimo − minimo);
+- il **minimo del §3**, che resta com'è.
+
+Stima, scritta prima di misurare: con questa regola una versione che non cambia niente fa suonare il guardiano circa **1 volta su 25**. Se capita, vale la regola del §7: confronto su un gruppo grande prima di concludere.
+
+**4. Quanti semi.** Si decide con la contro-prova (punto 5), con questa regola fissata adesso:
+- si prendono **12 semi** se con 12 la contro-prova va come deve;
+- altrimenti **24**;
+- se neanche 24 bastano, lo si dice e il guardiano diventa **solo informativo**, cioè stampa i numeri ma non boccia.
+
+**5. Contro-prova.**
+- **Deve passare** con 4 spostamenti mai guardati (`SPOSTA` da 8 a 11): 4 su 4. Così le soglie non sono scelte sulle stesse corse su cui si giudicano (regola dei semi).
+- **Deve fallire** con due modifiche che sappiamo peggiori:
+  - `DOWNE=off`, la poppa della 1.2.23;
+  - la patch della layline di dritta con `R_LAY` 100, su una copia del gioco. Se sulla 1.2.33 la patch non si applica più, lo dico e resta solo `DOWNE=off`, che allora deve fallire anche lui con l'intervallo delle 8 corse.
+
+**6. Informativo, solo se il caldo lo permette:** la 1.2.32 con 4 spostamenti, confrontando la sua mediana con quella della 1.2.33. Dice se i nomi hanno cambiato davvero qualcosa nei rivali. Non decide niente, perché la 1.2.33 è già chiusa (strada A).
+
+### Criteri, con soglie fissate prima di provare
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| Q1 | Il guardiano nuovo, sulla 1.2.33, con gli spostamenti 8-11 | passa 4 volte su 4 |
+| Q2 | `DOWNE=off` | fallisce |
+| Q3 | Layline di dritta, `R_LAY` 100 (se la patch si applica) | fallisce |
+| Q4 | Misura valida | tutte le regate finite (192 o 96 per corsa), 0 errori della pagina; ogni corsa con un'impronta diversa dalle altre, cioè gli spostamenti hanno cambiato davvero le regate |
+| Q5 | Non-regressione | `polare.js` e `raffiche_e_virate.js` identici; `js/` non toccato |
+
+### Costanti nuove (nostre, senza fonte)
+
+8 corse per misurare il rumore e 4 per la conferma; l'intervallo come soglia; 12 o 24 semi.
+
+### Rischi
+
+- **Soglie larghe:** il guardiano vedrà solo i peggioramenti grossi. Già oggi è così (§6), solo che oggi non lo sa. Per i peggioramenti piccoli restano la misura lunga e il confronto regata per regata.
+- **Tempo:** con 24 semi una corsa dura circa 11 minuti. In tutto sono circa 16 corse, quindi **3 ore** col freno del caldo, una corsa alla volta. Se il guardiano finisce a 24 semi, nei collaudi lunghi di `lancia_tutti.sh` costerà circa 11 minuti invece di 5-6.
+- **Boe sbagliate, squalificati, scuffiate** sono numeri piccoli, spesso 0 in tutte le corse: lì l'intervallo vale 0 e decide il minimo del §3. Le 6 boe sbagliate della prova della 1.2.32 dicono che anche quel minimo (+2) potrebbe essere stretto. Se lo è, si vedrà in Q1 e lo riporterò com'è, senza alzarlo dopo.
+
+### Cosa serve da Ale
+
+Il via. Si toccano solo `tests/misura_avversari_rotta.py` (la manopola `SPOSTA`), `tests/collaudo_guardiano_avversari.py` (soglie, riferimento a mediana, regate salvate), il riferimento `tests/guardiano_avversari_rif.json` e `docs/COLLAUDI.md`. Non è una versione del gioco.
