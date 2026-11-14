@@ -103,3 +103,38 @@ Ramo `sei-barche`. `tests/collaudo_sei_barche.py` (25 tornei a 4 e 25 a 6 sugli 
 **Corretto strada facendo:** «penalità alla Pietro Gallo» nel messaggio di un contatto fra due rivali (dalla 1.2.33).
 
 **Decisione di Ale (14 novembre, notte): «A, chiudi la 1.2.38».** Chiusa con N2 dichiarato: contatti nei primi 25 s in 34 regate su 100 con 6 barche (16 su 100 con 4, nel gioco di prima). Le manovre dei rivali prima del via restano nelle voci 4 e 17.
+
+## Passo 2 (1.2.39): come si fa, e criteri con le soglie (scritti il 15 novembre, prima del codice)
+
+Via già dato da Ale col resto della proposta («come consigli tu»: rivali più forti 4-4-2, il dodicesimo è il migliore del tuo zonale, torneo a 6 di prova nel gioco libero, già fatto nella 1.2.38).
+
+**Come si fa** (tutto intorno alla regata, la guida non cambia):
+- la stagione ha un circuito: zonale (com'è oggi; le stagioni salvate restano zonali) o **nazionale**; nella finestra della stagione nuova si sceglie fra i due;
+- **chi c'è:** tu, i 10 rivali nazionali, e il primo degli altri dell'ultimo zonale finito (da ora si salva a fine zonale); se uno zonale finito non c'è, il rivale zonale con più doti (a parità, il primo di un sorteggio);
+- **doti dei 10 nazionali:** nascono tutte insieme, per ogni area 4 doti, 4 medie e 2 difetti mescolati, e restano (come gli zonali, `progress.rivali`). Il dodicesimo tiene le sue doti dello zonale;
+- **4 tappe in posti inventati:** Lago dei Tre Venti, Golfo delle Meduse, Capo delle Rondini, Porto dei Velai;
+- **due batterie da 6**, gialla (la tua) e bianca; nella tua entrano per primi i rivali che non hai ancora incontrato; la tua batteria corre il torneo a 6 barche della 1.2.38;
+- **punti** 1-12, stessa classifica, stesse frasi, stesso salvataggio; lo stesso peso del sorteggio a numeri dello zonale (`ST_B` = 0,2), non ritarato;
+- **chi entra:** in carriera il nazionale è aperto solo con il diritto (primi 3 dello zonale); nel gioco libero sempre;
+- **a fine nazionale:** i primi 3 hanno il «diritto alla finale», solo scritto;
+- **con un amico:** il nazionale per ora no (resta lo zonale con il codice). Dichiarato.
+
+**Criteri del passo 2** (quelli dello zonale rifatti per 12 e batterie da 6, soglie invariate dove non detto):
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| Z1n | Tappe a numeri | semi 11-20, 200 stagioni nazionali per gruppo: ogni rivale (anche il dodicesimo) vince almeno 1 stagione su 200; in media chi ha dote in tutte e due le aree finisce davanti a chi ha difetto in tutte e due (semi 1-10 solo riportati) |
+| Z2n | La tua batteria nell'ordine del torneo | 20 tappe corse col pilota (80 regate da 6): 20 su 20 |
+| Z3n | Conti | posti 1-12, somma 78 in ogni tappa; posto finale uguale al ricalcolo |
+| Z4n | Frasi vere | 20 stagioni intere: 0 frasi false; almeno una frase a fine stagione in 18 su 20 |
+| Z5n | Salvataggio | pagina ricaricata dopo 2 tappe: stagione e circuito uguali; «Azzera i progressi» la cancella |
+| Z6n | Le regate non cambiano | impronta del guardiano identica al bit; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici |
+| Z7n | Pannello e browser | 0 px di eccesso a 1360×650 con la classifica di 12 righe e 3 frasi, a stagione finita; Chromium e Firefox senza `#collaudo`, 0 errori |
+| Z12n | Batterie giuste | 800 tappe: la tua batteria ha 6 barche con te, l'altra 6; ognuno in una batteria sola |
+| Z13n | Si incontrano tutti | 200 stagioni: in media almeno 10 degli 11 rivali corrono con te almeno una volta |
+| Z14n | Il racconto dice il vero | il vincitore scritto di ogni batteria è il primo di quella batteria nell'ordine della tappa: 0 errori |
+| N8 | Il nazionale è più duro | 2000 stagioni a numeri per circuito, sugli stessi semi: il tuo posto relativo medio, (posto − 1) / (concorrenti − 1), è peggiore al nazionale che allo zonale. Si misura il posto relativo e non quello in assoluto, perché con 12 concorrenti invece di 11 si finirebbe più indietro anche con rivali uguali |
+| N9 | Chi entra | carriera: senza il diritto il nazionale non si può cominciare, col diritto sì; gioco libero: sempre |
+| N10 | Lo zonale non cambia | `collaudo_stagione` e `collaudo_stagione_amico` OK, codici dell'amico identici (Z8) |
+
+Rischio già noto: a numeri il peso delle doti è piccolo (`ST_B` = 0,2), quindi N8 potrebbe uscire con uno scarto minimo; in acqua i rivali più forti contano di più, ma lì non si misura con 2000 stagioni. Il numero si riporta com'è.
