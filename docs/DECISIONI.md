@@ -147,6 +147,7 @@ Costo di cambiamento:
 | Carriera a circuiti: zonale e nazionale per ogni livello di barca, nomi come nella realtà; venti nomi di rivali approvati | 13 nov (proposta, il resto da decidere) | medio | Salvataggio dei rivali fra i tornei | `PROPOSTA-RIVALI-E-SPONSOR.md` §11-12 |
 | **La Scuola è chiusa come contenuti**: niente da aggiungere; restano cose da sistemare rigiocando. Supera «Deriva aspetta la Scuola» (4 nov): non c'è più da aspettare la prova della Scuola per lavorare a Deriva | 13 nov (Ale: «come contenuti è chiusa, ci sarà da rivedere rigiocando varie cose da sistemare ma da aggiungere proprio no») | basso | Ordine dei lavori | `IL-GIOCO.md` §2, `STATO.md` |
 | Rivali del torneo: due tratti, partenza e bolina, ogni area sorteggiata da sola (opzione A); manovre al posto della poppa provate e tolte | 13 nov sera (Ale: A, poi «chi è meno bravo è più lento nelle manovre») | basso | Solo `aiTratti` | `PROPOSTA-TRATTI-RIVALI.md` §11-15 |
+| 1.2.33 chiusa col guardiano degli avversari che non passa, dichiarato non adatto (nel rumore del caso); il guardiano si rifà dopo | 14 nov mattina (Ale: «ok A») | basso | Rifare il guardiano e rimisurare | `PROPOSTA-RIVALI-E-SPONSOR.md` §15; `DA-FARE.md` voce 33 |
 
 ## Contenuti e confini legali
 
