@@ -25,6 +25,7 @@ Voce 34 di `DA-FARE.md`, nota di Ale del 13 novembre («a volte quelle scritte c
 
 - **La scritta sopra un avversario** (colore, o cognome nel torneo) sta sopra la barca come prima, ma se lì copre lo scafo di un'altra barca, compresa la tua, scende sotto. Se anche sotto copre qualcosa, resta sopra e diventa trasparente.
 - **Niente sfarfallio:** dopo un cambio di posto la scritta resta ferma almeno 1 s di regata. Se nel frattempo copre una barca, è trasparente.
+- **Da lontano** (tasti 1-2, rotella, moviola): distanza dalla barca e lettere in proporzione alla vista, fino a 10 px (scelta A di Ale). Da vicino niente cambia.
 - **Solo disegno:** le regate non cambiano.
 - **Collaudo nuovo** `tests/collaudo_etichette.py`, con la misura `tests/misura_etichette.py`: 20 regate fisse del torneo, controllando le scritte mentre il gioco le disegna.
 - **Misure:** vedi `docs/PROPOSTA-ETICHETTE-BARCHE.md`, Esito.

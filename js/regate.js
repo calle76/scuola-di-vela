@@ -1456,7 +1456,9 @@
   // ---- scritte sopra le barche (1.2.34, PROPOSTA-ETICHETTE-BARCHE.md) ----
   // Sopra la barca (58 px) se lì non copre lo scafo di un'altra barca, altrimenti sotto; se nessuno dei due posti è libero, trasparente.
   // Un cambio di posto resta almeno ETICH_FERMA secondi di regata, per non far saltare la scritta su e giù.
-  const ETICH_ALFA = 0.4, ETICH_FERMA = 1;
+  // Da lontano (scelta A di Ale): distanza e lettere in proporzione alla vista, k = pixel per metro / quelli della vista normale (al massimo 1);
+  // distanza dal centro della barca ETICH_GAP·k, mai meno di mezza barca + ETICH_SPAZIO; lettere 13·k, mai sotto ETICH_LETT_MIN px.
+  const ETICH_ALFA = 0.4, ETICH_FERMA = 1, ETICH_GAP = 40, ETICH_SPAZIO = 3, ETICH_LETT_MIN = 10;
   function rettTocca(x, y, w, h, P){
     const dentro = (px, py) => px >= x && px <= x + w && py >= y && py <= y + h;
     if (P.some(([px, py]) => dentro(px, py))) return true;
@@ -1469,8 +1471,8 @@
       if (ok) return true; }
     return false;
   }
-  function etichPosto(b, i, sx, sy, w, scafi){
-    const yS = sy - 58, yG = sy + 40, copre = y => scafi.some((P, j) => j !== i && rettTocca(sx - w / 2, y, w, 18, P));
+  function etichPosto(b, i, sx, sy, w, h, g, scafi){
+    const yS = sy - g - h, yG = sy + g, copre = y => scafi.some((P, j) => j !== i && rettTocca(sx - w / 2, y, w, h, P));
     const q = b.etq || (b.etq = { su: true, t: -1e9 }), libSu = !copre(yS), libGiu = !copre(yG), puo = R.t - q.t >= ETICH_FERMA || R.t < q.t;
     if (puo && q.su && !libSu && libGiu){ q.su = false; q.t = R.t; }
     else if (puo && !q.su && (libSu || !libGiu)){ q.su = true; q.t = R.t; } // torna sopra appena è libero, o se anche sotto è coperto
@@ -1480,9 +1482,13 @@
     if (!R) return;
     ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const scafi = R.boats.map(b => hullWorld(b.S).map(([x, y]) => toScreen(v, x, y)));
+    const k = Math.min(1, v.ppm / (Math.min(W, H) / 48)), lett = Math.max(ETICH_LETT_MIN, 13 * k), h = lett + 5;
+    ctx.font = font(700, lett);
     R.boats.forEach((b, i) => { if (b.me) return; const [sx, sy] = toScreen(v, b.S.x, b.S.y), et = b.etich || b.name, w = ctx.measureText(et).width + 10; // 1.2.33: nel torneo il cognome
-      const p = etichPosto(b, i, sx, sy, w, scafi); ctx.globalAlpha = p.piena ? 1 : ETICH_ALFA;
-      ctx.fillStyle = "rgba(10,24,36,.6)"; ctx.fillRect(sx - w / 2, p.y, w, 18); ctx.fillStyle = b.S.sailorColor; ctx.fillText(et, sx, p.y + 9); ctx.globalAlpha = 1; });
+      const mezza = Math.max(...scafi[i].map(([x, y]) => Math.hypot(x - sx, y - sy))), g = Math.max(ETICH_GAP * k, mezza + ETICH_SPAZIO);
+      const p = etichPosto(b, i, sx, sy, w, h, g, scafi); ctx.globalAlpha = p.piena ? 1 : ETICH_ALFA;
+      ctx.fillStyle = "rgba(10,24,36,.6)"; ctx.fillRect(sx - w / 2, p.y, w, h); ctx.fillStyle = b.S.sailorColor; ctx.fillText(et, sx, p.y + h / 2); ctx.globalAlpha = 1; });
+    ctx.font = font(700, 13);
     R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + 10, gy - 10); });
     drawOrologio(R.boats[0], ranking());
     ctx.restore();

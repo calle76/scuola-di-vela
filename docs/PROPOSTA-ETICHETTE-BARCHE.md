@@ -54,3 +54,61 @@ Il via. Si toccano solo `js/regate.js` (`drawRaceScreen`) e un collaudo nuovo. V
 - Due coppie di regate danno numeri uguali, «regata 2 / regata 4, seme 2303» e «regata 1 / regata 3, seme 2305»: in quei tornei le due regate hanno lo stesso campo e lo stesso vento. Lo segnalo, ma per E1 non cambia niente.
 
 Con questo metro, E2 chiede: al massimo 187 disegni con una scritta piena sopra uno scafo (il 10% di 1870), e 0 sopra la tua barca, sulle stesse 20 regate.
+
+## Seconda parte: la proporzione da lontano (14 novembre, scelta A di Ale; scritta prima del codice)
+
+Osservazione di Ale: «durante la moviola, che vista tutta dall'alto ha barchette piccolissime e scritte grandi». Le fotografie lo confermano (`tests/output/etichette_lontano_*.png`, tasto 2 premuto 8 volte): con la correzione della prima parte la tua barca si vede, ma la scritta di Lunardi finisce 58 px sotto una barca di pochi pixel, e non si capisce più di chi sia. Ale ha scelto A.
+
+**Modello.**
+- Un fattore `k`: quanto la vista è più lontana di quella normale, cioè pixel per metro dello schermo diviso per quelli della vista normale. Vale al massimo 1: avvicinando la vista non cambia niente rispetto a oggi.
+- La distanza fra il centro della barca e il bordo vicino della scritta è 40 px × `k`, mai meno di mezza barca sullo schermo + 3 px.
+- Le lettere sono 13 px × `k`, mai meno di 10 px. Il rettangolo è alto quanto le lettere + 5 px (oggi 18).
+- La scelta sopra/sotto e la trasparenza restano quelle della prima parte.
+
+**Costanti nuove**, nostre e senza fonte: 10 px come lettera più piccola, 3 px di spazio minimo dalla barca.
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| F1 | Vista normale: niente cambia rispetto alla prima parte | `collaudo_etichette` in Chromium con gli stessi totali della prima parte: 54 335 disegni, 0 scritte piene su uno scafo, 2 trasparenti, 163 cambi di posto |
+| F2 | Da lontano (tasto 2 × 8), stesse 20 regate: di chi è la scritta. Per ogni scritta disegnata, la barca più vicina al rettangolo deve essere la sua | almeno il 90% delle scritte, contro il valore misurato prima del codice sulla 1.2.33 e sulla prima parte, che riporterò com'è |
+| F3 | Da lontano: scritte piene sopra uno scafo | al massimo il 10% della 1.2.33 misurata da lontano, e 0 sopra la tua barca |
+| F4 | Da lontano: lettere | mai sotto 10 px |
+| F5 | Le regate non cambiano, pannello, pagina senza `#collaudo` in Chromium e Firefox | come E4-E6 |
+
+Le misure «prima» (1.2.33 e prima parte, da lontano) si fanno con lo stesso strumento prima di scrivere il codice.
+
+## Esito (14 novembre, pomeriggio): 1.2.34 fatta, NON chiusa (F2 non passa)
+
+**Prima parte, sopra o sotto e trasparenza.** `collaudo_etichette`, 20 regate:
+
+| | Chromium | Firefox |
+| --- | --- | --- |
+| E2: disegni con una scritta piena su uno scafo | **0** (1.2.33: 1870) | **0** |
+| E2: sopra la tua barca | **0** (1.2.33: 903) | **0** |
+| trasparenti | 2 | 79 |
+| E3: cambi di posto, di cui a meno di 1 s | 163, **0** | 215, **0** |
+
+- E4: impronta del guardiano identica al bit (`2c0e3804a20d`, semi 1491-1502); `polare.js` e `raffiche_e_virate.js` identici; `collaudo_versione` OK.
+- E5: pagina senza `#collaudo`, Chromium e Firefox: versione 1.2.34, 0 errori. Fotografie: `tests/output/etichette_vicino_prima.png` e `_dopo.png`.
+- E6: 0 px di eccesso.
+- **Da dire:** lo 0 di E2 è quasi garantito per costruzione, perché il gioco fa lo stesso controllo dello strumento, anzi più preciso. Il dato che informa è un altro: le scritte trasparenti sono poche (2 e 79 disegni su circa 55 000), quindi quasi sempre c'è un posto libero.
+- **Errori miei nello strumento delle fotografie, corretti prima di riportare:**
+  - il segnale «scritta sulla tua barca» restava acceso da un momento precedente;
+  - la regata non era quella della misura, perché il gruppo dei rivali nasce dal primo torneo aperto.
+
+  Anche le prime misure «da lontano» non valevano: il tasto 2 premuto prima che il gioco partisse veniva ignorato. Ora lo zoom si imposta all'inizio di ogni regata.
+
+**Seconda parte, proporzione da lontano (scelta A).** `misura_etichette.py` con `ZOOM=8` (vista a 0,17), stesse 20 regate, Chromium:
+
+| | 1.2.33 | prima parte | **A** | soglia |
+| --- | --- | --- | --- | --- |
+| F1 vista normale, totali come la prima parte | – | – | **identici** (54 335 / 0 / 2 / 163) | identici ✓ |
+| F2 scritte più vicine alla propria barca | 45,1% | 53,4% | **88,6%** | ≥ 90% ✗ |
+| F3 disegni con una scritta piena su uno scafo | 18 664 (34,3%) | 0 | **0**, 0 sulla tua | ≤ 1866, 0 sulla tua ✓ |
+| F4 lettere più piccole | 13 px | 13 px | **10 px** | ≥ 10 ✓ |
+
+**Perché F2 non passa, diagnosi senza toccare niente.** Delle 18 574 scritte «sbagliate», 947 hanno un'altra barca entro 10 px, 7197 fra 10 e 20, 10 413 fra 20 e 40, e solo 17 oltre 40. Da lontano 40 px sono circa 4 lunghezze. La scritta più piccola è comunque larga circa 60 px, quindi con due barche così vicine il rettangolo tocca anche la vicina. Fotografia: `tests/output/etichette_lontano_A.png`, con due scritte impilate fra due barche vicine.
+
+**La 1.2.34 non è chiusa:** la soglia di F2 resta 90%. Strade per Ale:
+- **chiudere così**, dichiarando F2 a 88,6%: dal 45% al 89%, nessuna scritta piena sulle barche;
+- **aggiungere l'iniziale da lontano**, cioè la strada B scartata prima: solo da lontano e solo quando una barca vicina rende ambigua la scritta. Una scritta di una lettera è larga circa 15 px. Andrebbe rimisurata su semi nuovi.
