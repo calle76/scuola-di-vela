@@ -99,6 +99,7 @@ TESTS=(
     "collaudo_etichette.py|py|chiaro|1||collaudo_etichette.py"
     "collaudo_stagione.py|py|chiaro|1||collaudo_stagione.py"
     "collaudo_stagione_amico.py|py|chiaro|1||collaudo_stagione_amico.py"
+    "collaudo_sei_barche.py --veloce|py|chiaro|1||collaudo_sei_barche.py"
     "collaudo_triangolo.py|py|chiaro|1||collaudo_triangolo.py"
     "collaudo_avversari_deriva.py|py|chiaro|0||collaudo_avversari_deriva.py"
     "collaudo_distacchi_testo.py|py|chiaro|1||collaudo_distacchi_testo.py"

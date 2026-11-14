@@ -6,13 +6,14 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.37** (14 novembre sera, tag `v1.2.37`): **stagione con un amico**. Con un codice comune Ale e Lucio hanno la stessa stagione, ognuno nella sua batteria; dopo ogni tappa si scambiano un file e la classifica del circuito di 12 è la stessa nelle due pagine (`PROPOSTA-STAGIONE-ZONALE.md`, Esito di Lucio dodicesimo). Prima, lo stesso giorno:
-  - 1.2.36: stagione del circuito zonale a batterie;
+- **Ultima versione chiusa: 1.2.38** (14 novembre notte, tag `v1.2.38`): **regate a 6 barche, di prova**, nel torneo del gioco libero («Barche in acqua: 4 · 6, di prova»). È il passo 1 del nazionale. Chiusa con N2 dichiarato per scelta di Ale («A»): contatti nei primi 25 s in 34 regate su 100 con 6 barche, ma già 16 su 100 con 4 (`PROPOSTA-NAZIONALE.md`, Esito). Prima, lo stesso giorno:
+  - 1.2.37: stagione con un amico (codice e file);
+  - 1.2.36: stagione del circuito zonale;
   - 1.2.35: testi dei rivali;
-  - 1.2.34: scritte sopra le barche, chiusa con F2 all'88,6% per scelta di Ale.
+  - 1.2.34: scritte sopra le barche.
 
-  Da pushare dalla 1.2.30 alla 1.2.37: `git push origin main --tags`.
-- **1.2.38 (regate a 6 barche, passo 1 del nazionale) NON chiusa**, ramo `sei-barche` (commit `36b9ad4`; la cartella di lavoro era nella scratchpad della sessione: se non c'è più, rifarla con `git worktree add <cartella> sei-barche`). Passano N1 e N3-N7: partenze, contatti per coppia uguali a 4 barche, velocità 1,42-1,64 volte, scritte, pannello; con 4 barche tutto identico. **N2 no:** contatti nei primi 25 s in 34 regate su 100 con 6 barche, ma già in 16 su 100 con 4, cioè nel gioco di oggi. Per coppia di barche la frequenza è la stessa. **Decide Ale:** chiudere dichiarando N2, oppure prima le manovre dei rivali prima del via (voci 4 e 17). `PROPOSTA-NAZIONALE.md`, Esito sul ramo.
+  Da pushare dalla 1.2.30 alla 1.2.38: `git push origin main --tags`.
+- **Prossimo:** passo 2 del nazionale (1.2.39, stagione nazionale: 12 regatanti, 10 rivali nazionali, batterie da 6). Proposta già scritta e con il via di Ale (`PROPOSTA-NAZIONALE.md`); si parte dai criteri del passo 2.
 - **Dopo il nazionale** (Ale, 14 nov sera: «dopo i nazionali il gioco è quasi completo»):
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;

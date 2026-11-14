@@ -6,13 +6,13 @@
 import asyncio, json, os, pathlib, sys
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent) / "index.html").as_uri() + "#collaudo"
-JS = """([k, liv, seme, zoom]) => {
+JS = """([k, liv, seme, zoom, sei]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
   sv.fast(0); sel('aiLevel', liv); sel('cdSel', '60'); window.confirm = () => true;
   if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
-  semina(); sv.torApri(); document.getElementById('torGo').click();
-  const T = sv.tor; T.ris.length = 0; for (let j = 0; j < k; j++) T.ris.push([0, 1, 2, 3].map(i => ({ fin: i + 1, pp: 0 })));
+  semina(); sv.torApri(); if (sei) document.getElementById('torN6').click(); document.getElementById('torGo').click(); // SEI=1: torneo a 6 barche (1.2.38)
+  const T = sv.tor; T.ris.length = 0; for (let j = 0; j < k; j++) T.ris.push(Array.from({ length: T.av.length + 1 }, (_, i) => ({ fin: i + 1, pp: 0 })));
   semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
   if (zoom){ userZoom = Math.max(0.1, Math.pow(1.25, -zoom)); camZoom = userZoom; } // ZOOM=n: come n volte il tasto 2 (seconda parte della proposta)
   const R = sv.R, dt = 1 / 60;
@@ -48,7 +48,7 @@ async def main():
         for k in range(4):
             for seme in range(2301, 2306):
                 liv = "principianti" if seme % 2 else "esperti"
-                r = await pg.evaluate(JS, [k, liv, seme, int(os.environ.get("ZOOM") or 0)]); r.update(reg=k, seme=seme, liv=liv); out.append(r)
+                r = await pg.evaluate(JS, [k, liv, seme, int(os.environ.get("ZOOM") or 0), int(os.environ.get("SEI") or 0)]); r.update(reg=k, seme=seme, liv=liv); out.append(r)
                 print(f"  regata {k + 1} seme {seme} {liv}: disegni {r['disegni']}, con una scritta su uno scafo {r['copre']} (sul tuo {r['copreMe']}), scritte disegnate {r['etichette']}, trasparenti {r['trasp']}, sotto {r['sotto']}, cambi di posto {r['cambi']} (sotto 1 s: {r['salti']}), della barca giusta {r['giuste']}, lettere min {r['lettMin']}", flush=True)
         await br.close()
     D = sum(r["disegni"] for r in out); C = sum(r["copre"] for r in out); M = sum(r["copreMe"] for r in out); E = sum(r["etichette"] for r in out)
