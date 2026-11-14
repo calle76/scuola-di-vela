@@ -382,3 +382,5 @@ Quindi le soglie del guardiano stanno dentro il rumore del caso per qualunque ca
 **Per Ale, due strade:**
 - **A (la mia proposta):** chiudere la 1.2.33 così, dichiarando che il guardiano non è adatto a questo cambio, con la prova qui sopra. Poi rifare il guardiano, voce nuova della lista: misurare il rumore (la versione di riferimento con 3-5 spostamenti dei numeri casuali) e mettere le soglie sopra quel rumore, oppure usare più semi.
 - **B:** rifare prima il guardiano, poi rimisurare la 1.2.33 e chiuderla solo se passa.
+
+**Decisione di Ale (14 novembre, mattina): A.** La 1.2.33 si chiude con il guardiano dichiarato non adatto a questo cambio. Il guardiano si rifà dopo (voce 33 di `DA-FARE.md`).

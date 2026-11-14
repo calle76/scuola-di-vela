@@ -24,7 +24,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 Primo passo della carriera a circuiti (voci 28 e 30 di `DA-FARE.md`; `docs/PROPOSTA-RIVALI-E-SPONSOR.md` §12-14; via di Ale del 13 novembre: «sì, fai anche i nomi»). Solo nel torneo: la Scuola e le altre regate restano con Rossa, Verde e Blu.
 
 - **Dieci rivali del circuito zonale**, inventati e controllati nome per nome (§12), ognuno con una riga di storia che dice da dove viene, mai com'è in acqua. A ogni torneo nuovo se ne sorteggiano tre diversi. Le barche restano rossa, verde e blu, e il colore si legge accanto al nome («Tommaso Brunelli (barca rossa)»).
-- **Gruppo fisso:** la prima volta che un rivale compare si sorteggiano i suoi tratti (partenza e bolina, 1.2.31), che poi restano: chi ritorna in un altro torneo è uguale a prima. Il carattere (prudente, normale, aggressiva) resta sorteggiato a ogni torneo. Il gruppo sta con i progressi, separato fra carriera e gioco libero, e «Azzera i progressi» lo cancella.
+- **Gruppo fisso e bilanciato:** i tratti dei dieci rivali (partenza e bolina, 1.2.31) si sorteggiano una volta sola e poi restano: chi ritorna in un altro torneo è uguale a prima. Per ciascuna area ci sono sempre 3 doti, 4 medie e 3 difetti, mescolati a caso: chi sia bravo in cosa cambia da giocatore a giocatore, la flotta nel complesso no. Il carattere (prudente, normale, aggressiva) resta sorteggiato a ogni torneo. Il gruppo sta con i progressi, separato fra carriera e gioco libero, e «Azzera i progressi» lo cancella.
 - **Dove si leggono:**
   - presentazione del torneo e testo prima di ogni regata;
   - classifica del torneo e classifica della regata;
@@ -34,6 +34,7 @@ Primo passo della carriera a circuiti (voci 28 e 30 di `DA-FARE.md`; `docs/PROPO
 - **Il tuo nome**, facoltativo, al massimo 20 caratteri, nelle Impostazioni e nella finestra del torneo prima della prima regata. Compare nella classifica della regata e del torneo, nella schermata finale, nel libretto («Libretto di …»), come valore iniziale del nome sull'attestato e in una riga d'intestazione delle registrazioni. Vale in carriera e nel gioco libero; vuoto, si legge «Tu» come prima. Nei messaggi della regata il gioco continua a darti del tu.
 - **Registrazioni:** nelle righe del file le barche si chiamano come sempre (Tu, Rossa, Verde, Blu), perché un nome con lo spazio avrebbe rotto la lettura delle righe; i nomi del torneo sono nell'intestazione («barche: Tu, Rossa = Tommaso Brunelli (prudente), …»).
 - **Collaudo nuovo** `tests/collaudo_nomi_rivali.py`: 200 tornei creati di fila (stessi tratti per chi ritorna, sorteggio equilibrato) e 20 tornei corsi (i nomi in ogni posto, il nome del giocatore vuoto, normale, lungo e con caratteri come `<b>`).
+- **Guardiano degli avversari: non passa, e la versione si chiude lo stesso, per decisione di Ale (strada A, 14 novembre).** Sui semi 1491-1502 G5 dà contatti 61 → 76 (soglia +6). Ma il guardiano boccia anche la 1.2.32 con un solo `Math.random()` in più, cioè lo stesso gioco (boe sbagliate 0 → 6): le sue soglie stanno nel rumore del caso e non sa giudicare un cambio che sposta i sorteggi. Il guardiano si rifà (voce 33 di `DA-FARE.md`). La guida degli avversari non è stata toccata.
 - **Misure:** vedi `docs/PROPOSTA-RIVALI-E-SPONSOR.md` §15.
 
 ## 1.2.32 — Rotta ottimale più leggibile
