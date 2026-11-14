@@ -119,3 +119,31 @@ Ale: «aggiungere Lucio alla stagione». Lucio diventa il **dodicesimo della flo
 - **Rivali diversi in acqua:** Lucio può avere incontrato i rivali più forti, e Ale quelli più deboli. Il piazzamento a numeri compensa solo in parte, e va detto nel gioco.
 
 **Scelta in più per Ale:** la stagione con Lucio parte insieme alla stagione da solo, oppure dopo, come secondo passo. Consiglio: dopo, così il primo passo resta piccolo e la stagione da solo si collauda per conto suo.
+
+## Aggiunta (14 novembre, sera): le batterie
+
+Ale: «mi sembra però strano giocare contro 3 e vedere una classifica di 11». Scelta: **batterie allo zonale ora, flotta più grande al nazionale** (Ale: «ok B ora e A al nazionale»).
+
+**Fonte.** Nei campionati con flotte grandi la serie di qualificazione si corre a flotte separate, gruppi di colore il più possibile uguali di numero, e le classifiche poi si mettono insieme (F103, **[da verificare]** sul testo intero). Il gioco usa la stessa idea in piccolo, e lo dichiara.
+
+**Cosa cambia nel modello.**
+- **A ogni tappa la flotta del circuito è divisa in batterie.** Tu corri sempre in una batteria da 4, cioè tu più 3 rivali: è la regata di oggi.
+- **Le altre batterie corrono «a numeri»**, come scritto sopra, ma ora hanno un nome e si raccontano:
+  - prima: «Oggi la flotta è divisa in tre batterie: tu corri nella gialla con Sara, Pietro e Bartolin»;
+  - dopo: «Nella blu ha vinto Fontana, nella rossa Gallo».
+- **Le batterie cambiano a ogni tappa**, come nelle flotte separate vere: in una stagione si incontrano in acqua quasi tutti i rivali.
+- **Quante batterie e di quanti:**
+  - da solo siete in 11 (tu e 10 rivali): batterie da 4, 4 e 3. Le flotte vere sono «il più possibile uguali», non per forza uguali. La tua è sempre da 4; quella da 3 corre a numeri, quindi non si vede;
+  - con Lucio siete in 12: tre batterie da 4. Lucio corre sempre nella sua, mai nella tua.
+- **Al nazionale** (passo successivo, proposta a parte): la tua batteria diventa più grande, 6 barche, come premio della promozione. Prima vanno sistemati la linea di partenza, i punti, gli aspetti delle barche e le precedenze con più di 4 barche (`PROPOSTA-RIVALI-E-SPONSOR.md` §7).
+
+**Criteri in più, con soglie fissate prima di provare.**
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| Z12 | Batterie giuste | in 200 tappe simulate: la tua batteria ha sempre 4 barche; le altre differiscono al massimo di 1; ogni concorrente è in una batteria sola |
+| Z13 | Si incontrano tutti | in 200 stagioni simulate da 4 tappe, in media almeno 8 dei 10 rivali corrono in acqua con te almeno una volta |
+| Z14 | Il racconto dice il vero | il vincitore scritto per ogni batteria è il primo di quella batteria nella classifica della tappa: 0 errori in 20 tappe corse |
+
+**Scelta in più per Ale.** Da soli in 11 le batterie sono da 4, 4 e 3. Si può invece aggiungere un undicesimo rivale, preso dalla lista dei 20 nomi già approvati (§12), per fare tre batterie da 4. Costo: il gruppo bilanciato della 1.2.33 (3 doti, 4 medie, 3 difetti per area) va rifatto per 11, e i gruppi già salvati si rigenerano. Consiglio: restare a 10 rivali. La batteria da 3 non si vede, e con Lucio si arriva comunque a 12.
+
