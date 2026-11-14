@@ -4,6 +4,8 @@
 #       nella classifica della regata, in acqua (cognome), nella classifica del torneo e nella scheda dei rivali (titolo, storia, pulsanti)
 #   M2-M3: 200 tornei creati di fila (senza correrli): ogni nome ha sempre gli stessi tratti; ogni nome compare fra il 20% e il 40% dei tornei
 #   N1: il nome del giocatore in almeno 5 posti; N2: nome vuoto = «Tu»; N3: a fine regata 0 px di eccesso; N4: «<b>x</b>» resta testo
+#   1.2.35 (PROPOSTA-RIVALI-E-SPONSOR.md §17): T1 il testo prima della regata NON nomina i rivali (prima M1 chiedeva il contrario); T2 presentazione del
+#   torneo coi nomi e il rimando a «I rivali», pulsante prima della prima regata, stessi rivali dopo andata e ritorno; T3 le tre righe delle schede
 # Uso: python tests/collaudo_nomi_rivali.py [--tornei N]   (BROWSER=firefox per Firefox)
 import asyncio, json, os, pathlib, sys
 from playwright.async_api import async_playwright
@@ -15,6 +17,16 @@ NUOVO = """(seme) => { const sv = __sv; window.confirm = () => true;
   if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
   semina(seme); sv.torApri(); const intro = document.getElementById('torBody').textContent; document.getElementById('torGo').click();
   return { av: sv.tor.av.map(a => ({ nome: a.nome, tr: a.ai.tr })), intro }; }"""
+BOZZA = """(seme) => { const sv = __sv; window.confirm = () => true;
+  const semina = s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; };
+  if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
+  semina(seme); sv.torApri(); const B = document.getElementById('torBody'), prima = B.textContent, bott = !!document.getElementById('torRivali');
+  document.getElementById('torRivali').click(); const n0 = document.querySelectorAll('.tor-sch').length, vuote = [...document.querySelectorAll('.tor-sch')].every(d => /Ancora nessuna regata insieme/.test(d.textContent));
+  const d = document.getElementById('torDlg'), q = document.getElementById('torBody'), sc = Math.max(d.scrollHeight - d.clientHeight, q.scrollHeight - q.clientHeight, 0);
+  document.getElementById('torIndietro').click(); const dopo = document.getElementById('torBody').textContent;
+  document.getElementById('torGo').click(); return { prima, dopo, bott, n0, vuote, sc, av: sv.tor.av.map(a => ({ nome: a.nome, tr: a.ai.tr, char: a.char })) }; }"""
+RIGA = {"partenza": ["parte bene", "nella media", "parte tardi"], "bolina": ["stringe bene", "nella media", "va larga"]}
+SPIEGA = {"prudente": "prudente: si lancia", "normale": "normale, niente di particolare", "aggressiva": "aggressiva: punta le barche"}
 CORSA = """(seme) => { const sv = __sv, dt = 1 / 60;
   const semina = s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; };
   sv.fast(0); semina(seme + 7); sv.simTime = 0; sv.openItem(["r", "t"]);
@@ -48,6 +60,25 @@ async def main():
         fuori = {n: c for n, c in conta.items() if not 40 <= c <= 80}
         if fuori: falli.append(f"M3 fuori dal 20-40% su 200 tornei: {fuori}")
         print(f"  M2-M3: 200 tornei; presenze {conta}; tratti {tr}", flush=True)
+        # T2-T3 (1.2.35): presentazione, pulsante prima della prima regata, stessa bozza dopo andata e ritorno, righe delle schede
+        visti = {"partenza": set(), "bolina": set()}
+        for t in range(20):
+            b = await pg.evaluate(BOZZA, 7000 + t)
+            if not b["bott"] or b["n0"] != 3 or not b["vuote"] or b["sc"] > 0: falli.append(f"T2 t{t}: pulsante {b['bott']}, schede {b['n0']}, vuote {b['vuote']}, scorrimento {b['sc']} px")
+            if b["prima"] != b["dopo"]: falli.append(f"T2 t{t}: dopo «I rivali» e «Indietro» la presentazione è cambiata")
+            for k, a in enumerate(b["av"]):
+                if a["nome"] + " (barca " + ["rossa", "verde", "blu"][k] + ")" not in b["prima"]: falli.append(f"T2 t{t}: presentazione senza {a['nome']} (barca …)")
+            if "I rivali" not in b["prima"]: falli.append(f"T2 t{t}: presentazione senza il rimando a «I rivali»")
+            await pg.evaluate("() => { __sv.torApri(); document.getElementById('torRivali').click(); }")
+            for k, a in enumerate(b["av"]):
+                txt = await pg.evaluate("k => [...document.querySelectorAll('.tor-sch')][k].querySelector('.tor-tratti').innerHTML.split('<br>').map(r => { const d = document.createElement('div'); d.innerHTML = r; return d.textContent; }).join('\\n')", k)  # le schede nascoste non danno gli a capo con innerText
+                att = [SPIEGA[a["char"]], "Partenza: " + RIGA["partenza"][a["tr"][0]], "Bolina: " + RIGA["bolina"][a["tr"][1]]]
+                righe = txt.split("\n")
+                if len(righe) != 3 or any(x not in r for x, r in zip(att, righe)): falli.append(f"T3 t{t} {a['nome']}: righe {righe} invece di {att}")
+                visti["partenza"].add(a["tr"][0]); visti["bolina"].add(a["tr"][1])
+            await pg.evaluate("() => { document.getElementById('torIndietro').click(); document.getElementById('torDlg').close(); }")
+        if visti["partenza"] != {0, 1, 2} or visti["bolina"] != {0, 1, 2}: falli.append(f"T3 non misurato: valori visti {visti}")
+        print(f"  T2-T3: 20 tornei, valori visti {visti}", flush=True)
         # M1, N1, N2, N3, N4: tornei corsi (una regata ciascuno)
         for t in range(NT):
             gioc = ["", "Ale", "<b>x</b>", "Nome Lungo Ventichar"][t % 4]
@@ -59,7 +90,7 @@ async def main():
             for k, n in enumerate(nn):
                 if c["nomi"][k + 1] != n: falli.append(f"M1 t{t}: in regata la barca {k} si chiama {c['nomi'][k + 1]} invece di {n}")
                 if c["etich"][k + 1] != n.split(" ")[-1]: falli.append(f"M1 t{t}: in acqua {c['etich'][k + 1]} invece del cognome")
-                if n not in c["brief"]: falli.append(f"M1 t{t}: testo prima della regata senza {n}")
+            if any(x in c["brief"] for x in LISTA) or "carattere" in c["brief"]: falli.append(f"T1 t{t}: il testo prima della regata nomina i rivali")
             await pg.wait_for_timeout(400)
             atteso = gioc.strip() or "Tu"
             if c["nomi"][0] != atteso: falli.append(f"N1/N2 t{t}: in regata il giocatore è {c['nomi'][0]!r} invece di {atteso!r}")

@@ -384,3 +384,46 @@ Quindi le soglie del guardiano stanno dentro il rumore del caso per qualunque ca
 - **B:** rifare prima il guardiano, poi rimisurare la 1.2.33 e chiuderla solo se passa.
 
 **Decisione di Ale (14 novembre, mattina): A.** La 1.2.33 si chiude con il guardiano dichiarato non adatto a questo cambio. Il guardiano si rifà dopo (voce 33 di `DA-FARE.md`).
+
+## 17. Testi dei rivali più chiari (1.2.35; via di Ale del 14 novembre; criteri scritti prima delle misure)
+
+Osservazione di Ale, giocando il torneo: «le cose da leggere sono troppe nella presentazione della regata … gli avversari si possono leggere cliccando "rivali", quindi è un doppione … leggo gli avversari e non capisco cosa indichino le descrizioni (Bortolin: normale, che significa? … Pietro: prudente e sta alla larga. Descrizione: nella media. Non capisco a cosa si riferiscano)». Via: «ok va bene, fallo dopo la 1.2.34».
+
+**Cosa cambia.**
+- **Presentazione di ogni regata del torneo:** niente più frase sui rivali. Fuori dal torneo resta com'è.
+- **Presentazione del torneo:** i tre nomi con la barca e «Chi sono e come vanno: pulsante "I rivali"».
+- **Pulsante «I rivali» anche prima della prima regata.** Le schede mostrano storia e descrizione, e «Ancora nessuna regata insieme». Il torneo proposto resta lo stesso andando e tornando dalle schede: prima ogni riapertura ne sorteggiava uno nuovo.
+- **Scheda:** titolo col solo nome, poi sempre tre righe:
+  - «Prima del via: prudente: si lancia verso la linea un secondo più tardi, per non partire in anticipo» (oppure normale, oppure aggressiva, ognuna spiegata);
+  - «Partenza: parte bene / nella media / parte tardi»;
+  - «Bolina: stringe bene / nella media / va larga».
+- **Testo corretto:** «prudente e sta alla larga» prometteva più del codice. Una rivale prudente si lancia verso la linea solo 1 s più tardi, e niente la tiene lontana dalle altre barche. Ora fuori dal torneo si legge «prudente in partenza».
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| T1 | Il testo prima di ogni regata del torneo non nomina i rivali | 20 tornei: nessun nome dei 10 rivali, nessun «carattere» nel testo, 20 su 20 (cambia il controllo M1 di `collaudo_nomi_rivali`, che chiedeva il contrario) |
+| T2 | Presentazione del torneo | i 3 nomi con la barca e il rimando a «I rivali», 20 su 20; il pulsante c'è prima della prima regata; andata e ritorno dalle schede lasciano gli stessi 3 rivali, con gli stessi tratti |
+| T3 | Le righe della scheda dicono il vero | per ogni scheda, le tre righe coincidono con carattere e tratti salvati nel torneo, in 20 tornei (60 schede); e ognuno dei tre valori di partenza e di bolina compare almeno una volta (il metro misura) |
+| T4 | Spazio | `collaudo_scheda_rivali` S4, caso peggiore, 0 px di scorrimento; schede prima della prima regata, 0 px |
+| T5 | La guida non cambia | impronta del guardiano identica al bit; `polare.js` e `raffiche_e_virate.js` identici |
+
+**Esito (14 novembre, pomeriggio): 1.2.35 fatta, pronta da chiudere insieme alla 1.2.34** (il ramo `testi-rivali` parte dalla 1.2.34, che aspetta la decisione di Ale su F2).
+
+| # | Esito |
+| --- | --- |
+| T1 | 20 tornei in Chromium e in Firefox: il testo prima della regata non nomina i rivali |
+| T2 | 20 tornei: presentazione coi tre nomi e la barca, rimando a «I rivali», pulsante prima della prima regata, stessa presentazione dopo «I rivali» e «Indietro», 0 px di scorrimento |
+| T3 | 60 schede: le tre righe coincidono con carattere e tratti salvati; visti tutti e tre i valori di partenza e di bolina |
+| T4 | `collaudo_scheda_rivali` S4, caso peggiore: 0 px di scorrimento in tutte e tre le schede |
+| T5 | impronta del guardiano identica al bit (`2c0e3804a20d`); `polare.js` e `raffiche_e_virate.js` identici; `collaudo_versione` OK; pagina senza `#collaudo`, Chromium e Firefox: 1.2.35, 0 errori, 0 px |
+
+`collaudo_nomi_rivali` è OK in Chromium e Firefox, col nome del giocatore in 5 posti.
+
+**Trovati collaudando, oltre a T1-T5:**
+- **Due difetti della 1.2.33**, ora corretti (vedi `CHANGELOG.md` 1.2.35):
+  - il motivo del riquadro della penalità diceva «contatto con la Lucia Pavan»;
+  - `collaudo_scheda_rivali` non riconosceva più i contatti col nome proprio, e falliva con 182 celle. Alla 1.2.33 non l'avevo lanciato.
+- **Una parità d'arrivo non giudicata.** Seme 19, regata 4: due barche arrivano a 0,033 s l'una dall'altra; il gioco salva l'arrivo al decimo e le dà pari al primo posto. Succede uguale sulla 1.2.34, quindi non dipende da questa modifica. Il collaudo ora tratta le parità d'arrivo entro 0,05 s come già faceva per partenza e boa: non giudicate, contate (8 in 160 regate).
+- **`collaudo_riquadro_bandiere`** era fallito una volta su Q7 (costo del disegno 4,0%) perché girava col freno, che mette in pausa il processo. Senza freno passa.
+
+Fotografie: `tests/output/rivali_1235_presentazione.png` e `rivali_1235_scheda.png`.

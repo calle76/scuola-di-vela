@@ -19,6 +19,20 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.35 — I rivali si leggono in un posto solo, e si capiscono
+
+Osservazione di Ale del 14 novembre, giocando il torneo; via: «fallo dopo la 1.2.34». `docs/PROPOSTA-RIVALI-E-SPONSOR.md` §17.
+
+- **Presentazione di ogni regata del torneo più corta:** non ripete più i rivali, che stanno nel pulsante «I rivali».
+- **Presentazione del torneo:** i tre nomi con la barca e il rimando a «I rivali».
+- **«I rivali» anche prima della prima regata**, con storia e descrizione. Il torneo proposto resta lo stesso andando e tornando dalle schede (prima ogni riapertura ne sorteggiava uno nuovo).
+- **Scheda di un rivale:** il titolo è il nome. Sotto ci sono sempre tre righe: «Prima del via» (prudente, normale o aggressiva, con cosa vuol dire), «Partenza» e «Bolina» (bene, nella media, o il difetto). Prima «nella media» compariva da solo, senza dire di cosa.
+- **Corretto un testo che prometteva troppo:** «prudente e sta alla larga». Nel codice una rivale prudente si lancia verso la linea solo 1 s più tardi, e niente la tiene lontana dalle altre barche. Fuori dal torneo ora si legge «prudente in partenza».
+- **Collaudo:** `collaudo_nomi_rivali.py` controlla anche T1-T3. Il suo controllo M1 sul testo prima della regata è rovesciato: ora i rivali non devono comparire.
+- **Due difetti miei della 1.2.33, trovati collaudando:**
+  - nel riquadro della penalità il motivo diceva «contatto con la Lucia Pavan»: ora «contatto con Lucia Pavan», e fuori dal torneo resta «con la Rossa»;
+  - `collaudo_scheda_rivali.py` cercava i contatti come «Tu, contatto con la Rossa» e con i nomi del torneo non li trovava più (182 celle «sbagliate» su 40 tornei). Alla 1.2.33 non l'avevo lanciato. Ora legge tutte e due le forme.
+
 ## 1.2.34 — Le scritte sopra le barche non coprono le barche
 
 Voce 34 di `DA-FARE.md`, nota di Ale del 13 novembre («a volte quelle scritte coprono le barche»); `docs/PROPOSTA-ETICHETTE-BARCHE.md`; via di Ale del 14 novembre: «via all 34».
