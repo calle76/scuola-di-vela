@@ -147,3 +147,32 @@ Ale: «mi sembra però strano giocare contro 3 e vedere una classifica di 11». 
 
 **Scelta in più per Ale.** Da soli in 11 le batterie sono da 4, 4 e 3. Si può invece aggiungere un undicesimo rivale, preso dalla lista dei 20 nomi già approvati (§12), per fare tre batterie da 4. Costo: il gruppo bilanciato della 1.2.33 (3 doti, 4 medie, 3 difetti per area) va rifatto per 11, e i gruppi già salvati si rigenerano. Consiglio: restare a 10 rivali. La batteria da 3 non si vede, e con Lucio si arriva comunque a 12.
 
+
+## Fermata 2: via di Ale e dettagli (14 novembre, sera, scritti prima del codice)
+
+Ale: «ok come consigli tu». Quindi: 10 rivali, 4 tappe, nomi dei posti scritti da Claude, frasi in una lista che Ale controlla dopo, Lucio in un passo successivo, batterie. Versione **1.2.36**.
+
+**Dove si gioca.** Il torneo singolo resta com'è. Nella finestra del torneo, quando non c'è niente in corso, c'è un pulsante in più: «Stagione (4 tappe)». Ogni tappa è un torneo come oggi (4 regate), con i 3 rivali della tua batteria. La finestra della tappa ha il pulsante «Il circuito», con la classifica degli 11 e le frasi.
+
+**Batterie.** Si sorteggiano tutte all'inizio della stagione, così si vede subito con chi correrai. Si chiamano gialla, bianca e arancione, per non confonderle con le barche rossa, verde e blu. Nella tua entrano per primi i rivali che non hai ancora incontrato (serve a Z13: col sorteggio puro, in 4 tappe se ne incontrano in media 7,6 su 10).
+
+**Ordine della tappa (Plackett-Luce).**
+- La forza di un concorrente è f = (dote +1, media 0, difetto −1 in partenza) + (lo stesso in bolina), da −2 a +2; tu hai f = 0.
+- Si estrae l'ordine di tutti gli 11, uno per volta, ciascuno col peso e^(B·f).
+- I 4 posti usciti per la tua batteria si riempiono nell'ordine vero del torneo.
+- **B si sceglie così:** il più grande fra 0,1, 0,2, … 1,5 per cui, sui semi 1-10 (10 gruppi di rivali, 200 stagioni ciascuno), il rivale meno fortunato di ogni gruppo vince almeno 2 stagioni su 200. Si conferma Z1 (almeno 1 su 200) sui semi 11-20, mai guardati.
+
+**Punti del circuito.** Posto nella tappa = punti, nessuno scarto. A parità di punti vince chi ha più piazzamenti migliori, poi chi è andato meglio nell'ultima tappa (come A8 di F15). Se ti ritiri da una tappa, sei 11° in quella tappa e i rivali vanno tutti a numeri. I primi 3 a fine stagione hanno «diritto al nazionale»: viene solo scritto e salvato.
+
+**Frasi** (al massimo 3 dopo ogni tappa, in quest'ordine; ogni regola scrive al massimo una frase):
+1. «La tua bestia nera: X, davanti a te in N tappe su N» (da 2 tappe; X è quello messo meglio nel circuito fra chi ti è sempre davanti);
+2. «Con X ti sei toccato in N regate: colpa sua in a, tua in b» (N ≥ 2 nella stagione);
+3. «X e Y si giocano il primo posto del circuito: D punti fra loro» (da 2 tappe, primo e secondo a 2 punti o meno; «Tu» se sei tu);
+4. «X è in forma: tre podi di fila» (gli ultimi 3 piazzamenti di tappa fra i primi 3);
+5. «Sei sempre arrivato davanti a X: N tappe su N» (da 2 tappe; X è quello messo meglio nel circuito fra quelli che hai sempre battuto).
+
+**Il racconto delle batterie:** «Batteria bianca: ha vinto X» (il primo di quella batteria nell'ordine della tappa).
+
+**Salvataggio:** `progress.stagione`, separata fra carriera e gioco libero come tutti i progressi. Se cambia la versione del gioco, la stagione resta e la tappa in corso ricomincia, con la stessa batteria.
+
+**Soglie:** quelle di Z1-Z7 e Z12-Z14 qui sopra, invariate. Per Z2 e Z14 le 20 tappe si corrono col pilota (80 regate). Per Z4 servono 20 stagioni intere: le tappe col pilota sarebbero 320 regate, troppe per il PC. Le tappe si chiudono allora con il risultato del torneo scritto dal collaudo, passando dalle stesse funzioni del gioco. Il collaudo lo dice.
