@@ -47,3 +47,15 @@ O1 è il punto più delicato: il §8 diceva che due browser diversi non garantis
 2. Dove sta nella carriera:
    - solo come modo a parte, «Torneo con un amico»;
    - oppure anche come tappa della stagione zonale (`PROPOSTA-STAGIONE-ZONALE.md`).
+
+## Aggiunta (14 novembre, sera)
+
+Ale ha scelto di mettere Lucio **nella stagione zonale**, come dodicesimo della flotta del circuito, con le tappe corse a parte e scambiate con un file: `PROPOSTA-STAGIONE-ZONALE.md`, «Aggiunta». Il codice, il file e il fantasma descritti qui restano gli stessi. Il torneo singolo «con un amico» diventa un caso piccolo della stagione.
+
+**Diretta (gradino 3), domanda di Ale:** si può, ma costa molto di più:
+- serve un server che passi i messaggi;
+- c'è il ritardo della rete sui contatti e sulle precedenze;
+- due browser diversi non calcolano al bit uguale, quindi uno dei due deve fare da «padrone di casa».
+
+Resta dopo la stagione per corrispondenza.
+

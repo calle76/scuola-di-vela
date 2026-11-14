@@ -87,3 +87,35 @@ F89 (regate zonali e ranking; il punteggio minimo è da verificare), F88 (promoz
    - 4 tappe, oppure 2 per provarla;
    - i nomi delle tappe li scrivo io, posti inventati, oppure li scrivi tu;
    - le frasi le propongo io in una lista che controlli tu, come per i nomi dei rivali.
+
+## Aggiunta (14 novembre, sera): Lucio nella stagione
+
+Ale: «aggiungere Lucio alla stagione». Lucio diventa il **dodicesimo della flotta del circuito**. Non lo si incontra mai in acqua, come nei circuiti veri, dove le classifiche sommano regate corse in giorni diversi.
+
+**Come funziona.**
+- **Una stagione «con un amico»** nasce da un codice comune (`PROPOSTA-TORNEI-ONLINE.md`). Il codice fissa le 4 tappe, il loro vento e il gruppo dei 10 rivali con i loro tratti: Ale e Lucio hanno la stessa flotta.
+- **Ognuno corre le sue tappe quando vuole**, con 3 rivali in acqua. I 3 rivali possono essere diversi per i due: dipende dal sorteggio di ciascuno.
+- **A fine tappa si scambia un file piccolo:** posizione, tempo, i 3 rivali incontrati e la registrazione. Va bene un messaggio o la posta: niente server, nessun dato personale fuori.
+- **Nella classifica del circuito Lucio entra col suo risultato vero**, non a numeri, e lo stesso Ale nella stagione di Lucio. I rivali vengono messi in fila così:
+  - quelli in acqua con Ale restano nell'ordine della regata di Ale;
+  - quelli in acqua con Lucio nell'ordine della regata di Lucio;
+  - gli altri, a numeri, intorno a loro.
+- **Se un rivale era in acqua con tutti e due**, il suo piazzamento è quello della regata di chi tiene la classifica, così ognuno ha una classifica coerente. Le due classifiche possono differire di poco, e lo si dice.
+- **Ale contro Lucio, nella stessa tappa:** conta il piazzamento nella propria regata, e a pari piazzamento il tempo. Se avete corso con lo stesso vento, la barca dell'altro si può rivedere come fantasma in moviola.
+- **Se Lucio non ha ancora corso una tappa**, la classifica lo mostra «in attesa»: niente punti finché non arriva il suo file.
+- **I conti:** con 12 concorrenti la somma dei punti di ogni tappa è 1 + 2 + … + 12 = 78.
+
+**Criteri in più, con soglie fissate prima di provare.**
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| Z8 | Stesso codice, stessa stagione | due pagine (anche Chromium contro Firefox) con lo stesso codice: tappe, venti, rivali e tratti identici in 20 codici su 20 |
+| Z9 | Il risultato dell'amico entra com'è | in 20 tappe scambiate, la posizione di Lucio nella classifica è coerente col suo file: davanti a tutti i rivali che ha battuto in acqua, dietro a quelli che lo hanno battuto, 20 su 20 |
+| Z10 | Conti con 12 | somma dei punti di ogni tappa = 78; con un amico «in attesa», somma = 66 sugli 11 presenti |
+| Z11 | File sbagliati rifiutati | un file di un'altra stagione, di un'altra versione o rovinato viene rifiutato con un messaggio chiaro, mai caricato a metà |
+
+**Rischi in più.**
+- **Si può barare:** chi corre per secondo conosce il risultato dell'altro e può rifare la regata. Proposta: il file conta solo la **prima** regata corsa di quella tappa, come in una regata vera. Fra amici basta, ma lo si dice.
+- **Rivali diversi in acqua:** Lucio può avere incontrato i rivali più forti, e Ale quelli più deboli. Il piazzamento a numeri compensa solo in parte, e va detto nel gioco.
+
+**Scelta in più per Ale:** la stagione con Lucio parte insieme alla stagione da solo, oppure dopo, come secondo passo. Consiglio: dopo, così il primo passo resta piccolo e la stagione da solo si collauda per conto suo.
