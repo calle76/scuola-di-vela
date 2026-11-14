@@ -199,7 +199,7 @@ table.tor th,table.tor td{padding:4px 8px;border-bottom:1px solid var(--line);te
 table.tor th:nth-child(2),table.tor td:nth-child(2){text-align:left}
 table.tor tr.me td{font-weight:700}
 .tor-leg{font-size:.85rem;color:var(--ink-soft);margin:4px 0 0}
-.tor-tratti{margin:2px 0 4px;font-style:italic}
+.tor-tratti{margin:2px 0 4px;font-style:italic} .tor-storia{margin:0 0 4px;font-size:.85rem;color:var(--muted,#5b6b78)} .tor-nome{margin:4px 0} .tor-nome input{width:12em}
 .tor-sch h3{margin:14px 0 0;font-size:1rem}
 .tor-sch ul{margin:4px 0 0;padding-left:20px;font-size:.92rem}
 .tor-sch table.tor{table-layout:fixed}
@@ -323,6 +323,7 @@ dialog#attest::backdrop{background:rgba(13,25,36,.5)}
           <div class="optrow"><span>Raffiche</span>
             <select autocomplete="off" id="gustSel"><option value="0">nessuna</option><option value="1" selected>moderate</option><option value="2">forti</option></select></div>
         </div>
+        <div class="optrow" id="nomeRiga"><span title="Al posto di «Tu» nella classifica del torneo, nel libretto e nelle registrazioni. Vuoto: «Tu».">Il tuo nome</span><input id="setNome" type="text" maxlength="20" autocomplete="off" placeholder="Tu" aria-label="Il tuo nome"></div>
         <div class="optrow" id="suoniRiga"><span>Suoni</span><select autocomplete="off" id="suoniSel"><option value="spento">spenti</option><option value="basso">bassi</option><option value="medio">medi</option><option value="alto">alti</option></select></div>
         <div class="optrow" id="layRiga"><span title="Linee dalla boa di bolina da cui si arriva senza virare, nelle regate fuori dalla Scuola. «regate»: non nel torneo; «anche torneo»: anche nel torneo.">Layline</span><select autocomplete="off" id="laySel"><option value="no">no</option><option value="regate" selected>regate</option><option value="tutte">anche torneo</option></select></div></div>
         <label class="check" title="Vale per la modalità in corso: nelle prove e nelle regate parte spenta."><input autocomplete="off" type="checkbox" id="autoCenter" checked> La barra torna al centro da sola (per la modalità in corso)</label>

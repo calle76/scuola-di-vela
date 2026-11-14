@@ -19,6 +19,24 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.33 — I rivali del torneo hanno un nome, e anche tu
+
+Primo passo della carriera a circuiti (voci 28 e 30 di `DA-FARE.md`; `docs/PROPOSTA-RIVALI-E-SPONSOR.md` §12-14; via di Ale del 13 novembre: «sì, fai anche i nomi»). Solo nel torneo: la Scuola e le altre regate restano con Rossa, Verde e Blu.
+
+- **Dieci rivali del circuito zonale**, inventati e controllati nome per nome (§12), ognuno con una riga di storia che dice da dove viene, mai com'è in acqua. A ogni torneo nuovo se ne sorteggiano tre diversi. Le barche restano rossa, verde e blu, e il colore si legge accanto al nome («Tommaso Brunelli (barca rossa)»).
+- **Gruppo fisso e bilanciato:** i tratti dei dieci rivali (partenza e bolina, 1.2.31) si sorteggiano una volta sola e poi restano: chi ritorna in un altro torneo è uguale a prima. Per ciascuna area ci sono sempre 3 doti, 4 medie e 3 difetti, mescolati a caso: chi sia bravo in cosa cambia da giocatore a giocatore, la flotta nel complesso no. Il carattere (prudente, normale, aggressiva) resta sorteggiato a ogni torneo. Il gruppo sta con i progressi, separato fra carriera e gioco libero, e «Azzera i progressi» lo cancella.
+- **Dove si leggono:**
+  - presentazione del torneo e testo prima di ogni regata;
+  - classifica del torneo e classifica della regata;
+  - messaggi di contatti e penalità;
+  - scheda dei rivali, con titolo, storia e pulsanti;
+  - in acqua solo il **cognome**, per non allungare la scritta sopra la barca.
+- **Il tuo nome**, facoltativo, al massimo 20 caratteri, nelle Impostazioni e nella finestra del torneo prima della prima regata. Compare nella classifica della regata e del torneo, nella schermata finale, nel libretto («Libretto di …»), come valore iniziale del nome sull'attestato e in una riga d'intestazione delle registrazioni. Vale in carriera e nel gioco libero; vuoto, si legge «Tu» come prima. Nei messaggi della regata il gioco continua a darti del tu.
+- **Registrazioni:** nelle righe del file le barche si chiamano come sempre (Tu, Rossa, Verde, Blu), perché un nome con lo spazio avrebbe rotto la lettura delle righe; i nomi del torneo sono nell'intestazione («barche: Tu, Rossa = Tommaso Brunelli (prudente), …»).
+- **Collaudo nuovo** `tests/collaudo_nomi_rivali.py`: 200 tornei creati di fila (stessi tratti per chi ritorna, sorteggio equilibrato) e 20 tornei corsi (i nomi in ogni posto, il nome del giocatore vuoto, normale, lungo e con caratteri come `<b>`).
+- **Guardiano degli avversari: non passa, e la versione si chiude lo stesso, per decisione di Ale (strada A, 14 novembre).** Sui semi 1491-1502 G5 dà contatti 61 → 76 (soglia +6). Ma il guardiano boccia anche la 1.2.32 con un solo `Math.random()` in più, cioè lo stesso gioco (boe sbagliate 0 → 6): le sue soglie stanno nel rumore del caso e non sa giudicare un cambio che sposta i sorteggi. Il guardiano si rifà (voce 33 di `DA-FARE.md`). La guida degli avversari non è stata toccata.
+- **Misure:** vedi `docs/PROPOSTA-RIVALI-E-SPONSOR.md` §15.
+
 ## 1.2.32 — Rotta ottimale più leggibile
 
 Voce 32 di `DA-FARE.md`, osservazione 122 (`docs/PROPOSTA-ROTTA-LEGGIBILE.md`; via di Ale del 13 novembre: il filo e la barra nascosta, non lo zoom né le linee più grosse).
