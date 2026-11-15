@@ -87,3 +87,7 @@ Fatto nella 1.3.3. Tutti i criteri K1-K9 passano in Chromium e Firefox su 20 reg
 - **Cambiato prima di misurare le soglie:** il clou non usa più la lunghezza del filo, ma i metri di percorso mancanti in più della rotta ottimale. Il filo cresce anche quando le due rotte vanno su lati diversi del campo senza perdere niente: nella prima prova il «tratto peggiore» cadeva quasi sempre nel primo minuto dopo il via.
 - **Da decidere (Ale):** «c'erano altre barche» esce in 17 regate su 20, perché la regola dell'affollato (anche un solo secondo con una barca entro 3 lunghezze) col pilota, che naviga in gruppo, scatta quasi sempre. Strade: (a) tenerla così e guardare cosa succede a un giocatore vero; (b) affollato solo se le barche vicine ci sono per più di metà del minuto. Consiglio (a), poi decidere con le regate registrate.
 - «Coperto» non è uscito in nessuna regata vera: i tratti coperti sono costati 0,9-2,7 s, sotto i 5 s.
+
+## Il volto (1.3.4, 15 novembre 2026)
+
+Tre espressioni fatte da Ale con ChatGPT (F104), ritagliate a 128 px in `img/`. Regola di Ale: arrabbiato con una penalità o la partenza anticipata; contento con «quasi perfetta» o se nessuna frase pesa almeno 10 s (soglia nostra); serio altrimenti. Criterio K10 in `collaudo_coach.py`.

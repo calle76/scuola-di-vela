@@ -11,6 +11,8 @@
 #   K7 bene quando va bene: con la tua traccia sostituita da quella della rotta ottimale e nessuna barca vicina, nessuna frase di perdita, c'è «quasi perfetta» (costruito)
 #   K8 calcolo delle frasi sotto 200 ms; pagina senza #collaudo: riquadro del coach presente e nascosto, 0 errori
 #   K9 le frasi identiche prima e dopo la migliore in assoluto (V)
+#   K10 (1.3.4) il volto: l'espressione segue la regola di Ale (arrabbiato con una penalità o la partenza anticipata, contento con «quasi perfetta» o se nessuna
+#       frase pesa almeno 10 s, serio altrimenti) e l'immagine è caricata davvero (128 px)
 # Uso: python tests/collaudo_coach.py [--regate N] [--rif v1.3.2]   (BROWSER=firefox per Firefox)
 import asyncio, json, math, os, pathlib, re, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
@@ -86,7 +88,7 @@ async def main():
             for k, s in elenco: await pg.evaluate(CORSA, [k, s, 0]); rif.append(await pg.evaluate(ESITO))
             await pg.close()
         pg, errs, elenco = await regate(br, (ROOT / "index.html").as_uri(), NREG)
-        nclou = nfr = 0
+        nclou = nfr = 0; umori = {}
         for n, (k, s) in enumerate(elenco):
             await pg.evaluate(CORSA, [k, s, 0]); es = await pg.evaluate(ESITO)
             chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
@@ -104,6 +106,12 @@ async def main():
             for t0, t1 in d["tratti"]:   # K5b
                 vicina = min((f[5] for f in d["tu"] if t0 <= f[0] <= t1), default=1e9)
                 chk("K5b", vicina < 42, f"K5b {s}-{k}: tratto coperto {t0:.0f}-{t1:.0f} s senza barche entro 10 lunghezze (la più vicina a {vicina:.0f} m)")
+            if C:   # K10
+                atteso = "arrabbiato" if any(x["tipo"] == "penalita" or x.get("ocs") for x in C) else "contento" if any(x["tipo"] == "bene" for x in C) or all(x["peso"] < 10 for x in C) else "serio"
+                await pg.wait_for_function("() => document.getElementById('coachVolto').complete")
+                v = await pg.evaluate("() => { const i = document.getElementById('coachVolto'); return { u: i.dataset.umore, w: i.naturalWidth, src: i.getAttribute('src'), vis: !i.hidden }; }")
+                chk("K10", v["u"] == atteso and v["w"] == 128 and v["vis"] and v["src"] == f"img/coach-{atteso}.jpg", f"K10 {s}-{k}: volto {v}, atteso {atteso}")
+                umori[atteso] = umori.get(atteso, 0) + 1
             if C:   # K6
                 await pg.click("#coachFrasi button[data-k='0']"); await pg.wait_for_timeout(80)
                 t = await pg.evaluate("() => rivT0() + riv.pos")
@@ -116,7 +124,7 @@ async def main():
             chk("K2", m["ecc"] == 0 and m["dentro"] and m["vis"] == bool(C), f"K2 {s}-{k}: {m}")
             await pg.keyboard.press("Escape"); await pg.wait_for_timeout(80)
         chk("K4", nclou >= 3, f"K4: regate col clou da controllare {nclou} (servono almeno 3 perché il controllo misuri)")
-        print(f"frasi in tutto {nfr}, regate col clou controllato {nclou}", flush=True)
+        print(f"frasi in tutto {nfr}, regate col clou controllato {nclou}, volti {umori}", flush=True)
         # ---- K2 caso peggiore, K5a, K7 sull'ultima regata
         await pg.evaluate(CORSA, [3, 2601, 0]); await pg.click("#finRot"); await pg.wait_for_timeout(120)
         w = await pg.evaluate("""() => { rot.res.ass = rotAssoluta(); rot.res.testo = rotTesto(rot.res.ott, rot.res.sp); document.getElementById('movTit').textContent = rot.res.testo;
@@ -154,6 +162,6 @@ async def main():
         await br.close()
     print("casi per parte:", casi)
     if fail: print(f"ESITO: FALLITO ({len(fail)})"); sys.exit(1)
-    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

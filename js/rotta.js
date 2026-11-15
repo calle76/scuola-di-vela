@@ -276,7 +276,7 @@
     else if (L0 && L0.lay.vicine >= 2) F.push({ tipo: "boa", t: L0.lay.tv, peso: (L0.lay.vicine - 1) * T_VIR, n: L0.lay.vicine, txt: `Negli ultimi ${LAY_VICINO} m prima della boa hai virato ${L0.lay.vicine} volte: ne bastava una (lezione 23).` });
     // partenza
     const f0 = riv.all.reduce((a, f) => Math.abs(f.t) < Math.abs(a.t) ? f : a, riv.all[0]), kn = f0.b[0][4] * 1.9438, rit = o.taglio.t;
-    if (reg.ocs) F.push({ tipo: "partenza", t: 0, peso: Math.max(rit, COA_MIN), s: Math.round(rit), txt: `Al via eri oltre la linea: sei dovuto tornare e l'hai tagliata ${Math.round(rit)} s dopo lo sparo (lezione 17).` });
+    if (reg.ocs) F.push({ tipo: "partenza", ocs: true, t: 0, peso: Math.max(rit, COA_MIN), s: Math.round(rit), txt: `Al via eri oltre la linea: sei dovuto tornare e l'hai tagliata ${Math.round(rit)} s dopo lo sparo (lezione 17).` });
     else if (rit >= COA_VIA) F.push({ tipo: "partenza", t: 0, peso: rit, s: Math.round(rit), kn: +kn.toFixed(1), txt: `Hai tagliato la linea ${Math.round(rit)} s dopo il via; allo sparo andavi a ${kn.toFixed(1).replace(".", ",")} nodi (lezione 18).` });
     // penalità: il primo contatto con colpa tua e la prima boa toccata
     const ct = riv.segni.find(g => g.auto && g.label.includes(". Tu, contatto con "));
@@ -290,9 +290,14 @@
       return [{ tipo: "bene", t: o.taglio.t, peso: 0, s: tot, txt: `Regata quasi perfetta: in tutto ${tot} s dalla rotta ottimale.` }]; }
     return pesanti.sort((a, b) => b.peso - a.peso).slice(0, COA_N);
   }
+  // 1.3.4: l'espressione del volto (regola di Ale del 15 novembre): contento se dice «quasi perfetta» o se nessuna frase pesa almeno COA_POCO s;
+  // arrabbiato se c'è una penalità o la partenza anticipata; serio negli altri casi. COA_POCO: ipotesi nostra. Volti fatti da Ale con ChatGPT (FONTI-PUBBLICHE F104)
+  const COA_POCO = 10;
+  const coaUmore = C => C.some(x => x.tipo === "penalita" || x.ocs) ? "arrabbiato" : C.some(x => x.tipo === "bene") || C.every(x => x.peso < COA_POCO) ? "contento" : "serio";
   function coaMostra(){
     const C = rot.res && rot.res.coach; $("coach").hidden = !C || !C.length;
-    if (!C) return;
+    if (!C || !C.length) return;
+    const u = coaUmore(C), im = $("coachVolto"); im.src = "img/coach-" + u + ".jpg"; im.alt = "Il Coach, " + u; im.dataset.umore = u;
     $("coachFrasi").innerHTML = C.map((x, k) => `<li><button class="linkish" data-k="${k}" title="Vai a ${rivTempo(x.t)}">${x.txt}</button></li>`).join("");
   }
   $("coachFrasi").onclick = e => { const b = e.target.closest("button[data-k]"); if (!b || !riv.on || !rot.res || !rot.res.coach) return;

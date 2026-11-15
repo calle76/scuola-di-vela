@@ -19,6 +19,18 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.4 — Il volto del Coach
+
+- Il Coach ha un volto, in **tre espressioni** fatte da Ale con ChatGPT (`docs/FONTI-PUBBLICHE.md` F104). Sono ritagliate sul viso e ridotte a 128 px, circa 6 kB l'una, in `img/coach-serio.jpg`, `img/coach-contento.jpg` e `img/coach-arrabbiato.jpg`. Gli originali da 2 MB restano fuori dal repository.
+- **Quale espressione** (regola di Ale del 15 novembre):
+  - **arrabbiato** se fra le frasi c'è una penalità o la partenza anticipata;
+  - **contento** se dice «quasi perfetta», o se nessuna frase pesa almeno 10 s (soglia nostra);
+  - **serio** negli altri casi.
+- Se l'immagine non si carica, resta la «C» nel cerchio.
+- I punti di Deriva passano alla 1.3.5.
+
+**Misure:** `collaudo_coach.py` con il criterio nuovo K10 (espressione secondo la regola e immagine caricata davvero, 128 px), 20 regate, Chromium e Firefox: tutto verde. Volti mostrati in Chromium 14 serio, 5 arrabbiato, 1 contento; in Firefox 16 serio e 4 arrabbiato. Col pilota il contento esce poco: un giocatore che va bene lo vedrà più spesso. K1-K9 passano come nella 1.3.3.
+
 ## 1.3.3 — Il coach nella moviola
 
 Quarta versione della cornice di Deriva, al posto del «momento clou» (`docs/PROPOSTA-COACH.md`, via di Ale del 15 novembre 2026; nome «Coach», senza nome proprio, e coach indipendente dal tasto V, scelte dello stesso giorno).
