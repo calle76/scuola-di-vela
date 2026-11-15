@@ -91,3 +91,7 @@ Fatto nella 1.3.3. Tutti i criteri K1-K9 passano in Chromium e Firefox su 20 reg
 ## Il volto (1.3.4, 15 novembre 2026)
 
 Tre espressioni fatte da Ale con ChatGPT (F104), ritagliate a 128 px in `img/`. Regola di Ale: arrabbiato con una penalità o la partenza anticipata; contento con «quasi perfetta» o se nessuna frase pesa almeno 10 s (soglia nostra); serio altrimenti. Criterio K10 in `collaudo_coach.py`.
+
+## Scuffie (1.3.6, 15 novembre 2026)
+
+Dalla prova di Ale: frase sulla scuffia (secondi a barca rovesciata, lezione 8) e volto arrabbiato anche per una scuffia. Criterio K11 in `collaudo_coach.py`.

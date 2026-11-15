@@ -204,7 +204,7 @@
   // Il peso in secondi di clou e boa è una stima (metri divisi per la velocità media, o virate per T_VIR): serve solo a ordinare, le frasi dicono i metri.
   // Costanti, ipotesi nostre (proposta, §Costanti): COA_N frasi, finestra del clou COA_FIN s, coperto da COA_COP di vento tolto per almeno COA_COP_S s,
   // perdita minima COA_MIN s, affollato entro COA_AFF m (3 lunghezze), anticipo del salto COA_ANT s, ritardo minimo al via COA_VIA s.
-  const COA_N = 3, COA_FIN = 60, COA_COP = 0.1, COA_COP_S = 10, COA_MIN = 5, COA_AFF = 3 * BOAT.length, COA_ANT = 5, COA_VIA = 3;
+  const COA_RIPARTI = 10, COA_N = 3, COA_FIN = 60, COA_COP = 0.1, COA_COP_S = 10, COA_MIN = 5, COA_AFF = 3 * BOAT.length, COA_ANT = 5, COA_VIA = 3;
   function rotVel(twa, tws){ // velocità della polare del gioco (m/s) per un angolo dal vento e una forza (m/s)
     const r = rotRiga(tws), a = clamp(twa, ROT_TWA[0], 180), j = Math.min(ROT_TWA.length - 2, Math.floor((a - ROT_TWA[0]) / 5)), f = (a - ROT_TWA[j]) / 5;
     return r[j][0] * (1 - f) + r[j + 1][0] * f;
@@ -278,6 +278,12 @@
     const f0 = riv.all.reduce((a, f) => Math.abs(f.t) < Math.abs(a.t) ? f : a, riv.all[0]), kn = f0.b[0][4] * 1.9438, rit = o.taglio.t;
     if (reg.ocs) F.push({ tipo: "partenza", ocs: true, t: 0, peso: Math.max(rit, COA_MIN), s: Math.round(rit), txt: `Al via eri oltre la linea: sei dovuto tornare e l'hai tagliata ${Math.round(rit)} s dopo lo sparo (lezione 17).` });
     else if (rit >= COA_VIA) F.push({ tipo: "partenza", t: 0, peso: rit, s: Math.round(rit), kn: +kn.toFixed(1), txt: `Hai tagliato la linea ${Math.round(rit)} s dopo il via; allo sparo andavi a ${kn.toFixed(1).replace(".", ",")} nodi (lezione 18).` });
+    // 1.3.6 (Ale, 15 nov: «arrivato ultimo e scuffiato, il coach … non ha citato la scuffiata»): la prima scuffia della regata, coi secondi a barca rovesciata
+    // (le copie della moviola, colonna 8); peso = quei secondi più COA_RIPARTI per tornare a velocità (stima nostra, solo per ordinare)
+    { const cap = riv.all.filter(f => f.t >= rivT0() && f.b[0][8]); if (cap.length){ const t0 = cap[0].t; let t1 = t0; for (const f of riv.all) if (f.t >= t0){ if (!f.b[0][8]) break; t1 = f.t; }
+      const quante = riv.all.reduce((a, f, i) => a + (i && f.b[0][8] && !riv.all[i - 1].b[0][8] ? 1 : 0), cap[0] === riv.all[0] ? 1 : 0);
+      F.push({ tipo: "scuffia", t: t0, peso: t1 - t0 + COA_RIPARTI, s: Math.round(t1 - t0), n: quante,
+        txt: `A ${T(t0)} hai scuffiato: ${Math.round(t1 - t0)} s con la barca rovesciata${quante > 1 ? ` (e altre ${quante - 1} volte)` : ""} (lezione 8).` }); } }
     // penalità: il primo contatto con colpa tua e la prima boa toccata
     const ct = riv.segni.find(g => g.auto && g.label.includes(". Tu, contatto con "));
     if (ct){ const altra = ct.label.split(". Tu, contatto con ")[1].split(":")[0];
@@ -291,9 +297,9 @@
     return pesanti.sort((a, b) => b.peso - a.peso).slice(0, COA_N);
   }
   // 1.3.4: l'espressione del volto (regola di Ale del 15 novembre): contento se dice «quasi perfetta» o se nessuna frase pesa almeno COA_POCO s;
-  // arrabbiato se c'è una penalità o la partenza anticipata; serio negli altri casi. COA_POCO: ipotesi nostra. Volti fatti da Ale con ChatGPT (FONTI-PUBBLICHE F104)
+  // arrabbiato se c'è una penalità, la partenza anticipata o (1.3.6, aggiunta) una scuffia; serio negli altri casi. COA_POCO: ipotesi nostra. Volti fatti da Ale con ChatGPT (FONTI-PUBBLICHE F104)
   const COA_POCO = 10;
-  const coaUmore = C => C.some(x => x.tipo === "penalita" || x.ocs) ? "arrabbiato" : C.some(x => x.tipo === "bene") || C.every(x => x.peso < COA_POCO) ? "contento" : "serio";
+  const coaUmore = C => C.some(x => x.tipo === "penalita" || x.tipo === "scuffia" || x.ocs) ? "arrabbiato" : C.some(x => x.tipo === "bene") || C.every(x => x.peso < COA_POCO) ? "contento" : "serio";
   function coaMostra(){
     const C = rot.res && rot.res.coach; $("coach").hidden = !C || !C.length;
     if (!C || !C.length) return;

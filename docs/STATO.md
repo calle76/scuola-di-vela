@@ -6,7 +6,8 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.3.5** (15 novembre, tag `v1.3.5`): **Deriva in carriera, con punti propri e «Deriva superata»** (primi 3 dello zonale, o merito con quota provvisoria 19/21). **La cornice di Deriva (tappa 2 del piano) è finita.**
+- **Ultima versione chiusa: 1.3.6** (15 novembre, tag `v1.3.6`): il Coach dice le scuffie ed è arrabbiato anche per quelle (prova di Ale); `collaudo_menu` e `collaudo_cono` rimessi in ordine dopo il giro GitHub sulla 1.3.3.
+- **1.3.5** (15 novembre, tag `v1.3.5`): **Deriva in carriera, con punti propri e «Deriva superata»** (primi 3 dello zonale, o merito con quota provvisoria 19/21). **La cornice di Deriva (tappa 2 del piano) è finita.**
 - **1.3.4** (15 novembre, tag `v1.3.4`): **il volto del Coach**, tre espressioni fatte da Ale con ChatGPT (arrabbiato con una penalità o la partenza anticipata, contento se va bene, serio altrimenti).
 - **1.3.3** (15 novembre, tag `v1.3.3`): **il Coach nella moviola**, al posto del riassunto della rotta ottimale: al massimo tre frasi con un numero misurato, cliccabili (momento clou in metri di percorso, coperto, layline, partenza, penalità, «quasi perfetta»). K1-K9 passano; da decidere la regola dell'«affollato», che col pilota scatta in 17 regate su 20 (`PROPOSTA-COACH.md`, Esito). Il volto c'è dalla 1.3.4.
 - **1.3.2** (15 novembre, tag `v1.3.2`, in autonomia): **la prova 6 di Deriva, «I giri di penalità», con le medaglie** (240/300/385 s, scelte sui semi 1-30 e confermate sui 101-130). Due giri dovuti dal via, contati come nelle regate; 15 s per ogni giro non fatto. Fuori dai meriti della Scuola (`CHANGELOG.md` 1.3.2).

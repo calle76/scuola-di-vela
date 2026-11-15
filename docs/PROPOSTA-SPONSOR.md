@@ -70,3 +70,7 @@ Via dato, da fare dopo le tappe 2 e 3. Solo in carriera. I nomi degli sponsor li
 1. Il via.
 2. Va bene il **solo in carriera**?
 3. I nomi degli sponsor li propongo io, con la ricerca, e tu li controlli?
+
+## Idea di Ale (15 novembre 2026, pomeriggio): lo sponsor come figura
+
+«Ci vorrebbe un'altra figura, lo sponsor... più avanti, che possa giudicare il risultato dei punti e la classifica e l'andamento in generale, per capire se il contratto si sta rispettando o se la fiducia sta per calare. Per ora no.» Come il Coach giudica la regata, lo sponsor giudicherebbe la stagione: punti, classifica, andamento rispetto agli obiettivi del contratto, con una «fiducia» che sale o scende. **Non adesso**: da riprendere con la tappa 4, partendo da questa proposta.

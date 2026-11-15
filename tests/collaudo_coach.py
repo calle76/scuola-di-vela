@@ -12,7 +12,9 @@
 #   K8 calcolo delle frasi sotto 200 ms; pagina senza #collaudo: riquadro del coach presente e nascosto, 0 errori
 #   K9 le frasi identiche prima e dopo la migliore in assoluto (V)
 #   K10 (1.3.4) il volto: l'espressione segue la regola di Ale (arrabbiato con una penalità o la partenza anticipata, contento con «quasi perfetta» o se nessuna
-#       frase pesa almeno 10 s, serio altrimenti) e l'immagine è caricata davvero (128 px)
+#       frase pesa almeno 10 s, serio altrimenti) e l'immagine è caricata davvero (128 px); dalla 1.3.6 arrabbiato anche con una scuffia
+#   K11 (1.3.6) la scuffia: con la barca rovesciata per 20 s a metà regata (costruito sulle copie della moviola) il coach la dice, coi secondi (±1), e il volto è arrabbiato;
+#       senza scuffia mai (nelle 20 regate vere, controllate)
 # Uso: python tests/collaudo_coach.py [--regate N] [--rif v1.3.2]   (BROWSER=firefox per Firefox)
 import asyncio, json, math, os, pathlib, re, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
@@ -96,6 +98,7 @@ async def main():
             d = await pg.evaluate(DATI)
             C = d["coach"] or []; nfr += len(C)
             print(f"  {s}-{k}: " + " | ".join(f"{x['tipo']} {x['peso']:.0f}" for x in C), flush=True)
+            chk("K11", not any(x["tipo"] == "scuffia" for x in C) or await pg.evaluate("() => riv.all.some(f => f.b[0][8])"), f"K11 {s}-{k}: scuffia detta senza scuffia")
             chk("K3", 1 <= len(C) <= 3 and all(re.search(r"\d", x["txt"]) for x in C), f"K3 {s}-{k}: {len(C)} frasi, una senza numero? {[x['txt'] for x in C]}")
             chk("K8", d["ms"] < 200 and d["uguali"], f"K8 {s}-{k}: frasi in {d['ms']:.0f} ms, ricalcolate uguali {d['uguali']}")
             b = clou(d); cl = next((x for x in C if x["tipo"] == "clou"), None)
@@ -107,7 +110,7 @@ async def main():
                 vicina = min((f[5] for f in d["tu"] if t0 <= f[0] <= t1), default=1e9)
                 chk("K5b", vicina < 42, f"K5b {s}-{k}: tratto coperto {t0:.0f}-{t1:.0f} s senza barche entro 10 lunghezze (la più vicina a {vicina:.0f} m)")
             if C:   # K10
-                atteso = "arrabbiato" if any(x["tipo"] == "penalita" or x.get("ocs") for x in C) else "contento" if any(x["tipo"] == "bene" for x in C) or all(x["peso"] < 10 for x in C) else "serio"
+                atteso = "arrabbiato" if any(x["tipo"] in ("penalita", "scuffia") or x.get("ocs") for x in C) else "contento" if any(x["tipo"] == "bene" for x in C) or all(x["peso"] < 10 for x in C) else "serio"
                 await pg.wait_for_function("() => document.getElementById('coachVolto').complete")
                 v = await pg.evaluate("() => { const i = document.getElementById('coachVolto'); return { u: i.dataset.umore, w: i.naturalWidth, src: i.getAttribute('src'), vis: !i.hidden }; }")
                 chk("K10", v["u"] == atteso and v["w"] == 128 and v["vis"] and v["src"] == f"img/coach-{atteso}.jpg", f"K10 {s}-{k}: volto {v}, atteso {atteso}")
@@ -150,6 +153,12 @@ async def main():
             const sp = rotSpiega(rot.res.ott); const F = coaFrasi(rot.res.ott, sp);
             riv.all = salva; riv.segni = segni; reg.ocs = ocs; me.fin = finVero; o.taglio = tgVero; o.giri = giriVeri; return F.map(x => x.tipo + ": " + x.txt); }""")
         print("K7:", k7, flush=True)
+        k11 = await pg.evaluate("""() => { const tu = riv.all, me = R.boats[0], salva = tu.map(f => f.b[0][8]), t0 = rot.barche[0].taglio.t + 40;
+            tu.forEach(f => { if (f.t >= t0 && f.t <= t0 + 20) f.b[0][8] = 1; });
+            const F = coaFrasi(rot.res.ott, rot.res.sp); tu.forEach((f, i) => { f.b[0][8] = salva[i]; });
+            const x = F.find(y => y.tipo === "scuffia"); return { x, umore: coaUmore(F), tipi: F.map(y => y.tipo) }; }""")
+        print("K11:", k11, flush=True)
+        chk("K11", k11["x"] is not None and abs(k11["x"]["s"] - 20) <= 1 and k11["umore"] == "arrabbiato" and "lezione 8" in k11["x"]["txt"], f"K11 scuffia costruita: {k11}")
         chk("K7", any(x.startswith("bene") for x in k7) and not any(re.match(r"(clou|affollato|coperto|boa)", x) for x in k7), f"K7 traccia uguale alla rotta ottimale: {k7}")
         await pg.close()
         # ---- K8 pagina senza #collaudo
@@ -162,6 +171,6 @@ async def main():
         await br.close()
     print("casi per parte:", casi)
     if fail: print(f"ESITO: FALLITO ({len(fail)})"); sys.exit(1)
-    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10", "K11")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

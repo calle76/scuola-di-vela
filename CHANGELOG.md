@@ -19,6 +19,25 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.6 — Il Coach dice le scuffie
+
+Dalla prova di Ale del 15 novembre: «arrivato ultimo e scuffiato, il coach era serio non arrabbiato e non ha citato la scuffiata».
+
+- **Frase nuova:** «A 2:14 hai scuffiato: 25 s con la barca rovesciata (lezione 8).» Si contano i secondi a barca rovesciata, letti dalle copie della moviola; se le scuffie sono più di una, la frase lo dice. Per ordinare le frasi pesa quei secondi più 10 s per ripartire (stima nostra, `COA_RIPARTI`).
+- **Volto:** arrabbiato anche con una scuffia; l'ho aggiunto io alla regola della 1.3.4. L'ultimo posto da solo non cambia il volto: il Coach giudica la rotta, non la classifica.
+- **Due collaudi rotti, che non avevo aggiornato.** Il giro su GitHub del 15 novembre (43721358070, sulla 1.3.3) li ha trovati, rossi in tutti e due i browser; il gioco era giusto:
+  - **`collaudo_menu`:** non conosceva i rimandi del Coach alle lezioni 11, 17, 18 e 23;
+  - **`collaudo_cono`:** apriva il torneo dal menu della Scuola, dove dalla 1.3.0 non c'è più.
+
+  Ora sono verdi. Fuori da questi due e dal noto `collaudo_suoni_si_sentono` in Chromium (voce 18), quel giro era verde.
+
+**Misure** (`collaudo_coach.py`, 20 regate, criterio nuovo K11):
+- **Scuffia costruita**, 20 s a barca rovesciata a metà regata: il Coach la dice con 20 s e il volto è arrabbiato.
+- **Nelle 20 regate vere** nessuna scuffia detta senza scuffia.
+- **Il pilota scuffia davvero in parecchie regate:** il volto arrabbiato passa da 5 a 10 su 20 in Chromium (Firefox: da 4 a 9). Prima il Coach taceva le scuffie.
+- **K1-K10** restano verdi.
+- **Rilanciati sulla 1.3.5-1.3.6:** `collaudo_menu`, `collaudo_cono`, `collaudo_esame_nuove`, `collaudo_pilota_lezioni` (veloce) e `collaudo_salti2` sono verdi.
+
 ## 1.3.5 — Deriva in carriera: punti propri e «Deriva superata»
 
 Ultima versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre; criteri D2, D3, D6, D8, D10).

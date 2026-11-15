@@ -73,7 +73,8 @@ async def main():
         vecchi = [(d, t) for d, t in testi if re.search(r"[Ll]ezione [BCD]\d", t)]
         chk("M4", len(testi) > 300 and not vecchi, f"M4 nessun «Lezione B/C/D…» in {len(testi)} testi: {vecchi[:2]}")
         # i rimandi per numero nel codice del gioco (testi e messaggi), con il titolo a cui devono puntare
-        attesi = {"2": "Il timone", "3": "Andature e mure", "5": "Virata e strambata", "8": "Raffiche e scuffia", "10": "La barca che orza sbandando", "12": "Mure opposte", "20": "Boe e giri di penalità"}   # numeri rifatti nella 1.2.14; 1.3.1: la 20 dalla lezione 21 di Deriva
+        attesi = {"2": "Il timone", "3": "Andature e mure", "5": "Virata e strambata", "8": "Raffiche e scuffia", "10": "La barca che orza sbandando", "12": "Mure opposte", "20": "Boe e giri di penalità",
+                  "11": "I salti di vento", "17": "La partenza anticipata", "18": "Partenza in velocità", "23": "La layline"}   # 1.3.3-1.3.6: i rimandi del Coach (js/rotta.js)   # numeri rifatti nella 1.2.14; 1.3.1: la 20 dalla lezione 21 di Deriva
         rim = [(m.group(1), l.strip()[:80]) for l in SRC.splitlines() if not l.lstrip().startswith("//") for m in re.finditer(r"(?<![Ee]sercizio della )\blezione (\d+)\b", l.split(" // ")[0])]
         chk("M4", len(rim) >= 5 and all(n in attesi for n, _ in rim), f"M4 rimandi «lezione N» nei testi: {len(rim)}, numeri {sorted({n for n, _ in rim})}, fuori dall'elenco atteso: {[r for r in rim if r[0] not in attesi][:3]}")
         tit = await pg.evaluate("() => Object.fromEntries(LESSONS.map(L => [L.name.split(' ')[1], L.title]))")

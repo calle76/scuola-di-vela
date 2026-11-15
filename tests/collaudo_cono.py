@@ -107,7 +107,7 @@ async def main():
             fin["torneo"] == {"dialogo": 0, "pannello": 0, "casella": True} and all(fin[k] == {"dialogo": 0, "pannello": 0, "casella": False} for k in ("regata del menu", "navigazione libera")), str(fin))
         # pagina vera, senza #collaudo: il torneo si apre dal menu, nessun errore
         ctx, pg = await pagina(False)
-        vera = await pg.evaluate("""() => { const b = [...document.querySelectorAll("#menu button.item")].find(x => /Torneo/.test(x.textContent)); if (!b) return { menu: false }; b.click(); const go = document.getElementById("torGo"); if (go) go.click();
+        vera = await pg.evaluate("""() => { document.querySelector("#livSel [data-v=deriva]")?.click(); const b = [...document.querySelectorAll("#menu button.item")].find(x => /Torneo/.test(x.textContent)); if (!b) return { menu: false }; b.click(); const go = document.getElementById("torGo"); if (go) go.click();
           return { menu: true, casella: !!document.getElementById("showCono") }; }""")
         await pg.wait_for_timeout(1500); vera["ombra"] = await pg.evaluate("() => typeof R !== 'undefined' && !!R && R.ombra === true"); await ctx.close()
         chk("K14 pagina senza #collaudo: il torneo si apre dal menu col cono acceso", vera.get("menu") and vera.get("casella") and vera.get("ombra"), str(vera))
