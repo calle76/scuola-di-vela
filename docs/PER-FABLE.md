@@ -53,4 +53,4 @@ Oggi quasi tutti i collaudi in regata guidano la barca con la guida degli avvers
 
 - La regola dell'«affollato» del Coach: Ale ha deciso di tenerla così (16 novembre) e di riguardarla con le sue regate registrate.
 - La quota del merito (19 su 21, provvisoria fino alla tappa 7).
-- La voce 4 (rivali che virano addosso): proposta scritta, senza via.
+- Regole 15-16 in Deriva più voce 4 (rivali che virano addosso): proposta unica `PROPOSTA-REGOLE-15-16.md`, senza via; G da scegliere.

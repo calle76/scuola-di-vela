@@ -30,7 +30,7 @@
   - piano di chiusura di Deriva: le 5 decisioni prese con Ale (`PIANO-CHIUSURA-DERIVA.md`, `DECISIONI.md`);
   - **1.2.40 rotta in assoluto: chiusa il 15 novembre** (tag `v1.2.40`), a richiesta col tasto V per scelta di Ale; P1, A1, A2, P3, A3 dichiarati (`PROPOSTA-ROTTA-ASSOLUTA.md` §10-11);
   - proposte scritte per le tappe 2-4 (fermata 1): `PROPOSTA-DERIVA-CIRCUITI.md`, `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md`.
-- **Prossimo:** il 16 novembre Ale lavora con Fable (`PER-FABLE.md`). Poi tappa 5 (rivali che regatano meglio: voce 4 aspetta il via), 6 (punti da sistemare), 7 (uscita: quota del merito, prova a mano). Decisi il 16 nov: nomi di finale e sponsor approvati; «affollato» del Coach com'è, da riguardare con le regate registrate di Ale.
+- **Prossimo:** il 16 novembre Ale lavora con Fable (`PER-FABLE.md`). Poi tappa 5 (rivali che regatano meglio: prima la proposta unica regole 15-16 più voce 4, `PROPOSTA-REGOLE-15-16.md`, che aspetta il via e la scelta di G), 6 (punti da sistemare), 7 (uscita: quota del merito, prova a mano). Decisi il 16 nov: nomi di finale e sponsor approvati; «affollato» del Coach com'è, da riguardare con le regate registrate di Ale.
 - **L'elenco proposto in chat** per chiudere Deriva:
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;
