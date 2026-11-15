@@ -95,3 +95,28 @@ Fatta. R1-R6 passano (R1 17 casi a mano; R2 0 contraddizioni; R3 la Scuola ident
 ## Versione B, prima misura (16 novembre 2026, sera): da rifare
 
 Scritta e spenta nella 1.3.11. La prima misura sui semi 2201-2230 (M5 fuori soglia per 4, 8 e 12 s) era falsata da un commento a metà riga negli agganci dei collaudi (`CHANGELOG.md` 1.3.11): si rifà nella notte, sugli stessi semi di scelta, con in più il rumore di M5 (la stessa configurazione su altri gruppi di semi) e le coppie che si tengono col cono acceso e spento. La conferma sui semi 2231-2260 resta mai guardata.
+
+## Versione B, misura della notte (16 novembre 2026, 18:34-19:21; `tests/output/manovre-notte-16nov.txt`, non nel repository)
+
+Semi di scelta 2201-2230, 120 regate del torneo col pilota per configurazione; la conferma (2231-2260) non è stata guardata.
+
+| | B spenta | rinvio 4 s | 8 s | 12 s | B spenta, senza cono |
+| --- | --- | --- | --- | --- | --- |
+| M1 contatti dopo una virata del rivale (almeno −50%) | 20 | 11 (−45%) | 14 (−30%) | 14 (−30%) | 28 |
+| M2 contatti alla partenza | 13 | 0 | 0 | 0 | 8 |
+| M3 contatti in tutto (non di più) | 117 | 104 | 107 | 108 | 148 |
+| M4 arrivo mediano dei rivali (entro +2%) | 191,7 s | 194,6 (+1,5%) | 195,3 (+1,9%) | 194,4 (+1,4%) | 191,6 |
+| M5 fuori linea (al più +2) | 34 | 47 | 47 | 47 | 52 |
+| M5 non arrivati (al più +2) | 122 | 128 | 126 | 129 | 144 |
+| coppie che si tengono | 58 | 60 | 58 | 58 | 57 |
+
+**Rumore** (B spenta su altri tre gruppi di 30 semi): M1 21, 29, 21; M3 135, 134, 124; fuori linea 42, 36, 43; non arrivati 149, 135, 149; coppie 68, 67, 63.
+
+**Lettura:**
+- **M1 non passa** con nessun rinvio (−30% … −45% contro −50%). **M2** ha 13 casi nella base (meno di 15): non misurabile su questi semi, come scritto.
+- **M5, fuori linea: +13 in tutte e tre le configurazioni, sempre 47.** È la parte della partenza (aspettare mezzo secondo), uguale per 4, 8 e 12 s, ed esce dal rumore (34-43 con la B spenta). È un effetto vero, non il caso.
+- **M5, non arrivati:** +4 … +7, dentro il rumore (122-149 fra gruppi di semi), ma sopra la soglia scritta.
+- **Coppie che si tengono:** 58 col cono e 57 senza: **il cono non le toglie**, e la versione B non le allunga.
+- **Il cono** abbassa i contatti in tutto (148 → 117) e quelli dopo le virate (28 → 20).
+
+**Esito: la versione B non si adotta così.** Resta spenta. Strade per Ale: (1) lasciarla spenta; (2) provare solo la parte delle virate, senza l'attesa alla partenza che fa uscire i rivali dalla linea (M1 resterebbe da riguardare: −45% col rinvio di 4 s); (3) riprenderla con la voce 2 (bolina dei rivali), che tocca gli stessi punti.

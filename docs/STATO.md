@@ -6,7 +6,7 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.3.11** (16 novembre, tag `v1.3.11`): versione B dei rivali (voce 4) scritta ma **spenta**; la sua prima misura era falsata (commento a metà riga negli agganci dei collaudi) e si rifà nella notte.
+- **Ultima versione chiusa: 1.3.11** (16 novembre, tag `v1.3.11`): versione B dei rivali (voce 4) scritta ma **spenta**: misurata la notte del 16, non passa M1 (−30/−45% contro −50%) né M5 (+13 rivali fuori linea, dalla partenza); resta spenta, decisione di Ale sulle strade (`PROPOSTA-REGOLE-15-16.md`, in fondo).
 - **1.3.10** (notte del 16 novembre, tag `v1.3.10`): **regole 15 e 16 nelle regate di Deriva**, semaforo giallo, lezione 24; nel torneo un terzo dei contatti ora è colpa di chi prende la precedenza manovrando. Prossima la versione B (voce 4, guida dei rivali).
 - **1.3.9** (notte del 15 novembre, tag `v1.3.9`, in autonomia): **gli sponsor a contratto** (tappa 4), quattro gradini, offerte a fine contratto, il nazionale con uno sponsor nazionale, giudizio leggero dopo ogni tappa.
 - **1.3.8** (notte del 15 novembre, tag `v1.3.8`): i messaggi annotati per `collaudo_registro` (voce 35, giro GitHub sulla 1.3.6).
