@@ -19,6 +19,33 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.41 — Giro dei collaudi su GitHub rimesso in ordine; rotta ottimale con la mappa più grande
+
+Giro GitHub 43682372043 del 15 novembre 2026 (1.2.40): rosso in 8 pezzi su 8. Letto con `gh` (accesso dato da Ale lo stesso giorno) e confrontato coi giri dal 10 al 14 novembre.
+
+**Difetti del gioco (veri, ripetuti anche sul PC):**
+- **Finestra delle impostazioni:** dalla 1.2.33 la riga «Il tuo nome» stava fra le scelte del vento e «Suoni», così la regola `#freeOpts + #suoniRiga` non valeva più e nome e suoni scendevano su una riga loro: a 1360x650, con la registrazione accesa e i momenti segnati, la finestra scorreva di 23 px (`collaudo_suoni` S6, `collaudo_registratore`). Ora la finestra è larga 640 px e vento, intensità, raffiche, nome e suoni stanno su una riga: 572 px su 585, 0 di scorrimento.
+- **Classifica della regata nel torneo:** coi nomi dei rivali (1.2.33) una riga come «Davide Lunardi arrivata · 3 min 17 s · 2 penalità (+2 pt) · 6 s avanti» sbordava fino a 41 px e andava a capo (`collaudo_distacchi_testo` D3, 32 letture). Scelta di Ale: le righe che non ci stanno scendono di uno o due gradini di carattere (0,82 e 0,74 rem al posto di 0,92), il testo resta tutto, nome intero compreso (M1 della 1.2.33). La larghezza si misura con un Range: in Firefox `scrollWidth` del `<li>` non vede il testo che esce (primo tentativo: 5 letture ancora a capo in Firefox). Dopo: 0 letture a capo, su 3019 righe in Chromium e 2888 in Firefox. Il cognome al posto del nome è stato provato e scartato perché rompe M1.
+- **Lezione 11.3 «Vira sullo scarso»:** col testo di fine passo il pannello scorreva di 44 px, in ogni giro dall'11 novembre (`collaudo_pannello_lezioni`). Testo più corto di tre righe, stesso contenuto (tolto l'inciso «lo dice la scritta del vento»); 0 px in Chromium e Firefox.
+
+- **Classifica a regata finita:** le righe lunghe si rimisurano anche quando la classifica ricompare (moviola) e nella schermata finale.
+
+**Rotta ottimale (richiesta di Ale, 15 nov 2026):**
+- con B (mappa larga) si tolgono anche il commento e la riga dei tasti, i pulsanti stanno su una riga: la barra in basso passa da 274 a 78 px di altezza e la mappa prende il resto; il pulsante dice «Rimetti testo e barra (B)»; mentre calcola la migliore in assoluto il pulsante dice «Sto calcolando…» (il commento con B non si vede);
+- nella rotta ottimale (con e senza B) niente «Arrivato!» né orologio sopra la mappa, e la mappa usa anche i 90 px in alto che erano dell'orologio (Ale: «togli anche Arrivato e l'orologio»);
+- la scritta «Boa di bolina · lasciala a sinistra» (in regata e nella rotta) va dalla parte opposta al centro del campo, così non copre la boa né le tracce che la girano.
+
+**Collaudi rimasti indietro:**
+- `collaudo_torneo` C2 si aspettava «Rossa, Verde, Blu» nella classifica del torneo: ora prende i nomi dalle barche della regata.
+- `collaudo_registratore_barche` G2 cercava le barche delle righe B per nome: dalla 1.2.33 le righe B hanno la sigla (Rossa, Verde, Blu).
+- `collaudo_rotta_leggibile`: in R3 seme 2301 il pilota non arriva e il gioco giustamente non offre la rotta (manca l'arrivo); il collaudo ora controlla che in quel caso il pulsante manchi, conta le regate senza arrivo (1 su 20 in Firefox) e non vale con più di 5.
+- Giro su GitHub: ogni pezzo installa Chromium e Firefox, perché `collaudo_stagione`, `_stagione_amico`, `_sei_barche` e `_nazionale` aprono tutti e due (prima si fermavano con «Executable doesn't exist»).
+- `tests/fallimenti_noti.txt`: T2b del triangolo coi numeri della 1.2.40 (Chromium 126 su 166 sul PC e 128 su 168 su GitHub, Firefox 127 su 171 in tutti e due); tolte le voci di `collaudo_competizione` (misura, tutti e due i browser), `collaudo_contatto_vero` e `collaudo_giri_avversari` in Firefox, che passano nei giri del 14 e del 15 novembre.
+
+**Restano aperti:** la voce 40 di `DA-FARE.md` (lì il pilota arriva e il pulsante manca lo stesso: è un caso diverso da quello di `collaudo_rotta_leggibile`); `collaudo_torneo` C11 in Firefox su GitHub (2 tornei su 40 non risultano chiusi; non riprovato sul PC) e il sartiame di `collaudo_suoni_si_sentono` (1,4-3,6 dB contro almeno 2, rosso in ogni giro dal 10 novembre).
+
+Fisica identica: `polare.js`, `raffiche_e_virate.js`, `impronta1b.js`.
+
 ## 1.2.40 — Rotta ottimale in assoluto, a richiesta
 
 Voce 26 di `DA-FARE.md`, tappa 1 di `PIANO-CHIUSURA-DERIVA.md`; `docs/PROPOSTA-ROTTA-ASSOLUTA.md` §8-9 e §10 (esito); via di Ale del 14 novembre notte.

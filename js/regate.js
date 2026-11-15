@@ -1226,8 +1226,16 @@
     const rank = ranking();
     const gap = b => { const s = distacco(b); if (s === null) return ""; const r = Math.round(s); return " · " + (r > 0 ? r + " s avanti" : r < 0 ? -r + " s dietro" : "alla pari"); }; // 1.0.33; 1.0.54: in parole invece del segno (check di Ale)
     $("standings").innerHTML = rank.map(b => `<li class="${b.me ? "me" : ""}"><b>${escH(b.name)}</b> <span>${legName(b)}${b.pen ? " · " + b.pen / 15 + " penalità (+" + b.pen + " s)" : ""}${b.pp ? " · " + b.pp + " penalità (+" + b.pp + " pt)" : ""}${gap(b)}</span></li>`).join("");
+    stringi($("standings"));
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
     finShow();
+  }
+  // 1.2.41: una riga che non sta in una riga (nome intero del rivale, arrivo, penalità e distacco) scende di uno o due gradini di carattere invece di andare a capo (scelta di Ale, 15 nov 2026; collaudo_distacchi_testo D3)
+  function stringi(ol){
+    if (ol.hidden || !ol.offsetParent) return;
+    ol.style.whiteSpace = "nowrap"; const rg = document.createRange();   // larghezza del testo con un Range: in Firefox scrollWidth del <li> non vede il testo che esce
+    for (const li of ol.children) for (const c of ["", "s1", "s2"]){ li.className = li.className.replace(/ ?s[12]\b/g, "") + (c ? " " + c : ""); rg.selectNodeContents(li); if (rg.getBoundingClientRect().width <= li.clientWidth) break; }
+    ol.style.whiteSpace = "";
   }
   // ---- schermata finale (1.0.36, docs/archivio/PROPOSTA-SCHERMATA-FINALE.md) ----
   // A regata finita il riepilogo e la classifica passano dal pannello a un riquadro sopra il mare: il pannello non sfora più.
@@ -1240,6 +1248,7 @@
     $("finPen").hidden = !R.penList.length; $("finPen").innerHTML = R.penList.length ? "<b>Penalità</b><br>" + R.penList.join("<br>") : ""; // 1.0.49: tutte le penalità col motivo (richiesta di Ale)
     $("finTor").hidden = $("rTor").hidden; $("finRev").hidden = !rivCount(); $("finRot").hidden = !rivCount() || !R.rotta || !rot.barche[0] || !rot.barche[0].taglio || R.boats[0].fin === null; $("finRestart").hidden = $("finWind").hidden = $("rRestart").hidden;
     if ($("finOv").hidden){ $("finOv").hidden = false; releaseKeys(); setTimeout(() => (!$("finRestart").hidden ? $("finRestart") : $("finTor")).focus(), 0); }
+    stringi($("finList")); // 1.2.41: anche la classifica della schermata finale
   }
   $("rWind").onclick = () => startRace(raceIdx, otherWind()); // 1.0.75: «Cambia vento» di nuovo nelle regate (Ale, 1 nov 2026), mai nel torneo (rc.tor)
   $("finRestart").onclick = () => $("rRestart").click(); $("finWind").onclick = () => $("rWind").click(); $("finTor").onclick = () => $("rTor").click();
@@ -1731,8 +1740,13 @@
       const p = etichPosto(b, i, sx, sy, w, h, g, scafi); ctx.globalAlpha = p.piena ? 1 : ETICH_ALFA;
       ctx.fillStyle = "rgba(10,24,36,.6)"; ctx.fillRect(sx - w / 2, p.y, w, h); ctx.fillStyle = b.S.sailorColor; ctx.fillText(et, sx, p.y + h / 2); ctx.globalAlpha = 1; });
     ctx.font = font(700, 13);
-    R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y); ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + 10, gy - 10); });
-    drawOrologio(R.boats[0], ranking());
+    { // 1.2.41: la scritta della boa va dalla parte opposta al centro del campo (linea e boe), così non copre la boa né le tracce che la girano (Ale, 15 nov 2026)
+      const tb = ctx.textBaseline, C = [R.pin, R.cb, ...R.marks].map(q => toScreen(v, q.x, q.y)), cx = C.reduce((a, q) => a + q[0], 0) / C.length, cy = C.reduce((a, q) => a + q[1], 0) / C.length;
+      R.marks.forEach((mk, k) => { const [gx, gy] = toScreen(v, mk.x, mk.y), d = Math.hypot(gx - cx, gy - cy) || 1, ux = (gx - cx) / d, uy = (gy - cy) / d;
+        ctx.fillStyle = "#fff"; ctx.textAlign = ux > 0.35 ? "left" : ux < -0.35 ? "right" : "center"; ctx.textBaseline = uy > 0.35 ? "top" : uy < -0.35 ? "bottom" : "middle";
+        ctx.fillText(R.tri ? "Boa " + (k + 1) + " · lasciala a sinistra" : "Boa di bolina · lasciala a sinistra", gx + ux * 16, gy + uy * 16); });
+      ctx.textBaseline = tb; }
+    if (!(rot.on && riv.on)) drawOrologio(R.boats[0], ranking()); // 1.2.41: nella rotta ottimale niente orologio sopra la mappa (Ale, 15 nov 2026)
     ctx.restore();
     const g = goal(); // dopo l'arrivo niente freccia
     if (g) offscreenArrow(v, g);

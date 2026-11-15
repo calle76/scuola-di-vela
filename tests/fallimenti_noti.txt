@@ -9,10 +9,6 @@
 # (Chromium tests/output/lancia_tutti/20261101-031157, Firefox 20261101-041521) e coincidono con il giro su GitHub dello stesso giorno.
 # Per scrivere una voce nuova: .venv-collaudi/bin/python tests/noti.py righe <file di uscita>
 
-== collaudo_contatto_vero.py | firefox | Firefox, 1.2.15: un istante di 1/240 s con tre barche insieme (salti, seme 1, esperti): la spinta fra due fa sovrapporre per 4 mm la terza, che ha il contatto al passo dopo (PROPOSTA-DERIVA-SU-MAIN.md §6)
-FALLITO: 1b: 1 istanti con scafi sovrapposti e nessun contatto
-ESITO: FALLITO
-
 ~~ collaudo_torneo.py (misura) | tutti | C11: tempi veri (uscita dal menu, chiusura del browser a metà torneo), dipendono dal carico del computer: sul PC fallisce o passa da un giro all'altro
 C11 
 
@@ -34,34 +30,14 @@ ESITO: FALLITO
 == collaudo_virate2.py | firefox | avversari oltre la bolina + 15° sopra la soglia del 5%, noto dalla 1.0.31 (quasi tutte manovre volute della guida); numeri della 1.1.2
 ESITO: FALLITO
 
-== collaudo_competizione.py (misura) | chromium | C1 piazzamenti fuori dalla fascia 10-40%, noto; da ritarare con le medaglie. Numeri della 1.2.15 (guida nuova degli avversari)
-  NO  C1: 1° 9 (11%), 2° 15 (19%), 3° 23 (29%), 4° 33 (41%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 6 (8%), 2° 14 (18%), 3° 23 (29%), 4° 37 (46%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 6 (8%), 2° 13 (16%), 3° 16 (20%), 4° 45 (56%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 4 (5%), 2° 11 (14%), 3° 18 (22%), 4° 47 (59%) su 80 arrivate (fascia 10-40%)
-  misura C1: NO
-  conferma C1: NO
-ESITO: FALLITO
+== collaudo_triangolo.py | chromium | T2b fuori soglia dalla nascita del collaudo (1.0.55: 129 su 168): la strada resta ferma tra l'abeam e la fine del giro (PROPOSTA-TORNEI-1B.md §8.8). Numeri della 1.2.40 sul PC (15 nov 2026: con i rivali coi nomi il torneo cambia; nella 1.2.25 erano 121 su 174)
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 126 su 166 confronti (160 col segno giusto), entro 3 s dopo il via 38/57, dopo la boa 1 60/60, dopo la boa 2 28/49, errore massimo 18.8 s, giocatore arrivato in 20 regate su 20
 
-== collaudo_competizione.py (misura) | firefox | C1 piazzamenti fuori dalla fascia 10-40%, noto; da ritarare con le medaglie. Numeri della 1.2.15 (guida nuova degli avversari)
-  NO  C1: 1° 9 (11%), 2° 20 (25%), 3° 18 (22%), 4° 33 (41%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 6 (8%), 2° 9 (11%), 3° 25 (31%), 4° 40 (50%) su 80 arrivate (fascia 10-40%)
-  NO  C1: 1° 3 (4%), 2° 18 (22%), 3° 20 (25%), 4° 39 (49%) su 80 arrivate (fascia 10-40%)
-  misura C1: NO
-ESITO: FALLITO
+== collaudo_triangolo.py | chromium | Come la voce sopra, ma sui computer di GitHub: 128 su 168 invece di 126 su 166 (giro 43682372043 del 15 nov 2026, 1.2.40)
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 128 su 168 confronti (162 col segno giusto), entro 3 s dopo il via 39/57, dopo la boa 1 60/60, dopo la boa 2 29/51, errore massimo 18.8 s, giocatore arrivato in 20 regate su 20
 
-== collaudo_giri_avversari.py (120 regate) | firefox | Firefox, 1.2.18: G4 trova 14 casi di due giri di fila contro i 15 che il metro chiede (mediana 22,0 s, dentro 12-30): dalla 1.2.18 gli avversari girano anche prima del via e i giri si interrompono più spesso in gruppo, le coppie di giri di fila sono meno. Chromium verde con 120 regate (18 casi)
-FALLITO G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 22.0 s su 14 casi, minimo-massimo 19.5-24.6
-casi sbagliati: ['G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): 22.0 s su 14 casi, minimo-massimo 19.5-24.6']
-
-== collaudo_triangolo.py | chromium | T2b fuori soglia dalla nascita del collaudo (1.0.55: 129 su 168): la strada resta ferma tra l'abeam e la fine del giro (PROPOSTA-TORNEI-1B.md §8.8). Numeri della 1.2.25 (col cono d'ombra il torneo cambia; nella 1.2.24 erano 121 su 169)
-FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 121 su 174 confronti (162 col segno giusto), entro 3 s dopo il via 20/59, dopo la boa 1 59/59, dopo la boa 2 42/56, errore massimo 14.6 s, giocatore arrivato in 20 regate su 20
-
-== collaudo_triangolo.py | firefox | come in Chromium (T2b, noto dalla 1.0.55); numeri della 1.2.25 (nella 1.2.24 erano 120 su 170)
-FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 139 su 173 confronti (164 col segno giusto), entro 3 s dopo il via 31/58, dopo la boa 1 60/60, dopo la boa 2 48/55, errore massimo 11.6 s, giocatore arrivato in 20 regate su 20
-
-== collaudo_triangolo.py | firefox | Come la voce sopra, ma sui computer di GitHub: Firefox dà numeri un po' diversi (135 su 173 invece di 139; in locale due prove di fila dànno 139 tutte e due, quindi è la macchina, non il caso). Aggiunta l'11 novembre 2026 (DA-FARE voce 19)
-FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 135 su 173 confronti (163 col segno giusto), entro 3 s dopo il via 29/58, dopo la boa 1 60/60, dopo la boa 2 46/55, errore massimo 15.7 s, giocatore arrivato in 20 regate su 20
+== collaudo_triangolo.py | firefox | come in Chromium (T2b, noto dalla 1.0.55); numeri della 1.2.40, uguali sul PC e su GitHub (15 nov 2026; nella 1.2.25 erano 139 su 173 sul PC e 135 su GitHub)
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 127 su 171 confronti (163 col segno giusto), entro 3 s dopo il via 31/60, dopo la boa 1 60/60, dopo la boa 2 36/51, errore massimo 26.6 s, giocatore arrivato in 20 regate su 20
 
 == collaudo_avversari_deriva.py | chromium | casi 81 e 83 fuori soglia dalla nascita (PROPOSTA-AVVERSARI-DERIVA.md, V8, 6 nov 2026), identici dalla 1.2.15 alla 1.2.24: da riprendere col lavoro sugli avversari dopo il cono d'ombra
 FALLITO caso 81: 6 su 10 (soglia 9)

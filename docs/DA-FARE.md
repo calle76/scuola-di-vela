@@ -44,6 +44,7 @@
 | 38 | **Il circuito nazionale, con batterie da 6 barche** (Ale, 14 nov: «A al nazionale», «passa al nazionale»): passo 1 regate a 6 barche (1.2.38), passo 2 stagione nazionale (1.2.39) | `PROPOSTA-NAZIONALE.md`; `PROPOSTA-RIVALI-E-SPONSOR.md` §7, §12, §16 | **fatta:** passo 1 = 1.2.38 (N2 dichiarato, scelta A di Ale); passo 2 = 1.2.39, stagione nazionale, chiusa il 14 nov notte. Si toglie alla prossima pulizia dell'elenco |
 | 39 | **Piano di chiusura di Deriva** (Ale, 14 nov notte: «scrivi il piano di chiusura di Deriva»): tappe 1-7, da rotta in assoluto a uscita | `PIANO-CHIUSURA-DERIVA.md` | fermata 1: aspetta le 5 decisioni di Ale |
 | 40 | **In 3 regate su 100 il pulsante «Rotta ottimale» non compare** (semi 2415 R3 e R4, 2420 R4 di `collaudo_rotta_assoluta.py`), anche nella 1.2.39: il pilota arriva e il taglio della linea è registrato | `PROPOSTA-ROTTA-ASSOLUTA.md` §10 | causa da cercare |
+| 41 | **Due rossi rimasti nel giro su GitHub** (15 nov, `CHANGELOG.md` 1.2.41): `collaudo_torneo` C11 in Firefox (2 tornei su 40 chiusi a metà non risultano conclusi: forse è la voce 6) e il sartiame di `collaudo_suoni_si_sentono` (1,4-3,6 dB contro almeno 2, in ogni giro dal 10 nov) | `COLLAUDI.md` | da guardare |
 
 ## Proposta di riordino (13 novembre, per la voce 29: da decidere con Ale, niente è cambiato)
 

@@ -40,7 +40,7 @@ FILI = """() => { const F = __sv.rotFili(), all = __sv.riv.all, P = __sv.rot.res
   return { n: F.length, attesi: Math.floor(corta / 60 + 1e-9), scarto, istanti, lungh: F.map(f => Math.round(Math.hypot(f.v.x - f.b.x, f.v.y - f.b.y))) }; }"""
 
 async def main():
-    nome = os.environ.get("BROWSER", "chromium"); falli = []; righe = 0
+    nome = os.environ.get("BROWSER", "chromium"); falli = []; righe = 0; nonarr = []
     async with async_playwright() as p:
         br = await getattr(p, nome).launch()
         pg = await br.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
@@ -49,6 +49,10 @@ async def main():
             for seme in range(2301, 2301 + SEMI):
                 r = await pg.evaluate(CORSA, [k, seme]); await pg.wait_for_timeout(500)
                 r["rotVis"] = await pg.evaluate("() => { const b = document.getElementById('finRot'); return !b.hidden && b.offsetParent !== null; }")
+                if r["fin"] is None:   # 1.2.41 (voce 40): senza arrivo il gioco non offre la rotta ottimale (regate.js, finRot); qui si controlla solo che il pulsante manchi
+                    nonarr.append(f"R{k+1} seme {seme}")
+                    if r["rotVis"]: falli.append(f"R{k+1} seme {seme}: pilota non arrivato ma pulsante Rotta ottimale visibile")
+                    continue
                 if not r["rotVis"]: falli.append(f"R{k+1} seme {seme}: pulsante Rotta ottimale non visibile ({r})"); continue
                 prima = await pg.evaluate(MISURA)
                 await pg.keyboard.press("b"); await pg.wait_for_timeout(50)
@@ -77,6 +81,8 @@ async def main():
                 print(f"  R{k+1} seme {seme}: fili {f['n']} (attesi {f['attesi']}), scarto {f['scarto']:.3f} m, lunghezze {f['lungh']} m; barra {a['cw']} -> {b['cw']} px, uscita {uscita}", flush=True)
         await br.close()
     if errs: falli.append(f"errori della pagina: {errs[:3]}")
+    print(f"regate senza arrivo del pilota (pulsante giustamente assente): {len(nonarr)} {nonarr}")
+    if len(nonarr) > SEMI: falli.append(f"metro: {len(nonarr)} regate senza arrivo su {4 * SEMI}, più di {SEMI}")
     print(f"{nome}: {righe} regate con la rotta aperta; " + ("ESITO: OK" if not falli and righe else "FALLITO"))
     for x in falli: print("  ", x)
     sys.exit(0 if not falli and righe else 1)

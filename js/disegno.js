@@ -268,7 +268,7 @@
     if (opt.dead && !(st && (st.pause || st.rose || !st.hud))) drawDeadRose(heelG ? 196 : 84);
     if (mode === "race") drawRaceScreen(v);
     drawHelmLegend();
-    if (S.toast) drawToast();
+    if (S.toast && !(rot.on && riv.on)) drawToast(); // 1.2.41: nella rotta ottimale niente «Arrivato!» sopra la mappa (Ale, 15 nov 2026)
   }
 
   // ---- frecce fuori schermo, linee e scritte ----

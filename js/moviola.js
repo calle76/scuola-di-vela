@@ -47,7 +47,7 @@
     releaseKeys(); riv.on = true; riv.playing = true; riv.speed = 1;
     const primo = riv.segni.find(g => g.t >= rivT0());
     riv.pos = rivPosDi((primo ? primo.t : 0) - RIV_PRIMA);   // si parte 10 s prima del primo segno, o 10 s prima dello sparo
-    $("finOv").hidden = true; $("movBar").hidden = false; document.querySelector(".panel").classList.remove("fin");
+    $("finOv").hidden = true; $("movBar").hidden = false; document.querySelector(".panel").classList.remove("fin"); stringi($("standings")); /* 1.2.41: la classifica torna visibile, le righe lunghe si rimisurano */
     rivTacche(); rivMostra(); $("movPlay").focus();   // 1.0.76: il fuoco su Pausa, così lo spazio mette in pausa (su «Chiudi» chiudeva)
   }
   function rivChiudi(){

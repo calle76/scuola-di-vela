@@ -136,12 +136,13 @@ CORRI = """async (modo) => {   // modo: "pilota" (guida fino all'arrivo o alla f
 NOMI = ["Tu", "Rossa", "Verde", "Blu"]
 fmt = lambda v: str(round(v * 10) / 10).replace(".0", "").replace(".", ",")
 
-def confronta(tag, ris, righe):
+def confronta(tag, ris, righe, nomi=None):
+    nomi = nomi or NOMI                                    # dalla 1.2.33 i rivali hanno un nome: lo si prende dalle barche della regata
     cl = serie(ris); diff = 0
     for n, x in enumerate(cl):
         cells = [("Sq" if ris[j][x["i"]].get("dsq") else fmt(v)) + ("*" if ris[j][x["i"]]["pp"] else "") + ("°" if ris[j][x["i"]]["fin"] is None and not ris[j][x["i"]].get("dsq") else "") for j, v in enumerate(x["p"])]
         cells = [("(" + c + ")" if j == x["sc"] else c) for j, c in enumerate(cells)]
-        atteso = [f"{n + 1}°", NOMI[x["i"]]] + cells + [fmt(x["tot"])]
+        atteso = [f"{n + 1}°", nomi[x["i"]]] + cells + [fmt(x["tot"])]
         if n >= len(righe) or righe[n] != atteso:
             diff += 1; no(f"{tag}: riga {n + 1} del gioco {righe[n] if n < len(righe) else None}, nostra {atteso}")
     return diff, cl
@@ -178,7 +179,7 @@ async def c2(b, semi, carriera):
             f = r["formato"]; FORM[0] += 1   # C12 (1.2.21): regate 1-2 col punteggio, 3-4 coi giri; raffiche sempre (i salti si vedono nella breve)
             if f["giri"] != (k >= 2) or f["punti"] != (k < 2) or not f["raffiche"] or not f["salti"]: FORM[1] += 1; no(f"C12 seme {seme} regata {k + 1}: formato {f}")
             if k >= 2: FORM[2] += f["contatti"]; FORM[3] += sum(b["pp"] for b in r["boats"]); FORM[4] += sum(b["dsq"] for b in r["boats"])
-            d, cl = confronta(f"C2 seme {seme} regata {k + 1}", ris, r["righe"]); diff += d
+            d, cl = confronta(f"C2 seme {seme} regata {k + 1}", ris, r["righe"], NOMI[:1] + [x["name"] for x in r["boats"][1:]]); diff += d
         if len(ris) == 4:
             cl = serie(ris); pos = [x["i"] for x in cl].index(0) + 1
             if ultimo["finale"] != f"{pos}° su 4": diff += 1; no(f"C2 seme {seme}: finale del gioco {ultimo['finale']}, nostro {pos}° su 4")

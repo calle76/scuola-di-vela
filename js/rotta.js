@@ -221,9 +221,9 @@
   // chiesta, null = non calcolabile
   function rotAssChiedi(){
     if (!rot.on || !rot.res || !rot.res.ott || rot.res.ass !== undefined || rot.calc) return;
-    const r = rot.res; rot.calc = true; $("movAss").disabled = true;
+    const r = rot.res, ASS = "Migliore in assoluto (V)"; rot.calc = true; $("movAss").disabled = true; $("movAss").textContent = "Sto calcolando…"; // 1.2.41: anche sul pulsante, perché con B il commento è nascosto
     r.testo = $("movTit").textContent = "Sto calcolando la migliore in assoluto: qualche secondo…"; // nel testo della rotta: la moviola lo riscrive a ogni fotogramma (rivMostra)
-    setTimeout(() => { if (rot.res !== r){ rot.calc = false; return; } // un'altra regata nel frattempo
+    setTimeout(() => { $("movAss").textContent = ASS; if (rot.res !== r){ rot.calc = false; return; } // un'altra regata nel frattempo
       r.ass = rotAssoluta(); rot.calc = false; rot.box = null;
       r.testo = rotTesto(r.ott, r.sp) + (r.ass ? "" : " La migliore in assoluto non si può calcolare per questa regata.");
       $("movAss").hidden = true; $("movAss").disabled = false; if (rot.on) $("movTit").textContent = r.testo; }, 60);
@@ -232,7 +232,7 @@
   // torna sempre quando la rotta ottimale si chiude (rivChiudi)
   function rotLargo(on){
     rot.largo = !!on; document.querySelector(".layout").classList.toggle("largo", rot.largo);
-    $("movLargo").textContent = rot.largo ? "Rimetti la barra (B)" : "Allarga la mappa (B)";
+    $("movLargo").textContent = rot.largo ? "Rimetti testo e barra (B)" : "Allarga la mappa (B)"; // 1.2.41: con B si toglie anche il commento
     dispatchEvent(new Event("resize"));
   }
   // 1.2.32: il filo dello stesso istante, ogni ROT_FILO s dal tuo taglio della linea, finché esistono tutte e due le rotte
@@ -266,8 +266,8 @@
     if (!rot.on || !riv.on || !rot.res || !rot.res.ott) return null;
     if (!rot.box){ const P = rot.res.ott.punti.concat(rot.res.ass ? rot.res.ass.punti : []).map(q => [q.x, q.y]).concat(riv.all.map(f => [f.b[0][0], f.b[0][1]]), R.marks.map(m => [m.x, m.y]), [[R.pin.x, R.pin.y], [R.cb.x, R.cb.y]]);
       const xs = P.map(p => p[0]), ys = P.map(p => p[1]); rot.box = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; }
-    const [x0, y0, x1, y1] = rot.box, alto = H - $("movBar").offsetHeight - 110, ppm = Math.min((W - 60) / Math.max(10, x1 - x0), (alto - 40) / Math.max(10, y1 - y0));
-    return { ppm, rot: 0, cx: W / 2 + (S.x - (x0 + x1) / 2) * ppm, cy: 90 + alto / 2 + (S.y - (y0 + y1) / 2) * ppm };
+    const [x0, y0, x1, y1] = rot.box, alto = H - $("movBar").offsetHeight - 50, /* 1.2.41: senza orologio in alto, la mappa parte da 20 px invece che da 90 */ ppm = Math.min((W - 60) / Math.max(10, x1 - x0), (alto - 40) / Math.max(10, y1 - y0));
+    return { ppm, rot: 0, cx: W / 2 + (S.x - (x0 + x1) / 2) * ppm, cy: 20 + alto / 2 + (S.y - (y0 + y1) / 2) * ppm };
   }
   function rotDisegna(v){ // sopra la regata, mentre la moviola è aperta dalla rotta ottimale
     if (!rot.on || !riv.on || !rot.res || !rot.res.ott) return;

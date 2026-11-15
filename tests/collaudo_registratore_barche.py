@@ -44,7 +44,7 @@ CORRI = """([tipo, seme, registra, liv]) => {
     for (; lette < L.length; lette++){
       const l = L[lette]; if (l[0] === 'S') nS++;
       if (l[0] !== 'B') continue; nB++;
-      const p = l.split(' '), b = R.boats.find(x => x.name === p[2]);
+      const p = l.split(' '), b = R.boats.find(x => (x.sigla || x.name) === p[2]); // 1.2.33: nelle righe B la sigla (Rossa, Verde, Blu), non il nome del rivale
       if (!b){ male.push('barca ' + p[2] + ' inesistente'); continue; }
       const d = [Math.abs(+p[3] - b.S.x) > 0.06, Math.abs(+p[4] - b.S.y) > 0.06, Math.abs(((+p[5] - b.S.h) % 360 + 540) % 360 - 180) > 0.6, Math.abs(+p[6] - b.S.u * KN) > 0.06, +p[8] !== b.leg];
       if (d.some(x => x)) male.push(l + ' | vero ' + [b.S.x, b.S.y, b.S.h, b.S.u * KN, b.leg].join(' '));

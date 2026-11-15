@@ -79,11 +79,13 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Playwright 1.60.0 e il browser (come tests/prepara_ambiente.sh)
+      # Tutti e due i browser in ogni pezzo: collaudo_stagione, _stagione_amico, _sei_barche e
+      # _nazionale aprono sempre Chromium e Firefox (confronto fra browser e pagina vera in entrambi).
+      - name: Playwright 1.60.0 e i browser (come tests/prepara_ambiente.sh)
         run: |
           python -m venv .venv-collaudi
           .venv-collaudi/bin/pip install --quiet "playwright==1.60.0"
-          .venv-collaudi/bin/playwright install --with-deps ${{ matrix.browser }}
+          .venv-collaudi/bin/playwright install --with-deps chromium firefox
 
       - name: ffmpeg per collaudo_suoni_si_sentono.py (misura solo in Chromium)
         if: matrix.browser == 'chromium'
