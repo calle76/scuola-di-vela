@@ -22,7 +22,9 @@
     if (riv.fine === R) return;   // dopo l'arrivo del giocatore non si copia più
     const me = R.boats[0], ultimo = me.fin !== null || me.dnf;
     riv.acc += dt; if (riv.acc < RIV_DT && !ultimo && riv.all.length) return; riv.acc = 0;
-    riv.all.push({ t, b: R.boats.map(b => { const s = b.S; return [s.x, s.y, s.h, s.heel, s.u, s.dispBoom, s.boom, s.boomSide, s.capsized ? 1 : 0, s.hike || 0]; }) });
+    const fr = { t, b: R.boats.map(b => { const s = b.S; return [s.x, s.y, s.h, s.heel, s.u, s.dispBoom, s.boom, s.boomSide, s.capsized ? 1 : 0, s.hike || 0]; }) };
+    if (R.ombra) fr.c = [me.cop || 0, me.copDa ? R.boats.indexOf(me.copDa) : -1]; // 1.3.3 (docs/PROPOSTA-COACH.md): quanto vento toglie il cono al giocatore, e chi; solo lettura
+    riv.all.push(fr);
     if (riv.all.length > RIV_MAX_F){ riv.all.shift(); riv.tagliata = true; }
     if (ultimo) riv.fine = R;
   }
@@ -55,7 +57,7 @@
     R.boats.forEach((b, k) => Object.assign(b.S, riv.bk.S[k]));
     riv.bk.wake.forEach((items, a) => a.push(...items)); riv.bk = null;
     if (rot.largo) rotLargo(false); $("movLargo").hidden = $("movAss").hidden = true; // 1.2.32: chiusa la rotta ottimale, la barra laterale torna sempre
-    riv.on = false; rot.on = false; $("movBar").hidden = true; releaseKeys(); finShow();
+    riv.on = false; rot.on = false; $("movBar").hidden = true; $("coach").hidden = true; /* 1.3.3: il coach solo con la rotta ottimale */ releaseKeys(); finShow();
   }
   function rivTacche(){ // un segno = una tacca sul cursore
     const d = Math.max(0.1, rivDur());

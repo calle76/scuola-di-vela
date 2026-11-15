@@ -19,6 +19,39 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.3 — Il coach nella moviola
+
+Quarta versione della cornice di Deriva, al posto del «momento clou» (`docs/PROPOSTA-COACH.md`, via di Ale del 15 novembre 2026; nome «Coach», senza nome proprio, e coach indipendente dal tasto V, scelte dello stesso giorno).
+
+- A regata finita, aprendo **Rotta ottimale**, sopra la legenda c'è il **Coach**: un cerchio con la «C» (il volto arriva quando Ale lo crea) e **al massimo tre frasi**, le più pesanti in secondi. Ogni frase ha un numero misurato e un momento: cliccandola, la moviola salta lì (5 s prima).
+- Le frasi possibili:
+  - **momento clou:** il minuto in cui hai perso più metri di percorso sulla rotta ottimale, fuori dai tratti con barche vicine; se c'è, anche il vento girato contro (lezione 11);
+  - **«c'erano altre barche»:** se il tratto peggiore era fra le barche, il coach dice che la rotta ottimale non ne tiene conto;
+  - **coperto:** quanto sei rimasto nel cono d'ombra di chi, e i secondi persi, calcolati con la polare;
+  - **alla boa:** metri oltre la layline, o troppe virate negli ultimi 80 m (lezione 23);
+  - **partenza:** secondi dopo lo sparo e velocità allo sparo (lezione 18), o partenza anticipata (lezione 17);
+  - **penalità:** contatto con colpa o boa toccata;
+  - **«quasi perfetta»**, quando non hai perso niente di importante.
+- La **legenda** della rotta ottimale è più corta: colori, tempi e secondi per lato. Con V, in più, la partenza ideale. Il paragrafo dei «motivi» è sostituito dal coach.
+- La **moviola** registra in più, per il giocatore, quanto vento gli toglie il cono e chi glielo toglie (solo lettura).
+
+**Cambiato prima di misurare le soglie, e detto:** la proposta misurava il momento clou con la lunghezza del filo bianco, cioè la distanza fra te e la rotta ottimale nello stesso istante. Nella prima prova (8 regate) il «tratto peggiore» cadeva quasi sempre nel primo minuto dopo il via, con 60-100 m: due rotte su lati diversi del campo si allontanano anche senza perdere niente. Ora il clou misura **i metri di percorso che ti mancano in più della rotta ottimale** (distanza dalla prossima boa più i lati dopo, fino all'arrivo): cresce solo quando resti indietro davvero.
+
+**Misure** (`collaudo_coach.py`, nuovo; 20 regate del torneo col pilota, semi 2601-2605, mai usati prima; Chromium e Firefox, tutti i criteri passano):
+- **K1:** arrivi, penalità e posizioni identici alla 1.3.2 in 20 regate su 20.
+- **K2:** con la rotta aperta la barra della moviola sta dentro la finestra, con 0 px di eccesso, in tutte le regate e nel caso peggiore costruito (tre frasi lunghe e la legenda con V: la barra va da 204 a 631 px su 650).
+- **K3:** da 1 a 3 frasi per regata (41 in tutto in Chromium, 44 in Firefox), ognuna con il suo numero.
+- **K4:** il clou ricalcolato a parte in Python coincide, per finestra e metri, in tutti i casi controllati (7 regate in Chromium, 5 in Firefox).
+- **K5:** sui tratti costruiti i secondi persi coperti stanno entro il 25% della stima fatta con la tabella polare (scarti da −2% a +18%). Nei 6 tratti coperti delle regate vere c'era sempre una barca entro 10 lunghezze.
+- **K6, K7, K8, K9:** il salto della moviola va a 5 s prima del momento, entro 1 s. Con la traccia sostituita da quella della rotta ottimale il coach dice «quasi perfetta» (0-1 s). Le frasi si calcolano in meno di 200 ms. Le frasi sono identiche con e senza V.
+- **Fisica identica:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js`.
+- **Verdi anche:** `collaudo_moviola` (8 regate), `collaudo_rotta_assoluta`, `collaudo_rotta_leggibile`, `collaudo_ricarica`, `collaudo_rotta`.
+
+**Numeri da sapere:**
+- **«C'erano altre barche» esce in 17 regate su 20.** La regola scritta (un minuto è «affollato» se anche per un solo secondo c'è una barca entro 3 lunghezze, o il cono) col pilota scatta quasi sempre: la guida degli avversari, usata qui sul giocatore, naviga in gruppo (in una regata ha una barca vicina nel 64% dei secondi). Non l'ho cambiata dopo aver visto i numeri: è una scelta per Ale. Un giocatore vero forse sta meno in gruppo.
+- **«Coperto» non è uscito in nessuna delle 20 regate:** i tratti coperti veri sono costati da 0,9 a 2,7 s, sotto la soglia di 5 s per dirli. Il calcolo c'è ed è controllato (K5).
+- **Un difetto trovato e corretto durante il lavoro:** un commento `//` a metà riga, nella chiusura della moviola, toglieva il ritorno alla schermata di fine regata (`collaudo_moviola` V6 rosso, verde sulla 1.3.2). Corretto prima del commit.
+
 ## 1.3.2 — Deriva: la prova dei giri di penalità, con le medaglie
 
 Terza versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, criterio D9; `PROPOSTA-LIVELLO-DERIVA.md` §3). Lavoro fatto in autonomia su richiesta di Ale.

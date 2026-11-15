@@ -177,12 +177,13 @@
         if (!p.s || q.s === p.s) continue;
         const w1 = rotVento(q.x, q.y, rotRaffiche(q.t)).twd, w0 = rotVento(q.x, q.y, rotRaffiche(Math.max(ott.t0, q.t - 30))).twd, d = norm180(w1 - w0);
         if (p.s * d <= -SCARSO){ const vicino = tu.some((f, n) => n >= 5 && Math.abs(f.t - q.t) <= 15 && mure(f.x, f.y, f.h, f.t) !== mure(tu[n - 5].x, tu[n - 5].y, tu[n - 5].h, tu[n - 5].t));
-          if (!vicino){ motivi.push({ j, peso: L.tu - L.ott + 1, txt: `A ${rivTempo(q.t)} il vento è girato di ${Math.round(Math.abs(d))}° contro le tue mure: la rotta ottimale ha virato, tu no.` }); break; } } }
+          if (!vicino){ motivi.push({ j, t: q.t, scarso: Math.round(Math.abs(d)), peso: L.tu - L.ott + 1, txt: `A ${rivTempo(q.t)} il vento è girato di ${Math.round(Math.abs(d))}° contro le tue mure: la rotta ottimale ha virato, tu no.` }); break; } } }
       // layline: l'ultima virata per la boa oltre la layline, oppure più virate vicino alla boa
       if (L.nome === "Bolina" && tu.length > 10){ const mk = R.marks[0], vir = [];
         for (let n = 5; n < tu.length; n += 5){ const f = tu[n], g = tu[n - 5]; if (mure(f.x, f.y, f.h, f.t) !== mure(g.x, g.y, g.h, g.t)) vir.push(f); }
         const ul = vir[vir.length - 1], o2 = ul ? rotOltre(mk, ul.x, ul.y, ul.t) : null, oltreM = o2 ? o2.d * Math.sin(Math.max(0, o2.g) * D2R) : 0;
         const vicine = vir.filter(f => Math.hypot(f.x - mk.x, f.y - mk.y) < LAY_VICINO).length;
+        L.lay = { oltre: o2 && o2.g >= LAY_TOLL && oltreM >= LAY_MIN ? Math.round(oltreM) : 0, vicine, t: ul ? ul.t : null, tv: vir.filter(f => Math.hypot(f.x - mk.x, f.y - mk.y) < LAY_VICINO).map(f => f.t)[0] ?? null }; // 1.3.3: per il coach
         if (o2 && o2.g >= LAY_TOLL && oltreM >= LAY_MIN) motivi.push({ j, peso: L.tu - L.ott + 0.5, txt: `Hai virato per la boa ${Math.round(oltreM)} m oltre la layline: virando prima avresti fatto meno strada.` });
         else if (vicine >= 2) motivi.push({ j, peso: L.tu - L.ott + 0.5, txt: `Negli ultimi ${LAY_VICINO} m prima della boa hai virato ${vicine} volte: arrivando sulla layline ne basta una.` }); }
       // lato del campo: con il vento che ruota di almeno 2 SCARSO nel lato, la rotta ottimale va dalla parte della rotazione
@@ -195,25 +196,125 @@
     return { lati, motivi: motivi.slice(0, 2) };
   }
 
+  // ---- coach (1.3.3, docs/PROPOSTA-COACH.md; via di Ale del 15 novembre 2026) ----
+  // Al posto del riassunto della rotta ottimale: al massimo COA_N frasi, ognuna da un modello fisso riempito con numeri misurati, con un momento t
+  // (cliccandola la moviola salta lì, COA_ANT s prima) e un peso in secondi per scegliere le più importanti. Non dipende dalla migliore in assoluto (V).
+  // Frasi: clou (il minuto in cui il distacco dalla rotta ottimale cresce di più, fuori dai tratti coperti o affollati), affollato (se il tratto peggiore
+  // era fra le barche: la rotta ottimale non ne tiene conto), coperto (cono d'ombra, secondi persi con la polare), boa (layline), partenza, penalità, bene.
+  // Il peso in secondi di clou e boa è una stima (metri divisi per la velocità media, o virate per T_VIR): serve solo a ordinare, le frasi dicono i metri.
+  // Costanti, ipotesi nostre (proposta, §Costanti): COA_N frasi, finestra del clou COA_FIN s, coperto da COA_COP di vento tolto per almeno COA_COP_S s,
+  // perdita minima COA_MIN s, affollato entro COA_AFF m (3 lunghezze), anticipo del salto COA_ANT s, ritardo minimo al via COA_VIA s.
+  const COA_N = 3, COA_FIN = 60, COA_COP = 0.1, COA_COP_S = 10, COA_MIN = 5, COA_AFF = 3 * BOAT.length, COA_ANT = 5, COA_VIA = 3;
+  function rotVel(twa, tws){ // velocità della polare del gioco (m/s) per un angolo dal vento e una forza (m/s)
+    const r = rotRiga(tws), a = clamp(twa, ROT_TWA[0], 180), j = Math.min(ROT_TWA.length - 2, Math.floor((a - ROT_TWA[0]) / 5)), f = (a - ROT_TWA[j]) / 5;
+    return r[j][0] * (1 - f) + r[j + 1][0] * f;
+  }
+  function coaCoperto(tu){ // tratti col cono che toglie almeno COA_COP per almeno COA_COP_S s: [{ t0, t1, persi, da }]
+    const out = []; let cur = null;
+    const chiudi = () => { if (cur && cur.t1 - cur.t0 >= COA_COP_S) out.push(cur); cur = null; };
+    for (let i = 1; i < tu.length; i++){ const f = tu[i], c = f.c, dt = f.t - tu[i - 1].t;
+      if (c && c[0] >= COA_COP){
+        if (!cur) cur = { t0: f.t, t1: f.t, persi: 0, chi: {} };
+        const p = f.b[0], w = rotVento(p[0], p[1], rotRaffiche(f.t)), twa = Math.abs(norm180(p[2] - w.twd)), v0 = rotVel(twa, w.tws);
+        if (v0 > 0.05) cur.persi += dt * (1 - rotVel(twa, w.tws * (1 - c[0])) / v0);
+        cur.t1 = f.t; cur.chi[c[1]] = (cur.chi[c[1]] || 0) + dt;
+      } else if (cur && f.t - cur.t1 > 1) chiudi();
+    }
+    chiudi();
+    return out.map(o => ({ ...o, da: +Object.entries(o.chi).sort((a, b) => b[1] - a[1])[0][0] }));
+  }
+  // il clou: per ogni secondo, quanti metri di percorso ti mancano in più della rotta ottimale (distanza dalla prossima boa più i lati dopo, fino al centro
+  // della linea d'arrivo); la finestra di COA_FIN s in cui questo cresce di più. Prima stesura (scartata il 15 nov, prima di misurare le soglie): la lunghezza
+  // del filo, cioè la distanza fra le due barche nello stesso istante; ma due rotte su lati diversi del campo si allontanano anche senza perdere niente
+  function coaClou(P, tu, lati){
+    const me0 = rot.barche[0], M = R.marks.slice(me0.taglio.leg - 1).map(m => [m.x, m.y]).concat([[(R.pin.x + R.cb.x) / 2, (R.pin.y + R.cb.y) / 2]]);
+    const dopo = M.map((m, k) => M.slice(k).reduce((a, q, n, A) => a + (n ? Math.hypot(q[0] - A[n - 1][0], q[1] - A[n - 1][1]) : 0), 0)); // dalla boa k all'arrivo
+    const resto = (x, y, k) => k >= M.length ? 0 : Math.hypot(x - M[k][0], y - M[k][1]) + dopo[k];
+    const latoDi = (t, fine) => { let k = 0; while (k < fine.length && t >= fine[k]) k++; return k; };
+    const tuFine = me0.giri.map(g => g.t), g = [], fine = Math.min(P[P.length - 1].t, tu[tu.length - 1].t);
+    for (let s = P[0].t; s <= fine; s += 1){ const q = rotIstante(P, s, q => [q.x, q.y]), f = rotIstante(tu, s, f => f.b[0]);
+      if (q && f) g.push({ s, d: resto(f[0], f[1], latoDi(s, tuFine)) - resto(q[0], q[1], latoDi(s, lati)) }); }
+    const aff = new Set();
+    for (const f of tu){ const me = f.b[0]; if ((f.c && f.c[0] >= COA_COP) || f.b.some((b, k) => k && Math.hypot(b[0] - me[0], b[1] - me[1]) < COA_AFF)) aff.add(Math.floor(f.t)); }
+    const vel = (t0, t1) => { const fr = tu.filter(f => f.t >= t0 && f.t <= t1); return fr.length ? fr.reduce((a, f) => a + f.b[0][4], 0) / fr.length : 1; };
+    let best = null, tutto = null;
+    for (let i = 0; i + COA_FIN < g.length; i++){
+      const a = g[i], b = g[i + COA_FIN], w = { t0: a.s, t1: b.s, m: b.d - a.d };
+      let libero = true; for (let s = Math.floor(a.s); s <= b.s; s++) if (aff.has(s)){ libero = false; break; }
+      w.libero = libero;
+      if (!tutto || w.m > tutto.m) tutto = w;
+      if (libero && (!best || w.m > best.m)) best = w;
+    }
+    for (const w of [best, tutto]) if (w) w.peso = w.m / Math.max(0.5, vel(w.t0, w.t1));
+    return { best, tutto, g };
+  }
+  function coaFrasi(ott, sp){
+    const me = R.boats[0], o = rot.barche[0], fineTu = me.fin !== null ? me.fin : riv.all[riv.all.length - 1].t;
+    const tu = riv.all.filter(f => f.t >= o.taglio.t && f.t <= fineTu), F = [], T = rivTempo;
+    if (tu.length > 2){
+      // clou e affollato
+      const C = coaClou(ott.punti, tu, ott.lati), b = C.best;
+      if (b && b.peso >= COA_MIN){
+        const sc = sp.motivi.find(m => m.t !== undefined && m.t >= b.t0 - 10 && m.t <= b.t1);
+        F.push({ tipo: "clou", t: b.t0, peso: b.peso, m: Math.round(b.m), t0: b.t0, t1: b.t1,
+          txt: `Qui hai perso di più: fra ${T(b.t0)} e ${T(b.t1)} la rotta ottimale ha guadagnato ${Math.round(b.m)} m di percorso su di te.` + (sc ? ` Il vento era girato di ${sc.scarso}° contro di te e la rotta ottimale ha virato (lezione 11).` : "") });
+      }
+      const w = C.tutto;
+      if (w && !w.libero && w.peso >= COA_MIN && (!b || w.m > b.m))
+        F.push({ tipo: "affollato", t: w.t0, peso: w.peso, m: Math.round(w.m), t0: w.t0, t1: w.t1,
+          txt: `Fra ${T(w.t0)} e ${T(w.t1)} hai perso ${Math.round(w.m)} m di percorso, ma c'erano altre barche: la rotta ottimale non ne tiene conto.` });
+      // coperto: il tratto che è costato di più
+      const cop = coaCoperto(tu).sort((a, b) => b.persi - a.persi)[0];
+      if (cop && cop.persi >= 1){ const chi = R.boats[cop.da];
+        F.push({ tipo: "coperto", t: cop.t0, peso: cop.persi, s: Math.round(cop.persi), t0: cop.t0, t1: cop.t1,
+          txt: `Fra ${T(cop.t0)} e ${T(cop.t1)} eri nel cono d'ombra ${chi ? (FLEET_LOOK.some(l => l.name === chi.name) ? "della " : "di ") + chi.name : "di un'altra barca"}: circa ${Math.round(cop.persi)} s persi.` });
+      }
+    }
+    // alla boa (lato di bolina)
+    const L0 = sp.lati.find(L => L.nome === "Bolina" && L.lay);
+    if (L0 && L0.lay.oltre) F.push({ tipo: "boa", t: L0.lay.t, peso: L0.lay.oltre / 2, m: L0.lay.oltre, txt: `Hai virato per la boa ${L0.lay.oltre} m oltre la layline (lezione 23).` });
+    else if (L0 && L0.lay.vicine >= 2) F.push({ tipo: "boa", t: L0.lay.tv, peso: (L0.lay.vicine - 1) * T_VIR, n: L0.lay.vicine, txt: `Negli ultimi ${LAY_VICINO} m prima della boa hai virato ${L0.lay.vicine} volte: ne bastava una (lezione 23).` });
+    // partenza
+    const f0 = riv.all.reduce((a, f) => Math.abs(f.t) < Math.abs(a.t) ? f : a, riv.all[0]), kn = f0.b[0][4] * 1.9438, rit = o.taglio.t;
+    if (reg.ocs) F.push({ tipo: "partenza", t: 0, peso: Math.max(rit, COA_MIN), s: Math.round(rit), txt: `Al via eri oltre la linea: sei dovuto tornare e l'hai tagliata ${Math.round(rit)} s dopo lo sparo (lezione 17).` });
+    else if (rit >= COA_VIA) F.push({ tipo: "partenza", t: 0, peso: rit, s: Math.round(rit), kn: +kn.toFixed(1), txt: `Hai tagliato la linea ${Math.round(rit)} s dopo il via; allo sparo andavi a ${kn.toFixed(1).replace(".", ",")} nodi (lezione 18).` });
+    // penalità: il primo contatto con colpa tua e la prima boa toccata
+    const ct = riv.segni.find(g => g.auto && g.label.includes(". Tu, contatto con "));
+    if (ct){ const altra = ct.label.split(". Tu, contatto con ")[1].split(":")[0];
+      F.push({ tipo: "penalita", t: ct.t, peso: R.punti ? 20 : R.giri ? 20 : 15, txt: `A ${T(ct.t)} contatto con ${altra}, colpa tua: ${R.punti ? "un punto in più" : R.giri ? "due giri" : "15 s"} (lezioni 12-15).` }); }
+    const bt = riv.segni.find(g => g.auto && g.label.startsWith("Boa toccata"));
+    if (bt) F.push({ tipo: "penalita", t: bt.t, peso: 10, txt: `A ${T(bt.t)} hai toccato la boa: ${R.giri ? "un giro" : "una penalità"} (lezione 20).` });
+    // bene
+    const pesanti = F.filter(x => x.peso >= COA_MIN);
+    if (!pesanti.length && me.fin !== null && !me.dsq){ const tot = Math.round(sp.lati.reduce((a, L) => a + (L.tu !== null ? Math.max(0, L.tu - L.ott) : 0), 0));
+      return [{ tipo: "bene", t: o.taglio.t, peso: 0, s: tot, txt: `Regata quasi perfetta: in tutto ${tot} s dalla rotta ottimale.` }]; }
+    return pesanti.sort((a, b) => b.peso - a.peso).slice(0, COA_N);
+  }
+  function coaMostra(){
+    const C = rot.res && rot.res.coach; $("coach").hidden = !C || !C.length;
+    if (!C) return;
+    $("coachFrasi").innerHTML = C.map((x, k) => `<li><button class="linkish" data-k="${k}" title="Vai a ${rivTempo(x.t)}">${x.txt}</button></li>`).join("");
+  }
+  $("coachFrasi").onclick = e => { const b = e.target.closest("button[data-k]"); if (!b || !riv.on || !rot.res || !rot.res.coach) return;
+    riv.pos = rivPosDi(rot.res.coach[+b.dataset.k].t - COA_ANT); riv.playing = true; rivMostra(); };
+
   // ---- schermata ----
-  function rotTesto(ott, sp){
+  function rotTesto(ott, sp){ // 1.3.3: solo la legenda e i tempi; il commento lo fa il coach (coaFrasi)
     const me = R.boats[0], fmt = s => rivTempo(s), tu = me.fin !== null && !me.dsq ? me.fin - rot.barche[0].taglio.t : null, ot = ott.tempo - ott.t0;
     const A = rot.res && rot.res.ass;
-    let t = `In verde la rotta ottimale (col senno di poi), in blu la tua${A ? ", in viola la migliore in assoluto" : ""}; un punto ogni 30 s; ogni minuto un filo bianco unisce dove eri tu e dove saresti stato con la rotta ottimale nello stesso istante; tratteggiate in giallo le layline della boa di bolina col vento di quel momento. Rotta ottimale ${fmt(ot)} dal tuo taglio della linea` + (tu !== null ? `, tu ${fmt(tu)} (${tu - ot >= 0 ? "+" : "−"}${Math.round(Math.abs(tu - ot))} s). ` : ". ");
-    t += sp.lati.filter(L => L.tu !== null).map(L => `${L.nome} ${L.tu - L.ott >= 0 ? "+" : "−"}${Math.round(Math.abs(L.tu - L.ott))} s`).join(", ") + ".";
-    if (sp.motivi.length) t += " " + sp.motivi.map(m => m.txt).join(" ");
-    if (A){ const persa = ott.tempo - A.tempo, dopo = me.fin !== null && !me.dsq ? me.fin - ott.tempo : null; // 1.2.40: tempi dallo sparo
-      t += ` Partenza ideale: a ${Math.round(LINE_HALF + A.dx)} m dallo spillo, mure a ${A.mure > 0 ? "dritta" : "sinistra"}, con la barca già lanciata. Dallo sparo: migliore in assoluto ${fmt(A.tempo)}, dalla tua partenza ${fmt(ott.tempo)}` +
-        (dopo !== null ? `, tu ${fmt(me.fin)}` : "") + `: in partenza ${persa >= 0.5 ? "hai perso " + Math.round(persa) + " s" : "non hai perso niente"}` + (dopo !== null ? `, dopo ${Math.round(Math.max(0, dopo))} s.` : ".");
+    const lati = sp.lati.filter(L => L.tu !== null).map(L => L.nome.toLowerCase() + " " + (L.tu - L.ott >= 0 ? "+" : "−") + Math.round(Math.abs(L.tu - L.ott)) + " s").join(", ");
+    let t = "Verde la rotta ottimale (col senno di poi, senza le altre barche), blu la tua" + (A ? ", viola la migliore in assoluto" : "") + "; i fili bianchi ogni minuto; gialle le layline. Dal tuo taglio della linea: rotta ottimale " + fmt(ot) + (tu !== null ? ", tu " + fmt(tu) + " (" + lati + ")." : ".");
+    if (A){ const persa = ott.tempo - A.tempo; // 1.2.40: tempi dallo sparo
+      t += ` Partenza ideale (migliore in assoluto): a ${Math.round(LINE_HALF + A.dx)} m dallo spillo, mure a ${A.mure > 0 ? "dritta" : "sinistra"}, ${fmt(A.tempo)} dallo sparo; in partenza ${persa >= 0.5 ? "hai perso " + Math.round(persa) + " s" : "non hai perso niente"}.`;
     }
-    return t + " Conosce il vento prima che arrivi e ignora le altre barche.";
+    return t;
   }
   function rotApri(){
     if (!R || !R.rotta || riv.on) return;
     if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, sp: rotSpiega(ott) } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." };
-      if (ott) rot.res.testo = rotTesto(ott, rot.res.sp); }
+      if (ott){ rot.res.testo = rotTesto(ott, rot.res.sp); rot.res.coach = coaFrasi(ott, rot.res.sp); } }
     $("movAss").hidden = !rot.res.ott || rot.res.ass !== undefined; $("movAss").disabled = !!rot.calc; // 1.2.40: la migliore in assoluto solo a richiesta (tasto V), una volta per regata
-    rot.on = true; rot.box = null; rivApri(); $("movTit").textContent = rot.res.testo;
+    rot.on = true; rot.box = null; rivApri(); $("movTit").textContent = rot.res.testo; coaMostra();
     $("movLargo").hidden = !rot.res.ott; rotLargo(false);
   }
   // 1.2.40 (Ale, 15 novembre: «si potrebbe avere anche un tasto "vuoi la rotta" e si evita di aspettare»): il calcolo costa 3-4 s, quindi parte solo

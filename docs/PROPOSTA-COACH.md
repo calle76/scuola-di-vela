@@ -79,3 +79,11 @@ Nessuna affermazione nautica nuova: le frasi rimandano a lezioni già verificate
 1. Il via.
 2. ~~Il nome~~: deciso, «Coach».
 3. Il volto: quando c'è, un file quadrato (va bene 256x256 px, PNG o JPG) e il nome dello strumento con cui è fatto. Fino ad allora le iniziali in un cerchio.
+
+## Esito (fermata 2, 15 novembre 2026)
+
+Fatto nella 1.3.3. Tutti i criteri K1-K9 passano in Chromium e Firefox su 20 regate del torneo col pilota (semi 2601-2605, mai usati prima); numeri in `CHANGELOG.md` 1.3.3.
+
+- **Cambiato prima di misurare le soglie:** il clou non usa più la lunghezza del filo, ma i metri di percorso mancanti in più della rotta ottimale. Il filo cresce anche quando le due rotte vanno su lati diversi del campo senza perdere niente: nella prima prova il «tratto peggiore» cadeva quasi sempre nel primo minuto dopo il via.
+- **Da decidere (Ale):** «c'erano altre barche» esce in 17 regate su 20, perché la regola dell'affollato (anche un solo secondo con una barca entro 3 lunghezze) col pilota, che naviga in gruppo, scatta quasi sempre. Strade: (a) tenerla così e guardare cosa succede a un giocatore vero; (b) affollato solo se le barche vicine ci sono per più di metà del minuto. Consiglio (a), poi decidere con le regate registrate.
+- «Coperto» non è uscito in nessuna regata vera: i tratti coperti sono costati 0,9-2,7 s, sotto i 5 s.
