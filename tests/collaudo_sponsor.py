@@ -131,6 +131,23 @@ async def main():
         o = await q.evaluate("() => ({ naz: document.getElementById('stNaz').disabled, zon: document.getElementById('stZon').disabled, tit: document.getElementById('torTitle').textContent })")
         chk("S5", not o["naz"] and o["zon"] and "nazionale" in o["tit"], f"S5 con lo sponsor nazionale: {o}")
         await ctx.close()
+        # 1.3.12: lo stesso salvataggio con una stagione IN CORSO (prima lo sponsor nasceva vuoto e l'offerta del gradino 3 non arrivava più)
+        TAPPA1 = """() => { const S = progress.stagione, tp = stTappa(S); const T = torNuovo(S, tp.bat[0].length - 1), o = stEstrai(tp.bat[0]), nomi = ["*", ...T.av.map(a => a.nome)];
+          T.ris = [0, 1, 2, 3].map(() => nomi.map(id => ({ fin: o.indexOf(id) + 1, pp: 0 }))); stChiudiTappa(T); return !!S.fine; }"""
+        LEGGI = "() => ({ g: progress.sponsor ? progress.sponsor.offerte.map(o => o.g) : null, naz: document.getElementById('stNaz').disabled })"
+        for circ in ("naz", "zon"):
+            ctx, q = await pagina(v139)
+            await q.evaluate("c => { progress.stagione = stNuova(null, c); }", circ); await q.evaluate(TAPPA1)
+            await q.evaluate("() => { delete progress.sponsor; saveProgress(); }"); await q.reload(); await q.wait_for_timeout(300)
+            if circ == "naz":   # il nazionale in corso si finisce, poi si torna a «Stagione»
+                while not await q.evaluate(TAPPA1): pass
+                await q.evaluate("() => saveProgress()"); await q.click("#goTor"); await q.click("#stCirc"); await q.wait_for_timeout(100)
+            else:               # lo zonale in corso: si guarda «Lo sponsor», poi si lascia la stagione
+                await q.click("#goTor"); await q.click("#stCirc"); await q.click("#stSponsor"); await q.click("#spIndietro"); await q.click("#stLascia"); await q.wait_for_timeout(100)
+                await q.click("#stCirc"); await q.wait_for_timeout(100)
+            o = await q.evaluate(LEGGI)
+            chk("S5", bool(o["g"]) and 3 in o["g"], f"S5 salvataggio della 1.2.39 col diritto e una stagione in corso ({circ}): offerte {o['g']}")
+            await ctx.close()
         # ---- S7
         pieno = {**BREV, "sponsor": {"c": {"g": 4, "circ": "naz", "nome": "Cantiere Tre Gabbiani", "durata": 2, "ob": [{"t": "posto", "n": 5}, {"t": "podio"}], "esiti": [[True, False]]},
                  "offerte": [{"g": 4, "circ": "naz", "nome": "Cantiere Tre Gabbiani", "durata": 1, "ob": [{"t": "posto", "n": 5}, {"t": "podio"}], "rinnovo": True},

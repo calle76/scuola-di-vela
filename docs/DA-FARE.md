@@ -47,6 +47,8 @@
 | 39 | **Piano di chiusura di Deriva** (Ale, 14 nov notte: «scrivi il piano di chiusura di Deriva»): tappe 1-7, da rotta in assoluto a uscita | `PIANO-CHIUSURA-DERIVA.md` | decisioni prese; tappa 1 fatta (1.2.40); **via a tappe 2, 3 e 4 (15 nov): prossima la tappa 2, 1.3.0** |
 | 40 | **In 3 regate su 100 il pulsante «Rotta ottimale» non compare** (semi 2415 R3 e R4, 2420 R4 di `collaudo_rotta_assoluta.py`), anche nella 1.2.39: il pilota arriva e il taglio della linea è registrato | `PROPOSTA-ROTTA-ASSOLUTA.md` §10 | causa da cercare |
 | 41 | **Due rossi rimasti nel giro su GitHub** (15 nov, `CHANGELOG.md` 1.2.41): `collaudo_torneo` C11 in Firefox (2 tornei su 40 chiusi a metà non risultano conclusi: forse è la voce 6) e il sartiame di `collaudo_suoni_si_sentono` (1,4-3,6 dB contro almeno 2, in ogni giro dal 10 nov) | `COLLAUDI.md` | da guardare |
+| 42 | **Collaudi: le quattro proposte dei difetti messi apposta** (16 nov, Fable): P1 controllo del giro senza strambata, P2 contatto con colpa nel registro, P3 controprova del Coach che non parte dalla copia, P4 C11 del torneo fragile sotto carico | `MUTAZIONI.md` | aspetta il via di Ale |
+| 43 | **Pilota «da giocatore» per i collaudi** (16 nov, Fable): layline, aria libera, niente scuffie; serve per riguardare l'«affollato» del Coach e la quota del merito | `PROPOSTA-PILOTA-GIOCATORE.md` | fermata 1, aspetta il via di Ale |
 
 ## Proposta di riordino (13 novembre, per la voce 29: da decidere con Ale, niente è cambiato)
 

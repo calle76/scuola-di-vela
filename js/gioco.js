@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.11"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.12"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -270,7 +270,7 @@
     let nuovo = false;
     if (modo === "carriera" && !progress.brevetto && meriti(progress).superato){ progress.brevetto = { data: oggi() }; saveProgress(); nuovo = true; }
     let nuovoD = false; // 1.3.5: Deriva superata, solo in carriera e dopo l'attestato
-    if (modo === "carriera" && progress.brevetto && !progress.deriva){ const md = meritiD(progress); if (md.superato){ progress.deriva = { data: oggi(), strada: md.piazz ? "piazzamento" : "merito" }; saveProgress(); nuovoD = true; } }
+    if (modo === "carriera" && progress.brevetto && !progress.deriva && !nuovo){ /* 1.3.12: non insieme all'attestato, altrimenti la finestra di Deriva non si vedeva mai */ const md = meritiD(progress); if (md.superato){ progress.deriva = { data: oggi(), strada: md.piazz ? "piazzamento" : "merito" }; saveProgress(); nuovoD = true; } }
     $("game").hidden = true; $("menu").hidden = false;
     const vis = ([t, i]) => t !== "l" || !LESSONS[i].nascosta, VSEQ = SEQ.filter(vis); // 1.2.4: nel gioco nessuna lezione è nascosta; i collaudi possono nasconderle
     const doneCount = VSEQ.filter(([t, i]) => progress.done[t + i]).length;

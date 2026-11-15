@@ -19,6 +19,17 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.12 — Cinque difetti piccoli trovati rileggendo le 1.3.x
+
+Revisione del codice delle versioni 1.3.0-1.3.11 (`docs/PER-FABLE.md` §2). Le regate non cambiano.
+
+- **Sponsor, salvataggi di prima della 1.3.9 con una stagione in corso** (difetto medio, provato in una pagina vera). Chi aveva già il diritto al nazionale e una stagione a metà restava senza offerte e col nazionale chiuso. Causa: finire la stagione, o aprire «Lo sponsor», creava uno sponsor vuoto, e l'offerta del gradino 3 arrivava solo a chi lo sponsor non l'aveva affatto. Ora uno sponsor vuoto (senza contratto, senza offerte, senza storia) non ferma l'offerta.
+- **Stesso caso, prime offerte:** chi ha già il diritto al nazionale riceve i gradini 2 e 3 anche se la stagione zonale che stava finendo non è fra le prime 3.
+- **Attestato e «Deriva superata» nello stesso ritorno al menu:** la finestra di Deriva si apriva sotto l'attestato e non si vedeva mai. Ora compare al ritorno successivo al menu.
+- **Coach:** «(e altre 1 volte)» diventa «(e un'altra volta)».
+- **Coach:** se l'immagine del volto non si caricava una volta, restava nascosta fino alla ricarica della pagina.
+- **Collaudi:** `collaudo_sponsor.py` S5 ha due casi nuovi (salvataggio vecchio col diritto e nazionale in corso; con zonale in corso, «Lo sponsor» guardato e stagione lasciata). Sul codice di prima le offerte erano `[]` in tutti e due. `tests/controprove.py` ha 32 righe nuove (`f16…`): i 12 difetti messi apposta di `docs/MUTAZIONI.md`.
+
 ## 1.3.11 — Rivali che guardano prima di manovrare: scritti, ma spenti
 
 Versione B di `docs/PROPOSTA-REGOLE-15-16.md` (voce 4). **Nel gioco non cambia niente:** la guida nuova dei rivali è scritta e collaudabile, ma resta spenta (`MANOVRE = false`) finché la misura non dice che si può accendere. Con la versione B spenta le regate del torneo sono identiche al bit alla 1.3.10.

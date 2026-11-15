@@ -283,7 +283,7 @@
     { const cap = riv.all.filter(f => f.t >= rivT0() && f.b[0][8]); if (cap.length){ const t0 = cap[0].t; let t1 = t0; for (const f of riv.all) if (f.t >= t0){ if (!f.b[0][8]) break; t1 = f.t; }
       const quante = riv.all.reduce((a, f, i) => a + (i && f.b[0][8] && !riv.all[i - 1].b[0][8] ? 1 : 0), cap[0] === riv.all[0] ? 1 : 0);
       F.push({ tipo: "scuffia", t: t0, peso: t1 - t0 + COA_RIPARTI, s: Math.round(t1 - t0), n: quante,
-        txt: `A ${T(t0)} hai scuffiato: ${Math.round(t1 - t0)} s con la barca rovesciata${quante > 1 ? ` (e altre ${quante - 1} volte)` : ""} (lezione 8).` }); } }
+        txt: `A ${T(t0)} hai scuffiato: ${Math.round(t1 - t0)} s con la barca rovesciata${quante === 2 ? " (e un'altra volta)" : quante > 2 ? ` (e altre ${quante - 1} volte)` : ""} (lezione 8).` }); } }
     // penalità: il primo contatto con colpa tua e la prima boa toccata
     const ct = riv.segni.find(g => g.auto && g.label.includes(". Tu, contatto con "));
     if (ct){ const altra = ct.label.split(". Tu, contatto con ")[1].split(":")[0];
@@ -303,7 +303,7 @@
   function coaMostra(){
     const C = rot.res && rot.res.coach; $("coach").hidden = !C || !C.length;
     if (!C || !C.length) return;
-    const u = coaUmore(C), im = $("coachVolto"); im.src = "img/coach-" + u + ".jpg"; im.alt = "Il Coach, " + u; im.dataset.umore = u;
+    const u = coaUmore(C), im = $("coachVolto"); im.hidden = false; /* 1.3.12: un caricamento fallito lo nascondeva per tutta la sessione */ im.src = "img/coach-" + u + ".jpg"; im.alt = "Il Coach, " + u; im.dataset.umore = u;
     $("coachFrasi").innerHTML = C.map((x, k) => `<li><button class="linkish" data-k="${k}" title="Vai a ${rivTempo(x.t)}">${x.txt}</button></li>`).join("");
   }
   $("coachFrasi").onclick = e => { const b = e.target.closest("button[data-k]"); if (!b || !riv.on || !rot.res || !rot.res.coach) return;

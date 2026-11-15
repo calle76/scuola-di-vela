@@ -25,6 +25,20 @@ NEUTRA_JS = ("  // ---- chi cede (1.0.40", "  // controprova neutra: questo comm
 NEUTRA_MOTORE = ("const BOAT = {", "// controprova neutra: questo commento non cambia niente\nconst BOAT = {")
 NEUTRA_HTML = ('<aside class="panel">', '<!-- controprova neutra -->\n  <aside class="panel">')
 
+# 16 novembre 2026: i difetti M1-M12 di docs/PER-FABLE.md (codice delle 1.3.x)
+M1 = ("o.fin < b.fin).length + b.pp * pen));", "o.fin < b.fin).length + 0 * b.pp * pen));")
+M2 = ("sc = p.length >= TOR_N ? p.indexOf(Math.max(...p)) : -1;", "sc = -1;")
+M3 = ("if (g.cum < GIRO_GRADI || S.tacks <= g.tk || S.gybesC + S.gybesV <= g.gy) return;", "if (g.cum < GIRO_GRADI || S.tacks <= g.tk) return;")
+M4 = ("if (tA !== tB) return { cede: tA < 0 ? A : B, regola: 10 };", "if (tA !== tB) return { cede: tA < 0 ? B : A, regola: 10 };")
+M5 = ("merito = !!p.zonalePulita && totale >= QUOTA_MERITO;", "merito = totale >= QUOTA_MERITO;")
+M6 = ("spOfferteDa(tutti ? [c.g, Math.min(4, c.g + 1)]", "spOfferteDa(tutti ? [c.g, c.g]")
+M7 = ("w = { t0: a.s, t1: b.s, m: b.d - a.d };", "w = { t0: a.s + 10, t1: b.s + 10, m: b.d - a.d };")
+M8 = ("/* 1.3.3: il coach solo con la rotta ottimale */ releaseKeys(); finShow();", "/* 1.3.3: il coach solo con la rotta ottimale */ releaseKeys();")
+M9 = ("!LESSONS[li].nascosta && !LESSONS[li].livello && bancaEsame(li).length);", "!LESSONS[li].nascosta && !LESSONS[li].livello && li !== 3 && bancaEsame(li).length);")
+M10 = ('      <div class="feedback pending" id="lFeedback"></div>', '      <div class="feedback pending" id="lFeedback" style="margin-bottom:30px"></div>')
+M11 = ('cl.filter(x => x.id !== "*").slice(0, 5).map(x => x.id); }', 'cl.filter(x => x.id !== "*").slice(1, 6).map(x => x.id); }')
+M12 = ("hullScale: 1, ", "hullScale: 1.05, ")
+
 # id, tipo, comando (relativo a tests/), sostituzioni, testo del controllo che deve cadere (o None), cosa rappresenta
 CONTROPROVE = [
     ("polare-mut", "mutante", ["fisica/confronta.js", "polare.js"], [("sailArea: 7.0,", "sailArea: 7.7,")], None,
@@ -78,6 +92,40 @@ CONTROPROVE = [
     ("pannello-mut", "mutante", ["collaudo_pannello.py", "1360", "650"], [('    <section class="card" id="lesson" hidden>', '    <p style="margin:0;height:40px">controprova: una riga in più</p>\n    <section class="card" id="lesson" hidden>')], None,
      "40 px in più in cima al pannello"),
     ("pannello-neu", "neutra", ["collaudo_pannello.py", "1360", "650"], [NEUTRA_HTML], None, "commento nella pagina"),
+    # 16 novembre 2026 (docs/PER-FABLE.md §1, docs/MUTAZIONI.md): i 12 difetti M1-M12 sul codice delle 1.3.x; sostituzioni scritte prima di lanciarle.
+    # Stesso difetto, più collaudi: una riga per collaudo. Le neutre (f16n-) dicono se il collaudo è verde sul gioco vero.
+    ("f16-m1-torneo", "mutante", ["collaudo_torneo.py"], [M1], None, "M1 torPunti: la penalità sul punteggio non si somma"),
+    ("f16-m1-pentesto", "mutante", ["collaudo_penalita_testo.py"], [M1], None, "M1 torPunti: la penalità sul punteggio non si somma"),
+    ("f16-m2-torneo", "mutante", ["collaudo_torneo.py"], [M2], None, "M2 torSerie: lo scarto non si toglie"),
+    ("f16-m3-giri", "mutante", ["collaudo_giri.py"], [M3], None, "M3 giriPenalita: un giro vale anche senza strambata"),
+    ("f16-m3-provagiri", "mutante", ["collaudo_prova_giri.py"], [M3], None, "M3 giriPenalita: un giro vale anche senza strambata"),
+    ("f16-m4-regole", "mutante", ["collaudo_regole.py"], [M4], None, "M4 chiCede: regola 10 rovesciata (cede chi ha mure a dritta)"),
+    ("f16-m4-senzacolpa", "mutante", ["collaudo_contatto_senza_colpa.py"], [M4], None, "M4 chiCede: regola 10 rovesciata"),
+    ("f16-m4-registro", "mutante", ["collaudo_registro.py"], [M4], None, "M4 chiCede: regola 10 rovesciata"),
+    ("f16-m5-superata", "mutante", ["collaudo_deriva_superata.py"], [M5], None, "M5 meritiD: il merito non chiede la stagione senza ritiri"),
+    ("f16-m6-sponsor", "mutante", ["collaudo_sponsor.py"], [M6], None, "M6 spFineStagione: con tutti gli obiettivi non arriva il gradino sopra"),
+    ("f16-m7-coach", "mutante", ["collaudo_coach.py"], [M7], None, "M7 coaClou: finestra del clou 10 s più tardi"),
+    ("f16-m8-moviola", "mutante", ["collaudo_moviola.py"], [M8], None, "M8 rivChiudi: niente ritorno alla schermata di fine regata"),
+    ("f16-m9-esame", "mutante", ["collaudo_esame.py"], [M9], None, "M9 lezioniEsame: la lezione 4 (indice 3) esce dall'esame"),
+    ("f16-m9-derlez", "mutante", ["collaudo_deriva_lezioni.py"], [M9], None, "M9 lezioniEsame: la lezione 4 (indice 3) esce dall'esame"),
+    ("f16-m10-panlez", "mutante", ["collaudo_pannello_lezioni.py"], [M10], None, "M10 pagina: 30 px di margine in più nel pannello delle lezioni"),
+    ("f16-m11-finale", "mutante", ["collaudo_finale.py"], [M11], None, "M11 finale: rivali dal 2° al 6° invece che dal 1° al 5°"),
+    ("f16-m12-polare", "mutante", ["fisica/confronta.js", "polare.js"], [M12], None, "M12 motore: resistenza dello scafo +5%"),
+    ("f16-m12-impronta", "mutante", ["fisica/impronta1b.js"], [M12], None, "M12 motore: resistenza dello scafo +5%"),
+    ("f16n-torneo", "neutra", ["collaudo_torneo.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-pentesto", "neutra", ["collaudo_penalita_testo.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-giri", "neutra", ["collaudo_giri.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-provagiri", "neutra", ["collaudo_prova_giri.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-senzacolpa", "neutra", ["collaudo_contatto_senza_colpa.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-registro", "neutra", ["collaudo_registro.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-superata", "neutra", ["collaudo_deriva_superata.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-sponsor", "neutra", ["collaudo_sponsor.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-coach", "neutra", ["collaudo_coach.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-moviola", "neutra", ["collaudo_moviola.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-esame", "neutra", ["collaudo_esame.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-derlez", "neutra", ["collaudo_deriva_lezioni.py"], [NEUTRA_JS], None, "commento in regate.js"),
+    ("f16n-panlez", "neutra", ["collaudo_pannello_lezioni.py"], [NEUTRA_HTML], None, "commento nella pagina"),
+    ("f16n-finale", "neutra", ["collaudo_finale.py"], [NEUTRA_JS], None, "commento in regate.js"),
 ]
 
 SEGNI = ("FALLITO", "NO ", "ERRORE", "NON VALIDO")

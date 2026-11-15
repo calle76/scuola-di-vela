@@ -1786,10 +1786,11 @@
         D.storia.push({ nome: c.nome, g: c.g, durata: c.durata, esiti: c.esiti, esito: tutti ? "tutti" : qualcuno ? "parte" : "nessuno" });
         D.offerte = spOfferteDa(tutti ? [c.g, Math.min(4, c.g + 1)].filter((g, i, a) => a.indexOf(g) === i) : qualcuno ? [c.g] : [Math.max(1, c.g - 1)], tutti ? c : null);
         D.c = null; }
-    } else if (!D.c && !naz && !lasciata) D.offerte = spOfferteDa(pos <= 3 ? [2, 3] : [1, 2]);
+    } else if (!D.c && !naz && !lasciata) D.offerte = spOfferteDa(pos <= 3 || progress.nazionale ? [2, 3] : [1, 2]); /* 1.3.12: anche col diritto preso prima della 1.3.9 */
   }
   function spMigra(){ // un salvataggio col diritto al nazionale e senza sponsor: un'offerta del gradino 3 (e una zonale)
-    if (!spAttivo() || progress.sponsor || !progress.nazionale || (progress.stagione && !progress.stagione.fine)) return;
+    const D = progress.sponsor; /* 1.3.12: uno sponsor vuoto (creato aprendo «Lo sponsor» o finendo una stagione cominciata prima della 1.3.9) non ferma l'offerta */
+    if (!spAttivo() || (D && (D.c || D.offerte.length || D.storia.length)) || !progress.nazionale || (progress.stagione && !progress.stagione.fine)) return;
     spDati().offerte = spOfferteDa([3]); saveProgress();
   }
   function spMostra(indietro){
