@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola: si aggiorna a ogni fine lavoro (8 novembre 2026, decisione di Ale). Le cose da fare, in ordine, sono in `DA-FARE.md`.
 
-*Aggiornato: 14 novembre 2026, notte.*
+*Aggiornato: 15 novembre 2026.*
 
 ## Versione
 
-- **Ultima versione chiusa: 1.2.39** (14 novembre notte, tag `v1.2.39`): **il circuito nazionale.** Nella finestra della stagione si sceglie zonale o nazionale; al nazionale 12 regatanti (tu, i 10 nazionali, il primo del tuo zonale), due batterie da 6, rivali più forti (4-4-2); in carriera serve il diritto, nel gioco libero è sempre aperto; i primi 3 hanno il diritto alla finale, solo scritto. Tutti i criteri passano (`PROPOSTA-NAZIONALE.md`, esito del passo 2); a numeri il nazionale è più duro di poco (posto relativo 0,544 contro 0,507). Prima, lo stesso giorno:
+- **Ultima versione chiusa: 1.2.40** (15 novembre, tag `v1.2.40`): **rotta ottimale in assoluto, a richiesta** (pulsante «Migliore in assoluto» o tasto V nella rotta ottimale; criteri dichiarati per scelta di Ale, `PROPOSTA-ROTTA-ASSOLUTA.md` §10-11).
+- **1.2.39** (14 novembre notte): **il circuito nazionale.** Nella finestra della stagione si sceglie zonale o nazionale; al nazionale 12 regatanti (tu, i 10 nazionali, il primo del tuo zonale), due batterie da 6, rivali più forti (4-4-2); in carriera serve il diritto, nel gioco libero è sempre aperto; i primi 3 hanno il diritto alla finale, solo scritto. Tutti i criteri passano (`PROPOSTA-NAZIONALE.md`, esito del passo 2); a numeri il nazionale è più duro di poco (posto relativo 0,544 contro 0,507). Prima, lo stesso giorno:
   - 1.2.38: regate a 6 barche, di prova (N2 dichiarato, scelta A di Ale);
   - 1.2.37: stagione con un amico (codice e file);
   - 1.2.36: stagione del circuito zonale;
@@ -16,8 +17,9 @@
   Da pushare: `git push origin main --tags` (da qui non si vede se i tag dalla 1.2.30 sono già su GitHub; il comando non fa danni se lo sono).
 - **Notte 14-15 novembre, in autonomia:**
   - piano di chiusura di Deriva: le 5 decisioni prese con Ale (`PIANO-CHIUSURA-DERIVA.md`, `DECISIONI.md`);
-  - **1.2.40 rotta in assoluto: fatta ma NON chiusa** (ramo `rotta-assoluta`): 5 criteri su 10 non passano, soprattutto il tempo (3,6-4,3 s invece di 1-2 s). Decide Ale fra le strade di `PROPOSTA-ROTTA-ASSOLUTA.md` §10;
+  - **1.2.40 rotta in assoluto: chiusa il 15 novembre** (tag `v1.2.40`), a richiesta col tasto V per scelta di Ale; P1, A1, A2, P3, A3 dichiarati (`PROPOSTA-ROTTA-ASSOLUTA.md` §10-11);
   - proposte scritte per le tappe 2-4 (fermata 1): `PROPOSTA-DERIVA-CIRCUITI.md`, `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md`.
+- **Prossimo:** tappa 2 del piano, la cornice di Deriva: aspetta il via di Ale su `PROPOSTA-DERIVA-CIRCUITI.md` (e sulle proposte delle tappe 3 e 4).
 - **L'elenco proposto in chat** per chiudere Deriva:
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;

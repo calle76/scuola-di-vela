@@ -163,6 +163,7 @@ Costo di cambiamento:
 | Deriva si mostra in carriera quando la cornice (menu, lezioni, prova) è pronta, non prima | 14 nov notte (Ale: «ok va bene») | basso | — | `PIANO-CHIUSURA-DERIVA.md`, decisione 4 |
 | Sponsor senza materiale: nome, durata e obiettivi; il materiale si riparla col Fiocco | 14 nov notte (Ale: «sponsor senza materiale va bene») | basso | — | `PIANO-CHIUSURA-DERIVA.md`, decisione 5 |
 | Via alla rotta in assoluto intera (punto ideale, direzione, traccia viola) | 14 nov notte (Ale: «sì via alla rotta intera») | basso | — | `PROPOSTA-ROTTA-ASSOLUTA.md` §9 |
+| Rotta in assoluto a richiesta (pulsante e tasto V); 1.2.40 chiusa con P1, A1, A2, P3, A3 dichiarati | 15 nov (Ale: «non è un problema. si potrebbe avere anche un tasto "vuoi la rotta"», «sì vai così, con il tasto») | basso | — | `PROPOSTA-ROTTA-ASSOLUTA.md` §11 |
 
 ## Contenuti e confini legali
 

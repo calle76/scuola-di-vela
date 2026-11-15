@@ -19,7 +19,7 @@
   const rot = { reg: [], barche: [], acc: 0, res: null, on: false, spento: false };
 
   // ---- registrazione ----
-  function rotReset(){ rot.reg = []; rot.barche = R ? R.boats.map(() => ({ taglio: null, giri: [] })) : []; rot.acc = 1e9; rot.res = null; rot.on = false; }
+  function rotReset(){ rot.reg = []; rot.barche = R ? R.boats.map(() => ({ taglio: null, giri: [] })) : []; rot.acc = 1e9; rot.res = null; rot.on = false; rot.calc = false; }
   function rotCapture(dt){ // dal ciclo della regata (updateRace), dopo raceLegs; solo lettura
     if (!R || !R.rotta || rot.spento || R.t < 0 || R.t > ROT_TMAX) return;
     R.boats.forEach((b, k) => { const o = rot.barche[k]; if (!o) return;
@@ -210,10 +210,23 @@
   }
   function rotApri(){
     if (!R || !R.rotta || riv.on) return;
-    if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, ass: rotAssoluta() } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." };
-      if (ott) rot.res.testo = rotTesto(ott, rotSpiega(ott)); } // 1.2.40: con la migliore in assoluto (ass), null se non si può calcolare
+    if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, sp: rotSpiega(ott) } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." };
+      if (ott) rot.res.testo = rotTesto(ott, rot.res.sp); }
+    $("movAss").hidden = !rot.res.ott || rot.res.ass !== undefined; $("movAss").disabled = !!rot.calc; // 1.2.40: la migliore in assoluto solo a richiesta (tasto V), una volta per regata
     rot.on = true; rot.box = null; rivApri(); $("movTit").textContent = rot.res.testo;
     $("movLargo").hidden = !rot.res.ott; rotLargo(false);
+  }
+  // 1.2.40 (Ale, 15 novembre: «si potrebbe avere anche un tasto "vuoi la rotta" e si evita di aspettare»): il calcolo costa 3-4 s, quindi parte solo
+  // dal pulsante o dal tasto V; prima si scrive che si sta calcolando (il setTimeout lascia al browser il tempo di mostrarlo). rot.res.ass: undefined = non
+  // chiesta, null = non calcolabile
+  function rotAssChiedi(){
+    if (!rot.on || !rot.res || !rot.res.ott || rot.res.ass !== undefined || rot.calc) return;
+    const r = rot.res; rot.calc = true; $("movAss").disabled = true;
+    r.testo = $("movTit").textContent = "Sto calcolando la migliore in assoluto: qualche secondo…"; // nel testo della rotta: la moviola lo riscrive a ogni fotogramma (rivMostra)
+    setTimeout(() => { if (rot.res !== r){ rot.calc = false; return; } // un'altra regata nel frattempo
+      r.ass = rotAssoluta(); rot.calc = false; rot.box = null;
+      r.testo = rotTesto(r.ott, r.sp) + (r.ass ? "" : " La migliore in assoluto non si può calcolare per questa regata.");
+      $("movAss").hidden = true; $("movAss").disabled = false; if (rot.on) $("movTit").textContent = r.testo; }, 60);
   }
   // 1.2.32 (docs/PROPOSTA-ROTTA-LEGGIBILE.md): la barra laterale del gioco si nasconde (pulsante o B) e la mappa prende tutta la finestra;
   // torna sempre quando la rotta ottimale si chiude (rivChiudi)

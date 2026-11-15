@@ -7,7 +7,8 @@
 #   P5 0 px di eccesso a 1360x650 con la rotta aperta, con e senza barra; la barra della moviola dentro la finestra
 #   P4 con --rif f.json (da lanciare sul codice di prima, RADICE=...) salva verde, «dove hai perso» e fili; con --confronta f.json li confronta: 0 differenze
 #   --storta N: P2, N regate col vento girato di 10° (alterno + e -) prima dello sparo: il punto ideale all'estremità più al vento in 18 su 20
-# Uso: python tests/collaudo_rotta_assoluta.py [--regate N] [--rif f.json | --confronta f.json] [--storta N] [--foto]
+# --dichiarati: P1, A1, A2, P3, A3 solo riportati (1.2.40 chiusa così, decisione di Ale del 15 novembre).
+# Uso: python tests/collaudo_rotta_assoluta.py [--dichiarati] [--regate N] [--rif f.json | --confronta f.json] [--storta N] [--foto]
 import asyncio, hashlib, json, math, os, pathlib, sys
 from playwright.async_api import async_playwright
 BASE = (pathlib.Path(os.environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent) / "index.html").as_uri()
@@ -46,7 +47,7 @@ MISURA = """() => { const mb = document.getElementById('movBar').getBoundingClie
   return { ecc: Math.max(document.documentElement.scrollWidth - innerWidth, document.documentElement.scrollHeight - innerHeight, 0), barra: mb.bottom <= innerHeight + 0.5 && mb.top >= 0 }; }"""
 
 async def main():
-    nome = os.environ.get("BROWSER", "chromium"); falli = []; righe = []
+    nome = os.environ.get("BROWSER", "chromium"); falli = []; righe = []; kk = []
     rif = json.loads(pathlib.Path(CONF).read_text()) if CONF else None; salva = {}
     async with async_playwright() as p:
         br = await getattr(p, nome).launch()
@@ -71,6 +72,17 @@ async def main():
             if RIF: salva[chiave] = hashlib.sha1((v or "").encode()).hexdigest(); print(f"  {chiave}: verde salvata", flush=True)
             else:
                 if rif is not None and chiave in rif and rif[chiave] != hashlib.sha1((v or "").encode()).hexdigest(): falli.append(f"P4 {chiave}: verde, dove hai perso o fili diversi dal codice di prima")
+                # K1-K3 (tasto, decisione di Ale del 15 nov): aprendo la rotta la viola non si calcola; pulsante (regate pari) o tasto V (dispari) la chiedono
+                k0 = await pg.evaluate("() => ({ ass: __sv.rot.res.ass === undefined, btn: !document.getElementById('movAss').hidden })")
+                a0 = await pg.evaluate(MISURA)
+                # K2: il testo a ogni fotogramma (requestAnimationFrame viene prima del disegno): «Sto calcolando» deve comparire in almeno un fotogramma
+                await pg.evaluate("() => { window.__fr = []; (function f(){ __fr.push(document.getElementById('movTit').textContent.slice(0, 14)); if (__fr.length < 600) requestAnimationFrame(f); })(); }")
+                if n % 2: await pg.keyboard.press("v")
+                else: await pg.click("#movAss")
+                await pg.wait_for_function("() => __sv.rot.res.ass !== undefined", timeout=60000); await pg.wait_for_timeout(50)
+                scrive = await pg.evaluate("() => __fr.includes('Sto calcolando')")
+                k3 = await pg.evaluate("() => ({ nascosto: document.getElementById('movAss').hidden, testo: document.getElementById('movTit').textContent.includes('Partenza ideale') })")
+                kk.append(dict(lazy=k0["ass"] and k0["btn"], scrive=scrive, dopo=k3["nascosto"] and k3["testo"], ecc=a0["ecc"], come="V" if n % 2 else "pulsante"))
                 m = await pg.evaluate(MISURE, n < 20 and not storta)
                 if m.get("manca"): falli.append(f"{chiave}: rotta in assoluto non calcolata ({m})"); righe.append(dict(chiave=chiave, manca=True)); continue
                 a = await pg.evaluate(MISURA)
@@ -107,8 +119,16 @@ async def main():
     if STORTA:
         ok = sum(1 for r in st if r["dx"] == 30 * r["alVentoImp"]); print(f"P2 linea storta di 10°: punto ideale all'estremità più al vento in {ok} su {len(st)}")
         if ok < math.ceil(0.9 * len(st)) or not st: falli.append(f"P2 {ok} su {len(st)}")
+    if kk:
+        lazy = sum(x["lazy"] for x in kk); scr = sum(x["scrive"] for x in kk); dopo = sum(x["dopo"] for x in kk); e0 = max(x["ecc"] for x in kk)
+        print(f"K1 aprendo la rotta la viola non è calcolata e il pulsante c'è: {lazy} su {len(kk)}; K2 «Sto calcolando» scritto subito: {scr} su {len(kk)}; "
+              f"K3 dopo il calcolo testo con la partenza ideale e pulsante nascosto: {dopo} su {len(kk)} ({sum(x['come'] == 'V' for x in kk)} col tasto V); eccesso col pulsante {e0} px")
+        if lazy < len(kk) or scr < len(kk) or dopo < len(kk) or e0 > 0: falli.append(f"K1-K3: {lazy}/{scr}/{dopo} su {len(kk)}, eccesso {e0}")
     if CONF: print(f"P4 confronto col codice di prima: {sum(1 for r in righe if r['chiave'] in rif)} regate confrontate")
     if errs: falli.append(f"errori della pagina: {errs[:3]}")
+    if "--dichiarati" in sys.argv:  # 1.2.40 chiusa con P1, A1, A2, P3, A3 dichiarati (Ale, 15 nov): qui solo riportati
+        dich = [f for f in falli if f.split()[0] in ("P1", "A1", "A2", "P3", "A3")]; falli[:] = [f for f in falli if f not in dich]
+        if dich: print("dichiarati (non fanno fallire):", "; ".join(dich))
     print("ESITO: OK" if not falli else "FALLITO")
     for x in falli: print("  ", x)
     sys.exit(0 if not falli else 1)

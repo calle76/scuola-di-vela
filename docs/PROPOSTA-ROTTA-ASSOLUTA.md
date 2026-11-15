@@ -195,3 +195,28 @@ Il PC del collaudo è quello di Ale.
   - b. calcolare i 7 tratti in parallelo sui processori del PC (Web Worker): stessi risultati, tempo forse sotto 1-1,5 s sul tuo PC (6 processori), da verificare anche aprendo il gioco come file. Circa mezza giornata;
   - c. lasciare l'attesa com'è.
 - **P1, A1, A2:** dichiararli (scarti piccoli: mezzo secondo al massimo, una regata su 97 per la viola), oppure punti più fitti sulla linea, che però costano altro tempo.
+
+## 11. Decisione di Ale e chiusura (15 novembre 2026)
+
+Ale: «è solo questione di attendere il tracciato ideale? ma non è un problema. si potrebbe avere anche un tasto "vuoi la rotta" e si evita di aspettare»; poi «sì vai così, con il tasto». **1.2.40 chiusa con P1, A1, A2, P3 e A3 dichiarati** (numeri nel §10).
+
+**Il tasto.** «Rotta ottimale» si apre come prima, con verde e blu e senza attese. Nella barra c'è «Migliore in assoluto (V)»: col pulsante o col tasto V compare «Sto calcolando la migliore in assoluto: qualche secondo…», poi la viola, il punto ideale e la riga nel testo. Si calcola una volta per regata; poi il pulsante sparisce.
+
+Criteri del tasto (soglie scritte prima di misurare: tutte le regate):
+
+| # | Esito | Soglia |
+| --- | --- | --- |
+| K1 | aprendo la rotta la viola non si calcola e il pulsante c'è: **40 su 40** (Chromium), **8 su 8** (Firefox) | tutte ✓ |
+| K2 | «Sto calcolando» mostrato prima del calcolo: **40 su 40**, **8 su 8** | tutte ✓ |
+| K3 | dopo il calcolo, testo con la partenza ideale e pulsante nascosto: **40 su 40** (20 col tasto V), **8 su 8** (4 col tasto V) | tutte ✓ |
+| P4 | verde, «dove hai perso» e fili identici al codice di prima: 40 su 40 | ✓ |
+| P5 | 0 px di eccesso anche col pulsante in più | ✓ |
+
+Pagina senza `#collaudo` in Chromium e Firefox: 1.2.40, 0 errori. `collaudo_rotta_leggibile --semi 2` e `collaudo_moviola 8` OK.
+
+**Corretto strada facendo (tutti miei, trovati dai collaudi prima della chiusura):**
+- il pulsante era collegato a una funzione di `rotta.js`, che si carica dopo `moviola.js`: la riga si fermava con un errore;
+- correggendolo, un commento messo a metà riga aveva spento anche «Chiudi» e i pulsanti dei segni della moviola: con «Chiudi» la moviola non si chiudeva più. Trovato da `collaudo_rotta_leggibile` (8 su 8 con `main`, 2 su 8 col ramo), corretto: 8 su 8;
+- la moviola riscrive il titolo a ogni fotogramma, quindi «Sto calcolando» spariva subito: il primo metro di K2 (leggere il testo dopo il clic) non lo poteva vedere, perché la pagina è ferma mentre calcola. Il metro nuovo registra il testo a ogni fotogramma e l'ha visto; ora la scritta resta fino alla fine del calcolo.
+
+**Nel giro dei collaudi:** `collaudo_rotta_assoluta.py --regate 4 --dichiarati` (P1, A1, A2, P3, A3 solo riportati).
