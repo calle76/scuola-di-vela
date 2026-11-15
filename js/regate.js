@@ -1482,7 +1482,8 @@
   const ST_POSTI_NAZ = ["Lago dei Tre Venti", "Golfo delle Meduse", "Capo delle Rondini", "Porto dei Velai"]; // inventati
   const stNaz = S => !!S && S.circ === "naz";
   const stCircNome = S => stNaz(S) ? "nazionale" : "zonale";
-  const stNazAperto = () => modo !== "carriera" || !!progress.nazionale; // N9: nel gioco libero sempre (principio 2)
+  const stNazAperto = () => modo !== "carriera" || !!(progress.sponsor && progress.sponsor.c && progress.sponsor.c.circ === "naz"); // N9: nel gioco libero sempre (principio 2); 1.3.9: in carriera con un contratto nazionale (prima: col diritto)
+  const stZonAperto = () => modo !== "carriera" || !(progress.sponsor && progress.sponsor.c && progress.sponsor.c.circ === "naz"); // 1.3.9: lo sponsor decide il circuito
   function stDodicesimo(){ // il primo degli altri dell'ultimo zonale finito; se non c'è, il rivale zonale con più doti (a parità, il primo di un sorteggio)
     const S = progress.stagione;
     if (S && S.fine && !stNaz(S)){ const x = stClassifica(S).find(x => x.id !== "*" && x.id !== "@"); if (x) return x.id; }
@@ -1575,6 +1576,7 @@
       else { if (pos <= 3) progress.nazionale = true; // diritto al nazionale (1.2.39: in carriera lo apre)
         if (S.ritiri && S.tappe.every(t => !t.rit)) progress.zonalePulita = true; // 1.3.5: stagione zonale senza ritiri (solo quelle cominciate dalla 1.3.5, che segnano le tappe lasciate)
         const x = cl.find(x => x.id !== "*" && x.id !== "@"); if (x) progress.zonalePrimo = x.id; } // il dodicesimo del nazionale
+      spFineStagione(S, false); // 1.3.9: lo sponsor
     }
     saveProgress();
   }
@@ -1635,6 +1637,7 @@
   let stBozzaModo = null; // la modalità (libero o carriera) in cui è nata stBozza
   function stMostra(nota, nuova, msg){ // nuova: dal pulsante «Stagione»: si propone una stagione nuova (quella finita resta salvata finché non se ne comincia un'altra)
     if (nuova && stBozza && (stBozzaModo !== modo || stNaz(stBozza) && !stNazAperto())) stBozza = null; // 1.2.39: la proposta vale nella modalità in cui è nata (rivali e diritti sono separati)
+    if (nuova && spAttivo()){ spMigra(); const cc = progress.sponsor && progress.sponsor.c; if (cc && stCircScelto !== cc.circ){ stCircScelto = cc.circ; stBozza = null; } } // 1.3.9: il circuito dello sponsor
     const S = nuova ? stBozza || (stBozzaModo = modo, stBozza = stNuova(null, stCircScelto === "naz" && stNazAperto() ? "naz" : "zon")) : progress.stagione, am = !!S.codice, naz = stNaz(S);
     const fatte = S.tappe.filter(stFatta), k = fatte.length, n = S.tappe[0].bat.flat().length;
     const cl = k ? stClassifica(S) : [], pos = cl.findIndex(x => x.id === "*") + 1;
@@ -1647,24 +1650,102 @@
       ${msg ? `<p class="manca st-p">${msg}</p>` : `<p class="tor-leg">Tappa ${k}, ${stVincitori(S, fatte[k - 1])}${cl.some(x => x.manca) ? " · – in attesa del file dell'amico" : ""}</p>`}` : ""; // il messaggio del file al posto dei vincitori: le 12 righe stanno nei 650 px
     const frasi = k ? stFrasi(S) : [];
     const fine = S.fine ? `<p class="st-p"><b>Stagione finita: ${pos}° su ${n}.</b> ${naz ? (pos <= 3 ? "Fra i primi 3: diritto alla finale. Si corre dal riquadro del torneo, «La finale»." : "Per il diritto alla finale bisogna finire fra i primi 3.")
-      : pos <= 3 ? "Fra i primi 3: diritto al nazionale." + (modo === "carriera" ? " Ora puoi correre il circuito nazionale: «Stagione», poi «Nazionale»." : "") : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
-    const scelta = nuova && !am ? `<div class="row st-circ"><span>Circuito:</span><button id="stZon"${naz ? "" : ' class="primary"'}>Zonale</button><button id="stNaz"${naz ? ' class="primary"' : ""}${stNazAperto() ? "" : " disabled"}>Nazionale</button>${stNazAperto() ? "" : "<span>si apre finendo fra i primi 3 di uno zonale</span>"}</div>` : ""; // 1.2.39
+      : pos <= 3 ? "Fra i primi 3: diritto al nazionale." + (modo === "carriera" ? " In carriera il nazionale si corre con uno sponsor nazionale: «Lo sponsor»." : "") : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
+    const spOff = spAttivo() && progress.sponsor && progress.sponsor.offerte.length > 0; // 1.3.9: con offerte da scegliere la stagione non parte
+    const scelta = nuova && !am ? `<div class="row st-circ"><span>Circuito:</span><button id="stZon"${naz ? "" : ' class="primary"'}${stZonAperto() ? "" : " disabled"}>Zonale</button><button id="stNaz"${naz ? ' class="primary"' : ""}${stNazAperto() ? "" : " disabled"}>Nazionale</button>${spOff ? "<span>prima scegli lo sponsor</span>" : stNazAperto() ? (stZonAperto() ? "" : "<span>il tuo sponsor è nazionale</span>") : modo === "carriera" ? "<span>si apre con uno sponsor nazionale</span>" : "<span>si apre finendo fra i primi 3 di uno zonale</span>"}</div>` : ""; // 1.2.39
     const btnAm = am && !nuova ? `<button id="stSalva">Salva il mio risultato</button><button id="stCarica">Carica quello dell'amico</button><input type="file" id="stFileIn" accept=".json,application/json" hidden>` : "";
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Il circuito ${stCircNome(S)}</h2><span>${am && !nuova ? "codice " + S.codice + " · " : ""}${S.fine ? "stagione finita" : k ? "dopo la tappa " + k + " di " + ST_N : "stagione da cominciare"}</span></div>
       ${msg && !k ? `<p class="manca">${msg}</p>` : ""}${fine}${scelta}${spiega}${k ? tab : elenco}${frasi.length ? `<ul class="st-frasi">${frasi.map(f => `<li>${f}</li>`).join("")}</ul>` : ""}${k && !S.fine ? `<p class="tor-leg">Prossima: ${elenco.replace(/<\/?p>/g, "").split("<br>")[k]}</p>` : ""}
-      <div class="row">${nuova ? `<button class="primary" id="stInizia">Inizia la stagione</button>${am || naz ? "" : `<button id="stAmico">Con un amico</button>`}` : ""}<button${nuova ? "" : ` class="primary"`} id="stIndietro">Indietro</button>${btnAm}${!nuova && !S.fine ? `<button id="stLascia">Lascia la stagione</button>` : ""}</div>`;
+      <div class="row">${nuova ? `<button class="primary" id="stInizia"${spOff ? " disabled" : ""}>Inizia la stagione</button>${am || naz || spOff || !stZonAperto() ? "" : `<button id="stAmico">Con un amico</button>`}` : ""}<button${nuova ? "" : ` class="primary"`} id="stIndietro">Indietro</button>${spAttivo() && !am ? `<button id="stSponsor">Lo sponsor</button>` : ""}${btnAm}${!nuova && !S.fine ? `<button id="stLascia">Lascia la stagione</button>` : ""}</div>`;
     $("stIndietro").onclick = () => { if (nuova && am) stBozza = null; torMostra(nota); };
-    if ($("stInizia")) $("stInizia").onclick = () => { if (naz && !stNazAperto()) return; if (modo === "carriera") delete progress.finale; /* 1.3.7: il diritto vale per la finale subito dopo quel nazionale */ progress.stagione = S; stBozza = null; delete progress.torneo; tor = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
+    if ($("stSponsor")) $("stSponsor").onclick = () => spMostra(() => stMostra(nota, nuova, msg)); // 1.3.9
+    if ($("stInizia")) $("stInizia").onclick = () => { if ((naz && !stNazAperto()) || (!naz && !stZonAperto()) || spOff) return; if (modo === "carriera") delete progress.finale; /* 1.3.7: il diritto vale per la finale subito dopo quel nazionale */ progress.stagione = S; stBozza = null; delete progress.torneo; tor = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
     if ($("stAmico")) $("stAmico").onclick = () => stAmicoMostra(nota);
-    if ($("stZon")) $("stZon").onclick = () => { if (naz){ stCircScelto = "zon"; stBozza = null; stMostra(nota, true); } };
+    if ($("stZon")) $("stZon").onclick = () => { if (naz && stZonAperto()){ stCircScelto = "zon"; stBozza = null; stMostra(nota, true); } };
     if ($("stNaz")) $("stNaz").onclick = () => { if (!naz && stNazAperto()){ stCircScelto = "naz"; stBozza = null; stMostra(nota, true); } };
-    if ($("stLascia")) $("stLascia").onclick = () => { if (!confirm("Lasciare la stagione? La classifica del circuito si perde; il torneo della tappa in corso non conta.")) return;
+    if ($("stLascia")) $("stLascia").onclick = () => { if (!confirm("Lasciare la stagione? La classifica del circuito si perde; il torneo della tappa in corso non conta." + (spAttivo() && progress.sponsor && progress.sponsor.c ? " Per lo sponsor gli obiettivi di questa stagione sono mancati." : ""))) return;
+      spFineStagione(S, true); // 1.3.9
       delete progress.stagione; delete progress.torneo; tor = null; torBozza = null; saveProgress(); torMostra(nota); };
     if ($("stSalva")) $("stSalva").onclick = () => { const a = document.createElement("a"), u = URL.createObjectURL(new Blob([stFile(S)], { type: "application/json" }));
       a.href = u; a.download = "stagione-" + S.codice + "-" + S.io + ".json"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); };
     if ($("stCarica")) { const inp = $("stFileIn"); $("stCarica").onclick = () => inp.click();
       inp.onchange = () => { const f = inp.files[0]; if (!f) return; const r = new FileReader();
         r.onload = () => { const e = stCarica(S, String(r.result)); stMostra(nota, false, e || "Risultato dell'amico caricato."); }; r.readAsText(f); }; }
+  }
+  // ---- sponsor a contratto (1.3.9, tappa 4, docs/PROPOSTA-SPONSOR.md; via di Ale del 15 novembre 2026; solo carriera) ----
+  // Gradini 1-4 (1-2 zonale, 3-4 nazionale); un contratto: sponsor, gradino, circuito, durata 1 o 2 stagioni, 1-2 obiettivi verificabili sui dati della stagione
+  // (posto finale entro N, un podio di tappa, nessuna tappa lasciata, davanti a un rivale nominato). Con 2 stagioni gli obiettivi sono più facili (il primo
+  // soltanto, e il posto SP_FACILE più in basso). Fine contratto: tutti gli obiettivi in ogni stagione → rinnovo e gradino sopra; in parte → stesso gradino; nessuno →
+  // gradino sotto (mai sotto l'1). Sempre almeno 2 offerte, almeno una zonale. Prima stagione senza sponsor: primi 3 → gradini 2 e 3, altrimenti 1 e 2.
+  // Primi 3 del nazionale: l'offerta del Fiocco, solo scritta (il livello non c'è). In carriera il nazionale si corre solo con un contratto nazionale; i
+  // salvataggi col diritto già preso partono con un'offerta del gradino 3. Giudizio leggero dopo ogni tappa (Ale, 15 nov sera): una riga per obiettivo, coi numeri;
+  // niente «fiducia» che sale e scende. Nomi inventati, cercati uno per uno il 15 novembre (PROPOSTA-SPONSOR.md, Esito). Numeri: ipotesi nostre.
+  const SP_NOMI = [null, ["Ferramenta del Molo Nuovo", "Oleificio Capo Sereno"], ["Corderia del Faro Vecchio", "Cartiera di Valle Ventosa"],
+    ["Cantiere Due Delfini", "Trasporti Maestrale Blu"], ["Cantiere Tre Gabbiani", "Vetreria Isola Chiara"]];
+  const SP_FACILE = 1; // posti in più con un contratto di 2 stagioni. Prima stesura 2: «entro il 10° del nazionale» raggiunto l'83% delle volte, sopra l'80% di S3 (15 nov notte)
+  const SP_GRADINO = [null, "zonale piccolo", "zonale", "nazionale", "nazionale grande"], SP_CIRC = [null, "zon", "zon", "naz", "naz"];
+  const spAttivo = () => modo === "carriera";
+  const spDati = () => progress.sponsor || (progress.sponsor = { c: null, offerte: [], storia: [] });
+  function spObiettivi(g, durata, rnd = Math.random){
+    const davanti = () => ({ t: "davanti", r: RIVALI_ZONALE[Math.floor(rnd() * RIVALI_ZONALE.length)][0] });
+    const O = g === 1 ? [{ t: "ritiri" }, { t: "podio" }] : g === 2 ? [{ t: "posto", n: 5 }, davanti()] : g === 3 ? [{ t: "posto", n: 8 }, { t: "ritiri" }] : [{ t: "posto", n: 5 }, { t: "podio" }];
+    if (durata === 2) return [O[0].t === "posto" ? { t: "posto", n: O[0].n + SP_FACILE } : O[0]];
+    return O;
+  }
+  const spOfferta = (g, durata, k = 0, rinnovo = false) => ({ g, circ: SP_CIRC[g], nome: SP_NOMI[g][k], durata, ob: spObiettivi(g, durata), rinnovo });
+  function spOfferteDa(gradini, rinnovoDi){ // gradini in ordine; sempre almeno 2 offerte e almeno una zonale
+    const o = gradini.map(g => g === rinnovoDi?.g ? { ...spOfferta(g, rinnovoDi.durata), nome: rinnovoDi.nome, rinnovo: true } : spOfferta(g, 1));
+    if (o.length < 2) o.push(spOfferta(o[0].g, 2, 1));
+    if (!o.some(x => x.circ === "zon")) o.push(spOfferta(2, 2, 1));
+    return o;
+  }
+  const spTesto = (x, S) => x.t === "posto" ? `entro il ${x.n}° posto` : x.t === "podio" ? "un podio di tappa" : x.t === "ritiri" ? "nessuna tappa lasciata" : `davanti a ${x.r}`;
+  function spStato(x, S){ // { ok: true / false / null (ancora aperto), riga }
+    const fatte = S.tappe.filter(stFatta), k = fatte.length, fine = !!S.fine, cl = k ? stClassifica(S) : [], io = cl.find(y => y.id === "*"), pos = cl.indexOf(io) + 1;
+    if (x.t === "posto"){ if (!k) return { ok: null, riga: `Posto: obiettivo entro il ${x.n}°.` };
+      return { ok: fine ? pos <= x.n : null, riga: `Sei ${pos}° dopo ${k === 1 ? "la prima tappa" : k + " tappe"}; l'obiettivo è entro il ${x.n}°: ${pos <= x.n ? (fine ? "raggiunto" : "in linea") : (fine ? "mancato" : "servono più punti")}.` }; }
+    if (x.t === "podio"){ const j = fatte.findIndex(t => { const p = stOrdine(S, t).indexOf("*") + 1; return p > 0 && p <= 3; });
+      return j >= 0 ? { ok: true, riga: `Podio di tappa: fatto, alla tappa ${S.tappe.indexOf(fatte[j]) + 1}.` }
+        : { ok: fine ? false : null, riga: fine ? "Podio di tappa: mancato." : `Podio di tappa: ancora da fare, ${ST_N - k === 1 ? "resta una tappa" : "restano " + (ST_N - k) + " tappe"}.` }; }
+    if (x.t === "ritiri"){ const r = S.tappe.some(t => t.rit);
+      return { ok: r ? false : fine ? true : null, riga: r ? "Hai lasciato una tappa: obiettivo mancato." : fine ? "Nessuna tappa lasciata: raggiunto." : "Nessuna tappa lasciata, finora." }; }
+    const lui = cl.find(y => y.id === x.r);
+    if (!k || !lui) return { ok: null, riga: `Davanti a ${x.r}: si vede dalla prima tappa.` };
+    const dav = cl.indexOf(io) < cl.indexOf(lui);
+    return { ok: fine ? dav : null, riga: `${dav ? "Sei davanti a" : "Sei dietro a"} ${x.r} (${io.tot} punti contro ${lui.tot})${fine ? (dav ? ": raggiunto" : ": mancato") : ""}.` };
+  }
+  function spFineStagione(S, lasciata){ // dalla chiusura dell'ultima tappa (o «Lascia la stagione»): esito del contratto e offerte
+    if (!spAttivo()) return;
+    const D = spDati(), naz = stNaz(S), pos = S.fine ? S.fine.pos : null;
+    D.fiocco = D.fiocco || (naz && pos !== null && pos <= 3) || false; // l'offerta del Fiocco: solo scritta
+    if (D.c && D.c.circ === (naz ? "naz" : "zon")){
+      D.c.esiti.push(D.c.ob.map(x => lasciata ? false : spStato(x, S).ok === true));
+      if (D.c.esiti.length >= D.c.durata){ const c = D.c, tutti = c.esiti.every(e => e.every(v => v)), qualcuno = c.esiti.some(e => e.some(v => v));
+        D.storia.push({ nome: c.nome, g: c.g, durata: c.durata, esiti: c.esiti, esito: tutti ? "tutti" : qualcuno ? "parte" : "nessuno" });
+        D.offerte = spOfferteDa(tutti ? [c.g, Math.min(4, c.g + 1)].filter((g, i, a) => a.indexOf(g) === i) : qualcuno ? [c.g] : [Math.max(1, c.g - 1)], tutti ? c : null);
+        D.c = null; }
+    } else if (!D.c && !naz && !lasciata) D.offerte = spOfferteDa(pos <= 3 ? [2, 3] : [1, 2]);
+  }
+  function spMigra(){ // un salvataggio col diritto al nazionale e senza sponsor: un'offerta del gradino 3 (e una zonale)
+    if (!spAttivo() || progress.sponsor || !progress.nazionale || (progress.stagione && !progress.stagione.fine)) return;
+    spDati().offerte = spOfferteDa([3]); saveProgress();
+  }
+  function spMostra(indietro){
+    const D = spDati(), S = progress.stagione, c = D.c, quale = S && c && stNaz(S) === (c.circ === "naz") ? S : null;
+    const righe = c ? c.ob.map(x => `<li>${quale ? spStato(x, quale).riga : "Obiettivo: " + spTesto(x) + "."}</li>`).join("") : "";
+    const contratto = c ? `<p><b>${c.nome}</b>, sponsor ${SP_GRADINO[c.g]}: circuito ${c.circ === "naz" ? "nazionale" : "zonale"}, ${c.durata === 1 ? "una stagione" : "due stagioni"}${c.durata > 1 ? ` (questa è la ${c.esiti.length + 1}ª)` : ""}. Obiettivi: ${c.ob.map(x => spTesto(x)).join("; ")}.</p><ul class="st-frasi">${righe}</ul>` : "";
+    const ultimo = D.storia.length ? D.storia[D.storia.length - 1] : null;
+    const prima = ultimo ? `<p>Contratto finito con ${ultimo.nome}: obiettivi ${ultimo.esito === "tutti" ? "tutti raggiunti" : ultimo.esito === "parte" ? "raggiunti in parte" : "mancati"}.</p>` : "";
+    const off = D.offerte.length ? `<p><b>Offerte</b> (ne scegli una; il circuito della stagione dopo lo decide lo sponsor):</p>` + D.offerte.map((o, i) =>
+      `<p class="sp-off">${o.nome}${o.rinnovo ? " (rinnovo)" : ""} · ${o.circ === "naz" ? "nazionale" : "zonale"} · ${o.durata === 1 ? "1 stagione" : "2 stagioni"} · ${o.ob.map(x => spTesto(x)).join("; ")} <button id="spOk${i}">Accetta</button></p>`).join("") : "";
+    const fiocco = D.fiocco ? `<p>Il ${SP_NOMI[4][0]} ti offre la barca col fiocco: il livello del Fiocco non c'è ancora.</p>` : "";
+    const vuoto = !c && !D.offerte.length ? `<p>Nessuno sponsor ancora: le prime offerte arrivano alla fine della prima stagione zonale.</p>` : "";
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Lo sponsor</h2><span>${c ? "contratto in corso" : D.offerte.length ? "offerte da scegliere" : ""}</span></div>
+      ${contratto}${prima}${off}${fiocco}${vuoto}<p class="tor-leg">Sponsor e contratti sono un'invenzione del gioco: nomi inventati, nessun marchio vero.</p>
+      <div class="row"><button class="primary" id="spIndietro">Indietro</button></div>`;
+    $("spIndietro").onclick = indietro;
+    D.offerte.forEach((o, i) => { $("spOk" + i).onclick = () => { D.c = { ...o, esiti: [] }; D.offerte = []; stBozza = null; stCircScelto = o.circ; saveProgress(); spMostra(indietro); }; });
+    releaseKeys(); if (!$("torDlg").open) $("torDlg").showModal();
   }
   function stAmicoMostra(nota, msg){ // 1.2.37: creare una stagione con un codice, o entrare in quella di un amico
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Stagione con un amico</h2><span></span></div>${msg ? `<p class="manca">${msg}</p>` : ""}

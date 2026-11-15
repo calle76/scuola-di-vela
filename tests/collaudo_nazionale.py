@@ -208,13 +208,14 @@ async def main():
             if via != "cancellata": no(f"Z5n azzera: {via}")
             # N9
             esiti = {}
-            for modo, diritto in (("libero", False), ("carriera", False), ("carriera", True)):
+            for modo, diritto in (("libero", False), ("carriera", False), ("carriera", True), ("carriera", "sponsor")):   # 1.3.9: in carriera il nazionale si apre con uno sponsor nazionale, non più col diritto
                 await pg.evaluate("m => { document.getElementById('torDlg').close(); __sv.st.showMenu(); document.querySelector('#modoSel button[data-v=' + m + ']').click(); }", modo)
                 r = await pg.evaluate("d => { const sv = __sv; delete sv.progress.stagione; delete sv.progress.torneo; if (d) sv.progress.nazionale = true; else delete sv.progress.nazionale;" +
+                    " if (d === 'sponsor') sv.progress.sponsor = { c: { g: 3, circ: 'naz', nome: 'x', durata: 1, ob: [], esiti: [] }, offerte: [], storia: [] }; else delete sv.progress.sponsor;" +
                     " (" + APRI_NAZ + ")(); const b = document.getElementById('stNaz'), dis = !b || b.disabled; document.getElementById('stInizia').click();" +
                     " const c = sv.progress.stagione && sv.progress.stagione.circ; document.getElementById('torDlg').close(); return { dis, circ: c || 'zon' }; }", diritto)
-                esiti[f"{modo}{' col diritto' if diritto else ''}"] = r
-                atteso = "naz" if (modo == "libero" or diritto) else "zon"
+                esiti[f"{modo}{' con lo sponsor nazionale' if diritto == 'sponsor' else ' col diritto' if diritto else ''}"] = r
+                atteso = "naz" if (modo == "libero" or diritto == "sponsor") else "zon"
                 if r["circ"] != atteso or r["dis"] != (atteso == "zon"): no(f"N9 {modo} diritto={diritto}: {r}")
             print("N9:", esiti)
             await pg.evaluate("() => { __sv.st.showMenu(); document.querySelector('#modoSel button[data-v=libero]').click(); }")

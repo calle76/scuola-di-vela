@@ -74,3 +74,7 @@ Via dato, da fare dopo le tappe 2 e 3. Solo in carriera. I nomi degli sponsor li
 ## Idea di Ale (15 novembre 2026, pomeriggio): lo sponsor come figura
 
 «Ci vorrebbe un'altra figura, lo sponsor... più avanti, che possa giudicare il risultato dei punti e la classifica e l'andamento in generale, per capire se il contratto si sta rispettando o se la fiducia sta per calare. Per ora no.» Come il Coach giudica la regata, lo sponsor giudicherebbe la stagione: punti, classifica, andamento rispetto agli obiettivi del contratto, con una «fiducia» che sale o scende. **Non adesso**: da riprendere con la tappa 4, partendo da questa proposta.
+
+## Esito (1.3.9, notte del 15 novembre 2026)
+
+Fatta come sopra, solo in carriera, col giudizio leggero (una riga per obiettivo nella schermata «Lo sponsor»). S1-S7 passano in Chromium e Firefox (`collaudo_sponsor.py`; numeri in `CHANGELOG.md` 1.3.9). Cambiato dopo la prima misura: con 2 stagioni il posto scende di 1 e non di 2 (S3: «entro il 10° del nazionale» all'83%). Nomi degli sponsor da controllare (Ale): Ferramenta del Molo Nuovo, Oleificio Capo Sereno, Corderia del Faro Vecchio, Cartiera di Valle Ventosa, Cantiere Due Delfini, Trasporti Maestrale Blu, Cantiere Tre Gabbiani, Vetreria Isola Chiara. Fuori, come deciso: obiettivi sulla finale, la «fiducia».

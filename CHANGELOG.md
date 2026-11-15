@@ -19,6 +19,45 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.9 — Gli sponsor a contratto, col giudizio dopo ogni tappa
+
+Tappa 4 del piano di chiusura di Deriva (`docs/PROPOSTA-SPONSOR.md`, via di Ale del 15 novembre; giudizio leggero chiesto da Ale la sera stessa). Solo in carriera. Fatta nella notte, in autonomia.
+
+- **Quattro gradini**, ognuno con due sponsor dai nomi inventati, cercati uno per uno (nessun riscontro esatto; scartati «Officina Nautica Bassamarea» e «Caffè della Lanterna Verde», che somigliavano a ditte vere):
+  1. **zonale piccolo:** Ferramenta del Molo Nuovo, Oleificio Capo Sereno;
+  2. **zonale:** Corderia del Faro Vecchio, Cartiera di Valle Ventosa;
+  3. **nazionale:** Cantiere Due Delfini, Trasporti Maestrale Blu;
+  4. **nazionale grande:** Cantiere Tre Gabbiani, Vetreria Isola Chiara.
+- **Il contratto:** sponsor, circuito, 1 o 2 stagioni, 1 o 2 obiettivi verificabili:
+  - entro un posto;
+  - un podio di tappa;
+  - nessuna tappa lasciata;
+  - davanti a un rivale nominato.
+
+  Con 2 stagioni c'è solo il primo obiettivo, con il posto 1 più in basso.
+- **Fine contratto:** con tutti gli obiettivi rinnovo e gradino sopra; con una parte lo stesso gradino; con nessuno il gradino sotto, mai sotto l'1. Sempre almeno 2 offerte, almeno una zonale. Alla fine della prima stagione zonale, senza sponsor: gradini 2 e 3 a chi è fra i primi 3, altrimenti 1 e 2.
+- **Lo sponsor decide il circuito:** in carriera il nazionale si corre solo con uno sponsor nazionale; prima bastava il diritto. Con offerte da scegliere la stagione non parte. I salvataggi col diritto già preso si aprono con un'offerta del gradino 3. Ai primi 3 del nazionale arriva l'offerta del Fiocco, solo scritta: quel livello non c'è ancora.
+- **Il giudizio leggero:** nella schermata «Lo sponsor», aperta dal riquadro del circuito, c'è una riga per obiettivo, coi numeri della stagione in corso. Per esempio: «Sei 5° dopo 2 tappe; l'obiettivo è entro il 5°: in linea», oppure «Sei dietro a Pietro Gallo (18 punti contro 15)». Niente «fiducia» che sale e scende: è l'idea per più avanti.
+- **Lasciare la stagione** con un contratto in corso conta come obiettivi mancati.
+
+**Misure** (`collaudo_sponsor.py`, nuovo, Chromium e Firefox, tutto verde):
+- **S1:** in una carriera di 200 stagioni «a numeri», con tappe lasciate a caso, 332 obiettivi ricontrollati qui a parte sui dati salvati, 0 sbagliati.
+- **S2:** 167 passaggi di offerte secondo la tabella, 0 sbagliati, tutti e 4 i gradini toccati. Il collaudo sceglie metà delle volte l'offerta più alta: con la scelta a caso, una volta, il gradino 4 non era mai stato raggiunto.
+- **S3**, giocatore a forza 0, 2000 stagioni per circuito, soglia 20-80%:
+  - zonale: entro il 5° 42%, entro il 6° 51%, podio 69%, davanti a un rivale 48%;
+  - nazionale: entro il 5° 37%, entro il 6° 45%, entro l'8° 64%, entro il 9° 73%, podio 65%.
+
+  **Cambiato dopo la prima misura, e detto:** con 2 stagioni il posto scendeva di 2. «Entro il 10° del nazionale» si raggiungeva l'83% delle volte, sopra la soglia, quindi ora scende di 1. La soglia non è cambiata. «Nessuna tappa lasciata» non si misura così, perché dipende solo da chi gioca.
+- **S4:** l'offerta del Fiocco è giusta in 30 nazionali vinti su 30 e in 30 persi su 30 (casi costruiti). Lungo la carriera a caso il caso è capitato una volta sola.
+- **S5:**
+  - ricaricando a metà contratto lo sponsor è lo stesso;
+  - «Azzera i progressi» lo cancella;
+  - il salvataggio della 1.2.39 col diritto si apre con l'offerta del gradino 3, nazionale spento e stagione ferma finché non si sceglie; accettata, il nazionale si apre e lo zonale si spegne.
+- **S6:** fisica identica.
+- **S7:** la schermata dello sponsor con 3 offerte, un contratto, l'ultimo contratto finito e il Fiocco sta a 1360x650 senza scorrere. La prima versione scorreva di 39 px: offerte più compatte. Pagina senza `#collaudo`, 0 errori.
+- **Aggiornato `collaudo_nazionale` (N9):** in carriera il diritto da solo non apre più il nazionale, lo sponsor nazionale sì.
+- **Non-regressione, verde:** `collaudo_stagione`, `collaudo_stagione_amico`, `collaudo_nazionale`, `collaudo_torneo` (veloce), `collaudo_carriera_intera`, `collaudo_nomi`, `collaudo_deriva_superata`, `collaudo_finale`.
+
 ## 1.3.8 — I messaggi annotati per i collaudi (voce 35)
 
 - Il giro su GitHub della 1.3.6 (43725225511) ha ridato la caduta di `collaudo_registro` in Firefox, sulla verifica «contatto». È la seconda volta in tre giri, quindi non più un caso isolato. Il contatto c'era ed era registrato (questa volta senza colpa), ma il collaudo non ha visto il messaggio «Contatto…»: lo cercava sullo schermo ogni 20 ms.
