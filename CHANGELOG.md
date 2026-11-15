@@ -19,6 +19,17 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.2.40 — Rotta ottimale in assoluto, a richiesta
+
+Voce 26 di `DA-FARE.md`, tappa 1 di `PIANO-CHIUSURA-DERIVA.md`; `docs/PROPOSTA-ROTTA-ASSOLUTA.md` §8-9 e §10 (esito); via di Ale del 14 novembre notte.
+
+- **Nella vista «Rotta ottimale», una terza traccia, viola: la migliore in assoluto,** dallo sparo e dal punto migliore della linea fino all'arrivo, con un segno nel punto ideale e una freccia con la direzione. Nel testo: dove partire (metri dallo spillo, mure), i tempi dallo sparo della viola, della verde e tuoi, i secondi persi in partenza e dopo. Considera la barca già lanciata e ignora le altre barche, e lo dice.
+- **Calcolo:** 7 punti della linea, uno ogni 10 m; per ognuno la rotta fino alla boa 1 col calcolo della verde; dal migliore, la rotta intera.
+- **Rotta verde più veloce, identica al bit:** i punti nuovi si creano solo se servono, la riga della polare si riusa.
+- **A richiesta (decisione di Ale del 15 novembre):** il calcolo dura 3-4 s, quindi parte solo col pulsante «Migliore in assoluto (V)» o col tasto V, con la scritta «Sto calcolando…»; la rotta ottimale si apre veloce come prima.
+- **Chiusa con P1, A1, A2, P3 e A3 dichiarati:** tempo di calcolo 3,6-4,3 s invece di 1-2 s; il tuo punto a volte migliore dei 7, al massimo di 0,46 s; la viola più lenta della verde in 1 regata su 97, di 0,04 s; scegliere il punto sulla boa 1 sbaglia di più di 1 s in 3 regate su 20 (al massimo 2,1 s). `PROPOSTA-ROTTA-ASSOLUTA.md` §10-11.
+- **Corretti prima della chiusura**, trovati dai collaudi: il pulsante «Chiudi» della moviola spento da un commento a metà riga; la scritta di attesa riscritta dalla moviola a ogni fotogramma.
+
 ## 1.2.39 — Il circuito nazionale
 
 Voce 38 di `DA-FARE.md`, passo 2; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre («come consigli tu»).
