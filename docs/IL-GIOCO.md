@@ -17,7 +17,7 @@ Ogni livello ha una sola novità grande.
 | Livello | Barca | Novità | Stato |
 | --- | --- | --- | --- |
 | **La scuola** | deriva in singolo | tutta la teoria, le regole, le prove | **[fatto]**, chiusa come contenuti (Ale, 13 novembre 2026): niente da aggiungere, solo cose da sistemare rigiocando |
-| **Deriva** | la stessa, senza fiocco | gareggiare e rivedersi | **[proposta]**, `PROPOSTA-LIVELLO-DERIVA.md`; nascosta finché Ale non dice di mostrarla |
+| **Deriva** | la stessa, senza fiocco | gareggiare e rivedersi | **[deciso, in costruzione]**, `PROPOSTA-DERIVA-CIRCUITI.md` (via del 15 novembre). Dalla 1.3.0 **[fatto]** il menu a due livelli nel gioco libero, con le regate dei salti e dei giri e il torneo; in carriera nascosta fino alla 1.3.3 |
 | **Fiocco** | deriva a due, randa e fiocco | il fiocco | prototipo in `sperimentale/`, non nel gioco |
 | Dopo | gennaker, equipaggio da tre | una per volta | solo una direzione (`VISIONE-LIVELLI-E-CARRIERA.md` §2) |
 

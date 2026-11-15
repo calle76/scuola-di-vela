@@ -32,7 +32,7 @@ async def main():
                 for seme in range(A, B + 1):
                     pg = await b.new_page(viewport={"width": 1280, "height": 800}); pg.on("pageerror", lambda e: errori.append(str(e)))
                     await pg.goto(URL); await pg.wait_for_timeout(300)
-                    await pg.click(f"[data-r='{REG}']"); await pg.wait_for_timeout(100)
+                    await pg.evaluate("r => { const d = document.querySelector('#livSel [data-v=' + (r >= 2 ? 'deriva' : 'scuola') + ']'); d && d.click(); }", REG); await pg.click(f"[data-r='{REG}']"); await pg.wait_for_timeout(100)
                     r = await pg.evaluate(JS, [liv, cd, seme]); await pg.close()
                     if r is None: non_valide.append((liv, cd, seme)); continue
                     contate += r["n"]; non += [f"{liv} {cd} s seme {seme} {x}" for x in r["non"]]

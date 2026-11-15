@@ -183,7 +183,7 @@ async def main():
                 br = await bt.launch(); n0 = len(errori)
                 pg = await pagina(br, coll=False, nome=nome)
                 await pg.evaluate("() => { const m = document.querySelector('#modoSel button[data-v=libero]'); m && m.click(); }")
-                await pg.evaluate("() => document.getElementById('goTor').click()"); await pg.wait_for_timeout(100)
+                await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); document.getElementById('goTor').click(); }"); await pg.wait_for_timeout(100)
                 await pg.evaluate("() => { document.getElementById('stCirc').click(); document.getElementById('stAmico').click(); }")
                 await pg.fill("#stCodIn", "7k2m9q-e"); await pg.evaluate("() => document.getElementById('stEntra').click()")
                 testo = await pg.evaluate("() => document.getElementById('torBody').innerText")

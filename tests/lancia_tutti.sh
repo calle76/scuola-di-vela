@@ -118,6 +118,7 @@ TESTS=(
     "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
     "collaudo_carriera.py|py|chiaro|0||collaudo_carriera.py"
     "collaudo_libretto.py|py|chiaro|0||collaudo_libretto.py"
+    "collaudo_menu_livelli.py|py|chiaro|0||collaudo_menu_livelli.py"
     "collaudo_carriera_esame.py|py|chiaro|0||collaudo_carriera_esame.py"
     "collaudo_carriera_intera.py|py|chiaro|0||collaudo_carriera_intera.py"
     "collaudo_pilota_lezioni.py (veloce)|py|ambiguo|0||collaudo_pilota_lezioni.py --veloce"

@@ -213,7 +213,7 @@ async def c3(b, n):
                 pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
                 await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150)
                 dopo = await pg.evaluate("localStorage.getItem('scuolaVelaSim.v1')")
-                stato = await pg.evaluate("document.getElementById('goTor').textContent")
+                await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); stato = await pg.evaluate("document.getElementById('goTor').textContent")
                 casi += 1
                 buono = prima == dopo and json.loads(dopo)["torneo"]["ris"].__len__() == k + 1 and f"regata {k + 2} di 4" in stato
                 ok += buono
@@ -395,7 +395,7 @@ async def giocatore(b):
         await pg.goto(BASE); await pg.wait_for_timeout(300); return pg
     pg = await nuova(); fatti = 0; finale = None
     for k in range(4):
-        await pg.click("#goTor"); await pg.wait_for_timeout(200)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#goTor"); await pg.wait_for_timeout(200)
         await pg.click("#torGo"); await pg.wait_for_timeout(300)
         if not await pg.is_visible("#bGo"): no(f"C7 regata {k + 1}: niente riquadro delle istruzioni"); break
         await pg.click("#bGo"); await pg.wait_for_timeout(1500)                      # un secondo e mezzo di conto alla rovescia vero
@@ -409,10 +409,10 @@ async def giocatore(b):
         if k == 3: finale = await pg.inner_text("#torBody .score"); await pg.click("#torMenu")
         elif k == 1:
             await pg.close(); pg = await nuova()                                       # chiusura della pagina dopo la regata 2
-            st = await pg.inner_text("#goTor"); print(f"  dopo la riapertura il menu dice: {st.splitlines()}", flush=True)
+            await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); st = await pg.inner_text("#goTor"); print(f"  dopo la riapertura il menu dice: {st.splitlines()}", flush=True)
             if "regata 3 di 4" not in st: no(f"C7: dopo la riapertura «{st}»")
         else: await pg.click("#torMenu"); await pg.wait_for_timeout(200)
-    st = await pg.inner_text("#goTor")
+    await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); st = await pg.inner_text("#goTor")
     print(f"  regate {fatti} su 4, finale «{finale}», menu «{' '.join(st.split())}», errori nella console: {cons or 'nessuno'}", flush=True)
     if fatti != 4 or not finale or "migliore" not in st: no(f"C7 non completo: {fatti} regate, finale {finale}")
     if cons: no(f"C7 errori nella console: {cons[:3]}")

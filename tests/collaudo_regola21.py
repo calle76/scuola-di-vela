@@ -119,7 +119,7 @@ async def main():
         else: print("     K7 saltato: manca la cartella di riferimento")
         # ---- K8 ----
         ctx, pg, errs = await pagina(b, ROOT, "")
-        await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
         h = await pg.evaluate("() => ({ giri: R && R.giri, t21: motivoContatto({ regola: 21.2 }, R.boats[0]), t211: motivoContatto({ regola: 21.1 }, R.boats[1]) })")
         chk("K8b pagina senza #collaudo: la regata si apre e i motivi della 21.1 e 21.2 si leggono", h["giri"] and "scontando una penalità" in h["t21"] and "(regola 21.2)" in h["t21"] and "tornando dietro la linea" in h["t211"], h["t21"][:80])
         chk("K8c nessun errore di pagina", not errs, str(errs[:2]))

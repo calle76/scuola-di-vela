@@ -68,7 +68,7 @@ async def main():
         pg = await b.new_page(viewport={"width": 1360, "height": 650}); e2 = []; pg.on("pageerror", lambda e: e2.append(str(e)))
         await pg.goto(BASE); await pg.wait_for_timeout(500)
         riga = await pg.evaluate("() => !!document.getElementById('laySel') && document.getElementById('laySel').value")
-        await pg.click("[data-r='2']"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("[data-r='2']"); await pg.wait_for_timeout(1500)
         await pg.get_by_role("button", name="Parti").click(); await pg.wait_for_timeout(500); await pg.mouse.move(400, 300)
         for _ in range(30): await pg.mouse.wheel(0, 300); await pg.wait_for_timeout(30)   # zoom indietro col rotellino, fino a vedere la boa a 300 m
         await pg.wait_for_timeout(800)

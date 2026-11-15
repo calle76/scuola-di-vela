@@ -148,7 +148,10 @@ async def main():
         print("L3 giro dei suggerimenti:", [x.split(": ", 1)[1] for x in giro])
         await ctx.close()
         ctx, q, e = await menu(650, GIOC["A"][0], "libero")
-        chk("L3", await q.locator("#libManca").count() == 0 and "Tornei" in await q.inner_text(".tiles"), "L3: nel gioco libero niente libretto, i tornei sì (1.2.4: «In arrivo» tolto)")
+        chk("L3", await q.locator("#libManca").count() == 0 and await q.locator("#goTor").count() == 0, "L3: nel gioco libero, nella Scuola, niente libretto né torneo (1.3.0: il torneo sta in Deriva)")
+        await q.click("#livSel button[data-v='deriva']")
+        chk("L3", await q.locator("#libManca").count() == 0 and "Torneo" in await q.inner_text(".tiles") and await q.locator("#goTor").count() == 1, "L3: nel gioco libero il torneo sta in Deriva")
+        await q.click("#livSel button[data-v='scuola']")
         await ctx.close()
         # L4: spazio con ogni tipo di riga «cosa manca» (la più lunga è il caso peggiore): carriera vuota (Abilità), Conoscenza,
         # Competizione, Esperienza con sei lezioni da fare, totale, esame, superato

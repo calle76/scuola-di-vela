@@ -231,7 +231,7 @@ async def main():
                 await pg.goto(BASE); await pg.wait_for_timeout(800)
                 ver = await pg.evaluate("() => document.querySelector('.ver') && document.querySelector('.ver').textContent")
                 await pg.evaluate("() => { const m = document.querySelector('#modoSel button[data-v=libero]'); m && m.click(); }")
-                await pg.evaluate("() => document.getElementById('goTor').click()"); await pg.wait_for_timeout(100)
+                await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); document.getElementById('goTor').click(); }"); await pg.wait_for_timeout(100)
                 await pg.evaluate("() => document.getElementById('stCirc').click()"); await pg.wait_for_timeout(100)
                 await pg.evaluate("() => document.getElementById('stInizia').click()"); await pg.wait_for_timeout(100)
                 tit = await pg.evaluate("() => document.getElementById('torTitle').textContent")

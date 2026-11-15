@@ -34,7 +34,7 @@ async def main(semi, race):
             pg = await b.new_page(viewport={"width":1280,"height":800})
             errs=[]; pg.on("pageerror", lambda e: errs.append(str(e)))
             await pg.goto(URL); await pg.wait_for_timeout(300)
-            await pg.click("[data-r='%d']" % race); await pg.wait_for_timeout(200)
+            await pg.evaluate("r => { const d = document.querySelector('#livSel [data-v=' + (r >= 2 ? 'deriva' : 'scuola') + ']'); d && d.click(); }", race); await pg.click("[data-r='%d']" % race); await pg.wait_for_timeout(200)
             t, barche = await pg.evaluate(CORSA, [seme, LIMITE])
             line = f"regata {race+1} seme {seme}: t={t} {barche} errori={errs[:1]}"
             print(line, flush=True); open(OUT / "race_results.txt","a").write(line+"\n")

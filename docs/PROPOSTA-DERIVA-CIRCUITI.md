@@ -83,3 +83,11 @@ Via dato. Il torneo singolo resta in Deriva come allenamento, fuori dalla carrie
 1. Il via.
 2. Va bene che il **torneo singolo** resti in Deriva come allenamento, fuori dalla carriera?
 3. La lezione della layline come **23**, dopo le due già previste?
+
+## Esito della 1.3.0 (15 novembre 2026)
+
+Fatta: menu a due livelli nel gioco libero; in carriera niente cambia (costante `DERIVA_IN_CARRIERA`, da accendere con la 1.3.3). Nella vista Deriva, per ora, solo le voci che c'erano già: regate nei salti di vento e con i giri di penalità, torneo (con la stagione). La navigazione libera resta nella Scuola.
+- **D1:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+- **D2 (parte della 1.3.0):** 0 px di eccesso a 1360x650 e 1360x768 in 12 combinazioni (gioco libero; carriera vuota e col libretto pieno; livello salvato Scuola o Deriva), Chromium e Firefox (`collaudo_menu_livelli.py`). Il caso «col libretto al massimo» dentro Deriva in carriera si misura con la 1.3.3.
+- **D3 (parte della 1.3.0):** ogni regata si apre cliccando dal menu, il torneo apre il suo riquadro, la navigazione libera parte; il livello scelto resta alla ricarica e tornando da una regata; pagina senza `#collaudo`, 0 errori, in tutti e due i browser. «Deriva chiusa senza attestato e aperta con» si misura con la 1.3.3.
+- Da notare: nel gioco libero il pulsante «Deriva» si vede da subito, come chiede questa proposta («Deriva ancora nascosta in carriera»); le voci dentro erano già visibili prima.

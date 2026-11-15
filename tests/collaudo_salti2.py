@@ -57,7 +57,7 @@ async def main():
 
         # menu
         await pg.evaluate("document.getElementById('toMenu').click()")
-        mn = await pg.evaluate("""() => { const m = document.getElementById('menu'); const t = [...m.querySelectorAll('button[data-r]')].map(b => b.textContent);
+        mn = await pg.evaluate("""() => { document.querySelector('#livSel [data-v=deriva]')?.click(); const m = document.getElementById('menu'); const t = [...m.querySelectorAll('button[data-r]')].map(b => b.textContent);
           return { titoli: t, eccesso: m.scrollHeight - m.clientHeight, alto: document.documentElement.scrollHeight - innerHeight }; }""")
         check(any("salti di vento" in t for t in mn["titoli"]) and mn["eccesso"] <= 0 and mn["alto"] <= 0,
               f"menu del gioco libero: regata nuova presente, eccesso {mn['eccesso']} px / pagina {mn['alto']} px")
@@ -68,7 +68,7 @@ async def main():
 
         # pagina come la carica un giocatore
         await pg.evaluate("location.href='about:blank'"); await pg.wait_for_url("about:blank"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
-        await pg.click('button[data-r="2"]'); await pg.wait_for_timeout(500)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click('button[data-r="2"]'); await pg.wait_for_timeout(500)
         tit = await pg.text_content("#rTitle"); check("salti di vento" in tit, f"senza #collaudo: la regata si apre ({tit.strip()})")
         check(not errori, f"nessun errore della pagina ({errori[:2]})")
         await b.close()

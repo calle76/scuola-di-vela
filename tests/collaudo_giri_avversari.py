@@ -224,7 +224,7 @@ async def main():
         else: print("     G10 saltato: manca la cartella di riferimento")
         # ---- G11 ----
         ctx, pg, errs = await pagina(b, ROOT, "")
-        await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1200)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1200)
         h = await pg.evaluate("""() => { if (!R || !R.giri) return null; const o = R.boats[1]; R.t = 1; for (const x of R.boats) if (!x.me){ x.leg = 1; x.ocs = false; } o.gDebt = 2; const dt = 1 / 60;
           for (let k = 0; k < 60 * 120; k++) simulate(dt, curStep()); return { fatti: o.gFatti || 0, debito: o.gDebt, pl: R.penList.slice() }; }""")
         chk("G11 pagina senza #collaudo: la regata si apre, un avversario con due giri da fare ne fa almeno uno in 120 s simulati", bool(h) and h["fatti"] >= 1, str(h)[:120] if h else "regata non aperta")

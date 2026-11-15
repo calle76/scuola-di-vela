@@ -152,7 +152,7 @@ async def pagina_vera(b):
     pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
     await pg.click("#goFree"); await pg.wait_for_timeout(500)                       # il registratore si accende dalle impostazioni, nel gioco
     for sel in ["#openSet", "#sesOn", "#setClose", "#toMenu"]: await pg.click(sel)
-    await pg.click("#goTor"); await pg.wait_for_timeout(200); await pg.click("#torGo"); await pg.wait_for_timeout(300)
+    await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#goTor"); await pg.wait_for_timeout(200); await pg.click("#torGo"); await pg.wait_for_timeout(300)
     await pg.click("#bGo"); await pg.wait_for_timeout(9000)                         # nove secondi veri: conto alla rovescia e partenza
     testo = await scarica(pg); await ctx.close()
     nomi = {r.split(" ")[2] for r in testo.splitlines() if r.startswith("B ")}

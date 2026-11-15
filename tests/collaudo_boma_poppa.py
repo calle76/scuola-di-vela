@@ -130,7 +130,7 @@ async def main():
         print("  B4a (solo riportato dalla 1.1.1: la guida degli avversari è cambiata, nessuna regata può più essere identica alla %s; le regate si confrontano con tests/arrivi_regate.py a ogni modifica) diverse %d su %d" % (RIF, len(diff), len(uguali)))
         # ---- B6: pagina come la carica un giocatore ----
         ctx, pg, errs = await pagina(b, ROOT, "")
-        await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
         for k in ("ArrowLeft", "ArrowRight"):
             await pg.keyboard.down(k); await pg.wait_for_timeout(200); await pg.keyboard.up(k)
         await pg.wait_for_timeout(500)

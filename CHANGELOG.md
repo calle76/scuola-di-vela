@@ -19,6 +19,16 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.0 — Menu a due livelli: «La scuola» e «Deriva» (alfa della cornice di Deriva)
+
+Tappa 2 del piano di chiusura di Deriva, prima versione (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre 2026). Nessun contenuto nuovo: le voci che ci sono già cambiano posto.
+
+- **Nel gioco libero**, in alto accanto a «Gioco libero / Carriera», due pulsanti nuovi: **«La scuola»** e **«Deriva»**. La Scuola ha lezioni e prove, le regate a bastone e nelle raffiche, la navigazione libera, ripassi ed esame. Deriva ha le regate nei salti di vento e con i giri di penalità e il torneo (dal suo riquadro anche la stagione zonale o nazionale). Il livello scelto resta nel browser, anche tornando al menu da una regata.
+- **In carriera il menu non cambia:** Deriva resta nascosta finché la cornice non è pronta (decisione 4 del piano; si accende con la 1.3.3, costante `DERIVA_IN_CARRIERA`).
+- Col selettore nuovo la frase sotto il titolo della Scuola andava a capo: accorciata («Segui l'ordine numerato, oppure apri qualsiasi voce»); in carriera resta quella di prima.
+
+**Misure.** Collaudo nuovo `collaudo_menu_livelli.py` (D2 e D3 per la parte della 1.3.0, pagina senza `#collaudo`): spazio a 1360x650 e 1360x768 in 12 combinazioni (gioco libero, carriera vuota, carriera col libretto pieno; livello salvato Scuola o Deriva), 0 px di eccesso in Chromium e in Firefox; ogni regata si apre cliccando dal menu, il torneo apre il suo riquadro, la navigazione libera parte; il livello resta alla ricarica e tornando da una regata; 0 errori. Fisica identica: `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` (25 corse). 20 collaudi che cliccavano le regate 2-3 o il torneo nel gioco libero ora passano prima da «Deriva» (rilanciati qui: libretto, salti2, layline, regate, non_partite salti, boma_poppa; gli altri nel giro).
+
 ## 1.2.41 — Giro dei collaudi su GitHub rimesso in ordine; rotta ottimale con la mappa più grande
 
 Giro GitHub 43682372043 del 15 novembre 2026 (1.2.40): rosso in 8 pezzi su 8. Letto con `gh` (accesso dato da Ale lo stesso giorno) e confrontato coi giri dal 10 al 14 novembre.

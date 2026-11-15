@@ -69,7 +69,7 @@ async def main():
         # ---- O7: pagina come la carica un giocatore ----
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto((ROOT / "index.html").as_uri()); await pg.wait_for_timeout(500)
-        await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
         await pg.evaluate("() => giriDebito()"); await pg.wait_for_timeout(800)
         r = await pg.evaluate("() => { " + PIX + " return { sv: typeof window.__sv, or: R.rqOr, pix: punti() }; }")
         chk("O7 pagina senza #collaudo: dopo un debito l'anello si vede, rosso (e __sv non esiste)", r["sv"] == "undefined" and r["or"] is not None and r["pix"] and all(r["pix"][k] == "rosso" for k in ("ore3", "ore6", "ore9")), str(r))

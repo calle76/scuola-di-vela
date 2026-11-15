@@ -135,7 +135,7 @@ async def main():
         else: print("     G4 saltato: manca la cartella di riferimento")
         # ---- G5: pagina come la carica un giocatore ----
         ctx, pg, errs = await pagina(b, ROOT, "")
-        await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
         h = await pg.evaluate("() => ({ segnali: R && R.segnali, mode: mode, bd: R && bandiereTesto(bandiereR()) })")
         chk("G5b pagina senza #collaudo: la regata dei giri si apre con le bandiere (classe da subito)", h["segnali"] and h["mode"] == "race" and h["bd"] == "classe", str(h))
         await pg.wait_for_timeout(1500)
