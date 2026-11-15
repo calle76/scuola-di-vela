@@ -51,7 +51,6 @@ Oggi quasi tutti i collaudi in regata guidano la barca con la guida degli avvers
 
 ## Cose aperte da non decidere da soli (sono di Ale)
 
-- La regola dell'«affollato» del Coach (`PROPOSTA-COACH.md`, Esito).
+- La regola dell'«affollato» del Coach: Ale ha deciso di tenerla così (16 novembre) e di riguardarla con le sue regate registrate.
 - La quota del merito (19 su 21, provvisoria fino alla tappa 7).
-- I nomi della finale (Baia delle Sette Vele) e degli sponsor (`PROPOSTA-SPONSOR.md`, Esito).
 - La voce 4 (rivali che virano addosso): proposta scritta, senza via.
