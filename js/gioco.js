@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.0"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.1"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -109,7 +109,7 @@
   try { if (localStorage.getItem(MODO) === "carriera") modo = "carriera"; } catch(e){}
   let [STORE, GHOST_STORE] = KEYS(modo);
   // 1.3.0 (docs/PROPOSTA-DERIVA-CIRCUITI.md): due livelli nel menu, «La scuola» e «Deriva»; la scelta resta nel browser. In carriera Deriva è ancora
-  // nascosta (decisione 4 del piano): DERIVA_IN_CARRIERA si accende con la 1.3.3, quando la cornice è pronta; fino ad allora la carriera ha il menu di prima
+  // nascosta (decisione 4 del piano): DERIVA_IN_CARRIERA si accende con la versione dei punti di Deriva, quando la cornice è pronta; fino ad allora la carriera ha il menu di prima
   const LIV_KEY = "scuolaVelaLivello", DERIVA_IN_CARRIERA = false;
   let livello = "scuola";
   try { if (localStorage.getItem(LIV_KEY) === "deriva") livello = "deriva"; } catch(e){}
@@ -183,8 +183,9 @@
   const saveProgress = () => { if (LAB) return; try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   // ---- menu principale e attestato ----
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
-  const seqPos = () => SEQ.findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
-  const nextItem = () => { const p = seqPos(); return p >= 0 && p < SEQ.length - 1 ? SEQ[p + 1] : null; };
+  const seqDi = () => mode === "lesson" && LESSONS[lessonIdx]?.livello === "deriva" ? DSEQ : SEQ; // 1.3.1: «Prosegui» resta nel livello della voce aperta
+  const seqPos = () => seqDi().findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
+  const nextItem = () => { const p = seqPos(), Q = seqDi(); return p >= 0 && p < Q.length - 1 ? Q[p + 1] : null; };
   const nextLabel = () => { const n = nextItem(); return n ? "Prosegui: " + itemName(n) : "Torna al menu"; };
   const goNext = () => { const n = nextItem(); n ? openItem(n) : showMenu(); };
   const p2 = n => String(n).padStart(2, "0");
@@ -192,7 +193,7 @@
   const fmtTime = sec => { const m = Math.floor(sec / 60), s2 = sec % 60; return m ? m + " min " + s2 + " s" : s2 + " s"; };
 
   function openItem(it){
-    if (it !== "free" && it[0] !== "r") menuGr = gruppoDi(it); // 1.2.4: tornando al menu si ritrova la scheda della voce aperta
+    if (it !== "free" && it[0] !== "r" && gruppoDi(it) >= 0) menuGr = gruppoDi(it); // 1.3.1: le voci di Deriva non stanno nei gruppi della Scuola // 1.2.4: tornando al menu si ritrova la scheda della voce aperta
     $("menu").hidden = true; $("game").hidden = false; resize();
     if (it === "free") startFree(); else if (it[0] === "r") startRace(it[1]); else it[0] === "l" ? startLesson(it[1]) : startMission(it[1]);
     window.scrollTo(0, 0); canvas.focus();
@@ -246,6 +247,10 @@
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
+    const rigaVoce = ([t, i], num) => { const done = progress.done[t + i], L = LESSONS[i]; // 1.3.1: una riga di lezione (le voci di Deriva)
+      return `<button class="item" data-d="${i}" title="${esc(L.desc)}"><span class="num">${num}</span><span class="kind">${L.name}</span><span class="title">${L.title}</span><span class="state ${done ? "ok" : "todo"}">${done ? "Completata" : "Da fare"}</span></button>`; };
+    const ripBtn = i => { const L = LESSONS[i], best = progress.quiz?.["q" + i], n = quizDi(i).length;
+      return `<button data-q="${i}" title="${esc(ripName(i) + " · " + L.title + " · " + (best !== undefined ? "migliore: " + best + " su " + n : n + " domande"))}"><span>${numLez(i)} · ${L.title}</span>${best !== undefined && best * 5 >= n * 4 ? "<small>✓</small>" : ""}</button>`; };
     const LV = livMenu(); // 1.3.0: «scuola», «deriva», o null (carriera di prima)
     const raceOk = rc => LV === null ? modo !== "carriera" || rc.scuola !== false : (rc.scuola === false) === (LV === "deriva"); // gli indici restano quelli di RACES
     const races = RACES.map((rc, i) => { if (!raceOk(rc)) return ""; const b = progress.best[recK("r" + i)];
@@ -260,7 +265,9 @@
     const livSel = LV === null ? "" : `<div class="seg" id="livSel"><button data-v="scuola" aria-pressed="${LV === "scuola"}">La scuola</button><button data-v="deriva" aria-pressed="${LV === "deriva"}">Deriva</button></div>`;
     const sotto = LV === "deriva" ? "Il secondo livello, con la stessa barca: gareggiare e rivedere le tue regate." // col selettore dei livelli la frase lunga andava a capo
       : "Un simulatore per imparare a governare una deriva. Segui l'ordine numerato" + (LV === null ? " della Scuola" : "") + ", oppure apri qualsiasi voce.";
-    const tiles = LV === "deriva" ? `<div class="tiles due">
+    const tiles = LV === "deriva" ? `<div class="tiles">
+        <section class="tile"><div><div class="part-head"><h2>Deriva</h2><span>${DSEQ.filter(([t, i]) => progress.done[t + i]).length} di ${DSEQ.length} completate</span></div><div class="items">${DSEQ.map(v => rigaVoce(v, numLez(v[1]))).join("")}</div></div>
+          <div><div class="part-head"><h2>Ripassi</h2></div><div class="review"><div class="rip2">${ORD_D.map(ripBtn).join("")}</div></div></div></section>
         <section class="tile"><div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div></section>
         <section class="tile"><div><div class="part-head"><h2>Torneo</h2><span>quattro regate</span></div><div class="items">${torBtn}</div>
           <p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito, zonale o nazionale.</p></div></section>
@@ -283,6 +290,7 @@
       ${tiles}
       <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><span><button class="linkish" id="regOpen">Regate registrate</button> <button class="linkish" id="resetProg">Azzera i progressi</button></span></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(VSEQ[+b.dataset.k]));
+    $("menu").querySelectorAll("button.item[data-d]").forEach(b => b.onclick = () => openItem(["l", +b.dataset.d])); // 1.3.1: le lezioni di Deriva
     if ($("livSel")) $("livSel").onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.v !== livello){ livello = b.dataset.v; try { localStorage.setItem(LIV_KEY, livello); } catch(e){} showMenu(); } };
     if ($("schede")) $("schede").onclick = e => { const b = e.target.closest("button[data-g]"); if (b && +b.dataset.g !== menuGr){ menuGr = +b.dataset.g; showMenu(); } };
     if ($("goFree")) $("goFree").onclick = () => openItem("free");

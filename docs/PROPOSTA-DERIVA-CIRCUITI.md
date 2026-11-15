@@ -91,3 +91,10 @@ Fatta: menu a due livelli nel gioco libero; in carriera niente cambia (costante 
 - **D2 (parte della 1.3.0):** 0 px di eccesso a 1360x650 e 1360x768 in 12 combinazioni (gioco libero; carriera vuota e col libretto pieno; livello salvato Scuola o Deriva), Chromium e Firefox (`collaudo_menu_livelli.py`). Il caso «col libretto al massimo» dentro Deriva in carriera si misura con la 1.3.3.
 - **D3 (parte della 1.3.0):** ogni regata si apre cliccando dal menu, il torneo apre il suo riquadro, la navigazione libera parte; il livello scelto resta alla ricarica e tornando da una regata; pagina senza `#collaudo`, 0 errori, in tutti e due i browser. «Deriva chiusa senza attestato e aperta con» si misura con la 1.3.3.
 - Da notare: nel gioco libero il pulsante «Deriva» si vede da subito, come chiede questa proposta («Deriva ancora nascosta in carriera»); le voci dentro erano già visibili prima.
+
+## Esito della 1.3.1 (15 novembre 2026)
+
+Fatte le lezioni 21-23 con ripassi, glossario (6 voci) ed esercizi delle lezioni 22 e 23; **la prova dei giri di penalità passa alla 1.3.2**, e le versioni dopo scalano di uno (1.3.3 momento clou, 1.3.4 punti di Deriva, «Deriva superata», Deriva visibile in carriera). Numeri in `CHANGELOG.md` 1.3.1:
+- **D4:** esame 34/28 senza domande di Deriva; «di 25 completate»; meriti identici con e senza Deriva (6 salvataggi); `collaudo_carriera_intera.py` verde.
+- **D5:** lezione 22 10 su 10 guidando sui semi 1-10, confermato 11-20 e 21-30, 0 a mani ferme. Lezione 23: col primo pilota del collaudo **7 su 10 sui semi 11-20, fuori soglia**, perché a 20 m dalla boa la guida degli avversari virava di nuovo (voce 1b); col pilota corretto 20 su 20 sui semi 1-20 e 10 su 10 sui semi 21-30 mai guardati; 0 a mani ferme. L'esercizio dipende poco dal seme (vento costante, nessun avversario).
+- **D8:** 13 domande di Deriva, nessuna uguale alle 167 della Scuola; glossario senza termini ripetuti.

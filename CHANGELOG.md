@@ -19,6 +19,28 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.1 — Deriva: lezioni 21, 22 e 23, con ripassi, glossario ed esercizi
+
+Seconda versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`). Nel menu di Deriva (gioco libero) c'è ora la colonna «Deriva» con tre lezioni e i loro ripassi; in carriera Deriva resta nascosta.
+
+- **Lezione 21, «Come funziona il torneo»** (solo teoria): punti bassi, scarto dopo la quarta regata, penalità sul punteggio nelle regate 1 e 2 e giri nelle 3 e 4, finestra d'arrivo (nel gioco metà del tempo della prima: detto come scelta del gioco). Fonti: F15, appendice A e regola 44.3, parafrasate. Ripasso di 4 domande.
+- **Lezione 22, «Rivedi la tua regata»**: il tasto O, Rivedi, la rotta ottimale (anche la migliore in assoluto, V), le regate registrate. Solo il gioco, nessuna affermazione nautica. **Esercizio in regata:** sotto la boa, segnare un momento con O e girare la boa. Ripasso di 4 domande.
+- **Lezione 23, «La layline»**: il testo scritto il 9 novembre (`PROPOSTA-LIVELLO-DERIVA.md`, in fondo; F77 e F78 parafrasate). **Esercizio in regata:** in basso a sinistra della boa, senza le linee disegnate, girarla con al più un cambio di mure negli ultimi 80 m (soglia della proposta, nostra). Ripasso di 5 domande.
+- **Glossario:** 6 voci nuove (Finestra d'arrivo, Layline, Penalità sul punteggio, Punti bassi, Rotta ottimale, Scarto).
+- Le lezioni di Deriva non entrano in meriti, esame e «di 25 completate» della Scuola; «Prosegui» resta dentro Deriva (21 → 22 → 23 → menu).
+- **La prova dei giri di penalità con le medaglie passa alla 1.3.2** (nella proposta era in questa versione): è un percorso nuovo con le medaglie da tarare col pilota su due gruppi di semi, e merita una versione sua. Momento clou e punti di Deriva scalano di uno.
+
+**Misure.**
+- **D5, esercizi** (`collaudo_esercizi_regata.py`, E22 ed E23; soglia 9 su 10 guidando, 0 a mani ferme, al più 1 sbagliando apposta):
+  - Lezione 22: guidando 10 su 10 sui semi 1-10, 11-20 e 21-30; a mani ferme e senza segnare il momento 0 su 10 in tutti e tre i gruppi.
+  - Lezione 23, primo pilota: 10 su 10 sui semi 1-10, ma **7 su 10 sui semi di conferma 11-20 (fuori soglia)**. Causa: a 20 m dalla boa il pilota passava alla guida degli avversari, che virava di nuovo (il difetto della voce 1b). Il pilota del collaudo ora tiene la layline e gira la boa da solo: 20 su 20 sui semi 1-20 e 10 su 10 sui semi 21-30, mai guardati prima. A mani ferme e con le virate a zig-zag 0 in tutti i gruppi. Con vento costante e senza avversari l'esercizio dipende pochissimo dal seme (98 s in tutte le corse): la conferma su semi nuovi qui dice poco.
+- **D4** (`collaudo_deriva_lezioni.py`, nuovo): esame 34 domande con 28 per passare, nessuna da Deriva; «di 25 completate»; meriti identici con e senza lezioni e ripassi di Deriva in 6 salvataggi diversi. `collaudo_carriera_intera.py` verde.
+- **D8:** nessuna delle 13 domande di Deriva uguale a una delle 167 della Scuola; 74 termini nel glossario, nessuno ripetuto.
+- **D3:** dal menu di Deriva (pagina senza `#collaudo`) ogni lezione e ogni ripasso si apre; 0 errori; Chromium e Firefox.
+- **Pannello:** `collaudo_pannello_lezioni.py` misura tutti i passi di tutte le lezioni, anche le nuove: verde.
+- **Altri collaudi:** `collaudo_esame`, `collaudo_quiz`, `collaudo_lezioni`, `collaudo_nomi`, `collaudo_menu_livelli` verdi. `collaudo_esame_nuove` aggiornato: il glossario passa da 68 a 74 voci, e le lezioni di Deriva non hanno domande d'esame.
+- **Fisica:** `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici.
+
 ## 1.3.0 — Menu a due livelli: «La scuola» e «Deriva» (alfa della cornice di Deriva)
 
 Tappa 2 del piano di chiusura di Deriva, prima versione (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre 2026). Nessun contenuto nuovo: le voci che ci sono già cambiano posto.

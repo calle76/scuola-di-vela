@@ -39,6 +39,14 @@ CORSA = """async ([li, pil, seme]) => {
     else if (pil === "anticipo" || pil === "resta"){
       if (R.t < 0 && !via && toWF(S.x, S.y)[1] / 1.5 >= -R.t - 10){ via = true; lato = Math.sign(n180(S.h - R.mark.out)) || 1; }   // da qui, di bolina (sulle mure che ha) a circa 1,5 m/s verso il vento, passa la linea prima del via
       if (R.t < 0 && !via) sv.pilota(dt); else if (R.t < 0 || pil === "resta") tieni(R.mark.out + lato * 50); else sv.pilota(dt); }
+    else if (pil === "segna" || pil === "nosegna"){ if (pil === "segna" && k === 30) dispatchEvent(new KeyboardEvent("keydown", { key: "o" })); sv.pilota(dt); }   // 1.3.1, lezione 22: O dopo mezzo secondo, poi il pilota
+    else if (pil === "layline" || pil === "zigzag"){   // 1.3.1, lezione 23: di bolina a 48° sulle mure di partenza; vira quando la boa è a 50° dal vento dall'altra parte (sulla layline), poi il pilota a 20 m
+      const d = Math.hypot(R.mark.x - S.x, R.mark.y - S.y), rel = n180(Math.atan2(R.mark.x - S.x, -(R.mark.y - S.y)) * 180 / Math.PI - sv.twd);
+      if (fase === 0){ tieni(sv.twd + lato * 48); if (pil === "layline" ? rel * lato <= -50 : d < 75){ fase = 1; tF = R.t; } }
+      else if (pil === "zigzag" && fase < 4){ tieni(sv.twd + (fase % 2 ? -lato : lato) * 48); if (R.t - tF > 10){ fase++; tF = R.t; } }   // «zigzag»: a 75 m vira ogni 10 s, tre volte, poi il pilota
+      else if (pil === "layline" && fase === 1){ tieni(sv.twd - lato * 48); if (n180(Math.atan2(R.mark.x - S.x, -(R.mark.y - S.y)) * 180 / Math.PI - S.h) * lato > 80) fase = 2; }   // la boa al traverso o dietro, dal lato giusto
+      else if (pil === "layline" && fase === 2 && me.leg < 2) tieni(Math.atan2(R.mark.x - S.x, -(R.mark.y - S.y)) * 180 / Math.PI - lato * (d > 12 ? 75 : 90));   // gira attorno alla boa tenendola al traverso (15 nov: col pilota degli avversari a 20 m, 3 semi su 10 viravano di nuovo, voce 1b)
+      else sv.pilota(dt); }
     else if (pil === "tardi"){ if (R.t < -15 || R.t >= 0) sv.pilota(dt); else { sv.ctl.sheet = 1; sv.ctl.tiller = 0; } }
     else if (pil === "fermo"){ if (R.t >= 0) sv.pilota(dt); }
     else if (pil === "presto"){ if (R.t >= 0) sv.pilota(dt); else if (R.t >= -8){ if (h8 === null) h8 = sv.S.h; tieni(h8); } }
@@ -78,9 +86,9 @@ async def pagina(b, hash_="#collaudo"):
     pg = await ctx.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
     await pg.goto((ROOT / "index.html").as_uri() + hash_); await pg.wait_for_timeout(300)
     return ctx, pg, errs
-LEZ = {"D5": 15, "D6": 16, "D7": 17, "C1": 18, "C2": 19}
-BUONO = {"D5": "pilota", "D6": "anticipo", "D7": "boa", "C1": "pilota", "C2": "fermo"}
-SBAGLIA = {"D5": "anticipo", "D6": "resta", "D7": "tocca", "C1": "tardi", "C2": "presto"}
+LEZ = {"D5": 15, "D6": 16, "D7": 17, "C1": 18, "C2": 19, "E22": 21, "E23": 22}   # 1.3.1: lezioni 22 e 23 di Deriva
+BUONO = {"D5": "pilota", "D6": "anticipo", "D7": "boa", "C1": "pilota", "C2": "fermo", "E22": "segna", "E23": "layline"}
+SBAGLIA = {"D5": "anticipo", "D6": "resta", "D7": "tocca", "C1": "tardi", "C2": "presto", "E22": "nosegna", "E23": "zigzag"}
 async def main():
     a = sys.argv[1:]
     x, y = (a[a.index("--semi") + 1] if "--semi" in a else "1-10").split("-"); semi = range(int(x), int(y) + 1); n = len(semi)

@@ -563,6 +563,87 @@
       text: ["Da fermo servono alcuni secondi e qualche metro per prendere velocità. Prua appena sotto la bolina, cazza, barca piatta; quando la barca va, porta la prua in bolina."] }
   ];
 
+  // ---- Deriva (1.3.1, docs/PROPOSTA-DERIVA-CIRCUITI.md): lezioni 21-23, fuori da meriti, esame e «di 25 completate» della Scuola (livello: "deriva") ----
+  // 21: le regole del torneo come sono nel gioco (js/regate.js, torneo dell'1b): F15 appendice A (A2.1 scarto, A4 punti bassi, A5.2 chi non arriva), 44.3 penalità sul
+  //   punteggio; la finestra d'arrivo la scrivono le istruzioni di regata, nel gioco metà del tempo della prima (TOR_FIN, ipotesi nostra). Parafrasi, nessun testo copiato.
+  // 22: solo il gioco (moviola, rotta ottimale, registrazioni), nessuna affermazione nautica. Esercizio: segnare un momento con O e girare la boa.
+  // 23: la layline, testo di docs/PROPOSTA-LIVELLO-DERIVA.md (in fondo), fonti F77 e F78 parafrasate; 48° dalla polare del gioco (docs/PROPOSTA-LAYLINE.md).
+  //   Esercizio: bolina verso la boa partendo dal lato sinistro, al più un cambio di mure negli ultimi LAY_ES_M metri prima di girarla (soglia della proposta, ipotesi nostra).
+  const LAY_ES_M = 80;
+  const LE1 = [
+    { title: "Una serie di regate", ...PAUSE, zoom: 2,
+      text: ["Il torneo è una serie di quattro regate contro gli stessi rivali. Ogni regata dà dei punti, e alla fine si sommano.",
+             "Si usano i <em>punti bassi</em>: 1 al primo, 2 al secondo, e così via. Vince chi ne ha di meno. Chi non arriva o si ritira prende i punti del numero delle barche più uno: con quattro barche, 5 (regolamento, appendice A)."] },
+    { title: "Lo scarto", ...PAUSE, zoom: 2,
+      text: ["Finite le quattro regate, a ognuno si toglie il punteggio peggiore: è lo <em>scarto</em> (appendice A). Una regata andata male si può recuperare; due no.",
+             "Nella classifica del torneo lo scarto si vede fra parentesi."] },
+    { title: "Penalità sul punteggio e giri", ...PAUSE, zoom: 2,
+      text: ["Nelle regate 1 e 2 del torneo un contatto con colpa non costa tempo: costa punti in più in quella regata. È la <em>penalità sul punteggio</em> (regola 44.3): una parte dei punti di chi non arriva, con quattro barche 1 punto. Nella classifica la segna un asterisco.",
+             "Nelle regate 3 e 4 si fanno invece i giri di penalità, come nella lezione 20. Chi arriva senza averli fatti è squalificato e prende i punti di chi non arriva."] },
+    { title: "La finestra d'arrivo", ...PAUSE, zoom: 2,
+      text: ["Le istruzioni di una regata dicono anche entro quanto tempo bisogna arrivare dopo la prima barca: è la <em>finestra d'arrivo</em>. Chi arriva dopo non si classifica, e prende i punti di chi non arriva.",
+             "Nel gioco la finestra è metà del tempo della prima, contata dal suo arrivo: se la prima arriva in 10 minuti, hai 5 minuti in più. È una scelta del gioco: in una regata vera il numero lo scrivono le istruzioni."] },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Punti bassi: vince chi ne ha di meno. Dopo la quarta regata si scarta la peggiore. Contatto con colpa: un punto in più nelle regate 1 e 2, due giri nelle 3 e 4. Fuori dalla finestra d'arrivo non ti classifichi."] }
+  ];
+  const LE2 = [
+    { title: "Segnare un momento", ...PAUSE, zoom: 2,
+      text: ["Una regata si impara anche guardandola dopo. Mentre regati, premi <em>O</em> quando succede qualcosa che vuoi ricordare: il gioco segna quel momento.",
+             "Alcuni momenti si segnano da soli: i contatti e le boe toccate."] },
+    { title: "Rivedi", ...PAUSE, zoom: 2,
+      text: ["A regata finita, il pulsante <em>Rivedi</em> riproduce tutta la regata, dal conto alla rovescia, con tutte le barche.",
+             "Con ↑ e ↓ salti da un segno all'altro, con ← e → vai avanti o indietro di 5 secondi; lo spazio mette in pausa, i tasti da 1 a 5 cambiano la velocità, Esc chiude."] },
+    { title: "La rotta ottimale", ...PAUSE, zoom: 2,
+      text: ["Nelle regate fuori dalla Scuola, a regata finita, c'è anche <em>Rotta ottimale</em>: la rotta più veloce col vento che c'è stato davvero, calcolata col senno di poi. In verde la rotta ottimale, in blu la tua: dove si separano, hai perso tempo.",
+             "Con V vedi anche la migliore in assoluto, partendo dal punto migliore della linea: ti dice quanti secondi hai perso in partenza."] },
+    { title: "Le regate registrate", ...PAUSE, zoom: 2,
+      text: ["Il gioco registra da solo ogni regata e tiene le ultime cinque. Dal menu, con <em>Regate registrate</em>, puoi scaricarne il file: per esempio per mandarlo a chi ti aiuta a capire che cosa è successo."] },
+    { title: "Segna un momento e gira la boa", ...PAUSE, zoom: 2,
+      esercizio: { regata: 0, boa: [-30, 60, 50], avversari: "nessuno",
+        obiettivo: "Segna un momento con O, poi gira la boa gialla",
+        brief: "Esercizio della lezione 22. A regata già partita sei di bolina, da solo, sotto la boa gialla. Premi O una volta, per segnare un momento: in una regata vera lo ritroveresti con Rivedi. Poi gira la boa lasciandola a sinistra. È un esercizio: non si salva niente.",
+        fatto: (R, me) => riv.nMan >= 1 && me.leg >= 2,
+        fallito: R => R.t > 240 ? "Sono passati quattro minuti e l'obiettivo non c'è ancora." : "" },
+      text: ["Ora provalo. Apri l'esercizio: sei di bolina sotto la boa. Premi O per segnare un momento, poi gira la boa lasciandola a sinistra.",
+             "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
+      done: "Momento segnato e boa girata. Nelle regate vere quel segno lo ritrovi con Rivedi." },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["O segna un momento; contatti e boe toccate si segnano da soli. A regata finita: Rivedi per riguardarla, Rotta ottimale per vedere dove hai perso. Le ultime cinque regate restano in «Regate registrate»."] }
+  ];
+  const LE3 = [
+    { title: "Cos'è la layline", ...PAUSE, zoom: 2,
+      text: ["La <em>layline</em> è la linea da cui, di bolina, arrivi alla boa senza virare più. Ce ne sono due, una per mura. Sull'acqua non è disegnata: la devi immaginare."] },
+    { title: "L'angolo giusto di bolina", ...PAUSE, zoom: 2,
+      text: ["Di bolina non vince chi stringe di più il vento, ma chi arriva prima alla boa: troppo stretta la barca rallenta, troppo larga va dalla parte sbagliata.",
+             "Con questa barca il compromesso migliore, contando anche lo scivolamento di lato, è una rotta di circa 48° dal vento. È lì che parte la layline."] },
+    { title: "Due errori", ...PAUSE, zoom: 2,
+      text: ["Se viri prima della layline arrivi sotto la boa, e ti servono altre due virate.",
+             "Se la superi, navighi metri che non servono. Tutti e due gli errori costano."] },
+    { title: "Il vento la sposta", ...PAUSE, zoom: 2,
+      text: ["Se il vento gira, la layline gira con lui. Chi è già sulla layline e prende un <em>buono</em> si ritrova oltre: strada in più. Chi prende uno <em>scarso</em> arriva corto: virate in più.",
+             "Per questo, di solito, conviene arrivare sulla layline solo quando sei già vicino alla boa."] },
+    { title: "Come la riconosci", ...PAUSE, zoom: 2,
+      text: ["Il modo più semplice: se la tua barca vira di circa 90°, sei sulla layline quando vedi la boa poco più avanti del traverso.",
+             "Aiutano anche la prua che avevi sull'altra mura e le barche che arrivano sull'altra mura. Meglio usare più indizi insieme, e non fidarsi di una misura vecchia se il vento è cambiato."] },
+    { title: "Quando serve", ...PAUSE, zoom: 2,
+      text: ["La layline serve solo quando alla boa non si può andare dritti: di bolina, dove si deve virare, e in poppa piena, se conviene strambare. Al lasco, come fra la boa 1 e la boa 2 del triangolo, si va dritti alla boa e la layline non c'è.",
+             "Nel gioco le linee tratteggiate dalla boa sono un aiuto: si spengono nelle impostazioni, e nel torneo partono spente. A regata finita, la rotta ottimale ti dice se sei andato oltre o se hai virato troppe volte vicino alla boa."] },
+    { title: "Una virata sola", ...PAUSE, zoom: 2,
+      esercizio: { regata: 0, boa: [-80, 140, 48], avversari: "nessuno",
+        obiettivo: "Gira la boa con al più una virata negli ultimi " + LAY_ES_M + " m",
+        brief: "Esercizio della lezione 23. A regata già partita sei di bolina, da solo, in basso a sinistra della boa gialla, e le layline non sono disegnate. Vai sulla layline di destra, vira una volta e arriva alla boa senza altre virate: negli ultimi " + LAY_ES_M + " m prima della boa puoi cambiare mure al più una volta. Poi girala lasciandola a sinistra. È un esercizio: non si salva niente.",
+        fatto: (R, me) => me.leg >= 2,
+        fallito: (R, me, es) => {
+          const lato = Math.sign(norm180(env.twd - me.S.h)) || 1, d = Math.hypot(me.S.x - R.mark.x, me.S.y - R.mark.y);
+          if (es.lato !== undefined && lato !== es.lato && me.leg === 1 && d < LAY_ES_M) es.cambi = (es.cambi || 0) + 1;
+          es.lato = lato;
+          return (es.cambi || 0) > 1 ? "Negli ultimi " + LAY_ES_M + " m hai cambiato mure più di una volta: hai virato prima della layline." : R.t > 240 ? "Sono passati quattro minuti e la boa non è girata." : ""; } },
+      text: ["Ora provalo. Apri l'esercizio: sei di bolina in basso a sinistra della boa, senza le linee disegnate. Vai verso destra, vira quando vedi la boa poco più avanti del traverso, e arriva alla boa senza altre virate. Negli ultimi " + LAY_ES_M + " m puoi cambiare mure al più una volta.",
+             "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
+      done: "Boa presa con una virata sola: eri sulla layline." },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["La layline è la linea da cui arrivi alla boa senza virare più. Virare prima costa due virate, superarla costa strada. Il vento la sposta: arrivaci vicino alla boa. Con una virata di circa 90°, sei sulla layline quando vedi la boa poco più avanti del traverso."] }
+  ];
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -673,6 +754,23 @@
               ["Come si riparte", "La prua è quasi nel vento e la barca non parte. Che cosa fai?", "Poggio un poco e poi cazzo", ["Cazzo a ferro e aspetto", "Orzo ancora", "Lasco tutto"], "Con la prua troppo vicina al vento la vela non porta: si poggia un poco, poi si cazza."],
               ["Come si riparte", "Da fermo hai cazzato e la barca accelera. Poi?", "Quando ha preso velocità porto la prua in bolina", ["Lasco di nuovo", "Viro subito", "Resto al traverso fino alla boa"], "Presa velocità, si orza fino alla bolina e si va verso la linea."],
               ["Parti da fermo", "In regata, quando ti serve partire da fermo nel modo più rapido?", "Quando sei chiuso fra le altre barche o hai sbagliato i tempi", ["Mai", "Solo all'arrivo", "Solo con tanto vento"], "Capita quando non si è potuto accelerare prima: allora conta ripartire subito."]] },
+    // 1.3.1: le lezioni di Deriva (livello: "deriva"): senza esame; fuori da GRUPPI, quindi fuori da meriti, esame e «di 25 completate» della Scuola
+    { name: "Lezione 21", title: "Come funziona il torneo", steps: LE1, livello: "deriva", desc: "Punti bassi, scarto, penalità sul punteggio e finestra d'arrivo: le regole del torneo nel gioco.",
+      quiz: [["Nel torneo, chi vince?", "Chi ha meno punti", ["Chi ha più punti", "Chi vince l'ultima regata", "Chi ha vinto più regate"], "Si usano i punti bassi: 1 al primo, 2 al secondo, e vince chi ne ha di meno."],
+             ["Quattro barche. Nelle quattro regate arrivi 2°, 1°, 4° e 3°. Quanti punti hai, con lo scarto?", "6", ["10", "7", "4"], "Lo scarto toglie il punteggio peggiore, il 4: restano 2 + 1 + 3 = 6."],
+             ["Nella regata 1 del torneo tocchi un'altra barca e la colpa è tua. Che cosa succede, con quattro barche?", "Prendi 1 punto in più in quella regata", ["15 secondi in più", "Sei squalificato dal torneo", "Niente"], "Nelle regate 1 e 2 vale la penalità sul punteggio (regola 44.3): con quattro barche, 1 punto."],
+             ["Arrivi molto dopo la prima barca, oltre la finestra d'arrivo. Che punti prendi?", "Quelli di chi non arriva", ["Quelli del tuo posto", "Zero", "Uno in più dell'ultimo arrivato"], "Fuori dalla finestra d'arrivo non ti classifichi: prendi i punti di chi non arriva."]] },
+    { name: "Lezione 22", title: "Rivedi la tua regata", steps: LE2, livello: "deriva", desc: "Il tasto O, Rivedi, la rotta ottimale e le regate registrate. Esercizio in regata.",
+      quiz: [["Durante una regata vuoi ricordarti un momento. Che cosa fai?", "Premo O", ["Premo Esc", "Premo la barra spaziatrice", "Non si può"], "O segna il momento: lo ritrovi con Rivedi a regata finita."],
+             ["Quali momenti si segnano da soli?", "I contatti e le boe toccate", ["Le virate", "Le raffiche", "Nessuno"], "Contatti e boe toccate lasciano un segno da soli; gli altri li segni tu con O."],
+             ["In Rivedi, come salti da un segno all'altro?", "Con le frecce ↑ e ↓", ["Con le frecce ← e →", "Con la barra spaziatrice", "Con il tasto O"], "↑ e ↓ saltano fra i segni; ← e → vanno avanti o indietro di 5 secondi."],
+             ["Che cosa mostra la rotta ottimale?", "La rotta più veloce col vento che c'è stato, col senno di poi", ["La rotta delle altre barche", "La rotta più corta, senza contare il vento", "La rotta che il gioco ti consiglia prima del via"], "È calcolata dopo, col vento che c'è stato davvero: dove la tua rotta se ne separa, hai perso tempo."]] },
+    { name: "Lezione 23", title: "La layline", steps: LE3, livello: "deriva", desc: "La linea da cui si arriva alla boa senza virare più; come la sposta il vento e come riconoscerla. Esercizio in regata.",
+      quiz: [["Che cos'è la layline?", "La linea da cui si arriva alla boa senza virare più", ["La linea di partenza", "La rotta più corta fra due boe", "La linea che segna il vento"], "Dalla layline, di bolina, si arriva alla boa senza altre virate."],
+             ["Sei sulla layline e il vento ti dà un buono. Che cosa succede?", "Ti ritrovi oltre la layline e fai strada in più", ["Arrivi corto e devi virare ancora", "Non cambia niente", "Devi strambare"], "Il vento che gira sposta la layline: con un buono chi era sulla layline si ritrova oltre."],
+             ["Perché conviene arrivare sulla layline vicino alla boa?", "Perché il vento può girare e spostarla", ["Perché lontano dalla boa non esiste", "Perché vicino alla boa il vento è più forte", "Non conviene: meglio arrivarci subito"], "Più lontano la prendi, più tempo ha il vento per spostarla."],
+             ["La tua barca vira di circa 90°. Dove vedi la boa quando sei sulla layline?", "Poco più avanti del traverso", ["Dritta a prua", "Dritta a poppa", "Esattamente al traverso, o dietro"], "Con una virata di circa 90°, sull'altra mura la boa sarà a prua: da qui la vedi poco più avanti del traverso."],
+             ["Fra la boa 1 e la boa 2 del triangolo, al lasco, serve la layline?", "No: si va dritti alla boa", ["Sì, come di bolina", "Sì, ma solo con il vento forte", "Solo se ci sono altre barche"], "La layline serve quando alla boa non si può andare dritti; al lasco si va dritti."]] },
   ];
 
   // ---- prove ----
@@ -715,7 +813,10 @@
   ];
   const SEQ = GRUPPI.flatMap(g => g[1]);
   const ORD_L = SEQ.filter(([t]) => t === "l").map(([, i]) => i); // indici di LESSONS nell'ordine della Scuola
-  const numLez = i => ORD_L.indexOf(i) + 1;
+  // 1.3.1: le lezioni di Deriva, nell'ordine di LESSONS, numerate dopo quelle della Scuola (21, 22, 23)
+  const DSEQ = LESSONS.map((L, i) => ["l", i]).filter(([, i]) => LESSONS[i].livello === "deriva");
+  const ORD_D = DSEQ.map(([, i]) => i);
+  const numLez = i => ORD_L.includes(i) ? ORD_L.indexOf(i) + 1 : ORD_D.includes(i) ? ORD_L.length + ORD_D.indexOf(i) + 1 : 0;
   const gruppoDi = ([t, i]) => GRUPPI.findIndex(g => g[1].some(([u, j]) => u === t && j === i));
 
 
@@ -790,7 +891,7 @@
 
   const bancaEsame = li => ESAME[li] || LESSONS[li].esame || [];
   const quotaEsame = li => li < QUOTE.length ? QUOTE[li] : QUOTA_NUOVE;
-  const lezioniEsame = () => LESSONS.map((L, li) => li).filter(li => !LESSONS[li].nascosta && bancaEsame(li).length);
+  const lezioniEsame = () => LESSONS.map((L, li) => li).filter(li => !LESSONS[li].nascosta && !LESSONS[li].livello && bancaEsame(li).length); // 1.3.1: Deriva non ha esame
   const domandeEsame = () => lezioniEsame().reduce((a, li) => a + quotaEsame(li), 0);
   const sogliaEsame = (n = domandeEsame()) => Math.ceil(n * SOGLIA_ESAME - 1e-9);
   const quizDi = li => QUIZ[li] || LESSONS[li].quiz; // 1.2.3: il ripasso di una lezione nuova usa il quiz della lezione
@@ -820,11 +921,13 @@
     ["Dritta", "Il lato destro della barca, guardando verso prua.", "Lezione 1"],
     ["Filetti", "Nastrini sulla vela che mostrano come scorre l'aria: dritti se la vela è regolata; si agita quello sopravento se è troppo lascata, quello sottovento se è troppo cazzata.", "Lezione 3"],
     ["Fileggiare", "Il movimento della vela che sbatte perché è troppo lascata o perché la barca è nell'angolo morto.", "Lezione 1"],
+    ["Finestra d'arrivo", "Il tempo entro cui bisogna arrivare dopo la prima barca, scritto nelle istruzioni di regata. Chi arriva dopo non si classifica. Nel gioco è metà del tempo della prima, una scelta del gioco.", "Lezione 21"],
     ["Giro di penalità", "Un giro intero della barca, con una virata e una strambata, per scontare una penalità: uno per una boa toccata, due per un contatto con colpa; subito e tutti nello stesso verso (regole 44.1 e 44.2).", "Lezione 20"],
     ["Gran lasco", "Andatura con il vento quasi da dietro, circa 150°.", "Lezione 3"],
     ["Lascare", "Mollare una scotta: la vela si apre verso l'esterno.", "Lezione 1"],
     ["Lasciare strada", "Navigare in modo che l'altra barca possa tenere la sua rotta senza manovrare per evitarti. Con mure diverse lascia strada la barca mure a sinistra (regola 10).", "Lezione 12"],
     ["Lasco", "Andatura con il vento che arriva da dietro il fianco, circa 120°.", "Lezione 3"],
+    ["Layline", "La linea da cui, di bolina, si arriva alla boa senza virare più; una per mura. Il vento che gira la sposta.", "Lezione 23"],
     ["Libera dietro, libera avanti", "Con le stesse mure, una barca che sta tutta dietro la linea tirata al traverso dal punto più a poppa dell'altra è libera dietro, e lascia strada a quella libera avanti (regola 12).", "Lezione 13"],
     ["Linea di partenza", "La linea dalla barca giuria alla boa arancione. Al via si deve essere dietro, dalla parte da cui si parte; poi la si taglia.", "Lezione 16"],
     ["Mure", "Il lato da cui arriva il vento: mure a dritta se arriva da destra, mure a sinistra se arriva da sinistra. Tra due barche a vela con mure diverse, quella mure a sinistra deve lasciare strada; con le stesse mure, se sono affiancate, cede quella sopravento.", "Lezione 3"],
@@ -834,21 +937,25 @@
     ["Partenza anticipata", "Al segnale di partenza una parte dello scafo è già oltre la linea. Si torna con lo scafo tutto dietro la linea e si riparte (regola 29.1).", "Lezione 17"],
     ["Partenza da fermi", "Partire con la barca ferma e la vela che sbatte: cazzata la vela, servono alcuni secondi e qualche metro prima che la barca arrivi alla sua velocità.", "Lezione 19"],
     ["Partenza in velocità", "Aspettare quasi fermi vicino alla linea, una o due lunghezze dietro, e cazzare negli ultimi secondi, per tagliare la linea subito dopo il via e già veloci.", "Lezione 18"],
+    ["Penalità sul punteggio", "Invece di tempo o giri, punti in più nella regata in cui si è commessa l'infrazione (regola 44.3). Nel torneo del gioco vale nelle regate 1 e 2: con quattro barche, 1 punto.", "Lezione 21"],
     ["Poggiare", "Girare la prua allontanandola dal vento.", "Lezione 1"],
     ["Poppa (andatura)", "Andatura con il vento esattamente da dietro.", "Lezione 3"],
     ["Poppa (parte della barca)", "La parte posteriore della barca.", "Lezione 1"],
     ["Precedenza", "Ce l'ha la barca a cui l'altra deve lasciare strada. Avere la precedenza non è il permesso di urtare.", "Lezione 12"],
     ["Preparatorio", "Il segnale di quattro minuti prima del via: sale la bandiera P, blu con il quadrato bianco. Si ammaina a un minuto dal via (regola 26).", "Lezione 16"],
     ["Prua", "La parte anteriore della barca.", "Lezione 1"],
+    ["Punti bassi", "Il modo più usato di contare i punti in una serie di regate: 1 al primo, 2 al secondo, e così via; vince chi ne ha di meno (regolamento, appendice A).", "Lezione 21"],
     ["Raddrizzare", "Rimettere dritta una deriva scuffiata, salendo sulla lama di deriva e facendo leva col proprio peso.", "Lezione 8"],
     ["Raffica", "Aumento breve del vento, visibile sull'acqua come una chiazza più scura e increspata.", "Lezione 8"],
     ["Randa", "La vela principale, fissata all'albero e al boma.", "Lezione 1"],
     ["Richiamo individuale", "La bandiera X, bianca con la croce blu, alzata con un suono quando al via qualcuno è in anticipo. Resta su finché sono tornati tutti, ma non più di quattro minuti dal via (regola 29.1).", "Lezione 17"],
     ["Rilevamento", "La direzione, in gradi a partire da nord in senso orario, in cui si vede un oggetto dalla barca.", "Prove"],
+    ["Rotta ottimale", "Nel gioco, a regata finita: la rotta più veloce col vento che c'è stato davvero, calcolata col senno di poi, da confrontare con la propria.", "Lezione 22"],
     ["Salto di vento", "Un cambio di direzione del vento. Spesso il vento oscilla avanti e indietro; a volte gira sempre dalla stessa parte.", "Lezione 11"],
     ["Sbandamento", "L'inclinazione laterale della barca spinta dal vento.", "Lezione 8"],
     ["Scarroccio", "Lo scivolamento laterale della barca spinta dal vento, che la deriva riduce ma non annulla.", "Lezione 1"],
     ["Scarso", "Di bolina, il vento è scarso quando gira verso la prua: per restare di bolina devi poggiare. Con il vento che oscilla, di bolina si vira sugli scarsi.", "Lezione 11"],
+    ["Scarto", "In una serie di regate, il punteggio peggiore di ognuno che non si conta (regolamento, appendice A). Nel torneo del gioco si toglie dopo la quarta regata.", "Lezione 21"],
     ["Scotta", "La cima con cui si regola la vela.", "Lezione 1"],
     ["Scuffiare", "Rovesciarsi: succede alle derive quando lo sbandamento diventa eccessivo.", "Lezione 8"],
     ["Segnavento", "La piccola freccia gialla in cima all'albero: la punta indica da dove arriva il vento apparente (per questo sembra opposta alla freccia gialla grande «apparente», che arriva dal mare e punta verso la barca).", "Lezione 4"],
