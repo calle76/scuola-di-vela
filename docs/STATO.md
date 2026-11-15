@@ -14,7 +14,10 @@
   - 1.2.34: scritte sopra le barche.
 
   Da pushare: `git push origin main --tags` (da qui non si vede se i tag dalla 1.2.30 sono già su GitHub; il comando non fa danni se lo sono).
-- **Prossimo:** il piano di chiusura di Deriva è scritto (`PIANO-CHIUSURA-DERIVA.md`, fermata 1): aspetta le 5 decisioni di Ale. Prima tappa: la rotta in assoluto (voce 26, §8-9).
+- **Notte 14-15 novembre, in autonomia:**
+  - piano di chiusura di Deriva: le 5 decisioni prese con Ale (`PIANO-CHIUSURA-DERIVA.md`, `DECISIONI.md`);
+  - **1.2.40 rotta in assoluto: fatta ma NON chiusa** (ramo `rotta-assoluta`): 5 criteri su 10 non passano, soprattutto il tempo (3,6-4,3 s invece di 1-2 s). Decide Ale fra le strade di `PROPOSTA-ROTTA-ASSOLUTA.md` §10;
+  - proposte scritte per le tappe 2-4 (fermata 1): `PROPOSTA-DERIVA-CIRCUITI.md`, `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md`.
 - **L'elenco proposto in chat** per chiudere Deriva:
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;
