@@ -35,6 +35,10 @@ Dalla 1.2.39 chi finisce fra i primi 3 del nazionale ha il «diritto alla finale
 - Con i 6 più forti del nazionale, per il pilota vincere sarà raro: va bene per un premio, ma il numero si riporta (quante finali su 10 il pilota chiude fra i primi 3).
 - I contatti nei primi 25 s (N2 della 1.2.38) ci sono anche qui: si sistemano con la tappa 5.
 
-## Cosa serve da Ale
+## Risposte di Ale (15 novembre 2026)
+
+Via dato, da fare dopo la tappa 2. Il nome del posto lo propone Claude con la ricerca, Ale lo controlla.
+
+## Cosa serviva da Ale
 
 Il via, e il nome del posto (lo propongo io con la ricerca, come per i rivali).

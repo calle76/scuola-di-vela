@@ -61,7 +61,11 @@ I 4 gradini, le soglie degli obiettivi (posti 5 e 8), il numero di offerte, la d
 - **Tanti testi nuovi** (offerte, obiettivi, esiti): rischio di finestre piene. S7 lo misura.
 - **S3 a numeri** dice poco su chi gioca davvero: in acqua il giocatore non è «forza 0». Le soglie si riguardano dopo le prove a mano di Ale e Lucio.
 
-## Cosa serve da Ale
+## Risposte di Ale (15 novembre 2026)
+
+Via dato, da fare dopo le tappe 2 e 3. Solo in carriera. I nomi degli sponsor li propone Claude con la ricerca, Ale li controlla.
+
+## Cosa serviva da Ale
 
 1. Il via.
 2. Va bene il **solo in carriera**?

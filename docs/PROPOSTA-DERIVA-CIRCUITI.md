@@ -74,7 +74,11 @@ Lezione 21: F15 (appendice A, 44.3), parafrasata. Lezione 23: F77-F78, già nel 
 - **Una stagione è lunga** (16 regate): superare Deriva chiede tempo. Si salva dopo ogni regata.
 - **Il merito dipende dai rivali:** la quota si fissa solo dopo la tappa 5.
 
-## Cosa serve da Ale
+## Risposte di Ale (15 novembre 2026)
+
+Via dato. Il torneo singolo resta in Deriva come allenamento, fuori dalla carriera. La lezione della layline è la 23. Si parte dalla 1.3.0 (menu a due livelli).
+
+## Cosa serviva da Ale
 
 1. Il via.
 2. Va bene che il **torneo singolo** resti in Deriva come allenamento, fuori dalla carriera?

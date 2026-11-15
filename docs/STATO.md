@@ -20,7 +20,7 @@
   - piano di chiusura di Deriva: le 5 decisioni prese con Ale (`PIANO-CHIUSURA-DERIVA.md`, `DECISIONI.md`);
   - **1.2.40 rotta in assoluto: chiusa il 15 novembre** (tag `v1.2.40`), a richiesta col tasto V per scelta di Ale; P1, A1, A2, P3, A3 dichiarati (`PROPOSTA-ROTTA-ASSOLUTA.md` §10-11);
   - proposte scritte per le tappe 2-4 (fermata 1): `PROPOSTA-DERIVA-CIRCUITI.md`, `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md`.
-- **Prossimo:** tappa 2 del piano, la cornice di Deriva: aspetta il via di Ale su `PROPOSTA-DERIVA-CIRCUITI.md` (e sulle proposte delle tappe 3 e 4).
+- **Prossimo:** prima leggere il giro GitHub della notte sulla 1.2.41 (`gh run list --workflow collaudi.yml`, fuori dalla sandbox). Poi **tappa 2, la cornice di Deriva: via dato il 15 novembre** (torneo singolo resta come allenamento, layline lezione 23): si parte dalla 1.3.0, menu a due livelli (`PROPOSTA-DERIVA-CIRCUITI.md`). Dopo, tappe 3 (finale) e 4 (sponsor), anche quelle col via.
 - **L'elenco proposto in chat** per chiudere Deriva:
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;

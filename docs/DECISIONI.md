@@ -164,6 +164,10 @@ Costo di cambiamento:
 | Sponsor senza materiale: nome, durata e obiettivi; il materiale si riparla col Fiocco | 14 nov notte (Ale: «sponsor senza materiale va bene») | basso | — | `PIANO-CHIUSURA-DERIVA.md`, decisione 5 |
 | Via alla rotta in assoluto intera (punto ideale, direzione, traccia viola) | 14 nov notte (Ale: «sì via alla rotta intera») | basso | — | `PROPOSTA-ROTTA-ASSOLUTA.md` §9 |
 | Rotta in assoluto a richiesta (pulsante e tasto V); 1.2.40 chiusa con P1, A1, A2, P3, A3 dichiarati | 15 nov (Ale: «non è un problema. si potrebbe avere anche un tasto "vuoi la rotta"», «sì vai così, con il tasto») | basso | — | `PROPOSTA-ROTTA-ASSOLUTA.md` §11 |
+| Classifica della regata del torneo: le righe troppo lunghe scendono di carattere invece di andare a capo; il nome intero resta (M1) | 15 nov (scelta fra quattro strade) | basso | — | `CHANGELOG.md` 1.2.41 |
+| Rotta ottimale: con B solo barra e pulsanti; niente «Arrivato!» né orologio; scritta della boa fuori dal campo | 15 nov (Ale: «sarebbe bello sparisse e lasciasse la mappa ingrandirsi», «togli anche Arrivato e l'orologio») | basso | — | `CHANGELOG.md` 1.2.41 |
+| Via alla tappa 2 (cornice di Deriva); il torneo singolo resta in Deriva come allenamento, fuori dalla carriera; la lezione della layline è la 23 | 15 nov (risposte alle domande della proposta) | medio | tocca menu, carriera e salvataggi | `PROPOSTA-DERIVA-CIRCUITI.md` |
+| Via alle tappe 3 (finale a 6) e 4 (sponsor a contratto, solo in carriera), da fare dopo la tappa 2; nomi del posto della finale e degli sponsor proposti da Claude con la ricerca e controllati da Ale | 15 nov (risposte alle domande delle proposte) | medio | — | `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md` |
 
 ## Contenuti e confini legali
 
