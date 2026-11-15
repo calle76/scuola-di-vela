@@ -301,7 +301,8 @@
     $("coachFrasi").innerHTML = C.map((x, k) => `<li><button class="linkish" data-k="${k}" title="Vai a ${rivTempo(x.t)}">${x.txt}</button></li>`).join("");
   }
   $("coachFrasi").onclick = e => { const b = e.target.closest("button[data-k]"); if (!b || !riv.on || !rot.res || !rot.res.coach) return;
-    riv.pos = rivPosDi(rot.res.coach[+b.dataset.k].t - COA_ANT); riv.playing = true; rivMostra(); };
+    riv.pos = rivPosDi(rot.res.coach[+b.dataset.k].t - COA_ANT); riv.playing = true; rivMostra();
+    if (modo === "carriera" && !progress.coachVisto){ progress.coachVisto = true; saveProgress(); } }; // 1.3.5: un momento rivisto col coach (Esperienza di Deriva)
 
   // ---- schermata ----
   function rotTesto(ott, sp){ // 1.3.3: solo la legenda e i tempi; il commento lo fa il coach (coaFrasi)

@@ -104,3 +104,9 @@ Fatte le lezioni 21-23 con ripassi, glossario (6 voci) ed esercizi delle lezioni
 Fatta la prova 6, «I giri di penalità»: al via due giri dovuti, contati con le stesse regole delle regate; bolina fino alla boa a 170 m e ritorno; 15 s per ogni giro non fatto.
 - **D9:** col pilota 10 su 10 con i giri fatti, a mani ferme 0 su 10, +15 s a giro non fatto (`collaudo_prova_giri.py`). Medaglie **240/300/385 s** con la regola di `PROPOSTA-MEDAGLIE-E-NOMI.md` sui semi 1-30; confermate sui semi 101-130 (30 su 30 entro l'oro col pilota preciso, 30 su 30 entro il bronzo e 0 ori col pilota con errori, Chromium e Firefox).
 - Da sapere: saltare i due giri costa 30 s ma ne fa risparmiare circa 18: conviene farli, ma senza giri si prende ancora l'argento.
+
+## Esito della 1.3.5 (15 novembre 2026)
+
+Punti di Deriva (4 aree, 21 punti in tutto, numeri nostri), «Deriva superata» (primi 3 dello zonale, o merito: stagione zonale senza ritiri e almeno 19 punti, **quota provvisoria** fino alla tappa 7), Deriva visibile in carriera dopo l'attestato, libretto di Deriva. D2, D3, D6, D8, D10 passano (`collaudo_deriva_superata.py`; numeri in `CHANGELOG.md` 1.3.5). Restano: **D7** (raggiungibile, tappa 7, dopo i rivali) e la quota del merito.
+
+Versioni come fatte davvero: 1.3.0 menu, 1.3.1 lezioni, 1.3.2 prova dei giri, 1.3.3 Coach (al posto del momento clou, `PROPOSTA-COACH.md`), 1.3.4 volto del Coach, 1.3.5 punti e «Deriva superata». **La cornice di Deriva (tappa 2) è finita**; Deriva si vede in carriera (decisione 4 del piano).

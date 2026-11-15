@@ -3,7 +3,7 @@
 #  M1 spazio: a 1360x650 e 1360x768, gioco libero e carriera, livello salvato «scuola» e «deriva», carriera vuota e con il libretto al massimo
 #     (attestato, torneo aperto): pagina senza eccesso, né in altezza né in larghezza;
 #  M2 al suo posto: nel gioco libero la Scuola ha le regate 0-1 e la navigazione libera, non il torneo; Deriva ha le regate 2-3 e il torneo;
-#     in carriera Deriva è ancora nascosta (niente selettore) e il menu ha le regate 0-1 e il torneo, come prima;
+#     in carriera (dalla 1.3.5) i due livelli: senza attestato Deriva è spenta e si resta nella Scuola; con l'attestato Deriva ha regate 2-3, torneo e libretto di Deriva;
 #  M3 ogni voce si apre: dal menu, cliccando, ogni regata apre la sua (titolo), il torneo apre il suo riquadro, la navigazione libera parte;
 #  M4 il livello scelto resta: dopo la ricarica della pagina, e tornando al menu da una regata di Deriva;
 #  M5 0 errori della pagina.
@@ -53,7 +53,10 @@ async def main():
                         att = ([0, 1], False, True) if liv == "scuola" else ([2, 3], True, False)
                         chk("M2", s["sel"] == liv and (s["r"], s["tor"], s["free"]) == att and not s["lib"], f"M2 {tag}: {s}")
                     else:
-                        chk("M2", s["sel"] is None and s["r"] == [0, 1] and s["tor"] and s["free"] and s["lib"], f"M2 {tag}: {s}")
+                        # 1.3.5: in carriera i due livelli; senza attestato si resta nella Scuola (Deriva spenta), con l'attestato il livello salvato
+                        lv = liv if salv else "scuola"
+                        att = ([0, 1], False, True, True) if lv == "scuola" else ([2, 3], True, False, False)
+                        chk("M2", s["sel"] == lv and (s["r"], s["tor"], s["free"], s["lib"]) == att, f"M2 {tag}: {s}")
                     print(f"{tag}: eccesso {s['ecc']}/{s['eccx']} px, selettore {s['sel']}, regate {s['r']}, torneo {s['tor']}, navigazione {s['free']}", flush=True)
                     await ctx.close()
         # M3, M4: dal menu, cliccando come un giocatore

@@ -46,7 +46,8 @@ async def main():
         # carriera senza attestato: il torneo è chiuso e lo dice
         ctx, pg = await pagina(b, "#collaudo", modo="carriera")
         t = await leggi(pg, "menu carriera, senza attestato")
-        chk(await pg.is_disabled("#goTor") and "dopo l'attestato" in await pg.inner_text("#goTor"), f"N3 senza attestato il torneo è chiuso: «{(await pg.inner_text('#goTor')).splitlines()}»")
+        chk(await pg.is_disabled("#livSel button[data-v='deriva']") and await pg.locator("#goTor").count() == 0 and "attestato" in (await pg.get_attribute("#livSel button[data-v='deriva']", "title") or ""),
+            "N3 senza attestato Deriva (con il torneo) è chiusa e lo dice (1.3.5: prima il torneo stava nella Scuola, spento «dopo l'attestato»)")
         await ctx.close()
         # carriera salvata con il campo vecchio
         ctx, pg = await pagina(b, "#collaudo", modo="carriera")
@@ -62,7 +63,8 @@ async def main():
         chk(metro.tutti([s in t for s in ("La scuola", "superata", "Attestato del gioco", "Nessun valore legale")], minimo=4), f"N2 scritte dell'attestato: {t[:120]!r}")
         chk(await pg.input_value("#atName") == "Ale", "N3 il nome salvato c'è ancora")
         await pg.click("#atClose"); await pg.wait_for_timeout(100)
-        chk(not await pg.is_disabled("#goTor"), "N3 con il campo salvato il torneo si apre")
+        await pg.click("#livSel button[data-v='deriva']"); await pg.wait_for_timeout(100)
+        chk(not await pg.is_disabled("#goTor"), "N3 con il campo salvato il torneo si apre (1.3.5: dentro Deriva)")
         await pg.click("#goTor"); await pg.wait_for_timeout(200); await leggi(pg, "riquadro del torneo")
         await pg.evaluate("__sv.skipBrief = false"); await pg.click("#torGo"); await pg.wait_for_timeout(300); await leggi(pg, "istruzioni della regata del torneo")
         await pg.click("#bGo"); await pg.wait_for_timeout(400); await leggi(pg, "regata del torneo")

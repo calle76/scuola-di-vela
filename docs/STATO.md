@@ -6,7 +6,8 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.3.4** (15 novembre, tag `v1.3.4`): **il volto del Coach**, tre espressioni fatte da Ale con ChatGPT (arrabbiato con una penalità o la partenza anticipata, contento se va bene, serio altrimenti).
+- **Ultima versione chiusa: 1.3.5** (15 novembre, tag `v1.3.5`): **Deriva in carriera, con punti propri e «Deriva superata»** (primi 3 dello zonale, o merito con quota provvisoria 19/21). **La cornice di Deriva (tappa 2 del piano) è finita.**
+- **1.3.4** (15 novembre, tag `v1.3.4`): **il volto del Coach**, tre espressioni fatte da Ale con ChatGPT (arrabbiato con una penalità o la partenza anticipata, contento se va bene, serio altrimenti).
 - **1.3.3** (15 novembre, tag `v1.3.3`): **il Coach nella moviola**, al posto del riassunto della rotta ottimale: al massimo tre frasi con un numero misurato, cliccabili (momento clou in metri di percorso, coperto, layline, partenza, penalità, «quasi perfetta»). K1-K9 passano; da decidere la regola dell'«affollato», che col pilota scatta in 17 regate su 20 (`PROPOSTA-COACH.md`, Esito). Il volto c'è dalla 1.3.4.
 - **1.3.2** (15 novembre, tag `v1.3.2`, in autonomia): **la prova 6 di Deriva, «I giri di penalità», con le medaglie** (240/300/385 s, scelte sui semi 1-30 e confermate sui 101-130). Due giri dovuti dal via, contati come nelle regate; 15 s per ogni giro non fatto. Fuori dai meriti della Scuola (`CHANGELOG.md` 1.3.2).
 - **1.3.1** (15 novembre, tag `v1.3.1`): **lezioni di Deriva 21 (torneo), 22 (rivedere) e 23 (layline)**, con ripassi, 6 voci di glossario ed esercizi in regata per la 22 e la 23; fuori da meriti ed esame della Scuola. D4, D5, D8 passano (`CHANGELOG.md` 1.3.1; nella 23 il primo pilota del collaudo era fuori soglia sui semi di conferma, 7 su 10, per la guida degli avversari alla boa: corretto il pilota e confermato su semi nuovi). La prova dei giri passa alla 1.3.2.
@@ -25,7 +26,7 @@
   - piano di chiusura di Deriva: le 5 decisioni prese con Ale (`PIANO-CHIUSURA-DERIVA.md`, `DECISIONI.md`);
   - **1.2.40 rotta in assoluto: chiusa il 15 novembre** (tag `v1.2.40`), a richiesta col tasto V per scelta di Ale; P1, A1, A2, P3, A3 dichiarati (`PROPOSTA-ROTTA-ASSOLUTA.md` §10-11);
   - proposte scritte per le tappe 2-4 (fermata 1): `PROPOSTA-DERIVA-CIRCUITI.md`, `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md`.
-- **Prossimo:** **1.3.5, punti di Deriva, «Deriva superata» e Deriva visibile in carriera** (via già dato alla tappa 2; criteri D6, D10 di `PROPOSTA-DERIVA-CIRCUITI.md`; la quota del merito resta per la tappa 7). Da Ale: la regola dell'«affollato» del coach. Prima: leggere il giro GitHub sulla 1.3.0-1.3.3. Tappe 3 (finale) e 4 (sponsor) col via.
+- **Prossimo:** **tappa 3, la finale** (`PROPOSTA-FINALE.md`, via già dato): un torneo a 6 barche coi primi 6 del nazionale. Poi tappa 4, sponsor (via dato). Da Ale: la regola dell'«affollato» del Coach. Prima: leggere il giro GitHub sulla 1.3.0-1.3.5.
 - **L'elenco proposto in chat** per chiudere Deriva:
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;

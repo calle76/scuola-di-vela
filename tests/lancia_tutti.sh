@@ -121,6 +121,7 @@ TESTS=(
     "collaudo_libretto.py|py|chiaro|0||collaudo_libretto.py"
     "collaudo_menu_livelli.py|py|chiaro|0||collaudo_menu_livelli.py"
     "collaudo_deriva_lezioni.py|py|chiaro|0||collaudo_deriva_lezioni.py"
+    "collaudo_deriva_superata.py|py|chiaro|0||collaudo_deriva_superata.py"
     "collaudo_prova_giri.py|py|chiaro|0||collaudo_prova_giri.py"
     "collaudo_carriera_esame.py|py|chiaro|0||collaudo_carriera_esame.py"
     "collaudo_carriera_intera.py|py|chiaro|0||collaudo_carriera_intera.py"

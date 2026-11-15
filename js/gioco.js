@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.4"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.5"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -109,11 +109,11 @@
   try { if (localStorage.getItem(MODO) === "carriera") modo = "carriera"; } catch(e){}
   let [STORE, GHOST_STORE] = KEYS(modo);
   // 1.3.0 (docs/PROPOSTA-DERIVA-CIRCUITI.md): due livelli nel menu, «La scuola» e «Deriva»; la scelta resta nel browser. In carriera Deriva è ancora
-  // nascosta (decisione 4 del piano): DERIVA_IN_CARRIERA si accende con la versione dei punti di Deriva, quando la cornice è pronta; fino ad allora la carriera ha il menu di prima
-  const LIV_KEY = "scuolaVelaLivello", DERIVA_IN_CARRIERA = false;
+  // nascosta (decisione 4 del piano) fino alla 1.3.5, la versione dei punti di Deriva: da lì DERIVA_IN_CARRIERA e in carriera Deriva si apre con l'attestato
+  const LIV_KEY = "scuolaVelaLivello", DERIVA_IN_CARRIERA = true;
   let livello = "scuola";
   try { if (localStorage.getItem(LIV_KEY) === "deriva") livello = "deriva"; } catch(e){}
-  const livMenu = () => modo === "carriera" && !DERIVA_IN_CARRIERA ? null : livello; // null = menu della carriera di prima, senza i due livelli
+  const livMenu = () => modo === "carriera" && !DERIVA_IN_CARRIERA ? null : modo === "carriera" && !progress.brevetto ? "scuola" : livello; // null = menu della carriera di prima, senza i due livelli
   // record e fantasmi dei percorsi cambiati usano chiavi nuove; i completamenti restano.
   // 0.14: giro di boa dal lato giusto (prove 4 e 5, regate). 0.19: linea d'arrivo in tutte le prove.
   const KEYV = { m0: "m0.4", m1: "m1.4", m2: "m2.4", m3: "m3.5", m4: "m4.6", r0: "r0.4", r1: "r1.4" }; // 1.0.6: barca nuova (resistenza dalla vasca); 1.0.11: bolina nuova (resistenza indotta, vela che stringe): i tempi di prima non sono confrontabili
@@ -175,6 +175,43 @@
       <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES_CARRIERA.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Attestato ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Aprilo</button></p>`
         : `<p class="manca" id="libManca">${m.superato ? "Scuola superata." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
+  // ---- punti di Deriva e «Deriva superata» (1.3.5, docs/PROPOSTA-DERIVA-CIRCUITI.md; solo carriera) ----
+  // Quattro aree, come nella Scuola, con punti propri (quelli della Scuola non contano). Si ricalcolano da progress: ripetere senza migliorare non dà punti.
+  // Abilità: la prova dei giri, medaglia 3/2/1 più 1 senza errori. Conoscenza: i ripassi 21-23, 2 punti dall'80%, 1 dal 60% (come la Scuola). Competizione: la miglior
+  // stagione zonale finita (1-3°: 4, 4-6°: 3, oltre: 2) più il miglior posto in una tappa dello zonale (1°: 2, 2-3°: 1). Esperienza: le lezioni 21-23, una stagione
+  // zonale finita, un momento rivisto col coach. Superata: fra i primi 3 di uno zonale (il diritto al nazionale, progress.nazionale), oppure per merito: una stagione
+  // zonale senza ritiri (progress.zonalePulita, dalla 1.3.5) e almeno QUOTA_MERITO punti. Tutti i numeri sono ipotesi nostre; QUOTA_MERITO è provvisoria e si misura
+  // nella tappa 7 del piano, dopo i rivali (PIANO-CHIUSURA-DERIVA.md).
+  const MERITI_D = [["abil", "Abilità", 4], ["cono", "Conoscenza", 6], ["comp", "Competizione", 6], ["esp", "Esperienza", 5]], QUOTA_MERITO = 19;
+  function meritiD(p){
+    const m = MISSIONS.findIndex(x => x.livello === "deriva"), k = medalOf(m, p.best[recK("m" + m)]), sf = p.stagioneFatta, tp = p.derivaTappa;
+    const pt = {
+      abil: (k ? 4 - k : 0) + (p.clean[recK("m" + m)] ? 1 : 0),
+      cono: ORD_D.reduce((a, i) => { const s = p.quiz?.["q" + i], q = quizDi(i); return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0),
+      comp: (sf ? (sf.pos <= 3 ? 4 : sf.pos <= 6 ? 3 : 2) : 0) + (tp ? (tp === 1 ? 2 : tp <= 3 ? 1 : 0) : 0),
+      esp: ORD_D.filter(i => p.done["l" + i]).length + (sf ? 1 : 0) + (p.coachVisto ? 1 : 0) };
+    const totale = MERITI_D.reduce((a, [k]) => a + pt[k], 0), piazz = !!p.nazionale, merito = !!p.zonalePulita && totale >= QUOTA_MERITO;
+    return { pt, totale, piazz, merito, superato: piazz || merito };
+  }
+  function librettoDHtml(){
+    const m = meritiD(progress), pc = (v, max) => Math.round(100 * v / max), D = progress.deriva;
+    const rows = MERITI_D.map(([k, nome, max]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-md="${k}">${m.pt[k]} / ${max}</span></span></div>`).join("");
+    const riga = D ? `Deriva superata il ${fmtData(D.data)}, ${D.strada === "merito" ? "per merito" : "fra i primi 3 dello zonale"}.`
+      : `Per superarla: fra i primi 3 di una stagione zonale; oppure una stagione zonale senza ritiri e almeno ${QUOTA_MERITO} punti (quota provvisoria).`;
+    return `<div><div class="part-head"><h2>Libretto di Deriva</h2><span id="libDTot">totale ${m.totale} / ${MERITI_D.reduce((a, r) => a + r[2], 0)}</span></div>
+      <div class="lib">${rows}<p class="manca" id="libDManca">${riga}</p></div></div>`;
+  }
+  function openDeriva(){ // 1.3.5: una volta sola, tornando al menu con Deriva superata (come l'attestato)
+    const D = progress.deriva;
+    $("dvBody").innerHTML = `<div class="qz-top"><h2 id="dvTitle">Deriva superata</h2></div>
+      <p>${D.strada === "merito" ? `Hai finito una stagione zonale senza ritirarti e hai ${meritiD(progress).totale} punti di Deriva: superata per merito. Il circuito nazionale si apre solo fra i primi 3 di uno zonale.`
+        : "Sei arrivato fra i primi 3 di una stagione zonale: superata, e hai il diritto al circuito nazionale."}</p>
+      <p>Il livello dopo, con il fiocco, non c'è ancora. Nessun valore legale: è un traguardo del gioco.</p>
+      <div class="row"><button class="primary" id="dvClose">Chiudi</button></div>`;
+    $("dvClose").onclick = () => $("derivaDlg").close();
+    $("derivaDlg").showModal();
+  }
+
   loadProgress();
   // 1.2.33 (PROPOSTA-RIVALI-E-SPONSOR §13-14): il nome del giocatore, uguale in carriera e nel gioco libero (i progressi sono separati); «Azzera i progressi» lo cancella
   const NOME_KEY = "scuolaVelaSim.nome";
@@ -231,6 +268,8 @@
     mode = "menu"; setControls([], false, false);
     let nuovo = false;
     if (modo === "carriera" && !progress.brevetto && meriti(progress).superato){ progress.brevetto = { data: oggi() }; saveProgress(); nuovo = true; }
+    let nuovoD = false; // 1.3.5: Deriva superata, solo in carriera e dopo l'attestato
+    if (modo === "carriera" && progress.brevetto && !progress.deriva){ const md = meritiD(progress); if (md.superato){ progress.deriva = { data: oggi(), strada: md.piazz ? "piazzamento" : "merito" }; saveProgress(); nuovoD = true; } }
     $("game").hidden = true; $("menu").hidden = false;
     const vis = ([t, i]) => t !== "l" || !LESSONS[i].nascosta, VSEQ = SEQ.filter(vis); // 1.2.4: nel gioco nessuna lezione è nascosta; i collaudi possono nasconderle
     const doneCount = VSEQ.filter(([t, i]) => progress.done[t + i]).length;
@@ -265,19 +304,21 @@
     // 1.2.4: i ripassi della scheda aperta, su due colonne; ✓ = migliore almeno l'80%, il punteggio si legge passando sopra
     const quiz = `<div class="rip2">` + GRUPPI[menuGr][1].filter(([t, i]) => t === "l" && !LESSONS[i].nascosta).map(([, i]) => { const L = LESSONS[i], best = progress.quiz?.["q" + i], n = quizDi(i).length;
       return `<button data-q="${i}" title="${esc(ripName(i) + " · " + L.title + " · " + (best !== undefined ? "migliore: " + best + " su " + n : n + " domande"))}"><span>${numLez(i)} · ${L.title}</span>${best !== undefined && best * 5 >= n * 4 ? "<small>✓</small>" : ""}</button>`; }).join("") + `</div>`;
-    const livSel = LV === null ? "" : `<div class="seg" id="livSel"><button data-v="scuola" aria-pressed="${LV === "scuola"}">La scuola</button><button data-v="deriva" aria-pressed="${LV === "deriva"}">Deriva</button></div>`;
+    const dvChiusa = modo === "carriera" && !progress.brevetto; // 1.3.5: in carriera Deriva si apre con l'attestato
+    const livSel = LV === null ? "" : `<div class="seg" id="livSel"><button data-v="scuola" aria-pressed="${LV === "scuola"}">La scuola</button><button data-v="deriva" aria-pressed="${LV === "deriva"}"${dvChiusa ? ` disabled title="Si apre con l'attestato della Scuola"` : ""}>Deriva</button></div>`;
     const sotto = LV === "deriva" ? "Il secondo livello, con la stessa barca: gareggiare e rivedere le tue regate." // col selettore dei livelli la frase lunga andava a capo
       : "Un simulatore per imparare a governare una deriva. Segui l'ordine numerato" + (LV === null ? " della Scuola" : "") + ", oppure apri qualsiasi voce.";
     const tiles = LV === "deriva" ? `<div class="tiles">
         <section class="tile"><div><div class="part-head"><h2>Deriva</h2><span>${DSEQ.filter(([t, i]) => progress.done[t + i]).length} di ${DSEQ.length} completate</span></div><div class="items">${DSEQ.map((v, k) => rigaVoce(v, ORD_L.length + k + 1)).join("")}</div></div>
           <div><div class="part-head"><h2>Ripassi</h2></div><div class="review"><div class="rip2">${ORD_D.map(ripBtn).join("")}</div></div></div></section>
-        <section class="tile"><div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div></section>
-        <section class="tile"><div><div class="part-head"><h2>Torneo</h2><span>quattro regate</span></div><div class="items">${torBtn}</div>
-          <p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito, zonale o nazionale.</p></div></section>
+        <section class="tile"><div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div>
+          ${modo === "carriera" ? `<div><div class="part-head"><h2>Torneo</h2><span>quattro regate</span></div><div class="items">${torBtn}</div><p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito.</p></div>` : ""}</section>
+        <section class="tile">${modo === "carriera" ? librettoDHtml() : `<div><div class="part-head"><h2>Torneo</h2><span>quattro regate</span></div><div class="items">${torBtn}</div>
+          <p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito, zonale o nazionale.</p></div>`}</section>
       </div>` : `<div class="tiles">
         <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${VSEQ.length} completate</span></div><div class="seg schede" id="schede">${schede}</div><div class="items">${rows}</div></div></section>
         <section class="tile">
-          <div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}${modo === "carriera" ? torBtn : ""}</div></div>
+          <div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}${modo === "carriera" && LV === null ? torBtn : ""}</div></div>
           <div><div class="part-head"><h2>Navigazione libera</h2></div><div class="items"><button class="item wide free" id="goFree"><span class="num">⛵</span><span class="title">Naviga senza obiettivi</span><span></span><span class="desc">Scegli vento e raffiche e prova quello che vuoi.</span></button></div></div>
         </section>
         <section class="tile">
@@ -300,7 +341,7 @@
     if ($("goTor")) $("goTor").onclick = torApri;
     if ($("goEsame")) $("goEsame").onclick = openEsame;
     if ($("goAttest")) $("goAttest").onclick = openAttest;
-    if (nuovo) openAttest();
+    if (nuovo) openAttest(); else if (nuovoD) openDeriva();
     $("menuGloss").onclick = openGloss;
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));

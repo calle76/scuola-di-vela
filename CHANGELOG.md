@@ -19,6 +19,43 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.5 — Deriva in carriera: punti propri e «Deriva superata»
+
+Ultima versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre; criteri D2, D3, D6, D8, D10).
+
+- **In carriera ci sono i due livelli.** Senza l'attestato il pulsante «Deriva» è spento («si apre con l'attestato della Scuola»); con l'attestato Deriva contiene lezioni 21-23, la prova dei giri, le regate dei salti e dei giri, il **torneo con la stagione**, e il **libretto di Deriva**. Il torneo lascia la Scuola: prima stava fra le sue regate, spento fino all'attestato.
+- **Punti di Deriva**, propri, in quattro aree; quelli della Scuola non contano. Si ricalcolano dai progressi, quindi ripetere senza migliorare non dà punti.
+
+  | Area | Massimo | Da cosa |
+  | --- | --- | --- |
+  | Abilità | 4 | prova dei giri: oro 3, argento 2, bronzo 1, più 1 senza errori |
+  | Conoscenza | 6 | ripassi 21-23: 2 punti dall'80%, 1 dal 60% |
+  | Competizione | 6 | miglior stagione zonale finita (1-3°: 4, 4-6°: 3, oltre: 2), più il miglior posto in una tappa dello zonale (1°: 2, 2-3°: 1) |
+  | Esperienza | 5 | lezioni 21-23, una stagione zonale finita, un momento rivisto col Coach (cliccando una sua frase) |
+
+  Totale 21. Tutti i numeri sono ipotesi nostre, da tarare nella tappa 7 del piano.
+- **Deriva superata** in due modi:
+  - **fra i primi 3 di una stagione zonale**, cioè col diritto al nazionale, che il gioco salvava già;
+  - **per merito:** una stagione zonale finita senza ritirarsi da nessuna tappa e almeno **19 punti su 21**. La quota è **provvisoria**: la proposta la vuole misurata dopo i rivali (tappa 7). Con il merito il nazionale non si apre.
+
+  Il gioco lo dice una volta, con un riquadro, tornando al menu; poi lo dice il libretto. Nel gioco libero non si supera niente.
+- **La stagione ora segna le tappe lasciate.** Le stagioni cominciate prima della 1.3.5 non lo dicevano, quindi non contano come «senza ritiri»: per la strada del merito serve una stagione nuova. Il miglior posto in una tappa si salva da questa versione.
+- **I salvataggi di prima:** chi ha già uno zonale fra i primi 3 (diritto al nazionale) risulta superato al primo menu.
+
+**Misure.**
+- `collaudo_deriva_superata.py`, nuovo, Chromium e Firefox, tutto verde:
+  - **stagione vera vinta:** le 4 tappe chiuse con le funzioni del gioco; 2° nella stagione, superata fra i primi 3; il riquadro compare una volta e alla ricarica resta;
+  - **stagione vera con una tappa lasciata:** mai per merito, anche con 19 punti;
+  - **per merito, da salvataggi costruiti:** 19 punti senza ritiri sì; 18 no; 19 con ritiri no;
+  - **salvataggio della 1.2.39** con lo zonale fra i primi 3: superata;
+  - **gioco libero, e carriera senza attestato:** niente;
+  - **stagione a metà:** no;
+  - **punti separati:** i punti della Scuola e quelli di Deriva non si toccano a vicenda;
+  - **ripetere peggio** non cambia i punti, e le sole stagioni non bastano per merito;
+  - **spazio:** menu di Deriva col libretto pieno a 1360x650 e 1360x768 senza eccesso; il torneo si apre da Deriva; pagina senza `#collaudo`, 0 errori.
+- Aggiornati, perché il torneo in carriera ora sta in Deriva: `collaudo_nomi` (N3) e `collaudo_menu_livelli` (M2).
+- **Non-regressione** (Chromium), tutti verdi: `collaudo_libretto`, `collaudo_nomi`, `collaudo_menu_livelli`, `collaudo_carriera`, `collaudo_carriera_esame`, `collaudo_carriera_intera`, `collaudo_deriva_lezioni`, `collaudo_torneo` (veloce), `collaudo_stagione`, `collaudo_stagione_amico`, `collaudo_nazionale`, `collaudo_prova_giri`. Fisica identica (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`).
+
 ## 1.3.4 — Il volto del Coach
 
 - Il Coach ha un volto, in **tre espressioni** fatte da Ale con ChatGPT (`docs/FONTI-PUBBLICHE.md` F104). Sono ritagliate sul viso e ridotte a 128 px, circa 6 kB l'una, in `img/coach-serio.jpg`, `img/coach-contento.jpg` e `img/coach-arrabbiato.jpg`. Gli originali da 2 MB restano fuori dal repository.

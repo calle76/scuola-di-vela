@@ -1509,7 +1509,7 @@
         mia.forEach(n => { visti[n] = (visti[n] || 0) + 1; });
         return { posto, tws: Math.random() < 0.5 ? 10 : 12, bat: [["*", ...mia], resto.slice(0, 4), resto.slice(4)] };
       });
-      return { ver: VERSIONE, liv, tappe };
+      return { ver: VERSIONE, liv, tappe, ritiri: true }; // ritiri: dalla 1.3.5 le tappe lasciate sono segnate (t.rit)
     }
     const rnd = stRnd(cod.seme, 1), nomi = RIVALI_ZONALE.map(r => r[0]), vA = {}, vB = {};
     const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -1522,7 +1522,7 @@
       const can = [["A", ...a], ["B", ...b], r.slice(3)], mio = cod.io === "A" ? 0 : 1;
       return { posto, tws: rnd() < 0.5 ? 10 : 12, bat: [can[mio], can[1 - mio], can[2]].map(x => x.map(loc)), col: mio ? [1, 0, 2] : [0, 1, 2] };
     });
-    return { ver: VERSIONE, liv: cod.liv, codice: stCodice(cod.seme, cod.liv), seme: cod.seme, io: cod.io, gruppo, canon: ["A", "B", ...nomi].map(loc), tappe };
+    return { ver: VERSIONE, ritiri: true, liv: cod.liv, codice: stCodice(cod.seme, cod.liv), seme: cod.seme, io: cod.io, gruppo, canon: ["A", "B", ...nomi].map(loc), tappe };
   }
   function stOrdine(S, t){ // l'ordine di arrivo della tappa (null se non l'hai ancora corsa); con l'amico senza file: lui «in attesa», fuori dall'ordine
     if (t.ord || !t.mio) return t.ord || null;
@@ -1541,6 +1541,8 @@
       else o = [...o.filter(id => id !== "*"), "*"];
       tp.ord = o;
     }
+    if (!T) tp.rit = true; // 1.3.5 (punti di Deriva): la tappa lasciata; le stagioni salvate prima non lo dicono, e non contano come «senza ritiri»
+    else if (!stNaz(S)){ const io = stOrdine(S, tp).indexOf("*") + 1; if (io > 0) progress.derivaTappa = Math.min(progress.derivaTappa || 99, io); } // il miglior posto in una tappa dello zonale
     if (T){ tp.cont = {};
       T.av.forEach((a, n) => { const c = T.ris.map(r => r[n + 1].c || ""), k = c.filter(x => x).length;
         if (k) tp.cont[a.nome] = { n: k, s: c.filter(x => x.includes("s")).length, t: c.filter(x => x.includes("t")).length }; }); }
@@ -1550,6 +1552,7 @@
       progress[chiave] = { pos: old ? Math.min(old.pos, pos) : pos };
       if (naz){ if (pos <= 3) progress.finale = true; } // diritto alla finale: per ora solo scritto (la finale non c'è ancora)
       else { if (pos <= 3) progress.nazionale = true; // diritto al nazionale (1.2.39: in carriera lo apre)
+        if (S.ritiri && S.tappe.every(t => !t.rit)) progress.zonalePulita = true; // 1.3.5: stagione zonale senza ritiri (solo quelle cominciate dalla 1.3.5, che segnano le tappe lasciate)
         const x = cl.find(x => x.id !== "*" && x.id !== "@"); if (x) progress.zonalePrimo = x.id; } // il dodicesimo del nazionale
     }
     saveProgress();
