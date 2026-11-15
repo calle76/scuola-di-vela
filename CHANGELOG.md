@@ -19,6 +19,28 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.7 — La finale
+
+Tappa 3 del piano di chiusura di Deriva (`docs/PROPOSTA-FINALE.md`, via di Ale del 15 novembre 2026). Fatta nella notte del 15 novembre, in autonomia.
+
+- **La finale del circuito, a Baia delle Sette Vele** (posto inventato: una ricerca non trova nessuna regata con questo nome; il nome lo deve controllare Ale). Si apre dal riquadro del torneo, col pulsante «La finale»:
+  - **chi c'è:** tu e i 5 rivali meglio piazzati del nazionale appena finito, salvati alla fine del nazionale; nel gioco libero, se un nazionale non c'è, i 5 nazionali con più doti;
+  - **come si corre:** un solo torneo di 4 regate a 6 barche (quello della 1.2.38), tutti in acqua, niente a numeri.
+- **In carriera serve il diritto** (primi 3 del nazionale). Vale una volta: si consuma correndola, ritirandosi o cominciando un'altra stagione. Nel gioco libero è sempre aperta.
+- **Cosa resta:** il miglior posto in finale. A chi vince: «Hai vinto la finale del circuito», senza titoli che sembrino ufficiali.
+- La fine del nazionale ora dice dove si corre la finale.
+
+**Misure** (`collaudo_finale.py`, nuovo, Chromium e Firefox, tutto verde):
+- **F1:** in 200 nazionali simulati, con le 4 tappe chiuse con le funzioni del gioco, i rivali della finale sono i primi 5 della classifica, 200 su 200; il diritto va ai primi 3 (36 volte su 200). In carriera senza diritto il pulsante non c'è, col diritto sì; nel gioco libero sempre.
+- **F2:** 10 finali col pilota (40 regate a 6 barche): finiscono tutte e il posto salvato è quello della classifica del torneo.
+  - **Un numero da riportare:** il pilota è finito fra i primi 3 in 2 finali su 10 nel primo giro, in 0 su 10 nel secondo (Chromium) e in 0 su 10 in Firefox. Gli stessi semi danno corse diverse, perché fra il seme e la partenza passano fotogrammi veri. Il collaudo controlla che la finale funzioni, non quanto è difficile.
+- **F3:**
+  - ricaricando dopo 2 regate la finale è la stessa;
+  - «Azzera i progressi» la cancella;
+  - in carriera il ritiro e una stagione nuova chiudono il diritto.
+- **F4:** fisica identica (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`); `collaudo_torneo` (veloce), `collaudo_nazionale` e `collaudo_stagione` verdi.
+- **F5:** il riquadro della finale a 1360x650 non scorre; senza `#collaudo` la finale parte dal menu di Deriva a 6 barche; 0 errori.
+
 ## 1.3.6 — Il Coach dice le scuffie
 
 Dalla prova di Ale del 15 novembre: «arrivato ultimo e scuffiato, il coach era serio non arrabbiato e non ha citato la scuffiata».

@@ -6,7 +6,8 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.3.6** (15 novembre, tag `v1.3.6`): il Coach dice le scuffie ed è arrabbiato anche per quelle (prova di Ale); `collaudo_menu` e `collaudo_cono` rimessi in ordine dopo il giro GitHub sulla 1.3.3.
+- **Ultima versione chiusa: 1.3.7** (notte del 15 novembre, tag `v1.3.7`, in autonomia): **la finale** (tappa 3), a Baia delle Sette Vele (nome da controllare), coi primi 6 del nazionale.
+- **1.3.6** (15 novembre, tag `v1.3.6`): il Coach dice le scuffie ed è arrabbiato anche per quelle (prova di Ale); `collaudo_menu` e `collaudo_cono` rimessi in ordine dopo il giro GitHub sulla 1.3.3.
 - **1.3.5** (15 novembre, tag `v1.3.5`): **Deriva in carriera, con punti propri e «Deriva superata»** (primi 3 dello zonale, o merito con quota provvisoria 19/21). **La cornice di Deriva (tappa 2 del piano) è finita.**
 - **1.3.4** (15 novembre, tag `v1.3.4`): **il volto del Coach**, tre espressioni fatte da Ale con ChatGPT (arrabbiato con una penalità o la partenza anticipata, contento se va bene, serio altrimenti).
 - **1.3.3** (15 novembre, tag `v1.3.3`): **il Coach nella moviola**, al posto del riassunto della rotta ottimale: al massimo tre frasi con un numero misurato, cliccabili (momento clou in metri di percorso, coperto, layline, partenza, penalità, «quasi perfetta»). K1-K9 passano; da decidere la regola dell'«affollato», che col pilota scatta in 17 regate su 20 (`PROPOSTA-COACH.md`, Esito). Il volto c'è dalla 1.3.4.
@@ -27,7 +28,7 @@
   - piano di chiusura di Deriva: le 5 decisioni prese con Ale (`PIANO-CHIUSURA-DERIVA.md`, `DECISIONI.md`);
   - **1.2.40 rotta in assoluto: chiusa il 15 novembre** (tag `v1.2.40`), a richiesta col tasto V per scelta di Ale; P1, A1, A2, P3, A3 dichiarati (`PROPOSTA-ROTTA-ASSOLUTA.md` §10-11);
   - proposte scritte per le tappe 2-4 (fermata 1): `PROPOSTA-DERIVA-CIRCUITI.md`, `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md`.
-- **Prossimo:** **tappa 3, la finale** (`PROPOSTA-FINALE.md`, via già dato): un torneo a 6 barche coi primi 6 del nazionale. Poi tappa 4, sponsor (via dato). Da Ale: la regola dell'«affollato» del Coach. Prima: leggere il giro GitHub sulla 1.3.0-1.3.5.
+- **Prossimo:** **tappa 4, gli sponsor** (via dato), col giudizio leggero dello sponsor dopo ogni tappa (Ale, 15 novembre sera). Da Ale: il nome della finale, la regola dell'«affollato» del Coach.
 - **L'elenco proposto in chat** per chiudere Deriva:
   - rotta in assoluto con punto ideale, direzione e traccia viola (voce 26, §9, richiesta di Lucio);
   - poi cornice della carriera di Deriva, finale, sponsor semplici, rivali che regatano meglio, punti da sistemare;

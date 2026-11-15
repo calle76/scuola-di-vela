@@ -42,3 +42,7 @@ Via dato, da fare dopo la tappa 2. Il nome del posto lo propone Claude con la ri
 ## Cosa serviva da Ale
 
 Il via, e il nome del posto (lo propongo io con la ricerca, come per i rivali).
+
+## Esito (1.3.7, notte del 15 novembre 2026)
+
+Fatta. F1-F5 passano in Chromium e Firefox (`collaudo_finale.py`; numeri in `CHANGELOG.md` 1.3.7). Posto proposto: **Baia delle Sette Vele** (nessuna regata con questo nome nelle ricerche del 15 novembre; da controllare da Ale). Rischio confermato: col pilota la finale è dura, 0-2 su 10 fra i primi 3.

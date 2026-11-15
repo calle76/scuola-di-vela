@@ -1282,6 +1282,22 @@
       return T;
     } finally { Math.random = M; }
   }
+  // ---- la finale (1.3.7, tappa 3, docs/PROPOSTA-FINALE.md; via di Ale del 15 novembre 2026) ----
+  // Un solo torneo di 4 regate a 6 barche (quello della 1.2.38), tutti in acqua: tu e i 5 rivali meglio piazzati del nazionale finito (progress.finaleRivali,
+  // scritto alla fine del nazionale); nel gioco libero, senza un nazionale finito, i 5 nazionali con più doti. In carriera serve il diritto (progress.finale:
+  // primi 3 del nazionale), che si consuma correndola, ritirandosi o cominciando un'altra stagione. Resta il miglior posto (progress.finaleFatta). Posto inventato.
+  const FIN_POSTO = "Baia delle Sette Vele";
+  const finAperta = () => modo !== "carriera" || !!progress.finale;
+  function finRivali(){
+    const salvati = progress.finaleRivali;
+    if (salvati && salvati.length === 5) return salvati.slice();
+    return RIVALI_NAZIONALE.map(r => r[0]).map((id, k) => ({ id, f: stForza(id), k })).sort((a, b) => b.f - a.f || a.k - b.k).slice(0, 5).map(x => x.id);
+  }
+  function torNuovoFinale(){
+    const T = torNuovo(null, 5), liv = (progress.stagione && stNaz(progress.stagione) && progress.stagione.liv) || T.liv, aggro = sorteggiaAggressiva(liv, 5);
+    T.liv = liv; T.finale = true; T.av = finRivali().map((nome, k) => ({ nome, ai: aiTratti(liv, rivaleTr(nome)), char: carattere(k, aggro) }));
+    return T;
+  }
   function torRc(){
     const k = tor.ris.length, g = tor.regate[k];
     return { title: "Torneo, regata " + (k + 1) + " di " + TOR_N, wind: g.wind, tws: g.tws, gusts: 1, shifts: true, tor: true, giri: torGiri(tor, k), precedenze: true, tri: torTri(k), up: torTri(k) ? TRI_L : undefined };
@@ -1353,6 +1369,7 @@
     const old = progress.torneoFatto || { pos: 9, mer: 0 };
     progress.torneoFatto = { pos: Math.min(pos, old.pos), mer: Math.max(mer, old.mer) }; // il migliore di sempre, piazzamento e meriti
     tor.fine = { pos, mer }; delete progress.torneo;
+    if (tor.finale){ const f = progress.finaleFatta; progress.finaleFatta = { pos: f ? Math.min(f.pos, pos) : pos }; if (modo === "carriera") delete progress.finale; } // 1.3.7: la finale
     if (tor.st !== undefined && progress.stagione && !progress.stagione.fine) stChiudiTappa(tor);
   }
   function torApri(){ // dal menu
@@ -1416,15 +1433,17 @@
     const nomi = [escH(mioNome()), ...T.av.map((l, i) => avNome(T, i))], car = T.av.map((a, i) => avNomeBarca(T, i)).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
     const S = progress.stagione, inSt = T.st !== undefined && S, tp = inSt ? S.tappe[T.st] : null; // 1.2.36: il torneo è una tappa della stagione
-    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p><p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}${tp && stFatta(tp) ? ` Nella tappa sei ${stOrdine(S, tp).indexOf("*") + 1}° su ${stOrdine(S, tp).length} della flotta del circuito: la classifica è in «Il circuito».` : ""}</p>` : "";
+    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p>${T.finale ? `<p><b>${T.fine.pos === 1 ? "Hai vinto la finale del circuito." : "Finale del circuito: " + T.fine.pos + "° posto."}</b></p>` : ""}<p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}${tp && stFatta(tp) ? ` Nella tappa sei ${stOrdine(S, tp).indexOf("*") + 1}° su ${stOrdine(S, tp).length} della flotta del circuito: la classifica è in «Il circuito».` : ""}</p>` : "";
     const testaSt = inSt && !k ? `<p><b>Stagione, tappa ${T.st + 1} di ${ST_N}: ${tp.posto}.</b> Corri nella batteria ${ST_BAT[(tp.col || [0])[0]]}; ${stNaz(S) ? "l'altra corre" : "le altre " + (S.codice ? "sono quella dell'amico e una" : "due") + " corrono"} lo stesso giorno e conta${stNaz(S) ? "" : "no"} per la classifica del circuito ${stCircNome(S)}.</p>` : "";
-    const testa = !k ? testaSt + `<p>Quattro regate contro gli stessi ${T.av.length === 5 ? "cinque" : "tre"} avversari (${T.liv}): ${car}. Chi sono e come vanno: pulsante «I rivali». Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
+    const testaFin = T.finale && !k ? `<p><b>La finale del circuito, ${FIN_POSTO}.</b> ${progress.finaleRivali && progress.finaleRivali.length === 5 ? "I primi sei del nazionale, tu compreso" : "Tu e i cinque rivali nazionali con più doti"}: un solo torneo, tutti in acqua.${modo === "carriera" ? " Il diritto vale una volta: ritirarsi la chiude." : ""}</p>` : ""; // 1.3.7
+    const testa = !k ? testaSt + testaFin + `<p>Quattro regate contro gli stessi ${T.av.length === 5 ? "cinque" : "tre"} avversari (${T.liv}): ${car}. Chi sono e come vanno: pulsante «I rivali». Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
       <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; dopo la quarta regata la peggiore si scarta. Vince chi ha meno punti. Nelle regate 1 e 2 un contatto con colpa vale 1 punto in più; nelle 3 e 4 costa due giri, e chi arriva senza averli fatti è squalificato. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;
-    const sei = !tor && !inSt && modo === "libero" ? ` <span class="tor-sei">Barche in acqua: <button id="torN4"${T.av.length === AV_N ? ' class="primary"' : ""}>4</button> <button id="torN6"${T.av.length > AV_N ? ' class="primary"' : ""}>6, di prova</button></span>` : ""; // 1.2.38 (PROPOSTA-NAZIONALE, passo 1)
+    const sei = !tor && !inSt && !T.finale && modo === "libero" ? ` <span class="tor-sei">Barche in acqua: <button id="torN4"${T.av.length === AV_N ? ' class="primary"' : ""}>4</button> <button id="torN6"${T.av.length > AV_N ? ' class="primary"' : ""}>6, di prova</button></span>` : ""; // 1.2.38 (PROPOSTA-NAZIONALE, passo 1)
     const nomeIn = !k && !T.fine ? `<p class="tor-nome"><label for="torNomeIn">Il tuo nome in classifica (facoltativo):</label> <input id="torNomeIn" type="text" maxlength="20" autocomplete="off" placeholder="Tu" value="${escH(nomeGet())}">${sei}</p>` : ""; // 1.2.33 (§13-14)
-    const stBtn = inSt ? `<button id="stCirc">Il circuito</button>` : !tor && !(S && !S.fine) ? `<button id="stCirc">Stagione (${ST_N} tappe)</button>` : "";
-    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">${inSt ? "Tappa " + (T.st + 1) + " di " + ST_N : "Torneo"}</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
+    const stBtn = (inSt ? `<button id="stCirc">Il circuito</button>` : !tor && !(S && !S.fine) && !T.finale ? `<button id="stCirc">Stagione (${ST_N} tappe)</button>` : "")
+      + (!tor && !inSt && !T.finale && !T.fine && finAperta() ? `<button id="finApri">La finale</button>` : ""); // 1.3.7
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">${inSt ? "Tappa " + (T.st + 1) + " di " + ST_N : T.finale ? "La finale" : "Torneo"}</h2><span>${T.fine ? "finito" : k ? "dopo la regata " + k + " di " + TOR_N : ""}</span></div>
       ${nota ? `<p class="manca">${nota}</p>` : ""}${fine}${testa}${nomeIn}${tab}
       <div class="row">${T.fine ? `<button class="primary" id="torMenu">Torna al menu</button><button id="torRivali">I rivali</button>${stBtn}`
         : `<button class="primary" id="torGo">${k ? "Corri la regata " + (k + 1) : inSt ? "Inizia la tappa" : "Inizia il torneo"}</button>${tor ? `<button id="torRit">Ritirati dal${inSt ? "la tappa" : " torneo"}</button>` : ""}<button id="torRivali">I rivali</button>${stBtn}<button id="torMenu">${inGioco ? "Menu" : "Chiudi"}</button>`}</div>`;
@@ -1432,11 +1451,13 @@
     $("torMenu").onclick = () => { if (inGioco && !torEsciOk()) return; chiudi(); if (T.fine) tor = null; if (inGioco || T.fine) showMenu(); };
     if ($("torRivali")) $("torRivali").onclick = () => torSchedeMostra(T, nota);
     if ($("stCirc")) $("stCirc").onclick = () => stMostra(nota, !inSt);
+    if ($("finApri")) $("finApri").onclick = () => { torBozza = torNuovoFinale(); torMostra(nota); }; // 1.3.7
     if ($("torNomeIn")) $("torNomeIn").oninput = e => nomeSet(e.target.value);
     if ($("torN4")) $("torN4").onclick = () => { if (T.av.length !== AV_N){ torBozza = torNuovo(null, AV_N); torMostra(nota); } };
     if ($("torN6")) $("torN6").onclick = () => { if (T.av.length !== 5){ torBozza = torNuovo(null, 5); torMostra(nota); } };
     if ($("torGo")) $("torGo").onclick = () => { if (!tor){ tor = progress.torneo = T; saveProgress(); } torBozza = null; chiudi(); openItem(["r", "t"]); };
-    if ($("torRit")) $("torRit").onclick = () => { if (!confirm(inSt ? "Ritirarti dalla tappa? Nel circuito sei ultimo di questa tappa." : "Ritirarti dal torneo? Il torneo non conta: niente punti e niente piazzamento.")) return;
+    if ($("torRit")) $("torRit").onclick = () => { if (!confirm(inSt ? "Ritirarti dalla tappa? Nel circuito sei ultimo di questa tappa." : T.finale && modo === "carriera" ? "Ritirarti dalla finale? Il diritto si chiude." : "Ritirarti dal torneo? Il torneo non conta: niente punti e niente piazzamento.")) return;
+      if (T.finale && modo === "carriera") delete progress.finale; // 1.3.7
       delete progress.torneo; tor = null; if (inSt) stChiudiTappa(null); saveProgress(); chiudi(); showMenu(); };
     releaseKeys(); $("torDlg").showModal();
   }
@@ -1550,7 +1571,7 @@
       const cl = stClassifica(S), pos = cl.findIndex(x => x.id === "*") + 1, naz = stNaz(S), chiave = naz ? "nazionaleFatto" : "stagioneFatta", old = progress[chiave];
       S.fine = { pos };
       progress[chiave] = { pos: old ? Math.min(old.pos, pos) : pos };
-      if (naz){ if (pos <= 3) progress.finale = true; } // diritto alla finale: per ora solo scritto (la finale non c'è ancora)
+      if (naz){ if (pos <= 3) progress.finale = true; progress.finaleRivali = cl.filter(x => x.id !== "*").slice(0, 5).map(x => x.id); } // diritto alla finale (dalla 1.3.7 si corre) e i 5 rivali meglio piazzati
       else { if (pos <= 3) progress.nazionale = true; // diritto al nazionale (1.2.39: in carriera lo apre)
         if (S.ritiri && S.tappe.every(t => !t.rit)) progress.zonalePulita = true; // 1.3.5: stagione zonale senza ritiri (solo quelle cominciate dalla 1.3.5, che segnano le tappe lasciate)
         const x = cl.find(x => x.id !== "*" && x.id !== "@"); if (x) progress.zonalePrimo = x.id; } // il dodicesimo del nazionale
@@ -1625,7 +1646,7 @@
       `<tr class="${x.id === "*" ? "me" : ""}"><td>${x.manca ? "" : i + 1 + "°"}</td><td>${stNome(x.id, S)}</td>${x.p.map(v => `<td>${v === null ? "–" : v}</td>`).join("")}<td><b>${x.tot}</b></td></tr>`).join("")}</tbody></table>
       ${msg ? `<p class="manca st-p">${msg}</p>` : `<p class="tor-leg">Tappa ${k}, ${stVincitori(S, fatte[k - 1])}${cl.some(x => x.manca) ? " · – in attesa del file dell'amico" : ""}</p>`}` : ""; // il messaggio del file al posto dei vincitori: le 12 righe stanno nei 650 px
     const frasi = k ? stFrasi(S) : [];
-    const fine = S.fine ? `<p class="st-p"><b>Stagione finita: ${pos}° su ${n}.</b> ${naz ? (pos <= 3 ? "Fra i primi 3: diritto alla finale. La finale non c'è ancora: arriverà in una versione successiva." : "Per il diritto alla finale bisogna finire fra i primi 3.")
+    const fine = S.fine ? `<p class="st-p"><b>Stagione finita: ${pos}° su ${n}.</b> ${naz ? (pos <= 3 ? "Fra i primi 3: diritto alla finale. Si corre dal riquadro del torneo, «La finale»." : "Per il diritto alla finale bisogna finire fra i primi 3.")
       : pos <= 3 ? "Fra i primi 3: diritto al nazionale." + (modo === "carriera" ? " Ora puoi correre il circuito nazionale: «Stagione», poi «Nazionale»." : "") : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
     const scelta = nuova && !am ? `<div class="row st-circ"><span>Circuito:</span><button id="stZon"${naz ? "" : ' class="primary"'}>Zonale</button><button id="stNaz"${naz ? ' class="primary"' : ""}${stNazAperto() ? "" : " disabled"}>Nazionale</button>${stNazAperto() ? "" : "<span>si apre finendo fra i primi 3 di uno zonale</span>"}</div>` : ""; // 1.2.39
     const btnAm = am && !nuova ? `<button id="stSalva">Salva il mio risultato</button><button id="stCarica">Carica quello dell'amico</button><input type="file" id="stFileIn" accept=".json,application/json" hidden>` : "";
@@ -1633,7 +1654,7 @@
       ${msg && !k ? `<p class="manca">${msg}</p>` : ""}${fine}${scelta}${spiega}${k ? tab : elenco}${frasi.length ? `<ul class="st-frasi">${frasi.map(f => `<li>${f}</li>`).join("")}</ul>` : ""}${k && !S.fine ? `<p class="tor-leg">Prossima: ${elenco.replace(/<\/?p>/g, "").split("<br>")[k]}</p>` : ""}
       <div class="row">${nuova ? `<button class="primary" id="stInizia">Inizia la stagione</button>${am || naz ? "" : `<button id="stAmico">Con un amico</button>`}` : ""}<button${nuova ? "" : ` class="primary"`} id="stIndietro">Indietro</button>${btnAm}${!nuova && !S.fine ? `<button id="stLascia">Lascia la stagione</button>` : ""}</div>`;
     $("stIndietro").onclick = () => { if (nuova && am) stBozza = null; torMostra(nota); };
-    if ($("stInizia")) $("stInizia").onclick = () => { if (naz && !stNazAperto()) return; progress.stagione = S; stBozza = null; delete progress.torneo; tor = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
+    if ($("stInizia")) $("stInizia").onclick = () => { if (naz && !stNazAperto()) return; if (modo === "carriera") delete progress.finale; /* 1.3.7: il diritto vale per la finale subito dopo quel nazionale */ progress.stagione = S; stBozza = null; delete progress.torneo; tor = null; saveProgress(); torBozza = torNuovo(S); torMostra(nota); };
     if ($("stAmico")) $("stAmico").onclick = () => stAmicoMostra(nota);
     if ($("stZon")) $("stZon").onclick = () => { if (naz){ stCircScelto = "zon"; stBozza = null; stMostra(nota, true); } };
     if ($("stNaz")) $("stNaz").onclick = () => { if (!naz && stNazAperto()){ stCircScelto = "naz"; stBozza = null; stMostra(nota, true); } };
