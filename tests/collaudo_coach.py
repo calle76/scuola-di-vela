@@ -20,7 +20,7 @@ import asyncio, json, math, os, pathlib, re, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
-NREG = int(arg("--regate", "20")); RIF = arg("--rif", "v1.3.2")
+NREG = int(arg("--regate", "20")); RIF = arg("--rif", "v1.3.10")   # 1.3.10: le regole 15 e 16 cambiano apposta le penalità del torneo: da qui il riferimento è la 1.3.10 (prima la 1.3.2)
 src = (ROOT / "tests" / "collaudo_rotta_assoluta.py").read_text().split("async def main")[0]
 A = {"__file__": str(ROOT / "tests" / "collaudo_rotta_assoluta.py")}; exec(src, A); CORSA = A["CORSA"]
 fail, casi = [], {}

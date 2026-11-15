@@ -19,6 +19,51 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.10 — Regole 15 e 16 nelle regate di Deriva, col semaforo giallo e la lezione 24
+
+Prima versione della proposta unica `docs/PROPOSTA-REGOLE-15-16.md` (via di Ale del 16 novembre notte; G = 10° e lezione senza esercizio, come consigliato). Cambia la decisione del 23 ottobre: le regole 15 e 16, rimandate «al livello dopo», entrano in Deriva. La Scuola resta con le regole 10-13.
+
+- **Regola 15:** chi prende la precedenza con una sua manovra (una virata finita, un affiancamento da dietro) ha torto se tocca l'altra entro 5,2 s. È il tempo per scansarsi misurato con la barca del gioco il 23 ottobre.
+- **Regola 16:** chi ha la precedenza da almeno 5,2 s e negli ultimi 5,2 s ha girato la prua di almeno 10° verso l'altra ha torto. La 16.2 è un caso di questa.
+- **Semplificazione dichiarata** (scelta del 23 ottobre): dentro la finestra la colpa è di chi ha la precedenza, qualunque cosa abbia fatto l'altra.
+- **Dove valgono:** solo nelle regate di Deriva (salti di vento, giri di penalità, torneo, stagione, finale). Spente nelle regate della Scuola e negli esercizi delle lezioni. Valgono per la colpa al contatto e per il semaforo; la guida dei rivali le imparerà nella versione B.
+- **Il semaforo segue chi prenderebbe la penalità:**
+  - **rosso:** la penalità sarebbe tua, e la precedenza è dell'altra;
+  - **giallo** tratteggiato: la penalità sarebbe tua, anche se la precedenza è tua;
+  - **verde:** la penalità sarebbe dell'altra, anche quando le regole 10-13 ti farebbero cedere ma l'altra ha appena preso la precedenza virandoti davanti.
+
+  Correzione fatta durante il lavoro: la prima stesura colorava di rosso questi ultimi casi, e il collaudo del semaforo ha trovato 2 contraddizioni.
+- **I testi:** il motivo della penalità per la 15 e la 16 a fine regata; una frase nell'introduzione delle regate dei salti e dei giri; il suggerimento del semaforo nelle impostazioni.
+- **Lezione 24, «Prendere la precedenza»** (Deriva): regole 15 e 16 e il giallo, ripasso di 4 domande, voce di glossario «Spazio (regolamento)». È senza esercizio in regata, per ora.
+- **Punti di Deriva:** Conoscenza da 6 a 8 ed Esperienza da 5 a 6, in tutto 24. La quota provvisoria del merito, nella stessa proporzione, passa da 19 a 22. La proposta diceva «23», perché si era dimenticata dell'Esperienza: corretto e detto.
+
+**Due difetti trovati durante il lavoro, tutti e due da commenti `//` a metà riga:**
+- **Nel codice nuovo, prima del commit:** metà dell'oggetto della regata era finito in un commento, e senza le boe le regate si fermavano. L'ha preso il collaudo nuovo (R3).
+- **Uno vecchio, dalla 1.2.22:** nella moviola sbandamento e velocità delle barche non si rimettevano mai a posto durante «Rivedi». Corretto.
+
+**Controllo nuovo `tests/controllo_commenti.py`**, nel giro: cerca nei commenti `//` quello che sembra codice. La controprova trova tutti e due i difetti, sulla 1.3.9 e su una copia col difetto di stanotte.
+
+**Misure:**
+- **`collaudo_regole_15_16.py`** (nuovo), Chromium e Firefox: tutto verde.
+  - **R1:** 17 casi costruiti a mano, tutti con l'esito scritto prima: 6 per la 15, 6 per la 16, 5 per il semaforo. Un caso (16f) era costruito male (la barca B dietro invece che davanti), corretto e detto.
+  - **R3:** le regate della Scuola, 12 corse col pilota, identiche alla 1.3.9; regole spente nella Scuola e accese in Deriva.
+  - **R4**, effetti nel torneo, senza soglia: in 200 regate col pilota, 237 contatti con colpa, così divisi:
+
+    | Regola | Contatti |
+    | --- | --- |
+    | 10 | 46 |
+    | 11 | 57 |
+    | 13 | 30 |
+    | **15** | **87** |
+    | **16** | **14** |
+    | 21 | 3 |
+
+    Più di un terzo dei contatti nasce da chi prende la precedenza manovrando troppo vicino (i rivali che virano addosso). La versione B serve a farli scendere.
+- **`collaudo_semaforo`:** 0 contraddizioni in 17 contatti, sia in Chromium sia in Firefox. Il giallo copre il 17% dei passi col semaforo acceso.
+- **Verdi:** `collaudo_regole`, `collaudo_contatto_senza_colpa`, `collaudo_aggressiva`, `collaudo_registro`, `collaudo_regate`, `collaudo_giri`, `collaudo_torneo` (veloce), `collaudo_moviola`, `collaudo_pannello_lezioni`, `collaudo_deriva_lezioni`, `collaudo_deriva_superata`, `collaudo_esame_nuove`, `collaudo_menu`.
+- **Collaudi aggiornati:** quattro lezioni di Deriva, glossario di 75 voci, rimando alla lezione 24, quota 22 su 24. Il riferimento di K1 del Coach diventa la 1.3.10.
+- **Fisica identica.**
+
 ## 1.3.9 — Gli sponsor a contratto, col giudizio dopo ogni tappa
 
 Tappa 4 del piano di chiusura di Deriva (`docs/PROPOSTA-SPONSOR.md`, via di Ale del 15 novembre; giudizio leggero chiesto da Ale la sera stessa). Solo in carriera. Fatta nella notte, in autonomia.

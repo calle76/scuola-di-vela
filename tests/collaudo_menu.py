@@ -74,7 +74,7 @@ async def main():
         chk("M4", len(testi) > 300 and not vecchi, f"M4 nessun «Lezione B/C/D…» in {len(testi)} testi: {vecchi[:2]}")
         # i rimandi per numero nel codice del gioco (testi e messaggi), con il titolo a cui devono puntare
         attesi = {"2": "Il timone", "3": "Andature e mure", "5": "Virata e strambata", "8": "Raffiche e scuffia", "10": "La barca che orza sbandando", "12": "Mure opposte", "20": "Boe e giri di penalità",
-                  "11": "I salti di vento", "17": "La partenza anticipata", "18": "Partenza in velocità", "23": "La layline"}   # 1.3.3-1.3.6: i rimandi del Coach (js/rotta.js)   # numeri rifatti nella 1.2.14; 1.3.1: la 20 dalla lezione 21 di Deriva
+                  "11": "I salti di vento", "17": "La partenza anticipata", "18": "Partenza in velocità", "23": "La layline", "24": "Prendere la precedenza"}   # 1.3.3-1.3.6: i rimandi del Coach (js/rotta.js)   # numeri rifatti nella 1.2.14; 1.3.1: la 20 dalla lezione 21 di Deriva
         rim = [(m.group(1), l.strip()[:80]) for l in SRC.splitlines() if not l.lstrip().startswith("//") for m in re.finditer(r"(?<![Ee]sercizio della )\blezione (\d+)\b", l.split(" // ")[0])]
         chk("M4", len(rim) >= 5 and all(n in attesi for n, _ in rim), f"M4 rimandi «lezione N» nei testi: {len(rim)}, numeri {sorted({n for n, _ in rim})}, fuori dall'elenco atteso: {[r for r in rim if r[0] not in attesi][:3]}")
         tit = await pg.evaluate("() => Object.fromEntries(LESSONS.map(L => [L.name.split(' ')[1], L.title]))")
@@ -87,7 +87,7 @@ async def main():
                   "Partenza in velocità": "Partenza in velocità", "Partenza da fermi": "Partenza da fermi", "Strambata": "Virata e strambata", "Andatura": "Andature e mure", "Raffica": "Raffiche e scuffia",
                   "Scarto": "Come funziona il torneo", "Rotta ottimale": "Rivedi la tua regata", "Layline": "La layline"}   # 1.3.1: tre voci di Deriva
         sbag = [(v, glm.get(v), tit.get((glm.get(v) or "x y").split(" ")[1])) for v, t in att_gl.items() if tit.get((glm.get(v) or "x y").split(" ")[1]) != t]
-        chk("M4", not sbag and all(w == "Prove" or re.fullmatch(r"Lezione ([1-9]|1\d|2[0-3])", w) for _, w in gl), f"M4 glossario: {len(att_gl)} voci controllate sul titolo, sbagliate {sbag}")
+        chk("M4", not sbag and all(w == "Prove" or re.fullmatch(r"Lezione ([1-9]|1\d|2[0-4])", w) for _, w in gl), f"M4 glossario: {len(att_gl)} voci controllate sul titolo, sbagliate {sbag}")
         # ---- M5: lezione 3 dell'array ----
         l3 = [t for d, t in testi if d.startswith("Lezione 3 ")]
         chk("M5", len(l3) > 20 and not any("precedenz" in t.lower() for t in l3) and not any("Chi deve lasciare strada" in t for t in l3), f"M5 «Andature e mure» senza precedenze ({len(l3)} testi)")

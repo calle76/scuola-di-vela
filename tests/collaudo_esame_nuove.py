@@ -45,7 +45,7 @@ async def main():
             ctx, pg, errs = await pagina(b, (ROOT / "index.html").as_uri())
             # 1.2.4: di base tutte le lezioni sono visibili (menu nuovo); G1 le nasconde apposta per confrontarsi con la 1.2.2
             g0 = await pg.evaluate("() => ({ nasc: LESSONS.filter(L => L.nascosta).length, n: domandeEsame(), s: sogliaEsame(), gl: glossVisibili().length })")
-            chk("G0 di base (1.2.4) nessuna lezione nascosta: esame da 34, ne servono 28, glossario di 74 voci (67 + «Abbattuta» della 1.2.12 + 6 di Deriva della 1.3.1)", g0 == {"nasc": 0, "n": 34, "s": 28, "gl": 74}, str(g0))
+            chk("G0 di base (1.2.4) nessuna lezione nascosta: esame da 34, ne servono 28, glossario di 75 voci (67 + «Abbattuta» della 1.2.12 + 6 di Deriva della 1.3.1 + «Spazio» della 1.3.10)", g0 == {"nasc": 0, "n": 34, "s": 28, "gl": 75}, str(g0))
             await pg.evaluate("() => { LESSONS.forEach((L, i) => { if (i >= 6) L.nascosta = true; }); showMenu(); }")
             nuovo_es, nuovo_gl = await pg.evaluate(ESTRAI), await pg.evaluate(GLOSS)
             chk("G1 esame identico a RIF con le lezioni nuove nascoste (20 semi)", len(rif_es) == 20 and metro.tutti(len(x) == 20 for x in rif_es) and rif_es == nuovo_es, f"{len(rif_es)} estrazioni da {len(rif_es[0])} domande")
@@ -85,7 +85,7 @@ async def main():
             nuove_voci = ["Stallo della pala", "Spingere il boma", "Salto di vento", "Scarso", "Buono", "Lasciare strada", "Precedenza", "Sovrapposte", "Libera dietro, libera avanti",
                           "Barca giuria", "Linea di partenza", "Avviso", "Preparatorio", "Bandiera di classe", "Partenza anticipata", "Richiamo individuale", "Giro di penalità",
                           "Partenza in velocità", "Partenza da fermi", "Abbattuta"]
-            chk("G4 glossario con tutte visibili: 48 + 19 voci + «Abbattuta» (1.2.12) + 6 di Deriva (1.3.1), le nuove ci sono, le vecchie nello stesso ordine", len(gl) == 74 and all(v in gl for v in nuove_voci) and [v for v in gl if v in rif_gl] == rif_gl, f"{len(gl)} voci")
+            chk("G4 glossario con tutte visibili: 48 + 19 voci + «Abbattuta» (1.2.12) + 7 di Deriva (1.3.1, 1.3.10), le nuove ci sono, le vecchie nello stesso ordine", len(gl) == 75 and all(v in gl for v in nuove_voci) and [v for v in gl if v in rif_gl] == rif_gl, f"{len(gl)} voci")
             chk("G4 glossario intero a 1360x650: il riquadro sta dentro la finestra", g["top"] >= 0 and g["bottom"] <= g["H"] + 0.5, str(g))
             # ---- ripasso di una lezione nuova, in carriera ----
             rr = await pg.evaluate("""() => { modo = 'carriera'; progress.exam = { superato: false, voto: 3, n: 34, data: '2026-11-02', ripasso: [17] }; openQuiz(17);

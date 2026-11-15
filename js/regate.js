@@ -203,7 +203,7 @@
     setGusts(rc.gusts, !!rc.tor);
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, ombra: OMBRA && !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, r1516: !es && (!!rc.tor || rc.scuola === false), prec: {}, /* r1516 (1.3.10): regole 15 e 16, solo nelle regate di Deriva */ ombra: OMBRA && !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -247,6 +247,7 @@
           ". Le posizioni dietro la linea cambiano a ogni partenza.") + centerNote();
     if (rc.segnali) t += " Sulla barca giuria le bandiere dicono a che punto è la partenza: la bandiera di classe è l'avviso, la P (blu con il quadrato bianco) è il preparatorio e si ammaina a un minuto dal via, la classe si ammaina alla partenza. Se qualcuno parte in anticipo sale la X (bianca con la croce blu) finché non è tornato dietro la linea; dopo il via c'è la bandiera blu, perché la linea è d'arrivo. I suoni della giuria accompagnano le bandiere, ma i tempi contano sulle bandiere (regola 26).";
     if (rc.precedenze) t += " Chi non lascia strada paga la penalità. Cede: con mure diverse, la barca mure a sinistra; con le stesse mure, se sono affiancate la sopravento, se non lo sono quella che sta dietro; e chi sta virando cede a tutte finché non è di nuovo di bolina.";
+    if (rc.scuola === false && !rc.tor) t += " Qui valgono anche le regole 15 e 16: chi prende la precedenza con una sua manovra, o cambia rotta verso l'altra, deve lasciarle il tempo di scansarsi (lezione 24)."; // 1.3.10 (nel torneo il testo è già lungo: lo dice la lezione 24)
     return t;
   }
 
@@ -717,6 +718,48 @@
     if (lat === 0) return { cede: piuSopravento(A, B), regola: 11 };
     return { cede: lat * tA > 0 ? B : A, regola: 11 };                                             // B sta dal lato delle mure di A: B è sopravento
   }
+  // ---- regole 15 e 16 (1.3.10, docs/PROPOSTA-REGOLE-15-16.md, modello di PROPOSTA-REGOLE-PRECEDENZA-1B.md del 23 ottobre; F15 15, 16, 43.1, parafrasate) ----
+  // Solo nelle regate di Deriva (R.r1516); la Scuola resta con 10-13. Sopra la precedenza di base (chiCede) e solo per la colpa al contatto e il semaforo
+  // (la guida dei rivali le impara con la versione B). Per ogni coppia di barche entro PREC_VICINE m si ricorda quando la precedenza di base è passata
+  // dall'una all'altra e per manovra di chi (la barca che in quel passo ha cambiato mure o è entrata o uscita dalla virata; se nessuna delle due, un cambio
+  // d'affiancamento: la più veloce; se tutte e due, nessuna). 15: contatto entro T15 s da quel cambio, e precedenza presa con una manovra propria: cede chi
+  // l'ha presa. 16: chi ha la precedenza da almeno T15 s e negli ultimi T15 s ha girato la prua di almeno G16 gradi verso l'altra (la direzione in cui la
+  // vede si è avvicinata alla prua): cede lei; la 16.2 è un caso di questa. Semplificazione (scelta di Ale del 23 ottobre): dentro la finestra la colpa è
+  // di chi ha la precedenza, qualunque cosa abbia fatto l'altra. T15 = 5,2 s misurato (tests/fisica/finestra.js); G16 = 10° (Ale, 16 novembre: 95° percentile
+  // delle sole correzioni di rotta, 8,5-9,3°, arrotondato); PREC_VICINE = 40 m e il passo della memoria della prua, 0,25 s: ipotesi nostre.
+  const T15 = 5.2, G16 = 10, PREC_VICINE = 40, PREC_PASSO = 0.25;
+  function aggiornaPrecedenze(){
+    if (!R.r1516) return;
+    for (const b of R.boats){
+      const tk = tackOf(b), vir = !!b.virando;
+      b.manovra = b.tkP !== undefined && (tk !== b.tkP || vir !== b.virP); b.tkP = tk; b.virP = vir;
+      b.storiaH = b.storiaH || [];
+      if (!b.storiaH.length || R.t - b.storiaH[b.storiaH.length - 1][0] >= PREC_PASSO){ b.storiaH.push([R.t, b.S.h]); while (b.storiaH.length && R.t - b.storiaH[0][0] > T15 + 1) b.storiaH.shift(); }
+    }
+    const bs = R.boats;
+    for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
+      const A = bs[i], B = bs[j], key = i + "-" + j;
+      if (A.fin !== null || B.fin !== null || A.dnf || B.dnf || Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y) > PREC_VICINE){ delete R.prec[key]; continue; }
+      const base = chiCede(A, B), ha = base.cede === A ? B : A, p = R.prec[key];
+      if (!p){ R.prec[key] = { ha, t: -1e9, autore: null }; continue; }
+      if (p.ha !== ha){ const autore = A.manovra !== B.manovra ? (A.manovra ? A : B) : A.manovra ? null : (A.S.u >= B.S.u ? A : B);
+        R.prec[key] = { ha, t: R.t, autore }; }
+    }
+  }
+  function prua16(b){ const s = b.storiaH; if (!s || !s.length) return null; for (const [t, h] of s) if (R.t - t <= T15 + 1e-9) return h; return s[s.length - 1][1]; }
+  // come chiCede, più le regole 15 e 16 nelle regate di Deriva; .base è la precedenza di base (10-13)
+  function chiCede1516(A, B){
+    const base = chiCede(A, B);
+    if (!R.r1516 || !(base.regola >= 10 && base.regola <= 13)) return base;
+    const ha = base.cede === A ? B : A, altra = base.cede, i = R.boats.indexOf(A), j = R.boats.indexOf(B), p = R.prec[Math.min(i, j) + "-" + Math.max(i, j)];
+    if (p && p.ha === ha && R.t - p.t < T15){ return p.autore === ha ? { cede: ha, regola: 15, base } : base; }
+    const h0 = prua16(ha);
+    if (h0 !== null && Math.abs(norm180(ha.S.h - h0)) >= G16){
+      const brg = bearingTo(ha.S, altra.S);
+      if (Math.abs(norm180(brg - ha.S.h)) < Math.abs(norm180(brg - h0))) return { cede: ha, regola: 16, base };
+    }
+    return base;
+  }
   // ---- giri di penalità (livello 2a, 1.0.61, docs/PROPOSTA-LIVELLO-2A.md; F15 44.1 e 44.2) ----
   // Solo nelle regate con R.giri e solo per il giocatore. Ogni contatto con colpa dà un debito di due giri (R.need). 1.2.16 (docs/PROPOSTA-GIRI-GIOCATORE.md, osservazione 98): un giro
   // comincia quando la prua ha girato di GIRO_AVANZA gradi in un verso; riparte da capo se torna indietro di oltre GIRO_VERSO gradi dal picco o se per più di GIRO_SOSTA secondi non avanza
@@ -906,8 +949,11 @@
       if (d < bd){ bd = d; best = o; }
     }
     R.semNome = best ? best.name : null; // per i collaudi: con quale barca è calcolato il colore
-    R.sem = best && !me.S.capsized && me.fin === null && !me.dnf && R.t <= (R.semUntil || -1) && bd < SEM_OFF ? (chiCede(me, best).cede === me ? "rosso" : "verde") : null;
+    R.sem = best && !me.S.capsized && me.fin === null && !me.dnf && R.t <= (R.semUntil || -1) && bd < SEM_OFF ? semColore(me, best) : null;
   }
+  // 1.3.10: il colore segue chi prenderebbe la penalità (chiCede1516): rosso = tua e la precedenza è dell'altra; giallo = tua anche se la precedenza è tua
+  // (regole 15 e 16); verde = dell'altra (anche quando le 10-13 ti farebbero cedere, ma l'altra ha appena preso la precedenza con una sua manovra: regola 15)
+  function semColore(me, o){ const c = chiCede1516(me, o); return c.cede !== me ? "verde" : (c.base || c).cede === me ? "rosso" : "giallo"; }
   // il motivo della penalità: «tu eri… dovevi» al giocatore (0.21.2), terza persona per l'avversario; nell'1b con il numero della regola
   function motivoContatto(cc, guilty){
     const v = (tu, lui) => guilty.me ? tu : lui;
@@ -915,6 +961,8 @@
               11: v("eri", "era") + " sopravento con le stesse mure e " + v("dovevi", "doveva") + " stare lontano",
               12: v("eri", "era") + " dietro, con le stesse mure e senza essere affiancat" + v("o", "a") + ": " + v("dovevi", "doveva") + " lasciare strada a chi stava davanti",
               13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non " + v("eri", "era") + " di nuovo di bolina",
+              15: v("avevi", "aveva") + " appena preso la precedenza con una " + v("tua", "sua") + " manovra e non " + v("le hai", "le ha") + " dato il tempo di scansarsi",
+              16: v("avevi", "aveva") + " la precedenza ma " + v("hai", "ha") + " cambiato rotta verso l'altra barca, senza lasciarle spazio",
               21.1: v("stavi", "stava") + " tornando dietro la linea dopo una partenza anticipata e " + v("dovevi", "doveva") + " lasciare strada a chi non lo faceva",
               21.2: v("stavi", "stava") + " scontando una penalità e " + v("dovevi", "doveva") + " lasciare strada a chi non la scontava" })[cc.regola] + " (regola " + cc.regola + ")";
   }
@@ -932,7 +980,7 @@
       if (d > 4.4) continue; const mtv = hullOverlap(A.S, B.S); if (!mtv) continue; // scafo contro scafo (1.0.39); 4,4 m = due mezze lunghezze, oltre non si toccano
       R.contacts[key] = simTime;
       // mure di ciascuna col vento nel suo punto
-      const cc = chiCede(A, B), guilty = cc.cede;
+      const cc = chiCede1516(A, B), guilty = cc.cede; // 1.3.10: con le regole 15 e 16 nelle regate di Deriva
       const why = motivoContatto(cc, guilty);
       if (R.punti) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri){ if (guilty.me) giriDebito(); else guilty.gDebt = (guilty.gDebt || 0) + 2; } else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
       for (const o of [A, B]){ o.S.u *= 0.6; }
@@ -1103,7 +1151,7 @@
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
     rotCapture(dt);
-    aggiornaVirate();
+    aggiornaVirate(); aggiornaPrecedenze(); // 1.3.10
     contacts();
     if (R.giri){ boeToccate(); giriPenalita(); }
     semaforo();

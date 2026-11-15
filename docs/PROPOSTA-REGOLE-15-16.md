@@ -83,3 +83,11 @@ F15 (regole 15, 16, 43.1 e definizione di «spazio»), parafrasate; i casi pubbl
 1. Il via (A e poi B).
 2. **G: 10° (consiglio) o 53°.**
 3. Va bene la lezione 24 senza esercizio in regata, per ora?
+
+## Risposte di Ale (16 novembre 2026, notte)
+
+«Va bene via e come consigli tu»: via ad A e poi B; **G = 10°**; lezione 24 senza esercizio in regata, per ora.
+
+## Esito della versione A (1.3.10, notte del 16 novembre 2026)
+
+Fatta. R1-R6 passano (R1 17 casi a mano; R2 0 contraddizioni; R3 la Scuola identica; R4 in 200 regate del torneo 87 contatti su 237 per la 15 e 14 per la 16; R5 lezione 24 fuori dalla Scuola, punti di Deriva 24 con quota 22; R6 pannello e pagine). Due correzioni durante il lavoro, dette nel `CHANGELOG.md`: il colore del semaforo (segue chi prenderebbe la penalità) e la proposta che dimenticava l'Esperienza nei punti. Prossimo: la versione B (guida dei rivali), con le misure lunghe.

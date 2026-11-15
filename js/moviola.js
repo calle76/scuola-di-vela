@@ -70,7 +70,7 @@
     const L = (p, q) => p + (q - p) * f;
     R.boats.forEach((bt, k) => {
       const p = a.b[k], q = b.b[k], s = bt.S, n = f < 0.5 ? p : q;
-      s.x = L(p[0], q[0]); s.y = L(p[1], q[1]); s.h = p[8] !== q[8] ? n[2] : norm360(p[2] + norm180(q[2] - p[2]) * f); // 1.2.22: alla scuffiata e alla raddrizzata la prua cambia di colpo, non si mescola (collaudo_moviola V1, 9,84° con la 1.2.21) s.heel = L(p[3], q[3]); s.u = L(p[4], q[4]);
+      s.x = L(p[0], q[0]); s.y = L(p[1], q[1]); s.h = p[8] !== q[8] ? n[2] : norm360(p[2] + norm180(q[2] - p[2]) * f); s.heel = L(p[3], q[3]); s.u = L(p[4], q[4]); // 1.2.22: alla scuffiata e alla raddrizzata la prua cambia di colpo, non si mescola (collaudo_moviola V1, 9,84° con la 1.2.21). 1.3.10: sbandamento e velocità erano finiti dentro questo commento dalla 1.2.22 (tests/controllo_commenti.py)
       s.dispBoom = L(p[5], q[5]); s.boom = L(p[6], q[6]); s.boomSide = n[7]; s.capsized = !!n[8]; s.hike = n[9];
     });
     $("movPos").value = Math.round(1000 * riv.pos / Math.max(0.1, rivDur()));

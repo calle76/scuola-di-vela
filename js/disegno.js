@@ -505,9 +505,9 @@
     // 1.0.41: solo la barca del giocatore (le altre passano da questa stessa funzione con S scambiato: nella 1.0.40 il colore finiva anche sugli avversari);
     // più visibile: alone largo e trasparente sotto la linea colorata (rosso più spesso, secondo segnale oltre al colore)
     if (opt.sem && mode === "race" && R && R.sem && S === R.boats[0].S){
-      const rosso = R.sem === "rosso", col = rosso ? "#E0553A" : "#3FBF6B";
+      const rosso = R.sem === "rosso", giallo = R.sem === "giallo", col = rosso ? "#E0553A" : giallo ? "#E8B931" : "#3FBF6B"; // 1.3.10: il giallo, tratteggiato (secondo segnale oltre al colore)
       ctx.save(); ctx.lineJoin = "round"; ctx.globalAlpha = 0.3; ctx.strokeStyle = col; ctx.lineWidth = rosso ? 0.5 : 0.36; hullPath(0, 0); ctx.stroke();
-      ctx.globalAlpha = 1; ctx.lineWidth = rosso ? 0.22 : 0.14; hullPath(0, 0); ctx.stroke(); ctx.restore(); }
+      ctx.globalAlpha = 1; ctx.lineWidth = rosso ? 0.22 : giallo ? 0.18 : 0.14; if (giallo) ctx.setLineDash([0.35, 0.25]); hullPath(0, 0); ctx.stroke(); ctx.restore(); }
     // pozzetto e scassa della deriva
     ctx.fillStyle = colors.cockpit;
     ctx.beginPath(); ctx.moveTo(-0.38, 0.35); ctx.lineTo(0.38, 0.35); ctx.lineTo(0.42, 1.55); ctx.lineTo(-0.42, 1.55); ctx.closePath(); ctx.fill();

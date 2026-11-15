@@ -644,6 +644,20 @@
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
       text: ["La layline è la linea da cui arrivi alla boa senza virare più. Virare prima costa due virate, superarla costa strada. Il vento la sposta: arrivaci vicino alla boa. Con una virata di circa 90°, sei sulla layline quando vedi la boa poco più avanti del traverso."] }
   ];
+  // 24 (1.3.10, docs/PROPOSTA-REGOLE-15-16.md): le regole 15 e 16 di F15, parafrasate; nel gioco T15 e G16 (js/regate.js); senza esercizio in regata, per ora (Ale, 16 nov)
+  const LE4 = [
+    { title: "Prendere la precedenza", ...PAUSE, zoom: 2,
+      text: ["La precedenza può cambiare di mano. Se la prendi con una <em>tua</em> manovra, per esempio finisci una virata e ora sei mure a dritta davanti a un'altra barca, all'inizio devi darle lo spazio per scansarsi (regola 15).",
+             "Se invece la precedenza ti arriva per una manovra dell'altra, per esempio è lei che vira e si ritrova mure a sinistra, non devi niente: lo spazio deve trovarlo lei."] },
+    { title: "Cambiare rotta", ...PAUSE, zoom: 2,
+      text: ["Anche chi ha la precedenza non può fare quello che vuole: se cambia rotta, deve lasciare all'altra lo spazio per stare lontana (regola 16).",
+             "Un caso tipico, di bolina: sei mure a dritta e una barca mure a sinistra ti sta passando dietro. Non puoi poggiare addosso a lei per costringerla a cambiare rotta all'improvviso."] },
+    { title: "Nel gioco", ...PAUSE, zoom: 2,
+      text: ["Nelle regate di Deriva, per 5 secondi dopo che hai preso la precedenza con una tua manovra, o se negli ultimi 5 secondi hai girato la prua di almeno 10° verso l'altra barca, un contatto è colpa tua.",
+             "Il semaforo sullo scafo lo dice in <em>giallo</em>, tratteggiato: hai la precedenza, ma se tocchi adesso la penalità è tua. Nel regolamento conta se l'altra ha avuto lo spazio per manovrare da buon marinaio; il gioco usa il tempo, ed è una semplificazione. Nella Scuola restano le regole 10-13."] },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Precedenza presa con una tua manovra: dai all'altra il tempo di scansarsi (regola 15). Precedenza e cambio di rotta verso l'altra: lasciale spazio (regola 16). Il semaforo giallo te lo ricorda."] }
+  ];
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -771,6 +785,11 @@
              ["Perché conviene arrivare sulla layline vicino alla boa?", "Perché il vento può girare e spostarla", ["Perché lontano dalla boa non esiste", "Perché vicino alla boa il vento è più forte", "Non conviene: meglio arrivarci subito"], "Più lontano la prendi, più tempo ha il vento per spostarla."],
              ["La tua barca vira di circa 90°. Dove vedi la boa quando sei sulla layline?", "Poco più avanti del traverso", ["Dritta a prua", "Dritta a poppa", "Esattamente al traverso, o dietro"], "Con una virata di circa 90°, sull'altra mura la boa sarà a prua: da qui la vedi poco più avanti del traverso."],
              ["Fra la boa 1 e la boa 2 del triangolo, al lasco, serve la layline?", "No: si va dritti alla boa", ["Sì, come di bolina", "Sì, ma solo con il vento forte", "Solo se ci sono altre barche"], "La layline serve quando alla boa non si può andare dritti; al lasco si va dritti."]] },
+    { name: "Lezione 24", title: "Prendere la precedenza", steps: LE4, livello: "deriva", desc: "Chi prende la precedenza con una sua manovra, o cambia rotta, deve lasciare spazio all'altra (regole 15 e 16).",
+      quiz: [["Finisci una virata e ora hai la precedenza su una barca vicina. Che cosa devi fare?", "Darle il tempo di scansarsi", ["Niente: ho la precedenza", "Virare di nuovo", "Fare un giro di penalità"], "Hai preso la precedenza con una tua manovra: all'inizio devi darle lo spazio per scansarsi (regola 15)."],
+             ["La precedenza ti arriva perché è l'altra barca a virare. Devi darle tempo?", "No: lo spazio deve trovarlo lei", ["Sì, sempre", "Sì, ma solo di bolina", "Solo se siamo affiancate"], "La regola 15 vale quando prendi la precedenza con una manovra tua, non quando te la dà la manovra dell'altra."],
+             ["Sei mure a dritta, di bolina; una mure a sinistra ti sta passando dietro. Puoi poggiare addosso a lei?", "No: chi ha la precedenza e cambia rotta deve lasciarle spazio", ["Sì: ho la precedenza", "Sì, se poggio poco", "Solo dopo il via"], "Regola 16: anche chi ha la precedenza, cambiando rotta, deve lasciare all'altra lo spazio per stare lontana."],
+             ["Nelle regate di Deriva, che cosa vuol dire il semaforo giallo tratteggiato?", "Hai la precedenza, ma se tocchi adesso la penalità è tua", ["Devi lasciare strada", "Hai la precedenza e puoi tirare dritto", "Sta per arrivare una raffica"], "Il giallo ricorda le regole 15 e 16: l'hai appena presa, o hai appena cambiato rotta verso l'altra."]] },
   ];
 
   // ---- prove ----
@@ -971,6 +990,7 @@
     ["Sopravento", "Il lato colpito per primo dal vento; in generale, la parte da cui arriva il vento.", "Lezione 1"],
     ["Sottovento", "Il lato riparato, opposto a quello da cui arriva il vento.", "Lezione 1"],
     ["Sovrapposte", "Due barche con le stesse mure sono sovrapposte, cioè affiancate, quando nessuna delle due sta tutta dietro una linea tirata al traverso dal punto più a poppa dell'altra. Lascia strada la sopravento (regola 11).", "Lezione 13"],
+    ["Spazio (regolamento)", "Lo spazio che serve a una barca per manovrare prontamente e da buon marinaio. Chi prende la precedenza con una sua manovra, o cambia rotta, deve lasciarlo all'altra (regole 15 e 16).", "Lezione 24"],
     ["Spingere il boma", "Con la barca ferma nell'angolo morto, spingere il boma fuori e mettere la barra dalla stessa parte: la barca arretra e la prua gira lontano dal vento. Serve anche a frenare o ad arretrare apposta. Nel gioco, tasto Z.", "Lezione 6"],
     ["Sporgersi fuori bordo", "Spostare il peso fuori dalla barca, sopravento, per contrastare lo sbandamento.", "Lezione 8"],
     ["Stallo", "Vela troppo cazzata: non sbatte, ma l'aria non ci scorre sopra bene e la barca rallenta.", "Lezione 1"],

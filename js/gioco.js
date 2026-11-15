@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.9"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.10"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -182,7 +182,8 @@
   // zonale finita, un momento rivisto col coach. Superata: fra i primi 3 di uno zonale (il diritto al nazionale, progress.nazionale), oppure per merito: una stagione
   // zonale senza ritiri (progress.zonalePulita, dalla 1.3.5) e almeno QUOTA_MERITO punti. Tutti i numeri sono ipotesi nostre; QUOTA_MERITO è provvisoria e si misura
   // nella tappa 7 del piano, dopo i rivali (PIANO-CHIUSURA-DERIVA.md).
-  const MERITI_D = [["abil", "Abilità", 4], ["cono", "Conoscenza", 6], ["comp", "Competizione", 6], ["esp", "Esperienza", 5]], QUOTA_MERITO = 19;
+  // 1.3.10: con la lezione 24 Conoscenza va da 6 a 8 ed Esperienza da 5 a 6 (totale da 21 a 24); la quota provvisoria del merito, nella stessa proporzione, da 19 a 22
+  const MERITI_D = [["abil", "Abilità", 4], ["cono", "Conoscenza", 8], ["comp", "Competizione", 6], ["esp", "Esperienza", 6]], QUOTA_MERITO = 22;
   function meritiD(p){
     const m = MISSIONS.findIndex(x => x.livello === "deriva"), k = medalOf(m, p.best[recK("m" + m)]), sf = p.stagioneFatta, tp = p.derivaTappa;
     const pt = {

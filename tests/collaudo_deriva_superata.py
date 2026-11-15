@@ -3,7 +3,7 @@
 #   D6a stagione zonale vera vinta (4 tappe chiuse con stChiudiTappa, sempre primo nella batteria): superata «fra i primi 3», il riquadro compare una volta sola,
 #       e alla ricarica resta superata senza ricomparire
 #   D6b stagione vera con una tappa lasciata: mai «senza ritiri», quindi mai per merito, anche con tutti gli altri punti (21/21 di punti costruiti)
-#   D6c per merito (costruito): stagione 5° senza ritiri e 19 punti: superata; con 18: no (controprova); con 19 ma senza la stagione «senza ritiri»: no
+#   D6c per merito (costruito): stagione 5° senza ritiri e 22 punti (dalla 1.3.10; prima 19): superata; con 21: no (controprova); con 22 ma senza la stagione «senza ritiri»: no
 #   D6d salvataggio della 1.2.39 con lo zonale già fra i primi 3 (diritto al nazionale, nessun campo nuovo): superata al primo menu
 #   D6e gioco libero con gli stessi progressi: non si supera niente; carriera senza attestato: niente (Deriva è ancora chiusa)
 #   D6f stagione non finita (lasciata a metà) con tutti gli altri punti: no
@@ -22,7 +22,7 @@ def chk(parte, ok, testo):
     if not ok: fail.append(testo)
 
 BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}}
-RESTO = {"done": {"l20": True, "l21": True, "l22": True, "m5": True}, "best": {"m5": 230}, "clean": {"m5": True}, "quiz": {"q20": 4, "q21": 4, "q22": 5}, "coachVisto": True}
+RESTO = {"done": {"l20": True, "l21": True, "l22": True, "l23": True, "m5": True}, "best": {"m5": 230}, "clean": {"m5": True}, "quiz": {"q20": 4, "q21": 4, "q22": 5, "q23": 4}, "coachVisto": True}   # 1.3.10: con la lezione 24 (indice 23)
 def unisci(*d):
     o = {"done": {}, "best": {}, "clean": {}, "quiz": {}}
     for x in d:
@@ -66,12 +66,12 @@ async def main():
         await q.evaluate("() => { if (!__sv.torNuovo) __sv.torNuovo = torNuovo; }")
         s = await q.evaluate(STAGIONE, [4, 2, 4]); await q.evaluate("() => { delete __sv.progress.nazionale; __sv.progress.stagioneFatta = { pos: 5 }; __sv.progress.derivaTappa = 2; saveProgress(); showMenu(); }")
         r = await q.evaluate(stato)
-        chk("D6", not s["pulita"] and r["d"] is None and r["m"]["totale"] >= 19, f"D6b tappa lasciata: pulita {s['pulita']}, punti {r['m']['totale']}, superata {r['d']}")
+        chk("D6", not s["pulita"] and r["d"] is None and r["m"]["totale"] >= 22, f"D6b tappa lasciata: pulita {s['pulita']}, punti {r['m']['totale']}, superata {r['d']}")
         await ctx.close()
         # ---- D6c: per merito, costruito
-        for pt, pul, att in ((19, True, True), (18, True, False), (19, False, False)):
+        for pt, pul, att in ((22, True, True), (21, True, False), (22, False, False)):   # 1.3.10: quota 22 su 24 (prima 19 su 21)
             salv = unisci(BREV, RESTO, {"stagioneFatta": {"pos": 5}, "derivaTappa": 2})
-            if pt == 18: salv["quiz"]["q22"] = 3   # ripasso 23 al 60%: un punto in meno
+            if pt == 21: salv["quiz"]["q22"] = 3   # ripasso 23 al 60%: un punto in meno
             if pul: salv["zonalePulita"] = True
             ctx, q = await pagina(salv); r = await q.evaluate(stato)
             chk("D6", r["m"]["totale"] == pt and bool(r["d"]) == att and (not att or r["d"]["strada"] == "merito"), f"D6c {pt} punti, senza ritiri {pul}: superata {r['d']} (attesa {att})")
@@ -107,7 +107,7 @@ async def main():
             const a = meritiD(p).totale; p.quiz.q20 = Math.max(p.quiz.q20, 2); p.best.m5 = Math.min(p.best.m5, 300); p.stagioneFatta = { pos: Math.min(p.stagioneFatta.pos, 9) }; const b = meritiD(p).totale;
             const solo = { done: {}, best: {}, clean: {}, stagioneFatta: { pos: 4 }, derivaTappa: 1, zonalePulita: true }; const s = meritiD(solo);
             return { a, b, solo: s.totale, merito: s.merito }; }""")
-        chk("D10", d10["a"] == d10["b"] and not d10["merito"] and d10["solo"] < 19, f"D10 ripetere senza migliorare: {d10}")
+        chk("D10", d10["a"] == d10["b"] and not d10["merito"] and d10["solo"] < 22, f"D10 ripetere senza migliorare: {d10}")
         await ctx.close()
         # ---- D2 e D3: carriera col libretto di Deriva pieno, pagina senza #collaudo
         pieno = unisci(BREV, RESTO, {"stagioneFatta": {"pos": 2}, "derivaTappa": 1, "nazionale": True, "deriva": {"data": "2026-11-15", "strada": "piazzamento"}})
