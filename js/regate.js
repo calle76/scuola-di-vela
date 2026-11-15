@@ -726,34 +726,34 @@
   // restano, R.base; prima tornava a 1 e il debito risaliva, osservazione 72). Scontata la penalità il verso è di nuovo libero (44.2: lo stesso verso vale per ogni penalità). All'arrivo con giri mancanti il giocatore è squalificato (1.2.16, decisione di Ale dell'8 novembre; 60.5); dalla 1.2.18 anche gli avversari (giriMancantiAI).
   const GIRO_GRADI = 360, GIRO_VERSO = 20, GIRO_SOSTA = 8, GIRO_AVANZA = 20, GIRO_INIZIO = 120; // ipotesi nostre: isteresi del verso (disturbo delle onde), secondi senza girare dopo i quali il giro
     // riparte (1.2.16, sopra la sosta di 6-7 s del giro piantato di Ale), gradi da girare in GIRO_SOSTA s perché la prua «avanzi» (20: con 5 la barca a barra al centro, che scivola di 0,5-2°/s, sembrava girare; cambiato dopo la prima misura, Ale 8 nov), ripiego per giro non fatto degli avversari, gradi da cui si sta scontando (regola 21.2, 1.0.66)
-  function giroVia(){ const S = R.boats[0].S; R.giro = { h: S.h, v: 0, cum: 0, pk: 0, anc: 0, tA: R.t, tk: S.tacks, gy: S.gybesC + S.gybesV }; }
-  function giriMsg(){ const m = R.need - R.done; R.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata, senza fermarti."; }
-  function giriDebito(n){ R.need += n === undefined ? 2 : n; giroVia(); giriMsg(); } // il giro riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
-  function giriPenalita(){
-    const me = R.boats[0], S = me.S, g = R.giro;
-    if (!g || R.need <= R.done || me.fin !== null || me.dnf){ me.sconta = false; return; }
-    if (S.capsized){ giroVia(); me.sconta = false; return; }
+  function giroVia(G = R){ const S = G.boats[0].S; G.giro = { h: S.h, v: 0, cum: 0, pk: 0, anc: 0, tA: G.t, tk: S.tacks, gy: S.gybesC + S.gybesV }; }
+  function giriMsg(G = R){ const m = G.need - G.done; G.lastRule = m <= 0 ? "Penalità scontata: i giri sono fatti." : "Penalità: " + (m === 1 ? "ti manca un giro" : "devi fare " + m + " giri") + ", nello stesso verso, ciascuno con una virata e una strambata, senza fermarti."; }
+  function giriDebito(n, G = R){ G.need += n === undefined ? 2 : n; giroVia(G); giriMsg(G); } // il giro riparte a ogni colpa: i giri contano dopo l'infrazione, non prima
+  function giriPenalita(G = R){ // 1.3.2: G è lo stato dei giri, R nelle regate, quello della prova dei giri nelle prove (gioco.js)
+    const me = G.boats[0], S = me.S, g = G.giro;
+    if (!g || G.need <= G.done || me.fin !== null || me.dnf){ me.sconta = false; return; }
+    if (S.capsized){ giroVia(G); me.sconta = false; return; }
     const d = norm180(S.h - g.h); g.h = S.h;
     if (!g.v){ // nessun giro cominciato: si aspetta che la prua giri di GIRO_AVANZA gradi in un verso
       g.cum += d;
-      if (Math.abs(g.cum) >= GIRO_AVANZA){ g.v = Math.sign(g.cum); g.cum = g.pk = g.anc = Math.abs(g.cum); g.tA = R.t; }
-      else if (R.t - g.tA > GIRO_SOSTA){ giroVia(); me.sconta = false; } // fermi fra un giro e l'altro: si smette di scontare (21.2) e si riprendono i conti di virate e strambate da adesso
+      if (Math.abs(g.cum) >= GIRO_AVANZA){ g.v = Math.sign(g.cum); g.cum = g.pk = g.anc = Math.abs(g.cum); g.tA = G.t; }
+      else if (G.t - g.tA > GIRO_SOSTA){ giroVia(G); me.sconta = false; } // fermi fra un giro e l'altro: si smette di scontare (21.2) e si riprendono i conti di virate e strambate da adesso
       return;
     }
     g.cum += d * g.v; if (g.cum > g.pk) g.pk = g.cum;
-    if (g.cum >= g.anc + GIRO_AVANZA){ g.anc = g.cum; g.tA = R.t; }
-    if (g.pk - g.cum > GIRO_VERSO || R.t - g.tA > GIRO_SOSTA){ // tornato indietro o fermo: il giro riparte da capo
-      const era = g.pk; giroVia(); me.sconta = false;
+    if (g.cum >= g.anc + GIRO_AVANZA){ g.anc = g.cum; g.tA = G.t; }
+    if (g.pk - g.cum > GIRO_VERSO || G.t - g.tA > GIRO_SOSTA){ // tornato indietro o fermo: il giro riparte da capo
+      const era = g.pk; giroVia(G); me.sconta = false;
       if (era >= GIRO_INIZIO) toast("Giro interrotto: ricomincia, stesso verso, senza fermarti");
       return;
     }
     if (!me.sconta && g.cum >= GIRO_INIZIO) me.sconta = true;
     if (g.cum < GIRO_GRADI || S.tacks <= g.tk || S.gybesC + S.gybesV <= g.gy) return;
     const v = g.v;
-    R.done = R.giroDir && v !== R.giroDir ? R.base + 1 : R.done + 1; R.giroDir = v;
-    giroVia(); giriMsg(); if (R.done >= R.need) me.sconta = false;
-    toast(R.done >= R.need ? "Penalità scontata" : "Giro fatto: ne manca ancora " + (R.need - R.done));
-    if (R.done >= R.need){ const k = R.need - R.base; R.penList.push("Tu, penalità scontata: " + k + (k === 1 ? " giro" : " giri") + "."); R.base = R.need; R.giroDir = 0; }
+    G.done = G.giroDir && v !== G.giroDir ? G.base + 1 : G.done + 1; G.giroDir = v;
+    giroVia(G); giriMsg(G); if (G.done >= G.need) me.sconta = false;
+    toast(G.done >= G.need ? "Penalità scontata" : "Giro fatto: ne manca ancora " + (G.need - G.done));
+    if (G.done >= G.need){ const k = G.need - G.base; G.penList.push("Tu, penalità scontata: " + k + (k === 1 ? " giro" : " giri") + "."); G.base = G.need; G.giroDir = 0; }
   }
   function giriMancanti(b){ // il giocatore taglia l'arrivo con il debito aperto: squalificato (1.2.16; F15 44.2 e 60.5: nella realtà dopo una protesta, qui sempre)
     const m = R.need - R.done; if (m <= 0) return;

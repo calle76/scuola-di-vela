@@ -3,7 +3,7 @@
 #     i meriti della carriera identici con e senza le lezioni e i ripassi di Deriva fatti (stesso salvataggio, 6 salvataggi diversi);
 #  D8 niente doppioni: nessuna domanda dei ripassi di Deriva uguale a una della Scuola (ripassi ed esame); nessun termine del glossario ripetuto; le voci nuove ci sono;
 #  D3 al suo posto: dal menu di Deriva (pagina senza #collaudo) ogni lezione si apre, ogni ripasso apre il suo quiz «Ripasso 21-23»; dall'ultimo passo «Prosegui» porta
-#     alla lezione dopo di Deriva, e dalla 23 si torna al menu; 0 errori.
+#     alla lezione dopo di Deriva, dalla 23 si va alla prova 6 (1.3.2); 0 errori.
 # Esce con 1 se un controllo fallisce o se una parte non ha casi.
 import asyncio, json, os, pathlib, sys
 from playwright.async_api import async_playwright
@@ -64,9 +64,9 @@ async def main():
         head = await q.inner_text(".tile .part-head")
         chk("D4", "di 25 completate" in head, f"D4 menu della Scuola: «{' '.join(head.split())}»")
         await q.click("#livSel button[data-v='deriva']")
-        chk("D3", await q.locator("#menu button.item[data-d]").count() == 3 and await q.locator("#menu [data-q]").count() == 3, "D3 nel menu di Deriva tre lezioni e tre ripassi")
+        chk("D3", await q.locator("#menu button.item[data-d^='l']").count() == 3 and await q.locator("#menu [data-q]").count() == 3, "D3 nel menu di Deriva tre lezioni e tre ripassi")
         for k, li in enumerate(s["D"]):
-            await q.click(f"#menu button.item[data-d='{li}']"); await q.wait_for_timeout(200)
+            await q.click(f"#menu button.item[data-d='l{li}']"); await q.wait_for_timeout(200)
             nvis = await q.evaluate("() => !document.getElementById('game').hidden")
             chk("D3", nvis and f"{21 + k}" in (await q.inner_text("#where")), f"D3 la lezione {21 + k} si apre: «{(await q.inner_text('#where')).strip()}»")
             # fino all'ultimo passo (i passi con l'esercizio si saltano con l'apposito gancio: qui non si guida)
@@ -90,7 +90,7 @@ async def main():
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); q = await ctx.new_page(); q.on("pageerror", lambda x: errs.append(str(x)))
         await q.goto(BASE + "#collaudo"); await q.wait_for_timeout(300)
         nx = await q.evaluate("(D) => D.map(li => { __sv.openItem(['l', li]); return nextLabel(); })", s["D"])
-        chk("D3", nx == ["Prosegui: Lezione 22", "Prosegui: Lezione 23", "Torna al menu"], f"D3 «Prosegui» dall'ultimo passo: {nx}")
+        chk("D3", nx == ["Prosegui: Lezione 22", "Prosegui: Lezione 23", "Prosegui: Prova 6"], f"D3 «Prosegui» dall'ultimo passo: {nx}")
         await ctx.close()
         chk("D3", not errs, f"D3 errori della pagina: {errs[:3]}")
         await b.close()

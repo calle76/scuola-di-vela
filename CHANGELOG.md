@@ -19,6 +19,40 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.2 — Deriva: la prova dei giri di penalità, con le medaglie
+
+Terza versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, criterio D9; `PROPOSTA-LIVELLO-DERIVA.md` §3). Lavoro fatto in autonomia su richiesta di Ale.
+
+- **Prova 6, «I giri di penalità»**, nel menu di Deriva dopo le lezioni 21-23. Al via si devono già due giri, come dopo un contatto con colpa: vanno fatti subito, ognuno un giro intero nello stesso verso con una virata e una strambata, senza fermarsi (regola 44.2). Poi bolina fino alla boa a 170 m, lasciata a sinistra, e ritorno alla linea. Il tempo comprende i giri; **ogni giro non fatto costa 15 s** all'arrivo (scelta di Ale del 6 novembre) e toglie la stella.
+- Nel pannello della prova una riga dice quanti giri mancano («Giri da fare: 2») e diventa verde quando la penalità è scontata.
+- **I giri si contano con le stesse regole delle regate:** le funzioni dei giri di `regate.js` ora ricevono lo stato dei giri (nelle regate è quello di sempre, nella prova quello della prova). Per le regate non cambia niente.
+- **Medaglie: oro 240 s, argento 300 s, bronzo 385 s**, con la regola già scritta (`PROPOSTA-MEDAGLIE-E-NOMI.md` §2) applicata al pilota di `collaudo_medaglie.py`, che prima fa i giri con la barra tutta da una parte e poi il percorso.
+- La prova non entra nei meriti della Scuola: Abilità conta solo le prove 1-5.
+
+**Misure.**
+- **Medaglie, scelta sui semi 1-30:** il pilota preciso ha una mediana di 235,8 s (da 235,3 a 236,5), e la regola dà 240/300/385.
+- **Medaglie, conferma sui semi 101-130 mai guardati, Chromium e Firefox identici:**
+  - pilota preciso: 30 su 30 entro l'oro (mediana 235,9 s), con un margine di circa 4 s;
+  - pilota con errori: 30 su 30 entro il bronzo e 0 ori (mediana 307,8 s);
+  - pallino del menu giusto.
+- **D9** (`collaudo_prova_giri.py`, nuovo, semi 1-10):
+  - col pilota che fa i giri: completata 10 su 10, giri fatti 2 su 2, tempo salvato uguale al tempo vero;
+  - a mani ferme: 0 su 10;
+  - senza giri: 10 su 10 con +30 s e senza stella;
+  - con un giro solo: +15 s.
+- **Un numero da sapere:** i due giri costano circa 18 s di percorso (235,8 contro 217,3 s), saltarli ne costa 30. Conviene farli, ma chi li salta prende comunque l'argento (247 s).
+- **Meriti e menu:** i meriti della Scuola sono uguali con e senza un oro nella prova 6, e la prova sta solo nel menu di Deriva.
+- **Pagina senza `#collaudo`:** la prova si apre dal menu, la riga dei giri c'è, il pannello a 1360x650 non scorre, 0 errori.
+- **Non-regressione dei giri delle regate:**
+  - fisica identica (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`);
+  - verdi i collaudi delle regate coi giri: `collaudo_giri` (12 prove), `collaudo_orologio_giri`, `collaudo_segnali`, `collaudo_regola21` (12 prove), `collaudo_riquadro_bandiere`;
+  - verdi anche `collaudo_pannello`, `collaudo_carriera`, `collaudo_carriera_esame`, `collaudo_carriera_intera`, `collaudo_pilota_lezioni` (veloce), `collaudo_fasce` (prove 1-4 coi tempi di riferimento).
+- **Due collaudi rotti dalla 1.3.1, che allora non avevo lanciato** (mia mancanza):
+  - `collaudo_libretto`: contava anche le lezioni di Deriva fra quelle della Scuola, e ora legge solo quelle della Scuola;
+  - `collaudo_menu`: tra i rimandi noti mancava «come nella lezione 20», scritto nella lezione 21 e giusto; mancavano anche gli esercizi in regata, ora 7 e non più 5, e le lezioni di glossario fino alla 23.
+
+  In tutti e due il gioco era giusto e andava aggiornata l'attesa; ora sono verdi. Aggiornati anche `collaudo_deriva_lezioni` (dalla lezione 23 «Prosegui» porta alla prova 6) e `collaudo_medaglie` (prove 1-6).
+
 ## 1.3.1 — Deriva: lezioni 21, 22 e 23, con ripassi, glossario ed esercizi
 
 Seconda versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`). Nel menu di Deriva (gioco libero) c'è ora la colonna «Deriva» con tre lezioni e i loro ripassi; in carriera Deriva resta nascosta.

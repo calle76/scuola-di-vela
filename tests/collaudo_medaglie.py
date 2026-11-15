@@ -1,4 +1,4 @@
-# Medaglie delle prove (1.2.11, docs/PROPOSTA-MEDAGLIE-E-NOMI.md §3, soglie scritte prima).
+# Medaglie delle prove (1.2.11, docs/PROPOSTA-MEDAGLIE-E-NOMI.md §3, soglie scritte prima). Dalla 1.3.2 anche la prova 6 di Deriva, dei giri (prima i giri, poi il percorso).
 # Il pilota preciso è quello di collaudo_fasce.py (decide ogni 0,1 s, bolina a 52°, vela regolata). Quello «con errori tipici» decide ogni 0,5 s,
 # stringe a 60° e tiene la scotta 0,12 più lasca: tre ipotesi nostre, non misure di principianti veri. Passi fissi di 1/60 s, una pagina nuova per corsa.
 #   M3a: pilota preciso, 30 corse su 30 finite, almeno 25 su 30 entro l'oro, in ogni prova
@@ -6,7 +6,7 @@
 #   M3c: pilota con errori, oro al massimo in 5 su 30, in ogni prova (il metro deve distinguere)
 #   M3d: a corsa finita il pallino del menu è quello calcolato dal tempo, uno per prova
 #   M3e (aggiunto dopo il giro GitHub della 1.2.11, non è una soglia delle medaglie): le stesse corse rifatte danno gli stessi tempi
-# Le bande si leggono dal gioco. Uso: python collaudo_medaglie.py [--semi 101-130] [--prove 12345] [--scelta]
+# Le bande si leggono dal gioco. Uso: python collaudo_medaglie.py [--semi 101-130] [--prove 123456] [--scelta]
 #   --scelta: non controlla niente, stampa cosa dà la regola (semi 1-30): oro = mediana ai 5 s superiori, poi +5 s finché 25 su 30; argento ×1,25, bronzo ×1,6 ai 5 s più vicini
 import asyncio, os, pathlib, statistics, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
@@ -16,7 +16,7 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
 GIUSTO = [60, 0, -60]
-PIANI = [[], [], [], [[0, GIUSTO]], [[0, GIUSTO], [1, GIUSTO]]]   # gli stessi di collaudo_fasce.py: i punti attorno alle boe
+PIANI = [[], [], [], [[0, GIUSTO]], [[0, GIUSTO], [1, GIUSTO]], [[0, GIUSTO]]]   # 1.3.2: la prova 6, dei giri, gira una boa come la 4   # gli stessi di collaudo_fasce.py: i punti attorno alle boe
 PRECISO = {"passo": 6, "bolina": 52, "lasca": 0}; ERRORI = {"passo": 30, "bolina": 60, "lasca": 0.12}
 N_CORSE = 30
 CORSA = """
@@ -30,7 +30,9 @@ CORSA = """
   sv.fast(0);
   while (!sv.S.finished && n < 60 * 900) {
     const S = sv.S;
-    if (n % E.passo === 0 && i < pts.length) {
+    if (sv.mg && sv.mg.need > sv.mg.done && !E.senzaGiri) {   // 1.3.2, prova dei giri: prima i giri, con la barra tutta da una parte (come il pilota «boa» della lezione 20)
+      if (n % E.passo === 0) { sv.ctl.tiller = 1; sv.ctl.sheet = sv.autoSheet(); if (S.capsized && !S.righting) dispatchEvent(new KeyboardEvent("keydown", { key: "a" })); }
+    } else if (n % E.passo === 0 && i < pts.length) {
       const p = pts[i]; if (Math.hypot(p.x - S.x, p.y - S.y) < 7 && i < pts.length - 1) i++;
       const q = pts[Math.min(i, pts.length - 1)];
       const brg = Math.atan2(q.x - S.x, -(q.y - S.y)) / D, rel = n180(brg - sv.twd);
@@ -47,7 +49,7 @@ CORSA = """
     }
     sv.run(1 / 60, 1); n++;
   }
-  return [!!sv.S.finished, sv.S.time];
+  return [!!sv.S.finished, sv.S.time + (sv.mg ? Math.max(0, sv.mg.need - sv.mg.done) * GIRO_MANCA_S : 0)];   // 1.3.2: il tempo della prova dei giri conta i giri non fatti
 }
 """
 # Seme, apertura, partenza e corsa nella stessa chiamata: nessun fotogramma vero in mezzo. Con chiamate separate i fotogrammi consumavano numeri casuali
@@ -71,6 +73,10 @@ async def corsa(b, idx, k, seme0, E, menu=False):
             r = await pg.evaluate("""t => { const v = [...document.querySelectorAll('#menu button.item[data-k]')].find(b => b.querySelector('.title').textContent === t);
               if (!v) return null; const m = v.querySelector('.medal'); return m ? m.className : ""; }""", titolo)
             if r is not None: pallino = r; break
+        if pallino is None:   # 1.3.2: la prova dei giri sta nel menu di Deriva
+            await pg.evaluate("() => document.querySelector('#livSel [data-v=deriva]')?.click()")
+            pallino = await pg.evaluate("""t => { const v = [...document.querySelectorAll('#menu button.item[data-d]')].find(b => b.querySelector('.title').textContent === t);
+              if (!v) return null; const m = v.querySelector('.medal'); return m ? m.className : ""; }""", titolo)
     bande = await pg.evaluate(f"MISSIONS[{idx}].bands")
     await pg.close()
     return fin, t, bande, pallino, errs
@@ -82,7 +88,7 @@ def regola(tempi):
 async def main():
     a = sys.argv[1:]; scelta = "--scelta" in a
     primo, ultimo = map(int, (a[a.index("--semi") + 1] if "--semi" in a else ("1-30" if scelta else "101-130")).split("-"))
-    prove = [int(c) - 1 for c in (a[a.index("--prove") + 1] if "--prove" in a else "12345")]
+    prove = [int(c) - 1 for c in (a[a.index("--prove") + 1] if "--prove" in a else "123456")]
     n = ultimo - primo + 1
     async with async_playwright() as p:
         b = await getattr(p, os.environ.get("BROWSER", "chromium")).launch(); errori = []

@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.1"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.2"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -135,7 +135,7 @@
     const VIS = ORD_L.filter(i => !LESSONS[i].nascosta);
     const racePt = i => Math.max(0, ...["principianti", "esperti"].map(l => { const v = p.race?.[recK("r" + i) + ":" + l]; return v && v.n === 4 ? 5 - v.pos : 0; }));
     const pt = {
-      abil: MISSIONS.reduce((a, m, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
+      abil: M_SCUOLA.reduce((a, i) => { const k = medalOf(i, p.best[recK("m" + i)]); return a + (k ? 4 - k : 0) + (p.clean[recK("m" + i)] ? 1 : 0); }, 0),
       // 1.2.4 (docs/PROPOSTA-MENU.md §2): conoscenza ed esperienza su tutte le lezioni visibili (oggi le 20), in proporzione, con gli stessi massimi e minimi di prima.
       // Solo le visibili, come l'esame: i collaudi che nascondono le lezioni nuove ritrovano i conti delle 6 lezioni di prima
       cono: Math.floor(MERITI[1][2] * VIS.reduce((a, i) => { const s = p.quiz?.["q" + i], q = quizDi(i); return a + (s === undefined ? 0 : s * 5 >= q.length * 4 ? 2 : s * 5 >= q.length * 3 ? 1 : 0); }, 0) / (2 * VIS.length) + 1e-9),
@@ -154,9 +154,9 @@
       if (k === "esp"){ const i = VIS.find(j => !p.done["l" + j]); return i === undefined ? null : LESSONS[i].name + ", " + LESSONS[i].title + "."; }
       if (k === "abil"){
         const fas = i => medalOf(i, p.best[recK("m" + i)]), tit = i => "Prova " + (i + 1) + ", " + MISSIONS[i].title;
-        let i = MISSIONS.findIndex((m, j) => !fas(j)); if (i >= 0) return tit(i) + ".";
-        i = MISSIONS.findIndex((m, j) => fas(j) > 1); if (i >= 0) return tit(i) + ": prova a migliorare il tempo.";
-        i = MISSIONS.findIndex((m, j) => !p.clean[recK("m" + j)]); return i < 0 ? null : tit(i) + ": completala senza errori."; }
+        let i = M_SCUOLA.find(j => !fas(j)); if (i !== undefined) return tit(i) + "."; // 1.3.2: solo le prove della Scuola
+        i = M_SCUOLA.find(j => fas(j) > 1); if (i !== undefined) return tit(i) + ": prova a migliorare il tempo.";
+        i = M_SCUOLA.find(j => !p.clean[recK("m" + j)]); return i === undefined ? null : tit(i) + ": completala senza errori."; }
       if (k === "cono"){ const i = VIS.find(j => { const v = p.quiz?.["q" + j]; return v === undefined || v * 5 < quizDi(j).length * 4; }); return i === undefined ? null : ripName(i) + ", " + LESSONS[i].title + "."; }
       const rp = RACES_CARRIERA.map((rc, i) => racePt(i));
       const i = rp.indexOf(Math.min(...rp)); return rp[i] >= 4 ? null : "la " + RACES_CARRIERA[i].title + " (con avversari).";
@@ -183,7 +183,7 @@
   const saveProgress = () => { if (LAB) return; try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch(e){} };
   // ---- menu principale e attestato ----
   const itemName = ([t, i]) => t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
-  const seqDi = () => mode === "lesson" && LESSONS[lessonIdx]?.livello === "deriva" ? DSEQ : SEQ; // 1.3.1: «Prosegui» resta nel livello della voce aperta
+  const seqDi = () => (mode === "lesson" && LESSONS[lessonIdx]?.livello === "deriva") || (mode === "mission" && MISSIONS[missionIdx]?.livello === "deriva") ? DSEQ : SEQ; // 1.3.1: «Prosegui» resta nel livello della voce aperta
   const seqPos = () => seqDi().findIndex(([t, i]) => (t === "l" && mode === "lesson" && i === lessonIdx) || (t === "m" && mode === "mission" && i === missionIdx));
   const nextItem = () => { const p = seqPos(), Q = seqDi(); return p >= 0 && p < Q.length - 1 ? Q[p + 1] : null; };
   const nextLabel = () => { const n = nextItem(); return n ? "Prosegui: " + itemName(n) : "Torna al menu"; };
@@ -247,8 +247,11 @@
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
-    const rigaVoce = ([t, i], num) => { const done = progress.done[t + i], L = LESSONS[i]; // 1.3.1: una riga di lezione (le voci di Deriva)
-      return `<button class="item" data-d="${i}" title="${esc(L.desc)}"><span class="num">${num}</span><span class="kind">${L.name}</span><span class="title">${L.title}</span><span class="state ${done ? "ok" : "todo"}">${done ? "Completata" : "Da fare"}</span></button>`; };
+    const rigaVoce = ([t, i], num) => { const key = t + i, done = progress.done[key], L = t === "l" ? LESSONS[i] : MISSIONS[i]; // 1.3.1: una riga delle voci di Deriva; 1.3.2 anche la prova
+      let state = done ? "Completata" : "Da fare";
+      if (t === "m" && progress.best[recK(key)]) state = fmtTime(progress.best[recK(key)]) + medalTag(i, progress.best[recK(key)]);
+      if (t === "m" && progress.clean[recK(key)]) state += STAR;
+      return `<button class="item" data-d="${t}${i}" title="${esc(L.desc)}"><span class="num">${num}</span><span class="kind">${t === "l" ? L.name : "Prova " + (i + 1)}</span><span class="title">${L.title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`; };
     const ripBtn = i => { const L = LESSONS[i], best = progress.quiz?.["q" + i], n = quizDi(i).length;
       return `<button data-q="${i}" title="${esc(ripName(i) + " · " + L.title + " · " + (best !== undefined ? "migliore: " + best + " su " + n : n + " domande"))}"><span>${numLez(i)} · ${L.title}</span>${best !== undefined && best * 5 >= n * 4 ? "<small>✓</small>" : ""}</button>`; };
     const LV = livMenu(); // 1.3.0: «scuola», «deriva», o null (carriera di prima)
@@ -266,7 +269,7 @@
     const sotto = LV === "deriva" ? "Il secondo livello, con la stessa barca: gareggiare e rivedere le tue regate." // col selettore dei livelli la frase lunga andava a capo
       : "Un simulatore per imparare a governare una deriva. Segui l'ordine numerato" + (LV === null ? " della Scuola" : "") + ", oppure apri qualsiasi voce.";
     const tiles = LV === "deriva" ? `<div class="tiles">
-        <section class="tile"><div><div class="part-head"><h2>Deriva</h2><span>${DSEQ.filter(([t, i]) => progress.done[t + i]).length} di ${DSEQ.length} completate</span></div><div class="items">${DSEQ.map(v => rigaVoce(v, numLez(v[1]))).join("")}</div></div>
+        <section class="tile"><div><div class="part-head"><h2>Deriva</h2><span>${DSEQ.filter(([t, i]) => progress.done[t + i]).length} di ${DSEQ.length} completate</span></div><div class="items">${DSEQ.map((v, k) => rigaVoce(v, ORD_L.length + k + 1)).join("")}</div></div>
           <div><div class="part-head"><h2>Ripassi</h2></div><div class="review"><div class="rip2">${ORD_D.map(ripBtn).join("")}</div></div></div></section>
         <section class="tile"><div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div></section>
         <section class="tile"><div><div class="part-head"><h2>Torneo</h2><span>quattro regate</span></div><div class="items">${torBtn}</div>
@@ -290,7 +293,7 @@
       ${tiles}
       <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><span><button class="linkish" id="regOpen">Regate registrate</button> <button class="linkish" id="resetProg">Azzera i progressi</button></span></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(VSEQ[+b.dataset.k]));
-    $("menu").querySelectorAll("button.item[data-d]").forEach(b => b.onclick = () => openItem(["l", +b.dataset.d])); // 1.3.1: le lezioni di Deriva
+    $("menu").querySelectorAll("button.item[data-d]").forEach(b => b.onclick = () => openItem([b.dataset.d[0], +b.dataset.d.slice(1)])); // 1.3.1: le voci di Deriva
     if ($("livSel")) $("livSel").onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.v !== livello){ livello = b.dataset.v; try { localStorage.setItem(LIV_KEY, livello); } catch(e){} showMenu(); } };
     if ($("schede")) $("schede").onclick = e => { const b = e.target.closest("button[data-g]"); if (b && +b.dataset.g !== menuGr){ menuGr = +b.dataset.g; showMenu(); } };
     if ($("goFree")) $("goFree").onclick = () => openItem("free");
@@ -648,12 +651,22 @@
     Object.assign(fin, { fin: true, nx: (fin.x - pv.x) / fd, ny: (fin.y - pv.y) / fd });
     freshState(sx, sy, norm360(m.start.h + env.twd), m.start.sheet);
     setGusts(m.gusts);
+    MG = null; $("mGiri").hidden = !m.giri;
+    if (m.giri){ // 1.3.2, prova dei giri: lo stato dei giri come nelle regate (giriPenalita, js/regate.js), col tempo della prova
+      MG = { need: 0, done: 0, base: 0, giro: null, giroDir: 0, penList: [], lastRule: "", get t(){ return S.time; },
+             boats: [{ get S(){ return S; }, get fin(){ return S.finished ? S.time : null; }, dnf: false, sconta: false }] };
+      giriDebito(m.giri, MG); mgMostra();
+    }
     recStart(recK("m" + i));
     $("mTitle").textContent = "Prova " + (i + 1) + ". " + m.title;
     $("mNext").textContent = nextLabel(); $("mNext").parentElement.hidden = !nextItem(); // l'ultima prova della Scuola: «Torna al menu» c'è già in alto
     setControls([], true, true); setHud(3); $("hint").hidden = !opt.hint;
     showBrief($("mTitle").textContent, missionText(), true);
   }
+  let MG = null; // 1.3.2: i giri dovuti nella prova dei giri (null nelle altre prove)
+  const GIRO_MANCA_S = 15; // s per ogni giro non fatto all'arrivo della prova dei giri (PROPOSTA-LIVELLO-DERIVA.md §3, scelta di Ale del 6 novembre)
+  const mgMancano = () => MG ? Math.max(0, MG.need - MG.done) : 0;
+  function mgMostra(){ if (!MG) return; const n = mgMancano(); $("mGiri").textContent = n ? "Giri da fare: " + n + " (una virata e una strambata ciascuno, stesso verso)" : "Giri fatti: penalità scontata"; $("mGiri").classList.toggle("ok", !n); }
   const bandText = b => "Tempi delle medaglie: oro entro " + fmtTime(b[0]) + ", argento entro " + fmtTime(b[1]) + ", bronzo entro " + fmtTime(b[2]) + ".";
   const missionText = () => { const m = MISSIONS[missionIdx]; return m.text + " Vento da " + cardName(env.twd) + ", " + m.tws + " nodi." + centerNote() + " " + bandText(m.bands); };
   $("mBrief").onclick = () => showBrief($("mTitle").textContent, missionText(), false);
@@ -881,6 +894,7 @@
     }
     if ((mode === "mission" || mode === "free") && curMarks.length && !S.finished){
       S.time += dt;
+      if (mode === "mission" && MG){ const n0 = mgMancano(); giriPenalita(MG); if (mgMancano() !== n0) mgMostra(); } // 1.3.2
       const mk = curMarks[S.markIdx];
       let reached = false;
       if (mode === "mission" && mk.round){
@@ -897,14 +911,16 @@
       if (reached){
         if (mk.fin){
           S.finished = true;
-          const sec = Math.round(S.time), key = "m" + missionIdx, bk = recK(key), prev = progress.best[bk];
+          const manca = mgMancano(); // 1.3.2: ogni giro non fatto costa GIRO_MANCA_S
+          const sec = Math.round(S.time) + manca * GIRO_MANCA_S, key = "m" + missionIdx, bk = recK(key), prev = progress.best[bk];
           const aiuto = !!S.autoUsed; // scotta automatica: la prova si fa ma non vale record, medaglia né stella (1.0.73)
           if (!aiuto){ progress.done[key] = true; if (!prev || sec < prev){ progress.best[bk] = sec; recSave(); } }
-          const clean = regTotal() === 0; if (clean && !aiuto) progress.clean[bk] = true; if (!aiuto) saveProgress();
+          const clean = regTotal() === 0 && !manca; if (clean && !aiuto) progress.clean[bk] = true; if (!aiuto) saveProgress();
           if (aiuto) $("doneText").textContent = "Prova completata in " + fmtTime(sec) + " con la scotta automatica: così non vale record né medaglia. Spegnila nelle impostazioni (⚙) per far valere la prova.";
           else $("doneText").textContent = "Prova completata in " + fmtTime(sec) + "." + (!prev ? "" : sec < prev ? " Nuovo record!" : " Record: " + fmtTime(prev) + ".") +
             (medalOf(missionIdx, sec) ? " Medaglia: " + MEDALS[medalOf(missionIdx, sec) - 1] + "." : " Nessuna medaglia: il bronzo è entro " + fmtTime(MISSIONS[missionIdx].bands[2]) + ".") +
-            (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".");
+            (clean ? " Nessun errore: ★ senza errori." : " " + regText() + ".") +
+            (manca ? " Giri non fatti: " + manca + ", " + manca * GIRO_MANCA_S + " s in più già contati nel tempo." : "");
           $("done").hidden = false; toast("Arrivato!");
         } else { S.markIdx++; toast("Boa girata: ora verso " + (curMarks[S.markIdx].fin ? "l'arrivo" : curMarks[S.markIdx].label.toLowerCase())); }
       }

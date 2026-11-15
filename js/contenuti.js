@@ -801,7 +801,14 @@
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
       text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino alla linea d'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
       start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [320, 400, 510],
-      marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] }
+      marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] },
+    // 1.3.2, Deriva (docs/PROPOSTA-DERIVA-CIRCUITI.md D9, PROPOSTA-LIVELLO-DERIVA.md §3): due giri di penalità dovuti dal via (giri), contati come nelle regate
+    // (giriPenalita, js/regate.js; F15 44.2); ogni giro non fatto all'arrivo costa GIRO_MANCA_S (scelta di Ale del 6 nov, «come nelle regate» di allora). Bande: regola di
+    // docs/PROPOSTA-MEDAGLIE-E-NOMI.md §2 col pilota di tests/collaudo_medaglie.py, semi 1-30, confermate sui semi 101-130.
+    { title: "I giri di penalità", desc: "Due giri di penalità da scontare, poi bolina fino alla boa e ritorno.", wind: 0, tws: 10, gusts: 0, giri: 2, livello: "deriva",
+      text: "Al via hai già una penalità da scontare: due giri, come dopo un contatto con colpa. Falli subito, appena partito: ognuno è un giro intero nello stesso verso, con una virata e una strambata, senza fermarti (regola 44.2). Poi risali di bolina fino alla boa, girala lasciandola a sinistra e torna a tagliare la linea da cui sei partito. Il tempo comprende i giri; ogni giro non fatto costa 15 s all'arrivo.",
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [240, 300, 385], // semi 1-30: mediana del pilota 235,8 s (235,3-236,5)
+      marks: [{ x: 0, y: -150, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 
   // 1.2.4 (docs/PROPOSTA-MENU.md, bozza A scelta da Ale il 2 nov 2026): la Scuola in tre gruppi, nell'ordine di PROPOSTA-LEZIONI-SCUOLA.md §5,
@@ -814,8 +821,9 @@
   const SEQ = GRUPPI.flatMap(g => g[1]);
   const ORD_L = SEQ.filter(([t]) => t === "l").map(([, i]) => i); // indici di LESSONS nell'ordine della Scuola
   // 1.3.1: le lezioni di Deriva, nell'ordine di LESSONS, numerate dopo quelle della Scuola (21, 22, 23)
-  const DSEQ = LESSONS.map((L, i) => ["l", i]).filter(([, i]) => LESSONS[i].livello === "deriva");
-  const ORD_D = DSEQ.map(([, i]) => i);
+  const ORD_D = LESSONS.map((L, i) => i).filter(i => LESSONS[i].livello === "deriva");
+  const DSEQ = [...ORD_D.map(i => ["l", i]), ...MISSIONS.map((m, i) => ["m", i]).filter(([, i]) => MISSIONS[i].livello === "deriva")]; // 1.3.2: in fondo la prova dei giri
+  const M_SCUOLA = SEQ.filter(([t]) => t === "m").map(([, i]) => i); // le prove della Scuola (le sole che contano nei meriti)
   const numLez = i => ORD_L.includes(i) ? ORD_L.indexOf(i) + 1 : ORD_D.includes(i) ? ORD_L.length + ORD_D.indexOf(i) + 1 : 0;
   const gruppoDi = ([t, i]) => GRUPPI.findIndex(g => g[1].some(([u, j]) => u === t && j === i));
 

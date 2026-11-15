@@ -14,7 +14,7 @@ from playwright.async_api import async_playwright
 INDEX = pathlib.Path(__file__).resolve().parent.parent / "index.html"; BASE = INDEX.as_uri()
 import sorgente; SRC = sorgente.testo()   # dalla 1.0.3: index.html più js/
 BANDS = [list(map(int, b)) for b in re.findall(r"bands: \[(\d+), (\d+), (\d+)\]", SRC)]   # [oro, argento, bronzo] per prova
-assert len(BANDS) == 5, BANDS
+assert len(BANDS) == 6, BANDS; BANDS = BANDS[:5]   # 1.3.2: la sesta è la prova dei giri di Deriva, fuori dai meriti della Scuola
 ORD = [0, 1, 2, 3, 4, 7, 6, 5, 9, 8, 10, 11, 12, 13, 14, 15, 16, 18, 19, 17]   # indici delle lezioni nell'ordine della Scuola (PROPOSTA-LEZIONI-SCUOLA §5)
 TUTTE = range(20)
 MK = ["m0.4", "m1.4", "m2.4", "m3.5", "m4.6"]   # chiavi delle prove (KEYV), come le scrive il gioco
@@ -40,7 +40,7 @@ async def main():
         b = await getattr(pw, __import__("os").environ.get("BROWSER", "chromium")).launch()
         pg = await b.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(300)
-        NQ = await pg.evaluate("() => LESSONS.map((L, i) => (QUIZ[i] || L.quiz).length)")
+        NQ = await pg.evaluate("() => LESSONS.filter(L => !L.livello).map((L, i) => (QUIZ[i] || L.quiz).length)")   # 1.3.1: solo le lezioni della Scuola (quelle di Deriva stanno in fondo)
         chk("metro", len(NQ) == 20 and await pg.evaluate("() => JSON.stringify(ORD_L)") == json.dumps(ORD).replace(" ", ""), f"20 lezioni e ordine della Scuola come nella proposta: {NQ}")
         piene = {i: n for i, n in enumerate(NQ)}   # ogni ripasso tutto giusto
         pieni = lambda k: {i: NQ[i] for i in ORD[:k]}   # i primi k ripassi della Scuola tutti giusti

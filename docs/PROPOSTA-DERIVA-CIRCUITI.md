@@ -98,3 +98,9 @@ Fatte le lezioni 21-23 con ripassi, glossario (6 voci) ed esercizi delle lezioni
 - **D4:** esame 34/28 senza domande di Deriva; «di 25 completate»; meriti identici con e senza Deriva (6 salvataggi); `collaudo_carriera_intera.py` verde.
 - **D5:** lezione 22 10 su 10 guidando sui semi 1-10, confermato 11-20 e 21-30, 0 a mani ferme. Lezione 23: col primo pilota del collaudo **7 su 10 sui semi 11-20, fuori soglia**, perché a 20 m dalla boa la guida degli avversari virava di nuovo (voce 1b); col pilota corretto 20 su 20 sui semi 1-20 e 10 su 10 sui semi 21-30 mai guardati; 0 a mani ferme. L'esercizio dipende poco dal seme (vento costante, nessun avversario).
 - **D8:** 13 domande di Deriva, nessuna uguale alle 167 della Scuola; glossario senza termini ripetuti.
+
+## Esito della 1.3.2 (15 novembre 2026)
+
+Fatta la prova 6, «I giri di penalità»: al via due giri dovuti, contati con le stesse regole delle regate; bolina fino alla boa a 170 m e ritorno; 15 s per ogni giro non fatto.
+- **D9:** col pilota 10 su 10 con i giri fatti, a mani ferme 0 su 10, +15 s a giro non fatto (`collaudo_prova_giri.py`). Medaglie **240/300/385 s** con la regola di `PROPOSTA-MEDAGLIE-E-NOMI.md` sui semi 1-30; confermate sui semi 101-130 (30 su 30 entro l'oro col pilota preciso, 30 su 30 entro il bronzo e 0 ori col pilota con errori, Chromium e Firefox).
+- Da sapere: saltare i due giri costa 30 s ma ne fa risparmiare circa 18: conviene farli, ma senza giri si prende ancora l'argento.
