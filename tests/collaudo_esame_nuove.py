@@ -36,7 +36,7 @@ async def rispondi_tutte_sbagliate(pg):
     return n
 async def main():
     with tempfile.TemporaryDirectory() as tmp:
-        subprocess.run(f"git -C {ROOT} archive {RIF} | tar -x -C {tmp}", shell=True, check=True)
+        subprocess.run(f"git -C $(git -C {ROOT} rev-parse --show-toplevel) archive {RIF} | tar -x -C {tmp}", shell=True, check=True)
         async with async_playwright() as p:
             b = await getattr(p, os.environ.get("BROWSER", "chromium")).launch()
             # ---- G1: con le lezioni nascoste, identico a RIF ----

@@ -55,7 +55,7 @@ CONTROPROVE = [
     ("regole-mut13", "mutante", ["collaudo_regole.py"], [("if (A.virando !== B.virando) return { cede: A.virando ? A : B, regola: 13 };", "if (false) return { cede: A.virando ? A : B, regola: 13 };")], None,
      "regola 13 spenta: chi vira non cede più"),
     ("regole-neu", "neutra", ["collaudo_regole.py"], [NEUTRA_JS], None, "commento in regate.js"),
-    ("giri-mut", "mutante", ["collaudo_giri.py", "12"], [("R.done = R.giroDir && v !== R.giroDir ? 1 : R.done + 1;", "R.done = R.need;")], "B1",
+    ("giri-mut", "mutante", ["collaudo_giri.py", "12"], [("G.done = G.giroDir && v !== G.giroDir ? G.base + 1 : G.done + 1;", "G.done = G.need;")], "B1",
      "un giro solo estingue tutto il debito (la 44.2 ne vuole due)"),
     ("giri-neu", "neutra", ["collaudo_giri.py", "12"], [NEUTRA_JS], None, "commento in regate.js"),
     ("boa-mut", "mutante", ["collaudo_boa.py", "12"], [("R.boaTocc[key] = R.t; R.nBoa = (R.nBoa || 0) + 1; giriDebito(1);", "R.boaTocc[key] = R.t; R.nBoa = (R.nBoa || 0) + 1; giriDebito(0);")], None,
@@ -64,19 +64,19 @@ CONTROPROVE = [
     ("regola21-mut", "mutante", ["collaudo_regola21.py", "12"], [("if ((sa !== 0) !== (sb !== 0)) return { cede: sa ? A : B, regola: sa || sb };", "if (false) return { cede: sa ? A : B, regola: sa || sb };")], None,
      "regole 21.1 e 21.2 spente: chi sconta o torna dietro la linea non cede"),
     ("regola21-neu", "neutra", ["collaudo_regola21.py", "12"], [NEUTRA_JS], None, "commento in regate.js"),
-    ("giriavv-mut", "mutante", ["collaudo_giri_avversari.py", "12"], [("if (!(b.gDebt > 0) || b.fin !== null || b.dnf || R.t < 0 || b.leg < 1 || b.ocs){", "if (true || !(b.gDebt > 0) || b.fin !== null || b.dnf || R.t < 0 || b.leg < 1 || b.ocs){")], None,
-     "gli avversari non fanno mai i giri (12 regate invece di 40, per il tempo)"),
-    ("giriavv-neu", "neutra", ["collaudo_giri_avversari.py", "12"], [NEUTRA_JS], None, "commento in regate.js (12 regate)"),
+    ("giriavv-mut", "mutante", ["collaudo_giri_avversari.py", "120"], [("if (!(b.gDebt > 0) || b.fin !== null || b.dnf || (R.t >= 0 && b.leg < 1) || b.ocs){ if (b.gCum != null)", "if (true || !(b.gDebt > 0) || b.fin !== null || b.dnf || (R.t >= 0 && b.leg < 1) || b.ocs){ if (b.gCum != null)")], None,
+     "gli avversari non fanno mai i giri (120 regate, come nel giro)"),
+    ("giriavv-neu", "neutra", ["collaudo_giri_avversari.py", "120"], [NEUTRA_JS], None, "commento in regate.js (120 regate, come nel giro)"),
     # aggiunta dopo il primo lancio (1 novembre 2026, dichiarata in PROPOSTA-TEST-DEI-TEST.md §9): con 12 regate G4 vede 7 casi e ne vuole 15,
-    # quindi la neutra a 12 regate cade per il minimo di casi, non per un difetto; la neutra valida è quella con le 40 regate del giro
-    ("giriavv-neu40", "neutra", ["collaudo_giri_avversari.py", "40"], [NEUTRA_JS], None, "commento in regate.js (40 regate, come nel giro)"),
+    # quindi la neutra a 12 regate cade per il minimo di casi, non per un difetto. 16 novembre 2026: anche 40 non bastano più (dalla 1.3.10 meno contatti con colpa dei rivali); le due righe giriavv usano le 120 regate del giro
+    # ("giriavv-neu40", "neutra", ["collaudo_giri_avversari.py", "40"], [NEUTRA_JS], None, "commento in regate.js (40 regate, come nel giro)"),   # 16 novembre 2026: tolta, con 40 regate i casi non bastano più (dal giro si lancia con 120: riga giriavv-neu)
     ("segnali-mut", "mutante", ["collaudo_segnali.py"], [("b.X = R.t >= 0 && R.t < X_MAX && !!R.xSet && R.xSet.some(o => o.ocs && o.fin === null && !o.dnf);", "b.X = R.t >= 0 && R.t < X_MAX && !!R.xSet;")], None,
      "la X resta su anche quando le barche richiamate sono tornate (29.1)"),
     ("segnali-neu", "neutra", ["collaudo_segnali.py"], [NEUTRA_JS], None, "commento in regate.js"),
-    ("contatto-mut", "mutante", ["collaudo_contatto_vero.py"], [("if (R.lv2){ if (d > 4.4) continue; mtv = hullOverlap(A.S, B.S); if (!mtv) continue; }", "if (R.lv2){ if (d > 4.4) continue; mtv = hullOverlap(A.S, B.S); }")], None,
+    ("contatto-mut", "mutante", ["collaudo_contatto_vero.py"], [("if (d > 4.4) continue; const mtv = hullOverlap(A.S, B.S); if (!mtv) continue;", "if (d > 4.4) continue; const mtv = hullOverlap(A.S, B.S) || { nx: 0, ny: 1, pen: 0 };")], None,
      "nell'1b il contatto scatta a 4,4 m fra i centri anche senza scafi che si toccano"),
     ("contatto-neu", "neutra", ["collaudo_contatto_vero.py"], [NEUTRA_JS], None, "commento in regate.js"),
-    ("semaforo-mut", "mutante", ["collaudo_semaforo.py"], [('(chiCede(me, best).cede === me ? "rosso" : "verde")', '(chiCede(me, best).cede === me ? "verde" : "rosso")')], None,
+    ("semaforo-mut", "mutante", ["collaudo_semaforo.py"], [('return c.cede !== me ? "verde" : (c.base || c).cede === me ? "rosso" : "giallo"; }', 'return c.cede !== me ? "rosso" : (c.base || c).cede === me ? "verde" : "giallo"; }')], None,
      "semaforo con i colori scambiati"),
     ("semaforo-neu", "neutra", ["collaudo_semaforo.py"], [NEUTRA_JS], None, "commento in regate.js"),
     # aggiunte dopo il primo lancio (1 novembre 2026), per i collaudi appena diventati chiari; scritte prima di lanciarle
@@ -95,13 +95,13 @@ CONTROPROVE = [
     # 16 novembre 2026 (docs/PER-FABLE.md §1, docs/MUTAZIONI.md): i 12 difetti M1-M12 sul codice delle 1.3.x; sostituzioni scritte prima di lanciarle.
     # Stesso difetto, più collaudi: una riga per collaudo. Le neutre (f16n-) dicono se il collaudo è verde sul gioco vero.
     ("f16-m1-torneo", "mutante", ["collaudo_torneo.py"], [M1], None, "M1 torPunti: la penalità sul punteggio non si somma"),
-    ("f16-m1-pentesto", "mutante", ["collaudo_penalita_testo.py"], [M1], None, "M1 torPunti: la penalità sul punteggio non si somma"),
+    # ("f16-m1-pentesto", "mutante", ["collaudo_penalita_testo.py"], [M1], None, "M1 torPunti: la penalità sul punteggio non si somma"),   # 16 novembre 2026: tolta, questo collaudo non può vedere questo difetto (docs/MUTAZIONI.md, note 1-3)
     ("f16-m2-torneo", "mutante", ["collaudo_torneo.py"], [M2], None, "M2 torSerie: lo scarto non si toglie"),
     ("f16-m3-giri", "mutante", ["collaudo_giri.py"], [M3], None, "M3 giriPenalita: un giro vale anche senza strambata"),
-    ("f16-m3-provagiri", "mutante", ["collaudo_prova_giri.py"], [M3], None, "M3 giriPenalita: un giro vale anche senza strambata"),
+    # ("f16-m3-provagiri", "mutante", ["collaudo_prova_giri.py"], [M3], None, "M3 giriPenalita: un giro vale anche senza strambata"),   # 16 novembre 2026: tolta, questo collaudo non può vedere questo difetto (docs/MUTAZIONI.md, note 1-3)
     ("f16-m4-regole", "mutante", ["collaudo_regole.py"], [M4], None, "M4 chiCede: regola 10 rovesciata (cede chi ha mure a dritta)"),
     ("f16-m4-senzacolpa", "mutante", ["collaudo_contatto_senza_colpa.py"], [M4], None, "M4 chiCede: regola 10 rovesciata"),
-    ("f16-m4-registro", "mutante", ["collaudo_registro.py"], [M4], None, "M4 chiCede: regola 10 rovesciata"),
+    # ("f16-m4-registro", "mutante", ["collaudo_registro.py"], [M4], None, "M4 chiCede: regola 10 rovesciata"),   # 16 novembre 2026: tolta, questo collaudo non può vedere questo difetto (docs/MUTAZIONI.md, note 1-3)
     ("f16-m5-superata", "mutante", ["collaudo_deriva_superata.py"], [M5], None, "M5 meritiD: il merito non chiede la stagione senza ritiri"),
     ("f16-m6-sponsor", "mutante", ["collaudo_sponsor.py"], [M6], None, "M6 spFineStagione: con tutti gli obiettivi non arriva il gradino sopra"),
     ("f16-m7-coach", "mutante", ["collaudo_coach.py"], [M7], None, "M7 coaClou: finestra del clou 10 s più tardi"),

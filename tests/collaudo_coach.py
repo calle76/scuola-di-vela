@@ -85,7 +85,7 @@ async def main():
         # ---- K1: le stesse regate col codice di riferimento
         rif = []
         with tempfile.TemporaryDirectory() as tmp:
-            subprocess.run(f"git -C {ROOT} archive {RIF} | tar -x -C {tmp}", shell=True, check=True)
+            subprocess.run(f"git -C $(git -C {ROOT} rev-parse --show-toplevel) archive {RIF} | tar -x -C {tmp}", shell=True, check=True)
             pg, e0, elenco = await regate(br, (pathlib.Path(tmp) / "index.html").as_uri(), NREG)
             for k, s in elenco: await pg.evaluate(CORSA, [k, s, 0]); rif.append(await pg.evaluate(ESITO))
             await pg.close()

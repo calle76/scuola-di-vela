@@ -1,4 +1,6 @@
-# Proposta: un pilota «da giocatore» per i collaudi (fermata 1)
+# Un pilota «da giocatore» per i collaudi
+
+**Stato: via di Ale il 16 novembre 2026; fatto e misurato (fermata 2). Esito al §8: G1, G3, G5 e G7 passano; G2 e G6 no; G4 no sui semi di scelta e sì su quelli di conferma.**
 
 15 novembre 2026, gioco alla 1.3.11. Solo documento: nessun codice del gioco né dei collaudi è stato toccato. Chiesta da `PER-FABLE.md` §3.
 
@@ -65,3 +67,53 @@ Nessuna entra nel gioco.
 ## 7. Cosa serve da Ale
 
 Il via, oppure no. Nessuna domanda aperta: i numeri del §4 sono ipotesi nostre e si possono cambiare prima di cominciare.
+
+## 8. Esito (16 novembre 2026, fermata 2)
+
+**Che cosa c'è.** `tests/pilota_giocatore.js` (il pilota: il collaudo lo consegna alla pagina e lui prende il posto di `__sv.pilota`; quello di prima resta in `__sv.pilotaVecchio`) e `tests/misura_pilota_giocatore.py` (lo strumento di misura). Il gioco non è stato toccato. Nessun collaudo del giro usa ancora il pilota nuovo.
+
+**Aggiunte rispetto alla proposta, dette qui:**
+- il pilota **fa i giri di penalità** (con la sequenza dei rivali). Senza, arrivava squalificato in 5 regate su 20 e G5 non poteva passare; strambando nei giri scuffiava, quindi nei giri chiude la vela sopra i 120° dal vento (costante nuova, ipotesi nostra);
+- una pausa di 15 s fra due virate «per l'aria libera» e un margine di 2° sulla layline (ipotesi nostre; provati 0° e 1°: non cambia niente di misurabile);
+- G4 si misura sul **primo lato di bolina** (dal taglio della linea alla boa 1), contro lo stesso lato della rotta ottimale;
+- G6 «partenza in ritardo» si è fatto con 15 s e non 8, perché il pilota senza errori taglia già la linea fino a 8,6 s dopo il via.
+
+Le costanti (5 s, 60 m, 18°) sono rimaste quelle della proposta: sui semi di scelta le alternative provate (3 s e 40 m; 15°) non andavano meglio.
+
+**Numeri, 20 regate per riga:**
+
+| # | Cosa | Soglia | Vecchio, scelta (2601-2605) | Nuovo, scelta | Vecchio, conferma (2611-2615) | Nuovo, conferma | Esito |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| G1 | regate con una scuffia | al più 2 | 7 | 2 | 6 | 2 | **passa** |
+| G2 | regate con «c'erano altre barche» | al più 8 | 18 | 16 | 18 | 16 | **non passa** |
+| G3 | virate negli ultimi 40 m dalla boa 1 | al più 1,2 | 1,80 | 0,75 | 1,70 | 0,70 | **passa** |
+| G4 | tempo perso nella prima bolina, mediana | −30% sul vecchio | 22,7 s | 21,5 s (−5%) | 27,3 s | 11,0 s (−60%) | **non passa sulla scelta, passa sulla conferma** |
+| G5 | arrivate senza squalifica | 20 | 17 | 20 | 17 | 20 | **passa** |
+| G7 | il gioco non cambia | diff vuoto | — | `git diff` vuoto su `js/` e `index.html` | — | idem | **passa** |
+
+In più: posto medio 2,35 e 2,20 col nuovo contro 2,75 e 2,95 col vecchio; fra i primi 3 in 14 e 16 regate su 20 (vecchio 13 e 11).
+
+**G4, perché è così diverso fra i due gruppi.** I giri di penalità si fanno in bolina e costano: nelle sole regate senza giri la mediana del nuovo è 12,1 s (15 regate, scelta) e 5,8 s (15 regate, conferma), contro 21,4 e 26,6 del vecchio. Prima di aggiungere i giri, sui semi di scelta il nuovo era a 15,7 s (−31%), ma con 5 squalifiche.
+
+**G2, perché non passa.** Col pilota nuovo l'«affollato» scatta in 16 regate su 20, quasi come col vecchio. Ma è cambiato dove: in 8 casi su 16 (scelta) e 9 su 16 (conferma) la finestra comincia **nei primi 15 secondi dopo il via**, quando le barche sono tutte insieme per forza; col vecchio erano 0 su 18 e 2 su 18. Cioè: con quattro barche che partono dalla stessa linea, la regola di oggi (basta un secondo con una barca entro 3 lunghezze) scatta quasi sempre, anche per chi poi naviga da solo e arriva primo. Questo è un dato per la decisione di Ale sulla regola, non un difetto del pilota che si possa togliere con le sue tre costanti.
+
+**G6, errori messi apposta (10 regate per errore, semi 2601-2603): non passa nessuno dei tre.**
+
+| Errore | Fatto davvero | Il Coach lo dice | Numero giusto | Perché |
+| --- | --- | --- | --- | --- |
+| partenza 15 s in ritardo | 9 su 10 (linea tagliata a 15,5-26,4 s) | 9 su 10, col numero uguale al taglio vero | 7 su 10 entro 2 s da 15 | in 2 regate il pilota taglia ancora più tardi (20 e 26 s); in una non riesce a ritardare |
+| virata 25 m oltre la layline | 10 su 10 | 4 su 10 (dice 28, 32, 42, 43 m) | 1 su 10 entro 5 m | vedi sotto |
+| due virate in più vicino alla boa | 3 su 10 | 0 su 10 | — | vedi sotto |
+
+Che cosa si è capito sul Coach (cose vere, da decidere con Ale, non corrette):
+1. **«Oltre la layline» guarda solo l'ultima virata del lato.** Se dopo la virata lunga ce n'è un'altra vicino alla boa (al pilota capita in media 0,75 volte), la frase non esce.
+2. **Tre frasi al massimo:** «altre barche» (peso 20-45) e una penalità (20) passano davanti a un errore di layline da 25 m (peso 12-20).
+3. **«Hai virato N volte vicino alla boa: ne bastava una» non può uscire con 2 o 3 virate.** Ogni virata in più pesa 2 s e sotto i 5 s il Coach tace: la frase esce solo da 4 virate in su. Contato sulle 80 regate misurate (il Coach conta le virate entro 80 m dalla boa): col pilota vecchio 2 o 3 virate in 24 regate su 40, e la frase non esce mai; 4 o più in 6 regate, e la frase esce in 3 (nelle altre passano davanti altre frasi). Col pilota nuovo 2 o 3 virate in 12 regate su 40, mai detta. O la soglia o il testo sono da rivedere.
+4. Il numero del Coach per la layline è più grande dell'errore imposto di 3-18 m perché il pilota, anche senza errore, vira già 14-17 m oltre la layline del Coach (le due layline non sono la stessa: la sua è la rotta di bolina più lo scarroccio più 2°; quella del Coach è l'angolo migliore della polare).
+
+**Difetti del pilota rimasti (detti, non corretti):**
+- prima del via tocca un'altra barca con colpa in 7 regate su 20 (il vecchio 1-2): la partenza è ancora quella dei rivali, coi numeri degli esperti;
+- taglia la linea tardi (mediana 5,5 s sulla scelta, 1,8 s sulla conferma; fino a 8,6 s);
+- l'errore «due virate» riesce solo 3 volte su 10.
+
+**Che cosa serve da Ale.** (a) Se il pilota nuovo, così com'è, deve entrare in qualche collaudo (per esempio una seconda misura in `collaudo_coach.py`) o restare uno strumento a parte. (b) I punti 1-3 sul Coach: tenerli, o una proposta per cambiarli. (c) La regola dell'«affollato»: il dato dei primi 15 secondi dopo il via.

@@ -82,7 +82,7 @@ async def main():
     rif = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] != "-" else None
     if rif is None:   # senza cartella: la 1.0.72 si estrae da git in una cartella temporanea
         rif = tempfile.mkdtemp(prefix="sv_rif_")
-        subprocess.run("git -C %s archive %s | tar -x -C %s" % (ROOT, RIF, rif), shell=True, check=True)
+        subprocess.run("git -C $(git -C %s rev-parse --show-toplevel) archive %s | tar -x -C %s" % (ROOT, RIF, rif), shell=True, check=True)
     h0k = [float(sys.argv[3]), float(sys.argv[4])] if len(sys.argv) > 4 else DEF
     SEMPLICE = [999, 0]   # la regola semplice senza la lasca per la sbandata
     async with async_playwright() as p:

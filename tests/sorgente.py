@@ -1,6 +1,6 @@
 # Il codice del gioco dalla 1.0.3: index.html più i file di js/, caricati in ordine dai tag <script src> della pagina.
 # testo(): tutto il codice come un testo unico, nell'ordine di caricamento (per leggere costanti con un'espressione regolare).
-# copia(cartella, sostituzioni): copia della pagina (index.html, js/ e fonts/) in una cartella, con sostituzioni [(vecchio, nuovo)];
+# copia(cartella, sostituzioni): copia della pagina (index.html, js/, fonts/ e img/) in una cartella, con sostituzioni [(vecchio, nuovo)];
 #   ogni «vecchio» deve comparire una volta sola in tutto il codice, altrimenti errore. Torna il percorso del nuovo index.html.
 # Funziona anche con una pagina di prima della 1.0.3 (un file unico, senza js/).
 import pathlib, re, shutil
@@ -26,6 +26,7 @@ def copia(cartella, sostituzioni=(), pagina=ROOT / "index.html"):
     for rel, t in testi.items():
         (cartella / rel).parent.mkdir(parents=True, exist_ok=True); (cartella / rel).write_text(t, encoding="utf-8")
     if (pagina.parent / "fonts").is_dir(): shutil.copytree(pagina.parent / "fonts", cartella / "fonts", dirs_exist_ok=True)   # 1.0.5: i caratteri stanno nel progetto
+    if (pagina.parent / "img").is_dir(): shutil.copytree(pagina.parent / "img", cartella / "img", dirs_exist_ok=True)   # 16 novembre 2026: i volti del Coach (K10 li vuole caricati)
     return cartella / pagina.name
 
 # 1.2.4 (menu nuovo): script da dare a una pagina prima del caricamento perché nasconda le 14 lezioni nuove (indici 6-19) e ridisegni il menu.

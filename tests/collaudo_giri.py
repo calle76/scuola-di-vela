@@ -141,6 +141,21 @@ async def main():
         C = [await pg.evaluate(PROVA, ["opposto", 1 if k % 2 else -1, 300 + k]) for k in semi]
         chk("C1 un giro in un verso e uno nell'altro non estinguono il debito (%d prove senza avversari)" % n, metro.tutti(r["done1"] == 1 and r["done"] <= 1 and abs(r["ruotato"]) >= 400 for r in C) and len(C) == n, "ancora a debito: %d su %d; rotazione nel verso opposto media %d°" % (sum(1 for r in C if r["done"] <= 1), n, statistics.mean(abs(r["ruotato"]) for r in C)))
         chk("D0 rotazione di 360° senza virata e senza strambata: non esiste (la prua che fa il giro passa dal vento e da poppa); il criterio 4 della proposta ha 0 casi possibili", True, "dichiarato, non misurabile")
+        # ---- D0b (16 novembre 2026, docs/MUTAZIONI.md P1): la regola «ciascuno con una virata e una strambata» a stato costruito. Il conto dei giri riceve una prua che gira di 400°
+        # con una virata contata e nessuna strambata (o il contrario): il giro non deve contare. Riscontro: con tutte e due conta. Il difetto messo apposta M3 (condizione tolta) non lo vedeva nessuno.
+        D0B = await pg.evaluate("""() => { const out = [];
+          for (const verso of [1, -1]) for (const h0 of [0, 70, 140, 210, 280]) for (const caso of ["senza strambata", "senza virata", "tutte e due"]){
+            const S = { h: h0, tacks: 0, gybesC: 0, gybesV: 0, capsized: false }, G = { boats: [{ S, fin: null, dnf: false }], need: 2, done: 0, base: 0, t: 0, giroDir: 0, penList: [] };
+            giroVia(G); let girato = 0;
+            for (let k = 0; k < 200 && G.done === 0; k++){ S.h = norm180(S.h + 2 * verso); girato += 2; G.t += 0.1;
+              if (k === 50 && caso !== "senza virata") S.tacks++; if (k === 120 && caso !== "senza strambata") S.gybesC++;
+              giriPenalita(G); }
+            out.push({ caso, verso, h0, done: G.done, girato }); }
+          return out; }""")
+        senza = [r for r in D0B if r["caso"] != "tutte e due"]; con = [r for r in D0B if r["caso"] == "tutte e due"]
+        chk("D0b a stato costruito: 400° con la sola virata o la sola strambata non fanno un giro (20 su 20); con tutte e due sì, a 360° (10 su 10)",
+            metro.tutti(r["done"] == 0 and r["girato"] == 400 for r in senza) and len(senza) == 20 and metro.tutti(r["done"] == 1 and r["girato"] == 360 for r in con) and len(con) == 10,
+            "non contati %d su 20, contati %d su 10" % (sum(1 for r in senza if r["done"] == 0), sum(1 for r in con if r["done"] == 1)))
         # ---- D ----
         D = []
         for lato in (1.2, -1.2):

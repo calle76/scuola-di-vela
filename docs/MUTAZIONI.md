@@ -44,7 +44,9 @@ I collaudi rossi sono rossi **per la ragione giusta**: in ogni riga il controllo
 4. **M7 e la prova neutra del Coach: la controprova non partiva.** `collaudo_coach.py` in una copia si ferma dopo 1 secondo, per due ragioni che non c'entrano col difetto: prende il codice di riferimento con `git archive` dalla cartella in cui si trova (nella copia non c'è), e `controprove.py` non copia la cartella `img/` coi volti (K10 li vuole caricati). Per avere il risultato ho corretto le due cose **solo nelle copie** e lanciato il collaudo a mano, prima col difetto e poi senza. Vedi la proposta P3.
 5. **Prova neutra del torneo rossa (1 su 14).** `collaudo_torneo` senza nessun difetto è caduto su C11 («uscita dal menu 3,79 s, soglia 2 s»). È un tempo misurato con l'orologio vero, e il PC era carico (due tornei insieme, 1021 pause del freno). I rossi di M1 e M2 valgono lo stesso, perché sono caduti su C1 e C2, che sono conti e non tempi. Resta che C11 è fragile sotto carico: vedi la proposta P4.
 
-## Proposte (fermata 1: niente è stato cambiato nei collaudi)
+## Proposte
+
+**Via di Ale il 16 novembre 2026: P1 sì, P2 no, P3 sì, P4 sì. Fatte P1, P3 e P4** (esiti in fondo).
 
 | # | Che cosa | Costo | Parere |
 | --- | --- | --- | --- |
@@ -58,3 +60,11 @@ I collaudi rossi sono rossi **per la ragione giusta**: in ogni riga il controllo
 - Un difetto per zona, scelto da noi: dice che quei 12 controlli scattano, non che ogni riga del gioco è sorvegliata.
 - Un solo giro e solo Chromium.
 - M7 non è passato dallo strumento ma da un lancio a mano sulle copie (nota 4).
+
+## Esito delle proposte (16 novembre 2026, dopo il via di Ale)
+
+- **P1, fatta.** `collaudo_giri.py` ha il controllo nuovo **D0b**: il conto dei giri riceve una prua che gira di 400° con la sola virata o la sola strambata (20 casi: non deve contare) e con tutte e due (10 casi: deve contare a 360°). Sul gioco: 20 su 20 e 10 su 10. Controprova dallo strumento: col difetto M3 `collaudo_giri` ora è **rosso** proprio su D0b; la prova neutra è verde. M3 passa da «non visto» a «visto»: **12 difetti su 12**.
+- **P2, non fatta** (decisione di Ale).
+- **P3, fatta.** `tests/sorgente.py` copia anche `img/`; i quattro collaudi che usano `git archive` cercano la radice del repository. Rilanciate dallo strumento, senza ritocchi a mano: `f16-m7-coach` rosso su K4, `f16n-coach` verde.
+- **P4, fatta.** In `collaudo_torneo.py` un'uscita dal menu oltre 2 s si rimisura altre 2 volte (stesso torneo, stesso momento) e vale la migliore delle 3; la soglia resta 2 s. Non provata sotto carico: il torneo intero dura un'ora, lo dirà il giro su GitHub.
+- **Tabella ripulita.** Tolte le tre righe che non possono cadere (`f16-m1-pentesto`, `f16-m3-provagiri`, `f16-m4-registro`: note 1-3). Rimesse a posto quattro righe vecchie che non partivano più perché il codice da rompere era cambiato (`giri-mut`, `giriavv-mut`, `contatto-mut`, `semaforo-mut`); le righe `giriavv` ora usano le 120 regate del giro.

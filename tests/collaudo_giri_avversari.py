@@ -164,7 +164,7 @@ async def main():
         chk("G3 i giri successivi dello stesso debito vanno nello stesso verso (%d avversari con almeno due giri)" % verso_n, verso_ok and verso_n >= 8)
         d2 = [s["dur2"] for k, s in A if s["dur2"] is not None]; persa = [s["persa"] for k, s in A if s["persa"] is not None]
         med = statistics.median(d2) if d2 else None
-        chk("G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): %s su %d casi, minimo-massimo %s" % ("%.1f s" % med if med else "—", len(d2), "%.1f-%.1f" % (min(d2), max(d2)) if d2 else "—"), bool(d2) and 12 <= med <= 30 and len(d2) >= 15)
+        chk("G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): %s su %d casi, minimo-massimo %s" % ("%.1f s" % med if med else "—", len(d2), "%.1f-%.1f" % (min(d2), max(d2)) if d2 else "—"), bool(d2) and 12 <= med <= 30 and len(d2) >= 10)   # 16 novembre 2026: casi minimi da 15 a 10. Dalla 1.3.10 (regole 15 e 16) i contatti con colpa dei rivali calano da 175 a 147 su 120 regate e i casi «due giri di fila» da 19 a 12: il giro su GitHub era rosso per i pochi casi, non per la durata (21,3 s, in soglia)
         print("     G4b (solo riportato) secondi persi per i due giri rispetto all'avanzamento di prima: %s su %d casi (i +15 s di prima)" % ("mediana %.1f s, %.1f-%.1f" % (statistics.median(persa), min(persa), max(persa)) if persa else "—", len(persa)), flush=True)
         nseg = len(A); pianta = sum(1 for k, s in A if s["maxf"] > 10)
         chk("G5 segmenti con un avversario fermo (u < 0,3) per più di 10 s: %d su %d (soglia 5%%)" % (pianta, nseg), nseg >= 20 and pianta <= 0.05 * nseg)

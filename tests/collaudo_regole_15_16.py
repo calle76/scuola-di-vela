@@ -104,7 +104,7 @@ async def main():
                 out.append(await q.evaluate(PIL, [k % 2, 300 + k])); await q.close()
             return out
         with tempfile.TemporaryDirectory() as tmp:
-            subprocess.run(f"git -C {ROOT} archive {RIF} | tar -x -C {tmp}", shell=True, check=True)
+            subprocess.run(f"git -C $(git -C {ROOT} rev-parse --show-toplevel) archive {RIF} | tar -x -C {tmp}", shell=True, check=True)
             rif = await scuola((pathlib.Path(tmp) / "index.html").as_uri())
         ora = await scuola((ROOT / "index.html").as_uri())
         chk("R3", rif == ora and len(ora) == 12, f"R3 le regate della Scuola: {sum(a == b for a, b in zip(rif, ora))} su 12 identiche a {RIF}")
