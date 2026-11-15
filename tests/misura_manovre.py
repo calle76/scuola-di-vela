@@ -1,0 +1,48 @@
+# Misura della voce 4 (1.3.11, docs/PROPOSTA-REGOLE-15-16.md, versione B, criteri M1-M5 scritti prima).
+# Le 4 regate del torneo col pilota (come collaudo_rotta_assoluta.py: semi dispari principianti, pari esperti), con la versione B spenta (__sv.manovre(false),
+# cioè la 1.3.10) e accesa con RINVIO_MAX 4, 8 o 12 s; stessi semi per tutte. Registro dei contatti del gioco (R.contLog, solo #collaudo).
+#   M1 contatti dopo il via in cui un rivale della coppia aveva cominciato una virata nei 5 s prima
+#   M2 contatti fra -5 s e il via in cui un rivale della coppia aveva deciso di partire nei 5 s prima
+#   M3 contatti in tutto; M4 arrivo mediano dei rivali (s dallo sparo); M5 rivali piantati (sotto 0,2 m/s per 15 s di fila dopo il via), fuori linea, non arrivati
+#   coppie (16 nov): la scena S8 di tests/scene_strane.py, un rivale che cede a X da almeno 10 s con X entro 12,6 m e le prue a meno di 20°: coppie diverse per regata
+#   configurazioni: off (versione B spenta), 4 / 8 / 12 (RINVIO_MAX), nocono (versione B spenta e cono d'ombra spento, solo per contare le coppie)
+# Uso: python tests/misura_manovre.py --semi 2201-2230 --conf off,4,8,12   (BROWSER=firefox); stampa una riga JSON per configurazione
+import asyncio, json, os, pathlib, statistics, sys
+from playwright.async_api import async_playwright
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
+a, b_ = arg("--semi", "2201-2230").split("-"); SEMI = range(int(a), int(b_) + 1)
+CONF = arg("--conf", "off,4,8,12").split(",")
+src = (ROOT / "tests" / "collaudo_rotta_assoluta.py").read_text().split("async def main")[0]
+A = {"__file__": str(ROOT / "tests" / "collaudo_rotta_assoluta.py")}; exec(src, A)
+# la corsa di collaudo_rotta_assoluta.py, con in più il conto dei piantati (campione ogni secondo)
+CORSA = A["CORSA"].replace("while (R.t < 1500 && R.phase !== 'done'){ if (R.boats[0].fin === null) sv.pilota(dt); sv.run(dt, 1); }",
+  "const lenti = R.boats.map(() => 0), piant = new Set(), cop = new Set(); let acc = 0; window.__cop = cop;\n  while (R.t < 1500 && R.phase !== 'done'){ if (R.boats[0].fin === null) sv.pilota(dt); sv.run(dt, 1); acc += dt;\n"
+  "    if (acc >= 1){ acc = 0; if (R.t > 0) R.boats.forEach((b, i) => { if (i && b.fin === null && !b.dnf){ lenti[i] = b.S.u < 0.2 ? lenti[i] + 1 : 0; if (lenti[i] >= 15) piant.add(i); } }); } }\n"
+  "  window.__piant = piant.size;").replace("if (acc >= 1){ acc = 0;",
+  "if (acc >= 1){ acc = 0; R.boats.forEach((b, i) => { if (!i) return; const o = b.cedeA, k = o ? i + '-' + R.boats.indexOf(o) : null;"
+  " const ok = o && Math.hypot(o.S.x - b.S.x, o.S.y - b.S.y) < 12.6 && Math.abs(norm180(o.S.h - b.S.h)) < 20; b.__cp = ok && b.__ck === k ? (b.__cp || 0) + 1 : ok ? 1 : 0; b.__ck = k; if (b.__cp >= 10) cop.add(k); });").replace("return { fin: R.boats[0].fin };",
+  "return { log: R.contLog || [], fin: R.boats.slice(1).map(b => b.fin), fuori: R.boats.slice(1).filter(b => b.fuori).length, piant: window.__piant, coppie: window.__cop.size };")
+assert "__piant" in CORSA and "contLog" in CORSA and "__cop" in CORSA and "cop.add" in CORSA
+
+async def main():
+    async with async_playwright() as p:
+        br = await getattr(p, os.environ.get("BROWSER", "chromium")).launch()
+        pg = await br.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+        await pg.goto((ROOT / "index.html").as_uri() + "#collaudo"); await pg.wait_for_timeout(400)
+        for conf in CONF:
+            await pg.evaluate("c => { __sv.ombra(c !== 'nocono'); if (c === 'off' || c === 'nocono') __sv.manovre(false); else __sv.manovre(true, +c); }", conf)
+            m1 = m2 = m3 = fuori = piant = nonarr = coppie = 0; arrivi = []
+            for s in SEMI:
+                for k in range(4):
+                    r = await pg.evaluate(CORSA, [k, s, 0])
+                    for c in r["log"]:
+                        m3 += 1; riv = [x for x, idx in ((0, c["i"]), (1, c["j"])) if idx != 0]
+                        if c["t"] >= 0 and any(c["vir"][x] <= 5 for x in riv): m1 += 1
+                        if -5 <= c["t"] < 0 and any(c["go"][x] <= 5 for x in riv): m2 += 1
+                    arrivi += [f for f in r["fin"] if f is not None]; nonarr += sum(f is None for f in r["fin"]); fuori += r["fuori"]; piant += r["piant"]; coppie += r["coppie"]
+            out = {"conf": conf, "semi": f"{SEMI[0]}-{SEMI[-1]}", "regate": 4 * len(SEMI), "M1": m1, "M2": m2, "M3": m3, "M4": round(statistics.median(arrivi), 1) if arrivi else None,
+                   "piantati": piant, "coppie": coppie, "fuori": fuori, "non_arrivati": nonarr, "errori": len(errs)}
+            print(json.dumps(out), flush=True)
+        await br.close()
+asyncio.run(main())

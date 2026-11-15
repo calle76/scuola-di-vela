@@ -302,7 +302,18 @@
   }
 
   // ---- guida degli avversari ----
-  function cambiaBordo(b, ai){ b.side = -b.side; b.boardT = 0; b.boardMax = ai.boardMin + Math.random() * (ai.boardMax - ai.boardMin); } // scade il tempo del bordo: si vira, e si sorteggia la durata del prossimo
+  function cambiaBordo(b, ai){ b.side = -b.side; b.boardT = 0; b.boardMax = ai.boardMin + Math.random() * (ai.boardMax - ai.boardMin); b.rinvio = 0; } // scade il tempo del bordo: si vira, e si sorteggia la durata del prossimo
+  // 1.3.11 (docs/PROPOSTA-REGOLE-15-16.md, versione B; voce 4): nelle regate di Deriva, prima della virata a tempo il rivale prova la rotta dopo la virata
+  // con la stessa previsione con cui cede (passaggio, a velocità costante): con una barca a meno di RINVIO_D m rimanda di 1 s, al più RINVIO_MAX s in tutto.
+  // Lo stesso prima di partire (mezzo secondo, mai oltre lo sparo). E i rivali decidono chi cede anche con le regole 15 e 16 (chiCede1516).
+  // RINVIO_MAX da scegliere fra 4, 8 e 12 s sui semi 2201-2230 e confermare sui semi 2231-2260; RINVIO_D = 2 lunghezze: ipotesi nostre. MANOVRE = false: com'era
+  let MANOVRE = false, RINVIO_MAX = 8; // 1.3.11: spenta, perché sui semi di scelta nessun RINVIO_MAX passa M5 (CHANGELOG 1.3.11); si accende solo nelle misure (__sv.manovre)
+  const RINVIO_D = 2 * BOAT.length;
+  const guarda = () => MANOVRE && R.r1516;
+  function cambiaBordoGuarda(b, ai, twd, ang){ // ang: l'angolo dal vento del bordo nuovo (ai.up di bolina, l'angolo di poppa)
+    if (guarda() && (b.rinvio || 0) < RINVIO_MAX && passaggio(b, twd + b.side * ang) < RINVIO_D){ b.boardMax += 1; b.rinvio = (b.rinvio || 0) + 1; return; } // la nuova prua: twd - (-side)·ang
+    cambiaBordo(b, ai);
+  }
   function aiControl(b, dt){
     const s = b.S, w = windAt(s.x, s.y), twd = w.twd, twa = norm180(twd - s.h), side = sgn(twa), A = Math.abs(twa);
     const ai = b.ai;
@@ -337,7 +348,9 @@
       if (!b.goStart && -R.t <= 30){ // quattro volte al secondo simula la propria partenza con step() e parte quando serve
         b.simT = (b.simT || 0) - dt;
         if (b.simT <= 0){ b.simT = 0.25; const T = startTime(b, lineAim, w, -R.t + 2); // simula fin poco oltre lo zero: se non arriva in tempo, parte subito
-          if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)) b.goStart = true; } // il margine fa arrivare dopo lo zero, mai prima
+          if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)){
+            if (guarda() && R.t < 0 && passaggio(b, lineAim) < RINVIO_D) b.simT = 0.5; // 1.3.11: una barca sulla rotta di partenza: si aspetta mezzo secondo
+            else { b.goStart = true; b.tGo = R.t; } } } // il margine fa arrivare dopo lo zero, mai prima
       }
       b.holdA = holdAngle(by);
       const [rx, ry] = fromWF(b.waitX + lat * (yF - yW), yF); // il punto di ritrovo, dove si torna per riposizionarsi (A)
@@ -366,10 +379,10 @@
       if (near){ // vicino al bersaglio: il bordo che punta più vicino
         const best = Math.abs(norm180(twd - ai.up - brg)) < Math.abs(norm180(twd + ai.up - brg)) ? 1 : -1;
         if (best !== b.side && b.boardT > 8){ b.side = best; b.boardT = 0; } // isteresi: niente virate a raffica
-      } else if (b.boardT > b.boardMax) cambiaBordo(b, ai);
+      } else if (b.boardT > b.boardMax) cambiaBordoGuarda(b, ai, twd, ai.up);
       desired = twd - b.side * ai.up;
     } else if (Math.abs(rel) > (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155)){ // bersaglio in poppa piena: lasco con abbattute (1.2.24: angolo dalla polare)
-      if (b.boardT > b.boardMax) cambiaBordo(b, ai);
+      if (b.boardT > b.boardMax) cambiaBordoGuarda(b, ai, twd, DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155);
       desired = twd - b.side * (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155); // solo dopo il via: prima della partenza resta com'era
     } else {
       desired = brg; b.side = sgn(norm180(twd - brg)); b.boardT = Math.min(b.boardT, b.boardMax * 0.5);
@@ -468,7 +481,7 @@
       bt = t; best = { o, d };
     }
     if (!best){ b.cedeA = null; b.rottaU = null; b.cedeDa = null; return desired; }
-    const o = best.o, devo = chiCede(b, o).cede === b; b.cedeA = devo ? o : null;
+    const o = best.o, devo = (guarda() ? chiCede1516(b, o) : chiCede(b, o)).cede === b; b.cedeA = devo ? o : null; // 1.3.11: in Deriva anche le regole 15 e 16
     // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
     if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; }
     if (b.cedeDa === null || b.cedeDa === undefined) b.cedeDa = R.t;
@@ -979,6 +992,7 @@
         continue; } // stesso contatto finché non si separano
       if (d > 4.4) continue; const mtv = hullOverlap(A.S, B.S); if (!mtv) continue; // scafo contro scafo (1.0.39); 4,4 m = due mezze lunghezze, oltre non si toccano
       R.contacts[key] = simTime;
+      if (TOAST_LOG) (R.contLog = R.contLog || []).push({ t: R.t, i, j, vir: [A, B].map(x => x.virT === undefined ? 1e9 : R.t - x.virT), go: [A, B].map(x => x.tGo === undefined ? 1e9 : R.t - x.tGo) }); // 1.3.11: per le misure (solo #collaudo)
       // mure di ciascuna col vento nel suo punto
       const cc = chiCede1516(A, B), guilty = cc.cede; // 1.3.10: con le regole 15 e 16 nelle regate di Deriva
       const why = motivoContatto(cc, guilty);

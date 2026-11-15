@@ -91,3 +91,7 @@ F15 (regole 15, 16, 43.1 e definizione di «spazio»), parafrasate; i casi pubbl
 ## Esito della versione A (1.3.10, notte del 16 novembre 2026)
 
 Fatta. R1-R6 passano (R1 17 casi a mano; R2 0 contraddizioni; R3 la Scuola identica; R4 in 200 regate del torneo 87 contatti su 237 per la 15 e 14 per la 16; R5 lezione 24 fuori dalla Scuola, punti di Deriva 24 con quota 22; R6 pannello e pagine). Due correzioni durante il lavoro, dette nel `CHANGELOG.md`: il colore del semaforo (segue chi prenderebbe la penalità) e la proposta che dimenticava l'Esperienza nei punti. Prossimo: la versione B (guida dei rivali), con le misure lunghe.
+
+## Versione B, prima misura (16 novembre 2026, sera): da rifare
+
+Scritta e spenta nella 1.3.11. La prima misura sui semi 2201-2230 (M5 fuori soglia per 4, 8 e 12 s) era falsata da un commento a metà riga negli agganci dei collaudi (`CHANGELOG.md` 1.3.11): si rifà nella notte, sugli stessi semi di scelta, con in più il rumore di M5 (la stessa configurazione su altri gruppi di semi) e le coppie che si tengono col cono acceso e spento. La conferma sui semi 2231-2260 resta mai guardata.

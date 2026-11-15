@@ -19,6 +19,29 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.11 — Rivali che guardano prima di manovrare: scritti, ma spenti
+
+Versione B di `docs/PROPOSTA-REGOLE-15-16.md` (voce 4). **Nel gioco non cambia niente:** la guida nuova dei rivali è scritta e collaudabile, ma resta spenta (`MANOVRE = false`) finché la misura non dice che si può accendere. Con la versione B spenta le regate del torneo sono identiche al bit alla 1.3.10.
+
+- **Cosa fa, quando è accesa** (solo nelle regate di Deriva):
+  - prima della virata a tempo il rivale prova la rotta dopo la virata; con una barca a meno di 2 lunghezze rimanda di 1 s, al più `RINVIO_MAX` s in tutto;
+  - prima di partire fa la stessa prova e aspetta mezzo secondo, mai oltre lo sparo;
+  - decide chi cede anche con le regole 15 e 16.
+- **Strumento nuovo `tests/misura_manovre.py`:** criteri M1-M5, più le «coppie che si tengono» (la scena S8) e una configurazione senza cono d'ombra.
+
+**Le misure di questa sera non valgono, e va detto.**
+- Sui semi 2201-2230 avevano dato meno contatti (da 140 a 89-107) ma M5 fuori soglia per tutte e tre le scelte di `RINVIO_MAX`.
+- Erano falsate, di nuovo, da un commento `//` a metà riga: in `js/avvio.js`, nella riga degli agganci per i collaudi, il commento sul nuovo `manovre` spegneva tutto quello che veniva dopo (fra l'altro `twd`). Le corse della misura non erano quelle volute.
+- Il gioco vero non era toccato, perché quella riga esiste solo con `#collaudo`. L'ha scoperto il controllo K1 del Coach (regate diverse dalla 1.3.10 con la B spenta), cercando la causa file per file.
+- **La misura si rifà nella notte del 16 novembre.**
+
+**`tests/controllo_commenti.py` ampliato:** la prima versione non vedeva questo caso. Ora riconosce anche i getter («get nome(){»), «}, nome:» e le funzioni a freccia. La controprova trova la riga sbagliata nella copia col difetto; sul codice corretto 0 righe sospette.
+
+**Verifiche:**
+- regate del torneo con la versione B spenta identiche alla 1.3.10 (regate 2601-0 e 2601-1, arrivi e penalità);
+- fisica identica;
+- `controllo_commenti` verde.
+
 ## 1.3.10 — Regole 15 e 16 nelle regate di Deriva, col semaforo giallo e la lezione 24
 
 Prima versione della proposta unica `docs/PROPOSTA-REGOLE-15-16.md` (via di Ale del 16 novembre notte; G = 10° e lezione senza esercizio, come consigliato). Cambia la decisione del 23 ottobre: le regole 15 e 16, rimandate «al livello dopo», entrano in Deriva. La Scuola resta con le regole 10-13.

@@ -1,10 +1,12 @@
 # Controllo dei commenti che si mangiano il codice (16 novembre 2026). Due volte il 15 novembre un commento // aggiunto a metà riga ha trasformato in
 # commento il codice che seguiva sulla stessa riga (1.3.3: releaseKeys(); finShow(); nella chiusura della moviola; 1.3.10: metà dell'oggetto R della regata).
-# Cerca nei commenti // dei file js/ quello che sembra codice: una chiamata chiusa da «);» oppure due coppie «nome: valore,» di fila.
+# Cerca nei commenti // dei file js/ quello che sembra codice: una chiamata chiusa da «);», due coppie «nome: valore,» di fila, un getter «get nome(){»,
+# «}, nome:» o una funzione a freccia con un'istruzione (dal 16 nov, dopo il caso di avvio.js nella 1.3.11, che la prima versione non vedeva).
 # Le righe già note e giuste si riconoscono dal testo (NOTE_OK_TESTO; i numeri di riga cambiano). Esce con 1 se trova righe sospette nuove.
 import pathlib, re, sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-CODICE = re.compile(r"[A-Za-z_$][\w$.]*\([^()]*\);\s*\S|[A-Za-z_$][\w$]*: [^,;]{1,40}, [A-Za-z_$][\w$]*: [^,;]{1,40},")
+CODICE = re.compile(r"[A-Za-z_$][\w$.]*\([^()]*\);\s*\S|[A-Za-z_$][\w$]*: [^,;]{1,40}, [A-Za-z_$][\w$]*: [^,;]{1,40},"
+                    r"|\bget [A-Za-z_$][\w$]*\(\)\s*\{|\}\s*,\s*[A-Za-z_$][\w$]*\s*[:(]|=>\s*\{[^}]*;")   # 16 nov: anche getter, «}, nome:» e funzioni a freccia (avvio.js, 1.3.11)
 def commento(riga):   # il testo dopo il primo // che non sta dentro una stringa o un'espressione regolare (approssimato: fuori dalle virgolette)
     q = None; i = 0
     while i < len(riga) - 1:
