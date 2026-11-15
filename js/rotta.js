@@ -48,20 +48,22 @@
   // da {x, y, s (mure: +1 vento da destra, -1 da sinistra, 0 non ancora), t} fino al cancello; ritorna il punto d'arrivo con la catena .par
   function rotLato(p0, cancello){
     let front = [Object.assign({ debt: 0, par: null, man: 0 }, p0)];
-    const ox = p0.x, oy = p0.y, t0 = p0.t;
+    const ox = p0.x, oy = p0.y, t0 = p0.t, tmp = { x: 0, y: 0 }; let rigaTws = NaN, rigaUlt = null;
     for (let t = t0; t < t0 + ROT_LATO_MAX && t < ROT_TMAX; t += ROT_DT){
       const Q = rotRaffiche(t), best = new Map();
       for (const p of front){
-        const w = rotVento(p.x, p.y, Q), riga = rotRiga(w.tws);
-        for (let n = 0; n < ROT_TWA.length; n++) for (const s of [1, -1]){ const twa = ROT_TWA[n];
+        const w = rotVento(p.x, p.y, Q), riga = w.tws === rigaTws ? rigaUlt : (rigaTws = w.tws, rigaUlt = rotRiga(w.tws)); // 1.2.40: fuori dalle raffiche la forza è sempre la stessa
+        for (let n = 0; n < ROT_TWA.length; n++) for (let si = 0; si < 2; si++){ const s = si ? -1 : 1, twa = ROT_TWA[n];
           let debt = p.debt, man = p.man;
           if (p.s && s !== p.s){ debt += twa < 90 ? T_VIR : T_ABB; man++; }
           const mv = Math.max(0, ROT_DT - debt); debt = Math.max(0, debt - ROT_DT);
           const [v, lee] = riga[n], c = (w.twd - s * (twa + lee)) * D2R; // s = +1: vento da destra, la prua sta a sinistra del vento
-          const q = { x: p.x + Math.sin(c) * v * mv, y: p.y - Math.cos(c) * v * mv, s, t: t + ROT_DT, debt, man, par: p };
-          const fr = cancello(p, q); if (fr !== null){ q.x = p.x + (q.x - p.x) * fr; q.y = p.y + (q.y - p.y) * fr; q.t = t + ROT_DT * fr; q.fine = true; return q; }
-          const dx = q.x - ox, dy = q.y - oy, d = Math.hypot(dx, dy), key = Math.round(Math.atan2(dx, -dy) / D2R / ROT_SETT) * 2 + (s > 0 ? 1 : 0);
-          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q }); // chi deve ancora finire una manovra vale meno
+          // 1.2.40: il punto nuovo si crea solo se entra nel fronte o finisce il lato (stessi conti e stesso ordine di prima: risultati identici, circa metà del tempo)
+          tmp.x = p.x + Math.sin(c) * v * mv; tmp.y = p.y - Math.cos(c) * v * mv;
+          const fr = cancello(p, tmp); if (fr !== null){ const q = { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p };
+            q.x = p.x + (q.x - p.x) * fr; q.y = p.y + (q.y - p.y) * fr; q.t = t + ROT_DT * fr; q.fine = true; return q; }
+          const dx = tmp.x - ox, dy = tmp.y - oy, d = Math.hypot(dx, dy), key = Math.round(Math.atan2(dx, -dy) / D2R / ROT_SETT) * 2 + (s > 0 ? 1 : 0);
+          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q: { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p } }); // chi deve ancora finire una manovra vale meno
         }
       }
       front = [...best.values()].map(o => o.q);
@@ -69,12 +71,12 @@
     return null;
   }
   // cancello della boa: semiretta dalla boa verso mk.out, passata dal lato giusto (da a ≥ 0 ad a < 0, come roundCheck) ad almeno ROT_BOA m
-  const rotCancBoa = mk => (p, q) => {
-    const ux = Math.sin(mk.out * D2R), uy = -Math.cos(mk.out * D2R), cp = (p.x - mk.x) * uy - (p.y - mk.y) * ux, cq = (q.x - mk.x) * uy - (q.y - mk.y) * ux; // > 0: a destra della semiretta guardando lungo out
+  const rotCancBoa = mk => { const ux = Math.sin(mk.out * D2R), uy = -Math.cos(mk.out * D2R); return (p, q) => { // 1.2.40: ux e uy una volta sola
+    const cp = (p.x - mk.x) * uy - (p.y - mk.y) * ux, cq = (q.x - mk.x) * uy - (q.y - mk.y) * ux; // > 0: a destra della semiretta guardando lungo out
     if (!(cp <= 0 && cq > 0) && !(cp < 0 && cq >= 0)) return null; // roundCheck: da bearing-out ≥ 0 (a destra, prodotto < 0 qui) a < 0
     const f = cp / (cp - cq), ax = p.x + (q.x - p.x) * f - mk.x, ay = p.y + (q.y - p.y) * f - mk.y;
     return ax * ux + ay * uy >= ROT_BOA ? f : null;
-  };
+  }; };
   const rotCancArrivo = () => (p, q) => { const [px, py] = toWF(p.x, p.y), [qx, qy] = toWF(q.x, q.y);
     if (!(py < 0 && qy >= 0)) return null; const f = -py / (qy - py), x = px + (qx - px) * f; return Math.abs(x) <= LINE_HALF ? f : null; };
 
@@ -89,6 +91,25 @@
       p = { x: q.x, y: q.y, t: q.t, s: q.s }; }
     return { tempo: p.t, t0: tg.t, lati, punti: [{ t: tg.t, x: tg.x, y: tg.y, s: 0 }].concat(cat) };
   }
+
+  // ---- rotta in assoluto (1.2.40, docs/PROPOSTA-ROTTA-ASSOLUTA.md §8-9; via di Ale del 14 novembre 2026, notte) ----
+  // Allo sparo, da ROT_ASS_N punti della linea, uno ogni ROT_ASS_PASSO m e centrati, con le mure libere: per ognuno la rotta fino alla boa 1, con lo stesso
+  // calcolo della verde (rotLato). Il più veloce è il punto ideale; da lì la rotta intera (viola). La barca si considera già lanciata allo sparo e le altre
+  // barche non esistono: lo dice il testo. Costanti nostre: 7 punti, 10 m (§8). I punti stanno fra spillo e comitato (non fromWF, che segue il vento impostato).
+  const ROT_ASS_N = 7, ROT_ASS_PASSO = 10;
+  const rotCatena = (q, p) => { const pezzo = []; for (let r = q; r && r !== p; r = r.par) pezzo.push({ t: r.t, x: r.x, y: r.y, s: r.s, man: r.man }); return pezzo.reverse(); }; // come in rotCalcola
+  function rotAssoluta(forza){ // forza: indice del punto della linea da usare comunque (solo per i collaudi, A2)
+    if (!R || rot.reg.length < 2 || !R.marks.length) return null;
+    const canc = R.marks.map(rotCancBoa).concat([rotCancArrivo()]), cand = [];
+    for (let i = 0; i < ROT_ASS_N; i++){ const dx = (i - (ROT_ASS_N - 1) / 2) * ROT_ASS_PASSO, f = (dx + LINE_HALF) / (2 * LINE_HALF), p = { x: R.pin.x + (R.cb.x - R.pin.x) * f, y: R.pin.y + (R.cb.y - R.pin.y) * f, t: 0, s: 0 }, q = rotLato(p, canc[0]);
+      cand.push({ dx, p, q, boa: q ? q.t : Infinity }); }
+    const m = forza === undefined ? cand.reduce((a, b) => b.boa < a.boa ? b : a) : cand[forza]; if (!m.q) return null;
+    let p = m.p, q = m.q; const lati = [q.t], cat = rotCatena(q, p);
+    for (let j = 1; j < canc.length; j++){ p = { x: q.x, y: q.y, t: q.t, s: q.s }; q = rotLato(p, canc[j]); if (!q) return null; lati.push(q.t); cat.push(...rotCatena(q, p)); }
+    const punti = [{ t: 0, x: m.p.x, y: m.p.y, s: 0 }].concat(cat), d = punti.find(c => c.t >= 5) || punti[punti.length - 1];
+    return { tempo: q.t, t0: 0, lati, punti, dx: m.dx, mure: (cat.find(c => c.s) || { s: 0 }).s, dir: Math.atan2(d.x - m.p.x, -(d.y - m.p.y)), cand: cand.map(c => ({ dx: c.dx, boa: c.boa })) };
+  }
+  const rotBoa1Da = (x, y, t) => { const q = R && R.marks.length ? rotLato({ x, y, t, s: 0 }, rotCancBoa(R.marks[0])) : null; return q ? q.t : null; }; // per i collaudi (P1)
 
   // per la barca k, lato per lato, il tempo vero e quello della rotta ottimale partendo da dove e quando quella barca ha cominciato il lato
   // (misura degli avversari, docs/PROPOSTA-AVVERSARI-ROTTA.md): [{ lato, vero, ott, manOtt }], solo i lati finiti
@@ -177,14 +198,20 @@
   // ---- schermata ----
   function rotTesto(ott, sp){
     const me = R.boats[0], fmt = s => rivTempo(s), tu = me.fin !== null && !me.dsq ? me.fin - rot.barche[0].taglio.t : null, ot = ott.tempo - ott.t0;
-    let t = `In verde la rotta ottimale (col senno di poi), in blu la tua; un punto ogni 30 s; ogni minuto un filo bianco unisce dove eri tu e dove saresti stato con la rotta ottimale nello stesso istante; tratteggiate in giallo le layline della boa di bolina col vento di quel momento. Rotta ottimale ${fmt(ot)} dal tuo taglio della linea` + (tu !== null ? `, tu ${fmt(tu)} (${tu - ot >= 0 ? "+" : "−"}${Math.round(Math.abs(tu - ot))} s). ` : ". ");
+    const A = rot.res && rot.res.ass;
+    let t = `In verde la rotta ottimale (col senno di poi), in blu la tua${A ? ", in viola la migliore in assoluto" : ""}; un punto ogni 30 s; ogni minuto un filo bianco unisce dove eri tu e dove saresti stato con la rotta ottimale nello stesso istante; tratteggiate in giallo le layline della boa di bolina col vento di quel momento. Rotta ottimale ${fmt(ot)} dal tuo taglio della linea` + (tu !== null ? `, tu ${fmt(tu)} (${tu - ot >= 0 ? "+" : "−"}${Math.round(Math.abs(tu - ot))} s). ` : ". ");
     t += sp.lati.filter(L => L.tu !== null).map(L => `${L.nome} ${L.tu - L.ott >= 0 ? "+" : "−"}${Math.round(Math.abs(L.tu - L.ott))} s`).join(", ") + ".";
     if (sp.motivi.length) t += " " + sp.motivi.map(m => m.txt).join(" ");
+    if (A){ const persa = ott.tempo - A.tempo, dopo = me.fin !== null && !me.dsq ? me.fin - ott.tempo : null; // 1.2.40: tempi dallo sparo
+      t += ` Partenza ideale: a ${Math.round(LINE_HALF + A.dx)} m dallo spillo, mure a ${A.mure > 0 ? "dritta" : "sinistra"}, con la barca già lanciata. Dallo sparo: migliore in assoluto ${fmt(A.tempo)}, dalla tua partenza ${fmt(ott.tempo)}` +
+        (dopo !== null ? `, tu ${fmt(me.fin)}` : "") + `: in partenza ${persa >= 0.5 ? "hai perso " + Math.round(persa) + " s" : "non hai perso niente"}` + (dopo !== null ? `, dopo ${Math.round(Math.max(0, dopo))} s.` : ".");
+    }
     return t + " Conosce il vento prima che arrivi e ignora le altre barche.";
   }
   function rotApri(){
     if (!R || !R.rotta || riv.on) return;
-    if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, testo: rotTesto(ott, rotSpiega(ott)) } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." }; }
+    if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, ass: rotAssoluta() } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." };
+      if (ott) rot.res.testo = rotTesto(ott, rotSpiega(ott)); } // 1.2.40: con la migliore in assoluto (ass), null se non si può calcolare
     rot.on = true; rot.box = null; rivApri(); $("movTit").textContent = rot.res.testo;
     $("movLargo").hidden = !rot.res.ott; rotLargo(false);
   }
@@ -224,7 +251,7 @@
   }
   function rotVista(){ // la vista dall'alto, nord in su, che contiene campo e tracce, sopra la barra della moviola; null se la rotta non è aperta
     if (!rot.on || !riv.on || !rot.res || !rot.res.ott) return null;
-    if (!rot.box){ const P = rot.res.ott.punti.map(q => [q.x, q.y]).concat(riv.all.map(f => [f.b[0][0], f.b[0][1]]), R.marks.map(m => [m.x, m.y]), [[R.pin.x, R.pin.y], [R.cb.x, R.cb.y]]);
+    if (!rot.box){ const P = rot.res.ott.punti.concat(rot.res.ass ? rot.res.ass.punti : []).map(q => [q.x, q.y]).concat(riv.all.map(f => [f.b[0][0], f.b[0][1]]), R.marks.map(m => [m.x, m.y]), [[R.pin.x, R.pin.y], [R.cb.x, R.cb.y]]);
       const xs = P.map(p => p[0]), ys = P.map(p => p[1]); rot.box = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; }
     const [x0, y0, x1, y1] = rot.box, alto = H - $("movBar").offsetHeight - 110, ppm = Math.min((W - 60) / Math.max(10, x1 - x0), (alto - 40) / Math.max(10, y1 - y0));
     return { ppm, rot: 0, cx: W / 2 + (S.x - (x0 + x1) / 2) * ppm, cy: 90 + alto / 2 + (S.y - (y0 + y1) / 2) * ppm };
@@ -232,6 +259,13 @@
   function rotDisegna(v){ // sopra la regata, mentre la moviola è aperta dalla rotta ottimale
     if (!rot.on || !riv.on || !rot.res || !rot.res.ott) return;
     const P = rot.res.ott.punti, T = rivT0() + riv.pos, lw = Math.max(0.25, 1.6 / v.ppm);
+    const A = rot.res.ass; // 1.2.40: la migliore in assoluto, viola, sotto le altre; segno nel punto ideale della linea e freccia della direzione
+    if (A){ const VI = "rgba(200,120,255,", Q = A.punti, pt = (x, y, r) => { ctx.fillStyle = VI + "1)"; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); };
+      ctx.lineWidth = lw; ctx.strokeStyle = VI + ".9)"; ctx.beginPath(); Q.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y)); ctx.stroke();
+      for (let s = 30; s < Q[Q.length - 1].t; s += 30){ const q = rotIstante(Q, s, q => [q.x, q.y]); if (q) pt(q[0], q[1], 2.2 * lw); }
+      const o = Q[0], L = 12, ux = Math.sin(A.dir), uy = -Math.cos(A.dir), ex = o.x + ux * L, ey = o.y + uy * L;
+      pt(o.x, o.y, 4.5 * lw); ctx.lineWidth = 2 * lw; ctx.beginPath(); ctx.moveTo(o.x, o.y); ctx.lineTo(ex, ey);
+      ctx.moveTo(ex - ux * 4 + uy * 3, ey - uy * 4 - ux * 3); ctx.lineTo(ex, ey); ctx.lineTo(ex - ux * 4 - uy * 3, ey - uy * 4 + ux * 3); ctx.stroke(); }
     ctx.lineWidth = lw; ctx.strokeStyle = "rgba(60,200,90,.9)"; ctx.beginPath(); P.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y)); ctx.stroke();
     const tu = riv.all.filter(f => f.t >= rot.barche[0].taglio.t); ctx.strokeStyle = "rgba(80,150,255,.85)"; ctx.beginPath(); tu.forEach((f, i) => i ? ctx.lineTo(f.b[0][0], f.b[0][1]) : ctx.moveTo(f.b[0][0], f.b[0][1])); ctx.stroke();
     const punto = (x, y, r, c) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); };

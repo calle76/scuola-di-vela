@@ -160,3 +160,38 @@ Il punto migliore fino alla boa 1 potrebbe non essere il migliore sull'intero pe
 **Costo:** circa una giornata, come la proposta originale, ma con il rischio più basso.
 
 **Cosa serve da Ale e Lucio:** il via, e quando farla (consiglio: subito dopo il nazionale).
+
+## 10. Esito (14-15 novembre 2026, notte): 1.2.40 fatta, NON chiusa
+
+Via di Ale del 14 notte («sì via alla rotta intera»). Ramo `rotta-assoluta`, `tests/collaudo_rotta_assoluta.py` (nuovo). Le 4 regate del torneo col pilota, semi 2401-2425 (mai usati prima; dispari principianti, pari esperti; ogni regata col suo sorteggio), 100 regate: **97 misurate**, 3 senza il pulsante «Rotta ottimale» (sotto).
+
+| # | Esito | Soglia |
+| --- | --- | --- |
+| P1 | punto ideale non peggio del tuo alla boa 1: **90 su 97**; il peggiore **+0,46 s** | 100 su 100 ✗ |
+| P2 | linea storta di 10°: punto ideale all'estremità più al vento **20 su 20** (vedi sotto) | 18 su 20 ✓ |
+| P3 | i 7 tratti fino alla boa 1: al massimo **3,6 s** in Chromium, **4,2 s** in Firefox (8 regate) | 1 s ✗ |
+| P4 | rotta verde, «dove hai perso» e fili **identici** al codice di prima in 97 regate su 97; impronta del guardiano `2c0e3804a20d`; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici | ✓ |
+| P5 | 0 px di eccesso a 1360×650 con e senza barra; la barra della moviola dentro la finestra | ✓ |
+| A1 | viola non più lenta della verde: **96 su 97**; l'unica, **+0,04 s** | 100 su 100 ✗ |
+| A2 | scelta sulla boa 1 entro 1 s dal migliore sull'intero percorso: **17 su 20**; le 3 fuori perdono **2,1**, **1,4** e circa **1,0 s** (appena sopra la soglia) | 18 su 20 ✗ |
+| A3 | tutta la rotta in assoluto: al massimo **4,0 s** in Chromium, **4,3 s** in Firefox | 2 s ✗ |
+
+Il PC del collaudo è quello di Ale.
+
+**Perché P1 e A1 non passano.** I 7 punti stanno a 10 m l'uno dall'altro: il tuo punto di partenza può cadere fra due di loro ed essere un po' migliore di tutti e 7. Succede in 7 regate su 97, al massimo per mezzo secondo. Quando succede, il testo dice «in partenza non hai perso niente» (sotto mezzo secondo non si conta).
+
+**Perché P3 e A3 non passano.** Ogni tratto fino alla boa 1 costa circa mezzo secondo, come la rotta verde, e sono 7. Ho accelerato il calcolo senza cambiare i risultati (la verde è identica al bit, P4): i punti nuovi si creano solo se servono, la riga della polare si riusa. Nelle prime prove (4 regate, prima delle accelerazioni) i 7 tratti costavano circa 3,4 s; dopo, **3,1 s di media** su 97 regate (tutta la rotta 3,6 s). Il confronto è su regate diverse, quindi il guadagno è misurato male; in ogni caso non basta.
+
+**P2, cosa è successo prima del 20 su 20.**
+1. La prima prova, col vento vero del torneo girato di 10°, dava 0 su 6 con 14 regate non misurate: salti e raffiche spostano il vento allo sparo di quanto lo giravo io, e il pilota, col vento girato, spesso non arriva. Non misurava la geometria che il criterio dice; rifatta con vento costante e calcolando la rotta senza aspettare il pilota.
+2. Con vento costante dava ancora 0 su 20, e c'era un errore mio nel codice nuovo: i 7 punti seguivano il vento impostato invece della linea vera. Nel gioco normale il vento impostato non cambia, quindi era invisibile, ma era sbagliato: ora i punti stanno fra spillo e comitato. Rifatte le 100 regate: stessi numeri.
+3. Detto chiaro: con vento costante le 20 regate sono in pratica **2 situazioni** (vento girato di +10° e di −10°), ripetute.
+
+**Trovato strada facendo:** in 3 regate su 100 (semi 2415 R3 e R4, 2420 R4) il pulsante «Rotta ottimale» non compare, anche col codice della 1.2.39: il pilota arriva, il taglio della linea è registrato. Causa non cercata: va in `DA-FARE.md`.
+
+**Strade per Ale:**
+- **Tempo (P3, A3):**
+  - **a. (consiglio)** mostrare subito la verde e aggiungere la viola quando è pronta, 3-4 s dopo, con la scritta «sto calcolando la migliore in assoluto»: l'attesa sparisce, ma il calcolo dura uguale e P3-A3 restano dichiarati. Costo piccolo;
+  - b. calcolare i 7 tratti in parallelo sui processori del PC (Web Worker): stessi risultati, tempo forse sotto 1-1,5 s sul tuo PC (6 processori), da verificare anche aprendo il gioco come file. Circa mezza giornata;
+  - c. lasciare l'attesa com'è.
+- **P1, A1, A2:** dichiararli (scarti piccoli: mezzo secondo al massimo, una regata su 97 per la viola), oppure punti più fitti sulla linea, che però costano altro tempo.
