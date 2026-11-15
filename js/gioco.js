@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.7"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.8"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -839,7 +839,10 @@
   // SIMULAZIONE
   // ======================================================================
   let GYBE_KICK = 260; // gradi/s: circa 19° di sbandamento con 6 nodi, 45° con 10, scuffia con 15
-  function toast(text, t = 2.6){ S.toast = { text, t }; }
+  // 1.3.7: solo con #collaudo, ogni messaggio scritto si annota (al più gli ultimi 200): i collaudi non dipendono più dal guardare lo schermo a intervalli
+  // (collaudo_registro in Firefox su GitHub: due volte su tre giri un «Contatto!» coperto da un altro messaggio prima di essere visto, voce 35)
+  const TOAST_LOG = /^#collaudo/.test(location.hash) ? [] : null;
+  function toast(text, t = 2.6){ S.toast = { text, t }; if (TOAST_LOG){ TOAST_LOG.push({ t: simTime, text }); if (TOAST_LOG.length > 200) TOAST_LOG.shift(); } }
   function detectManeuvers(){
     const twa = norm180(local.twd - S.h), side = sgn(twa), A = Math.abs(twa);
     if (side === S.prevSide || A < 1 || A > 179) return;

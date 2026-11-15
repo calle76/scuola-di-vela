@@ -19,6 +19,15 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.8 — I messaggi annotati per i collaudi (voce 35)
+
+- Il giro su GitHub della 1.3.6 (43725225511) ha ridato la caduta di `collaudo_registro` in Firefox, sulla verifica «contatto». È la seconda volta in tre giri, quindi non più un caso isolato. Il contatto c'era ed era registrato (questa volta senza colpa), ma il collaudo non ha visto il messaggio «Contatto…»: lo cercava sullo schermo ogni 20 ms.
+- **Ipotesi, non verificata:** il gioco ha un solo posto per i messaggi, e un altro messaggio scritto subito dopo (per esempio quello della virata) copre il «Contatto», prima che il collaudo lo veda. Sulle macchine lente di GitHub, in Firefox, un fotogramma dura di più.
+- **Cosa cambia:** solo con `#collaudo` il gioco annota ogni messaggio che scrive, al massimo gli ultimi 200. `collaudo_registro` conta i messaggi di contatto da quella lista e scrive una nota quando sullo schermo ne ha visti di meno, cioè quando sono stati coperti. Per chi gioca non cambia niente.
+- **Il possibile difetto vero resta aperto** (voce 35): un messaggio importante («Contatto! Penalità…») può essere coperto subito da uno meno importante. Si vedrà dalle note dei prossimi giri.
+
+**Misure:** `collaudo_registro` 15 su 15 in Chromium; la verifica del contatto verde in Chromium e Firefox. Fisica identica (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`).
+
 ## 1.3.7 — La finale
 
 Tappa 3 del piano di chiusura di Deriva (`docs/PROPOSTA-FINALE.md`, via di Ale del 15 novembre 2026). Fatta nella notte del 15 novembre, in autonomia.

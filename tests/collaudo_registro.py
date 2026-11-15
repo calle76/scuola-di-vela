@@ -158,6 +158,7 @@ async def main():
 
         if "h" in casi:  # regata con avversari: punta la barca più vicina finché c'è un contatto
             await pg.evaluate(SET, ["#aiLevel", "principianti"]); await pg.evaluate(SET, ["#cdSel", "60"]); await pg.evaluate("__sv.openItem(['r',0])"); await pg.evaluate("__sv.fast(4)")
+            await pg.evaluate("() => { __sv.toasts.length = 0; window.__log0 = 0; }")   # 1.3.7: i messaggi scritti, dal registro del gioco (non dipende dai tempi)
             await pg.evaluate("""() => { window.__ct = 0; let last = null; clearInterval(window.__ctw);
               window.__ctw = setInterval(() => { const t = __sv.toast; if (t && t !== last && t.startsWith('Contatto') && !t.startsWith('Contatto fra')) window.__ct++; last = t; }, 20); }   // 1.1.1: «Contatto fra X e Y» è fra due avversari (dalla 1.1.0 in tutte le regate), non del giocatore""")
             trovato = False
@@ -169,7 +170,8 @@ async def main():
                   const h = (__sv.twd + (rel >= 0 ? 50 : -50)) * Math.PI / 180; return [me.x + Math.sin(h) * 40, me.y - Math.cos(h) * 40]; })()""")
                 await pg.evaluate(VAI, [[pos], "free"]); await pg.wait_for_timeout(500)
                 if await pg.evaluate("__sv.reg.contacts > 0"): trovato = True; await pg.wait_for_timeout(1500); break
-            r = await reg(pg); s = await pg.evaluate("[window.__ct, __sv.R.boats[0].pen]")
+            r = await reg(pg); s = await pg.evaluate("[__sv.toasts.slice(window.__log0).filter(x => x.text.startsWith('Contatto') && !x.text.startsWith('Contatto fra')).length, __sv.R.boats[0].pen, window.__ct]")
+            if s[2] != s[0]: print(f"      nota: messaggi di contatto scritti {s[0]}, visti sullo schermo guardando ogni 20 ms {s[2]} (un altro messaggio li ha coperti)")
             verifica("contatto", trovato and r["contacts"] == s[0] and r["contactsPen"] * 15 == s[1], f"registro {r} | contatti annunciati {s[0]} | penalità {s[1]} s")
             await pg.evaluate(FERMA); await pg.evaluate("clearInterval(window.__ctw)")
 

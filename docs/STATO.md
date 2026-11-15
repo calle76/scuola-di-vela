@@ -6,7 +6,8 @@
 
 ## Versione
 
-- **Ultima versione chiusa: 1.3.7** (notte del 15 novembre, tag `v1.3.7`, in autonomia): **la finale** (tappa 3), a Baia delle Sette Vele (nome da controllare), coi primi 6 del nazionale.
+- **Ultima versione chiusa: 1.3.8** (notte del 15 novembre, tag `v1.3.8`): i messaggi annotati per `collaudo_registro` (voce 35, giro GitHub sulla 1.3.6).
+- **1.3.7** (notte del 15 novembre, tag `v1.3.7`, in autonomia): **la finale** (tappa 3), a Baia delle Sette Vele (nome da controllare), coi primi 6 del nazionale.
 - **1.3.6** (15 novembre, tag `v1.3.6`): il Coach dice le scuffie ed è arrabbiato anche per quelle (prova di Ale); `collaudo_menu` e `collaudo_cono` rimessi in ordine dopo il giro GitHub sulla 1.3.3.
 - **1.3.5** (15 novembre, tag `v1.3.5`): **Deriva in carriera, con punti propri e «Deriva superata»** (primi 3 dello zonale, o merito con quota provvisoria 19/21). **La cornice di Deriva (tappa 2 del piano) è finita.**
 - **1.3.4** (15 novembre, tag `v1.3.4`): **il volto del Coach**, tre espressioni fatte da Ale con ChatGPT (arrabbiato con una penalità o la partenza anticipata, contento se va bene, serio altrimenti).
