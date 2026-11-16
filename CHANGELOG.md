@@ -19,6 +19,14 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.17 — Lezioni 11 e 15 più chiare
+
+Da dove viene: Ale, 16 novembre sera. La lezione 11 su scarso e buono «non si capisce molto», e non diceva in quali regate si usa; il passo 2 della lezione 15 diceva che il gioco non controlla le regole 14, 15 e 16, ma le 15 e 16 ci sono nelle regate di Deriva.
+
+- **Lezione 11:** un passo nuovo, «Un esempio», coi numeri della Prua (mure a dritta a 050°, il vento gira di 10° a destra, si poggia a 060°: scarso; virando la Prua va a 320° invece di 310°: buono). Nel riepilogo: «Nelle regate della Scuola il vento non gira: lo userai in quelle di Deriva». Detto nel posto del primo passo, l'esempio faceva scorrere il pannello di 97 px; la frase lunga nel riepilogo di 9 px: per questo passo a parte e frase corta.
+- **Lezione 15, passo 2 e una domanda d'esame:** nella Scuola il gioco controlla le regole 10-13; le 15 e 16 sono spiegate e applicate dalle regate di Deriva in poi (senza citare una versione del gioco, scelta di Ale); la 14 non la controlla, ma in regata vale.
+- **Collaudi:** `collaudo_pannello_lezioni.py` in Chromium e Firefox, 130 passi su 130, 0 px oltre la finestra; `collaudo_versione.py` e `controllo_commenti.py` OK; `polare.js` e `raffiche_e_virate.js` girano (il motore non è toccato).
+
 ## 1.3.16 — Stagione con un amico: i file valgono fra versioni, e si riprende dal proprio file
 
 Da dove viene: il 16 novembre Ale ha trovato in Chrome la stagione con un amico ricominciata (era alla tappa 3, sulla 1.3.12). Non è stato il gioco: nessuna versione cancella la stagione, sono stati i dati del browser. Restavano però due problemi veri (`docs/PROPOSTA-STAGIONE-FILE.md`, via di Ale del 16 novembre; la scelta D1 l'ha lasciata a Claude: la ripresa vale anche in carriera).
