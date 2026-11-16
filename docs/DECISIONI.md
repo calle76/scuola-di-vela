@@ -184,6 +184,7 @@ Costo di cambiamento:
 | **Via all'Allenamento** al posto delle due regate di Deriva (tolte dal menu, restano nel codice per le lezioni); record per percorso × barche, 4 combinazioni, come consigliato (domanda 3 non risposta a parte) | 16 nov (Ale: «toglie due regate inutili e ne mette una in cui scegliere come impostarla») | medio | menu di Deriva, record e collaudi del menu | `PROPOSTA-ALLENAMENTO.md` |
 | **Aiuto «scarso / buono» in regata:** si comporta come la layline (acceso nelle regate a tema, spento nel torneo salvo «anche torneo»); vale anche in carriera (disattivabile) | 16 nov sera (domande 1 e 2 della proposta) | basso | un valore predefinito nelle Impostazioni | `PROPOSTA-AIUTO-SCARSO.md` |
 | **Regola 18 (spazio alla boa) dentro Deriva**, non più dopo (cambia la decisione del 31 ottobre) | 16 nov sera (domanda 1 della proposta) | medio | colpa alla boa, semaforo, lezione 25; poi guida degli avversari | `PROPOSTA-REGOLA-18.md` |
+| **Zona della regola 18 disegnata** (cerchio tenue di tre lunghezze attorno alle boe), aiuto disattivabile come la layline: acceso nelle regate a tema, spento nel torneo salvo «anche torneo» | 16 nov sera (domanda 2 della proposta) | basso | un disegno e una riga nelle Impostazioni | `PROPOSTA-REGOLA-18.md` |
 
 ## Contenuti e confini legali
 

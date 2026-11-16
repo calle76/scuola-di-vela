@@ -84,3 +84,4 @@ Codice in `js/regate.js` (sezione nuova dopo le regole 15 e 16, come quella), le
 ## Risposte di Ale
 
 1. **Sì, la 18 entra dentro Deriva** (16 novembre 2026, sera).
+2. **Sì, zona disegnata** come aiuto disattivabile, come la layline (16 novembre 2026, sera).
