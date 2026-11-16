@@ -1540,6 +1540,10 @@
   // l'ordine della tappa si ricalcola ogni volta (stOrdine), con lo stesso sorteggio nelle due pagine.
   const ST_N = 4, ST_B = 0.2, ST_POSTI = ["Lago delle Ginestre", "Golfo dei Gabbiani", "Baia del Faro", "Isola dei Pini"], ST_BAT = ["gialla", "bianca", "arancione"]; // posti inventati
   const ST_ALFA = "0123456789ABCDEFGHJKMNPQRSTVWXYZ", ST_TIPO = "scuola-di-vela-stagione";
+  /* 1.3.16 (docs/PROPOSTA-STAGIONE-FILE.md): la forma della stagione con un amico, scritta nei file al posto della versione del gioco (i file senza forma valgono 1).
+     Chi cambia il modo in cui un codice diventa tappe, venti, batterie e rivali (stNuova con cod, RIVALI_ZONALE, TRATTI, ST_POSTI, stRnd) deve alzarla: i file vecchi
+     saranno rifiutati invece di dare classifiche diverse nelle due pagine. Dalla 1.2.37 alla 1.3.16 la forma non è cambiata. */
+  const ST_FORMA = 1;
   // 1.2.39 (docs/PROPOSTA-NAZIONALE.md, passo 2): il circuito nazionale, S.circ = "naz" (senza circ è lo zonale, anche nelle stagioni salvate prima).
   // 12 regatanti: tu, i 10 nazionali e il primo degli altri dell'ultimo zonale finito (progress.zonalePrimo); due batterie da 6, la tua corre il torneo a 6 barche.
   // Con un amico solo lo zonale. In carriera il nazionale si apre col diritto (progress.nazionale); i primi 3 del nazionale hanno il diritto alla finale, solo scritto.
@@ -1680,12 +1684,13 @@
   // il file per l'amico (1.2.37): nel file "A" e "B" al posto di "*" e "@", così vale uguale nelle due pagine
   function stFile(S){
     const can = id => id === "*" ? S.io : id;
-    return JSON.stringify({ tipo: ST_TIPO, ver: VERSIONE, codice: S.codice, ruolo: S.io, nome: nomeGet().trim().slice(0, 20), tappe: S.tappe.map(t => t.mio ? t.mio.map(can) : null) });
+    return JSON.stringify({ tipo: ST_TIPO, ver: VERSIONE, forma: ST_FORMA, codice: S.codice, ruolo: S.io, nome: nomeGet().trim().slice(0, 20), tappe: S.tappe.map(t => t.mio ? t.mio.map(can) : null),
+      rit: S.tappe.map((t, j) => t.rit ? j : -1).filter(j => j >= 0) }); /* 1.3.16: forma e tappe lasciate (per riprendere la stagione dal proprio file) */
   }
   function stCarica(S, testo){ // "" se il file è entrato, altrimenti il motivo per cui è rifiutato (la stagione non cambia)
     let f; try { f = JSON.parse(testo); } catch(e){ return "Il file non si legge: non è un risultato della stagione."; }
     if (!f || f.tipo !== ST_TIPO) return "Il file non è un risultato della stagione.";
-    if (f.ver !== VERSIONE) return "File della versione " + escH(f.ver) + ", qui c'è la " + VERSIONE + ": aggiornate il gioco tutti e due.";
+    if ((f.forma ?? 1) !== ST_FORMA) return stFormaMsg(f); /* 1.3.16: prima si rifiutava ogni file di un'altra versione del gioco */
     if (f.codice !== S.codice) return "Il file è di un'altra stagione (codice " + escH(f.codice) + ").";
     const altro = S.io === "A" ? "B" : "A";
     if (f.ruolo !== altro) return "Questo è il tuo risultato, non quello dell'amico.";
@@ -1695,6 +1700,25 @@
     if (tappe.includes(undefined)) return "File rovinato: un arrivo non torna con la batteria dell'amico.";
     S.amico = { nome: String(f.nome || "").slice(0, 20) || "Il tuo amico", tappe };
     saveProgress(); return "";
+  }
+  const stFormaMsg = f => "Il file è della versione " + escH(f.ver || "?") + ": da allora la stagione con un amico è cambiata e il file non vale più. Ricominciate con un codice nuovo.";
+  function stRiprendi(testo){ /* 1.3.16: la stagione rifatta dal proprio file (codice e ruolo), con i propri arrivi; { S, n } oppure il motivo del rifiuto */
+    let f; try { f = JSON.parse(testo); } catch(e){ return "Il file non si legge: non è un risultato della stagione."; }
+    if (!f || f.tipo !== ST_TIPO) return "Il file non è un risultato della stagione.";
+    if ((f.forma ?? 1) !== ST_FORMA) return stFormaMsg(f);
+    const c = stLeggiCodice(f.codice);
+    if (!c || stCodice(c.seme, c.liv) !== f.codice || (f.ruolo !== "A" && f.ruolo !== "B") || !Array.isArray(f.tappe) || f.tappe.length !== ST_N) return "Il file è rovinato.";
+    const n = f.tappe.findIndex(o => o === null), k = n < 0 ? ST_N : n;
+    if (f.tappe.slice(k).some(o => o !== null)) return "Il file è rovinato.";
+    if (!k) return "Nel file non c'è ancora nessuna tappa corsa: per ricominciare basta il codice " + escH(f.codice) + ".";
+    if (k === ST_N) return "Nel file la stagione è finita: non c'è niente da riprendere.";
+    const S = stNuova(Object.assign(c, { io: f.ruolo })), altro = f.ruolo === "A" ? "B" : "A";
+    for (let j = 0; j < k; j++){ const o = f.tappe[j], bat = S.tappe[j].bat[0].map(id => id === "*" ? f.ruolo : id);
+      if (!Array.isArray(o) || o.length !== bat.length || !bat.every(id => o.includes(id))) return "File rovinato: un arrivo non torna con la tua batteria.";
+      S.tappe[j].mio = o.map(id => id === f.ruolo ? "*" : id === altro ? "@" : id); }
+    if (Array.isArray(f.rit)) f.rit.forEach(j => { if (S.tappe[j] && S.tappe[j].mio) S.tappe[j].rit = true; });
+    else S.ritiri = false; /* il file non dice le tappe lasciate: la stagione non conta come «senza ritiri» */
+    return { S, n: k, vecchio: !Array.isArray(f.rit) };
   }
   let stBozza = null; // la stagione proposta prima di cominciarla: resta la stessa finché la finestra è aperta
   let stCircScelto = "zon"; // 1.2.39: il circuito scelto per la stagione nuova
@@ -1706,13 +1730,13 @@
     const fatte = S.tappe.filter(stFatta), k = fatte.length, n = S.tappe[0].bat.flat().length;
     const cl = k ? stClassifica(S) : [], pos = cl.findIndex(x => x.id === "*") + 1;
     const elenco = `<p>${S.tappe.map((t, j) => `${j + 1}) ${t.posto}, ${t.tws} nodi: ${stFatta(t) ? `${stOrdine(S, t).indexOf("*") + 1}°` : "con " + t.bat[0].slice(1).join(", ")}`).join("<br>")}</p>`;
-    const spiega = !nuova ? "" : am ? `<p>Stagione con un amico, livello ${S.liv}. ${S.io === "A" ? "Manda all'amico il codice <b>" + S.codice + "</b>: scrivendolo in «Ho un codice» avrà le stesse tappe, gli stessi venti e gli stessi rivali." : "Codice " + S.codice + "."} Siete in 12: tu e l'amico correte ognuno nella sua batteria, quando volete; dopo ogni tappa vi mandate il file del risultato e la classifica del circuito vi mette insieme. Punti: 1 al primo, 12 all'ultimo.</p>`
+    const spiega = !nuova || k ? "" : am ? /* k con nuova: stagione ripresa dal file (1.3.16), la spiegazione non sta nei 650 px */ `<p>Stagione con un amico, livello ${S.liv}. ${S.io === "A" ? "Manda all'amico il codice <b>" + S.codice + "</b>: scrivendolo in «Ho un codice» avrà le stesse tappe, gli stessi venti e gli stessi rivali." : "Codice " + S.codice + "."} Siete in 12: tu e l'amico correte ognuno nella sua batteria, quando volete; dopo ogni tappa vi mandate il file del risultato e la classifica del circuito vi mette insieme. Punti: 1 al primo, 12 all'ultimo.</p>`
       : naz ? `<p>Quattro tappe, in 12: tu, dieci rivali nazionali, più forti di quelli dello zonale, e ${stNome(S.tappe[0].bat.flat().find(id => !RIVALI_NAZIONALE.some(r => r[0] === id) && id !== "*"), S)}, che viene dal tuo zonale. A ogni tappa due batterie da 6: tu corri nella tua un torneo di 4 regate contro 5 rivali; l'altra corre lo stesso giorno e il gioco calcola il suo arrivo dalle doti dei rivali e da un sorteggio. Punti: 1 al primo, 12 all'ultimo. I primi 3 hanno diritto alla finale.</p>`
       : `<p>Quattro tappe. A ogni tappa la flotta del circuito, tu e 10 rivali, si divide in tre batterie: tu corri nella tua un torneo di 4 regate contro 3 rivali; le altre due corrono lo stesso giorno e il gioco calcola il loro arrivo dalle doti dei rivali e da un sorteggio. Il posto nella tappa vale i punti: 1 al primo, 11 all'ultimo. Dopo 4 tappe vince chi ne ha meno; i primi 3 hanno diritto al nazionale.</p>`;
     const tab = k ? `<table class="tor st"><thead><tr><th></th><th>Regatante</th>${fatte.map((t, j) => `<th>T${j + 1}</th>`).join("")}<th>Totale</th></tr></thead><tbody>${cl.map((x, i) =>
       `<tr class="${x.id === "*" ? "me" : ""}"><td>${x.manca ? "" : i + 1 + "°"}</td><td>${stNome(x.id, S)}</td>${x.p.map(v => `<td>${v === null ? "–" : v}</td>`).join("")}<td><b>${x.tot}</b></td></tr>`).join("")}</tbody></table>
       ${msg ? `<p class="manca st-p">${msg}</p>` : `<p class="tor-leg">Tappa ${k}, ${stVincitori(S, fatte[k - 1])}${cl.some(x => x.manca) ? " · – in attesa del file dell'amico" : ""}</p>`}` : ""; // il messaggio del file al posto dei vincitori: le 12 righe stanno nei 650 px
-    const frasi = k ? stFrasi(S) : [];
+    const frasi = k && !nuova ? stFrasi(S) : [];
     const fine = S.fine ? `<p class="st-p"><b>Stagione finita: ${pos}° su ${n}.</b> ${naz ? (pos <= 3 ? "Fra i primi 3: diritto alla finale. Si corre dal riquadro del torneo, «La finale»." : "Per il diritto alla finale bisogna finire fra i primi 3.")
       : pos <= 3 ? "Fra i primi 3: diritto al nazionale." + (modo === "carriera" ? " In carriera il nazionale si corre con uno sponsor nazionale: «Lo sponsor»." : "") : "Per il diritto al nazionale bisogna finire fra i primi 3."}</p>` : "";
     const spOff = spAttivo() && progress.sponsor && progress.sponsor.offerte.length > 0; // 1.3.9: con offerte da scegliere la stagione non parte
@@ -1815,7 +1839,7 @@
   function stAmicoMostra(nota, msg){ // 1.2.37: creare una stagione con un codice, o entrare in quella di un amico
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Stagione con un amico</h2><span></span></div>${msg ? `<p class="manca">${msg}</p>` : ""}
       <p>La stessa stagione per due: stesse tappe, stessi venti, stessi rivali. Ognuno corre nella sua batteria quando vuole; dopo ogni tappa vi scambiate un file piccolo (messaggio o posta) e la classifica del circuito vi mette insieme. In acqua non vi incontrate.</p>
-      <div class="row"><button class="primary" id="stCrea">Crea un codice da mandare</button></div>
+      <div class="row"><button class="primary" id="stCrea">Crea un codice da mandare</button><button id="stRiprendi">Riprendi dal mio file</button><input type="file" id="stRipIn" accept=".json,application/json" hidden></div>
       <p class="tor-nome"><label for="stCodIn">Ho un codice:</label> <input id="stCodIn" type="text" maxlength="10" autocomplete="off" placeholder="7K2M9Q-E"> <button id="stEntra">Entra</button></p>
       <div class="row"><button id="stIndietro">Indietro</button></div>`;
     $("stCrea").onclick = () => { stBozzaModo = modo; stBozza = stNuova({ seme: Math.floor(Math.random() * 1073741824), liv: opt.aiLevel === "esperti" ? "esperti" : "principianti", io: "A" }); stMostra(nota, true); };
@@ -1823,6 +1847,13 @@
       if (!c) return stAmicoMostra(nota, "Il codice non si legge: sono 6 lettere o cifre, un trattino e una E o una P (per esempio 7K2M9Q-E).");
       stBozzaModo = modo; stBozza = stNuova(Object.assign(c, { io: "B" })); stMostra(nota, true); };
     $("stIndietro").onclick = () => { stBozza = null; stMostra(nota, true); };
+    $("stRiprendi").onclick = () => $("stRipIn").click(); /* 1.3.16: dopo aver perso i dati del browser */
+    $("stRipIn").onchange = e => { const fl = e.target.files[0]; if (!fl) return; const r = new FileReader();
+      r.onload = () => { const x = stRiprendi(String(r.result)); if (typeof x === "string") return stAmicoMostra(nota, x);
+        stBozzaModo = modo; stBozza = x.S;
+        stMostra(nota, true, "Ripresa dal tuo file: " + x.n + (x.n > 1 ? " tappe" : " tappa") + ". Comincia la stagione e carica il file dell'amico; la tappa lasciata a metà si rifà, i contatti con i rivali non tornano."
+          + (x.vecchio ? " Il file non dice le tappe lasciate: la stagione non conta come «senza ritiri»." : "")); };
+      r.readAsText(fl); };
   }
   // ---- disegno della regata ----
   function drawRaceWorld(v){

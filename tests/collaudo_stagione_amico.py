@@ -5,7 +5,15 @@
 #       e file scambiati dopo ogni tappa: classifica del circuito identica dopo ogni tappa.
 #   Z9  il risultato dell'amico entra com'è: in ogni tappa, nell'ordine della tappa, la batteria dell'amico è nell'ordine del suo file e la tua nel tuo.
 #   Z10 conti: dopo lo scambio ogni tappa ha i posti 1..12 (somma 78); prima dello scambio l'amico è «in attesa» e gli 11 presenti fanno 66.
-#   Z11 file sbagliati: altra stagione, altra versione, proprio ruolo, file rovinato, ordine impossibile: rifiutati con un messaggio, stagione invariata, 5 su 5.
+#   Z11 file sbagliati: altra stagione, altra forma (1.3.16; prima: altra versione), proprio ruolo, file rovinato, ordine impossibile: rifiutati con un messaggio,
+#       stagione invariata, 5 su 5.
+#   1.3.16 (docs/PROPOSTA-STAGIONE-FILE.md, soglie scritte prima del codice):
+#   F1  file fra versioni: nelle stagioni pari (10 codici x 2 ruoli = 20 casi), dopo ogni tappa il file dell'amico riscritto come uno della 1.3.12 (ver "1.3.12",
+#       senza forma né rit) entra e dà la stessa classifica del file di oggi: 20 su 20.
+#   F3  ripresa: nelle stagioni dispari (altri 10 codici x 2 ruoli = 20 casi), dopo la tappa 2 o 3: proprio file salvato, stagione cancellata, ripresa dal file,
+#       file dell'amico caricato: classifica, ordini, batterie e torneo della tappa dopo identici a prima: 20 su 20. Con --pilota anche dopo le tappe corse col pilota.
+#   F4  pulsante assente con una stagione in corso; file con 4 tappe rifiutato; ripresa da un file senza rit con ritiri falso: 3 su 3.
+#   F5  pannello: finestra «Con un amico» col pulsante nuovo e presentazione dopo la ripresa col messaggio più lungo, in Chromium e Firefox.
 #   Z7  pannello a 1360x650: finestra «Con un amico», presentazione col codice, circuito con 12 righe dopo 4 tappe; file salvato e caricato dai pulsanti veri.
 #   --pilota N: N tappe della stagione con un amico corse davvero col pilota (la tua batteria nell'ordine del torneo).
 #   --vera: pagina senza #collaudo, Chromium e Firefox: entrare con un codice e cominciare la stagione, 0 errori.
@@ -61,6 +69,21 @@ CORRI = """async () => { const sv = __sv, dt = 1 / 60;
   if (me.fin === null && !me.dnf) return { fallita: "pilota non arrivato" };
   document.getElementById("rTor").click(); return { ok: true }; }"""
 
+RIPRESA = """([t, fx]) => { const sv = __sv, prima = JSON.stringify(sv.progress.stagione), x = sv.st.riprendi(t);
+  if (typeof x === "string") return { rifiuto: x };
+  const S = x.S, e = sv.st.carica(S, fx); if (e) { return { rifiuto: "amico: " + e }; }
+  const S0 = JSON.parse(prima), ord = U => U.tappe.map(u => sv.st.ordine(U, u)), cl = U => sv.st.classifica(U).map(y => [y.id, y.p, y.tot, y.manca]);
+  const tor = U => { const T = sv.st.torNuovo(U); return JSON.stringify({ liv: T.liv, st: T.st, regate: T.regate, av: T.av }); };
+  const pulisci = U => JSON.stringify(U.tappe.map(u => ({ posto: u.posto, tws: u.tws, bat: u.bat, col: u.col, mio: u.mio || null, rit: !!u.rit })));
+  __seed(99); const a = tor(S0); __seed(99); const b = tor(S);
+  return { cl: JSON.stringify(cl(S0)) === JSON.stringify(cl(S)), ord: JSON.stringify(ord(S0)) === JSON.stringify(ord(S)), tappe: pulisci(S0) === pulisci(S),
+           amico: JSON.stringify(S0.amico.tappe) === JSON.stringify(S.amico.tappe), gruppo: JSON.stringify(S0.gruppo) === JSON.stringify(S.gruppo), torneo: a === b, ritiri: S.ritiri }; }"""
+async def riprendi(pg, fx, cosa):   # F3: il proprio file, la stagione rifatta da quello e il file dell'amico; la stagione salvata non si tocca
+    t = await pg.evaluate("() => __sv.st.file(__sv.progress.stagione)")
+    r = await pg.evaluate(RIPRESA, [t, fx])
+    if "rifiuto" in r or not all(r[x] for x in ("cl", "ord", "tappe", "amico", "gruppo", "torneo", "ritiri")): no(f"{cosa}: {r}"); return False
+    return True
+
 async def main():
     async with async_playwright() as p:
         ch = await p.chromium.launch(); ff = await p.firefox.launch()
@@ -79,7 +102,7 @@ async def main():
             else: no(f"Z8 codice {v['CA']['codice']}: browser uguali {stessi}, A e B uguali {strutt}, codice riletto {letto}")
         print(f"Z8: {uguali} codici su 20 con la stessa stagione in Chromium e Firefox, per chi crea e per chi entra")
         # Z15, Z9, Z10
-        rnd = random.Random(37); ok15 = 0; tappe = 0
+        rnd = random.Random(37); ok15 = 0; tappe = 0; f1ko = set(); f3 = 0; f3ko = 0
         for k in range(20):
             seme = (k * 7919 + 777) % (1 << 30)
             for pg, io in ((pc, "A"), (pf, "B")):
@@ -111,13 +134,40 @@ async def main():
                         if mia != c["mio"][i] or sua != c["amico"][i]: no(f"Z9 stagione {k} tappa {i + 1} ({io}): batterie non nell'ordine dei file")
                     if sum(x[2] for x in c["cl"]) != 78 * (j + 1): no(f"Z10 stagione {k} dopo la tappa {j + 1} ({io}): somma {sum(x[2] for x in c['cl'])}")
                     if len(c["frasi"]) > 3: no(f"frasi: {len(c['frasi'])}")
+                if k % 2 == 0:   # F1: il file dell'amico come uno della 1.3.12
+                    for pg, fx, c in ((pc, fb, ca), (pf, fa, cb)):
+                        fv = json.loads(fx); fv["ver"] = "1.3.12"; fv.pop("forma", None); fv.pop("rit", None)
+                        e = await pg.evaluate("t => __sv.st.carica(__sv.progress.stagione, t)", json.dumps(fv)); c2 = await pg.evaluate(CLAS)
+                        if e or c2["cl"] != c["cl"] or c2["ord"] != c["ord"]: no(f"F1 stagione {k} tappa {j + 1}: «{e}», classifica uguale {c2['cl'] == c['cl']}"); f1ko.add((k, pg is pc))
+                elif j == 1 + (k // 2) % 2:   # F3: ripresa dal proprio file dopo la tappa 2 o 3
+                    for pg, fx in ((pc, fb), (pf, fa)):
+                        f3 += 1
+                        if not await riprendi(pg, fx, f"F3 stagione {k} dopo la tappa {j + 1}"): f3ko += 1
                 tappe += 1
             if buono: ok15 += 1
         print(f"Z15: {ok15} stagioni su 20 con la stessa classifica nelle due pagine dopo ogni tappa ({tappe} tappe scambiate); Z9 e Z10 controllati in ogni tappa")
+        print(f"F1: {20 - len(f1ko)} casi su 20 (10 codici x 2 ruoli, 4 tappe ciascuno) col file della 1.3.12 accettato e la stessa classifica")
+        print(f"F3: {f3 - f3ko} riprese su {f3} identiche a prima")
+        if f3 != 20: no(f"F3: misurati {f3} casi invece di 20")
+        # F4
+        f4 = 0
+        e = await pc.evaluate("t => __sv.st.riprendi(t)", fa); print(f"  F4 file con 4 tappe: «{e}»")
+        if isinstance(e, str): f4 += 1
+        else: no("F4 file con 4 tappe accettato")
+        fv = json.loads(fa); fv["tappe"][3] = None; fv["tappe"][2] = None; fv.pop("rit", None)
+        x = await pc.evaluate("t => { const x = __sv.st.riprendi(t); return typeof x === 'string' ? x : { ritiri: x.S.ritiri, n: x.n, vecchio: x.vecchio }; }", json.dumps(fv)); print(f"  F4 file senza rit: {x}")
+        if isinstance(x, dict) and x["ritiri"] is False and x["n"] == 2 and x["vecchio"]: f4 += 1
+        else: no(f"F4 file senza rit: {x}")
+        p4 = await pc.evaluate("t => { const pr = __sv.progress, salvata = pr.stagione; pr.stagione = __sv.st.riprendi(t).S; __sv.torApri(); document.getElementById('stCirc').click(); const r = [!!document.getElementById('stAmico'), !!document.getElementById('stRiprendi')]; pr.stagione = salvata; return r; }", json.dumps(fv))
+        print(f"  F4 stagione in corso: «Con un amico» {p4[0]}, «Riprendi dal mio file» {p4[1]}")
+        if p4 == [False, False]: f4 += 1
+        else: no(f"F4 pulsanti con la stagione in corso: {p4}")
+        await pc.evaluate("() => document.getElementById('torDlg').close()")
+        print(f"F4: {f4} casi su 3")
         # Z11 nella pagina A (stagione dell'ultimo giro, 4 tappe, file di B già caricato)
         casi = {
             "altra stagione": "t => { const f = JSON.parse(t); f.codice = '000000-P'; return JSON.stringify(f); }",
-            "altra versione": "t => { const f = JSON.parse(t); f.ver = '1.2.36'; return JSON.stringify(f); }",
+            "altra forma": "t => { const f = JSON.parse(t); f.forma = 2; return JSON.stringify(f); }",
             "proprio ruolo": "t => __sv.st.file(__sv.progress.stagione)",
             "file rovinato": "t => t.slice(0, 40)",
             "ordine impossibile": "t => { const f = JSON.parse(t); f.tappe[0][1] = 'Mario Rossi'; return JSON.stringify(f); }",
@@ -148,7 +198,7 @@ async def main():
         print(f"  file caricato dal pulsante: «{msg}»")
         if msg != "Risultato dell'amico caricato.": no(f"carica dal pulsante: {msg}")
         pannello(await pc.evaluate(PANNELLO), "circuito dopo il caricamento, con messaggio")
-        fv = json.loads(fb); fv["ver"] = "1.2.36"; fbp.write_text(json.dumps(fv))
+        fv = json.loads(fb); fv["ver"] = "1.2.36"; fv["forma"] = 2; fbp.write_text(json.dumps(fv))
         await pc.set_input_files("#stFileIn", str(fbp)); await pc.wait_for_timeout(300)
         nf = await pc.evaluate("() => __sv.st.frasi(__sv.progress.stagione).length")
         # caso peggiore: 3 frasi. Se la stagione ne ha meno, si aggiungono nella finestra copie della frase più lunga possibile (detto nel risultato)
@@ -159,6 +209,22 @@ async def main():
         pannello(await pc.evaluate(PANNELLO), "finestra «Con un amico»"); await pc.screenshot(path=str(QUI / "output" / "stagione_amico_codice.png"))
         await pc.evaluate("() => document.getElementById('stCrea').click()")
         pannello(await pc.evaluate(PANNELLO), "presentazione col codice"); await pc.screenshot(path=str(QUI / "output" / "stagione_amico_presentazione.png"))
+        fv = json.loads(fa); fv["tappe"][3] = None; fv["ver"] = "1.3.12"; fv.pop("forma", None); fv.pop("rit", None); fvp = pathlib.Path(tempfile.mkdtemp()) / "mio.json"; fvp.write_text(json.dumps(fv))
+        for nome, pg in (("Chromium", pc), ("Firefox", pf)):
+            await pg.evaluate("() => localStorage.setItem('scuolaVelaSim.nome', 'Alessandro Massimil')")
+            await pg.evaluate("() => { const i = document.getElementById('torDlg').open && document.getElementById('stIndietro'); if (i) i.click(); delete __sv.progress.stagione; delete __sv.progress.torneo; __sv.torApri(); document.getElementById('stCirc').click(); document.getElementById('stAmico').click(); }")
+            pannello(await pg.evaluate(PANNELLO), f"F5 {nome} finestra «Con un amico» col pulsante nuovo")
+            await pg.set_input_files("#stRipIn", str(fvp)); await pg.wait_for_timeout(300)
+            m = await pg.evaluate("() => (document.querySelector('#torBody .manca') || {}).textContent")
+            print(f"  F5 {nome} ripresa dal pulsante: «{m}»")
+            if not m or not m.startswith("Ripresa dal tuo file: 3 tappe"): no(f"F5 {nome} ripresa dal pulsante: {m}")
+            pannello(await pg.evaluate(PANNELLO), f"F5 {nome} presentazione dopo la ripresa, messaggio più lungo")
+            if pg is pc: await pc.screenshot(path=str(QUI / "output" / "stagione_amico_ripresa.png"))
+            await pg.evaluate("() => document.getElementById('stInizia').click()")
+            tit = await pg.evaluate("() => document.getElementById('torTitle').textContent")
+            if tit != "Tappa 4 di 4": no(f"F5 {nome} dopo la ripresa: «{tit}»")
+            await pg.evaluate("() => document.getElementById('torDlg').close()")
+        await pc.evaluate("() => { delete __sv.progress.stagione; delete __sv.progress.torneo; __sv.torApri(); document.getElementById('stCirc').click(); document.getElementById('stAmico').click(); document.getElementById('stCrea').click(); }")
         await pc.evaluate("() => { document.getElementById('stIndietro').click(); document.getElementById('stCirc').click(); document.getElementById('stAmico').click(); document.getElementById('stCodIn').value = 'xyz'; document.getElementById('stEntra').click(); }")
         m = await pc.evaluate("() => (document.querySelector('#torBody .manca') || {}).textContent")
         print(f"  codice sbagliato: «{m}»")
@@ -177,6 +243,11 @@ async def main():
                 print(f"  tappa {j + 1} col pilota: torneo {tab}, salvato {mio}")
                 if tab != mio: no(f"pilota tappa {j + 1}: la batteria salvata non è nell'ordine del torneo")
                 await pc.evaluate("() => { document.getElementById('torMenu').click(); __sv.torApri(); }")
+            # F3 col pilota: ripresa senza file dell'amico (gli si dà un file vuoto della stessa stagione, ruolo A)
+            fx = await pc.evaluate("() => { const S = __sv.progress.stagione; return JSON.stringify({ tipo: 'scuola-di-vela-stagione', ver: 'x', forma: 1, codice: S.codice, ruolo: 'A', nome: '', tappe: [null, null, null, null], rit: [] }); }")
+            await pc.evaluate("() => { __sv.progress.stagione.amico = { nome: '', tappe: [null, null, null, null] }; }")
+            ok = await riprendi(pc, fx, f"F3 dopo {PIL} tappe col pilota")
+            print(f"F3 col pilota: ripresa dopo {PIL} tappe {'identica' if ok else 'DIVERSA'}")
         await ch.close(); await ff.close()
         if "--vera" in sys.argv:
             for nome, bt in (("Chromium", p.chromium), ("Firefox", p.firefox)):

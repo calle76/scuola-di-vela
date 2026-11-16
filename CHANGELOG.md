@@ -19,6 +19,19 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.16 — Stagione con un amico: i file valgono fra versioni, e si riprende dal proprio file
+
+Da dove viene: il 16 novembre Ale ha trovato in Chrome la stagione con un amico ricominciata (era alla tappa 3, sulla 1.3.12). Non è stato il gioco: nessuna versione cancella la stagione, sono stati i dati del browser. Restavano però due problemi veri (`docs/PROPOSTA-STAGIONE-FILE.md`, via di Ale del 16 novembre; la scelta D1 l'ha lasciata a Claude: la ripresa vale anche in carriera).
+
+- **I file dell'amico non dipendono più dalla versione del gioco.** Prima un file di un'altra versione era rifiutato («aggiornate il gioco tutti e due»). Ora nel file c'è la «forma della stagione» (`ST_FORMA = 1`): cambia solo se cambia il modo in cui un codice diventa tappe, venti, batterie e rivali, e dalla 1.2.37 non è mai cambiato. I file vecchi, senza forma, valgono 1: entrano anche quelli della 1.3.12.
+- **«Riprendi dal mio file»** nella finestra «Stagione con un amico». Rifà la stagione dal codice e dal ruolo scritti nel proprio file e ci rimette i propri arrivi; poi si carica il file dell'amico come sempre. Non tornano il torneo della tappa lasciata a metà (si rifà) e i contatti con i rivali (servono alla frase «ti sei toccato con…»). Il file scrive ora anche le tappe lasciate; una stagione ripresa da un file vecchio, senza quel dato, non conta come «senza ritiri» (in carriera non dà «Deriva superata per merito»). Si rifiutano: il file con 4 tappe (stagione finita), quello senza tappe corse e quello con gli arrivi che non tornano con la batteria. Il pulsante c'è solo quando non c'è una stagione in corso.
+- Nella presentazione dopo la ripresa non ci sono la spiegazione della stagione con un amico e le frasi del circuito: con la classifica di 12 non entravano nei 650 px (prima misura: 100 px di troppo).
+- **Collaudi:** `collaudo_stagione_amico.py --pilota 1 --vera` (Chromium e Firefox): «ESITO: OK».
+  - F1: 20 casi su 20 (10 codici × 2 ruoli, file riscritto come uno della 1.3.12) entrano con la stessa classifica.
+  - F3: 20 riprese su 20 identiche a prima (altri 10 codici × 2 ruoli, dopo la tappa 2 o 3) per classifica, ordini, batterie e torneo della tappa dopo; più 1 ripresa dopo una tappa corsa col pilota, identica.
+  - F4: 3 casi su 3; F5: 0 px di eccesso nei due browser; Z8, Z15, Z11 (con «altra forma» al posto di «altra versione») come prima.
+  - `polare.js` e `raffiche_e_virate.js` identici al riferimento.
+
 ## 1.3.15 — Il Coach arrabbiato ha un volto nuovo
 
 Richiesta di Ale del 16 novembre: «è più espressiva». L'immagine del Coach arrabbiato (`img/coach-arrabbiato.jpg`) è sostituita con una fatta da Ale con Gemini, ritagliata sul volto (quadrato di 440 px dall'originale 1376x768) e ridotta a 128 px, 5 kB. Serio e contento restano quelli della 1.3.4. Nient'altro cambia: stessa regola del volto, stesso nome di file. Fonte: `FONTI-PUBBLICHE.md` F104.

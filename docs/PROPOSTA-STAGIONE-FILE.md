@@ -1,6 +1,6 @@
 # Proposta: file della stagione con un amico che valgono fra versioni, e «Riprendi dal mio file»
 
-*16 novembre 2026, fermata 1. Niente è cambiato nel gioco: aspetta il via di Ale e la scelta D1.*
+*16 novembre 2026. Fermata 1 scritta; via di Ale lo stesso giorno («vai avanti da solo»), D1 lasciata a Claude: sì, anche in carriera. Fatta nella 1.3.16: esito in fondo.*
 
 ## Da dove viene
 
@@ -66,3 +66,14 @@ Dopo si carica il file dell'amico come sempre.
 ## Versione
 
 1.3.16, solo `js/regate.js` (più il `CHANGELOG.md` e `VERSIONE`). Si tocca `tests/collaudo_stagione_amico.py`. Collaudi da lanciare: quelli qui sopra; il resto col giro di Ale.
+
+## Esito (16 novembre 2026, 1.3.16)
+
+Tutto passa, con le soglie scritte qui sopra (`collaudo_stagione_amico.py --pilota 1 --vera`, Chromium e Firefox):
+- F1: 20 casi su 20;
+- F2: 4 su 4 (sono Z11 e il rifiuto del proprio file);
+- F3: 20 su 20, più 1 ripresa dopo una tappa corsa col pilota, identica. Il pilota ha corso una tappa sola, non una stagione su cinque come scritto sopra: si risparmia tempo e calore del PC, e il resto di F3 usa le funzioni del gioco;
+- F4: 3 su 3;
+- F5: 0 px di eccesso, ma **solo dopo una correzione**. La prima misura dava 100 px di troppo nella presentazione dopo la ripresa (spiegazione, classifica di 12, messaggio e frasi). Ora lì non ci sono la spiegazione e le frasi, e il messaggio è più corto.
+
+`collaudo_stagione.py` OK; `polare.js` e `raffiche_e_virate.js` identici al riferimento.
