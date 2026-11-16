@@ -9,7 +9,7 @@
 // Errori a comando (opts): tardi = secondi di ritardo al via; oltre = metri oltre la layline prima di virare; doppia = due virate vicino alla boa 1.
 // Tutte le costanti sono ipotesi nostre (§4 della proposta) e nessuna entra nel gioco.
 (opts) => {
-  const P = Object.assign({ ombraS: 5, layM: 60, heel: 18, marg: 2, tardi: 0, oltre: 0, doppia: false, pausa: 15, giroA: 120 }, opts || {});
+  const P = Object.assign({ ombraS: 5, layM: 60, heel: 18, marg: 2, tardi: 0, oltre: 0, doppia: false, pausa: 15, giroA: 120, partenza: 0 }, opts || {});
   if (!__sv.pilotaVecchio) __sv.pilotaVecchio = __sv.pilota;
   const UP = 46.5, DOWN = 152.5;
   __sv.pg = { P, virateVia: 0, oltreFatti: 0, doppie: 0 };
@@ -22,6 +22,7 @@
     }
     if (S.capsized){ me.capW += dt; if (me.capW >= 1) rightBoat(); return ctl.tiller; }
     me.capW = 0; me.info = info; me.me = false;
+    if (P.partenza){ const pr = me.leg < 1; if (pr !== me.pg.pr){ me.pg.pr = pr; Object.assign(me.ai, pr ? { up: 51.5, gain: 26, react: 3, startM: 1.5 } : { up: UP, gain: 18, react: 5, startM: 0.5 }); } } /* prova: fino al taglio della linea i numeri dei principianti (centro fascia) */
     const st = me.pg, w = windAt(S.x, S.y), twd = w.twd, inGara = me.leg >= 1 && me.fin === null && R.t >= 0;
     let marg = P.marg, forzata = null;
     if (inGara){
