@@ -15,6 +15,8 @@
 #       frase pesa almeno 10 s, serio altrimenti) e l'immagine è caricata davvero (128 px); dalla 1.3.6 arrabbiato anche con una scuffia
 #   K11 (1.3.6) la scuffia: con la barca rovesciata per 20 s a metà regata (costruito sulle copie della moviola) il coach la dice, coi secondi (±1), e il volto è arrabbiato;
 #       senza scuffia mai (nelle 20 regate vere, controllate)
+#   K12 (1.3.14) le frasi nel file della regata: prima di aprire la rotta ottimale l'ultimo pezzo registrato non ha righe «A»; dopo ha «A - volto» col volto mostrato, «A - rotta» e una riga
+#       per frase, nello stesso ordine, con lo stesso testo e lo stesso momento (±0,05 s); chiesta una seconda volta la scrittura non raddoppia le righe; la copia in IndexedDB le ha (ultima regata)
 # Uso: python tests/collaudo_coach.py [--regate N] [--rif v1.3.2]   (BROWSER=firefox per Firefox)
 import asyncio, json, math, os, pathlib, re, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
@@ -36,6 +38,11 @@ DATI = """() => { const r = rot.res, me = R.boats[0], o = rot.barche[0], fine = 
     marks: R.marks.map(m => [m.x, m.y]), fin: [(R.pin.x + R.cb.x) / 2, (R.pin.y + R.cb.y) / 2], aff: COA_AFF, cop: COA_COP, fin60: COA_FIN, min: COA_MIN, affS: COA_AFF_S, affVia: COA_AFF_VIA, taglio: o.taglio.t,
     tu: tu.map(f => [f.t, f.b[0][0], f.b[0][1], f.b[0][4], f.c ? f.c[0] : 0, Math.min(1e9, ...f.b.slice(1).map(b => Math.hypot(b[0] - f.b[0][0], b[1] - f.b[0][1])))]),
     tratti: coaCoperto(tu).map(x => [x.t0, x.t1]) }; }"""
+
+REGC = """() => { if (!regPezzi.length) return null; const reg = Math.max(...regPezzi.map(p => p.reg)), pz = regPezzi.filter(p => p.reg === reg).sort((a, b) => b.n - a.n)[0], r = pz.testo.split("\\n");
+  return { righe: r.filter(l => l.startsWith("A ")), ultima: r.filter(l => l).pop(), mia: !!regUltima && regUltima.R === R && regUltima.reg === reg, id: pz.id, fine: pz.fine, lung: pz.testo.length }; }"""
+IDB = """(id) => new Promise(ok => { const o = indexedDB.open("scuolaVelaReg", 1); o.onerror = () => ok(null);
+  o.onsuccess = () => { const q = o.result.transaction("pezzi", "readonly").objectStore("pezzi").get(id); q.onsuccess = () => { ok(q.result ? q.result.testo.split("\\n").filter(l => l.startsWith("A ")) : null); o.result.close(); }; q.onerror = () => ok(null); }; })"""
 
 def interp(A, T):   # A: [[t, x, y], ...] ordinati
     lo, hi = 0, len(A) - 1
@@ -94,9 +101,16 @@ async def main():
         for n, (k, s) in enumerate(elenco):
             await pg.evaluate(CORSA, [k, s, 0]); es = await pg.evaluate(ESITO)
             chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
+            g0 = await pg.evaluate(REGC)
             await pg.click("#finRot"); await pg.wait_for_timeout(120)
             d = await pg.evaluate(DATI)
             C = d["coach"] or []; nfr += len(C)
+            g1 = await pg.evaluate(REGC); um = await pg.evaluate("() => document.getElementById('coachVolto').dataset.umore")
+            chk("K12", bool(g0) and g0["mia"] and g0["fine"] == "ultimo" and not g0["righe"], f"K12 {s}-{k}: prima della rotta ottimale {g0 and {**g0, 'righe': g0['righe'][:2]}}")
+            fr = [l for l in (g1 or {}).get("righe", []) if not l.startswith("A - ")]
+            chk("K12", bool(g1) and g1["id"] == g0["id"] and g1["righe"][:1] == ["A - volto " + um] and g1["righe"][1:2] == ["A - rotta " + " ".join(await pg.evaluate("() => rot.res.testo.split(/\\s+/)"))] and len(fr) == len(C) >= 1
+                and all(l.endswith(" " + " ".join(x["txt"].split())) and l.split()[2] == x["tipo"] and abs(float(l.split()[1]) - x["t"]) <= 0.05 for l, x in zip(fr, C)) and g1["ultima"] == g1["righe"][-1],
+                f"K12 {s}-{k}: righe del Coach nel file {g1 and g1['righe']}, volto {um}, frasi {[x['txt'] for x in C]}")
             print(f"  {s}-{k}: " + " | ".join(f"{x['tipo']} {x['peso']:.0f}" for x in C), flush=True)
             chk("K11", not any(x["tipo"] == "scuffia" for x in C) or await pg.evaluate("() => riv.all.some(f => f.b[0][8])"), f"K11 {s}-{k}: scuffia detta senza scuffia")
             chk("K3", 1 <= len(C) <= 3 and all(re.search(r"\d", x["txt"]) for x in C), f"K3 {s}-{k}: {len(C)} frasi, una senza numero? {[x['txt'] for x in C]}")
@@ -126,6 +140,13 @@ async def main():
             m = await pg.evaluate("""() => { const mb = document.getElementById('movBar').getBoundingClientRect(); return { ecc: Math.max(document.documentElement.scrollWidth - innerWidth, document.documentElement.scrollHeight - innerHeight, 0), dentro: mb.top >= 0 && mb.bottom <= innerHeight + 0.5, vis: !document.getElementById('coach').hidden }; }""")
             chk("K2", m["ecc"] == 0 and m["dentro"] and m["vis"] == bool(C), f"K2 {s}-{k}: {m}")
             await pg.keyboard.press("Escape"); await pg.wait_for_timeout(80)
+            # la seconda scrittura si chiede alla funzione del gioco, non riaprendo la rotta ottimale dal pulsante: riaprendola (16 novembre, prima stesura) nella regata dopo, una volta su due,
+            # il riquadro di fine regata non compariva (2603-2 poi 2603-3, Chromium); potrebbe essere lo stesso fatto della voce 40 di DA-FARE, da cercare a parte
+            await pg.evaluate("() => regCoach(R, rot.res.coach, 'serio', rot.res.testo)"); g2 = await pg.evaluate(REGC)
+            chk("K12", bool(g2) and g2["righe"] == g1["righe"] and g2["lung"] == g1["lung"], f"K12 {s}-{k}: chiesta una seconda volta, la scrittura cambia le righe: {g2 and g2['righe']}")
+            if n == len(elenco) - 1:
+                await pg.wait_for_timeout(300); db = await pg.evaluate(IDB, g1["id"])
+                chk("K12", db == g1["righe"], f"K12 {s}-{k}: copia in IndexedDB {db}")
         chk("K4", nclou >= 3, f"K4: regate col clou da controllare {nclou} (servono almeno 3 perché il controllo misuri)")
         print(f"frasi in tutto {nfr}, regate col clou controllato {nclou}, volti {umori}", flush=True)
         # ---- K2 caso peggiore, K5a, K7 sull'ultima regata
@@ -171,6 +192,6 @@ async def main():
         await br.close()
     print("casi per parte:", casi)
     if fail: print(f"ESITO: FALLITO ({len(fail)})"); sys.exit(1)
-    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10", "K11")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10", "K11", "K12")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

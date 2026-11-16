@@ -1436,7 +1436,9 @@
   }
   function torApri(){ // dal menu
     let nota = "";
-    if (progress.torneo && progress.torneo.ver !== VERSIONE){ nota = "Il gioco è cambiato dalla versione " + progress.torneo.ver + ": il torneo in corso è stato chiuso, senza punti."; delete progress.torneo; saveProgress(); }
+    /* 1.3.14 (Ale, 16 novembre 2026: «ogni volta che arriva una nuova versione si azzera tutto, non riusciamo a finire un torneo»): fino alla 1.3.13 il torneo cominciato con un'altra versione
+       veniva chiuso qui senza punti. Ora resta: le regate fatte tengono i punti, quelle che mancano si corrono con la versione nuova. progress.torneo.ver resta la versione d'inizio.
+       Una versione che cambia la forma di progress.torneo deve convertirlo qui */
     tor = progress.torneo || null; torBozza = null;
     const S = progress.stagione;
     if (!tor && S && !S.fine) torBozza = torNuovo(S); // 1.2.36: la prossima tappa della stagione

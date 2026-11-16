@@ -66,6 +66,9 @@ CONTROPROVE = [
     ("regola21-neu", "neutra", ["collaudo_regola21.py", "12"], [NEUTRA_JS], None, "commento in regate.js"),
     ("giriavv-mut", "mutante", ["collaudo_giri_avversari.py", "120"], [("if (!(b.gDebt > 0) || b.fin !== null || b.dnf || (R.t >= 0 && b.leg < 1) || b.ocs){ if (b.gCum != null)", "if (true || !(b.gDebt > 0) || b.fin !== null || b.dnf || (R.t >= 0 && b.leg < 1) || b.ocs){ if (b.gCum != null)")], None,
      "gli avversari non fanno mai i giri (120 regate, come nel giro)"),
+    # 16 novembre 2026 (DA-FARE voce 46, dopo la correzione del G3): provata a mano prima di entrare qui, Chromium, 120 regate: 24 coppie di giri su 24 in versi opposti, G3 cade
+    ("giriavv-verso", "mutante", ["collaudo_giri_avversari.py", "120"], [("b.gFatti = (b.gFatti || 0) + 1; b.gCum = 0; b.gTk = 0; b.gGy = 0;", "b.gFatti = (b.gFatti || 0) + 1; b.gCum = 0; b.gTk = 0; b.gGy = 0; b.gV = -b.gV;")], "G3",
+     "dopo ogni giro fatto l'avversario cambia verso (44.2: i giri di una penalità nello stesso verso)"),
     ("giriavv-neu", "neutra", ["collaudo_giri_avversari.py", "120"], [NEUTRA_JS], None, "commento in regate.js (120 regate, come nel giro)"),
     # aggiunta dopo il primo lancio (1 novembre 2026, dichiarata in PROPOSTA-TEST-DEI-TEST.md §9): con 12 regate G4 vede 7 casi e ne vuole 15,
     # quindi la neutra a 12 regate cade per il minimo di casi, non per un difetto. 16 novembre 2026: anche 40 non bastano più (dalla 1.3.10 meno contatti con colpa dei rivali); le due righe giriavv usano le 120 regate del giro

@@ -333,7 +333,8 @@
   function rotApri(){
     if (!R || !R.rotta || riv.on) return;
     if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, sp: rotSpiega(ott) } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." };
-      if (ott){ rot.res.testo = rotTesto(ott, rot.res.sp); rot.res.coach = coaFrasi(ott, rot.res.sp); } }
+      if (ott){ rot.res.testo = rotTesto(ott, rot.res.sp); rot.res.coach = coaFrasi(ott, rot.res.sp);
+        regCoach(R, rot.res.coach, rot.res.coach.length ? coaUmore(rot.res.coach) : "nessuno", rot.res.testo); /* 1.3.14: le frasi del Coach nel file della regata */ } }
     $("movAss").hidden = !rot.res.ott || rot.res.ass !== undefined; $("movAss").disabled = !!rot.calc; // 1.2.40: la migliore in assoluto solo a richiesta (tasto V), una volta per regata
     rot.on = true; rot.box = null; rivApri(); $("movTit").textContent = rot.res.testo; coaMostra();
     $("movLargo").hidden = !rot.res.ott; rotLargo(false);

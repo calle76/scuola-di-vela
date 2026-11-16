@@ -19,6 +19,20 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.14 — Il torneo resta al cambio di versione; le frasi del Coach nel file della regata
+
+Due richieste di Ale del 16 novembre. Le regate non cambiano.
+
+- **Una versione nuova non chiude più il torneo in corso.** Dalla 1.0.34 il torneo cominciato con un'altra versione veniva chiuso senza punti alla prima apertura («Il gioco è cambiato dalla versione…»); con quattro versioni in due giorni Ale e Lucio non riuscivano a finirne uno. Ora il torneo resta: le regate fatte tengono i punti, quelle che mancano si corrono con la versione nuova. Fra amici, sui file della stagione, il controllo della versione resta. Limite dichiarato: una versione che cambiasse la forma del torneo salvato dovrà convertirlo.
+- **Le frasi del Coach nel file della regata.** Ale ha giocato quattro regate per far guardare il Coach, ma il file non conteneva le frasi. Ora, la prima volta che a regata finita si apre la «Rotta ottimale», in fondo all'ultimo pezzo della registrazione si aggiungono le righe `A`: il volto, la riga dei tempi della rotta ottimale e una riga per frase (momento, tipo, peso, testo). **Se la rotta ottimale non si apre, il Coach non calcola niente e nel file non c'è niente**: prima «Rotta ottimale», poi «Scarica l'ultima regata».
+- **Collaudi:**
+  - `collaudo_torneo_versione.py`, nuovo, nel giro: V0-V4 passano in Chromium e in Firefox; la controprova col codice della 1.3.13 perde il torneo, come atteso.
+  - `collaudo_coach.py`, parte K12 nuova (frasi e volto nel file, una volta sola, anche nella copia in IndexedDB): passa, 61 controlli su 20 regate in Chromium e 25 su 8 regate in Firefox; tutto il collaudo «ESITO: OK» nei due browser. In più, le 4 regate giocate da Ale alle 12:46-13:13 hanno le righe `A` nel file (osservazioni 129-132).
+  - `collaudo_giri_avversari.py`, G3 (voce 46 di `DA-FARE.md`, il gioco non c'entra): in Firefox il G3 era rosso su GitHub e lo è anche sul PC, per un caso solo su 120 regate (seme 111): la Blu sconta un debito, 3,5 s dopo ne prende uno nuovo e gira nell'altro verso 33 s dopo il giro di prima. È permesso: scontata una penalità il verso è di nuovo libero. Il collaudo prendeva per «stesso debito» ogni coppia di giri a meno di 40 s; ora la coppia conta solo se in mezzo il debito non è mai sceso a zero, e ne servono almeno 8 (minimo aggiunto dopo aver visto i numeri: 26 coppie in Firefox, 26 in Chromium). Sulla 1.3.9 in Firefox il caso non c'è (36 coppie, nessuna opposta). Controprova nuova `giriavv-verso` (verso invertito dopo ogni giro): 24 coppie su 24 opposte, G3 cade.
+  - Non-regressione: `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici al riferimento.
+- **Non convince:** scrivendo K12, riaprire una seconda volta la rotta ottimale dal pulsante ha fatto sparire, una volta su due, il riquadro di fine regata nella regata dopo (solo nel collaudo, Chromium). Segnato nella voce 40 di `DA-FARE.md`.
+- **Temperatura:** due misure lanciate insieme hanno portato il PC a 85 °C; da lì una per volta col freno a 64 °C (picchi 59-70 °C).
+
 ## 1.3.13 — Il Coach, seconda mano
 
 `docs/PROPOSTA-COACH-2.md`, via di Ale il 16 novembre. Le regate non cambiano: il Coach legge soltanto.

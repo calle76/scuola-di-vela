@@ -261,9 +261,11 @@
     "#   E bandiere elenco   le bandiere della partenza sulla barca giuria a ogni cambio (regata dei giri, 1.0.65): classe, P, X, blu, o «nessuna»",
     "#   E sconta inizio|fine   il giocatore comincia o smette di scontare la penalità, e lascia strada a chi non la sconta (regola 21.2, regata dei giri, 1.0.66)",
     "#   E boa_toccata N giri da fare   una boa toccata (regata dei giri, 1.0.62, regola 31): un giro in più di debito",
+    "#   A …   il Coach (1.3.14), in fondo all'ultimo pezzo, solo se a regata finita si apre la «Rotta ottimale»: «A - volto contento|serio|arrabbiato»; «A - rotta testo» la riga dei tempi sotto la moviola;",
+    "#         «A t tipo peso testo» una riga per frase mostrata, nell'ordine: t il momento della frase (secondi di regata), tipo clou|affollato|coperto|boa|partenza|scuffia|penalita|bene, peso in secondi (serve solo a ordinarle); «A - nessuna frase» se non ne mostra",
   ];
   const regPezzi = []; // {id, reg, n, fine, quando, nome, file, testo}: in memoria e in IndexedDB
-  let sesAutoR = null, sesSalva = null;
+  let sesAutoR = null, sesSalva = null, regUltima = null; /* regUltima (1.3.14): { R, reg } dell'ultima regata registrata e chiusa, per le righe del Coach */
   function regIdb(modo, f){ // senza IndexedDB (finestra privata) i pezzi restano in memoria finché la pagina è aperta
     try {
       const o = indexedDB.open("scuolaVelaReg", 1);
@@ -321,8 +323,18 @@
       for (const b of sesAutoR.boats) sesLine(["F", t, regNome(b), b.fin !== null ? arr.indexOf(b) + 1 : "-", b.fin !== null ? b.fin.toFixed(1) : "-", b.pen || 0, b.pp || 0, sesStato(b)].join(" "));
     }
     // una regata aperta e richiusa subito non contiene niente: nel menu si confondeva col pezzo 1 di quella vera (regata di Ale, 6 novembre)
-    if (motivo === "arrivo" || ses.pz > 1 || ses.ult - ses.p0 >= REG_MIN) regSigilla(motivo === "arrivo" ? "ultimo" : "interrotto");
+    if (motivo === "arrivo" || ses.pz > 1 || ses.ult - ses.p0 >= REG_MIN){ regSigilla(motivo === "arrivo" ? "ultimo" : "interrotto"); regUltima = { R: sesAutoR, reg: ses.start.getTime() }; }
     Object.assign(ses, sesSalva); sesSalva = null; sesMarksUi();
+  }
+  // 1.3.14 (Ale, 16 novembre 2026: «credevo le registrasse»): le frasi del Coach in fondo all'ultimo pezzo della regata, una volta sola, quando la rotta ottimale si apre la prima volta
+  // (prima il Coach non ha calcolato niente). Solo scrittura nel testo già chiuso: non tocca la regata. G è la regata della rotta ottimale: se non è l'ultima registrata non si scrive niente
+  function regCoach(G, C, umore, rotta){
+    if (!regUltima || regUltima.R !== G) return;
+    const pz = regPezzi.filter(p => p.reg === regUltima.reg).sort((a, b) => b.n - a.n)[0];
+    if (!pz || pz.coach || /\nA - volto /.test(pz.testo)) return;
+    const una = s => String(s).replace(/\s+/g, " ");
+    pz.testo += ["A - volto " + umore, "A - rotta " + una(rotta), ...(C.length ? C.map(x => "A " + x.t.toFixed(1) + " " + x.tipo + " " + x.peso.toFixed(1) + " " + una(x.txt)) : ["A - nessuna frase"]), ""].join("\n");
+    pz.coach = true; regIdb("readwrite", st => st.put(pz)); regUi();
   }
   $("regGet").onclick = () => { const p = regPezzi.find(x => x.id === document.querySelector("#regBox select").value); if (p) sesFile("regata-" + p.file + "-pezzo-" + p.n + ".txt", p.testo); };
   $("regLast").onclick = () => { // un solo file: il browser può bloccare più scaricamenti partiti da un solo clic

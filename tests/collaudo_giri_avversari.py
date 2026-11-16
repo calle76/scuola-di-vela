@@ -152,16 +152,21 @@ async def main():
                     else: falliti.append((k + 1, r["nomi"][i], req, r["gFatti"][i]))
         chk("G2 i debiti con almeno 90 s di regata davanti sono estinti: %d casi, %d estinti (%.0f%%; soglia 80%%)" % (casi, fatti, 100 * fatti / casi if casi else 0), casi >= 15 and fatti >= 0.8 * casi, "non estinti (regata, barca, dovuti, fatti): %s" % falliti[:8])
         # G3: stesso verso entro un periodo di debito (giri di un segmento + segmenti adiacenti dello stesso debito)
-        verso_ok = True; verso_n = 0
+        verso_ok = True; verso_n = 0; verso_c = 0; verso_nuovo = 0
         for k, r in enumerate(R):
             for i in range(3):
                 gs = [g for kk, s, g in giri if kk == k and s["i"] == i]
                 if len(gs) >= 2:
                     verso_n += 1
-                    # giri consecutivi senza che il debito si sia azzerato in mezzo: si confrontano solo coppie di giri a meno di 40 s (stesso debito)
+                    # giri consecutivi senza che il debito si sia azzerato in mezzo: si confrontano solo coppie di giri a meno di 40 s (stesso debito).
+                    # 16 novembre 2026 (DA-FARE voce 46): i 40 s da soli non bastano. In Firefox, seme 111, la Blu sconta un debito, 3,5 s dopo ne prende uno nuovo e gira nell'altro verso
+                    # 33 s dopo il giro di prima: è permesso (scontata la penalità il verso è di nuovo libero, 44.2). Ora la coppia conta solo se fra i due giri il debito non è mai sceso a zero nei campioni
                     for a, c in zip(gs, gs[1:]):
-                        if c["t"] - a["t"] < 40 and (a["rot"] > 0) != (c["rot"] > 0): verso_ok = False
-        chk("G3 i giri successivi dello stesso debito vanno nello stesso verso (%d avversari con almeno due giri)" % verso_n, verso_ok and verso_n >= 8)
+                        if c["t"] - a["t"] < 40 and metro.tutti(x[5] > 0 for x in r["log"][i] if a["t"] <= x[0] < c["t"]):
+                            verso_c += 1
+                            if (a["rot"] > 0) != (c["rot"] > 0): verso_ok = False
+                        elif c["t"] - a["t"] < 40: verso_nuovo += 1
+        chk("G3 i giri successivi dello stesso debito vanno nello stesso verso (%d avversari con almeno due giri, %d coppie di giri confrontate; %d coppie escluse perché in mezzo il debito è stato scontato)" % (verso_n, verso_c, verso_nuovo), verso_ok and verso_n >= 8 and verso_c >= 8)
         d2 = [s["dur2"] for k, s in A if s["dur2"] is not None]; persa = [s["persa"] for k, s in A if s["persa"] is not None]
         med = statistics.median(d2) if d2 else None
         chk("G4 durata dei due giri di fila (mediana, soglia 12-30 s; il giocatore 17,5 s): %s su %d casi, minimo-massimo %s" % ("%.1f s" % med if med else "—", len(d2), "%.1f-%.1f" % (min(d2), max(d2)) if d2 else "—"), bool(d2) and 12 <= med <= 30 and len(d2) >= 10)   # 16 novembre 2026: casi minimi da 15 a 10. Dalla 1.3.10 (regole 15 e 16) i contatti con colpa dei rivali calano da 175 a 147 su 120 regate e i casi «due giri di fila» da 19 a 12: il giro su GitHub era rosso per i pochi casi, non per la durata (21,3 s, in soglia)
