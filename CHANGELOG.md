@@ -19,6 +19,12 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.15 — Il Coach arrabbiato ha un volto nuovo
+
+Richiesta di Ale del 16 novembre: «è più espressiva». L'immagine del Coach arrabbiato (`img/coach-arrabbiato.jpg`) è sostituita con una fatta da Ale con Gemini, ritagliata sul volto (quadrato di 440 px dall'originale 1376x768) e ridotta a 128 px, 5 kB. Serio e contento restano quelli della 1.3.4. Nient'altro cambia: stessa regola del volto, stesso nome di file. Fonte: `FONTI-PUBBLICHE.md` F104.
+
+- **Collaudi:** `collaudo_coach.py` con 8 regate in Chromium (K10: immagine caricata a 128 px, volto giusto): «ESITO: OK», 8 regate su 8 col volto arrabbiato caricato.
+
 ## 1.3.14 — Il torneo resta al cambio di versione; le frasi del Coach nel file della regata
 
 Due richieste di Ale del 16 novembre. Le regate non cambiano.
