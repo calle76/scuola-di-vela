@@ -50,6 +50,7 @@
 | 42 | **Coach, seconda mano: guardarlo con le regate registrate di Ale** (fatto nella 1.3.13; C2 e C4 non passano: la soglia dei 20 s distingue i piloti su un gruppo di semi e non sull'altro) | `PROPOSTA-COACH-2.md` §8 | aspetta le registrazioni |
 | 43 | **Pilota «da giocatore»: resta a parte** (Ale, 16 nov). Fatto e misurato; partenza più morbida come opzione (contatti prima del via da 7 a 3-4 regate su 20). Da fare ancora: una partenza sua, senza contatti | `PROPOSTA-PILOTA-GIOCATORE.md` §8-9 | quando serve al Coach (voce 42, criteri C1-C4) |
 | 45 | **`collaudo_triangolo` su GitHub: il fallimento noto cambia numero a ogni giro** (124 su 165 nel giro 43761612866; sul PC resta 126 su 166, riprovato il 16 nov). L'elenco delle varianti non regge: serve una voce «a frammento» o una soglia | `tests/fallimenti_noti.txt` | piccola, da fare |
+| 46 | **`collaudo_giri_avversari` G3 rosso in Firefox su GitHub** (giri 43761612866 e 43812953418, 1.3.12 e 1.3.13): «i giri successivi dello stesso debito vanno nello stesso verso» non passa (24 avversari con almeno due giri); in Chromium passa. Non viene dal lavoro del 16 novembre (c'era già nel primo giro, non visto perché letto solo Chromium). Da rifare sul PC con `BROWSER=firefox` sulle versioni 1.3.9 e 1.3.10 per capire se è un difetto dei rivali o del collaudo | giri GitHub | da capire |
 
 ## Proposta di riordino (13 novembre, per la voce 29: da decidere con Ale, niente è cambiato)
 
