@@ -178,10 +178,14 @@
         const w1 = rotVento(q.x, q.y, rotRaffiche(q.t)).twd, w0 = rotVento(q.x, q.y, rotRaffiche(Math.max(ott.t0, q.t - 30))).twd, d = norm180(w1 - w0);
         if (p.s * d <= -SCARSO){ const vicino = tu.some((f, n) => n >= 5 && Math.abs(f.t - q.t) <= 15 && mure(f.x, f.y, f.h, f.t) !== mure(tu[n - 5].x, tu[n - 5].y, tu[n - 5].h, tu[n - 5].t));
           if (!vicino){ motivi.push({ j, t: q.t, scarso: Math.round(Math.abs(d)), peso: L.tu - L.ott + 1, txt: `A ${rivTempo(q.t)} il vento è girato di ${Math.round(Math.abs(d))}° contro le tue mure: la rotta ottimale ha virato, tu no.` }); break; } } }
-      // layline: l'ultima virata per la boa oltre la layline, oppure più virate vicino alla boa
+      // layline: la prima virata fatta oltre la layline (1.3.13; prima l'ultima del lato), oppure più virate vicino alla boa
       if (L.nome === "Bolina" && tu.length > 10){ const mk = R.marks[0], vir = [];
-        for (let n = 5; n < tu.length; n += 5){ const f = tu[n], g = tu[n - 5]; if (mure(f.x, f.y, f.h, f.t) !== mure(g.x, g.y, g.h, g.t)) vir.push(f); }
-        const ul = vir[vir.length - 1], o2 = ul ? rotOltre(mk, ul.x, ul.y, ul.t) : null, oltreM = o2 ? o2.d * Math.sin(Math.max(0, o2.g) * D2R) : 0;
+        /* 1.3.13: le virate dentro un giro di penalità non contano (la prua gira di almeno 270° nello stesso verso nei 10 s attorno) */
+        const inGiro = f => { let s = 0; for (let i = 1; i < tu.length; i++) if (Math.abs(tu[i].t - f.t) <= 10) s += norm180(tu[i].h - tu[i - 1].h); return Math.abs(s) >= 270; };
+        for (let n = 5; n < tu.length; n += 5){ const f = tu[n], g = tu[n - 5]; if (mure(f.x, f.y, f.h, f.t) !== mure(g.x, g.y, g.h, g.t) && !inGiro(f)) vir.push(f); }
+        /* 1.3.13: la prima virata fatta oltre la layline (fino alla 1.3.12 solo l'ultima del lato: con un'altra virata vicino alla boa la frase non usciva) */
+        const oltreDi = f => { const o = rotOltre(mk, f.x, f.y, f.t); return o.g >= LAY_TOLL ? o.d * Math.sin(o.g * D2R) : 0; };
+        const ul = vir.find(f => oltreDi(f) >= LAY_MIN) || vir[vir.length - 1], o2 = ul ? rotOltre(mk, ul.x, ul.y, ul.t) : null, oltreM = o2 ? o2.d * Math.sin(Math.max(0, o2.g) * D2R) : 0;
         const vicine = vir.filter(f => Math.hypot(f.x - mk.x, f.y - mk.y) < LAY_VICINO).length;
         L.lay = { oltre: o2 && o2.g >= LAY_TOLL && oltreM >= LAY_MIN ? Math.round(oltreM) : 0, vicine, t: ul ? ul.t : null, tv: vir.filter(f => Math.hypot(f.x - mk.x, f.y - mk.y) < LAY_VICINO).map(f => f.t)[0] ?? null }; // 1.3.3: per il coach
         if (o2 && o2.g >= LAY_TOLL && oltreM >= LAY_MIN) motivi.push({ j, peso: L.tu - L.ott + 0.5, txt: `Hai virato per la boa ${Math.round(oltreM)} m oltre la layline: virando prima avresti fatto meno strada.` });
@@ -205,6 +209,9 @@
   // Costanti, ipotesi nostre (proposta, §Costanti): COA_N frasi, finestra del clou COA_FIN s, coperto da COA_COP di vento tolto per almeno COA_COP_S s,
   // perdita minima COA_MIN s, affollato entro COA_AFF m (3 lunghezze), anticipo del salto COA_ANT s, ritardo minimo al via COA_VIA s.
   const COA_RIPARTI = 10, COA_N = 3, COA_FIN = 60, COA_COP = 0.1, COA_COP_S = 10, COA_MIN = 5, COA_AFF = 3 * BOAT.length, COA_ANT = 5, COA_VIA = 3;
+  /* 1.3.13 (docs/PROPOSTA-COACH-2.md): una finestra è «affollata» solo con almeno COA_AFF_S secondi affollati su COA_FIN, e i primi COA_AFF_VIA secondi dopo il taglio della linea non contano
+     (al via le barche sono insieme per forza); la frase delle virate vicino alla boa esce da COA_VIR virate. Ipotesi nostre, scelte sui semi 2601-2605 */
+  const COA_AFF_S = 20, COA_AFF_VIA = 15, COA_VIR = 3;
   function rotVel(twa, tws){ // velocità della polare del gioco (m/s) per un angolo dal vento e una forza (m/s)
     const r = rotRiga(tws), a = clamp(twa, ROT_TWA[0], 180), j = Math.min(ROT_TWA.length - 2, Math.floor((a - ROT_TWA[0]) / 5)), f = (a - ROT_TWA[j]) / 5;
     return r[j][0] * (1 - f) + r[j + 1][0] * f;
@@ -235,13 +242,13 @@
     for (let s = P[0].t; s <= fine; s += 1){ const q = rotIstante(P, s, q => [q.x, q.y]), f = rotIstante(tu, s, f => f.b[0]);
       if (q && f) g.push({ s, d: resto(f[0], f[1], latoDi(s, tuFine)) - resto(q[0], q[1], latoDi(s, lati)) }); }
     const aff = new Set();
-    for (const f of tu){ const me = f.b[0]; if ((f.c && f.c[0] >= COA_COP) || f.b.some((b, k) => k && Math.hypot(b[0] - me[0], b[1] - me[1]) < COA_AFF)) aff.add(Math.floor(f.t)); }
+    for (const f of tu){ const me = f.b[0]; if (f.t < me0.taglio.t + COA_AFF_VIA) continue; if ((f.c && f.c[0] >= COA_COP) || f.b.some((b, k) => k && Math.hypot(b[0] - me[0], b[1] - me[1]) < COA_AFF)) aff.add(Math.floor(f.t)); }
     const vel = (t0, t1) => { const fr = tu.filter(f => f.t >= t0 && f.t <= t1); return fr.length ? fr.reduce((a, f) => a + f.b[0][4], 0) / fr.length : 1; };
     let best = null, tutto = null;
     for (let i = 0; i + COA_FIN < g.length; i++){
       const a = g[i], b = g[i + COA_FIN], w = { t0: a.s, t1: b.s, m: b.d - a.d };
-      let libero = true; for (let s = Math.floor(a.s); s <= b.s; s++) if (aff.has(s)){ libero = false; break; }
-      w.libero = libero;
+      let nAff = 0; for (let s = Math.floor(a.s); s <= b.s; s++) if (aff.has(s)) nAff++;
+      const libero = nAff < COA_AFF_S; w.libero = libero;
       if (!tutto || w.m > tutto.m) tutto = w;
       if (libero && (!best || w.m > best.m)) best = w;
     }
@@ -272,8 +279,10 @@
     }
     // alla boa (lato di bolina)
     const L0 = sp.lati.find(L => L.nome === "Bolina" && L.lay);
-    if (L0 && L0.lay.oltre) F.push({ tipo: "boa", t: L0.lay.t, peso: L0.lay.oltre / 2, m: L0.lay.oltre, txt: `Hai virato per la boa ${L0.lay.oltre} m oltre la layline (lezione 23).` });
-    else if (L0 && L0.lay.vicine >= 2) F.push({ tipo: "boa", t: L0.lay.tv, peso: (L0.lay.vicine - 1) * T_VIR, n: L0.lay.vicine, txt: `Negli ultimi ${LAY_VICINO} m prima della boa hai virato ${L0.lay.vicine} volte: ne bastava una (lezione 23).` });
+    const boa = []; /* 1.3.13: delle due frasi sulla boa esce la più pesante; quella delle virate da COA_VIR virate, col peso almeno COA_MIN (prima usciva solo da 4) */
+    if (L0 && L0.lay.oltre) boa.push({ tipo: "boa", t: L0.lay.t, peso: L0.lay.oltre / 2, m: L0.lay.oltre, txt: `Hai virato per la boa ${L0.lay.oltre} m oltre la layline (lezione 23).` });
+    if (L0 && L0.lay.vicine >= COA_VIR) boa.push({ tipo: "boa", t: L0.lay.tv, peso: Math.max(COA_MIN, (L0.lay.vicine - 1) * T_VIR), n: L0.lay.vicine, txt: `Negli ultimi ${LAY_VICINO} m prima della boa hai virato ${L0.lay.vicine} volte: ne bastava una (lezione 23).` });
+    if (boa.length) F.push(boa.sort((a, b) => b.peso - a.peso)[0]);
     // partenza
     const f0 = riv.all.reduce((a, f) => Math.abs(f.t) < Math.abs(a.t) ? f : a, riv.all[0]), kn = f0.b[0][4] * 1.9438, rit = o.taglio.t;
     if (reg.ocs) F.push({ tipo: "partenza", ocs: true, t: 0, peso: Math.max(rit, COA_MIN), s: Math.round(rit), txt: `Al via eri oltre la linea: sei dovuto tornare e l'hai tagliata ${Math.round(rit)} s dopo lo sparo (lezione 17).` });

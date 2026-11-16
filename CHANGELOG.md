@@ -19,6 +19,18 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.13 — Il Coach, seconda mano
+
+`docs/PROPOSTA-COACH-2.md`, via di Ale il 16 novembre. Le regate non cambiano: il Coach legge soltanto.
+
+- **«C'erano altre barche» esce meno.** Una finestra è «affollata» solo se le altre barche (entro 3 lunghezze, o un cono) ci sono state per almeno 20 secondi su 60; i primi 15 secondi dopo il taglio della linea non contano. Prima bastava un secondo. Quando la finestra non è affollata, la stessa perdita la dice «qui hai perso di più».
+- **«Hai virato N volte vicino alla boa» esce da 3 virate** (prima, di fatto, da 4). Con 2 il Coach tace: una virata in più costa circa 2 s.
+- **«Oltre la layline» guarda la prima virata fatta oltre la layline**, non l'ultima del lato. Se ci sono tutte e due le frasi sulla boa, esce la più pesante.
+- **Aggiunta non scritta nella proposta:** le virate fatte dentro un giro di penalità non contano più fra le virate vicino alla boa (la prua gira di almeno 270° nei 10 s attorno).
+- **Misure** (20 regate per pilota e per gruppo di semi; pilota vecchio = nel gruppo, nuovo = più pulito). «Altre barche»: semi di scelta da 18 e 16 a **10 e 3**; semi di conferma da 18 e 16 a **6 e 5**. Criteri: C1 (pilota nuovo al più 8 su 20) **passa**, 5; C2 (almeno 4 regate di differenza fra i due piloti sui semi di conferma) **non passa**, 1; C4 (errore di 25 m messo apposta: la frase esce in almeno 8 regate su 10) **non passa**, 7 (prima 4); C3 non misurato come scritto (la frase delle virate col pilota vecchio passa da 3 regate su 40 a 12).
+- **Il volto non cambia regola.**
+- **Collaudi:** `collaudo_coach.py` ricalcola da solo il clou con la regola nuova.
+
 ## 1.3.12 — Cinque difetti piccoli trovati rileggendo le 1.3.x
 
 Revisione del codice delle versioni 1.3.0-1.3.11 (`docs/PER-FABLE.md` §2). Le regate non cambiano.

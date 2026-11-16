@@ -4,7 +4,7 @@
 #   K2 spazio: barra della moviola col coach dentro la finestra a 1360x650 e 0 px di eccesso, anche nel caso peggiore costruito (tre frasi più lunghe, legenda con V)
 #   K3 ogni frase detta ha un numero; al più 3 frasi; i numeri del clou coincidono col ricalcolo del collaudo (K4)
 #   K4 il clou: il collaudo ricalcola da solo (in Python, dai dati esportati) la finestra di 60 s in cui i metri di percorso mancanti in più crescono di più,
-#      fuori dai secondi affollati: stessa finestra e stessi metri (±1 m) del coach, in tutte le regate in cui c'è
+#      fuori dalle finestre affollate (1.3.13: almeno 20 s affollati su 60, senza i primi 15 s dopo il taglio): stessa finestra e stessi metri (±1 m) del coach, in tutte le regate in cui c'è
 #   K5 coperto: (a) tratti costruiti a vento, angolo e quota fissi: secondi persi entro ±25% della stima fatta qui con la tabella polare letta da js/rotta-dati.js;
 #      (b) nessun tratto coperto senza una barca entro 10 lunghezze, nelle regate vere
 #   K6 cliccando una frase la moviola va a 5 s prima del suo momento, entro 1 s
@@ -33,7 +33,7 @@ DATI = """() => { const r = rot.res, me = R.boats[0], o = rot.barche[0], fine = 
   const tu = riv.all.filter(f => f.t >= o.taglio.t && f.t <= fine);
   const t0 = performance.now(); const F = coaFrasi(r.ott, r.sp); const ms = performance.now() - t0;
   return { coach: r.coach, ms, uguali: JSON.stringify(F) === JSON.stringify(r.coach), punti: r.ott.punti.map(q => [q.t, q.x, q.y]), lati: r.ott.lati, giri: o.giri.map(g => g.t), leg: o.taglio.leg,
-    marks: R.marks.map(m => [m.x, m.y]), fin: [(R.pin.x + R.cb.x) / 2, (R.pin.y + R.cb.y) / 2], aff: COA_AFF, cop: COA_COP, fin60: COA_FIN, min: COA_MIN,
+    marks: R.marks.map(m => [m.x, m.y]), fin: [(R.pin.x + R.cb.x) / 2, (R.pin.y + R.cb.y) / 2], aff: COA_AFF, cop: COA_COP, fin60: COA_FIN, min: COA_MIN, affS: COA_AFF_S, affVia: COA_AFF_VIA, taglio: o.taglio.t,
     tu: tu.map(f => [f.t, f.b[0][0], f.b[0][1], f.b[0][4], f.c ? f.c[0] : 0, Math.min(1e9, ...f.b.slice(1).map(b => Math.hypot(b[0] - f.b[0][0], b[1] - f.b[0][1])))]),
     tratti: coaCoperto(tu).map(x => [x.t0, x.t1]) }; }"""
 
@@ -58,11 +58,11 @@ def clou(d):   # ricalcolo indipendente del clou
         q, f = interp(P, s), interp(TU, s)
         if q and f: g.append((s, resto(f[0], f[1], lato(s, d["giri"])) - resto(q[0], q[1], lato(s, d["lati"]))))
         s += 1
-    aff = {math.floor(f[0]) for f in d["tu"] if f[4] >= d["cop"] or f[5] < d["aff"]}
+    aff = {math.floor(f[0]) for f in d["tu"] if f[0] >= d["taglio"] + d["affVia"] and (f[4] >= d["cop"] or f[5] < d["aff"])}   # 1.3.13: i primi affVia secondi dopo il taglio non contano
     best = None
     for i in range(len(g) - d["fin60"]):
         a, b = g[i], g[i + d["fin60"]]
-        if any(t in aff for t in range(math.floor(a[0]), math.floor(b[0]) + 1)): continue
+        if sum(1 for t in range(math.floor(a[0]), math.floor(b[0]) + 1) if t in aff) >= d["affS"]: continue   # 1.3.13: affollata solo con almeno affS secondi su 60
         if best is None or b[1] - a[1] > best[2]: best = (a[0], b[0], b[1] - a[1])
     return best
 
@@ -102,7 +102,7 @@ async def main():
             chk("K3", 1 <= len(C) <= 3 and all(re.search(r"\d", x["txt"]) for x in C), f"K3 {s}-{k}: {len(C)} frasi, una senza numero? {[x['txt'] for x in C]}")
             chk("K8", d["ms"] < 200 and d["uguali"], f"K8 {s}-{k}: frasi in {d['ms']:.0f} ms, ricalcolate uguali {d['uguali']}")
             b = clou(d); cl = next((x for x in C if x["tipo"] == "clou"), None)
-            if cl or (b and b[2] / 2 >= d["min"] * 3):   # clou detto, o una perdita libera grande che il coach avrebbe dovuto dire (stima prudente: 2 m/s)
+            if cl or (b and b[2] / 2 >= d["min"] * 3 and len(C) < 3):   # 1.3.13: con tre frasi già dette il clou può restare fuori perché pesa meno (2601-1 e 2603-1: «altre barche», scuffia e penalità davanti); si pretende solo quando c'è posto   # clou detto, o una perdita libera grande che il coach avrebbe dovuto dire (stima prudente: 2 m/s)
                 nclou += 1
                 ok = cl is not None and b is not None and abs(cl["t0"] - b[0]) < 1e-6 and abs(cl["m"] - round(b[2])) <= 1
                 chk("K4", ok, f"K4 {s}-{k}: coach {cl and (cl['t0'], cl['m'])}, ricalcolo {b}")

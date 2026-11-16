@@ -1,4 +1,6 @@
-# Proposta: il Coach dopo le misure col pilota «da giocatore» (fermata 1)
+# Il Coach dopo le misure col pilota «da giocatore»
+
+**Stato: via di Ale il 16 novembre 2026; fatto nella 1.3.13 (fermata 2). Esito al §8: C1, C5, C6 passano; C2 e C4 no; C3, C7 e C8 non misurati.**
 
 16 novembre 2026, gioco alla 1.3.12. Solo documento e strumento di misura (`tests/misura_coach_varianti.py`): il gioco non è stato toccato. Nasce dal §8 di `PROPOSTA-PILOTA-GIOCATORE.md` e dalle risposte di Ale del 16 novembre («il Coach è da migliorare anche nella frase "c'erano altre barche"», «c'è da sistemare quella che non esce mai», «al massimo tre frasi»).
 
@@ -76,3 +78,28 @@ Con meno casi di quelli scritti: «NON VALIDO».
 ## 7. Che cosa serve da Ale
 
 Il via, oppure no. Una sola scelta possibile da cambiare prima di cominciare: i 20 secondi (la tabella del §3 mostra 10 e 30).
+
+## 8. Esito (16 novembre 2026, 1.3.13)
+
+Fatte A, B, C e D come scritte. **Un'aggiunta non scritta:** le virate dentro un giro di penalità non contano più fra le virate vicino alla boa (con la soglia a 3, due giri di penalità vicino alla boa avrebbero fatto dire «hai virato 3 volte»).
+
+| # | Cosa | Soglia | Misurato | Esito |
+| --- | --- | --- | --- | --- |
+| C1 | «altre barche» col pilota nuovo, semi 2611-2615 | al più 8 su 20 | 5 | **passa** |
+| C2 | pilota vecchio meno pilota nuovo, semi 2611-2615 | almeno 4 | 6 − 5 = 1 | **non passa** |
+| C3 | frase delle virate con 3 o più virate | tutte | non misurato come scritto: la lista prima del taglio a tre non si legge da fuori. Col pilota vecchio la frase passa da 3 regate su 40 a 12 | **non misurato** |
+| C4 | 25 m oltre la layline messi apposta: la frase esce | almeno 8 su 10 | 7 (prima 4); dice 28-43 m | **non passa**, di una |
+| C5 | regate identiche | identiche | `collaudo_coach` K1: 20 su 20 uguali al riferimento; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici | **passa** |
+| C6 | `collaudo_coach.py` col ricalcolo aggiornato | verde | verde; clou ricalcolato uguale in 14 regate | **passa** |
+| C7 | regate registrate di Ale | solo riportato | non ci sono file nuovi da leggere | **non fatto** |
+| C8 | pannello a 1360x650 | 0 px | `collaudo_coach` K2: 0 px in 21 casi (le frasi non sono più lunghe) | **passa** |
+
+«Altre barche», regate su 20: semi di scelta da 18 (vecchio) e 16 (nuovo) a **10 e 3**; semi di conferma da 18 e 16 a **6 e 5**.
+
+**C2, che cosa dice.** Sui semi di scelta la regola distingue i due piloti (10 contro 3), sui semi di conferma no (6 contro 5). La soglia dei 20 secondi è stata scelta sui primi: la conferma dice che la differenza fra i due piloti non è solida. Resta vero che la frase esce molto meno (da 16-18 a 3-10 regate su 20). Riportato com'è; i 20 secondi non sono stati ritoccati.
+
+**C4.** Nelle 3 regate su 10 in cui la frase non esce, o passano davanti tre frasi più pesanti, o il pilota non ha virato davvero oltre la layline del Coach.
+
+**Nel collaudo:** K4 pretendeva «qui hai perso di più» ogni volta che c'era una perdita libera grande. Con la regola nuova le perdite libere sono molte di più, e in due regate (2601-1, 2603-1) la frase resta fuori perché ce ne sono tre più pesanti: ora K4 la pretende solo quando c'è posto. Cambiato dopo aver visto il rosso, detto qui.
+
+**Volti nelle 20 regate del collaudo:** 11 arrabbiato, 7 serio, 2 contento, come prima.
