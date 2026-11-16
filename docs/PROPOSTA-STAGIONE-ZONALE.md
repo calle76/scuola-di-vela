@@ -173,7 +173,7 @@ Ale: «ok come consigli tu». Quindi: 10 rivali, 4 tappe, nomi dei posti scritti
 
 **Il racconto delle batterie:** «Batteria bianca: ha vinto X» (il primo di quella batteria nell'ordine della tappa).
 
-**Salvataggio:** `progress.stagione`, separata fra carriera e gioco libero come tutti i progressi. Se cambia la versione del gioco, la stagione resta e la tappa in corso ricomincia, con la stessa batteria.
+**Salvataggio:** `progress.stagione`, separata fra carriera e gioco libero come tutti i progressi. Se cambia la versione del gioco, la stagione resta e la tappa in corso ricomincia, con la stessa batteria. **Dalla 1.3.14 (16 novembre 2026, richiesta di Ale) nemmeno la tappa in corso ricomincia:** il torneo cominciato con un'altra versione resta, con le regate fatte (`CHANGELOG.md` 1.3.14).
 
 **Soglie:** quelle di Z1-Z7 e Z12-Z14 qui sopra, invariate. Per Z2 e Z14 le 20 tappe si corrono col pilota (80 regate). Per Z4 servono 20 stagioni intere: le tappe col pilota sarebbero 320 regate, troppe per il PC. Le tappe si chiudono allora con il risultato del torneo scritto dal collaudo, passando dalle stesse funzioni del gioco. Il collaudo lo dice.
 
