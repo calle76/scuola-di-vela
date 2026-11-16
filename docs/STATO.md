@@ -6,6 +6,7 @@
 
 ## Versione
 
+- **Alla prossima apertura (scritto il 16 novembre a fine sessione):** 1) chiedere ad Ale se ha fatto `git push origin main --tags` e cancellato i quattro rami vecchi su GitHub; 2) voce 42 di `DA-FARE.md`: proposta (fermata 1) per la terza mano del Coach, a partire dalla scuffia dentro la finestra di «altre barche» (osservazione 131); 3) voce 41: rifare sul PC in Firefox il C11 di `collaudo_torneo`, una misura per volta col freno a 64 °C, per capire se i 4 casi su 40 del giro sulla 1.3.15 sono il caso; 4) le regate nuove di Ale, se ce ne sono nella cartella (ora hanno le frasi del Coach).
 - **Un ramo solo:** il 16 novembre `fable-16nov` è stato fuso in `main` (avanzamento semplice, via di Ale); da qui si lavora su `main`.
 - **Ultima versione chiusa: 1.3.15** (16 novembre, tag `v1.3.15`): il volto arrabbiato del Coach è un'immagine nuova, fatta da Ale con Gemini (F104).
 - **Giro su GitHub sulla 1.3.15** (43868042746, 16 novembre): i collaudi nuovi e corretti passano nei due browser (`collaudo_giri_avversari` col G3, `collaudo_torneo_versione`, `collaudo_coach`). Rossi: `collaudo_triangolo` T2b in Firefox (numero che cambia, voce 45) e `collaudo_suoni_si_sentono` in Chromium (sartiame, e per la prima volta H5). Da guardare: C11 di `collaudo_torneo` in Firefox, 4 tornei su 40 contro 1 del giro prima (voce 41). L'esploratore del mattino (su `main`) è passato.
