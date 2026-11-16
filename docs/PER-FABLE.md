@@ -54,3 +54,8 @@ Oggi quasi tutti i collaudi in regata guidano la barca con la guida degli avvers
 - La regola dell'«affollato» del Coach: Ale ha deciso di tenerla così (16 novembre) e di riguardarla con le sue regate registrate.
 - La quota del merito (19 su 21, provvisoria fino alla tappa 7).
 - Regole 15-16 in Deriva più voce 4 (rivali che virano addosso): proposta unica `PROPOSTA-REGOLE-15-16.md`, senza via; G da scegliere.
+
+## Da non ripetere (Ale, 16 novembre sera)
+
+- **La temperatura del PC:** due volte non è stata controllata. Ogni misura col browser va sotto `tests/freno.py 64 55`, una per volta.
+- **I giri dei collaudi su GitHub si leggono per intero** (tutti i pezzi, Chromium e Firefox) e ogni rosso si confronta subito coi giri precedenti, **prima** di dire se è nuovo o noto. Il 16 novembre una conclusione è stata corretta ore dopo («questo errore c'era anche nei collaudi precedenti, ho controllato ora»).
