@@ -117,3 +117,20 @@ Che cosa si è capito sul Coach (cose vere, da decidere con Ale, non corrette):
 - l'errore «due virate» riesce solo 3 volte su 10.
 
 **Che cosa serve da Ale.** (a) Se il pilota nuovo, così com'è, deve entrare in qualche collaudo (per esempio una seconda misura in `collaudo_coach.py`) o restare uno strumento a parte. (b) I punti 1-3 sul Coach: tenerli, o una proposta per cambiarli. (c) La regola dell'«affollato»: il dato dei primi 15 secondi dopo il via.
+
+## 9. Dopo le risposte di Ale (16 novembre, sera)
+
+- **Il pilota resta uno strumento a parte** (Ale: «è da sistemare a parte»): non entra nei collaudi del giro.
+- **Partenza più morbida, come opzione** (`--opz partenza=1`): fino al taglio della linea il pilota usa i numeri dei principianti (centro della fascia), poi quelli degli esperti. Misurata sui due gruppi di semi, 20 regate ciascuno:
+
+| Cosa | Senza, scelta | Con, scelta | Senza, conferma | Con, conferma |
+| --- | --- | --- | --- | --- |
+| contatti con colpa prima del via (regate) | 7 | 4 | 7 | 3 |
+| taglio della linea, mediana | 5,5 s | 2,3 s | 1,8 s | 2,9 s |
+| tempo perso nella prima bolina, mediana (G4) | 21,5 s | 11,6 s | 11,0 s | 9,2 s |
+| regate con una scuffia (G1, al più 2) | 2 | 3 | 2 | 3 |
+| arrivate senza squalifica (G5, 20) | 20 | 20 | 20 | 19 |
+| fra i primi 3 | 14 | 17 | 16 | 18 |
+
+  Con la partenza morbida G4 passa su tutti e due i gruppi (−49% e −66% sul pilota vecchio), ma G1 e G5 mancano la soglia di una regata. Per questo resta un'opzione e non il comportamento di base. I contatti prima del via non sono spariti (3-4 regate su 20): la partenza è sempre quella dei rivali.
+- **Il Coach:** le tre cose del §8 sono diventate una proposta, `PROPOSTA-COACH-2.md` (fermata 1).
