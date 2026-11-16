@@ -80,3 +80,7 @@ Come per le regole 15 e 16 nella 1.3.10:
 ## Lavoro stimato
 
 Codice in `js/regate.js` (sezione nuova dopo le regole 15 e 16, come quella), lezione 25 in `js/contenuti.js`, una riga di registrazione in `js/registratore.js`; collaudo nuovo con i casi a mano (Z2) e misura col pilota (Z3-Z5). Una versione (1.3.18 o successiva). La versione B (avversari) è un lavoro a parte, con proposta propria.
+
+## Risposte di Ale
+
+1. **Sì, la 18 entra dentro Deriva** (16 novembre 2026, sera).
