@@ -85,3 +85,4 @@ Codice in `js/regate.js` (sezione nuova dopo le regole 15 e 16, come quella), le
 
 1. **Sì, la 18 entra dentro Deriva** (16 novembre 2026, sera).
 2. **Sì, zona disegnata** come aiuto disattivabile, come la layline (16 novembre 2026, sera).
+3. **Sì, versione A prima della B**, se Z5 passa. **Via di Ale**, ma il lavoro aspetta i crediti rigenerati, tra qualche giorno (16 novembre 2026, sera).
