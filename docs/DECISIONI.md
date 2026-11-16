@@ -181,6 +181,7 @@ Costo di cambiamento:
 | Via alla tappa 2 (cornice di Deriva); il torneo singolo resta in Deriva come allenamento, fuori dalla carriera; la lezione della layline è la 23 | 15 nov (risposte alle domande della proposta) | medio | tocca menu, carriera e salvataggi | `PROPOSTA-DERIVA-CIRCUITI.md` |
 | Via alle tappe 3 (finale a 6) e 4 (sponsor a contratto, solo in carriera), da fare dopo la tappa 2; nomi del posto della finale e degli sponsor proposti da Claude con la ricerca e controllati da Ale | 15 nov (risposte alle domande delle proposte) | medio | — | `PROPOSTA-FINALE.md`, `PROPOSTA-SPONSOR.md` |
 | **Stagione con un amico: file validi fra versioni (forma della stagione, `ST_FORMA`) e «Riprendi dal mio file», anche in carriera** (D1 lasciata a Claude: «vedi tu») | 16 nov (Ale: «vorrei poter aggiornare il più serenamente possibile») | basso | chi cambia la stagione col codice deve alzare `ST_FORMA`; in carriera un file ritoccato a mano può dare posti migliori | `PROPOSTA-STAGIONE-FILE.md`, 1.3.16 |
+| **Via all'Allenamento** al posto delle due regate di Deriva (tolte dal menu, restano nel codice per le lezioni); record per percorso × barche, 4 combinazioni, come consigliato (domanda 3 non risposta a parte) | 16 nov (Ale: «toglie due regate inutili e ne mette una in cui scegliere come impostarla») | medio | menu di Deriva, record e collaudi del menu | `PROPOSTA-ALLENAMENTO.md` |
 
 ## Contenuti e confini legali
 

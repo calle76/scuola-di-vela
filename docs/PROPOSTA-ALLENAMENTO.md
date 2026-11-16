@@ -1,6 +1,6 @@
 # Proposta: l'Allenamento al posto delle due regate di Deriva (fermata 1)
 
-16 novembre 2026, sera. Nasce dalla chiacchierata con Ale dello stesso giorno: «dovrebbero essere regate di allenamento, ma se hanno meno cose non ha più senso». **Solo proposta: in `js/` niente finché Ale non dà il via.**
+16 novembre 2026, sera. Nasce dalla chiacchierata con Ale dello stesso giorno: «dovrebbero essere regate di allenamento, ma se hanno meno cose non ha più senso». **Via di Ale il 16 novembre** («toglie due regate inutili e ne mette una in cui scegliere come impostarla»): le due regate escono dal menu; record su 4 combinazioni, come consigliato.
 
 ## Cosa c'è oggi
 
