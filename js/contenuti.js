@@ -649,7 +649,7 @@
   // 24 (1.3.10, docs/PROPOSTA-REGOLE-15-16.md): le regole 15 e 16 di F15, parafrasate; nel gioco T15 e G16 (js/regate.js); senza esercizio in regata, per ora (Ale, 16 nov)
   const LE4 = [
     { title: "Prendere la precedenza", ...PAUSE, zoom: 2,
-      text: ["La precedenza può cambiare di mano. Se la prendi con una <em>tua</em> manovra, per esempio finisci una virata e ora sei mure a dritta davanti a un'altra barca, all'inizio devi darle lo spazio per scansarsi (regola 15).",
+      text: ["La precedenza può passare da una barca a un'altra. Se la prendi con una <em>tua</em> manovra, per esempio se finisci una virata ritrovandoti mure a dritta davanti a un'altra barca, all'inizio devi darle lo spazio per scansarsi (regola 15).",
              "Se invece la precedenza ti arriva per una manovra dell'altra, per esempio è lei che vira e si ritrova mure a sinistra, non devi niente: lo spazio deve trovarlo lei."] },
     { title: "Cambiare rotta", ...PAUSE, zoom: 2,
       text: ["Anche chi ha la precedenza non può fare quello che vuole: se cambia rotta, deve lasciare all'altra lo spazio per stare lontana (regola 16).",

@@ -19,6 +19,10 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.18 — Lezione 24, primo passo scritto meglio
+
+Da dove viene: Lucio, 16 novembre notte: il primo passo della lezione 24 «detto così sembra che manchi qualcosa». La frase nuova è la sua: «La precedenza può passare da una barca a un'altra. Se la prendi con una tua manovra, per esempio se finisci una virata ritrovandoti mure a dritta davanti a un'altra barca, all'inizio devi darle lo spazio per scansarsi (regola 15).» Il resto del passo è invariato: la seconda frase («Se invece la precedenza ti arriva per una manovra dell'altra…») dice il caso della regola 15 «a meno che non acquisisca tale diritto a causa delle azioni dell'altra barca». Solo testo; il motore non è toccato.
+
 ## 1.3.17 — Lezioni 11 e 15 più chiare
 
 Da dove viene: Ale, 16 novembre sera. La lezione 11 su scarso e buono «non si capisce molto», e non diceva in quali regate si usa; il passo 2 della lezione 15 diceva che il gioco non controlla le regole 14, 15 e 16, ma le 15 e 16 ci sono nelle regate di Deriva.

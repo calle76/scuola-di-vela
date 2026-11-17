@@ -49,4 +49,4 @@ Nessuna nuova. Il test usa le due già presenti (90° e 1,5 m di `roundCheck`).
 1. Dopo il via: esporre `roundCheck` in `__sv`, riscrivere `tests/misura_lato_boa.py` col metro vero (R1, R2) e misurare **prima** (R4: i tempi).
 2. Il controllo in `rotLato`; misurare R1, R3, R5, R6 con una misura alla volta e il freno termico.
 3. Schermate (R7); collaudo in pagina normale (R8).
-4. Versione nuova (1.3.18) con voce in `CHANGELOG.md`, `VERSIONE` in `js/gioco.js`, tag e documenti; `tests/lancia_tutti.sh` lo lancia Ale sul suo PC.
+4. Versione nuova (la prossima libera, dopo la 1.3.18 della lezione 24) con voce in `CHANGELOG.md`, `VERSIONE` in `js/gioco.js`, tag e documenti; `tests/lancia_tutti.sh` lo lancia Ale sul suo PC.
