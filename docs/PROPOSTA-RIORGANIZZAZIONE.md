@@ -1,6 +1,6 @@
 # Proposta: riorganizzare il gioco in «La scuola» e «Livello 1»
 
-30 ottobre 2026. **Fermata 1: nessun codice, nessuna misura nuova.** I numeri qui sotto sono contati sul codice di oggi (`wc -l`, `grep`). Nasce da un'idea di Ale (30 ottobre 2026, ultimo messaggio): fare il livello 2 (regolamento) nel motore, poi **riorganizzare tutto, tenendo il meglio, con la barca dell'1b fin dall'inizio, meno cose, meglio ordinate**. Se approvata, **supera** `PROPOSTA-COMPLETAMENTO-1B.md` (le sette lezioni brevi si fondono nella scuola; menu, meriti e brevetto dell'1b non si fanno) e l'impianto 1a/1b/2a/2b di `VISIONE-LIVELLI-E-CARRIERA.md` §2 (19 ottobre 2026).
+30 ottobre 2026. **Fermata 1: nessun codice, nessuna misura nuova.** I numeri qui sotto sono contati sul codice di oggi (`wc -l`, `grep`). Nasce da un'idea di Ale (30 ottobre 2026, ultimo messaggio): fare il livello 2 (regolamento) nel motore, poi **riorganizzare tutto, tenendo il meglio, con la barca dell'1b fin dall'inizio, meno cose, meglio ordinate**. Se approvata, **supera** `archivio/PROPOSTA-COMPLETAMENTO-1B.md` (le sette lezioni brevi si fondono nella scuola; menu, meriti e brevetto dell'1b non si fanno) e l'impianto 1a/1b/2a/2b di `VISIONE-LIVELLI-E-CARRIERA.md` §2 (19 ottobre 2026).
 
 ## 1. L'idea, come l'ha detta Ale
 

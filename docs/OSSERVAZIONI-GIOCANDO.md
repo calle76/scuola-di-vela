@@ -150,7 +150,7 @@ Risultati (tempi netti): regata 1 Tu 191 s, Rossa 191, Blu 196, Verde 204 · reg
 
 Annotazioni senza numero: i due suggerimenti «I filetti sono dritti, ma cazzando un po' vai più veloce» (115 volte, 462 s) e «Filetti dritti: vela regolata» (112 volte, 401 s) si alternano a ogni circa 4 s per tutta la registrazione; il primo è quello più mostrato, il secondo il più frequente dopo di lui. Non è un difetto misurato, solo un dato per quando si rivede la modalità coach. Nei punti 67-70 nessuna soglia nuova: i conteggi sono su una sola registrazione (12 barche, 4 regate) e valgono come conferma delle misure sui 40 tornei, non come sostituto.
 
-**Seguito del 29 ottobre 2026 sul punto 67 (e 59-61):** provato un rimedio sulla partenza degli avversari, **non adottato** (`PROPOSTA-DERIVA-ATTESA-1B.md`): le uscite dagli estremi scendono dal 17,6% al 5%, ma le partenze anticipate raddoppiano (9,6% → 20%). Gioco invariato. Il filone resta aperto.
+**Seguito del 29 ottobre 2026 sul punto 67 (e 59-61):** provato un rimedio sulla partenza degli avversari, **non adottato** (`archivio/PROPOSTA-DERIVA-ATTESA-1B.md`): le uscite dagli estremi scendono dal 17,6% al 5%, ma le partenze anticipate raddoppiano (9,6% → 20%). Gioco invariato. Il filone resta aperto.
 
 ## 1 novembre 2026, notte: lista «CHECK SCUOLA DI VELA» alla 1.0.73 e `sessione-20261101-0018.txt`
 

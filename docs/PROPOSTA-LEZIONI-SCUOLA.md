@@ -25,7 +25,7 @@ Le lezioni di oggi non si riscrivono da capo: testi e quiz sono stati verificati
 
 ## 3. Gruppo B: la fisica dell'1b (cinque lezioni nuove)
 
-Ogni lezione ha la forma decisa per le lezioni brevi (`PROPOSTA-COMPLETAMENTO-1B.md` §1): da 2 a 4 passi, **uno solo pratico**, e un quiz di 4 domande. **Il testo si scrive solo dopo aver letto la fonte** di ogni affermazione. Se la fonte non c'è, quella frase non si scrive, e lo dico.
+Ogni lezione ha la forma decisa per le lezioni brevi (`archivio/PROPOSTA-COMPLETAMENTO-1B.md` §1): da 2 a 4 passi, **uno solo pratico**, e un quiz di 4 domande. **Il testo si scrive solo dopo aver letto la fonte** di ogni affermazione. Se la fonte non c'è, quella frase non si scrive, e lo dico.
 
 | # | Lezione | Il passo pratico (idea) | Fonte già nei documenti |
 |---|---|---|---|

@@ -21,7 +21,7 @@ Giro completo, sequenziale, Chromium, repository pulito sul commit `a29fbb7` (1.
 
 Verdi (erano falliti il 29 ottobre): `collaudo_carriera.py`, `collaudo_registrazione.py (8 regate)`.
 
-I tre nuovi hanno **una sola causa**, trovata e misurata: la descrizione della «Regata con i giri di penalità» nel menu (vedi sotto, §2 e `PROPOSTA-MENU-1360X650.md`). Non c'entrano il motore né i giri degli avversari.
+I tre nuovi hanno **una sola causa**, trovata e misurata: la descrizione della «Regata con i giri di penalità» nel menu (vedi sotto, §2 e `archivio/PROPOSTA-MENU-1360X650.md`). Non c'entrano il motore né i giri degli avversari.
 
 ## 2. Il menu che scorre di 68 px: bisezione
 
@@ -49,6 +49,6 @@ Lanciato `tests/lancia_tutti.sh --veloce --parallelo 3` sulla 1.0.68 (cartella `
 ## 6. Cosa serve da Ale
 
 - `git push` (commit nuovi: tutta la sessione, ultimi `a29fbb7`, `7f4e4a7` e questa relazione).
-- La scelta sul menu (R1-R4 in `PROPOSTA-MENU-1360X650.md`), consiglio R2.
+- La scelta sul menu (R1-R4 in `archivio/PROPOSTA-MENU-1360X650.md`), consiglio R2.
 - La risposta alla domanda aperta sul boma in poppa (via per la fermata 2) e il tuo test a mano sulla 1.0.67/1.0.68 (lista data in chat).
 - Firefox: il giro completo con `BROWSER=firefox` non è stato fatto; se vuoi lo faccio io in una mezz'ora di parallelo.

@@ -7,7 +7,7 @@ Voce 2 di `DA-FARE.md`; osservazioni 93, 96, 100 di `OSSERVAZIONI-GIOCANDO.md`. 
 In parte.
 - **1.1.1** (`PROPOSTA-PARTENZE-1B.md`): le barche che non partivano affatto (25 → 0 su 1440).
 - **1.2.15** (fetta 4 della Deriva): al via, chi taglierebbe oltre l'estremità sinistra stringe o cambia mure. Barche fuori linea 62 → 24.
-- **29 ottobre** (`PROPOSTA-DERIVA-ATTESA-1B.md`): la deriva **durante l'attesa** fu provata con 8 varianti e nessuna fu adottata. Quella che toglieva le uscite raddoppiava le partenze anticipate. Restava da provare: «far sì che la barca in attesa non scivoli».
+- **29 ottobre** (`archivio/PROPOSTA-DERIVA-ATTESA-1B.md`): la deriva **durante l'attesa** fu provata con 8 varianti e nessuna fu adottata. Quella che toglieva le uscite raddoppiava le partenze anticipate. Restava da provare: «far sì che la barca in attesa non scivoli».
 
 Quello che vedi tu è proprio il pezzo rimasto: l'attesa.
 

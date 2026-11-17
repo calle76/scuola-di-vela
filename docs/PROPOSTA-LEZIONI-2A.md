@@ -4,22 +4,22 @@
 
 ## 0. Il quadro completo delle lezioni della scuola (correzione di Ale, 31 ottobre 2026)
 
-La prima stesura di questo documento parlava solo di regolamento. **Le lezioni della scuola sono più di quelle sul regolamento.** Tutto l'elenco, come risulta da `PROPOSTA-RIORGANIZZAZIONE.md` §3 e da `PROPOSTA-COMPLETAMENTO-1B.md` §1:
+La prima stesura di questo documento parlava solo di regolamento. **Le lezioni della scuola sono più di quelle sul regolamento.** Tutto l'elenco, come risulta da `PROPOSTA-RIORGANIZZAZIONE.md` §3 e da `archivio/PROPOSTA-COMPLETAMENTO-1B.md` §1:
 
 | Gruppo | Lezioni | Stato |
 |---|---|---|
 | **A. Le sei di oggi, riscritte per la barca dell'1b** | 1 La barca e il vento; 2 il timone; 3 **andature e mure** (senza «precedenze», che vengono dopo nel gruppo D); 4 vento reale e vento apparente; 5 virata e strambata; 6 raffiche e scuffia (`js/contenuti.js`, `LESSONS`) | Testi e quiz esistono (si tengono); i passi pratici vanno percorsi di nuovo dal pilota con la barca nuova. Nella lezione 3 si toglie la parte sulle precedenze |
-| **B. La fisica dell'1b** | 1 timone che stalla (freccia e Maiusc); 2 **spingi il boma (tasto Z)** per uscire dall'angolo morto; 3 salti di vento (virare sugli scarsi); 4 raddrizzata lunga (tasto A); 5 barca che orza sbandando | Mai scritte. Fonti già citate in `PROPOSTA-COMPLETAMENTO-1B.md` |
+| **B. La fisica dell'1b** | 1 timone che stalla (freccia e Maiusc); 2 **spingi il boma (tasto Z)** per uscire dall'angolo morto; 3 salti di vento (virare sugli scarsi); 4 raddrizzata lunga (tasto A); 5 barca che orza sbandando | Mai scritte. Fonti già citate in `archivio/PROPOSTA-COMPLETAMENTO-1B.md` |
 | **C. Partenza e tecnica** | 1 **partenza in velocità**; 2 **partenza da fermi** | Da scrivere; il motore c'è. Contenuto da definire con le misure già fatte sulle partenze (`archivio/PROPOSTA-PARTENZE.md`) |
 | **D. Il regolamento (2a)** | Le sette di §1 qui sotto | Da scrivere; il motore c'è |
 
 **Corretto il 31 ottobre su indicazione di Ale:** (1) il gruppo A ha i titoli veri del gioco; nella prima stesura avevo scritto «il vento a bordo», che non è il titolo, ed è la lezione «Vento reale e apparente»; (2) le precedenze escono dalla lezione 3 e restano solo nel gruppo D; (3) il gruppo C è di due lezioni; (4) **il gruppo «E» (poppa e strambata) è tolto**: la strambata è già la lezione 5 del gruppo A, e la correzione del boma in poppa (`PROPOSTA-BOMA-IN-POPPA.md`) cambia soltanto quello che quella lezione mostra, non crea una lezione.
 
-La lezione 6 delle «sette brevi» dell'1b (contatto vero e chi cede) entra nel gruppo D; la 7 (come funziona il torneo) passa al livello Deriva perché la scuola non ha tornei. Totale: 6 + 5 + 2 + 7 = **20 lezioni**, ciascuna di 2-4 passi con un solo passo pratico e un quiz di 4 domande (il modello di `PROPOSTA-COMPLETAMENTO-1B.md`). È tanto per chi comincia: l'ordine mette A e B prima, il regolamento (D) dopo.
+La lezione 6 delle «sette brevi» dell'1b (contatto vero e chi cede) entra nel gruppo D; la 7 (come funziona il torneo) passa al livello Deriva perché la scuola non ha tornei. Totale: 6 + 5 + 2 + 7 = **20 lezioni**, ciascuna di 2-4 passi con un solo passo pratico e un quiz di 4 domande (il modello di `archivio/PROPOSTA-COMPLETAMENTO-1B.md`). È tanto per chi comincia: l'ordine mette A e B prima, il regolamento (D) dopo.
 
 **«Contatto vero» e danno.** «Contatto vero» non vuol dire con danno: è il contatto fra i contorni degli scafi (1.0.39, `hullOverlap`) al posto del contatto fra cerchi. Il **danno** è un'altra cosa e il gioco non lo ha. Il regolamento (F15) dice: regola 14, ogni barca evita il contatto se ragionevolmente possibile, anche quella con la precedenza (che può aspettare finché è chiaro che l'altra non si scansa); regola 43.1(c), la barca con la precedenza è **esonerata** dalla 14 se il contatto **non causa danno o lesioni**. Quindi, se c'è danno, anche la barca che aveva ragione può avere torto: Ale lo ricordava giusto. Nel gioco oggi chi deve lasciare strada ha sempre torto e l'altra mai. Per modellare il danno servirebbe una soglia («che cosa è un danno» in un gioco senza scafi che si rompono, per esempio una velocità relativa) che **non ha fonte**: sarebbe un'ipotesi nostra. Non è nella lezione 4, che resta solo teoria dichiarata; se Ale lo vuole è una fetta a sé con fermata 1 (regola 14 «contatto serio»).
 
-Il resto di questo documento tratta il gruppo D; per il gruppo B valgono i criteri di `PROPOSTA-COMPLETAMENTO-1B.md` §«Criteri», da riscrivere sulla scuola quando si comincia.
+Il resto di questo documento tratta il gruppo D; per il gruppo B valgono i criteri di `archivio/PROPOSTA-COMPLETAMENTO-1B.md` §«Criteri», da riscrivere sulla scuola quando si comincia.
 
 ## 1. Cosa insegnare nel regolamento (sette lezioni brevi, gruppo D)
 
