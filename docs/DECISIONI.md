@@ -207,4 +207,4 @@ Da prendere **prima** di cominciare il livello a cui servono.
 | Barche vere (per categoria) dei livelli 4 e oltre | Livello 4 | idem |
 | Gioco a più persone: quale gradino e se sì | Prima di toccare registrazione e istantanee | `PROPOSTA-REGATA-COME-FONTE.md` §8 |
 | Avversari con tratti diversi (errore, lettura del vento, aggressività) estratti a caso nel torneo; equipaggio con tratti propri per Deriva (idea di Ale, 12 nov) | Prima della proposta (non ha ancora il via) | `DA-FARE.md` voce 23 |
-| Far correre davvero le altre batterie del circuito invece di estrarre il loro ordine (Ale, 17 nov) | Prima della proposta (via non ancora dato) | `DA-FARE.md` voce 52, `PROPOSTA-ALTRE-BATTERIE.md` |
+| Far correre davvero le altre batterie (Ale, 17 nov): **NO**, la classifica a sorteggio resta; non si appesantisce il gioco per poco realismo in più, si riapre solo se la classifica sbaglia | Costo di riaprire: la proposta è scritta | `DA-FARE.md` voce 52, `PROPOSTA-ALTRE-BATTERIE.md` |

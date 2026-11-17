@@ -1,6 +1,8 @@
 # Proposta: far correre davvero le altre batterie del circuito
 
-*Fermata 1, 17 novembre 2026. Voce 52 di `DA-FARE.md`. Nessun codice nel gioco finché non arriva il via di Ale.*
+*Fermata 1, 17 novembre 2026. Voce 52 di `DA-FARE.md`.*
+
+**ARCHIVIATA il 17 novembre 2026 (Ale): non si fa.** «Non complichiamo e appesantiamo il gioco se non serve davvero. Se la classifica va bene com'è la teniamo, se c'è qualcosa da migliorare si fa.» La classifica a sorteggio resta. Numeri che l'hanno sostenuta: l'ordine dentro la tua batteria è sempre quello vero; la fortuna sposta il tuo posto di tappa di circa ±2 (deviazione standard 1,7-2,0 sui 4 posti), quindi circa ±4 punti su una stagione di 4 tappe; la forza dei rivali conta (media a fine stagione 19,6 punti con due doti, 28,3 con due difetti, `PROPOSTA-STAGIONE-ZONALE.md` Z1). Si riapre solo se una classifica sembra sbagliata in una stagione vera.
 
 ## Da dove viene
 
