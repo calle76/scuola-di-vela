@@ -455,3 +455,21 @@ Le fonti sono in `FONTI-PUBBLICHE.md` (F79-F85). Lette per intero: F80 (MIT) e F
 
 Le sette frasi di `PROPOSTA-SCELTE-DICHIARATE.md` §1 sono state riscritte con «in questo gioco» (D4 della proposta): 45° prima della strambata (lezione 5; le fonti non concordano), filetti uno per lato e colori nostri (lezione 3), 60° di scuffia (lezione 8), boma a una quarantina di gradi al traverso (lezione 3 e domanda d'esame), una o due lunghezze dietro la linea (lezione 18; la domanda d'esame ora chiede il principio, non il numero), parole del regolamento (lezione 12 e tre voci di glossario). Lo stato di queste affermazioni passa da 🎮 a «dichiarata nella 1.3.21»; i numeri del motore non cambiano.
 
+## Numeri nostri ancora presentati come fatti: elenco (17 novembre 2026, voce 60)
+
+Cercati in `js/contenuti.js` (testi visibili: lezioni, quiz d'esame, glossario) tutti i numeri con unità (gradi, metri, secondi, nodi, per cento, lunghezze): 74 occorrenze, di cui la maggior parte sono commenti nel codice (non si vedono) o numeri già dichiarati («nelle scuole si indica…», «in questo gioco…», dalla 1.3.21). Restano questi, da decidere **uno per uno** con Ale. Nessun testo è stato cambiato.
+
+| # | Dove (testo, `js/contenuti.js`) | Cosa dice | Perché è un numero nostro o incerto | Proposta |
+| --- | --- | --- | --- | --- |
+| 1 | Glossario, «Bolina» (riga 942) | «bolina stretta: circa 45°, il massimo che la barca riesce a stringere; bolina larga: circa 60-75°» | Le fonti (Dispensa) dicono 40-45° e 60-70°; la barca del gioco ha il limite a 40° (tabella «Confini delle andature» più su). «Il massimo che la barca riesce a stringere» vale per il gioco | «circa 40-45° (nel gioco, 40°); bolina larga circa 60-70°» |
+| 2 | Lezione 3 (riga 105) | «con il vento tra circa 45° e 75° dalla prua» | Stesso scarto: 75 contro 70 delle fonti | «tra circa 45° e 70°» |
+| 3 | Lezione 3 (riga 113) | lasco «circa 120°», gran lasco «circa 150°» | Non ho trovato una fonte per questi due numeri nei documenti | Cercare la fonte; se manca, «in questo gioco» |
+| 4 | Lezione sulle raffiche (riga 223) | «lasca un poco per tenere lo sbandamento sotto i 20°» | Soglia scelta da noi (`AUTO_HEEL0`), nessuna fonte | «(in questo gioco, sotto i 20°)» |
+| 5 | Lezione 11 (righe 352-358) e `js/rotta.js` | «scarso di una decina di gradi» (lezione), «almeno 7°» (esercizio), «6°» (Coach, `SCARSO`) | **Tre numeri diversi per la stessa cosa.** Tutti nostri | Decidere un numero solo (o «6-10°» nel testo) |
+| 6 | Quiz della lezione 8 (riga 704) | «fatta bene, 15-20 secondi dalla scuffia alla barca che naviga» | Un solo video, già attribuito a un allenatore nel testo; resta una fonte sola | Va bene com'è; tenerlo in `CONTENUTI-DA-VERIFICARE.md` (riga 35) |
+| 7 | Coach (`js/rotta.js`), frase delle boe | «negli ultimi 80 m prima della boa hai virato 3 volte: ne bastava una» | 80 m e 3 virate sono nostri; «ne bastava una» è un giudizio, non una misura | «ne bastava una, di solito» o toglierla |
+
+**Già a posto (non vanno toccati):** penalità 15 s, due giri o un punto («nelle regate di questo gioco»); 5 secondi e 10° delle regole 15-16 («nelle regate di Deriva»); 35° e 45° della barra («nel gioco»); soglie degli esercizi di partenza («è un esercizio»); virata di circa 90° e 48° della layline (fonti F77, F78); i numeri misurati del Coach (secondi, metri e gradi calcolati sulla regata).
+
+**Cosa non ho ancora controllato:** i messaggi del Coach non elencati sopra, i testi di `js/regate.js` e `js/gioco.js` (messaggi a comparsa, suggerimenti del pannello), le lezioni 21-25 di Deriva nel dettaglio. Il prossimo passo è quello, e costa un po' di più.
+
