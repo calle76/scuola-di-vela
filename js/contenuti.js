@@ -575,7 +575,7 @@
   const LE1 = [
     { title: "Una serie di regate", ...PAUSE, zoom: 2,
       text: ["Il torneo è una serie di quattro regate contro gli stessi rivali. Ogni regata dà dei punti, e alla fine si sommano.",
-             "Si usano i <em>punti bassi</em>: 1 al primo, 2 al secondo, e così via. Vince chi ne ha di meno. Chi non arriva o si ritira prende i punti del numero delle barche più uno: con quattro barche, 5 (regolamento, appendice A)."] },
+             "Si usano i <em>punti bassi</em>: vince chi ha meno punti. I punti crescono dal primo all'ultimo: 1 al primo, 2 al secondo, e così via. Chi non arriva o si ritira prende i punti del numero delle barche più uno: con quattro barche, 5 (regolamento, appendice A)."] },
     { title: "Lo scarto", ...PAUSE, zoom: 2,
       text: ["Finite le quattro regate, a ognuno si toglie il punteggio peggiore: è lo <em>scarto</em> (appendice A). Una regata andata male si può recuperare; due no.",
              "Nella classifica del torneo lo scarto si vede fra parentesi."] },
