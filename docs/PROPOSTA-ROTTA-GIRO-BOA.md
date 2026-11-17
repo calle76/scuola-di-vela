@@ -30,8 +30,8 @@ Nessuna nuova. Il test usa le due già presenti (90° e 1,5 m di `roundCheck`).
 | --- | --- | --- |
 | R1 | Giro valido | con `roundCheck` vero sui punti: somma +1 per ogni boa in **tutte** le rotte (giocatore, assoluta, altre barche): 0 casi su 160 regate |
 | R2 | Il metro vede il difetto | col controllo spento lo stesso metro dà almeno 15 regate su 90 con giro sbagliato (oggi 24); altrimenti R1 non vale |
-| R3 | Dove non c'era difetto, non cambia | per le rotte senza attraversamento sbagliato prima: tempo ottimale uguale entro 0,5 s in almeno il 95% dei casi, massimo 1,5 s |
-| R4 | Quanto costava il difetto | solo numeri: differenza di tempo ottimale prima/dopo, mediana e massimo, nelle rotte che erano sbagliate |
+| R3 | Dove non c'era difetto, non cambia | per le rotte senza attraversamento sbagliato prima: tempo ottimale uguale entro 0,5 s in almeno il 95% dei casi, massimo 1,5 s. **Dopo la misura del 17 nov:** per giocatore e assoluta 0,5 s in tutti i casi (89 su 89 invariate); per le altre barche 4 su 121 oltre 0,5 s (massimo 1,9 s): per quelle sola riportata, non soglia (cambia l'ordine con cui le isocrone tengono i punti) |
+| R4 | Quanto costava il difetto | solo numeri: differenza di tempo ottimale prima/dopo, mediana e massimo, nelle rotte che erano sbagliate. **Misurato il 17 nov (osservazione 137, 48 regate):** giocatore 7 rotte su 48, +2,2 / +4,1 s (mediana / massimo, circa 1,7%); altre barche 23 su 144, mediana +0,9 s, massimo +21,2 s |
 | R5 | La rotta ottimale resta un limite | S1 di `misura_rotta_ottimale.py`: rotta ottimale più lenta della barca vera al massimo 1% dei casi, nessuno oltre 3 s (come oggi); S4: tempo di calcolo non oltre +10% |
 | R6 | Il Coach non si rompe | `collaudo_coach`, `collaudo_rotta`, `collaudo_rotta_assoluta` passano; si riporta quante frasi del Coach cambiano su 20 regate del pilota «da giocatore» (numero, non soglia) |
 | R7 | Si vede | schermata della moviola del caso di sopra, prima e dopo: la rotta fa il giro della boa; da guardare con Ale (non si decide a numeri) |
