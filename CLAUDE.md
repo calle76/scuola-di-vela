@@ -4,7 +4,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 
 ## Da leggere prima di lavorare
 
-- Sempre, per primi: `docs/STATO.md` (a che punto siamo, una pagina, aggiornata a ogni fine lavoro) e `docs/DA-FARE.md` (le cose da fare, nell'ordine deciso da Ale: si prende la prima). Poi: `docs/IL-GIOCO.md` (com'è fatto il gioco, una pagina; dal 6 novembre 2026 vale su tutti gli altri), `docs/PROGETTO.md` (principi), `CHANGELOG.md` (stato delle versioni; la storia fino alla 0.24 è in `docs/archivio/`, da aprire solo se serve), `docs/COLLAUDI.md` **senza** la tabella «Browser»: di quella si legge solo la riga del collaudo che serve (`grep -n "collaudo_nome" docs/COLLAUDI.md`).
+- Sempre, per primi: `docs/STATO.md` (a che punto siamo, una pagina, aggiornata a ogni fine lavoro) e `docs/DA-FARE.md` (le cose da fare, nell'ordine deciso da Ale: si prende la prima). Poi, se il compito lo richiede: `docs/IL-GIOCO.md` (com'è fatto il gioco, una pagina; dal 6 novembre 2026 vale su tutti gli altri) e `docs/PROGETTO.md` (principi). **Non si leggono interi:** `CHANGELOG.md` (441 KB: solo le prime 30 righe per le ultime versioni, il resto con `grep -n "^## 1.3.x"`; la storia fino alla 0.24 è in `docs/archivio/`) e `docs/COLLAUDI.md` (115 KB: solo con `grep -n "collaudo_nome" docs/COLLAUDI.md`, mai la tabella «Browser» intera). La storia giorno per giorno è in `docs/archivio/STATO-storico-novembre.md`: da aprire solo se serve.
 - **Il codice non si legge mai tutto.** Dalla 1.0.3 è diviso: `index.html` (stile e struttura) e `js/` (`motore.js`, `base.js`, `contenuti.js`, `gioco.js`, `regate.js`, `disegno.js`, `registratore.js`, `moviola.js`, `suoni-dati.js` (dalla 1.2.7: suoni registrati in base64, non si apre), `suoni.js`, `avvio.js`, `laboratorio.js`, caricati in quest'ordine; la prima riga di ogni file dice cosa contiene). Si apre solo il file che serve, e dentro si legge prima la mappa:
   `grep -nE "^  // ([A-ZÀ-Ú]{4,}|-{3,})" js/nome.js`
   Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna. Una riga eseguita al caricamento di un file non vede le funzioni dei file caricati dopo: il codice nuovo che deve partire all'avvio va in `avvio.js`.
@@ -12,6 +12,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 - Sul prototipo del fiocco: `docs/SPERIMENTALE.md`, `docs/FISICA-E-TARATURE.md`, `docs/FONTI-PUBBLICHE.md`, `docs/CONTENUTI-DA-VERIFICARE.md`.
 - Su livelli, ruoli e carriera: `docs/VISIONE-LIVELLI-E-CARRIERA.md` e `docs/ROADMAP.md`.
 - Lo stato corrente sta nei documenti, non qui: non fidarti di quello che ricordi.
+- **Tenere brevi i file che si leggono all'inizio** (Ale e Claude, 17 novembre 2026): a fine lavoro **si sostituisce** la sezione «Dove siamo» di `docs/STATO.md` (una pagina, circa 6 KB) invece di aggiungere paragrafi in cima; le voci chiuse di `docs/DA-FARE.md` si tolgono e vanno in `docs/archivio/`; una voce è una riga, il dettaglio sta nella proposta o nell'osservazione.
 
 ## Principi (da `docs/PROGETTO.md`)
 
@@ -35,7 +36,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
 - **A ogni versione chiusa, il tag annotato `vX.Y.Z`** sul commit della versione (`git tag -a vX.Y.Z -m "Versione X.Y.Z"`); a fine lavoro all'utente `git push origin main --tags`. Dall'8 novembre 2026 ci sono i tag di tutte le versioni dalla 0.18 (prima la costante `VERSIONE` non c'era).
 - **Ogni versione aggiorna `CHANGELOG.md`.** I prototipi non sono versioni: stanno in `sperimentale/`, non toccano `index.html` né `js/`, e vanno sotto «Sperimentale».
 - Nei prototipi segna ogni riga cambiata con `// FIOCCO`. A ogni compito chiuso aggiorna i documenti in `docs/`.
-- **Risparmio di crediti.** Lancia solo i collaudi direttamente legati alla modifica; i controlli veloci di non-regressione (`polare.js`, `raffiche_e_virate.js`) restano sempre da lanciare. Non aspettare la suite completa né i collaudi lunghi. A fine lavoro indica il comando `tests/lancia_tutti.sh` (con `--veloce` se basta), che l'utente lancia sul suo PC incollando il riepilogo. Se un collaudo è indispensabile per capire se la modifica funziona, lancialo tu.
+- **Risparmio di crediti.** Lancia solo i collaudi direttamente legati alla modifica; i controlli veloci di non-regressione (`polare.js`, `raffiche_e_virate.js`) restano sempre da lanciare. Non aspettare la suite completa né i collaudi lunghi. **I giri completi li fa girare l'utente su GitHub** (scheda Actions → «Collaudi» → «Run workflow», completo o veloce; dal 17 novembre 2026 non li lancia più sul suo PC): a fine lavoro indica solo quel giro, senza «lancia `tests/lancia_tutti.sh` sul tuo PC». Se un collaudo è indispensabile per capire se la modifica funziona, lancialo tu, **uno per volta e col freno termico** (`python3 tests/freno.py 64 55 comando…`: il PC è arrivato a 85 °C).
 
 ## Git
 
