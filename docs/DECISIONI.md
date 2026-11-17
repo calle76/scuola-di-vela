@@ -208,3 +208,6 @@ Da prendere **prima** di cominciare il livello a cui servono.
 | Gioco a più persone: quale gradino e se sì | Prima di toccare registrazione e istantanee | `PROPOSTA-REGATA-COME-FONTE.md` §8 |
 | Avversari con tratti diversi (errore, lettura del vento, aggressività) estratti a caso nel torneo; equipaggio con tratti propri per Deriva (idea di Ale, 12 nov) | Prima della proposta (non ha ancora il via) | `DA-FARE.md` voce 23 |
 | Far correre davvero le altre batterie (Ale, 17 nov): **NO**, la classifica a sorteggio resta; non si appesantisce il gioco per poco realismo in più, si riapre solo se la classifica sbaglia | Costo di riaprire: la proposta è scritta | `DA-FARE.md` voce 52, `PROPOSTA-ALTRE-BATTERIE.md` |
+| Carriera di prova per vedere gli sponsor (idea del 17 nov): **NO** (Ale: non si aumentano le varianti del gioco, e comunque si dovrebbe rigiocare quella vera) | — | `DA-FARE.md` voce 54 (al suo posto: il file della carriera) |
+| «Rifai questo tratto» e curva dei progressi (Ale, 17 nov): il primo nel livello Coach dopo Deriva, la seconda in coda; non ora, per non appesantire Deriva | Prima di aprire il livello Coach | `DA-FARE.md` voce 56 |
+
