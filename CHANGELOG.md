@@ -19,6 +19,18 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.22 — Numeri nostri nei testi (voce 60)
+
+Da dove viene: l'elenco di `docs/CONTENUTI-DA-VERIFICARE.md` (ultima sezione, 17 novembre 2026) e il via di Ale («ok, cambia i testi»). Solo testi; nessun numero del motore cambia.
+
+- **Glossario «Bolina» e lezione 3:** bolina stretta «circa 40-45° (nel gioco 40°)», larga «circa 60-70°» (era 60-75°); nel passo della bolina il vento «tra circa 45° e 70°» (era 75°: le fonti dicono 70 e il controllo del passo accetta fino a 72°).
+- **Lezione 3, lasco e gran lasco:** aggiunto «sono i valori di questo gioco» (120° e 150° non hanno una fonte nei documenti).
+- **Lezione sulle raffiche:** «sotto i 20° (in questo gioco)».
+- **Scarso (lezione 11 e quiz):** tre numeri diversi per la stessa cosa (lezione «una decina di gradi», esercizio 7°, Coach 6°). Nei testi ora è quello dell'esercizio, **«almeno 7°»**; il quiz dice «scarso di 10°» come esempio. **Il Coach continua a usare 6°** (`SCARSO` in `js/rotta.js`): non è scritto in nessuna frase, e cambiarlo cambierebbe i numeri della rotta ottimale (da decidere con Ale).
+- **Coach, frase delle boe:** «di solito ne basta una» invece di «ne bastava una» (era un giudizio dato come certo).
+- **Non toccati:** il quiz «15-20 secondi» (già attribuito a un allenatore, fonte unica).
+- **Collaudi:** `collaudo_pannello_lezioni.py` 130 passi su 130, 0 px di eccesso in Chromium e Firefox; `collaudo_esame.py`, `collaudo_esame_nuove.py`, `collaudo_versione.py` e `controllo_commenti.py` OK. Nessun collaudo dipendeva dalle frasi cambiate (cercate per testo). Il motore non è toccato.
+
 ## 1.3.21 — Scelte del gioco dichiarate nelle lezioni (voce 9)
 
 Da dove viene: `docs/PROPOSTA-SCELTE-DICHIARATE.md` (13 novembre), via di Ale il 17 novembre («ok a tutte, se ne abbiamo già parlato dovrebbe andare bene»). Principio 4: le semplificazioni si dichiarano. **Solo testi** in `js/contenuti.js` e nel glossario; nessun numero del motore cambia.

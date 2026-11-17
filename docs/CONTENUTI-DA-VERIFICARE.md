@@ -473,3 +473,4 @@ Cercati in `js/contenuti.js` (testi visibili: lezioni, quiz d'esame, glossario) 
 
 **Cosa non ho ancora controllato:** i messaggi del Coach non elencati sopra, i testi di `js/regate.js` e `js/gioco.js` (messaggi a comparsa, suggerimenti del pannello), le lezioni 21-25 di Deriva nel dettaglio. Il prossimo passo è quello, e costa un po' di più.
 
+**Esito (1.3.22, 17 novembre 2026, via di Ale):** casi 1, 2, 3, 4, 5 e 7 cambiati nei testi; il 6 resta com'è. Caso 5: nei testi «almeno 7°»; il Coach usa ancora 6° (`SCARSO`), non scritto in nessuna frase.

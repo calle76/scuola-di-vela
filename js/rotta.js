@@ -281,7 +281,7 @@
     const L0 = sp.lati.find(L => L.nome === "Bolina" && L.lay);
     const boa = []; /* 1.3.13: delle due frasi sulla boa esce la più pesante; quella delle virate da COA_VIR virate, col peso almeno COA_MIN (prima usciva solo da 4) */
     if (L0 && L0.lay.oltre) boa.push({ tipo: "boa", t: L0.lay.t, peso: L0.lay.oltre / 2, m: L0.lay.oltre, txt: `Hai virato per la boa ${L0.lay.oltre} m oltre la layline (lezione 23).` });
-    if (L0 && L0.lay.vicine >= COA_VIR) boa.push({ tipo: "boa", t: L0.lay.tv, peso: Math.max(COA_MIN, (L0.lay.vicine - 1) * T_VIR), n: L0.lay.vicine, txt: `Negli ultimi ${LAY_VICINO} m prima della boa hai virato ${L0.lay.vicine} volte: ne bastava una (lezione 23).` });
+    if (L0 && L0.lay.vicine >= COA_VIR) boa.push({ tipo: "boa", t: L0.lay.tv, peso: Math.max(COA_MIN, (L0.lay.vicine - 1) * T_VIR), n: L0.lay.vicine, txt: `Negli ultimi ${LAY_VICINO} m prima della boa hai virato ${L0.lay.vicine} volte: di solito ne basta una (lezione 23).` });
     if (boa.length) F.push(boa.sort((a, b) => b.peso - a.peso)[0]);
     // partenza
     const f0 = riv.all.reduce((a, f) => Math.abs(f.t) < Math.abs(a.t) ? f : a, riv.all[0]), kn = f0.b[0][4] * 1.9438, rit = o.taglio.t;
