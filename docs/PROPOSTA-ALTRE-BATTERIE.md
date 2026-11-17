@@ -35,19 +35,21 @@ Ale, 17 novembre: «non simuli le regate avversarie [...] vorrei far correre dav
 | B2 | Le batterie finiscono | almeno il 95% delle regate delle altre batterie con tutte le barche arrivate |
 | B3 | La tua regata non cambia | tua batteria identica al bit con e senza le altre batterie, stesso seme, 20 su 20 |
 | B4 | La forza conta, ma non decide | su 200 stagioni: punti medi dei rivali con due doti minori di quelli con due difetti di almeno 4 punti; ogni rivale vince almeno 1 stagione su 200; nessuno ne vince più di 35% |
-| B5 | Tempo | zonale al massimo 40 s su PC di Ale in Chromium, 60 s in Firefox; schermo che non si blocca per più di 200 s... *[soglia da fissare sulla prima misura]* |
+| B5 | Tempo | zonale al massimo 40 s su PC di Ale in Chromium, 60 s in Firefox; schermo che non si blocca *[soglia sul blocco da fissare dopo la prima misura: oggi non ho un numero]* |
 | B6 | Amico | file scambiati: la tua classifica coerente col file dell'amico, 20 su 20 (come Z9); file di forma vecchia rifiutati |
 | B7 | Salvataggio | chiusura della pagina a metà calcolo: tappa non scritta a metà, si ricalcola alla riapertura |
 | B8 | Carriera | probabilità del pilota «da giocatore» di essere nei primi 3 dello zonale riportata, prima e dopo (numero, non soglia) |
 
-*(B5: la riga è provvisoria; va letta come «il blocco dello schermo si misura e si dichiara»: oggi non ho un numero.)*
+## Versione semplice (Ale, 17 nov: «semplifichiamo, ma teniamo più coerenza possibile»)
 
-## Domande per Ale
+Le quattro domande sono chiuse con la scelta più semplice che resta coerente con le regate vere; Ale può correggerle:
 
-1. **Come si uniscono le batterie** (punto 3): per punti di serie, come scritto? È la scelta più semplice e vicina alle flotte vere.
-2. **Quando si calcola:** subito a fine tappa con una barra di attesa (~30 s), oppure in sottofondo mentre guardi la classifica?
-3. **Con l'amico:** va bene che ognuno abbia la sua batteria «degli altri» e lo si dica?
-4. **Prima o dopo** la sistemazione della guida dei rivali (voci 2-4)? Fatta prima, le classifiche sono più credibili; fatta dopo, il difetto si vede subito e serve a misurare.
+1. **Batterie unite per punti di serie** (punto 3 sopra): stesso conto del torneo per tutti, nessuna regola nuova.
+2. **Calcolo subito a fine tappa, con una barra di attesa** (circa 30 s): niente sottofondo, niente stato a metà (B7 si riduce a «chiusa la pagina, si rifà»).
+3. **Con l'amico, ognuno la sua batteria «degli altri»**, dichiarato in una riga nel gioco; le batterie di Ale e di Lucio restano vere nelle due classifiche.
+4. **Guida dei rivali com'è oggi**, senza aspettare le voci 2-4: i loro difetti si vedranno nelle classifiche e serviranno a misurarli.
+
+Coerenza tenuta: stesso motore, stessi venti, stesse regole, stessi tratti dei rivali, stesso conto dei punti. Tolto: sorteggio, `ST_B`, sottofondo, accordo fra le due pagine sulla batteria degli altri.
 
 ## Passi
 
