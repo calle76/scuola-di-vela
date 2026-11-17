@@ -9,7 +9,14 @@
 - **Il gioco:** la Scuola (barca a una vela, 20 lezioni) è chiusa come contenuti. Deriva è nel gioco ma non ancora «finita»: lezioni 21-25, torneo e stagione (circuito zonale e nazionale, finale, sponsor a contratto in carriera), regole 15 e 16 col semaforo giallo, cono d'ombra, rotta ottimale (anche «in assoluto», tasto V), Coach nella moviola col volto (tre espressioni), stagione con un amico per file (`ST_FORMA`, «Riprendi dal mio file»). Com'è fatto: `IL-GIOCO.md`.
 - **Oggi (17 nov) niente di nuovo nel motore.** Chiuse cinque versioni di solo testo: 1.3.18 (lezione 24), 1.3.19 (lezione 21), 1.3.20 (presentazione della stagione: dice che solo l'ordine nella tua batteria è vero), 1.3.21 (sette scelte del gioco dichiarate «in questo gioco…»), 1.3.22 (numeri nostri nei testi allineati alle fonti). Letti i dati di Lucio e di Ale (osservazioni 133-137).
 - **Un difetto vero trovato e non ancora corretto:** la rotta ottimale può girare la boa dal lato sbagliato (osservazioni 134 e 137, voce 50): costa 2-4 s al giocatore in 7 regate su 48, fino a 21 s alle altre barche. Proposta scritta, aspetta il via.
-- **Collaudi:** Ale li fa girare **su GitHub**, non sul PC. A fine lavoro non si dice «lancia `lancia_tutti.sh` sul tuo PC». Le misure lunghe le faccio io, **una per volta col freno termico** (`python3 tests/freno.py 64 55 comando…`: il PC è arrivato a 85 °C). Fallimenti noti in `tests/fallimenti_noti.txt` (T2b del triangolo ha voci a frammento per GitHub).
+- **Collaudi:** Ale li fa girare **su GitHub**, non sul PC. A fine lavoro non si dice «lancia `lancia_tutti.sh` sul tuo PC». Le misure lunghe le faccio io, **una per volta col freno termico** (`python3 tests/freno.py 64 55 comando…`: sospende il comando sopra 64 °C e lo riprende sotto 55 °C; il PC è arrivato a 85 °C). Fallimenti noti in `tests/fallimenti_noti.txt` (T2b del triangolo ha voci a frammento per GitHub).
+
+## A inizio sessione
+
+1. Leggere questa pagina e `DA-FARE.md`; `git status --short` (i file non tracciati dell'ambiente si lasciano fuori).
+2. **Chiedere ad Ale due cose:** se ha pushato, e **se i crediti sono tornati** (non si vede dai file): da quello dipende se si parte da una voce grossa o solo da lavori leggeri.
+3. Se ci sono regate nuove, o è passato tempo: ricordargli il disco esterno (`bash tests/copia_su_disco.sh`).
+4. **«Via già dato» = si può eseguire quando i crediti ci sono**; senza il via si scrive solo la proposta (le due fermate di `CLAUDE.md`).
 
 ## Decisioni di Ale ancora valide (17 novembre)
 
@@ -27,7 +34,8 @@
 
 - **Push:** `git push origin main --tags` (dopo ogni sessione; la 1.3.22 e i riordini sono da pushare).
 - **Chiedere a Lucio** per il finale dell'osservazione 135: «in quella regata (21:20) sei arrivato primo?» e a che secondo succede la situazione.
-- **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Non coperti: i `stagione-*.json` (lo script li copia), i salvataggi del browser (carriera: voce 54).
+- **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ogni due settimane circa e dopo regate nuove; a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Lo script copia anche i `stagione-*.json`; **non** copre i salvataggi del browser (carriera: voce 54).
+- **File sciolti nella radice del repo** (non tracciati): `stagione-*.json` (i vostri salvataggi; sono copiati dallo script), `Coach_*.png/jpeg` (gli originali; i jpg usati dal gioco sono in `img/`), `regata-…(1).txt` (duplicati identici: si possono cancellare). Decide Ale.
 - **Regolamento applicato:** salvare in `fonti-pdf/` le pagine utili di https://www.racingrulesofsailing.org/ (da qui il sito risponde 403): casi per le regole 11, 15, 16, 18.
 - Giocare e mandare le registrazioni: «Scarica l'ultima regata»; per un momento che sorprende, tasto **M** o scrivere il secondo.
 
