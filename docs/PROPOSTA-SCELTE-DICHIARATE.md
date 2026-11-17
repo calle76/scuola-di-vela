@@ -40,3 +40,13 @@ Testi letti in `js/contenuti.js` il 13 novembre (numeri di riga del ramo `scheda
 ## 5. Costo
 
 Due-tre ore: testi, glossario, collaudi delle lezioni toccate.
+
+## 6. Aggiornamento del 17 novembre 2026: ricontrollata, domande rese semplici
+
+- **Le sette frasi ci sono ancora** in `js/contenuti.js` com'erano (controllate una per una il 17 novembre), ma i **numeri di riga della §1 sono cambiati** (per esempio la strambata della lezione 5 è ora alla riga 204, l'esercizio a 811, il traverso a 111 e 866, le «una o due lunghezze» a 522, 542, 756 e 761): si cercano per testo, non per riga.
+- Le lezioni 21 e 24 (1.3.18 e 1.3.19) non c'entrano con queste sette frasi.
+- **Domande per Ale, una risposta ciascuna, con la mia scelta consigliata:**
+  1. **Il via a tutto:** sì, sono solo testi, nessun numero del motore cambia (consigliato: sì, ma insieme agli altri «via» quando tornano i crediti).
+  2. **La domanda d'esame sulle «una o due lunghezze» (frase 6):** cambiarla col principio («Dove conviene aspettare il via? Vicino alla linea, quasi fermo»), non toglierla (consigliato: cambiarla, così l'esame resta di venti domande).
+  3. **Le parole del regolamento (frase 7):** la riga nella lezione 12 **e** le voci nel glossario (consigliato: tutte e due; il glossario non costa pannello).
+- **Costo rivisto:** circa 1-2 ore con Sonnet; i collaudi sono D1-D4 della §3 (pannello delle lezioni 130 passi, `collaudo_esame`, `collaudo_lezioni` per le cinque lezioni toccate).
