@@ -55,6 +55,7 @@ async def main():
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); await ctx.add_init_script(SEME)
         pg = await ctx.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto((ROOT / "index.html").as_uri() + "#collaudo"); await pg.wait_for_timeout(250)
+        await pg.evaluate("opt.coachReg = false")   # 1.3.32: dalla 1.3.28 il Coach in regata disegna una foto da file: in Chromium il disegno diventa «contaminato» e getImageData (colore dei pixel) dà SecurityError. Qui si misurano i pixel dell'orologio, non il Coach
         G = [await pg.evaluate(GIRI, [1 if k % 2 else -1, 3000 + k, False]) for k in range(1, 11)]
         P = [await pg.evaluate(GIRI, [1, 3100 + k, True]) for k in range(1, 4)]
         tutti = [s for r in G + P for s in r["out"]]
@@ -92,7 +93,7 @@ async def main():
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); pg = await ctx.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto((ROOT / "index.html").as_uri()); await pg.wait_for_timeout(500)
         await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
-        await pg.evaluate("() => giriDebito()"); await pg.wait_for_timeout(800)
+        await pg.evaluate("() => { opt.coachReg = false; giriDebito(); }"); await pg.wait_for_timeout(800)   # 1.3.32: Coach spento come sopra (foto da file = canvas contaminato in Chromium); la pagina resta quella di un giocatore
         r = await pg.evaluate("() => { " + PIX + " return { sv: typeof window.__sv, or: R.rqOr, pix: punti() }; }")
         chk("O7 pagina senza #collaudo: dopo un debito l'anello si vede, rosso (e __sv non esiste)", r["sv"] == "undefined" and r["or"] is not None and r["pix"] and all(r["pix"][k] == "rosso" for k in ("ore3", "ore6", "ore9")), str(r))
         chk("O8 nessun errore di pagina senza #collaudo", not errs, str(errs[:2]))

@@ -106,6 +106,7 @@ async def pagina(b, base, hash_="#collaudo", vp=(1360, 650)):
     ctx = await b.new_context(viewport={"width": vp[0], "height": vp[1]}); await ctx.add_init_script(SEME)
     pg = await ctx.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
     await pg.goto(pathlib.Path(base, "index.html").as_uri() + hash_); await pg.wait_for_timeout(250)
+    if hash_ == "#collaudo": await pg.evaluate("opt.coachReg = false")   # 1.3.32: vedi collaudo_orologio_giri.py (foto del Coach da file = canvas contaminato in Chromium, getImageData non funziona)
     return ctx, pg, errs
 def solo_pezzi(r): return [x for x in r if x]
 async def main():
