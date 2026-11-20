@@ -29,7 +29,7 @@ JS = """([seme, wind, tws]) => {
   const una = (f, marks) => { const out = {};
     for (const lib of [true, false]){ sv.rot.giroLibero = lib; const t0 = performance.now(), o = f(), ms = performance.now() - t0;
       out[lib ? "prima" : "dopo"] = o ? { tempo: o.tempo, ms, giro: giro(o, marks(o)) } : null; }
-    sv.rot.giroLibero = true; return out; };   // 1.3.23: nel gioco il controllo è spento di base
+    sv.rot.giroLibero = false; return out; };   // come nel gioco (acceso dalla 1.3.24)
   const mk0 = k => () => R.marks.slice(sv.rot.barche[k].taglio.leg - 1);
   const out = { marks: R.marks.length, fin0: R.boats[0].fin };
   out.mia = una(() => sv.rotCalcola(0), mk0(0));

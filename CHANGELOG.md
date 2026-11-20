@@ -19,6 +19,21 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.24 — La rotta ottimale gira la boa come il gioco (voce 50)
+
+Da dove viene: il controllo scritto e lasciato spento nella 1.3.23 (R3 non passava). Ora acceso. `docs/PROPOSTA-ROTTA-GIRO-BOA.md` §Esito.
+
+- **La causa di R3:** il primo controllo guardava solo il punto in cui la rotta taglia la semiretta della boa, e vietava anche i passaggi **sopra la boa entrati dal lato interno**. Il gioco quelli non li conta (`roundCheck` salta i punti entro 1,5 m dalla boa e ignora quelli a più di 90° da `out`). La rotta doveva allargarsi e, per come le isocrone tengono i punti, arrivava alla boa fino a 19 s dopo. **Trovata con un confronto punto per punto.** Una prima diagnosi era sbagliata: in una pagina nuova la stessa regata viene diversa da quella della misura, e la rotta guardata era davvero sbagliata per il gioco.
+- **Il controllo ora segue la regola di `roundCheck` lungo ogni ramo della rotta.** Ogni punto ricorda l'ultimo stato visto fuori da 1,5 m (lato < 0, ≥ 0, oltre 90°). Il passo che va da < 0 a ≥ 0 non si fa, finché il ramo non ha già girato la boa (`.giu`). Vicino alla boa ogni passo si guarda in 8 pezzi (`ROT_PEZZI`). I punti a più di 8 m dalla boa e dalla sua retta (`ROT_LONTANO`) saltano il controllo: nessun passo da lì può fare un giro. Il lato finisce appena oltre la linea (`ROT_OLTRE`, 2% del passo). Costanti nostre.
+- **Misure (`tests/misura_giro_boa.py`, col freno), su semi di scelta 1-3 e di conferma 101-103** (4 venti, 10 e 12 nodi, 24 regate ciascuno, 120 rotte):
+  - **R1** 0 rotte non valide su 120, in tutti e due i gruppi.
+  - **R2** senza controllo il metro vede il difetto: 16 e 8 regate su 24.
+  - **R3** rotte già valide invariate entro 0,5 s: 27 su 27 e 30 su 30 (scelta), 19 su 19 e 14 su 14 (conferma); massimo 0,09 s.
+  - **R4** sui semi di conferma, il difetto costava: alla tua rotta 7 su 24, mediana +1,8 s; alle altre barche 6 su 72, mediana +2,3 s, massimo +5,2 s. Sui semi di scelta: giocatore mediana +1,4 s, massimo +15,1 s; altre barche massimo +26,3 s.
+  - **Tempo di calcolo** +3,5% sui semi di conferma (+6,4% su 4 regate); prima delle due ottimizzazioni era +45%.
+- **R6:** `collaudo_coach` verde, `collaudo_rotta_assoluta --regate 4 --dichiarati` verde. In 4 regate su 20 cambia il peso di una frase del Coach; gli argomenti restano gli stessi. Esempio: nella 2602-1 il «clou» passa da 34 a 18, perché la rotta vecchia tagliava la boa e la perdita era gonfiata.
+- **Non fatti:** R5-S1 di `misura_rotta_ottimale.py` (la rotta più lenta della barca vera), R7 (schermate prima e dopo), R8 (una regata giocata senza `#collaudo`): restano al giro su GitHub e al gioco di Ale.
+
 ## 1.3.23 — Coach che sorride, orologio dei giri nel torneo, carriera e attestato in un file (rotta e lato della boa: scritto, spento)
 
 Da dove viene: le segnalazioni di Ale del 17 novembre (voci 57, 61, 62) e il via del 20 novembre a 50, 54 e 64 (`DECISIONI.md`).

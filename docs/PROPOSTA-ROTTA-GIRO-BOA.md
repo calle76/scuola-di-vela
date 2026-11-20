@@ -58,3 +58,13 @@ Nessuna nuova. Il test usa le due già presenti (90° e 1,5 m di `roundCheck`).
 - **Numeri (24 regate, non 160: semi 1-3, venti 0/90/180/270°, 10 e 12 nodi; ridotte per il tempo, circa 1,5 min a regata col freno):** R1 0 rotte non valide su 120 (passa); R2 16 regate su 24 con almeno una rotta sbagliata, 12 la tua (passa); **R3 non passa**: rotte valide prima entro 0,5 s 19 su 27 (giocatore e assoluta, 70%) e 17 su 30 (altre barche, 57%), massimi 7,5 e 15,8 s; R4 giocatore 12 su 24, mediana +1,4 s, massimo +15,1 s; altre barche 31 su 72, mediana +6,4, massimo +26,3; toccate e ritorno: giocatore 4 su 24, +0,1 s. Tempo di calcolo +13,7% (R5 voleva al più +10%, misurato qui e non con `misura_rotta_ottimale.py`). R5 S1, R6, R7, R8 non misurati.
 - **Ipotesi provata e scartata:** il gioco conta il giro già a 1,5 m, il cancello della rotta a 2 m; il divieto tolto ai rami già passati dal lato giusto (`.giu`) non ha cambiato nessun numero. **Causa di R3 da trovare** (prossimo passo: confrontare punto per punto una rotta valida prima e dopo, per esempio la più lenta del giocatore).
 - **Stato:** il codice resta in `js/rotta.js` ma spento (`rot.giroLibero: true`): il gioco calcola le rotte come nella 1.3.22. Le soglie non sono cambiate.
+
+## Esito, seconda parte (20 novembre 2026, sera; versione 1.3.24, controllo ACCESO)
+
+- **Causa di R3 trovata:** il controllo guardava solo il punto di taglio, e vietava i passaggi sopra la boa entrati dal lato interno, che `roundCheck` non conta (salta i punti entro 1,5 m e ignora quelli oltre 90°). L'ipotesi dei 2 m contro 1,5 m era sbagliata. Lo era anche una prima diagnosi su una regata rifatta in una pagina nuova: lì la regata viene diversa da quella della misura.
+- **Controllo riscritto con la regola di `roundCheck` lungo ogni ramo** (stato ricordato nel punto, 8 pezzi per passo vicino alla boa, controllo saltato oltre 8 m).
+- **Semi di scelta 1-3:** R1 0 su 120; R3 100% e 100%, massimo 0,09 s.
+- **Semi di conferma 101-103, mai guardati prima:** R1 0 su 120; R2 8 regate su 24; R3 19 su 19 e 14 su 14, massimo 0,05 s; R4 giocatore 7 su 24, mediana +1,8 s; altre barche 6 su 72, massimo +5,2 s; tempo di calcolo +3,5%.
+- **R6:** `collaudo_coach` e `collaudo_rotta_assoluta` verdi; frasi del Coach con un peso diverso in 4 regate su 20.
+- **Non misurati:** R5-S1, R7, R8.
+- **Le soglie non sono cambiate.** È cambiato il metro (60 pezzi per tratto, prima parte di questo Esito), detto lì.

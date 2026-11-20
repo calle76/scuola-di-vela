@@ -16,7 +16,7 @@
   // abbattuta 0,0 s: 1 s è un minimo nostro perché la rotta non cambi mure a ogni passo); SCARSO 6°; settori di 2° (§2 D); passo 1 s.
   // ======================================================================
   const ROT_REG = 0.5, ROT_DT = 1, T_VIR = 2, T_ABB = 1, ROT_SETT = 2, ROT_BOA = 2, ROT_LATO_MAX = 900, ROT_TMAX = 1800, SCARSO = 6, ROT_RAFF = 1.12;
-  const rot = { reg: [], barche: [], acc: 0, res: null, on: false, spento: false, giroLibero: true }; /* giroLibero (1.3.23, voce 50): controllo del lato della boa SPENTO finché R3 di PROPOSTA-ROTTA-GIRO-BOA.md non passa (20 nov: rotte già valide fino a 7,5 s più lente, causa non trovata) */
+  const rot = { reg: [], barche: [], acc: 0, res: null, on: false, spento: false, giroLibero: false }; /* giroLibero (voce 50): true spegne il controllo del lato della boa (spento nella 1.3.23, acceso dalla 1.3.24 quando R1-R3 sono passati su semi nuovi) */
 
   // ---- registrazione ----
   function rotReset(){ rot.reg = []; rot.barche = R ? R.boats.map(() => ({ taglio: null, giri: [] })) : []; rot.acc = 1e9; rot.res = null; rot.on = false; rot.calc = false; }
@@ -60,12 +60,13 @@
           const [v, lee] = riga[n], c = (w.twd - s * (twa + lee)) * D2R; // s = +1: vento da destra, la prua sta a sinistra del vento
           // 1.2.40: il punto nuovo si crea solo se entra nel fronte o finisce il lato (stessi conti e stesso ordine di prima: risultati identici, circa metà del tempo)
           tmp.x = p.x + Math.sin(c) * v * mv; tmp.y = p.y - Math.cos(c) * v * mv;
-          if (cancello.vieta && !p.giu && cancello.vieta(p, tmp)) continue; /* 1.3.23 (voce 50): niente passi che girano la boa dal lato sbagliato, finché il ramo non l'ha già girata */
-          const giu = p.giu || (cancello.vieta ? cancello.giusto(p, tmp) : false);
-          const fr = cancello(p, tmp); if (fr !== null){ const q = { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu };
+          const ps = cancello.passo ? ((p.lo ?? (p.lo = cancello.lontano(p))) ? 4 : cancello.passo(p, tmp)) : 0; /* 1.3.23 (voce 50): niente passi che per il gioco girano la boa dal lato sbagliato, finché il ramo non l'ha già girata */
+          if (ps & 8 && !p.giu) continue;
+          const giu = p.giu || (ps & 16) > 0, ra = ps & 7;
+          const fr = cancello(p, tmp); if (fr !== null){ const q = { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu, ra };
             q.x = p.x + (q.x - p.x) * fr; q.y = p.y + (q.y - p.y) * fr; q.t = t + ROT_DT * fr; q.fine = true; return q; }
           const dx = tmp.x - ox, dy = tmp.y - oy, d = Math.hypot(dx, dy), key = Math.round(Math.atan2(dx, -dy) / D2R / ROT_SETT) * 2 + (s > 0 ? 1 : 0);
-          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q: { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu } }); // chi deve ancora finire una manovra vale meno
+          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q: { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu, ra } }); // chi deve ancora finire una manovra vale meno
         }
       }
       front = [...best.values()].map(o => o.q);
@@ -73,6 +74,8 @@
     return null;
   }
   // cancello della boa: semiretta dalla boa verso mk.out, passata dal lato giusto (da a ≥ 0 ad a < 0, come roundCheck) ad almeno ROT_BOA m
+  const ROT_LONTANO = 8; // 1.3.23: metri oltre i quali un passo (al massimo circa 5 m in 1 s) non può tagliare la semiretta della boa
+  const ROT_PEZZI = 8; // 1.3.23: pezzi in cui si guarda un passo vicino alla boa (ipotesi nostra: con passi fino a 2,5 m, circa 30 cm)
   const ROT_OLTRE = 0.02; // 1.3.23: frazione del passo oltre la semiretta in cui finisce il lato (pochi cm), ipotesi nostra: un punto proprio sulla linea, se la rotta poi torna indietro, per roundCheck non ha girato
   const rotCancBoa = mk => { const ux = Math.sin(mk.out * D2R), uy = -Math.cos(mk.out * D2R), oltre = rot.giroLibero ? 0 : ROT_OLTRE; const c = (p, q) => { // 1.2.40: ux e uy una volta sola
     const cp = (p.x - mk.x) * uy - (p.y - mk.y) * ux, cq = (q.x - mk.x) * uy - (q.y - mk.y) * ux; // > 0: a destra della semiretta guardando lungo out
@@ -80,17 +83,22 @@
     const f = cp / (cp - cq), ax = p.x + (q.x - p.x) * f - mk.x, ay = p.y + (q.y - p.y) * f - mk.y;
     return ax * ux + ay * uy >= ROT_BOA ? Math.min(1, f + oltre) : null;
   };
-    // 1.3.23 (voce 50, docs/PROPOSTA-ROTTA-GIRO-BOA.md; via di Ale del 20 nov): non si fa il passo che taglia la semiretta della boa nel verso sbagliato (da bearing-out < 0
-    // a ≥ 0, come il -1 di roundCheck in js/gioco.js), con il punto di taglio dalla parte di out o dentro 1,5 m dalla boa (roundCheck salta i punti entro 1,5 m: un passaggio
-    // lì dentro gli arriva come -1 fra i punti prima e dopo). Il controllo è sul punto di taglio e non sugli estremi del passo: a 1 s di passo, vicino alla boa, gli estremi
-    // possono stare oltre i 90° mentre il gioco, a 60 passi al secondo, vede il passaggio. Prima la rotta poteva passare dal lato sbagliato e poi da quello giusto (oss. 134 e 137).
-    // Un ramo che è già passato dal lato giusto vicino alla boa (sotto i ROT_BOA m del cancello, ma per roundCheck la boa è girata: c.giusto, segnato in .giu) non ha più
-    // divieti: per il gioco quella boa è fatta (prima stesura senza .giu: rotte valide fino a 7,5 s più lente, R3 della proposta, 20 nov).
-    // rot.giroLibero = true lo spegne; dalla 1.3.23 è spento di base (vedi rot): tests/misura_giro_boa.py lo accende per misurare
-    const taglio = (p, q, verso) => { const cp = (p.x - mk.x) * uy - (p.y - mk.y) * ux, cq = (q.x - mk.x) * uy - (q.y - mk.y) * ux;
-      if (verso > 0 ? !(cp > 0 && cq <= 0) : !(cp <= 0 && cq > 0)) return false; const f = cp / (cp - cq);
-      return (p.x + (q.x - p.x) * f - mk.x) * ux + (p.y + (q.y - p.y) * f - mk.y) * uy >= -1.5; };
-    if (!rot.giroLibero){ c.vieta = (p, q) => taglio(p, q, 1); c.giusto = (p, q) => taglio(p, q, -1); }
+    // 1.3.23 (voce 50, docs/PROPOSTA-ROTTA-GIRO-BOA.md; via di Ale del 20 nov): la regola di roundCheck (js/gioco.js) seguita lungo ogni ramo della rotta. Ogni punto si ricorda
+    // (.ra) l.ultimo stato visto fuori da 1,5 m dalla boa: bearing-out < 0, ≥ 0, oppure oltre i 90° da out. Il passo che va da < 0 a ≥ 0 è un giro sbagliato e non si fa,
+    // finché il ramo non è già passato da ≥ 0 a < 0 (.giu: per il gioco la boa è girata, anche sotto i ROT_BOA m del cancello). Entro 6 m dalla boa il passo si guarda in ROT_PEZZI
+    // pezzi (il gioco controlla 60 volte al secondo). Prima stesura (20 nov): solo il punto di taglio, e vietava anche i passaggi sopra la boa entrati dal lato interno,
+    // che il gioco non conta: rotte già valide fino a 7,5 s più lente (R3). rot.giroLibero = true lo spegne (tests/misura_giro_boa.py, controprova).
+    // .ra in un numero: 0 nessuno stato ancora, 1 oltre i 90°, 2 bearing-out < 0, 3 ≥ 0, 4 «dalla posizione» (punto lontano: lo stato è quello del punto stesso);
+    // c.passo restituisce .ra del punto nuovo più 8 (giro sbagliato) e 16 (giro giusto). c.lontano: il punto è a più di ROT_LONTANO m dalla boa e dalla retta della
+    // semiretta, quindi nessun passo che parte da lì (al massimo pochi metri) può fare un giro: il controllo si salta (dopo la prima stesura, +45% di tempo di calcolo)
+    const stato = (dx, dy) => dx * dx + dy * dy < 2.25 ? 0 : dx * ux + dy * uy < 0 ? 1 : dx * uy - dy * ux > 0 ? 2 : 3;
+    if (!rot.giroLibero) c.lontano = p => { const px = p.x - mk.x, py = p.y - mk.y, cr = px * uy - py * ux;
+      return (cr > ROT_LONTANO || cr < -ROT_LONTANO) && px * px + py * py > (6 + ROT_LONTANO) * (6 + ROT_LONTANO); };
+    if (!rot.giroLibero) c.passo = (p, q) => { const px = p.x - mk.x, py = p.y - mk.y; let ra = p.ra === 4 ? stato(px, py) : p.ra || 0, neg = 0, pos = 0;
+      const qx = q.x - mk.x, qy = q.y - mk.y, N = Math.min(px * px + py * py, qx * qx + qy * qy) < 36 ? ROT_PEZZI : 1;
+      for (let j = 1; j <= N; j++){ const f = j / N, st = stato(px + (qx - px) * f, py + (qy - py) * f); if (!st) continue;
+        if (ra === 2 && st === 3 && !pos) neg = 8; else if (ra === 3 && st === 2) pos = 16; ra = st; } /* un -1 dopo il +1 dello stesso passo non conta: la boa è già girata */
+      return ra | neg | pos; };
     return c; };
   const rotCancArrivo = () => (p, q) => { const [px, py] = toWF(p.x, p.y), [qx, qy] = toWF(q.x, q.y);
     if (!(py < 0 && qy >= 0)) return null; const f = -py / (qy - py), x = px + (qx - px) * f; return Math.abs(x) <= LINE_HALF ? f : null; };
