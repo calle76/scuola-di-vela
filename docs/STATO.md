@@ -2,23 +2,20 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 21 novembre 2026, sessione in autonomia mentre Ale era fuori (gioco alla **1.3.31**, tag `v1.3.31`, su `main`).*
+*Aggiornato: 20-21 novembre 2026, notte, sessione in autonomia (gioco alla **1.3.31**, tag `v1.3.31`; questa sessione ha toccato solo collaudi e documenti, non `index.html` né `js/`).*
 
 ## Dove siamo
 
-- **Il gioco:** Scuola chiusa come contenuti. Deriva nel gioco, non ancora «finita»: lezioni 21-25, torneo (ora **3 regate lunghe, circa 10 minuti**), stagione, finale, sponsor dall'entrata in Deriva, regole 15 e 16, cono d'ombra, raffiche come zone sull'acqua, rotta ottimale, Coach nella moviola **e durante la regata**. Com'è fatto: `IL-GIOCO.md`.
-- **Versioni del 20-21 nov:**
-  - 1.3.23: Coach contento, orologio dei giri nel torneo, carriera e attestato in un file, benvenuto e sponsor all'entrata in Deriva;
-  - 1.3.24: rotta ottimale e lato della boa;
-  - 1.3.25: lezione «da rivedere», lezione 11 «In regata»;
-  - 1.3.26: regate lunghe;
-  - 1.3.27: rotta ottimale nelle regate lunghe sempre calcolata e più veloce;
-  - 1.3.28: Coach durante la regata;
-  - 1.3.29: triangolo delle regate lunghe da 440 m, collaudi ripassati in Chromium e Firefox;
-  - 1.3.30: lezione 11, la prua media è una prima stima e si aggiorna; il Coach in regata conosce il vento medio (detto);
-  - 1.3.31: frase del Coach sull'ultimo lato resa neutra.
-- **Da sapere:** con `#collaudo` le regate restano corte, quindi i collaudi vecchi non provano le regate lunghe (lo fanno `collaudo_percorso_lungo`, `collaudo_coach --lungo`, `collaudo_coach_regata`). La rotta «in assoluto» (tasto V) su una regata lunga ci mette ancora 9-10 s. I file «intera» delle regate pesano circa 2 MB: decide Ale (voce 66). Le frasi del Coach in regata: Ale le sta leggendo (21 nov).
-- **Collaudi:** lanciati qui in Chromium, col freno; Firefox per i collaudi nuovi e il giro completo su GitHub.
+- **Il gioco:** Scuola chiusa come contenuti. Deriva nel gioco, non ancora «finita»: lezioni 21-25, torneo (3 regate lunghe, circa 10 minuti), stagione, finale, sponsor, regole 15 e 16, cono d'ombra, raffiche come zone, rotta ottimale, Coach nella moviola e durante la regata. Com'è fatto: `IL-GIOCO.md`. Ultime versioni: 1.3.26 regate lunghe, 1.3.28 Coach in regata, 1.3.29 triangolo da 440 m, 1.3.30-1.3.31 lezione 11 e frase del Coach (`CHANGELOG.md`).
+- **Giro completo su GitHub (run 44804439764, sulla 1.3.31, Chromium e Firefox):** 5 pezzi su 8 rossi, ma **nessun difetto del gioco**: i fallimenti erano dei collaudi o già noti.
+  - **Nuovi, già corretti nei collaudi:** `orologio_giri` e `riquadro_bandiere` in Chromium («canvas contaminata»: dalla 1.3.28 la foto del Coach da file impedisce di leggere i pixel; riprodotto sul PC; ora spengono il Coach); `torneo --giocatore` (C7) in tutti e due i browser (aspettava 4 regate, dalla 1.3.26 sono 3); `coach (regate lunghe)` in tutti e due (cadeva quando la rotta ottimale non compare: ora conta il caso, K0, al più 2 su 20).
+  - **Non nuovi:** `suoni_si_sentono` sartiame in Chromium (2,0 contro «almeno 2»: già visto il 20 nov mattina, voci 8 e 18); T2b, E2, Q7, partenze, virate2, avversari_deriva come in `fallimenti_noti.txt`; `competizione`, `rotta`, `fasce`, `pilota_lezioni` da controllare come prima.
+  - **Da rivedere al prossimo giro:** `percorso_lungo` P4 in Firefox (bolina in raffica 42% contro soglia 40%); sul PC non si riproduce (29% Firefox, 32% Chromium). Soglia non cambiata.
+  - I rossi del giro del 20 nov mattina (`sponsor`, `deriva_superata`) ora sono verdi.
+- **Voce 66(c) fatta** per torneo, stagione, regole 15-16 e Coach (flag `--lungo`; numeri in `COLLAUDI.md`): tutto passa tranne **C11 R7, l'uscita dal menu in 3-6 s** nelle regate lunghe (soglia 2 s): causa letta in `torChiudi`, nuova voce **71**. Nella suite completa ci sono ora 3 collaudi in lungo.
+- **Proposte nuove (fermata 1, senza codice):** voci 67 (bandiere del via nei 3 minuti: prima va chiarito con Ale cosa non funziona), 68 (suggerimento del Coach visibile più a lungo), 69 (più espressioni del Coach). Voce 70 (volume dei suoni legato allo zoom): in lista, proposta da scrivere.
+- **Da sapere:** con `#collaudo` le regate restano corte, quindi i collaudi senza `--lungo` non provano le regate lunghe. La rotta «in assoluto» (V) su una regata lunga ci mette ancora 9-10 s. Le frasi del Coach in regata: Ale le sta leggendo.
+- **Collaudi:** lanciati qui in Chromium, col freno (picco 73 °C); Firefox per i collaudi nuovi e il giro completo su GitHub. I tentativi molto lunghi (circa 45 minuti) si interrompono: si spezzano (`--solo`).
 
 ## A inizio sessione
 
@@ -35,13 +32,13 @@
 
 ## Prossimi passi, quando tornano i crediti
 
-1. Dare i «via» con la lista di `DA-FARE.md` (64 e 54 fatti nella 1.3.23; ordine consigliato ora: 66 (collaudi portati alle regate lunghe, rotta «in assoluto» più veloce, decisione sui file), 49 regola 18, 4B rivali regate lunghe (prima la proposta `PROPOSTA-PERCORSO-LUNGO.md`), 49 regola 18, 4B rivali, 36 Allenamento, 42 Coach; leggeri: 55 registrazioni più ricche, 57 volto felice, 53 distacchi T2b). L'ordine lo decide Ale.
+1. Dare i «via» con la lista di `DA-FARE.md` (64 e 54 fatti nella 1.3.23; ordine consigliato ora: 71 (uscita lenta dalle regate lunghe), 66 (altri collaudi in lungo, rotta «in assoluto»), 67-69 (dopo le risposte di Ale), 49 regola 18, 4B rivali, 36 Allenamento, 42 Coach; leggeri: 55 registrazioni più ricche, 57 volto felice, 53 distacchi T2b). L'ordine lo decide Ale.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
 3. Regate nuove di Ale e Lucio nella cartella: leggerle (formato e cosa non contengono: voce 55).
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main --tags` (dopo ogni sessione; dalla 1.3.23 alla 1.3.29 sono da pushare).
+- **Push:** `git push origin main --tags` (dopo ogni sessione; dalla 1.3.23 alla 1.3.31 e i collaudi di questa notte sono da pushare).
 - **Chiedere a Lucio** per il finale dell'osservazione 135: «in quella regata (21:20) sei arrivato primo?» e a che secondo succede la situazione.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ogni due settimane circa e dopo regate nuove; a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Lo script copia anche i `stagione-*.json`; **non** copre i salvataggi del browser (carriera: voce 54).
 - **File sciolti nella radice del repo** (non tracciati): `stagione-*.json` (i vostri salvataggi; sono copiati dallo script), `Coach_*.png/jpeg` (gli originali; i jpg usati dal gioco sono in `img/`), `regata-…(1).txt` (duplicati identici: si possono cancellare). Decide Ale.
