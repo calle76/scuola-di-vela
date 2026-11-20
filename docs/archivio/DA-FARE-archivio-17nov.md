@@ -50,3 +50,4 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 50 | Rotta ottimale e lato della boa: fatta nella 1.3.24 (controllo acceso, R1-R3 passati anche su semi di conferma) |
 | 62 | Ripassi: lezione «da rivedere» (1.3.25) |
 | 63 | Regate lunghe in Deriva: fatte nella 1.3.26 (il seguito è la voce 66) |
+| 65 | Coach durante la regata: fatto nella 1.3.28 |

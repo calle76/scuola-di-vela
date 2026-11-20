@@ -19,6 +19,36 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.28 — Il Coach durante la regata (voce 65)
+
+Da dove viene: idea di Ale del 20 novembre («il coach che appare con diverse espressioni durante le lunghe regate per dare consigli e commenti»), risposta alle domande («se acceso suggerisce cosa sarebbe meglio fare», per coerenza con «Scuola di vela»; anche «scarso/buono»), via del 20 novembre. `docs/PROPOSTA-COACH-IN-REGATA.md`.
+
+- **Cosa fa.**
+  - **Dove e quando:** nelle regate di Deriva (torneo, stagione, finale, regate di Deriva; non negli esercizi), un riquadro in alto a sinistra sul mare col volto (contento, serio, arrabbiato) e una frase per 6 s. Si spegne nelle impostazioni («Il Coach durante la regata», visibile in regata).
+  - **Quanto parla:** al più un commento ogni 30 s, tranne partenza anticipata e penalità.
+  - **Di cosa:** solo tattica, con le lezioni da ripassare:
+    - la partenza (buona entro 3 s dallo sparo, in ritardo da 10 s, anticipata, ancora dietro la linea);
+    - le penalità e i giri (anche prima del via);
+    - il cono d'ombra (coperti per 8 s di bolina, con il nome di chi copre);
+    - il vento scarso di almeno 7° per 8 s, di bolina e a più di 80 m dalla boa («se oscilla, conviene virare», lezione 11);
+    - le posizioni guadagnate o perse alla boa;
+    - nell'ultimo lato la barca davanti a 1-10 s;
+    - l'obiettivo dello sponsor prima del via nelle tappe della carriera.
+  - **Registrazione:** ogni commento va nel file della regata come riga «C».
+- **Non tocca la regata:** legge lo stato e non lo cambia, senza numeri a caso. La parte che non riguarda le penalità guarda 4 volte al secondo.
+- **`collaudo_coach_regata.py` (nuovo, nel giro), 12 regate lunghe col pilota:**
+  - **P1:** 4-8 commenti per regata, mediana 4,5; nessuno a meno di 30 s, salvo penalità.
+  - **P2:** 61 commenti ricontrollati sullo stato della regata nell'istante in cui compaiono, 0 sbagliati. Per tipo: 28 scarso, 10 boa, 7 distacco, 7 partenza, 5 colpa, 2 giri, 1 cono, 1 anticipata.
+  - **P3:** nessun doppione con i messaggi del gioco. Vuol dire poco: in regata il gioco non ha suggerimenti su cono e scarso.
+  - **P4:** acceso e spento, arrivi identici al decimo in 3 regate su 3.
+  - **P5:** riquadro dentro la metà alta sinistra del mare, 0 px di eccesso.
+  - **P6:** costo fra −2% e +3%. Nella prima stesura, che guardava a ogni passo, era +4/+14%.
+  - **P7:** pagina senza `#collaudo`, 0 errori.
+  - **Finestra delle impostazioni:** nel caso peggiore (torneo, righe del cono e del Coach) 550 px, senza scorrere, in Chromium e Firefox.
+- **Tre correzioni durante il collaudo:** le penalità prima del via erano dette solo allo sparo (ora subito); una frase poteva dire «è a 0 s» (ora da 1 s); i commenti alla boa e sulla partenza buona passavano anche a meno di 30 s da un altro (ora no, come nella proposta).
+- **Da guardare con Ale:** il Coach parla soprattutto dello scarso (28 commenti su 61). Le frasi sono mie, prese dalle lezioni: vanno lette.
+- Non-regressione: `collaudo_registratore`, `collaudo_pannello` verdi.
+
 ## 1.3.27 — Rotta ottimale nelle regate lunghe: più veloce, e sempre calcolata (voce 66 a)
 
 - **Difetto vero trovato misurando (1.3.24-1.3.26):** in una regata lunga la rotta ottimale poteva venire **molto più lenta** (+83 s, seme 402 triangolo) o **non esserci affatto** (seme 403 bastone: «non si può calcolare»). Causa: le isocrone tengono un punto per settore, il più avanti. I rami arrivati oltre la boa dal lato sbagliato, che col controllo della 1.3.24 non possono più chiudere il giro, restavano lì e cacciavano dai settori le rotte giuste. Ora nel settore hanno un posto a parte (`c.sbagliato`). Nelle regate corte non cambia niente di misurabile: rimisurato il 50 sui semi 101-103, R1 0 su 120, R3 100%, massimo 0,05 s, calcolo +4,2%.

@@ -69,3 +69,7 @@ Durata del commento 6 s; distanza minima fra due commenti 30 s; soglie degli eve
 - Il Coach in regata, **se acceso, suggerisce cosa sarebbe meglio fare**: è coerente col titolo del gioco, «Scuola di vela» (insegna, non solo commenta). Quindi ogni frase della tabella diventa un consiglio («vira», «poggia per uscire dal cono», «fai i giri lontano dalle altre barche»), non un giudizio.
 - **«Scarso o buono»** (voce 48): era un aiuto a parte, una riga sotto il vento che dice se il vento gira a favore o contro. Ale: in gara può suggerirlo il Coach; in più va **migliorata la lezione** che lo spiega (lezione 11).
 - Quanto spesso parla: non deciso; resta la regola della proposta (al più uno ogni 30 s, tranne le penalità).
+
+## Esito (21 novembre 2026; versione 1.3.28)
+
+Fatto con le risposte di Ale: il Coach suggerisce cosa fare, anche lo «scarso». Quanto parla: regola della proposta (al più ogni 30 s). P1-P7 verdi (`collaudo_coach_regata.py`); numeri in `CHANGELOG.md` 1.3.28. Le frasi sono state scritte partendo dalle lezioni (non mostrate ad Ale prima del codice, come prevedeva il passo 1: vanno lette ora); la voce 48 («scarso/buono» come riga a parte) non serve più nelle regate di Deriva.

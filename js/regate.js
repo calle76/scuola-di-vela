@@ -1140,6 +1140,7 @@
     if (!R) return;
     const prevT = R.t; R.t += dt;
     if (R.segnali || R.giri) rqAggiorna();
+    crAggiorna(dt); /* 1.3.28: il Coach in regata (js/rotta.js), solo se acceso e nelle regate di Deriva */
     // segnali di partenza (versione accorciata a un minuto)
     const sig = (at, text) => { if (prevT < at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
     if (R.segnali){ // 1.0.65: i messaggi seguono le bandiere (le soglie con <=, perché il primo passo parte esattamente dal tempo dell'avviso)
@@ -1962,6 +1963,7 @@
     if (g) offscreenArrow(v, g);
     linePill(v, R.pin, R.cb, R.t < 0 ? "Linea di partenza" : "Arrivo", g && g.kind !== "mark" ? g : null, 0, 4);
     drawRiquadro(); // 1.2.17: per ultimo, sopra la scritta della linea e la freccia (la scritta «Arrivo» copriva l'orologio dei giri)
+    crDisegna(); // 1.3.28: il Coach in regata, sotto il riquadro delle bandiere
   }
   // ---- aiuti a schermo e fantasma (valgono in tutte le modalità) ----
   // freccia curva sulla prua: da che parte sta girando davvero la barca

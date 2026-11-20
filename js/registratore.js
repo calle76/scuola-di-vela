@@ -262,6 +262,7 @@
     "#   E sconta inizio|fine   il giocatore comincia o smette di scontare la penalità, e lascia strada a chi non la sconta (regola 21.2, regata dei giri, 1.0.66)",
     "#   E boa_toccata N giri da fare   una boa toccata (regata dei giri, 1.0.62, regola 31): un giro in più di debito",
     "#   A …   il Coach (1.3.14), in fondo all'ultimo pezzo, solo se a regata finita si apre la «Rotta ottimale»: «A - volto contento|serio|arrabbiato»; «A - rotta testo» la riga dei tempi sotto la moviola;",
+    "#   C t volto frase   il Coach durante la regata (1.3.28): un suggerimento, col volto (contento, serio, arrabbiato); solo nelle regate di Deriva e se acceso",
     "#         «A t tipo peso testo» una riga per frase mostrata, nell'ordine: t il momento della frase (secondi di regata), tipo clou|affollato|coperto|boa|partenza|scuffia|penalita|bene, peso in secondi (serve solo a ordinarle); «A - nessuna frase» se non ne mostra",
   ];
   const regPezzi = []; // {id, reg, n, fine, quando, nome, file, testo}: in memoria e in IndexedDB

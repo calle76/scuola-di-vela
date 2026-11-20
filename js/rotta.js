@@ -352,6 +352,81 @@
     riv.pos = rivPosDi(rot.res.coach[+b.dataset.k].t - COA_ANT); riv.playing = true; rivMostra();
     if (modo === "carriera" && !progress.coachVisto){ progress.coachVisto = true; saveProgress(); } }; // 1.3.5: un momento rivisto col coach (Esperienza di Deriva)
 
+  // ---- coach in regata (1.3.28, voce 65, docs/PROPOSTA-COACH-IN-REGATA.md; idea e via di Ale del 20 novembre 2026: «se acceso, suggerisce cosa sarebbe meglio fare») ----
+  // Solo nelle regate di Deriva (R.r1516: torneo, stagione, finale, regate di Deriva; non negli esercizi), con opt.coachReg. Un volto e una frase in alto a sinistra sul mare,
+  // per CR_DUR s; al più un commento ogni CR_PAUSA s, tranne partenza anticipata e penalità. Dice solo cose che il gioco sa adesso. Legge lo stato della regata e non lo cambia,
+  // senza numeri a caso: la regata è identica col Coach acceso o spento (P4). Ogni commento va nel file della regata come riga «C». Soglie: ipotesi nostre
+  const CR_OGNI = 0.25, CR_DUR = 6, CR_PAUSA = 30, CR_COP = 8, CR_SCARSO = 7, CR_SCARSO_T = 8, CR_BOA_LONTANA = 80, CR_DIST = 10, CR_W = 330;
+  const crImg = {};
+  const crVolto = u => crImg[u] || (crImg[u] = Object.assign(new Image(), { src: "img/coach-" + u + ".jpg" }));
+  const crNome = b => (FLEET_LOOK.some(l => l.name === b.name) ? "la " : "") + (b.etich || b.name);
+  const crAttivo = () => !!(opt.coachReg && R && R.r1516 && !R.es);
+  function crDi(umore, testo, forza){
+    const c = R.cr; if (!forza && R.t - c.ult < CR_PAUSA) return false;
+    c.ult = R.t; c.cur = { t0: R.t, umore, testo }; c.log.push({ t: +R.t.toFixed(2), umore, testo });
+    if (typeof ses !== "undefined" && ses.on) sesLine("C " + sesT() + " " + umore + " " + testo);
+    return true;
+  }
+  function crAggiorna(dt){
+    if (!crAttivo()) return;
+    const me = R.boats[0], c = R.cr || (R.cr = { ult: -1e9, cur: null, log: [], part: false, cop: 0, sc: 0, leg: 0, pos: null, need: R.need || 0, done: R.done || 0, pp: 0, pen: 0, vicino: false, sponsor: false });
+    if (me.fin !== null || me.dnf) return;
+    if (!c.sponsor && R.tor && R.t >= -50){ c.sponsor = true; /* l'obiettivo dello sponsor, nelle tappe della stagione in carriera */
+      const D = modo === "carriera" && progress.sponsor && progress.sponsor.c, S = progress.stagione;
+      if (D && S && tor && tor.st !== undefined && stNaz(S) === (D.circ === "naz")) crDi("serio", "Per lo sponsor: " + D.ob.map(x => spTesto(x)).join(" e ") + ". Ogni regata conta."); }
+    // penalità: sempre (forza), anche prima del via
+    if ((R.need || 0) > c.need){ crDi("arrabbiato", "Penalità: fai i giri subito, lontano dalle altre barche, ognuno con una virata e una strambata (lezione 20).", true); }
+    if ((R.done || 0) > c.done && (R.done || 0) >= (R.need || 0) && (R.need || 0) > 0){ crDi("contento", "Giri fatti: ora riparti e riprendi velocità.", true); }
+    if ((me.pp || 0) > c.pp) crDi("arrabbiato", "Contatto con colpa: un punto in più. Ripassa chi ha la precedenza (lezioni 12-15).", true);
+    if ((me.pen || 0) > c.pen) crDi("arrabbiato", "Contatto con colpa: " + Math.round(me.pen - c.pen) + " s di penalità. Ripassa chi ha la precedenza (lezioni 12-15).", true);
+    c.need = R.need || 0; c.done = R.done || 0; c.pp = me.pp || 0; c.pen = me.pen || 0;
+    if (!c.part && R.t >= 0){
+      if (me.ocs){ c.part = true; crDi("arrabbiato", "Sei partito prima del via: torna dietro la linea e riparti (lezione 17).", true); }
+      else if (me.leg >= 1){ c.part = true; const tl = me.tLinea ?? R.t;
+        if (tl <= 3) crDi("contento", "Bella partenza: sulla linea allo sparo. Ora cerca vento libero.");
+        else if (tl >= 10) crDi("serio", "Partenza in ritardo: non restare dietro alle altre, cerca vento libero (lezione 18)."); }
+      else if (R.t > 10 && !me.ocs){ c.part = true; crDi("serio", "Sei ancora dietro la linea: taglia subito, dal punto più libero."); } }
+    if (R.t < 0) return;
+    if ((c.acc = (c.acc || 0) + dt) < CR_OGNI) return; dt = c.acc; c.acc = 0; /* il resto 4 volte al secondo (P6: a ogni passo costava il 4-14% della simulazione) */
+    if (me.leg < 1) return;
+    const w = windAt(me.S.x, me.S.y), a = norm180(w.twd - me.S.h), bolina = Math.abs(a) >= 30 && Math.abs(a) <= 75 && !S.capsized;
+    // cono d'ombra
+    if (R.ombra && bolina && (me.cop || 0) > 0.10 && me.copDa){ /* c.cop: secondi di copertura di fila; -1 = già detto per questa copertura */
+      if (c.cop >= 0){ c.cop += dt; const n = crNome(me.copDa);
+        if (c.cop >= CR_COP && crDi("serio", "Sei nel cono d'ombra " + (n.startsWith("la ") ? "del" + n.slice(1) : "di " + n) + ": vira o poggia per avere vento libero.")){ c.cop = -1; c.copDa = me.copDa; } } }
+    else c.cop = 0;
+    // scarso: lontano dalla boa, di bolina
+    const g = R.marks[me.leg - 1], lontana = g ? Math.hypot(g.x - me.S.x, g.y - me.S.y) > CR_BOA_LONTANA : false;
+    const sc = -Math.sign(a) * norm180(w.twd - env.twd);
+    if (bolina && lontana && sc >= CR_SCARSO){ c.sc += dt; if (c.sc >= CR_SCARSO_T && crDi("serio", "Il vento ti è scarso di " + Math.round(sc) + "°: se oscilla, conviene virare (lezione 11).")) c.sc = -60; }
+    else if (c.sc > 0) c.sc = 0; else if (c.sc < 0) c.sc = Math.min(0, c.sc + dt);
+    // boa girata: posizioni
+    const pos = ranking().indexOf(me) + 1;
+    if (c.pos === null) c.pos = pos;
+    if (me.leg > c.leg){ if (c.leg >= 1){ const d = c.pos - pos;
+        if (d > 0) crDi("contento", "Boa girata: hai guadagnato " + (d === 1 ? "un posto" : d + " posti") + ", sei " + pos + "°. Ora difendi: resta fra gli avversari e la prossima boa.");
+        else if (d < 0) crDi("serio", "Alla boa hai perso " + (-d === 1 ? "un posto" : -d + " posti") + ": sei " + pos + "°. Nel prossimo lato cerca vento libero."); }
+      c.leg = me.leg; c.pos = pos; }
+    // ultimo lato: la barca davanti vicina
+    if (!c.vicino && me.leg === R.marks.length + 1){ const dav = R.boats.filter(b => !b.me && b.fin === null && !b.dnf).map(b => [b, distacco(b)]).filter(([, s]) => s !== null && s >= 1 && s <= CR_DIST).sort((x, y) => x[1] - y[1])[0];
+      if (dav){ c.vicino = true; const n = crNome(dav[0]); crDi("contento", n.charAt(0).toUpperCase() + n.slice(1) + " è a " + Math.round(dav[1]) + " s: puoi prenderla, ogni manovra conta."); } }
+  }
+  function crDisegna(){
+    R && (R.crRect = null); if (!crAttivo() || !R.cr || !R.cr.cur) return;
+    const c = R.cr.cur, eta = R.t - c.t0; if (eta > CR_DUR || eta < 0) return;
+    const alfa = Math.min(1, (CR_DUR - eta) / 0.8, eta / 0.3 + 0.2), pad = 8, F = 48, x = RQ_X, y = R.rqRect ? R.rqRect[1] + R.rqRect[3] + 8 : RQ_YS;
+    ctx.save(); ctx.globalAlpha = alfa; ctx.font = font(600, 14);
+    const parole = c.testo.split(" "), righe = []; let r = "";
+    for (const p of parole){ const t = r ? r + " " + p : p; if (ctx.measureText(t).width > CR_W - F - 3 * pad && r){ righe.push(r); r = p; } else r = t; }
+    if (r) righe.push(r);
+    const h = Math.max(F + 2 * pad, righe.length * 19 + 2 * pad), w = CR_W;
+    rqSfondo(x, y, w, h, false);
+    const im = crVolto(c.umore); if (im.complete && im.naturalWidth) ctx.drawImage(im, x + pad, y + pad, F, F);
+    ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    righe.forEach((t, k) => ctx.fillText(t, x + 2 * pad + F, y + pad + 10 + k * 19));
+    ctx.restore(); R.crRect = [x, y, w, h];
+  }
+
   // ---- schermata ----
   function rotTesto(ott, sp){ // 1.3.3: solo la legenda e i tempi; il commento lo fa il coach (coaFrasi)
     const me = R.boats[0], fmt = s => rivTempo(s), tu = me.fin !== null && !me.dsq ? me.fin - rot.barche[0].taglio.t : null, ot = ott.tempo - ott.t0;
