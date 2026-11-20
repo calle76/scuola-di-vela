@@ -49,3 +49,4 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 61 | **Giri di penalità: manca l'orologio** che invita a farli e li conta (segnalato da Ale il 17 nov, con immagine). Da capire se manca sempre o solo in certi casi (Deriva, torneo, Scuola) | oss. da scrivere; `PROPOSTA-GIRI-GIOCATORE.md` | Opus |
 | 50 | Rotta ottimale e lato della boa: fatta nella 1.3.24 (controllo acceso, R1-R3 passati anche su semi di conferma) |
 | 62 | Ripassi: lezione «da rivedere» (1.3.25) |
+| 63 | Regate lunghe in Deriva: fatte nella 1.3.26 (il seguito è la voce 66) |

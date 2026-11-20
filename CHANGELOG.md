@@ -19,6 +19,29 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.26 — Regate lunghe in Deriva: circa 10 minuti, tre regate per torneo, raffiche come zone (voce 63)
+
+Da dove viene: `docs/PROPOSTA-PERCORSO-LUNGO.md` e le risposte di Ale del 20 novembre (solo Deriva; 9-11 minuti; tre regate per tappa e per torneo; «VIA col lavoro autonomo»).
+
+- **Lati:** nel torneo, nella stagione e nella finale la bolina del bastone passa da 140 a **560 m** e il lato del triangolo da 140 a **460 m** (`LATO_BAS`, `LATO_TRI`). Misurati col pilota per stare a metà dei 9-11 minuti. La Scuola e le altre regate di Deriva (salti di vento, giri) non cambiano.
+- **Tre regate per torneo** (`TOR_N_LUNGO`): bastone a punti, triangolo a punti, bastone coi giri. **Con tre regate niente scarto**, che resta dalla quarta regata (scelta mia, di solito lo scarto parte da 4 regate: da guardare con Ale). Ogni torneo si ricorda come è nato (`T.n`, `T.lungo`): **un torneo già cominciato resta di 4 regate corte**. Testi: lezione 21, riepilogo, glossario «Scarto», riquadro del torneo, menu, benvenuto.
+- **Raffiche come zone sull'acqua** nelle regate lunghe (`gustZona`): stesse forze di oggi, nessun numero della barca cambiato. Ma raggio 80-160 m invece di 9-20, vita 2-4 minuti invece di 40-60 s, una ogni circa 7 volte l'intervallo di oggi, sparse su tutto il campo (3 volte più larghe le posizioni, 150-300 m sopravento). Stesse estrazioni a caso nello stesso ordine: altrove il gioco non cambia.
+- **Misure (`tests/misura_percorso_lungo.py`, nuova: pilota sul giocatore, rivali «medio», col freno; il pilota rifà i vostri numeri: oggi 3,0-3,5 minuti e raffiche di 2 s sulla barca):**
+  - **semi di scelta 1-10, tre prove** (440/340 m: 8,5 min, raffiche troppo rade; 520/420: 9,4; 560/460 con raffiche più grandi: 9,8);
+  - **conferma sui 101-110:** durata 10,3 e 10,0 minuti; virate dopo il via 10 e 8 (oggi 4); in raffica il 39-40% del tempo di bolina (oggi 6%); una raffica resta sulla barca 22-26 s (oggi 2).
+  - **Ritocco dichiarato dopo aver visto i numeri:** il 40% era sul bordo della soglia, quindi intervallo da 6 a 7. **Riconferma sui 301-310, mai usati:** 10,5 e 10,7 min; virate 11 e 9; in raffica 28-30%; raffica sulla barca 21 e **17 s**.
+- **Soglie della proposta non raggiunte (dette, non abbassate):**
+  - **velocità di bolina in raffica:** +0,2/+0,6 nodi contro la soglia di +0,6 (oggi +0,1/+0,3). La barca in raffica sbanda, e il pilota lasca e orza invece di accelerare; la fisica non si tocca;
+  - **durata di una raffica sulla barca:** 17-26 s secondo i semi, contro la soglia di 20;
+  - **L5:** la rotta ottimale a fine regata lunga ci mette **3,3-4,1 s** su questo PC (soglia 3), quella in assoluto (tasto V) 13,5-14,9 s, e intanto la pagina è ferma;
+  - **L7:** il file della regata sarà di circa 2-2,5 MB (stima dai file di oggi: 0,7-0,9 MB per 3-4 minuti), contro la soglia di 1 MB.
+- **L4, rivali:** a parità di minuti meno penalità (da 3,0-3,6 a 0,5-1,1 ogni 10 minuti) e meno secondi da fermi; nessuna barca senza arrivare in 40 regate (conferma). Una non arrivata in 10 triangoli sui semi 301-310. «Oltre la layline» non misurato.
+- **L6:** la boa a 400 m fuori schermo ha la freccia con la distanza (schermata guardata).
+- **Collaudi:** con `#collaudo` le regate restano corte, come le istruzioni e il benvenuto: i ~40 collaudi scritti per le regate da 3 minuti restano validi così, ma **non provano le regate lunghe**. Vanno portati uno per volta (voce nuova in `DA-FARE.md`). `collaudo_percorso_lungo.py` (nuovo, nel giro) le accende: P1-P5 verdi, compreso un torneo lungo intero e la pagina senza `#collaudo`.
+  - Non-regressione verde: `polare.js` e `raffiche_e_virate.js` identici, `impronta1b.js` OK, `collaudo_torneo --veloce`, `collaudo_stagione`, `collaudo_sponsor`, `collaudo_deriva_superata`, `collaudo_finale`, `collaudo_menu_livelli`, `collaudo_carriera_esame`.
+  - Questi ultimi cinque, col benvenuto della 1.3.23, si bloccavano nelle pagine senza `#collaudo`: ora nei loro salvataggi di prova il benvenuto risulta già visto (`dvBenvenuto`).
+- **Difetto vecchio trovato dal collaudo nuovo:** a torneo finito, cambiare nelle impostazioni il livello degli avversari o il tempo di partenza dava «Errore interno», perché cercava la regata del torneo che non c'è più. Corretto.
+
 ## 1.3.25 — Lezione «da rivedere» dopo un ripasso sbagliato (62), lezione 11 in regata
 
 Da dove viene: risposte di Ale del 20 novembre (62: «la scelta più semplice»; lezione su scarso e buono da migliorare).

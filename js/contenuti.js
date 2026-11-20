@@ -577,19 +577,19 @@
   const LAY_ES_M = 80;
   const LE1 = [
     { title: "Una serie di regate", ...PAUSE, zoom: 2,
-      text: ["Il torneo è una serie di quattro regate contro gli stessi rivali. Ogni regata dà dei punti, e alla fine si sommano.",
+      text: ["Il torneo è una serie di tre regate contro gli stessi rivali (dalle regate lunghe di Deriva; prima erano quattro). Ogni regata dà dei punti, e alla fine si sommano.",
              "Si usano i <em>punti bassi</em>: vince chi ha meno punti. I punti crescono dal primo all'ultimo: 1 al primo, 2 al secondo, e così via. Chi non arriva o si ritira prende i punti del numero delle barche più uno: con quattro barche, 5 (regolamento, appendice A)."] },
     { title: "Lo scarto", ...PAUSE, zoom: 2,
-      text: ["Finite le quattro regate, a ognuno si toglie il punteggio peggiore: è lo <em>scarto</em> (appendice A). Una regata andata male si può recuperare; due no.",
-             "Nella classifica del torneo lo scarto si vede fra parentesi."] },
+      text: ["Nelle serie più lunghe, finite le regate, a ognuno si toglie il punteggio peggiore: è lo <em>scarto</em> (appendice A). Una regata andata male si può recuperare; due no.",
+             "In questo gioco lo scarto c'è dalla quarta regata: il torneo di tre regate non ne ha, e conta tutto. Quando c'è, nella classifica si vede fra parentesi."] },
     { title: "Penalità sul punteggio e giri", ...PAUSE, zoom: 2,
       text: ["Nelle regate 1 e 2 del torneo un contatto con colpa non costa tempo: costa punti in più in quella regata. È la <em>penalità sul punteggio</em> (regola 44.3): una parte dei punti di chi non arriva, con quattro barche 1 punto. Nella classifica la segna un asterisco.",
-             "Nelle regate 3 e 4 si fanno invece i giri di penalità, come nella lezione 20. Chi arriva senza averli fatti è squalificato e prende i punti di chi non arriva."] },
+             "Nella regata 3 si fanno invece i giri di penalità, come nella lezione 20. Chi arriva senza averli fatti è squalificato e prende i punti di chi non arriva."] },
     { title: "La finestra d'arrivo", ...PAUSE, zoom: 2,
       text: ["Le istruzioni di una regata dicono anche entro quanto tempo bisogna arrivare dopo la prima barca: è la <em>finestra d'arrivo</em>. Chi arriva dopo non si classifica, e prende i punti di chi non arriva.",
              "Nel gioco la finestra è metà del tempo della prima, contata dal suo arrivo: se la prima arriva in 10 minuti, hai 5 minuti in più. È una scelta del gioco: in una regata vera il numero lo scrivono le istruzioni."] },
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
-      text: ["Punti bassi: vince chi ne ha di meno. Dopo la quarta regata si scarta la peggiore. Contatto con colpa: un punto in più nelle regate 1 e 2, due giri nelle 3 e 4. Fuori dalla finestra d'arrivo non ti classifichi."] }
+      text: ["Punti bassi: vince chi ne ha di meno. Con tre regate niente scarto (dalla quarta si scarta la peggiore). Contatto con colpa: un punto in più nelle regate 1 e 2, due giri nella 3. Fuori dalla finestra d'arrivo non ti classifichi."] }
   ];
   const LE2 = [
     { title: "Segnare un momento", ...PAUSE, zoom: 2,
@@ -776,7 +776,7 @@
     // 1.3.1: le lezioni di Deriva (livello: "deriva"): senza esame; fuori da GRUPPI, quindi fuori da meriti, esame e «di 25 completate» della Scuola
     { name: "Lezione 21", title: "Come funziona il torneo", steps: LE1, livello: "deriva", desc: "Punti bassi, scarto, penalità sul punteggio e finestra d'arrivo: le regole del torneo nel gioco.",
       quiz: [["Nel torneo, chi vince?", "Chi ha meno punti", ["Chi ha più punti", "Chi vince l'ultima regata", "Chi ha vinto più regate"], "Si usano i punti bassi: 1 al primo, 2 al secondo, e vince chi ne ha di meno."],
-             ["Quattro barche. Nelle quattro regate arrivi 2°, 1°, 4° e 3°. Quanti punti hai, con lo scarto?", "6", ["10", "7", "4"], "Lo scarto toglie il punteggio peggiore, il 4: restano 2 + 1 + 3 = 6."],
+             ["Quattro barche, una serie di quattro regate con lo scarto. Arrivi 2°, 1°, 4° e 3°. Quanti punti hai?", "6", ["10", "7", "4"], "Lo scarto toglie il punteggio peggiore, il 4: restano 2 + 1 + 3 = 6."],
              ["Nella regata 1 del torneo tocchi un'altra barca e la colpa è tua. Che cosa succede, con quattro barche?", "Prendi 1 punto in più in quella regata", ["15 secondi in più", "Sei squalificato dal torneo", "Niente"], "Nelle regate 1 e 2 vale la penalità sul punteggio (regola 44.3): con quattro barche, 1 punto."],
              ["Arrivi molto dopo la prima barca, oltre la finestra d'arrivo. Che punti prendi?", "Quelli di chi non arriva", ["Quelli del tuo posto", "Zero", "Uno in più dell'ultimo arrivato"], "Fuori dalla finestra d'arrivo non ti classifichi: prendi i punti di chi non arriva."]] },
     { name: "Lezione 22", title: "Rivedi la tua regata", steps: LE2, livello: "deriva", desc: "Il tasto O, Rivedi, la rotta ottimale e le regate registrate. Esercizio in regata.",
@@ -989,7 +989,7 @@
     ["Sbandamento", "L'inclinazione laterale della barca spinta dal vento.", "Lezione 8"],
     ["Scarroccio", "Lo scivolamento laterale della barca spinta dal vento, che la deriva riduce ma non annulla.", "Lezione 1"],
     ["Scarso", "Di bolina, il vento è scarso quando gira verso la prua: per restare di bolina devi poggiare. Con il vento che oscilla, di bolina si vira sugli scarsi.", "Lezione 11"],
-    ["Scarto", "In una serie di regate, il punteggio peggiore di ognuno che non si conta (regolamento, appendice A). Nel torneo del gioco si toglie dopo la quarta regata.", "Lezione 21"],
+    ["Scarto", "In una serie di regate, il punteggio peggiore di ognuno che non si conta (regolamento, appendice A). Nel gioco si toglie dalla quarta regata: il torneo di tre regate non ce l'ha.", "Lezione 21"],
     ["Scotta", "La cima con cui si regola la vela.", "Lezione 1"],
     ["Scuffiare", "Rovesciarsi: succede alle derive quando lo sbandamento diventa eccessivo.", "Lezione 8"],
     ["Segnavento", "La piccola freccia gialla in cima all'albero: la punta indica da dove arriva il vento apparente (per questo sembra opposta alla freccia gialla grande «apparente», che arriva dal mare e punta verso la barca).", "Lezione 4"],

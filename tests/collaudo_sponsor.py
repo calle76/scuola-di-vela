@@ -18,7 +18,7 @@ BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
-BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}}
+BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}, "dvBenvenuto": "2026-11-15"}   # 1.3.23: il benvenuto in Deriva già visto (lo controlla collaudo_carriera_file)
 fail, casi = [], {}
 def chk(parte, ok, testo):
     casi[parte] = casi.get(parte, 0) + 1

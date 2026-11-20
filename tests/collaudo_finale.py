@@ -45,7 +45,7 @@ async def main():
         print(f"F1: {sum(x[0] and x[1] for x in r)} su {len(r)} finali coi primi 5; posti del giocatore nel nazionale {sorted({x[2] for x in r})}; col diritto {sum(x[2] <= 3 for x in r)}", flush=True)
         chk("F1", len({x[2] for x in r}) >= 5, "F1 il metro: posti del giocatore abbastanza diversi")
         await ctx.close()
-        BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}}
+        BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}, "dvBenvenuto": "2026-11-15"}   # 1.3.23: il benvenuto in Deriva già visto (lo controlla collaudo_carriera_file)
         for modo, salv, att in (("carriera", BREV, False), ("carriera", {**BREV, "finale": True, "finaleRivali": ["Chiara Benedetti", "Andrea Tosi", "Federica Marchi", "Luca Ravasi", "Anna Corradini"]}, True), ("libero", None, True)):
             ctx, q = await pagina(modo, salv)
             await q.click("#goTor"); await q.wait_for_timeout(200)

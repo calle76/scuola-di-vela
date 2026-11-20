@@ -23,7 +23,7 @@ def chk(parte, ok, testo):
 # carriera col libretto al massimo e l'attestato (stesse chiavi di collaudo_libretto.py): il caso più alto del menu della carriera
 PIENA = {"done": {**{f"l{i}": True for i in range(20)}, **{f"m{i}": True for i in range(5)}}, "best": {}, "clean": {}, "quiz": {},
          "race": {"r0.4:esperti": {"pos": 1, "n": 4, "pulita": True}, "r1.4:esperti": {"pos": 1, "n": 4, "pulita": True}},
-         "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}}
+         "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}, "dvBenvenuto": "2026-11-15"}   # 1.3.23: il benvenuto in Deriva già visto (lo controlla collaudo_carriera_file)
 
 async def main():
     async with async_playwright() as p:

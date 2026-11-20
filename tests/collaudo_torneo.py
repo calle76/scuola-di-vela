@@ -158,7 +158,7 @@ async def pagina(b, ctx=None, url=BASE + "#collaudo"):
 async def prepara(pg, seme, carriera):
     await pg.evaluate("""([seme, carriera]) => { __sv.fast(0);
       if (carriera){ localStorage.setItem("scuolaVelaModo", "carriera");
-        localStorage.setItem("scuolaVelaCarriera.v1", JSON.stringify({ done: {}, best: {}, clean: {}, brevetto: { data: "2026-10-20" } })); }
+        localStorage.setItem("scuolaVelaCarriera.v1", JSON.stringify({ done: {}, best: {}, clean: {}, brevetto: { data: "2026-10-20" }, dvBenvenuto: "2026-10-20" })); /* 1.3.23: benvenuto già visto */ }
       __seed(seme); }""", [seme, carriera])
     if carriera: await pg.reload(); await pg.wait_for_timeout(150); await pg.evaluate("s => { __sv.fast(0); __seed(s); }", seme)
     await pg.evaluate("__sv.store = localStorage.getItem('scuolaVelaModo') === 'carriera' ? 'scuolaVelaCarriera.v1' : 'scuolaVelaSim.v1'")

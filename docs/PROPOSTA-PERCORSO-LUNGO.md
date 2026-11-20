@@ -80,3 +80,20 @@ Così una raffica si attraversa in 20-60 s invece che in 5-10, la barca fa in te
 3. **Tre regate per tappa e per torneo** (oggi quattro): circa 30 minuti a tappa.
 
 Via al codice: non ancora dato esplicitamente.
+
+## Esito (20 novembre 2026, notte; versione 1.3.26)
+
+Via di Ale («ora VIA col lavoro autonomo»). Fatto: lati 560/460 m, tre regate per torneo (niente scarto con tre: scelta mia), raffiche-zona; tornei già cominciati restano corti; con `#collaudo` le regate restano corte finché i collaudi non sono adattati. Numeri in `CHANGELOG.md` 1.3.26.
+
+| # | Esito |
+| --- | --- |
+| L1 | **passa:** 10,3 e 10,0 min (semi 101-110), 10,5 e 10,7 (301-310) |
+| L2 | **passa:** virate 8-11 (oggi 4) |
+| L3 | **in parte:** in raffica 28-30% (passa); durata sulla barca 17-26 s, a cavallo dei 20 (non sempre); velocità +0,2/+0,6 nodi, sotto +0,6 (non passa) |
+| L4 | **passa** per penalità e barche ferme; layline non misurata |
+| L5 | **non passa:** rotta ottimale 3,3-4,1 s, in assoluto 13,5-14,9 s su questo PC, a pagina ferma |
+| L6 | **passa** (freccia con la distanza) |
+| L7 | **non passa** (stima 2-2,5 MB) |
+| N | **passa** (fisica identica; collaudi di torneo, stagione, sponsor, finale, Deriva superata verdi) |
+
+Prossimi passi: rotta ottimale calcolata a pezzi o con passo più lungo (L5); registrazione più leggera (L7); collaudi portati alle regate lunghe; poi il Coach in regata (65).

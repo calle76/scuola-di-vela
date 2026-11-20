@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.25"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.26"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -55,12 +55,16 @@
   }
   function spawnGust(dist, lat, mature, P = S){
     const to = (env.twd + 180) * D2R, ax = Math.sin(to), ay = -Math.cos(to);
-    gusts.push({ x: P.x - ax * dist - ay * lat, y: P.y - ay * dist + ax * lat, r: 9 + Math.random() * 11,
+    gusts.push({ x: P.x - ax * dist - ay * lat, y: P.y - ay * dist + ax * lat, r: gustZona ? RAFF_R[0] + Math.random() * RAFF_R[1] : 9 + Math.random() * 11,
       k: gustLevel === 1 ? 0.2 + Math.random() * 0.2 : 0.35 + Math.random() * 0.3,
-      sh: (Math.random() - 0.5) * (gustLevel === 1 ? 12 : 20), age: mature ? 3 : 0, ttl: 40 + Math.random() * 20, life: mature ? 1 : 0 });
+      sh: (Math.random() - 0.5) * (gustLevel === 1 ? 12 : 20), age: mature ? 3 : 0, ttl: gustZona ? RAFF_VITA[0] + Math.random() * RAFF_VITA[1] : 40 + Math.random() * 20, life: mature ? 1 : 0 });
   }
-  function setGusts(level, all = false){
-    gustLevel = level; gustAll = all; gusts.length = 0;
+  // 1.3.26 (voce 63, docs/PROPOSTA-PERCORSO-LUNGO.md; via di Ale del 20 nov): raffiche come zone sull'acqua nelle regate lunghe di Deriva (gustZona). Stesse forze di oggi;
+  // più grandi, più lunghe, più rade e sparse su tutto il campo. Stesse estrazioni a caso nello stesso ordine: con gustZona spento il gioco non cambia. Numeri: ipotesi nostre, misurate
+  let gustZona = false;
+  const RAFF_R = [80, 80], RAFF_VITA = [120, 120], RAFF_INT = 7, RAFF_DIST = [150, 150], RAFF_LAT = 3; // raggio e vita: minimo e ampiezza (80-160 m, 120-240 s); intervallo: 7 volte quello di oggi (6 nella prima stesura: 35-42% di bolina in raffica, sul bordo della soglia; ritoccato e riconfermato sui semi 301-310); distanza sopravento 150-300 m; larghezza: 3 volte. Scelti sui semi 1-10 (tre prove), confermati sui 101-110
+  function setGusts(level, all = false, zona = false){
+    gustLevel = level; gustAll = all; gustZona = zona; gusts.length = 0;
     if (level){ spawnGust(22, -14, true); spawnGust(45, 18, true); spawnGust(70, -6, true); spawnGust(95, 25, true); gustTimer = 3; }
   }
   function updateGusts(dt){
@@ -71,9 +75,9 @@
     if (!gustLevel) return;
     gustTimer -= dt;
     if (gustTimer <= 0 && gusts.length < 12){
-      gustTimer = (gustLevel === 1 ? 4 : 2.6) * (0.6 + Math.random() * 0.8);
+      gustTimer = (gustLevel === 1 ? 4 : 2.6) * (0.6 + Math.random() * 0.8) * (gustZona ? RAFF_INT : 1);
       // torneo dell'1b: sopravento a una barca a caso (prima solo al giocatore, e un avversario lontano navigava senza raffiche)
-      spawnGust(55 + Math.random() * 60, (Math.random() - 0.5) * 90, false, gustAll && mode === "race" && R ? R.boats[Math.floor(Math.random() * R.boats.length)].S : S);
+      spawnGust(gustZona ? RAFF_DIST[0] + Math.random() * RAFF_DIST[1] : 55 + Math.random() * 60, (Math.random() - 0.5) * 90 * (gustZona ? RAFF_LAT : 1), false, gustAll && mode === "race" && R ? R.boats[Math.floor(Math.random() * R.boats.length)].S : S);
     }
   }
 
@@ -254,7 +258,7 @@
     progress.dvBenvenuto = oggi(); saveProgress();
     $("dvBody").innerHTML = `<div class="qz-top"><h2 id="dvTitle">Benvenuto in Deriva</h2></div>
       <div class="dv-coach"><img src="img/coach-serio.jpg" alt="Il Coach" width="64" height="64"><p>Sono il Coach: ti seguo in questo livello. Si gareggia con la stessa barca della Scuola.</p></div>
-      <ul><li>Cinque lezioni nuove (21-25): regole in regata, partenza, layline.</li><li>Regate contro il computer e il torneo di quattro regate.</li>
+      <ul><li>Cinque lezioni nuove (21-25): regole in regata, partenza, layline.</li><li>Regate contro il computer e il torneo di tre regate, lunghe circa dieci minuti.</li>
         <li>La stagione del circuito: quattro tappe, zonale e poi nazionale.</li><li>Dopo ogni regata la moviola: la rotta ottimale e i miei commenti.</li>
         <li>Deriva si supera fra i primi 3 di una stagione zonale, oppure con una stagione senza ritiri e abbastanza punti.</li></ul>
       ${offri ? `<p><b>Due sponsor</b> ti fanno un'offerta: la trovi in «Lo sponsor», dal riquadro del torneo. Scegline una prima di iniziare la stagione.</p>` : ""}
@@ -351,7 +355,7 @@
       return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
     const torBtn = (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
         const S = progress.stagione, sTp = S && !S.fine ? S.tappe.filter(t => t.ord || t.mio).length + 1 : 0; // 1.2.36: la stagione in corso
-        const st = chiuso ? "dopo l'attestato" : sTp ? "tappa " + sTp + " di " + ST_N + (T ? " · regata " + (T.ris.length + 1) : "") : T ? "in corso: regata " + (T.ris.length + 1) + " di " + TOR_N : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
+        const st = chiuso ? "dopo l'attestato" : sTp ? "tappa " + sTp + " di " + ST_N + (T ? " · regata " + (T.ris.length + 1) : "") : T ? "in corso: regata " + (T.ris.length + 1) + " di " + (T.n || TOR_N) : F ? "migliore: " + F.pos + "°" + (modo === "carriera" ? " · meriti " + F.mer : "") : "Da fare";
         return `<button class="item wide" id="goTor"${chiuso ? " disabled" : ""}><span class="num">⚑</span><span class="title">Torneo</span><span class="state ${F ? "ok" : "todo"}">${st}</span></button>`; })(); // senza descrizione (la dà il riquadro che si apre); nel gioco libero sta nel terzo riquadro: in «Regate» il menu non stava in 1360x650
     // 1.2.4: i ripassi della scheda aperta, su due colonne; ✓ = migliore almeno l'80%, il punteggio si legge passando sopra
     const quiz = `<div class="rip2">` + GRUPPI[menuGr][1].filter(([t, i]) => t === "l" && !LESSONS[i].nascosta).map(([, i]) => { const L = LESSONS[i], best = progress.quiz?.["q" + i], n = quizDi(i).length;
@@ -364,8 +368,8 @@
         <section class="tile"><div><div class="part-head"><h2>Deriva</h2><span>${DSEQ.filter(([t, i]) => progress.done[t + i]).length} di ${DSEQ.length} completate</span></div><div class="items">${DSEQ.map((v, k) => rigaVoce(v, ORD_L.length + k + 1)).join("")}</div></div>
           <div><div class="part-head"><h2>Ripassi</h2></div><div class="review"><div class="rip2">${ORD_D.map(ripBtn).join("")}</div></div></div></section>
         <section class="tile"><div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div>
-          ${modo === "carriera" ? `<div><div class="part-head"><h2>Torneo</h2><span>quattro regate</span></div><div class="items">${torBtn}</div><p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito.</p></div>` : ""}</section>
-        <section class="tile">${modo === "carriera" ? librettoDHtml() : `<div><div class="part-head"><h2>Torneo</h2><span>quattro regate</span></div><div class="items">${torBtn}</div>
+          ${modo === "carriera" ? `<div><div class="part-head"><h2>Torneo</h2><span>tre regate</span></div><div class="items">${torBtn}</div><p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito.</p></div>` : ""}</section>
+        <section class="tile">${modo === "carriera" ? librettoDHtml() : `<div><div class="part-head"><h2>Torneo</h2><span>tre regate</span></div><div class="items">${torBtn}</div>
           <p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito, zonale o nazionale.</p></div>`}</section>
       </div>` : `<div class="tiles">
         <section class="tile"><div><div class="part-head"><h2>Scuola</h2><span>${doneCount} di ${VSEQ.length} completate</span></div><div class="seg schede" id="schede">${schede}</div><div class="items">${rows}</div></div></section>
@@ -852,8 +856,8 @@
   $("rRestart").onclick = () => R && R.es ? apriEsercizio(R.es.lezione, R.es.passo) : startRace(raceIdx, env.twd);
   // 1.0.70: «Cambia vento» tolto dalle regate; 1.0.75: rimesso nel pannello e nella schermata finale delle regate (rWind, finWind in regate.js), mai nel torneo; nelle prove c'è sempre (mWind)
   $("rBrief").onclick = () => showBrief($("rTitle").textContent, R.brief, false);
-  $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; startRace(raceIdx, env.twd); };
-  $("cdSel").onchange = e => { opt.countdown = +e.target.value; startRace(raceIdx, env.twd); };
+  $("aiLevel").onchange = e => { opt.aiLevel = e.target.value; if (raceIdx === "t" && !tor) return; startRace(raceIdx, env.twd); }; /* 1.3.26: a torneo finito la regata del torneo non c'è più (errore interno trovato da collaudo_percorso_lungo) */
+  $("cdSel").onchange = e => { opt.countdown = +e.target.value; if (raceIdx === "t" && !tor) return; startRace(raceIdx, env.twd); };
   // zoom minimo 0,1 (0.19.3): a 1360x650 un obiettivo a 300 m resta sullo schermo con la barca al margine (vedi CHANGELOG)
   const ZMIN = 0.1;
   canvas.addEventListener("wheel", e => { e.preventDefault(); userZoom = clamp(userZoom * (e.deltaY > 0 ? 0.9 : 1.1), ZMIN, 3); }, { passive: false });

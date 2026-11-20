@@ -21,7 +21,7 @@ def chk(parte, ok, testo):
     print(("ok      " if ok else "FALLITO ") + testo, flush=True)
     if not ok: fail.append(testo)
 
-BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}}
+BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}, "dvBenvenuto": "2026-11-15"}   # 1.3.23: il benvenuto in Deriva già visto (lo controlla collaudo_carriera_file)
 RESTO = {"done": {"l20": True, "l21": True, "l22": True, "l23": True, "m5": True}, "best": {"m5": 230}, "clean": {"m5": True}, "quiz": {"q20": 4, "q21": 4, "q22": 5, "q23": 4}, "coachVisto": True}   # 1.3.10: con la lezione 24 (indice 23)
 def unisci(*d):
     o = {"done": {}, "best": {}, "clean": {}, "quiz": {}}

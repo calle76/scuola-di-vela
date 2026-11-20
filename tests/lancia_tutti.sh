@@ -126,6 +126,7 @@ TESTS=(
     "collaudo_deriva_superata.py|py|chiaro|0||collaudo_deriva_superata.py"
     "collaudo_finale.py|py|chiaro|0||collaudo_finale.py"
     "collaudo_sponsor.py|py|chiaro|0||collaudo_sponsor.py"
+    "collaudo_percorso_lungo.py|py|chiaro|1||collaudo_percorso_lungo.py"
     "collaudo_carriera_file.py|py|chiaro|0||collaudo_carriera_file.py"
     "collaudo_regole_15_16.py|py|chiaro|0||collaudo_regole_15_16.py"
     "controllo_commenti.py|py|chiaro|0||controllo_commenti.py"
