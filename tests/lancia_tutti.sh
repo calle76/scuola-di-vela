@@ -117,6 +117,7 @@ TESTS=(
     "collaudo_avversari1b.py|py|chiaro|1||collaudo_avversari1b.py"
     "collaudo_lezioni.py|py|chiaro|0||collaudo_lezioni.py"
     "collaudo_quiz.py|py|chiaro|0||collaudo_quiz.py"
+    "collaudo_rivedere.py|py|chiaro|0||collaudo_rivedere.py"
     "collaudo_esame.py|py|chiaro|0||collaudo_esame.py"
     "collaudo_carriera.py|py|chiaro|0||collaudo_carriera.py"
     "collaudo_libretto.py|py|chiaro|0||collaudo_libretto.py"

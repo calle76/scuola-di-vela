@@ -354,12 +354,15 @@
       text: ["Se il vento oscilla, di bolina conviene <em>virare quando sei scarso</em>: sulle altre mure quello stesso salto è buono, e la prua punta più verso il vento, cioè verso la boa. Poi si resta lì finché non si è di nuovo scarsi.",
              "Con vento medio da nord, di bolina la Prua media è circa 050° sulle mure a dritta e circa 310° sulle mure a sinistra. Se la Prua si allontana dal nord di almeno 7° (per esempio 060° o 300°) sei scarso: vira. Se invece si avvicina al nord (040° o 320°) sei buono: resta dove sei.",
              "Due eccezioni. Se il vento gira sempre dalla stessa parte non si vira sugli scarsi: si va verso il salto. E vicino alla boa, quando resta un salto solo, si gioca come se il vento non dovesse più tornare."] },
+    { title: "In regata", ...PAUSE, zoom: 0.8, /* 1.3.25 (Ale, 16 e 20 nov: «in regata come capisco se cambiare mura?»): il metodo di F41 (prua media prima del via) e, dichiarato, l'aiuto del Rilevamento */
+      text: ["In regata non hai il tempo per fare conti. Prima del via fai un tratto di bolina su tutte e due le mure e guarda la Prua: quelle sono le tue prue medie (è il consiglio dell'allenatore). Durante la regata confronta la Prua con la media: se è più lontana dalla boa di almeno 7°, sei scarso.",
+             "In questo gioco c'è anche un aiuto: il <em>Rilevamento</em> nel pannello dice dove sta la boa. Di bolina, se la Prua si allontana dal Rilevamento sei scarso, se si avvicina sei buono. Nelle regate di Deriva il vento gira: lì puoi provarlo."] },
     { title: "Vira sullo scarso", tiller: true, autoTrim: true, hud: 3, shifts: "osc", rose: true, hintKind: "sail", scarsoHint: true,
       text: ["Il vento medio arriva da nord. Mettiti di bolina: Prua media circa 050° o 310°. Quando sei scarso di almeno 7° <em>vira</em> (te lo dice il suggerimento in basso), poi tieni la bolina sulle altre mure fino al prossimo scarso. Servono due virate da scarsi: se viri da buono, si ricomincia. La vela si regola da sola."], // 1.2.41: più corto di due righe, col testo di fine passo il pannello scorreva di 44 px (collaudo_pannello_lezioni)
       cond: (I, S, B) => (B.buone || 0) >= 2 && !B.daBuono && I.twa >= 35 && I.twa <= 75 && I.kn > 2, hold: 3,
       done: "Due virate sugli scarsi: ogni volta, sulle altre mure, lo stesso salto ti ha fatto puntare più verso il vento." },
     { title: "Riepilogo", tiller: true, sheet: true, hud: 3, shifts: "osc", hintKind: "tt", final: true,
-      text: ["Il vento oscilla: con la bussola trova la prua media, vira quando sei scarso e resta sulle mure buone. Se il vento gira sempre dalla stessa parte, o vicino alla boa, si fa diverso. Nelle regate della Scuola il vento non gira: lo userai in quelle di Deriva."] }
+      text: ["Il vento oscilla: con la bussola trova la prua media (prima del via, sulle due mure), vira quando sei scarso e resta sulle mure buone. Se il vento gira sempre dalla stessa parte, o vicino alla boa, si fa diverso. Nelle regate della Scuola il vento non gira: lo userai in quelle di Deriva."] }
   ];
 
   // ---- gruppo D, il regolamento (1.1.9, docs/PROPOSTA-LEZIONI-2A.md): regole rilette nel PDF di F15 (fonti-pdf/RRS-2025-2028-World-Sailing.pdf) il 1 novembre 2026 ----

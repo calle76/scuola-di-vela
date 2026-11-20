@@ -48,3 +48,4 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 57 | **Volto felice del Coach:** oggi non compare mai (0 su 11 nelle regate del 15-17 nov). Riconfermato da Ale il 17 nov: 4 regate in repo (`regata-20261116-*`, `stagione-*.json`), arriva primo e il Coach non sorride. Contento anche con un primo posto, un record o una perdita piccola; altre espressioni da decidere | `js/rotta.js` `coaUmore`; `PROPOSTA-COACH.md` | Sonnet |
 | 61 | **Giri di penalità: manca l'orologio** che invita a farli e li conta (segnalato da Ale il 17 nov, con immagine). Da capire se manca sempre o solo in certi casi (Deriva, torneo, Scuola) | oss. da scrivere; `PROPOSTA-GIRI-GIOCATORE.md` | Opus |
 | 50 | Rotta ottimale e lato della boa: fatta nella 1.3.24 (controllo acceso, R1-R3 passati anche su semi di conferma) |
+| 62 | Ripassi: lezione «da rivedere» (1.3.25) |

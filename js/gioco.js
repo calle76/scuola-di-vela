@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.24"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.25"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -329,17 +329,17 @@
     const esc = t => t.replace(/"/g, "&quot;");
     const schede = GRUPPI.map(([nome, voci], j) => { const v = voci.filter(vis); return `<button data-g="${j}" aria-pressed="${j === menuGr}">${j + 1} · ${nome} <small>${v.filter(([t, i]) => progress.done[t + i]).length}/${v.length}</small></button>`; }).join("");
     const rows = VSEQ.map(([t, i], k) => { if (gruppoDi([t, i]) !== menuGr) return "";
-      const key = t + i, done = progress.done[key];
+      const key = t + i, riv = t === "l" && !!progress.rivedi?.[key], done = progress.done[key] && !riv; /* 1.3.25 (voce 62): «Da rivedere» dopo un ripasso con errori */
       const kind = t === "l" ? LESSONS[i].name : "Prova " + (i + 1);
       const title = t === "l" ? LESSONS[i].title : MISSIONS[i].title;
       const desc = t === "l" ? LESSONS[i].desc : MISSIONS[i].desc;
-      let state = done ? "Completata" : "Da fare";
+      let state = riv ? "Da rivedere" : done ? "Completata" : "Da fare";
       if (t === "m" && progress.best[recK(key)]) state = fmtTime(progress.best[recK(key)]) + medalTag(i, progress.best[recK(key)]);
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-k="${k}" title="${esc(desc)}"><span class="num">${k + 1}</span><span class="kind">${kind}</span><span class="title">${title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`;
     }).join("");
-    const rigaVoce = ([t, i], num) => { const key = t + i, done = progress.done[key], L = t === "l" ? LESSONS[i] : MISSIONS[i]; // 1.3.1: una riga delle voci di Deriva; 1.3.2 anche la prova
-      let state = done ? "Completata" : "Da fare";
+    const rigaVoce = ([t, i], num) => { const key = t + i, riv = t === "l" && !!progress.rivedi?.[key], done = progress.done[key] && !riv, L = t === "l" ? LESSONS[i] : MISSIONS[i]; // 1.3.1: una riga delle voci di Deriva; 1.3.2 anche la prova
+      let state = riv ? "Da rivedere" : done ? "Completata" : "Da fare";
       if (t === "m" && progress.best[recK(key)]) state = fmtTime(progress.best[recK(key)]) + medalTag(i, progress.best[recK(key)]);
       if (t === "m" && progress.clean[recK(key)]) state += STAR;
       return `<button class="item" data-d="${t}${i}" title="${esc(L.desc)}"><span class="num">${num}</span><span class="kind">${t === "l" ? L.name : "Prova " + (i + 1)}</span><span class="title">${L.title}</span><span class="state ${done ? "ok" : "todo"}">${state}</span></button>`; };
@@ -477,8 +477,9 @@
       if (!qz.partial){ progress.quiz = progress.quiz || {}; if (prev === undefined || qz.score > prev) progress.quiz[key] = qz.score;
         const ex = modo === "carriera" ? progress.exam : null; if (ex?.ripasso) ex.ripasso = ex.ripasso.filter(x => x !== qz.li); // 0.24: ripasso completo dopo l'esame, con qualsiasi punteggio
         saveProgress(); } // il giro parziale non tocca il record
+      if (nw && !LESSONS[qz.li].nascosta){ progress.rivedi = progress.rivedi || {}; progress.rivedi["l" + qz.li] = true; saveProgress(); } // 1.3.25 (voce 62, Ale 17 e 20 nov): sbagliando, la lezione torna «da rivedere» nel menu finché non la si rifà
       b.innerHTML = `<h2>${ripName(qz.li)} · ${L.title}</h2><div class="score">${qz.score} su ${n}</div>
-        <p class="q">${nw === 0 ? "Tutto giusto." : nw === 1 ? "Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati: ecco le domande sbagliate."}</p>
+        <p class="q">${nw === 0 ? "Tutto giusto." : nw === 1 ? "Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione." : "Conviene rifare la lezione, o almeno i passi sugli argomenti sbagliati: ecco le domande sbagliate."}${nw ? " Nel menu la lezione resta «da rivedere» finché non la rifai." : ""}</p>
         ${nw ? `<div class="wlist" id="qzWrong">${qz.wrong.map(wrongItem).join("")}</div>` : ""}
         <div class="row"><button class="primary" id="qzAgain">Rifai il ripasso</button>${nw ? `<button id="qzOnly">Ripassa solo le sbagliate</button><button id="qzLesson">Rivedi la lezione</button>` : ""}<button id="qzClose">Chiudi</button></div>`;
       $("qzAgain").onclick = () => openQuiz(qz.li); $("qzClose").onclick = closeQuiz;
@@ -651,7 +652,7 @@
     $("lEs").hidden = !st.esercizio; $("lEs").textContent = "Apri l'esercizio"; $("lEs").classList.add("primary"); // 1.2.1: il passo apre una regata (meccanismo B)
     $("lNext").textContent = st.final ? nextLabel() : "Avanti";
     $("lQuiz").hidden = !st.final || !!LESSONS[lessonIdx].nascosta; // 1.1.4: il quiz delle lezioni nuove arriva col menu nuovo
-    if (st.final){ progress.done["l" + lessonIdx] = true; saveProgress(); }
+    if (st.final){ progress.done["l" + lessonIdx] = true; if (progress.rivedi) delete progress.rivedi["l" + lessonIdx]; saveProgress(); } // 1.3.25: rifatta, non è più «da rivedere»
     setControls(st.sem || [], !!st.tiller, !!st.sheet, st.turnHint);
     setHud(st.hud || 0);
     $("hint").hidden = st.pause || st.hintKind === "none" || !st.hud;

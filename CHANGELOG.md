@@ -19,6 +19,13 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.25 — Lezione «da rivedere» dopo un ripasso sbagliato (62), lezione 11 in regata
+
+Da dove viene: risposte di Ale del 20 novembre (62: «la scelta più semplice»; lezione su scarso e buono da migliorare).
+
+- **Da rivedere (voce 62).** Un ripasso finito con almeno un errore segna la lezione «Da rivedere» nel menu (Scuola e Deriva, gioco libero e carriera); l'esito del ripasso lo dice. Rifatta la lezione fino all'ultimo passo torna «Completata». I punti non cambiano: la lezione resta fatta per l'esperienza. `progress.rivedi`. Collaudo nuovo `collaudo_rivedere.py` (nel giro): V1-V4 verdi, 8 controlli, anche senza `#collaudo` e tutto a clic. Il controllo «i punti non cambiano» misurava 0 contro 0 nella prima stesura (troppe poche lezioni fatte): rifatto con tutte le lezioni, 6 contro 6.
+- **Lezione 11, passo nuovo «In regata».** Risponde alla domanda di Ale del 16 novembre («in regata come capisco se cambiare mura?»). Prima del via un tratto di bolina sulle due mure per trovare le prue medie (metodo della fonte F41, l'allenatore già citato); in regata si confronta la Prua con la media. **In questo gioco**, in più, il Rilevamento del pannello (la direzione della boa): di bolina, se la Prua se ne allontana sei scarso, se si avvicina sei buono. Il riepilogo dice «prima del via, sulle due mure». `collaudo_pannello_lezioni` 131 passi su 131 dentro la finestra; `collaudo_lezioni` e `collaudo_pilota_lezioni --veloce` verdi.
+
 ## 1.3.24 — La rotta ottimale gira la boa come il gioco (voce 50)
 
 Da dove viene: il controllo scritto e lasciato spento nella 1.3.23 (R3 non passava). Ora acceso. `docs/PROPOSTA-ROTTA-GIRO-BOA.md` §Esito.

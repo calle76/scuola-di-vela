@@ -36,7 +36,6 @@
 | 40 | **«Rotta ottimale» non compare in 3 regate su 100** (semi 2415, 2420 di `collaudo_rotta_assoluta.py`); indizio: riaprirla due volte | `PROPOSTA-ROTTA-ASSOLUTA.md` §10 | Opus |
 | 35 | **Messaggio «Contatto» coperto da un altro** (`collaudo_registro` in Firefox su GitHub). Se compaiono le note del collaudo, dare priorità ai messaggi delle penalità | `CHANGELOG.md` 1.3.8 | Sonnet |
 | 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa | `CHANGELOG.md` 1.2.28 | — |
-| 62 | **Ripassi della Scuola: cosa deve succedere sbagliando?** Il codice non ha un difetto: a fine ripasso ci sono già le domande sbagliate e «Rivedi la lezione». Da decidere con Ale (20 nov): (a) accanto a ogni domanda sbagliata il passo della lezione da cui viene, con un pulsante che apre la lezione a quel passo; (b) in carriera la lezione torna «da rivedere» nel menu finché non la si rifà; (c) altro | `js/gioco.js` `renderQuiz`; segnalazione di Ale del 17 nov | Sonnet |
 | 8, 18 | **Suoni:** boa poco forte e sartiame in `collaudo_suoni_si_sentono` (il bordo si sposta fra un giro e l'altro) | `CHANGELOG.md` 1.2.12 | Sonnet |
 
 ## 4. In sospeso, in coda o idee
