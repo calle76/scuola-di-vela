@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 21 novembre 2026, sessione in autonomia mentre Ale era fuori (gioco alla **1.3.29**, tag `v1.3.29`, su `main`).*
+*Aggiornato: 21 novembre 2026, sessione in autonomia mentre Ale era fuori (gioco alla **1.3.30**, tag `v1.3.30`, su `main`).*
 
 ## Dove siamo
 
@@ -14,8 +14,9 @@
   - 1.3.26: regate lunghe;
   - 1.3.27: rotta ottimale nelle regate lunghe sempre calcolata e più veloce;
   - 1.3.28: Coach durante la regata;
-  - 1.3.29: triangolo delle regate lunghe da 440 m, collaudi ripassati in Chromium e Firefox.
-- **Da sapere:** con `#collaudo` le regate restano corte, quindi i collaudi vecchi non provano le regate lunghe (lo fanno `collaudo_percorso_lungo`, `collaudo_coach --lungo`, `collaudo_coach_regata`). La rotta «in assoluto» (tasto V) su una regata lunga ci mette ancora 9-10 s. I file «intera» delle regate pesano circa 2 MB: decide Ale (voce 66). Le frasi del Coach in regata sono da leggere.
+  - 1.3.29: triangolo delle regate lunghe da 440 m, collaudi ripassati in Chromium e Firefox;
+  - 1.3.30: lezione 11, la prua media è una prima stima e si aggiorna; il Coach in regata conosce il vento medio (detto).
+- **Da sapere:** con `#collaudo` le regate restano corte, quindi i collaudi vecchi non provano le regate lunghe (lo fanno `collaudo_percorso_lungo`, `collaudo_coach --lungo`, `collaudo_coach_regata`). La rotta «in assoluto» (tasto V) su una regata lunga ci mette ancora 9-10 s. I file «intera» delle regate pesano circa 2 MB: decide Ale (voce 66). Le frasi del Coach in regata: Ale le sta leggendo (21 nov).
 - **Collaudi:** lanciati qui in Chromium, col freno; Firefox per i collaudi nuovi e il giro completo su GitHub.
 
 ## A inizio sessione
