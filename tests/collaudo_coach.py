@@ -17,6 +17,8 @@
 #       senza scuffia mai (nelle 20 regate vere, controllate)
 #   K12 (1.3.14) le frasi nel file della regata: prima di aprire la rotta ottimale l'ultimo pezzo registrato non ha righe «A»; dopo ha «A - volto» col volto mostrato, «A - rotta» e una riga
 #       per frase, nello stesso ordine, con lo stesso testo e lo stesso momento (±0,05 s); chiesta una seconda volta la scrittura non raddoppia le righe; la copia in IndexedDB le ha (ultima regata)
+#   K13 (1.3.23, voce 57) contento anche col primo posto (almeno un'altra barca, squalificati esclusi) o col nuovo record, se non c'è niente da arrabbiato (costruito);
+#       K10 nelle regate vere ricalcola primo posto e record e li conta
 # Uso: python tests/collaudo_coach.py [--regate N] [--rif v1.3.2]   (BROWSER=firefox per Firefox)
 import asyncio, json, math, os, pathlib, re, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
@@ -97,7 +99,7 @@ async def main():
             for k, s in elenco: await pg.evaluate(CORSA, [k, s, 0]); rif.append(await pg.evaluate(ESITO))
             await pg.close()
         pg, errs, elenco = await regate(br, (ROOT / "index.html").as_uri(), NREG)
-        nclou = nfr = 0; umori = {}
+        nclou = nfr = nbravo = 0; umori = {}
         for n, (k, s) in enumerate(elenco):
             await pg.evaluate(CORSA, [k, s, 0]); es = await pg.evaluate(ESITO)
             chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
@@ -124,7 +126,10 @@ async def main():
                 vicina = min((f[5] for f in d["tu"] if t0 <= f[0] <= t1), default=1e9)
                 chk("K5b", vicina < 42, f"K5b {s}-{k}: tratto coperto {t0:.0f}-{t1:.0f} s senza barche entro 10 lunghezze (la più vicina a {vicina:.0f} m)")
             if C:   # K10
-                atteso = "arrabbiato" if any(x["tipo"] in ("penalita", "scuffia") or x.get("ocs") for x in C) else "contento" if any(x["tipo"] == "bene" for x in C) or all(x["peso"] < 10 for x in C) else "serio"
+                bravo = await pg.evaluate("""() => { const me = R.boats[0]; if (me.fin === null || me.dsq) return false;   // 1.3.23 (voce 57): primo posto o record, ricalcolati qui
+                  return (R.boats.length > 1 && !R.boats.some(b => !b.me && b.fin !== null && !b.dsq && b.fin < me.fin)) || !!R.recNuovo; }""")
+                atteso = "arrabbiato" if any(x["tipo"] in ("penalita", "scuffia") or x.get("ocs") for x in C) else "contento" if bravo or any(x["tipo"] == "bene" for x in C) or all(x["peso"] < 10 for x in C) else "serio"
+                if bravo: nbravo += 1
                 await pg.wait_for_function("() => document.getElementById('coachVolto').complete")
                 v = await pg.evaluate("() => { const i = document.getElementById('coachVolto'); return { u: i.dataset.umore, w: i.naturalWidth, src: i.getAttribute('src'), vis: !i.hidden }; }")
                 chk("K10", v["u"] == atteso and v["w"] == 128 and v["vis"] and v["src"] == f"img/coach-{atteso}.jpg", f"K10 {s}-{k}: volto {v}, atteso {atteso}")
@@ -148,7 +153,7 @@ async def main():
                 await pg.wait_for_timeout(300); db = await pg.evaluate(IDB, g1["id"])
                 chk("K12", db == g1["righe"], f"K12 {s}-{k}: copia in IndexedDB {db}")
         chk("K4", nclou >= 3, f"K4: regate col clou da controllare {nclou} (servono almeno 3 perché il controllo misuri)")
-        print(f"frasi in tutto {nfr}, regate col clou controllato {nclou}, volti {umori}", flush=True)
+        print(f"frasi in tutto {nfr}, regate col clou controllato {nclou}, volti {umori}, regate col primo posto o il record {nbravo}", flush=True)
         # ---- K2 caso peggiore, K5a, K7 sull'ultima regata
         await pg.evaluate(CORSA, [3, 2601, 0]); await pg.click("#finRot"); await pg.wait_for_timeout(120)
         w = await pg.evaluate("""() => { rot.res.ass = rotAssoluta(); rot.res.testo = rotTesto(rot.res.ott, rot.res.sp); document.getElementById('movTit').textContent = rot.res.testo;
@@ -179,6 +184,15 @@ async def main():
             const F = coaFrasi(rot.res.ott, rot.res.sp); tu.forEach((f, i) => { f.b[0][8] = salva[i]; });
             const x = F.find(y => y.tipo === "scuffia"); return { x, umore: coaUmore(F), tipi: F.map(y => y.tipo) }; }""")
         print("K11:", k11, flush=True)
+        k13 = await pg.evaluate("""() => { const me = R.boats[0], salva = R.boats.map(b => [b.fin, b.dsq]), rec = R.recNuovo, C = [{ tipo: "clou", peso: 30 }], P = [{ tipo: "penalita", peso: 20 }], out = {};
+            if (me.fin === null) me.fin = 200; R.boats.forEach(b => { if (!b.me){ b.fin = me.fin + 10; b.dsq = false; } }); R.recNuovo = false;
+            out.primo = coaUmore(C, coaBravo()); out.primoPen = coaUmore(P, coaBravo());
+            R.boats[1].fin = me.fin - 5; out.secondo = coaUmore(C, coaBravo());
+            R.recNuovo = true; out.secondoRecord = coaUmore(C, coaBravo());
+            R.recNuovo = false; R.boats[1].dsq = true; out.primoSquali = coaUmore(C, coaBravo());
+            R.boats.forEach((b, i) => { b.fin = salva[i][0]; b.dsq = salva[i][1]; }); R.recNuovo = rec; return out; }""")
+        print("K13:", k13, flush=True)   # 1.3.23 (voce 57): costruito, perché il primo posto nelle regate col pilota capita poco
+        chk("K13", k13 == {"primo": "contento", "primoPen": "arrabbiato", "secondo": "serio", "secondoRecord": "contento", "primoSquali": "contento"}, f"K13 volto col primo posto e il record: {k13}")
         chk("K11", k11["x"] is not None and abs(k11["x"]["s"] - 20) <= 1 and k11["umore"] == "arrabbiato" and "lezione 8" in k11["x"]["txt"], f"K11 scuffia costruita: {k11}")
         chk("K7", any(x.startswith("bene") for x in k7) and not any(re.match(r"(clou|affollato|coperto|boa)", x) for x in k7), f"K7 traccia uguale alla rotta ottimale: {k7}")
         await pg.close()
@@ -192,6 +206,6 @@ async def main():
         await br.close()
     print("casi per parte:", casi)
     if fail: print(f"ESITO: FALLITO ({len(fail)})"); sys.exit(1)
-    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10", "K11", "K12")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10", "K11", "K12", "K13")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

@@ -19,13 +19,10 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 50 | **Rotta ottimale: giro della boa dal lato sbagliato.** Costa 2-4 s al giocatore in 7 regate su 48, fino a 21 s alle altre barche. Un controllo in `rotLato` | `PROPOSTA-ROTTA-GIRO-BOA.md`; oss. 134 e 137 | Opus |
+| 50 | **Rotta ottimale: giro della boa dal lato sbagliato.** Controllo scritto nella 1.3.23 ma **spento**: R1 passa (0 rotte non valide su 120), R3 no (rotte già valide fino a 7,5 s più lente per il giocatore, 15,8 per le altre barche; causa da trovare: non è il passaggio sotto i 2 m). Trovata anche una seconda forma del difetto («tocca la linea e torna indietro») | `PROPOSTA-ROTTA-GIRO-BOA.md` §Esito; `tests/misura_giro_boa.py` | Opus |
 | 53 | **Distacchi del triangolo (T2b):** il difetto è soprattutto del metro (letto a 10 s). Si cambia il collaudo (lettura a 3 s), non il gioco | `PROPOSTA-DISTACCHI-TRIANGOLO.md` | Sonnet |
-| 54 | **«Salva / Carica la mia carriera» in un file** (paura di perdere i dati del browser). Piccola | come «Riprendi dal mio file» (`PROPOSTA-STAGIONE-FILE.md`) | Sonnet |
 | 63 | **Regate troppo corte e raffiche non percepite** (Ale, 18 nov): lati da 140 m, 3 minuti, una sola virata, ritorno dritto di poppa; nelle raffiche non si vede differenza di velocità. Idea: lati da 400-500 m (giro 6-8 min), raffiche come zone sull'acqua, controllare nei `regata-*.txt` quanto il vento e la velocità cambiano davvero. Costi: telecamera, ritaratura rivali, record non confrontabili. Prima la proposta | da scrivere (`PROPOSTA-PERCORSO-LUNGO.md`) | Opus |
-| 64 | **Entrata in Deriva e attestato** (Ale, 18 nov; sponsor prima rifiutato, ora richiesto): all'arrivo al livello Deriva compaiono lo sponsor e la presentazione del Coach («cosa si fa in questo livello»); un **attestato in un file** che permette di ripartire sempre dall'inizio di Deriva senza rifare la Scuola (Carriera → Deriva → «hai l'attestato?» sì). Serve per provare i grandi cambiamenti. Legata alla 54; l'attestato dice «nessun valore legale» | da scrivere; `PROPOSTA-STAGIONE-FILE.md`, `PROPOSTA-RIVALI-E-SPONSOR.md` | Sonnet |
 | 55 | **Registrazioni più ricche:** stato del semaforo, registrazione dopo il proprio arrivo, chi ha la precedenza, contatti con colpa. Soglia di peso del file da dichiarare | oss. 135-136 | Sonnet |
-| 57 | **Volto felice del Coach:** oggi non compare mai (0 su 11 nelle regate del 15-17 nov). Riconfermato da Ale il 17 nov: 4 regate in repo (`regata-20261116-*`, `stagione-*.json`), arriva primo e il Coach non sorride. Contento anche con un primo posto, un record o una perdita piccola; altre espressioni da decidere | `js/rotta.js` `coaUmore`; `PROPOSTA-COACH.md` | Sonnet |
 | 42 | **Coach, terza mano:** la finestra di «altre barche» può contenere una scuffia e la perdita è detta due volte | `PROPOSTA-COACH-2.md` §8; oss. 131 | Opus per la proposta |
 | 9 | **Verificare su fonti i 45° prima della strambata e la posizione dei filetti** (seconda parte della voce; le scelte dichiarate sono nella 1.3.21) | `CONTENUTI-DA-VERIFICARE.md` | Sonnet |
 | 2 | **Avversari tutti insieme:** bolina e avvicinamento alla boa, uscire dal vento sporco, casi 81 e 83 di Deriva. Aspettano registrazioni di Lucio | `PROPOSTA-CONO-D-OMBRA.md`; `PROPOSTA-AVVERSARI-BOLINA.md` §14 | Opus |
@@ -39,8 +36,7 @@
 | 40 | **«Rotta ottimale» non compare in 3 regate su 100** (semi 2415, 2420 di `collaudo_rotta_assoluta.py`); indizio: riaprirla due volte | `PROPOSTA-ROTTA-ASSOLUTA.md` §10 | Opus |
 | 35 | **Messaggio «Contatto» coperto da un altro** (`collaudo_registro` in Firefox su GitHub). Se compaiono le note del collaudo, dare priorità ai messaggi delle penalità | `CHANGELOG.md` 1.3.8 | Sonnet |
 | 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa | `CHANGELOG.md` 1.2.28 | — |
-| 61 | **Giri di penalità: manca l'orologio** che invita a farli e li conta (segnalato da Ale il 17 nov, con immagine). Da capire se manca sempre o solo in certi casi (Deriva, torneo, Scuola) | oss. da scrivere; `PROPOSTA-GIRI-GIOCATORE.md` | Opus |
-| 62 | **Scuola, ripassi: sbagliando le domande non si attivano le lezioni corrispondenti** (segnalato da Ale il 17 nov) | da cercare in `js/contenuti.js` / `js/gioco.js` | Sonnet |
+| 62 | **Ripassi della Scuola: cosa deve succedere sbagliando?** Il codice non ha un difetto: a fine ripasso ci sono già le domande sbagliate e «Rivedi la lezione». Da decidere con Ale (20 nov): (a) accanto a ogni domanda sbagliata il passo della lezione da cui viene, con un pulsante che apre la lezione a quel passo; (b) in carriera la lezione torna «da rivedere» nel menu finché non la si rifà; (c) altro | `js/gioco.js` `renderQuiz`; segnalazione di Ale del 17 nov | Sonnet |
 | 8, 18 | **Suoni:** boa poco forte e sartiame in `collaudo_suoni_si_sentono` (il bordo si sposta fra un giro e l'altro) | `CHANGELOG.md` 1.2.12 | Sonnet |
 
 ## 4. In sospeso, in coda o idee

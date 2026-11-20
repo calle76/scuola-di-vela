@@ -16,7 +16,7 @@
   // abbattuta 0,0 s: 1 s è un minimo nostro perché la rotta non cambi mure a ogni passo); SCARSO 6°; settori di 2° (§2 D); passo 1 s.
   // ======================================================================
   const ROT_REG = 0.5, ROT_DT = 1, T_VIR = 2, T_ABB = 1, ROT_SETT = 2, ROT_BOA = 2, ROT_LATO_MAX = 900, ROT_TMAX = 1800, SCARSO = 6, ROT_RAFF = 1.12;
-  const rot = { reg: [], barche: [], acc: 0, res: null, on: false, spento: false };
+  const rot = { reg: [], barche: [], acc: 0, res: null, on: false, spento: false, giroLibero: true }; /* giroLibero (1.3.23, voce 50): controllo del lato della boa SPENTO finché R3 di PROPOSTA-ROTTA-GIRO-BOA.md non passa (20 nov: rotte già valide fino a 7,5 s più lente, causa non trovata) */
 
   // ---- registrazione ----
   function rotReset(){ rot.reg = []; rot.barche = R ? R.boats.map(() => ({ taglio: null, giri: [] })) : []; rot.acc = 1e9; rot.res = null; rot.on = false; rot.calc = false; }
@@ -60,10 +60,12 @@
           const [v, lee] = riga[n], c = (w.twd - s * (twa + lee)) * D2R; // s = +1: vento da destra, la prua sta a sinistra del vento
           // 1.2.40: il punto nuovo si crea solo se entra nel fronte o finisce il lato (stessi conti e stesso ordine di prima: risultati identici, circa metà del tempo)
           tmp.x = p.x + Math.sin(c) * v * mv; tmp.y = p.y - Math.cos(c) * v * mv;
-          const fr = cancello(p, tmp); if (fr !== null){ const q = { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p };
+          if (cancello.vieta && !p.giu && cancello.vieta(p, tmp)) continue; /* 1.3.23 (voce 50): niente passi che girano la boa dal lato sbagliato, finché il ramo non l'ha già girata */
+          const giu = p.giu || (cancello.vieta ? cancello.giusto(p, tmp) : false);
+          const fr = cancello(p, tmp); if (fr !== null){ const q = { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu };
             q.x = p.x + (q.x - p.x) * fr; q.y = p.y + (q.y - p.y) * fr; q.t = t + ROT_DT * fr; q.fine = true; return q; }
           const dx = tmp.x - ox, dy = tmp.y - oy, d = Math.hypot(dx, dy), key = Math.round(Math.atan2(dx, -dy) / D2R / ROT_SETT) * 2 + (s > 0 ? 1 : 0);
-          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q: { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p } }); // chi deve ancora finire una manovra vale meno
+          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q: { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu } }); // chi deve ancora finire una manovra vale meno
         }
       }
       front = [...best.values()].map(o => o.q);
@@ -71,12 +73,25 @@
     return null;
   }
   // cancello della boa: semiretta dalla boa verso mk.out, passata dal lato giusto (da a ≥ 0 ad a < 0, come roundCheck) ad almeno ROT_BOA m
-  const rotCancBoa = mk => { const ux = Math.sin(mk.out * D2R), uy = -Math.cos(mk.out * D2R); return (p, q) => { // 1.2.40: ux e uy una volta sola
+  const ROT_OLTRE = 0.02; // 1.3.23: frazione del passo oltre la semiretta in cui finisce il lato (pochi cm), ipotesi nostra: un punto proprio sulla linea, se la rotta poi torna indietro, per roundCheck non ha girato
+  const rotCancBoa = mk => { const ux = Math.sin(mk.out * D2R), uy = -Math.cos(mk.out * D2R), oltre = rot.giroLibero ? 0 : ROT_OLTRE; const c = (p, q) => { // 1.2.40: ux e uy una volta sola
     const cp = (p.x - mk.x) * uy - (p.y - mk.y) * ux, cq = (q.x - mk.x) * uy - (q.y - mk.y) * ux; // > 0: a destra della semiretta guardando lungo out
     if (!(cp <= 0 && cq > 0) && !(cp < 0 && cq >= 0)) return null; // roundCheck: da bearing-out ≥ 0 (a destra, prodotto < 0 qui) a < 0
     const f = cp / (cp - cq), ax = p.x + (q.x - p.x) * f - mk.x, ay = p.y + (q.y - p.y) * f - mk.y;
-    return ax * ux + ay * uy >= ROT_BOA ? f : null;
-  }; };
+    return ax * ux + ay * uy >= ROT_BOA ? Math.min(1, f + oltre) : null;
+  };
+    // 1.3.23 (voce 50, docs/PROPOSTA-ROTTA-GIRO-BOA.md; via di Ale del 20 nov): non si fa il passo che taglia la semiretta della boa nel verso sbagliato (da bearing-out < 0
+    // a ≥ 0, come il -1 di roundCheck in js/gioco.js), con il punto di taglio dalla parte di out o dentro 1,5 m dalla boa (roundCheck salta i punti entro 1,5 m: un passaggio
+    // lì dentro gli arriva come -1 fra i punti prima e dopo). Il controllo è sul punto di taglio e non sugli estremi del passo: a 1 s di passo, vicino alla boa, gli estremi
+    // possono stare oltre i 90° mentre il gioco, a 60 passi al secondo, vede il passaggio. Prima la rotta poteva passare dal lato sbagliato e poi da quello giusto (oss. 134 e 137).
+    // Un ramo che è già passato dal lato giusto vicino alla boa (sotto i ROT_BOA m del cancello, ma per roundCheck la boa è girata: c.giusto, segnato in .giu) non ha più
+    // divieti: per il gioco quella boa è fatta (prima stesura senza .giu: rotte valide fino a 7,5 s più lente, R3 della proposta, 20 nov).
+    // rot.giroLibero = true lo spegne; dalla 1.3.23 è spento di base (vedi rot): tests/misura_giro_boa.py lo accende per misurare
+    const taglio = (p, q, verso) => { const cp = (p.x - mk.x) * uy - (p.y - mk.y) * ux, cq = (q.x - mk.x) * uy - (q.y - mk.y) * ux;
+      if (verso > 0 ? !(cp > 0 && cq <= 0) : !(cp <= 0 && cq > 0)) return false; const f = cp / (cp - cq);
+      return (p.x + (q.x - p.x) * f - mk.x) * ux + (p.y + (q.y - p.y) * f - mk.y) * uy >= -1.5; };
+    if (!rot.giroLibero){ c.vieta = (p, q) => taglio(p, q, 1); c.giusto = (p, q) => taglio(p, q, -1); }
+    return c; };
   const rotCancArrivo = () => (p, q) => { const [px, py] = toWF(p.x, p.y), [qx, qy] = toWF(q.x, q.y);
     if (!(py < 0 && qy >= 0)) return null; const f = -py / (qy - py), x = px + (qx - px) * f; return Math.abs(x) <= LINE_HALF ? f : null; };
 
@@ -307,12 +322,17 @@
   }
   // 1.3.4: l'espressione del volto (regola di Ale del 15 novembre): contento se dice «quasi perfetta» o se nessuna frase pesa almeno COA_POCO s;
   // arrabbiato se c'è una penalità, la partenza anticipata o (1.3.6, aggiunta) una scuffia; serio negli altri casi. COA_POCO: ipotesi nostra. Volti fatti da Ale con ChatGPT (FONTI-PUBBLICHE F104)
+  // 1.3.23 (voce 57; Ale, 17 nov: «arriva primo e il Coach non sorride»): contento anche col primo posto (con almeno un'altra barca in acqua) o col nuovo record
+  // (R.recNuovo, da salvaArrivo), se non c'è niente da arrabbiato; prima non compariva mai (0 su 11 nelle regate del 15-17 nov)
   const COA_POCO = 10;
-  const coaUmore = C => C.some(x => x.tipo === "penalita" || x.tipo === "scuffia" || x.ocs) ? "arrabbiato" : C.some(x => x.tipo === "bene") || C.every(x => x.peso < COA_POCO) ? "contento" : "serio";
+  function coaBravo(){ const me = R && R.boats[0]; if (!me || me.fin === null || me.dsq) return false;
+    const primo = R.boats.length > 1 && !R.boats.some(b => !b.me && b.fin !== null && !b.dsq && b.fin < me.fin);
+    return primo || !!R.recNuovo; }
+  const coaUmore = (C, bravo) => C.some(x => x.tipo === "penalita" || x.tipo === "scuffia" || x.ocs) ? "arrabbiato" : bravo || C.some(x => x.tipo === "bene") || C.every(x => x.peso < COA_POCO) ? "contento" : "serio";
   function coaMostra(){
     const C = rot.res && rot.res.coach; $("coach").hidden = !C || !C.length;
     if (!C || !C.length) return;
-    const u = coaUmore(C), im = $("coachVolto"); im.hidden = false; /* 1.3.12: un caricamento fallito lo nascondeva per tutta la sessione */ im.src = "img/coach-" + u + ".jpg"; im.alt = "Il Coach, " + u; im.dataset.umore = u;
+    const u = coaUmore(C, coaBravo()), im = $("coachVolto"); im.hidden = false; /* 1.3.12: un caricamento fallito lo nascondeva per tutta la sessione */ im.src = "img/coach-" + u + ".jpg"; im.alt = "Il Coach, " + u; im.dataset.umore = u;
     $("coachFrasi").innerHTML = C.map((x, k) => `<li><button class="linkish" data-k="${k}" title="Vai a ${rivTempo(x.t)}">${x.txt}</button></li>`).join("");
   }
   $("coachFrasi").onclick = e => { const b = e.target.closest("button[data-k]"); if (!b || !riv.on || !rot.res || !rot.res.coach) return;
@@ -334,7 +354,7 @@
     if (!R || !R.rotta || riv.on) return;
     if (!rot.res){ const ott = rotCalcola(0); rot.res = ott ? { ott, sp: rotSpiega(ott) } : { ott: null, testo: "La rotta ottimale non si può calcolare per questa regata (manca il taglio della linea o l'arrivo)." };
       if (ott){ rot.res.testo = rotTesto(ott, rot.res.sp); rot.res.coach = coaFrasi(ott, rot.res.sp);
-        regCoach(R, rot.res.coach, rot.res.coach.length ? coaUmore(rot.res.coach) : "nessuno", rot.res.testo); /* 1.3.14: le frasi del Coach nel file della regata */ } }
+        regCoach(R, rot.res.coach, rot.res.coach.length ? coaUmore(rot.res.coach, coaBravo()) : "nessuno", rot.res.testo); /* 1.3.14: le frasi del Coach nel file della regata */ } }
     $("movAss").hidden = !rot.res.ott || rot.res.ass !== undefined; $("movAss").disabled = !!rot.calc; // 1.2.40: la migliore in assoluto solo a richiesta (tasto V), una volta per regata
     rot.on = true; rot.box = null; rivApri(); $("movTit").textContent = rot.res.testo; coaMostra();
     $("movLargo").hidden = !rot.res.ott; rotLargo(false);

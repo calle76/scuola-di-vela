@@ -2,15 +2,16 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 18 novembre 2026, sessione di sola chat (gioco alla **1.3.22**, tag `v1.3.22`, su `main`; nessun codice toccato).*
+*Aggiornato: 20 novembre 2026, sessione in autonomia di 4 ore (gioco alla **1.3.23**, tag `v1.3.23`, su `main`).*
 
 ## Dove siamo
 
-- **Il gioco:** la Scuola (barca a una vela, 20 lezioni) è chiusa come contenuti. Deriva è nel gioco ma non ancora «finita»: lezioni 21-25, torneo e stagione (circuito zonale e nazionale, finale, sponsor a contratto in carriera), regole 15 e 16 col semaforo giallo, cono d'ombra, rotta ottimale (anche «in assoluto», tasto V), Coach nella moviola col volto (tre espressioni), stagione con un amico per file (`ST_FORMA`, «Riprendi dal mio file»). Com'è fatto: `IL-GIOCO.md`.
-- **Oggi (17 nov) niente di nuovo nel motore.** Chiuse cinque versioni di solo testo: 1.3.18 (lezione 24), 1.3.19 (lezione 21), 1.3.20 (presentazione della stagione: dice che solo l'ordine nella tua batteria è vero), 1.3.21 (sette scelte del gioco dichiarate «in questo gioco…»), 1.3.22 (numeri nostri nei testi allineati alle fonti). Letti i dati di Lucio e di Ale (osservazioni 133-137).
-- **18 nov, due richieste nuove di Ale (solo scritte, nessun via):** (63) **regate troppo corte**: lati di 140 m, 3 minuti, una virata sola, raffiche che non si sentono; direzione: lati da 400-500 m e raffiche come zone sull'acqua, prima da controllare nei `regata-*.txt` quanto vento e velocità cambiano davvero; (64) **entrata in Deriva**: sponsor e presentazione del Coach appena si arriva al livello, più un **attestato in un file** che fa ripartire da Deriva senza rifare la Scuola (legata alla 54). Entrambe vanno prima in una proposta (due fermate). Lo sponsor in Deriva era stato escluso: la decisione è superata (`DECISIONI.md`).
-- **Un difetto vero trovato e non ancora corretto:** la rotta ottimale può girare la boa dal lato sbagliato (osservazioni 134 e 137, voce 50): costa 2-4 s al giocatore in 7 regate su 48, fino a 21 s alle altre barche. Proposta scritta, aspetta il via.
-- **Collaudi:** Ale li fa girare **su GitHub**, non sul PC. A fine lavoro non si dice «lancia `lancia_tutti.sh` sul tuo PC». Le misure lunghe le faccio io, **una per volta col freno termico** (`python3 tests/freno.py 64 55 comando…`: sospende il comando sopra 64 °C e lo riprende sotto 55 °C; il PC è arrivato a 85 °C). Fallimenti noti in `tests/fallimenti_noti.txt` (T2b del triangolo ha voci a frammento per GitHub).
+- **Il gioco:** la Scuola è chiusa come contenuti. Deriva è nel gioco ma non ancora «finita»: lezioni 21-25, torneo e stagione (zonale, nazionale, finale, sponsor a contratto), regole 15 e 16, cono d'ombra, rotta ottimale, Coach nella moviola col volto. Com'è fatto: `IL-GIOCO.md`.
+- **20 nov, versione 1.3.23:** il Coach sorride col primo posto o il record (57); l'orologio dei giri compare anche nel torneo, dove mancava perché il torneo non ha bandiere (61); carriera in un file, attestato in un file, «Riparti da un attestato», benvenuto in Deriva col Coach e prime due offerte di sponsor all'entrata (54 e 64, `PROPOSTA-ATTESTATO-E-CARRIERA-FILE.md`). Collaudi lanciati: `collaudo_coach`, `collaudo_orologio_giri`, `collaudo_carriera_file` (nuovo) verdi in Chromium; `polare.js` e `raffiche_e_virate.js` identici alla 1.3.22; `impronta1b.js` OK. Non lanciati qui: Firefox e `collaudo_sponsor` (giro su GitHub).
+- **50 (rotta ottimale e lato della boa): scritto ma spento.** R1 passa, R3 no (rotte già valide fino a 7,5 s più lente): causa da trovare (`PROPOSTA-ROTTA-GIRO-BOA.md` §Esito). Le rotte del gioco sono quelle della 1.3.22.
+- **62 (ripassi):** nessun difetto nel codice; è una domanda per Ale (`DA-FARE.md`).
+- **Giri GitHub del 17-18 nov:** solo rossi già noti (suoni: sartiame e boa; torneo C11 in Firefox). Il 19 nessun giro (niente commit nuovi).
+- **Collaudi:** Ale li fa girare **su GitHub**, non sul PC. Le misure lunghe le faccio io, **una per volta col freno termico** (`python3 tests/freno.py 64 55 comando…`). Oggi picco 55 °C. Il PC è lento: `misura_giro_boa.py` circa 1,5 minuti a regata.
 
 ## A inizio sessione
 
@@ -27,13 +28,13 @@
 
 ## Prossimi passi, quando tornano i crediti
 
-1. Dare i «via» con la lista di `DA-FARE.md` (ordine consigliato: **64 attestato + 54 file della carriera per primi**, perché servono a provare tutto il resto senza rifare la Scuola; poi 50 rotta ottimale, 63 regate lunghe (prima la proposta `PROPOSTA-PERCORSO-LUNGO.md`), 49 regola 18, 4B rivali, 36 Allenamento, 42 Coach; leggeri: 55 registrazioni più ricche, 57 volto felice, 53 distacchi T2b). L'ordine lo decide Ale.
+1. Dare i «via» con la lista di `DA-FARE.md` (64 e 54 fatti nella 1.3.23; ordine consigliato ora: 50 (trovare la causa di R3), 63 regate lunghe (prima la proposta `PROPOSTA-PERCORSO-LUNGO.md`), 49 regola 18, 4B rivali, 36 Allenamento, 42 Coach; leggeri: 55 registrazioni più ricche, 57 volto felice, 53 distacchi T2b). L'ordine lo decide Ale.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
 3. Regate nuove di Ale e Lucio nella cartella: leggerle (formato e cosa non contengono: voce 55).
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main --tags` (dopo ogni sessione; la 1.3.22 e i riordini sono da pushare).
+- **Push:** `git push origin main --tags` (dopo ogni sessione; la 1.3.23 è da pushare).
 - **Chiedere a Lucio** per il finale dell'osservazione 135: «in quella regata (21:20) sei arrivato primo?» e a che secondo succede la situazione.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ogni due settimane circa e dopo regate nuove; a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Lo script copia anche i `stagione-*.json`; **non** copre i salvataggi del browser (carriera: voce 54).
 - **File sciolti nella radice del repo** (non tracciati): `stagione-*.json` (i vostri salvataggi; sono copiati dallo script), `Coach_*.png/jpeg` (gli originali; i jpg usati dal gioco sono in `img/`), `regata-…(1).txt` (duplicati identici: si possono cancellare). Decide Ale.

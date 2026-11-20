@@ -2,6 +2,8 @@
 # Uso: .venv-collaudi/bin/python tests/collaudo_orologio_giri.py        (BROWSER=firefox per l'altro browser)
 #  O1 l'orologio c'è se e solo se c'è un debito di giri (anche prima del via), letto da __sv.riquadro; O2 pixel dell'anello: rosso prima del giro, verde dove il giro è arrivato,
 #  nel verso giusto (ore 3 e ore 6 per i giri a dritta, ore 9 e ore 6 per quelli a sinistra); O3 il numero al centro = giri contati dal collaudo / giri della penalità;
+#  O9 (1.3.23, voce 61) nel torneo (regate 3 e 4, coi giri ma senza bandiere): prima del debito niente riquadro; col debito l'orologio c'è, rosso, «0/2»,
+#     nella metà alta, senza il pezzo delle bandiere; in 3 semi. Prima della 1.3.23 lì non c'era (segnalato da Ale il 17 nov).
 #  O5 il riquadro sta nella metà alta dello schermo (bussola e vento sono in basso a destra); O7 pagina senza #collaudo: dopo un debito l'anello si vede, rosso.
 import asyncio, os, pathlib, sys
 import metro
@@ -27,6 +29,21 @@ async ([dir, seme, prima]) => {
   while (R.t < t0 + 90 && R.done < R.need && !cap){ sv.ctl.tiller = dir; sv.ctl.sheet = sv.autoSheet(); sv.run(dt, 1); if (sv.S.capsized) cap = true; camp('giri'); }
   for (let j = 0; j < 60 * 5; j++){ sv.pilota(dt); sv.run(dt, 1); camp('dopo'); }
   return { out, cap, done: R.done, need: R.need };
+}"""
+TORNEO = PIX + """
+async ([k, seme]) => {
+  const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); }, dt = 1 / 60;
+  sv.fast(0); sel('aiLevel', 'medio'); sel('cdSel', '60'); window.confirm = () => true; __seed(seme);
+  if (sv.tor){ sv.torApri(); document.getElementById('torRit').click(); }
+  sv.torApri(); document.getElementById('torGo').click();
+  const T = sv.tor; T.ris.length = 0; for (let j = 0; j < k; j++) T.ris.push([0, 1, 2, 3].map(i => ({ fin: i + 1, pp: 0 })));
+  sv.simTime = 0; sv.openItem(["r", "t"]); const R = sv.R;
+  for (let j = 0; j < 60 * 5; j++){ sv.pilota(dt); sv.run(dt, 1); }
+  sv.draw(0.016); const prima = { d: sv.riquadro, or: R.rqOr };
+  giriDebito(); for (let j = 0; j < 30; j++){ sv.pilota(dt); sv.run(dt, 1); } sv.draw(0.016);
+  const d = sv.riquadro;
+  return { tor: !!R.tor, giri: !!R.giri, segnali: !!R.segnali, prima: prima.d, primaOr: prima.or, oro: d && d.orologio ? d.orologio.testo : null, flag: d ? d.flag : null,
+    rect: sv.rqRect, rect2: sv.rqRect2, pix: punti(), righe: d ? d.righe.map(r => r[0]) : null };
 }"""
 bad = []
 def chk(nome, ok, extra=""):
@@ -64,6 +81,11 @@ async def main():
         chk("O3b le penalità si scontano come prima (giri contati dal gioco: 2 su 2) in tutte le prove senza scuffia", scontate >= 8 and metro.tutti(r["done"] >= r["need"] for r in G if not r["cap"]), "scontate %d su 10" % scontate)
         basso = max((s["rect"][1] + s["rect"][3]) for s in tutti if s["rect"])
         chk("O5 il riquadro con l'orologio sta nella metà alta dello schermo (parte più bassa a y=%d, metà = 325)" % basso, basso < 325)
+        TT = [await pg.evaluate(TORNEO, [2 + (j % 2), 3200 + j]) for j in range(3)]
+        for j, t in enumerate(TT): print("O9 torneo, regata %d, seme %d: %s" % (3 + j % 2, 3200 + j, t), flush=True)
+        chk("O9 torneo coi giri (senza bandiere): prima del debito niente riquadro, col debito l'orologio rosso «0/2» nella metà alta, senza bandiere (3 semi)",
+            len(TT) == 3 and metro.tutti(t["tor"] and t["giri"] and not t["segnali"] and t["prima"] is None and t["primaOr"] is None and t["oro"] == "0/2" and t["flag"] == []
+                and t["rect"] is None and t["rect2"] and t["rect2"][1] + t["rect2"][3] < 325 and t["pix"] and all(t["pix"][q] == "rosso" for q in ("ore3", "ore6", "ore9")) for t in TT))
         chk("O0 nessun errore di pagina", not errs, str(errs[:2]))
         await ctx.close()
         # ---- O7: pagina come la carica un giocatore ----

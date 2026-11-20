@@ -1069,9 +1069,9 @@
     const deb = R.need > R.done; if (R.rqDeb && !deb) R.rqScont = R.t; R.rqDeb = deb;
   }
   function rqDati(){ // { flag, senso (riga di significato o null), righe: [[testo, colore, peso, px]], lampo }; flag vuoto = niente pezzo di sinistra, righe vuote = niente pezzo di destra; null se non si vede nulla
-    const me = R.boats[0], f = bandiereR(), flag = ["classe", "P", "X", "blu"].filter(k => f[k]), righe = [];
+    const me = R.boats[0], f = R.segnali ? bandiereR() : {}, flag = ["classe", "P", "X", "blu"].filter(k => f[k]), righe = []; /* senza R.segnali (torneo coi giri) solo la parte delle penalità */
     const recente = R.rqT != null && R.t - R.rqT < RQ_PERM, deb = R.need > R.done, scont = R.rqScont != null && R.t - R.rqScont < RQ_SCONTATA;
-    const oltre = opt.hint && R.t < 0 && me.fin === null && toWF(me.S.x, me.S.y)[1] <= 0;
+    const oltre = R.segnali && opt.hint && R.t < 0 && me.fin === null && toWF(me.S.x, me.S.y)[1] <= 0;
     if (f.X) righe.push([me.ocs ? "X: torna dietro la linea" : "X: richiamo per altre barche", "#FFD447", 700, 14]);
     if (deb){
       const m = R.need - R.done;
@@ -1105,7 +1105,7 @@
     ctx.restore();
   }
   function drawRiquadro(){
-    R.rqRect = null; R.rqRect2 = null; R.rqOr = null; if (!R.segnali) return;
+    R.rqRect = null; R.rqRect2 = null; R.rqOr = null; if (!R.segnali && !R.giri) return; /* 1.3.23 (voce 61): nel torneo coi giri le bandiere non ci sono, ma le penalità e l'orologio sì */
     const d = rqDati(); if (!d) return;
     const gap = 10, pad = 10; ctx.save(); ctx.textBaseline = "middle"; ctx.textAlign = "left";
     const nf = d.flag.length;
@@ -1135,7 +1135,7 @@
   function updateRace(dt){
     if (!R) return;
     const prevT = R.t; R.t += dt;
-    if (R.segnali) rqAggiorna();
+    if (R.segnali || R.giri) rqAggiorna();
     // segnali di partenza (versione accorciata a un minuto)
     const sig = (at, text) => { if (prevT < at && R.t >= at && !R.signals.has(at)){ R.signals.add(at); toast(text); } };
     if (R.segnali){ // 1.0.65: i messaggi seguono le bandiere (le soglie con <=, perché il primo passo parte esattamente dal tempo dell'avviso)
@@ -1189,6 +1189,7 @@
     }
     const key = "r" + raceIdx, bk = recK(key), prev = progress.best[bk], tot = Math.round(me.fin);
     if (!prev || tot < prev){ progress.best[bk] = tot; recSave(); }
+    R.recNuovo = !!prev && tot < prev; /* 1.3.23: il Coach sorride col nuovo record (voce 57) */
     progress.done[key] = true; if (regTotal() === 0) progress.clean[bk] = true; saveProgress();
     raceResults(prev, tot);
     // 0.21: piazzamento per livello degli avversari (solo con avversari); «pulita» si legge adesso, all'arrivo
@@ -1811,6 +1812,7 @@
       if (D.c.esiti.length >= D.c.durata){ const c = D.c, tutti = c.esiti.every(e => e.every(v => v)), qualcuno = c.esiti.some(e => e.some(v => v));
         D.storia.push({ nome: c.nome, g: c.g, durata: c.durata, esiti: c.esiti, esito: tutti ? "tutti" : qualcuno ? "parte" : "nessuno" });
         D.offerte = spOfferteDa(tutti ? [c.g, Math.min(4, c.g + 1)].filter((g, i, a) => a.indexOf(g) === i) : qualcuno ? [c.g] : [Math.max(1, c.g - 1)], tutti ? c : null);
+        if (!naz && pos !== null && pos <= 3 && !D.offerte.some(o => o.circ === "naz")) D.offerte.push(spOfferta(3, 1)); /* 1.3.23: fra i primi 3 dello zonale c'è sempre un'offerta nazionale (serve dalla prima stagione, con lo sponsor dall'entrata in Deriva) */
         D.c = null; }
     } else if (!D.c && !naz && !lasciata) D.offerte = spOfferteDa(pos <= 3 || progress.nazionale ? [2, 3] : [1, 2]); /* 1.3.12: anche col diritto preso prima della 1.3.9 */
   }

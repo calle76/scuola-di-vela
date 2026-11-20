@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.22"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.23"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -172,7 +172,7 @@
     const rows = MERITI.map(([k, nome, max, min]) => `<div class="lrow"><span>${nome}</span><span class="lbar"><i style="width:${pc(m.pt[k], max)}%"></i></span><span class="num"><span data-m="${k}">${m.pt[k]} / ${max}</span> · <span class="${m.pt[k] >= min ? "ok" : "no"}">servono ${min}</span></span></div>`).join("");
     const sug = m.sugg.length ? m.sugg[giroSug++ % m.sugg.length] : null;
     return `<div><div class="part-head"><h2>Libretto${nomeGet().trim() ? " di " + escH(nomeGet().trim()) : ""}</h2><span id="libTot">totale ${m.totale} / ${MERITI.reduce((a, r) => a + r[2], 0)} (servono ${TOT_MIN})</span></div>
-      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES_CARRIERA.length}</p>${m.superato && progress.brevetto ? `<p class="manca" id="libManca">Attestato ottenuto il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Aprilo</button></p>`
+      <div class="lib">${rows}<p id="libPulite">Regate senza errori: ${m.pulite} su ${RACES_CARRIERA.length}</p>${progress.brevetto && (m.superato || progress.brevetto.file) ? `<p class="manca" id="libManca">Attestato ${progress.brevetto.file ? "caricato da un file, ottenuto" : "ottenuto"} il ${fmtData(progress.brevetto.data)}. <button class="linkish" id="goAttest">Aprilo</button></p>`
         : `<p class="manca" id="libManca">${m.superato ? "Scuola superata." : m.manca}</p>${sug ? `<p id="libSug">Cosa potresti fare adesso: ${sug}</p>` : ""}`}</div></div>`;
   }
   // ---- punti di Deriva e «Deriva superata» (1.3.5, docs/PROPOSTA-DERIVA-CIRCUITI.md; solo carriera) ----
@@ -208,6 +208,56 @@
       <p>${D.strada === "merito" ? `Hai finito una stagione zonale senza ritirarti e hai ${meritiD(progress).totale} punti di Deriva: superata per merito. Il circuito nazionale si apre solo fra i primi 3 di uno zonale.`
         : "Sei arrivato fra i primi 3 di una stagione zonale: superata, e hai il diritto al circuito nazionale."}</p>
       <p>Il livello dopo, con il fiocco, non c'è ancora. Nessun valore legale: è un traguardo del gioco.</p>
+      <div class="row"><button class="primary" id="dvClose">Chiudi</button></div>`;
+    $("dvClose").onclick = () => $("derivaDlg").close();
+    $("derivaDlg").showModal();
+  }
+
+  // ---- carriera e attestato in un file, benvenuto in Deriva (1.3.23, voci 54 e 64, docs/PROPOSTA-ATTESTATO-E-CARRIERA-FILE.md; via di Ale del 20 novembre 2026) ----
+  // Il file della carriera è tutto il salvataggio (progress, fantasmi, nome); caricarlo sostituisce la carriera del browser. L'attestato della Scuola in un file fa ripartire
+  // la carriera dall'inizio di Deriva (tutto il resto azzerato). Niente controllo della versione, come per la stagione dalla 1.3.16: solo la forma del file.
+  const CAR_FORMA = 1, ATT_FORMA = 1; // etichette del formato dei file: si alzano solo se cambia il modo di leggerli
+  function scaricaFile(nome, testo){ const a = document.createElement("a"), u = URL.createObjectURL(new Blob([testo], { type: "application/json" }));
+    a.href = u; a.download = nome; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); }
+  const carFile = () => JSON.stringify({ tipo: "carriera", forma: CAR_FORMA, ver: VERSIONE, data: oggi(), nome: nomeGet(), progress, ghosts });
+  const attFile = m => { const B = progress.brevetto; return JSON.stringify({ tipo: "attestato", livello: "scuola", forma: ATT_FORMA, ver: VERSIONE, data: B.data, nome: B.nome || nomeGet().trim(),
+    voto: progress.exam ? progress.exam.voto : null, n: progress.exam ? progress.exam.n || 20 : null, meriti: m.pt, nota: "Nessun valore legale: è un traguardo del gioco." }); };
+  function fileLeggi(testo, tipo){ // l'oggetto del file, o il motivo del rifiuto
+    let f; try { f = JSON.parse(testo); } catch(e){ return "Il file non si legge: non è un file del gioco."; }
+    if (!f || typeof f !== "object") return "Il file non si legge: non è un file del gioco.";
+    if (f.tipo !== tipo) return tipo === "carriera" ? (f.tipo === "attestato" ? "Questo è un attestato: si carica con «Riparti da un attestato»." : "Questo non è il file di una carriera.")
+      : (f.tipo === "carriera" ? "Questa è una carriera intera: si carica con «Carica una carriera»." : "Questo non è il file di un attestato.");
+    if ((f.forma || 1) > (tipo === "carriera" ? CAR_FORMA : ATT_FORMA)) return "Il file viene da una versione più nuova del gioco: aggiorna il gioco e riprova.";
+    if (tipo === "carriera" && (!f.progress || typeof f.progress !== "object" || Array.isArray(f.progress))) return "Il file della carriera è incompleto.";
+    if (tipo === "attestato" && (f.livello !== "scuola" || !/^\d{4}-\d{2}-\d{2}$/.test(f.data || "") || !f.meriti || typeof f.meriti !== "object")) return "L'attestato è incompleto.";
+    return f;
+  }
+  function carCarica(testo){ // "" fatto, null annullato, altrimenti il motivo del rifiuto (la carriera non cambia)
+    const f = fileLeggi(testo, "carriera"); if (typeof f === "string") return f;
+    if (!confirm("Sostituire la carriera di questo browser con quella del file (salvata il " + fmtData(f.data || oggi()) + ")? Quella di adesso si perde, se non l'hai salvata.")) return null;
+    progress = Object.assign({ done: {}, best: {}, clean: {} }, f.progress); ghosts = f.ghosts && typeof f.ghosts === "object" ? f.ghosts : {}; nomeSet(f.nome || "");
+    saveProgress(); saveGhosts(); showMenu(); return "";
+  }
+  function attCarica(testo){
+    const f = fileLeggi(testo, "attestato"); if (typeof f === "string") return f;
+    if (!confirm("Ripartire dall'inizio di Deriva con l'attestato della Scuola del " + fmtData(f.data) + "? Tutto il resto della carriera di questo browser si azzera (Scuola, record, fantasmi, Deriva, stagioni, sponsor): se vuoi tenerlo, prima «Salva la carriera».")) return null;
+    const pt = {}; for (const [k, , max] of MERITI) pt[k] = Math.max(0, Math.min(max, +f.meriti[k] || 0));
+    progress = { done: {}, best: {}, clean: {}, exam: { superato: true, voto: +f.voto || 0, n: +f.n || 20, data: f.data }, brevetto: { data: f.data, nome: String(f.nome || "").slice(0, 60), file: { meriti: pt } } };
+    ghosts = {}; if (f.nome) nomeSet(f.nome);
+    livello = "deriva"; try { localStorage.setItem(LIV_KEY, livello); } catch(e){}
+    saveProgress(); saveGhosts(); showMenu(); return "";
+  }
+  let benvSkip = location.hash === "#collaudo" || location.hash === "#collaudo-lab"; // come le istruzioni (briefSkip): nei collaudi la finestra bloccherebbe i clic; __sv.benvenuto = true la riaccende
+  function openBenvenuto(){ // la prima volta che in carriera si apre Deriva: cosa si fa e, per una carriera che non ha mai avuto sponsor né stagioni, le prime offerte
+    const D = progress.sponsor, offri = !progress.stagione && !progress.nazionale && !progress.deriva && (!D || (!D.c && !D.offerte.length && !D.storia.length));
+    if (offri){ spDati().offerte = spOfferteDa([1, 2]); }
+    progress.dvBenvenuto = oggi(); saveProgress();
+    $("dvBody").innerHTML = `<div class="qz-top"><h2 id="dvTitle">Benvenuto in Deriva</h2></div>
+      <div class="dv-coach"><img src="img/coach-serio.jpg" alt="Il Coach" width="64" height="64"><p>Sono il Coach: ti seguo in questo livello. Si gareggia con la stessa barca della Scuola.</p></div>
+      <ul><li>Cinque lezioni nuove (21-25): regole in regata, partenza, layline.</li><li>Regate contro il computer e il torneo di quattro regate.</li>
+        <li>La stagione del circuito: quattro tappe, zonale e poi nazionale.</li><li>Dopo ogni regata la moviola: la rotta ottimale e i miei commenti.</li>
+        <li>Deriva si supera fra i primi 3 di una stagione zonale, oppure con una stagione senza ritiri e abbastanza punti.</li></ul>
+      ${offri ? `<p><b>Due sponsor</b> ti fanno un'offerta: la trovi in «Lo sponsor», dal riquadro del torneo. Scegline una prima di iniziare la stagione.</p>` : ""}
       <div class="row"><button class="primary" id="dvClose">Chiudi</button></div>`;
     $("dvClose").onclick = () => $("derivaDlg").close();
     $("derivaDlg").showModal();
@@ -251,13 +301,14 @@
   // disegno nostro: una deriva stilizzata sul mare, in alto sull'attestato (non è un marchio né un logo di nessuna classe)
   const NAVE = `<svg class="nave" viewBox="0 0 120 70" role="img" aria-label="Una deriva a vela"><path class="vela" stroke-width="2" stroke-linejoin="round" d="M58 6 L58 46 L22 46 Z"/><path class="vela" stroke-width="2" stroke-linejoin="round" d="M64 14 L64 46 L92 46 Z"/><path class="scafo" d="M14 50 L102 50 L90 60 L28 60 Z"/><path class="onda" d="M6 66 Q16 60 26 66 T46 66 T66 66 T86 66 T106 66 T116 66"/></svg>`;
   function openAttest(){
-    const B = progress.brevetto, m = meriti(progress), q = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    const B = progress.brevetto, m = B.file ? { pt: B.file.meriti } : meriti(progress), q = t => /* 1.3.23: attestato caricato da un file, coi punti del file */ t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
     $("atBody").innerHTML = `${NAVE}<p class="sc">Scuola di vela</p><hr><p class="titolo">Attestato del gioco</p><h2 id="atTitle">La scuola</h2><p class="ruolo">superata</p>
       <label for="atName">Nome (facoltativo)</label><input id="atName" maxlength="60" autocomplete="off" value="${q(B.nome || nomeGet().trim())}">
       <p>Ottenuto il ${fmtData(B.data)}, con l'esame superato: ${progress.exam.voto} su ${progress.exam.n || 20}.</p>
       <ul>${MERITI.map(([k, nome, max]) => `<li>${nome}: ${m.pt[k]} / ${max}</li>`).join("")}</ul>
       <p class="legal">Nessun valore legale: non sostituisce un corso di vela né la patente nautica.</p>
-      <div class="row"><button class="primary" id="atPrint">Stampa</button><button id="atClose">Chiudi</button></div>`;
+      <div class="row"><button class="primary" id="atPrint">Stampa</button><button id="atSalva">Salva in un file</button><button id="atClose">Chiudi</button></div>`;
+    $("atSalva").onclick = () => scaricaFile("attestato-scuola-" + B.data.replace(/-/g, "") + ".json", attFile(m)); // 1.3.23 (voce 64)
     $("atName").oninput = e => { B.nome = e.target.value.trim(); saveProgress(); };
     $("atPrint").onclick = () => window.print();
     $("atClose").onclick = () => $("attest").close();
@@ -333,7 +384,7 @@
         <div class="head-r">${livSel}<div class="seg" id="modoSel"><button data-v="libero" aria-pressed="${modo === "libero"}">Gioco libero</button><button data-v="carriera" aria-pressed="${modo === "carriera"}">Carriera</button></div>
         <button class="pill" id="menuGloss">Glossario</button></div></header>
       ${tiles}
-      <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><span><button class="linkish" id="regOpen">Regate registrate</button> <button class="linkish" id="resetProg">Azzera i progressi</button></span></footer></div>`;
+      <footer class="menu-foot"><span>${wipeNote ? "<b>La barca o le prove sono cambiate: i tempi salvati sono stati azzerati.</b> " : ""}I progressi restano salvati in questo browser. ★ prova o regata completata almeno una volta senza errori. Il pallino oro, argento o bronzo è la medaglia del tuo tempo migliore.</span><span><button class="linkish" id="regOpen">Regate registrate</button> <button class="linkish" id="resetProg">Azzera i progressi</button>${modo === "carriera" ? ` <button class="linkish" id="carSalva">Salva la carriera</button> <button class="linkish" id="carCarica">Carica una carriera</button> <button class="linkish" id="carAtt">Riparti da un attestato</button><input type="file" id="carIn" accept=".json,application/json" hidden>` : ""}</span></footer></div>`;
     $("menu").querySelectorAll("button.item[data-k]").forEach(b => b.onclick = () => openItem(VSEQ[+b.dataset.k]));
     $("menu").querySelectorAll("button.item[data-d]").forEach(b => b.onclick = () => openItem([b.dataset.d[0], +b.dataset.d.slice(1)])); // 1.3.1: le voci di Deriva
     if ($("livSel")) $("livSel").onclick = e => { const b = e.target.closest("button"); if (b && b.dataset.v !== livello){ livello = b.dataset.v; try { localStorage.setItem(LIV_KEY, livello); } catch(e){} showMenu(); } };
@@ -342,7 +393,13 @@
     if ($("goTor")) $("goTor").onclick = torApri;
     if ($("goEsame")) $("goEsame").onclick = openEsame;
     if ($("goAttest")) $("goAttest").onclick = openAttest;
-    if (nuovo) openAttest(); else if (nuovoD) openDeriva();
+    if (nuovo) openAttest(); else if (nuovoD) openDeriva(); else if (modo === "carriera" && LV === "deriva" && !progress.dvBenvenuto && !benvSkip) openBenvenuto(); // 1.3.23 (voce 64)
+    if ($("carSalva")){ let cosa = null; const inp = $("carIn"); // 1.3.23 (voci 54 e 64): carriera e attestato in un file
+      $("carSalva").onclick = () => scaricaFile("carriera-" + oggi().replace(/-/g, "") + ".json", carFile());
+      $("carCarica").onclick = () => { cosa = "carriera"; inp.value = ""; inp.click(); };
+      $("carAtt").onclick = () => { cosa = "attestato"; inp.value = ""; inp.click(); };
+      inp.onchange = () => { const f = inp.files[0]; if (!f) return; const r = new FileReader();
+        r.onload = () => { const e = (cosa === "attestato" ? attCarica : carCarica)(String(r.result)); if (e) alert(e); }; r.readAsText(f); }; }
     $("menuGloss").onclick = openGloss;
     $("menu").querySelectorAll("[data-q]").forEach(b => b.onclick = () => openQuiz(+b.dataset.q));
     $("menu").querySelectorAll("[data-r]").forEach(b => b.onclick = () => openItem(["r", +b.dataset.r]));

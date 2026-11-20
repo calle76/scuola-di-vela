@@ -39,3 +39,11 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 10, 14 | **le fai tu** | giudizio dei suoni all'ascolto, copia di sicurezza del progetto |
 
 
+
+
+## Chiuse il 20 novembre 2026 (versione 1.3.23)
+
+| 54 | **«Salva / Carica la mia carriera» in un file** (paura di perdere i dati del browser). Piccola | come «Riprendi dal mio file» (`PROPOSTA-STAGIONE-FILE.md`) | Sonnet |
+| 64 | **Entrata in Deriva e attestato** (Ale, 18 nov; sponsor prima rifiutato, ora richiesto): all'arrivo al livello Deriva compaiono lo sponsor e la presentazione del Coach («cosa si fa in questo livello»); un **attestato in un file** che permette di ripartire sempre dall'inizio di Deriva senza rifare la Scuola (Carriera → Deriva → «hai l'attestato?» sì). Serve per provare i grandi cambiamenti. Legata alla 54; l'attestato dice «nessun valore legale» | da scrivere; `PROPOSTA-STAGIONE-FILE.md`, `PROPOSTA-RIVALI-E-SPONSOR.md` | Sonnet |
+| 57 | **Volto felice del Coach:** oggi non compare mai (0 su 11 nelle regate del 15-17 nov). Riconfermato da Ale il 17 nov: 4 regate in repo (`regata-20261116-*`, `stagione-*.json`), arriva primo e il Coach non sorride. Contento anche con un primo posto, un record o una perdita piccola; altre espressioni da decidere | `js/rotta.js` `coaUmore`; `PROPOSTA-COACH.md` | Sonnet |
+| 61 | **Giri di penalità: manca l'orologio** che invita a farli e li conta (segnalato da Ale il 17 nov, con immagine). Da capire se manca sempre o solo in certi casi (Deriva, torneo, Scuola) | oss. da scrivere; `PROPOSTA-GIRI-GIOCATORE.md` | Opus |
