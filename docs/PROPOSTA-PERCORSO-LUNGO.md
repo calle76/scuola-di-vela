@@ -72,3 +72,11 @@ Così una raffica si attraversa in 20-60 s invece che in 5-10, la barca fa in te
 2. Lati lunghi dietro una costante, provati con `__sv`; poi raffiche-zona; misure una alla volta col freno.
 3. Rivali: prima si misura quanto peggiorano (L4), poi si decide se ritarare.
 4. Versione nuova, `CHANGELOG.md`, documenti.
+
+## Risposte di Ale (20 novembre 2026, sera)
+
+1. **Solo Deriva.**
+2. **Regate di circa 9-11 minuti:** quindi lati di circa **400-450 m**, non 300 (stima: 400 m → circa 8,5 minuti, 450 m → circa 10). La soglia L1 diventa «mediana fra 9 e 11 minuti».
+3. **Tre regate per tappa e per torneo** (oggi quattro): circa 30 minuti a tappa.
+
+Via al codice: non ancora dato esplicitamente.

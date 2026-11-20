@@ -63,3 +63,9 @@ Durata del commento 6 s; distanza minima fra due commenti 30 s; soglie degli eve
 1. Le frasi, con le fonti (`FONTI-PUBBLICHE.md`), da far vedere ad Ale prima del codice.
 2. Il riquadro e gli eventi, dietro l'impostazione; il collaudo P1-P7.
 3. Le frasi nel file della regata; documenti e versione.
+
+## Risposte di Ale (20 novembre 2026, sera)
+
+- Il Coach in regata, **se acceso, suggerisce cosa sarebbe meglio fare**: è coerente col titolo del gioco, «Scuola di vela» (insegna, non solo commenta). Quindi ogni frase della tabella diventa un consiglio («vira», «poggia per uscire dal cono», «fai i giri lontano dalle altre barche»), non un giudizio.
+- **«Scarso o buono»** (voce 48): era un aiuto a parte, una riga sotto il vento che dice se il vento gira a favore o contro. Ale: in gara può suggerirlo il Coach; in più va **migliorata la lezione** che lo spiega (lezione 11).
+- Quanto spesso parla: non deciso; resta la regola della proposta (al più uno ogni 30 s, tranne le penalità).
