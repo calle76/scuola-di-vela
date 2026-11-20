@@ -19,6 +19,15 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.29 — Triangolo delle regate lunghe da 440 m; collaudi ripassati in due browser
+
+- **Triangolo da 460 a 440 m.** Ritocco dichiarato, dopo aver visto i numeri: col triangolo da 460 m la durata stava sempre nella metà alta dei 9-11 minuti (10,0 / 10,7 / 10,9 in Chromium) e in Firefox usciva a 11,1 (`collaudo_percorso_lungo` P4 rosso). **Riconferma su semi nuovi 601-610:** bastone 10,3 minuti, triangolo 10,4; in raffica 34-35% del tempo di bolina; raffica sulla barca 20 s. `collaudo_percorso_lungo` verde in Chromium e Firefox (10,1 e 10,4 minuti in tutti e due). La velocità in raffica, solo riportata, va da −0,06 a +0,65 nodi secondo browser e percorso: numero molto variabile.
+- **Giro di collaudi di contorno, col freno, uno per volta (Chromium):** verdi `collaudo_regole_15_16`, `collaudo_cono`, `collaudo_nazionale`, `collaudo_stagione_amico`, `collaudo_rotta_assoluta`, `collaudo_moviola`, `collaudo_carriera_intera`, `collaudo_libretto`, `collaudo_quiz`, `collaudo_carriera`, `collaudo_regate` (6 0 e 6 1), `collaudo_giri_avversari` (120), `collaudo_esercizi_regata`, `collaudo_semaforo`, `collaudo_coach_regata`.
+  - `collaudo_triangolo`: rosso già noto, con la riga identica (T2b, 126 su 166).
+  - `collaudo_quiz` aveva il messaggio dell'esito scritto parola per parola: aggiornato con la frase su «da rivedere» della 1.3.25.
+  - **`collaudo_registrazione` E2 rosso**: +15/+25% di tempo per passo con la registrazione accesa. **Non è di oggi:** la 1.3.22 sullo stesso PC dà +15/+19%. È una misura di tempo che col freno non regge (su GitHub è già «da controllare»).
+- **In Firefox:** verdi `collaudo_carriera_file`, `collaudo_rivedere`, `collaudo_orologio_giri`, `collaudo_coach_regata`, `collaudo_percorso_lungo`.
+
 ## 1.3.28 — Il Coach durante la regata (voce 65)
 
 Da dove viene: idea di Ale del 20 novembre («il coach che appare con diverse espressioni durante le lunghe regate per dare consigli e commenti»), risposta alle domande («se acceso suggerisce cosa sarebbe meglio fare», per coerenza con «Scuola di vela»; anche «scarso/buono»), via del 20 novembre. `docs/PROPOSTA-COACH-IN-REGATA.md`.

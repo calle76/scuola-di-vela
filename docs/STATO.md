@@ -2,15 +2,21 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 20-21 novembre 2026, notte, terza sessione in autonomia (gioco alla **1.3.26**, tag `v1.3.26`, su `main`).*
+*Aggiornato: 21 novembre 2026, sessione in autonomia mentre Ale era fuori (gioco alla **1.3.29**, tag `v1.3.29`, su `main`).*
 
 ## Dove siamo
 
-- **Il gioco:** Scuola chiusa come contenuti. Deriva nel gioco, non ancora «finita»: lezioni 21-25, torneo, stagione, finale, sponsor dall'entrata in Deriva, regole 15 e 16, cono d'ombra, rotta ottimale (che dalla 1.3.24 gira la boa come la conta il gioco), Coach nella moviola. Com'è fatto: `IL-GIOCO.md`.
-- **20 nov:** 1.3.23 (Coach contento, orologio dei giri nel torneo, carriera e attestato in un file, benvenuto e sponsor all'entrata in Deriva); 1.3.24 (rotta ottimale e lato della boa); 1.3.25 (lezione «da rivedere» dopo un ripasso sbagliato; lezione 11 con il passo «In regata»); **1.3.26 regate lunghe in Deriva** (circa 10 minuti, tre regate per torneo, raffiche come zone sull'acqua).
-- **Da sapere sulla 1.3.26:** con `#collaudo` le regate restano corte, quindi i collaudi vecchi non le provano (solo `collaudo_percorso_lungo.py`); la rotta ottimale a fine regata lunga ferma la pagina 3-4 s (14 s quella in assoluto); i file delle regate peseranno 2-2,5 MB; in raffica la barca guadagna poco (+0,2/+0,6 nodi). Tutto nella voce 66.
-- **Proposta senza codice:** 65 Coach durante la regata (suggerisce cosa fare, anche «scarso/buono»): adesso che le regate sono lunghe si può fare.
-- **Collaudi lanciati qui** (Chromium, col freno, picco 68 °C): tutti verdi quelli toccati; Firefox solo nel giro su GitHub.
+- **Il gioco:** Scuola chiusa come contenuti. Deriva nel gioco, non ancora «finita»: lezioni 21-25, torneo (ora **3 regate lunghe, circa 10 minuti**), stagione, finale, sponsor dall'entrata in Deriva, regole 15 e 16, cono d'ombra, raffiche come zone sull'acqua, rotta ottimale, Coach nella moviola **e durante la regata**. Com'è fatto: `IL-GIOCO.md`.
+- **Versioni del 20-21 nov:**
+  - 1.3.23: Coach contento, orologio dei giri nel torneo, carriera e attestato in un file, benvenuto e sponsor all'entrata in Deriva;
+  - 1.3.24: rotta ottimale e lato della boa;
+  - 1.3.25: lezione «da rivedere», lezione 11 «In regata»;
+  - 1.3.26: regate lunghe;
+  - 1.3.27: rotta ottimale nelle regate lunghe sempre calcolata e più veloce;
+  - 1.3.28: Coach durante la regata;
+  - 1.3.29: triangolo delle regate lunghe da 440 m, collaudi ripassati in Chromium e Firefox.
+- **Da sapere:** con `#collaudo` le regate restano corte, quindi i collaudi vecchi non provano le regate lunghe (lo fanno `collaudo_percorso_lungo`, `collaudo_coach --lungo`, `collaudo_coach_regata`). La rotta «in assoluto» (tasto V) su una regata lunga ci mette ancora 9-10 s. I file «intera» delle regate pesano circa 2 MB: decide Ale (voce 66). Le frasi del Coach in regata sono da leggere.
+- **Collaudi:** lanciati qui in Chromium, col freno; Firefox per i collaudi nuovi e il giro completo su GitHub.
 
 ## A inizio sessione
 
@@ -27,13 +33,13 @@
 
 ## Prossimi passi, quando tornano i crediti
 
-1. Dare i «via» con la lista di `DA-FARE.md` (64 e 54 fatti nella 1.3.23; ordine consigliato ora: 66 (rotta ottimale veloce e file leggeri per le regate lunghe), 65 Coach in regata regate lunghe (prima la proposta `PROPOSTA-PERCORSO-LUNGO.md`), 49 regola 18, 4B rivali, 36 Allenamento, 42 Coach; leggeri: 55 registrazioni più ricche, 57 volto felice, 53 distacchi T2b). L'ordine lo decide Ale.
+1. Dare i «via» con la lista di `DA-FARE.md` (64 e 54 fatti nella 1.3.23; ordine consigliato ora: 66 (collaudi portati alle regate lunghe, rotta «in assoluto» più veloce, decisione sui file), 49 regola 18, 4B rivali regate lunghe (prima la proposta `PROPOSTA-PERCORSO-LUNGO.md`), 49 regola 18, 4B rivali, 36 Allenamento, 42 Coach; leggeri: 55 registrazioni più ricche, 57 volto felice, 53 distacchi T2b). L'ordine lo decide Ale.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
 3. Regate nuove di Ale e Lucio nella cartella: leggerle (formato e cosa non contengono: voce 55).
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main --tags` (dopo ogni sessione; dalla 1.3.23 alla 1.3.26 sono da pushare).
+- **Push:** `git push origin main --tags` (dopo ogni sessione; dalla 1.3.23 alla 1.3.29 sono da pushare).
 - **Chiedere a Lucio** per il finale dell'osservazione 135: «in quella regata (21:20) sei arrivato primo?» e a che secondo succede la situazione.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ogni due settimane circa e dopo regate nuove; a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Lo script copia anche i `stagione-*.json`; **non** copre i salvataggi del browser (carriera: voce 54).
 - **File sciolti nella radice del repo** (non tracciati): `stagione-*.json` (i vostri salvataggi; sono copiati dallo script), `Coach_*.png/jpeg` (gli originali; i jpg usati dal gioco sono in `img/`), `regata-…(1).txt` (duplicati identici: si possono cancellare). Decide Ale.

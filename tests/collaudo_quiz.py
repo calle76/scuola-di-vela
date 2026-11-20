@@ -45,7 +45,7 @@ async def main():
         chk(f"migliore: {N} su {N}" in await menu_best(pg, li), "record = tutte giuste")
         # 2) un errore con record già pieno: non scende, elenco di 1
         await pg.click(f"[data-q='{li}']"); await gira(pg, li, {1})
-        chk("Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione." == await pg.inner_text(".qz .q"), "1 errore: messaggio")
+        chk("Quasi tutto giusto: ecco la domanda sbagliata con la spiegazione. Nel menu la lezione resta «da rivedere» finché non la rifai." == await pg.inner_text(".qz .q"), "1 errore: messaggio")   # 1.3.25: la frase su «da rivedere» (voce 62)
         chk(await pg.locator(".wq").count() == 1, "1 errore: 1 domanda in elenco")
         expl = await pg.evaluate("(li)=>QUIZ[li][1][3]", li)
         chk(expl in await pg.inner_text(".wq"), "1 errore: c'è la spiegazione")
