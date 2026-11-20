@@ -27,6 +27,8 @@ arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
 NREG = int(arg("--regate", "20")); RIF = arg("--rif", "v1.3.10")   # 1.3.10: le regole 15 e 16 cambiano apposta le penalità del torneo: da qui il riferimento è la 1.3.10 (prima la 1.3.2)
 src = (ROOT / "tests" / "collaudo_rotta_assoluta.py").read_text().split("async def main")[0]
 A = {"__file__": str(ROOT / "tests" / "collaudo_rotta_assoluta.py")}; exec(src, A); CORSA = A["CORSA"]
+LUNGO = "--lungo" in sys.argv   # 1.3.27 (voce 66): le stesse prove sulle regate lunghe del torneo (bolina 560 m, triangolo 460 m); K1 saltato: il riferimento non ha regate lunghe
+if LUNGO: CORSA = CORSA.replace("sv.fast(0);", "sv.fast(0); sv.lungo = true;", 1)
 fail, casi = [], {}
 def chk(parte, ok, testo):
     casi[parte] = casi.get(parte, 0) + 1
@@ -85,15 +87,17 @@ def vpol(twa, tws_ms):   # interpolazione bilineare sulla tabella, fatta qui
 async def regate(br, base, n):
     pg = await br.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(base + "#collaudo"); await pg.wait_for_timeout(500)
-    return pg, errs, [(k, s) for s in range(2601, 2601 + (n + 3) // 4) for k in range(4)][:n]
+    nk = 3 if LUNGO else 4   # con le regate lunghe il torneo ha 3 regate
+    return pg, errs, [(k, s) for s in range(2601, 2601 + (n + nk - 1) // nk) for k in range(nk)][:n]
 
 async def main():
     nome = os.environ.get("BROWSER", "chromium")
     async with async_playwright() as p:
         br = await getattr(p, nome).launch()
         # ---- K1: le stesse regate col codice di riferimento
-        rif = []
+        rif = []; e0 = []
         with tempfile.TemporaryDirectory() as tmp:
+          if not LUNGO:
             subprocess.run(f"git -C $(git -C {ROOT} rev-parse --show-toplevel) archive {RIF} | tar -x -C {tmp}", shell=True, check=True)
             pg, e0, elenco = await regate(br, (pathlib.Path(tmp) / "index.html").as_uri(), NREG)
             for k, s in elenco: await pg.evaluate(CORSA, [k, s, 0]); rif.append(await pg.evaluate(ESITO))
@@ -102,7 +106,7 @@ async def main():
         nclou = nfr = nbravo = 0; umori = {}
         for n, (k, s) in enumerate(elenco):
             await pg.evaluate(CORSA, [k, s, 0]); es = await pg.evaluate(ESITO)
-            chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
+            if not LUNGO: chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
             g0 = await pg.evaluate(REGC)
             await pg.click("#finRot"); await pg.wait_for_timeout(120)
             d = await pg.evaluate(DATI)
@@ -206,6 +210,6 @@ async def main():
         await br.close()
     print("casi per parte:", casi)
     if fail: print(f"ESITO: FALLITO ({len(fail)})"); sys.exit(1)
-    if any(casi.get(k, 0) == 0 for k in ("K1", "K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10", "K11", "K12", "K13")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in (() if LUNGO else ("K1",)) + ("K2", "K3", "K4", "K5a", "K6", "K7", "K8", "K9", "K10", "K11", "K12", "K13")): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

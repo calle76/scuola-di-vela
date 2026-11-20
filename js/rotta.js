@@ -47,26 +47,27 @@
   }
   // da {x, y, s (mure: +1 vento da destra, -1 da sinistra, 0 non ancora), t} fino al cancello; ritorna il punto d'arrivo con la catena .par
   function rotLato(p0, cancello){
+    const DT = rotPasso = rot.dt || (R && R.up >= 400 ? ROT_DT_LUNGO : ROT_DT); /* 1.3.27 (voce 66): passo delle isocrone, più lungo nelle regate lunghe (rot.dt solo per le misure) */
     let front = [Object.assign({ debt: 0, par: null, man: 0 }, p0)];
     const ox = p0.x, oy = p0.y, t0 = p0.t, tmp = { x: 0, y: 0 }; let rigaTws = NaN, rigaUlt = null;
-    for (let t = t0; t < t0 + ROT_LATO_MAX && t < ROT_TMAX; t += ROT_DT){
+    for (let t = t0; t < t0 + ROT_LATO_MAX && t < ROT_TMAX; t += DT){
       const Q = rotRaffiche(t), best = new Map();
       for (const p of front){
         const w = rotVento(p.x, p.y, Q), riga = w.tws === rigaTws ? rigaUlt : (rigaTws = w.tws, rigaUlt = rotRiga(w.tws)); // 1.2.40: fuori dalle raffiche la forza è sempre la stessa
         for (let n = 0; n < ROT_TWA.length; n++) for (let si = 0; si < 2; si++){ const s = si ? -1 : 1, twa = ROT_TWA[n];
           let debt = p.debt, man = p.man;
           if (p.s && s !== p.s){ debt += twa < 90 ? T_VIR : T_ABB; man++; }
-          const mv = Math.max(0, ROT_DT - debt); debt = Math.max(0, debt - ROT_DT);
+          const mv = Math.max(0, DT - debt); debt = Math.max(0, debt - DT);
           const [v, lee] = riga[n], c = (w.twd - s * (twa + lee)) * D2R; // s = +1: vento da destra, la prua sta a sinistra del vento
           // 1.2.40: il punto nuovo si crea solo se entra nel fronte o finisce il lato (stessi conti e stesso ordine di prima: risultati identici, circa metà del tempo)
           tmp.x = p.x + Math.sin(c) * v * mv; tmp.y = p.y - Math.cos(c) * v * mv;
           const ps = cancello.passo ? ((p.lo ?? (p.lo = cancello.lontano(p))) ? 4 : cancello.passo(p, tmp)) : 0; /* 1.3.23 (voce 50): niente passi che per il gioco girano la boa dal lato sbagliato, finché il ramo non l'ha già girata */
           if (ps & 8 && !p.giu) continue;
           const giu = p.giu || (ps & 16) > 0, ra = ps & 7;
-          const fr = cancello(p, tmp); if (fr !== null){ const q = { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu, ra };
-            q.x = p.x + (q.x - p.x) * fr; q.y = p.y + (q.y - p.y) * fr; q.t = t + ROT_DT * fr; q.fine = true; return q; }
-          const dx = tmp.x - ox, dy = tmp.y - oy, d = Math.hypot(dx, dy), key = Math.round(Math.atan2(dx, -dy) / D2R / ROT_SETT) * 2 + (s > 0 ? 1 : 0);
-          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q: { x: tmp.x, y: tmp.y, s, t: t + ROT_DT, debt, man, par: p, giu, ra } }); // chi deve ancora finire una manovra vale meno
+          const fr = cancello(p, tmp); if (fr !== null){ const q = { x: tmp.x, y: tmp.y, s, t: t + DT, debt, man, par: p, giu, ra };
+            q.x = p.x + (q.x - p.x) * fr; q.y = p.y + (q.y - p.y) * fr; q.t = t + DT * fr; q.fine = true; return q; }
+          const dx = tmp.x - ox, dy = tmp.y - oy, d = Math.hypot(dx, dy), key = Math.round(Math.atan2(dx, -dy) / D2R / ROT_SETT) * 4 + (s > 0 ? 1 : 0) + (cancello.sbagliato && !giu && cancello.sbagliato(tmp) ? 2 : 0); /* 1.3.27: chi è oltre la boa dal lato sbagliato ha un posto a parte nel settore */
+          const sc = d - debt * v, o = best.get(key); if (!o || sc > o.sc) best.set(key, { sc, q: { x: tmp.x, y: tmp.y, s, t: t + DT, debt, man, par: p, giu, ra } }); // chi deve ancora finire una manovra vale meno
         }
       }
       front = [...best.values()].map(o => o.q);
@@ -74,6 +75,7 @@
     return null;
   }
   // cancello della boa: semiretta dalla boa verso mk.out, passata dal lato giusto (da a ≥ 0 ad a < 0, come roundCheck) ad almeno ROT_BOA m
+  const ROT_DT_LUNGO = 1.5; let rotPasso = ROT_DT; // 1.3.27 (voce 66): passo delle isocrone nelle regate lunghe (bolina da 400 m in su): il più corto sotto 3 s di calcolo su questo PC con giro valido (semi 401-403, confermato sui 404-406); rotPasso: quello del lato in calcolo
   const ROT_LONTANO = 8; // 1.3.23: metri oltre i quali un passo (al massimo circa 5 m in 1 s) non può tagliare la semiretta della boa
   const ROT_PEZZI = 8; // 1.3.23: pezzi in cui si guarda un passo vicino alla boa (ipotesi nostra: con passi fino a 2,5 m, circa 30 cm)
   const ROT_OLTRE = 0.02; // 1.3.23: frazione del passo oltre la semiretta in cui finisce il lato (pochi cm), ipotesi nostra: un punto proprio sulla linea, se la rotta poi torna indietro, per roundCheck non ha girato
@@ -92,8 +94,11 @@
     // c.passo restituisce .ra del punto nuovo più 8 (giro sbagliato) e 16 (giro giusto). c.lontano: il punto è a più di ROT_LONTANO m dalla boa e dalla retta della
     // semiretta, quindi nessun passo che parte da lì (al massimo pochi metri) può fare un giro: il controllo si salta (dopo la prima stesura, +45% di tempo di calcolo)
     const stato = (dx, dy) => dx * dx + dy * dy < 2.25 ? 0 : dx * ux + dy * uy < 0 ? 1 : dx * uy - dy * ux > 0 ? 2 : 3;
+    // 1.3.27 (voce 66): un punto oltre la boa (entro 90° da out) dal lato < 0 senza aver girato non può più fare il giro senza tornare indietro; nelle isocrone stava nello stesso
+    // settore delle rotte giuste e, essendo più avanti, le cacciava: rotta più lenta di 83 s o nessuna rotta nelle regate lunghe (misura_passo_rotta, semi 402 e 403)
+    if (!rot.giroLibero) c.sbagliato = q => { const qx = q.x - mk.x, qy = q.y - mk.y; return qx * ux + qy * uy >= 0 && qx * uy - qy * ux > 0; };
     if (!rot.giroLibero) c.lontano = p => { const px = p.x - mk.x, py = p.y - mk.y, cr = px * uy - py * ux;
-      return (cr > ROT_LONTANO || cr < -ROT_LONTANO) && px * px + py * py > (6 + ROT_LONTANO) * (6 + ROT_LONTANO); };
+      const m = ROT_LONTANO * rotPasso; return (cr > m || cr < -m) && px * px + py * py > (6 + m) * (6 + m); }; /* 1.3.27: il margine cresce col passo */
     if (!rot.giroLibero) c.passo = (p, q) => { const px = p.x - mk.x, py = p.y - mk.y; let ra = p.ra === 4 ? stato(px, py) : p.ra || 0, neg = 0, pos = 0;
       const qx = q.x - mk.x, qy = q.y - mk.y, N = Math.min(px * px + py * py, qx * qx + qy * qy) < 36 ? ROT_PEZZI : 1;
       for (let j = 1; j <= N; j++){ const f = j / N, st = stato(px + (qx - px) * f, py + (qy - py) * f); if (!st) continue;

@@ -96,6 +96,7 @@ TESTS=(
     "collaudo_guardiano_avversari.py|py|chiaro|1||collaudo_guardiano_avversari.py"
     "collaudo_rotta_leggibile.py|py|chiaro|0||collaudo_rotta_leggibile.py --semi 2"
     "collaudo_coach.py|py|chiaro|0||collaudo_coach.py"
+    "collaudo_coach.py (regate lunghe)|py|chiaro|1||collaudo_coach.py --lungo"
     "collaudo_torneo_versione.py|py|chiaro|0||collaudo_torneo_versione.py"
     "collaudo_rotta_assoluta.py|py|chiaro|0||collaudo_rotta_assoluta.py --regate 4 --dichiarati"
     "collaudo_nomi_rivali.py|py|chiaro|1||collaudo_nomi_rivali.py"

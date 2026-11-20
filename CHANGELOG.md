@@ -19,6 +19,16 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.27 — Rotta ottimale nelle regate lunghe: più veloce, e sempre calcolata (voce 66 a)
+
+- **Difetto vero trovato misurando (1.3.24-1.3.26):** in una regata lunga la rotta ottimale poteva venire **molto più lenta** (+83 s, seme 402 triangolo) o **non esserci affatto** (seme 403 bastone: «non si può calcolare»). Causa: le isocrone tengono un punto per settore, il più avanti. I rami arrivati oltre la boa dal lato sbagliato, che col controllo della 1.3.24 non possono più chiudere il giro, restavano lì e cacciavano dai settori le rotte giuste. Ora nel settore hanno un posto a parte (`c.sbagliato`). Nelle regate corte non cambia niente di misurabile: rimisurato il 50 sui semi 101-103, R1 0 su 120, R3 100%, massimo 0,05 s, calcolo +4,2%.
+- **Passo delle isocrone di 1,5 s nelle regate lunghe** (`ROT_DT_LUNGO`, bolina da 400 m in su; prima 1 s). Criterio scritto prima di misurare: il passo più corto con calcolo sotto 3 s su questo PC, giro valido in tutte le rotte e rotta mai più lenta della barca vera.
+  - **Semi 401-403:** passo 1: 3,4-3,9 s; passo 1,5: 2,3-2,7 s, giro valido 6 su 6, rotta l'1,2% più lunga (mediana; da −2,5% a +1,8%); passo 2: 1,7-1,9 s, ma sui semi 404-406 una rotta in assoluto tornava a girare la boa dal lato sbagliato.
+  - **Conferma 404-406:** passo 1,5, giro valido 6 su 6, calcolo 0,67 volte; una regata, che col passo 1 voleva 6,8 s, resta sopra i 3 s.
+  - **«In assoluto» (tasto V):** da 13-15 s a circa 9-10 s, ancora lenta.
+- **Il Coach sulle regate lunghe:** `collaudo_coach.py --lungo` (nuovo, nel giro): tutte le prove verdi su 20 regate lunghe, K1 saltato (il riferimento della 1.3.10 non ha regate lunghe). Volti: 9 arrabbiati, 10 seri, 1 contento.
+- **Misura nuova** `tests/misura_passo_rotta.py`.
+
 ## 1.3.26 — Regate lunghe in Deriva: circa 10 minuti, tre regate per torneo, raffiche come zone (voce 63)
 
 Da dove viene: `docs/PROPOSTA-PERCORSO-LUNGO.md` e le risposte di Ale del 20 novembre (solo Deriva; 9-11 minuti; tre regate per tappa e per torneo; «VIA col lavoro autonomo»).
