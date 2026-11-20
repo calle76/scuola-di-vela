@@ -409,7 +409,7 @@
       c.leg = me.leg; c.pos = pos; }
     // ultimo lato: la barca davanti vicina
     if (!c.vicino && me.leg === R.marks.length + 1){ const dav = R.boats.filter(b => !b.me && b.fin === null && !b.dnf).map(b => [b, distacco(b)]).filter(([, s]) => s !== null && s >= 1 && s <= CR_DIST).sort((x, y) => x[1] - y[1])[0];
-      if (dav){ c.vicino = true; const n = crNome(dav[0]); crDi("contento", n.charAt(0).toUpperCase() + n.slice(1) + " è a " + Math.round(dav[1]) + " s: puoi prenderla, ogni manovra conta."); } }
+      if (dav){ c.vicino = true; const n = crNome(dav[0]); crDi("contento", n.charAt(0).toUpperCase() + n.slice(1) + " è a " + Math.round(dav[1]) + " s davanti a te: puoi superare quella barca, ogni manovra conta."); /* 1.3.31: neutra (prima «puoi prenderla», sbagliata per i rivali uomini) */ } }
   }
   function crDisegna(){
     R && (R.crRect = null); if (!crAttivo() || !R.cr || !R.cr.cur) return;
