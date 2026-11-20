@@ -6,12 +6,14 @@
 #   R3 la Scuola non cambia: le due regate della Scuola col pilota, 12 corse, arrivi e penalità identici al codice di riferimento (RIF, git archive); nelle
 #      regate della Scuola e negli esercizi delle lezioni le regole 15 e 16 sono spente
 #   R4 effetti, senza soglia: N regate del torneo col pilota (semi 2701-...), contatti per regola, quanti con la 15 e con la 16
-# Uso: python tests/collaudo_regole_15_16.py [--regate N] [--rif v1.3.9]   (BROWSER=firefox)
+#   --lungo (1.3.32, voce 66c): R4 sulle regate lunghe, come le gioca Ale (__sv.lungo = true: 3 regate per torneo, bolina 560 m, triangolo 440 m); R1 e R3 non cambiano (casi a mano, Scuola)
+# Uso: python tests/collaudo_regole_15_16.py [--regate N] [--rif v1.3.9] [--lungo]   (BROWSER=firefox)
 import asyncio, json, math, os, pathlib, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
 NREG = int(arg("--regate", "200")); RIF = arg("--rif", "v1.3.9")
+LUNGO = "--lungo" in sys.argv; NT = 3 if LUNGO else 4   # regate di un torneo
 fail, casi = [], {}
 def chk(parte, ok, testo):
     casi[parte] = casi.get(parte, 0) + 1
@@ -113,14 +115,15 @@ async def main():
         A_ = {"__file__": str(ROOT / "tests" / "collaudo_rotta_assoluta.py")}; exec(src, A_)
         pg = await b.new_page(viewport={"width": 1360, "height": 650}); pg.on("pageerror", lambda e: errs.append(str(e)))
         await pg.goto((ROOT / "index.html").as_uri() + "#collaudo"); await pg.wait_for_timeout(300)
+        if LUNGO: await pg.evaluate("() => { __sv.lungo = true; }")
         conta = {}; contatti = 0; mie = 0
-        for k, s in [(k, s) for s in range(2701, 2701 + (NREG + 3) // 4) for k in range(4)][:NREG]:
+        for k, s in [(k, s) for s in range(2701, 2701 + (NREG + NT - 1) // NT) for k in range(NT)][:NREG]:
             await pg.evaluate(A_["CORSA"], [k, s, 0])
             pl = await pg.evaluate("() => __sv.R.penList.filter(x => x.includes('contatto con'))")
             for x in pl:
                 contatti += 1; reg = x.rsplit("(regola ", 1)[-1].rstrip(").") if "(regola " in x else "?"; conta[reg] = conta.get(reg, 0) + 1
                 if x.startswith("Tu,"): mie += 1
-        print(f"R4: {NREG} regate del torneo col pilota: {contatti} contatti con colpa ({mie} del giocatore); per regola {dict(sorted(conta.items()))}", flush=True)
+        print(f"R4: {NREG} regate del torneo{' lungo' if LUNGO else ''} col pilota: {contatti} contatti con colpa ({mie} del giocatore); per regola {dict(sorted(conta.items()))}", flush=True)
         chk("R4", contatti > 0, f"R4 il metro ha visto contatti: {contatti}")
         chk("R4", not errs, f"errori della pagina: {errs[:3]}")
         await b.close()

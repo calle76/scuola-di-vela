@@ -11,7 +11,7 @@
 #   --pilota N: Z2 e Z14 su N tappe corse davvero col pilota (soglia: 20 tappe): la batteria nell'ordine della classifica del torneo mostrata,
 #       e il vincitore scritto di ogni batteria = il primo di quella batteria nell'ordine della tappa.
 #   --vera: pagina senza #collaudo in Chromium e Firefox: versione, finestra della stagione aperta e cominciata, 0 errori.
-# Uso: python collaudo_stagione.py [--pilota N] [--vera] [--solo-pilota]
+# Uso: python collaudo_stagione.py [--pilota N] [--vera] [--solo-pilota] [--lungo]
 import asyncio, json, pathlib, re, sys
 from playwright.async_api import async_playwright
 QUI = pathlib.Path(__file__).resolve().parent
@@ -20,6 +20,8 @@ PIL = int(sys.argv[sys.argv.index("--pilota") + 1]) if "--pilota" in sys.argv el
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
+LUNGO = "--lungo" in sys.argv   # 1.3.32 (voce 66c): tappe come le gioca Ale, tornei lunghi (__sv.lungo = true): 3 regate da circa 10 minuti per tappa
+N = 3 if LUNGO else 4          # regate di una tappa
 errori = []
 def no(m): errori.append(m); print("  NO  " + m, flush=True)
 
@@ -29,6 +31,7 @@ async def pagina(b, url, coll=True):
     pg.on("pageerror", lambda e: errori.append("errore pagina: " + str(e)) or print("  NO  errore pagina:", e, flush=True))
     pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
     await pg.goto(url + ("#collaudo" if coll else "")); await pg.wait_for_timeout(200)
+    if coll: await pg.evaluate("([l, n]) => { __sv.lungo = l; window.NREG = n; }", [LUNGO, N])
     return pg
 
 # --- Z1: 200 stagioni a numeri per gruppo, con le funzioni del gioco (stEstrai, stClassifica) ---
@@ -57,7 +60,7 @@ STAGIONE_FINTA = """(seme, quante = 4) => { const sv = __sv; __seed(seme); sv.pr
   const S = sv.st.nuova(); sv.progress.stagione = S; const frasi = [], viste = [];
   for (let j = 0; j < quante; j++){
     const tp = S.tappe[j], av = tp.bat[0].slice(1).map(nome => ({ nome }));
-    const ris = [0, 1, 2, 3].map(() => [0, 1, 2, 3].map(i => { const x = { fin: Math.random() < 0.05 ? null : Math.round((600 + Math.random() * 120) * 10) / 10, pp: 0 };
+    const ris = [0, 1, 2, 3].slice(0, NREG).map(() => [0, 1, 2, 3].map(i => { const x = { fin: Math.random() < 0.05 ? null : Math.round((600 + Math.random() * 120) * 10) / 10, pp: 0 };
       if (i && Math.random() < 0.3) x.c = Math.random() < 0.5 ? "s" : "t"; return x; }));
     sv.st.chiudi({ av, ris, st: j });
     frasi.push(sv.st.frasi(S));
@@ -167,7 +170,7 @@ async def main():
             if peggio is not None:
                 await pg.evaluate("""seme => { const sv = __sv; __seed(seme); sv.progress.rivali = {}; const S = sv.st.nuova(); sv.progress.stagione = S;
                   for (let j = 0; j < 2; j++){ const tp = S.tappe[j], av = tp.bat[0].slice(1).map(nome => ({ nome }));
-                    const ris = [0, 1, 2, 3].map(() => [0, 1, 2, 3].map(i => { const x = { fin: Math.random() < 0.05 ? null : Math.round((600 + Math.random() * 120) * 10) / 10, pp: 0 };
+                    const ris = [0, 1, 2, 3].slice(0, NREG).map(() => [0, 1, 2, 3].map(i => { const x = { fin: Math.random() < 0.05 ? null : Math.round((600 + Math.random() * 120) * 10) / 10, pp: 0 };
                       if (i && Math.random() < 0.3) x.c = Math.random() < 0.5 ? "s" : "t"; return x; }));
                     sv.st.chiudi({ av, ris, st: j }); }
                   sv.torApri(); sv.st.mostra("", false); }""", peggio)
@@ -180,7 +183,7 @@ async def main():
             # Z5
             await pg.evaluate("s => (" + STAGIONE_FINTA + ")(s, 2)", 9100)   # stChiudiTappa salva dopo ogni tappa, come nel gioco
             prima = await pg.evaluate("() => { __sv.torApri(); __sv.st.mostra('', false); return [JSON.stringify(__sv.progress.stagione), document.getElementById('torBody').innerText]; }")
-            await pg.reload(); await pg.wait_for_timeout(300)
+            await pg.reload(); await pg.wait_for_timeout(300); await pg.evaluate("([l, n]) => { __sv.lungo = l; window.NREG = n; }", [LUNGO, N])
             dopo = await pg.evaluate("() => { __sv.fast(0); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); __sv.st.mostra('', false); return [JSON.stringify(__sv.progress.stagione), document.getElementById('torBody').innerText]; }")
             ok5 = prima == dopo and '"ord"' in prima[0]
             print("Z5 ricarica:", "stagione e circuito uguali" if ok5 else "DIVERSI")
@@ -199,7 +202,7 @@ async def main():
                 await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; delete __sv.progress.stagione; delete __sv.progress.torneo; __sv.torApri(); document.getElementById('stCirc').click(); document.getElementById('stInizia').click(); }", 700 + s)
                 for j in range(4):
                     if fatte >= PIL: break
-                    for k in range(4):
+                    for k in range(N):
                         await pg.evaluate("s => __seed(s)", (700 + s) * 100 + j * 10 + k)
                         r = await pg.evaluate(CORRI)
                         if "fallita" in r: no(f"seme {700 + s} tappa {j + 1} regata {k + 1}: {r['fallita']}"); break

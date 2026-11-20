@@ -23,6 +23,7 @@
 #
 # Uso: python collaudo_torneo.py                # C1, C2, C3, C4, C6, C10 (circa 15 minuti)
 #      python collaudo_torneo.py --veloce       # C1, C6, C3 e C4 su 2 tornei, C2 su 2 semi: soglie dei conteggi non valutate
+#      python collaudo_torneo.py --lungo        # come sopra ma coi tornei lunghi (3 regate da circa 10 minuti, niente scarto): voce 66c, 1.3.32
 #      python collaudo_torneo.py --giocatore    # C7: pagina senza #collaudo, torneo intero dal menu con una chiusura in mezzo
 import asyncio, json, pathlib, sys
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
@@ -33,6 +34,8 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   window.__seed = v => { s = v; }; })();"""
 VELOCE = "--veloce" in sys.argv
+LUNGO = "--lungo" in sys.argv   # 1.3.32 (voce 66c): tornei lunghi come li gioca Ale (__sv.lungo = true): 3 regate da circa 10 minuti, niente scarto. Senza il flag restano le 4 regate corte di #collaudo
+N = 3 if LUNGO else 4          # regate di un torneo
 errori = []
 def no(msg): errori.append(msg); print("  NO  " + msg, flush=True)
 
@@ -153,6 +156,7 @@ async def pagina(b, ctx=None, url=BASE + "#collaudo"):
     errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
     await pg.goto(url); await pg.wait_for_timeout(150)
+    await pg.evaluate("v => { __sv.lungo = v; }", LUNGO)
     return ctx, pg, errs
 
 async def prepara(pg, seme, carriera):
@@ -160,7 +164,7 @@ async def prepara(pg, seme, carriera):
       if (carriera){ localStorage.setItem("scuolaVelaModo", "carriera");
         localStorage.setItem("scuolaVelaCarriera.v1", JSON.stringify({ done: {}, best: {}, clean: {}, brevetto: { data: "2026-10-20" }, dvBenvenuto: "2026-10-20" })); /* 1.3.23: benvenuto già visto */ }
       __seed(seme); }""", [seme, carriera])
-    if carriera: await pg.reload(); await pg.wait_for_timeout(150); await pg.evaluate("s => { __sv.fast(0); __seed(s); }", seme)
+    if carriera: await pg.reload(); await pg.wait_for_timeout(150); await pg.evaluate("([s, l]) => { __sv.fast(0); __sv.lungo = l; __seed(s); }", [seme, LUNGO])
     await pg.evaluate("__sv.store = localStorage.getItem('scuolaVelaModo') === 'carriera' ? 'scuolaVelaCarriera.v1' : 'scuolaVelaSim.v1'")
     await pg.evaluate("__sv.torApri()")
 
@@ -171,7 +175,7 @@ async def c2(b, semi, carriera):
     for seme in semi:
         ctx, pg, errs = await pagina(b); await prepara(pg, seme, carriera)
         ris = []; ultimo = None
-        for k in range(4):
+        for k in range(N):
             r = await pg.evaluate(CORRI, "pilota")
             if "fallita" in r: no(f"C2 seme {seme} regata {k + 1}: {r['fallita']}"); break
             if r["mosso"] == 0: no(f"C2 seme {seme} regata {k + 1}: il pilota non ha mosso la barra")
@@ -180,7 +184,7 @@ async def c2(b, semi, carriera):
             if f["giri"] != (k >= 2) or f["punti"] != (k < 2) or not f["raffiche"] or not f["salti"]: FORM[1] += 1; no(f"C12 seme {seme} regata {k + 1}: formato {f}")
             if k >= 2: FORM[2] += f["contatti"]; FORM[3] += sum(b["pp"] for b in r["boats"]); FORM[4] += sum(b["dsq"] for b in r["boats"])
             d, cl = confronta(f"C2 seme {seme} regata {k + 1}", ris, r["righe"], NOMI[:1] + [x["name"] for x in r["boats"][1:]]); diff += d
-        if len(ris) == 4:
+        if len(ris) == N:
             cl = serie(ris); pos = [x["i"] for x in cl].index(0) + 1
             if ultimo["finale"] != f"{pos}° su 4": diff += 1; no(f"C2 seme {seme}: finale del gioco {ultimo['finale']}, nostro {pos}° su 4")
             pr = ultimo["prog"] or {}
@@ -190,32 +194,32 @@ async def c2(b, semi, carriera):
                 if ultimo["meriti"] != f"Meriti di Competizione del torneo: {mer}.": diff += 1; no(f"C2 seme {seme}: meriti del gioco «{ultimo['meriti']}», nostri {mer}")
                 if (pr.get("torneoFatto") or {}).get("mer", -1) < mer: no(f"C2 seme {seme}: torneoFatto {pr.get('torneoFatto')} con meriti {mer}")
             pp = sum(r[0]["pp"] for r in ris); na = sum(1 for r in ris for x in r if x["fin"] is None)
-            print(f"  seme {seme}: {pos}° · punti Tu {[fmt(v) for v in cl[[x['i'] for x in cl].index(0)]['p']]} · penalità Tu {pp} · non arrivate {na} su 16", flush=True)
+            print(f"  seme {seme}: {pos}° · punti Tu {[fmt(v) for v in cl[[x['i'] for x in cl].index(0)]['p']]} · penalità Tu {pp} · non arrivate {na} su {4 * N}", flush=True)
         if errs: no(f"C2 seme {seme}: errore nella pagina {errs[0]}")
         await ctx.close()
-    print(f"  C2: {diff} differenze; regate concluse {regate} su {4 * len(semi)}", flush=True)
+    print(f"  C2: {diff} differenze; regate concluse {regate} su {N * len(semi)}", flush=True)
     print(f"  C12: formato giusto in {FORM[0] - FORM[1]} regate su {FORM[0]}; nelle regate coi giri {FORM[2]} contatti, punti di penalità {FORM[3]}, squalifiche {FORM[4]}", flush=True)
     if FORM[0] == 0 or FORM[1]: no(f"C12 formato: {FORM[1]} sbagliati su {FORM[0]}")
     if FORM[3]: no(f"C12: {FORM[3]} punti di penalità nelle regate coi giri")
     return regate, diff
 
 async def c3(b, n):
-    print(f"\n== C3: ripresa, {n} tornei, chiusura dopo le regate 1, 2 e 3", flush=True)
+    print(f"\n== C3: ripresa, {n} tornei, chiusura dopo ogni regata tranne l'ultima", flush=True)
     casi = ok = 0; complete = 0
     for t in range(n):
         ctx, pg, errs = await pagina(b); await prepara(pg, 200 + t, False)
         fatti = 0
-        for k in range(4):
+        for k in range(N):
             r = await pg.evaluate(CORRI, "ritiro"); fatti += 1
-            if k < 3:
+            if k < N - 1:
                 prima = await pg.evaluate("localStorage.getItem('scuolaVelaSim.v1')")
                 await pg.close(); pg = await ctx.new_page(); await pg.add_init_script(SEME); pg.on("pageerror", lambda e: errs.append(str(e)))
                 pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
-                await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150)
+                await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150); await pg.evaluate("v => { __sv.lungo = v; }", LUNGO)
                 dopo = await pg.evaluate("localStorage.getItem('scuolaVelaSim.v1')")
                 await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); stato = await pg.evaluate("document.getElementById('goTor').textContent")
                 casi += 1
-                buono = prima == dopo and json.loads(dopo)["torneo"]["ris"].__len__() == k + 1 and f"regata {k + 2} di 4" in stato
+                buono = prima == dopo and json.loads(dopo)["torneo"]["ris"].__len__() == k + 1 and f"regata {k + 2} di {N}" in stato
                 ok += buono
                 if not buono: no(f"C3 torneo {t + 1} dopo la regata {k + 1}: salvataggio uguale {prima == dopo}, menu «{stato}»")
                 await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); }", 400 + 10 * t + k)
@@ -265,11 +269,11 @@ async def c11(b, n):
                             ctx2, pg2, _e = await pagina(b); await prepara(pg2, 500 + t, False); tempi.append(await pg2.evaluate(AVANTI, [m, "menu"])); await ctx2.close()
                         print(f"  C11 R7 {tag}: uscita lenta, rimisurata: {[round(x / 1000, 2) for x in tempi]} s, vale il migliore", flush=True); dt = min(tempi)
                     lento = max(lento, dt)
-                else: await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150)
+                else: await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150); await pg.evaluate("v => { __sv.lungo = v; }", LUNGO)
                 tor = (await stato(pg) or {}).get("torneo")
                 if regata_ritirata(tor, 0, tag): totale[esci] += 1
                 await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); }", 600 + t)
-                for k in range(1, 4):   # il torneo prosegue: le altre 3 regate col ritiro subito
+                for k in range(1, N):   # il torneo prosegue: le altre regate col ritiro subito
                     r = await pg.evaluate(CORRI, "ritiro")
                 if r.get("finale") and "torneo" not in (r["prog"] or {}) and (r["prog"] or {}).get("torneoFatto"): totale["completi"] += 1
                 else: no(f"C11 {tag}: torneo non concluso ({r.get('finale')})")
@@ -278,10 +282,10 @@ async def c11(b, n):
         # R4: uscita a metà della quarta regata
         for esci in ("menu", "chiusura"):
             ctx, pg, errs = await pagina(b); await prepara(pg, 700 + t, False)
-            for k in range(3): await pg.evaluate(CORRI, "ritiro")
+            for k in range(N - 1): await pg.evaluate(CORRI, "ritiro")
             await pg.evaluate("__sv.torApri()")
             dt = await pg.evaluate(AVANTI, [40, "menu" if esci == "menu" else None])
-            if esci == "chiusura": await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150)
+            if esci == "chiusura": await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150); await pg.evaluate("v => { __sv.lungo = v; }", LUNGO)
             pr = await stato(pg)
             if pr and "torneo" not in pr and pr.get("torneoFatto"): totale["q4"] += 1
             else: no(f"C11 torneo {t + 1} quarta regata {esci}: torneo non chiuso ({pr and pr.get('torneo') and len(pr['torneo']['ris'])})")
@@ -308,7 +312,7 @@ async def c4(b, n):
     for t in range(n):
         ctx, pg, errs = await pagina(b); await prepara(pg, 500 + t, False)
         prima = await pg.evaluate("localStorage.getItem('scuolaVelaSim.v1')")
-        k = t % 4
+        k = t % N
         if k == 0: await pg.evaluate("() => { document.getElementById('torGo').click(); __sv.run(1 / 60, 60 * 30); }")  # ritiro dal torneo senza regate concluse:
         for j in range(k): await pg.evaluate(CORRI, "ritiro")                                                             # si riapre il riquadro dal menu
         if k == 0: await pg.evaluate("() => document.getElementById('toMenu').click()")
@@ -333,8 +337,8 @@ async def c6(b):
     intro = await pg.evaluate("() => { const q = document.getElementById('torBody'); return q.scrollHeight - q.clientHeight; }")
     print(f"  riquadro d'inizio: {intro} px che scorrono", flush=True)
     if intro > 0: no(f"C6 riquadro d'inizio: {intro} px")
-    for k in range(3): await pg.evaluate(CORRI, "ritiro")
-    await pg.evaluate("""() => { const T = __sv.tor; T.ris.forEach((r, j) => { r[0].pp = 2; r[1].fin = null; r[2].pp = 1; }); T.ris[2][3].fin = null; T.ris[2][3].dsq = true; }""")
+    for k in range(N - 1): await pg.evaluate(CORRI, "ritiro")
+    await pg.evaluate("""() => { const T = __sv.tor; T.ris.forEach((r, j) => { r[0].pp = 2; r[1].fin = null; r[2].pp = 1; }); const u = T.ris[T.ris.length - 1]; u[3].fin = null; u[3].dsq = true; }""")
     await pg.evaluate("""() => { document.getElementById('torGo').click(); const R = __sv.R, me = R.boats[0];
       __sv.run(1 / 60, 60 * 400);
       Object.assign(__sv.reg, { capsizes: 2, gybesV: 1, irons: 2, ironsSec: 14, wrongMarks: 1, contacts: 3, contactsPen: 2, ocs: 1, outLine: 2 });
@@ -352,7 +356,7 @@ async def c6(b):
     await pg.screenshot(path=str(pathlib.Path(__file__).resolve().parent / "output" / "torneo_classifica.png"))
     print(f"  pannello: {pan} px di eccesso; riquadro: {dlg}", flush=True)
     if pan > 0: no(f"C6 pannello +{pan} px")
-    if not dlg["dentro"] or dlg["scorre"] > 0 or dlg["larg"] > 0 or dlg["righe"] != 4 or dlg["celle"] != 4 * 7: no(f"C6 riquadro {dlg}")
+    if not dlg["dentro"] or dlg["scorre"] > 0 or dlg["larg"] > 0 or dlg["righe"] != 4 or dlg["celle"] != 4 * (N + 3): no(f"C6 riquadro {dlg}")
     if errs: no(f"C6 errore nella pagina {errs[0]}")
     await ctx.close()
 
@@ -389,8 +393,9 @@ async def c10(b, semi):
     if n < len(semi) or tu == 0 or av < 0.5 * tu: no(f"C10 fuori soglia: avversari {av:.1%} contro giocatore {tu:.1%}")
     return out
 
+NG = 3   # regate del torneo giocato come lo gioca Ale (senza #collaudo): dalla 1.3.26 sono 3
 async def giocatore(b):
-    # C7: pagina senza #collaudo, come la carica un giocatore: dal menu, riquadro delle istruzioni con «Parti», ritiro dalla regata
+    # C7 (dal 1.3.32 voce 66c: da pagina senza #collaudo il torneo è lungo, 3 regate: NG; prima 4 e il collaudo cadeva sul timeout di «#torBody .score»): pagina senza #collaudo, come la carica un giocatore: dal menu, riquadro delle istruzioni con «Parti», ritiro dalla regata
     # col pulsante (gli avversari la finiscono), classifica, chiusura della pagina dopo la regata 2, ripresa dal menu, fino alla fine.
     print("\n== C7: torneo da giocatore, pagina senza #collaudo", flush=True)
     ctx = await b.new_context(viewport={"width": 1360, "height": 650})
@@ -400,7 +405,7 @@ async def giocatore(b):
         pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
         await pg.goto(BASE); await pg.wait_for_timeout(300); return pg
     pg = await nuova(); fatti = 0; finale = None
-    for k in range(4):
+    for k in range(NG):
         await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#goTor"); await pg.wait_for_timeout(200)
         await pg.click("#torGo"); await pg.wait_for_timeout(300)
         if not await pg.is_visible("#bGo"): no(f"C7 regata {k + 1}: niente riquadro delle istruzioni"); break
@@ -412,15 +417,15 @@ async def giocatore(b):
         fatti += 1
         print(f"  regata {k + 1}: «{t}», classifica con {righe} barche", flush=True)
         if righe != 4: no(f"C7 regata {k + 1}: {righe} righe")
-        if k == 3: finale = await pg.inner_text("#torBody .score"); await pg.click("#torMenu")
+        if k == NG - 1: finale = await pg.inner_text("#torBody .score"); await pg.click("#torMenu")
         elif k == 1:
             await pg.close(); pg = await nuova()                                       # chiusura della pagina dopo la regata 2
             await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); st = await pg.inner_text("#goTor"); print(f"  dopo la riapertura il menu dice: {st.splitlines()}", flush=True)
-            if "regata 3 di 4" not in st: no(f"C7: dopo la riapertura «{st}»")
+            if f"regata 3 di {NG}" not in st: no(f"C7: dopo la riapertura «{st}»")
         else: await pg.click("#torMenu"); await pg.wait_for_timeout(200)
     await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); st = await pg.inner_text("#goTor")
-    print(f"  regate {fatti} su 4, finale «{finale}», menu «{' '.join(st.split())}», errori nella console: {cons or 'nessuno'}", flush=True)
-    if fatti != 4 or not finale or "migliore" not in st: no(f"C7 non completo: {fatti} regate, finale {finale}")
+    print(f"  regate {fatti} su {NG}, finale «{finale}», menu «{' '.join(st.split())}», errori nella console: {cons or 'nessuno'}", flush=True)
+    if fatti != NG or not finale or "migliore" not in st: no(f"C7 non completo: {fatti} regate, finale {finale}")
     if cons: no(f"C7 errori nella console: {cons[:3]}")
     await ctx.close()
 
@@ -434,16 +439,25 @@ async def main():
             if VELOCE:
                 await c2(b, [1, 2], False); await c3(b, 2); await c4(b, 2); await c11(b, 1)
             else:
-                ra, d = await c2(b, list(range(1, 21)), False)
-                rb, d2 = await c2(b, list(range(101, 121)), True)
-                if ra != 80 or rb != 80: no(f"C2: regate concluse {ra} e {rb} su 80")
-                casi, ok, comp = await c3(b, 10)
-                if casi != 30 or ok != 30 or comp != 10: no(f"C3 fuori soglia: {ok} su {casi}, complete {comp}")
-                if await c4(b, 10) != 10: no("C4 fuori soglia")
-                tt, lento = await c11(b, 10)
-                if tt["menu"] != 40 or tt["chiusura"] != 40 or tt["completi"] != 80 or tt["q4"] != 20 or tt["r5"] != 20: no(f"C11 fuori soglia: {tt}")
-                if lento > 2000: no(f"C11 R7: uscita dal menu {lento / 1000:.2f} s (soglia 2 s)")
-                await c10(b, list(range(1, 21)))
+                # --solo c2a,c2b,c3,c4,c11,c10: solo quelle parti, in pezzi più corti (c2a1 = semi 1-10, c2a2 = 11-20, c2b1 = 101-110, c2b2 = 111-120). Le soglie dei conteggi valgono per la parte intera
+                # solo se la parte gira intera (c2a e c2b = c2a1+c2a2 e c2b1+c2b2); altrimenti si riporta quanto è uscito
+                P = (sys.argv[sys.argv.index("--solo") + 1].split(",") if "--solo" in sys.argv else ["c2a", "c2b", "c3", "c4", "c11", "c10"])
+                da = lambda x: x in P
+                for nome, semi, carr in (("c2a", range(1, 21), False), ("c2b", range(101, 121), True)):
+                    parti = [(pn, sm) for pn, sm in ((nome + "1", list(semi)[:10]), (nome + "2", list(semi)[10:])) if da(pn) or da(nome)]
+                    tot = 0
+                    for pn, sm in parti: tot += (await c2(b, sm, carr))[0]
+                    nsemi = sum(len(sm) for _, sm in parti)
+                    if tot != nsemi * N: no(f"C2 {nome}: regate concluse {tot} su {nsemi * N}")
+                if da("c3"):
+                    casi, ok, comp = await c3(b, 10)
+                    if casi != 10 * (N - 1) or ok != casi or comp != 10: no(f"C3 fuori soglia: {ok} su {casi}, complete {comp}")
+                if da("c4") and await c4(b, 10) != 10: no("C4 fuori soglia")
+                if da("c11"):
+                    tt, lento = await c11(b, 10)
+                    if tt["menu"] != 40 or tt["chiusura"] != 40 or tt["completi"] != 80 or tt["q4"] != 20 or tt["r5"] != 20: no(f"C11 fuori soglia: {tt}")
+                    if lento > 2000: no(f"C11 R7: uscita dal menu {lento / 1000:.2f} s (soglia 2 s)")
+                if da("c10"): await c10(b, list(range(1, 21)))
         await b.close()
     print("\nESITO: " + ("OK" if not errori else f"FALLITO ({len(errori)}): " + "; ".join(errori[:8])), flush=True)
     sys.exit(1 if errori else 0)

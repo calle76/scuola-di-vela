@@ -17,6 +17,7 @@
 #       senza scuffia mai (nelle 20 regate vere, controllate)
 #   K12 (1.3.14) le frasi nel file della regata: prima di aprire la rotta ottimale l'ultimo pezzo registrato non ha righe «A»; dopo ha «A - volto» col volto mostrato, «A - rotta» e una riga
 #       per frase, nello stesso ordine, con lo stesso testo e lo stesso momento (±0,05 s); chiesta una seconda volta la scrittura non raddoppia le righe; la copia in IndexedDB le ha (ultima regata)
+#   K0 (1.3.32) regate dove la rotta ottimale non compare: contate e non controllate (prima il collaudo cadeva con un errore di Python); al più max(2, 10% delle regate)
 #   K13 (1.3.23, voce 57) contento anche col primo posto (almeno un'altra barca, squalificati esclusi) o col nuovo record, se non c'è niente da arrabbiato (costruito);
 #       K10 nelle regate vere ricalcola primo posto e record e li conta
 # Uso: python tests/collaudo_coach.py [--regate N] [--rif v1.3.2]   (BROWSER=firefox per Firefox)
@@ -35,7 +36,8 @@ def chk(parte, ok, testo):
     if not ok: fail.append(testo); print("FALLITO " + testo, flush=True)
 
 ESITO = """() => { const R = __sv.R; return R.boats.map(b => [b.fin === null ? null : Math.round(b.fin * 100) / 100, b.pen || 0, b.pp || 0, b.dsq ? 1 : 0, b.leg]); }"""
-DATI = """() => { const r = rot.res, me = R.boats[0], o = rot.barche[0], fine = me.fin !== null ? me.fin : riv.all[riv.all.length - 1].t;
+DATI = """() => { const r = rot.res; if (!r || !r.ott) return { manca: true };   /* 1.3.32: senza rotta ottimale il gioco non calcola il coach (rotta.js: if (ott)); il collaudo lo conta invece di cadere */
+  const me = R.boats[0], o = rot.barche[0], fine = me.fin !== null ? me.fin : riv.all[riv.all.length - 1].t;
   const tu = riv.all.filter(f => f.t >= o.taglio.t && f.t <= fine);
   const t0 = performance.now(); const F = coaFrasi(r.ott, r.sp); const ms = performance.now() - t0;
   return { coach: r.coach, ms, uguali: JSON.stringify(F) === JSON.stringify(r.coach), punti: r.ott.punti.map(q => [q.t, q.x, q.y]), lati: r.ott.lati, giri: o.giri.map(g => g.t), leg: o.taglio.leg,
@@ -103,13 +105,15 @@ async def main():
             for k, s in elenco: await pg.evaluate(CORSA, [k, s, 0]); rif.append(await pg.evaluate(ESITO))
             await pg.close()
         pg, errs, elenco = await regate(br, (ROOT / "index.html").as_uri(), NREG)
-        nclou = nfr = nbravo = 0; umori = {}
+        nclou = nfr = nbravo = nmanca = 0; umori = {}
         for n, (k, s) in enumerate(elenco):
             await pg.evaluate(CORSA, [k, s, 0]); es = await pg.evaluate(ESITO)
             if not LUNGO: chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
             g0 = await pg.evaluate(REGC)
+            if not await pg.is_visible("#finRot"): nmanca += 1; print(f"  {s}-{k}: pulsante «Rotta ottimale» non visibile (voce 40): regata non controllata", flush=True); continue   # 1.3.32
             await pg.click("#finRot"); await pg.wait_for_timeout(120)
             d = await pg.evaluate(DATI)
+            if d.get("manca"): nmanca += 1; print(f"  {s}-{k}: rotta ottimale assente (voce 40): regata non controllata", flush=True); await pg.keyboard.press("Escape"); await pg.wait_for_timeout(80); continue   # Escape chiude la moviola come a fine ciclo (senza, la moviola aperta nascondeva «Rotta ottimale» nelle regate dopo)
             C = d["coach"] or []; nfr += len(C)
             g1 = await pg.evaluate(REGC); um = await pg.evaluate("() => document.getElementById('coachVolto').dataset.umore")
             chk("K12", bool(g0) and g0["mia"] and g0["fine"] == "ultimo" and not g0["righe"], f"K12 {s}-{k}: prima della rotta ottimale {g0 and {**g0, 'righe': g0['righe'][:2]}}")
@@ -156,6 +160,7 @@ async def main():
             if n == len(elenco) - 1:
                 await pg.wait_for_timeout(300); db = await pg.evaluate(IDB, g1["id"])
                 chk("K12", db == g1["righe"], f"K12 {s}-{k}: copia in IndexedDB {db}")
+        chk("K0", nmanca <= max(2, NREG // 10), f"K0: regate senza rotta ottimale {nmanca} su {NREG} (soglia scritta il 20 nov 2026 prima di rimisurare: al più {max(2, NREG // 10)}; la voce 40 di DA-FARE ne contava 3 su 100 nelle regate corte)")
         chk("K4", nclou >= 3, f"K4: regate col clou da controllare {nclou} (servono almeno 3 perché il controllo misuri)")
         print(f"frasi in tutto {nfr}, regate col clou controllato {nclou}, volti {umori}, regate col primo posto o il record {nbravo}", flush=True)
         # ---- K2 caso peggiore, K5a, K7 sull'ultima regata
