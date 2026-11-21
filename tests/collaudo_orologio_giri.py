@@ -2,8 +2,8 @@
 # Uso: .venv-collaudi/bin/python tests/collaudo_orologio_giri.py        (BROWSER=firefox per l'altro browser)
 #  O1 l'orologio c'è se e solo se c'è un debito di giri (anche prima del via), letto da __sv.riquadro; O2 pixel dell'anello: rosso prima del giro, verde dove il giro è arrivato,
 #  nel verso giusto (ore 3 e ore 6 per i giri a dritta, ore 9 e ore 6 per quelli a sinistra); O3 il numero al centro = giri contati dal collaudo / giri della penalità;
-#  O9 (1.3.23, voce 61) nel torneo (regate 3 e 4, coi giri ma senza bandiere): prima del debito niente riquadro; col debito l'orologio c'è, rosso, «0/2»,
-#     nella metà alta, senza il pezzo delle bandiere; in 3 semi. Prima della 1.3.23 lì non c'era (segnalato da Ale il 17 nov).
+#  O9 (1.3.23, voce 61; dalla 1.3.35, voce 67, il torneo ha anche le bandiere: criterio cambiato dichiarando il perché) nel torneo (regate 3 e 4, coi giri): prima del debito
+#     c'è solo il pezzo delle bandiere (la classe) e nessun orologio; col debito l'orologio c'è, rosso, «0/2», nella metà alta, a destra, e le bandiere a sinistra; in 3 semi.
 #  O5 il riquadro sta nella metà alta dello schermo (bussola e vento sono in basso a destra); O7 pagina senza #collaudo: dopo un debito l'anello si vede, rosso.
 import asyncio, os, pathlib, sys
 import metro
@@ -84,9 +84,9 @@ async def main():
         chk("O5 il riquadro con l'orologio sta nella metà alta dello schermo (parte più bassa a y=%d, metà = 325)" % basso, basso < 325)
         TT = [await pg.evaluate(TORNEO, [2 + (j % 2), 3200 + j]) for j in range(3)]
         for j, t in enumerate(TT): print("O9 torneo, regata %d, seme %d: %s" % (3 + j % 2, 3200 + j, t), flush=True)
-        chk("O9 torneo coi giri (senza bandiere): prima del debito niente riquadro, col debito l'orologio rosso «0/2» nella metà alta, senza bandiere (3 semi)",
-            len(TT) == 3 and metro.tutti(t["tor"] and t["giri"] and not t["segnali"] and t["prima"] is None and t["primaOr"] is None and t["oro"] == "0/2" and t["flag"] == []
-                and t["rect"] is None and t["rect2"] and t["rect2"][1] + t["rect2"][3] < 325 and t["pix"] and all(t["pix"][q] == "rosso" for q in ("ore3", "ore6", "ore9")) for t in TT))
+        chk("O9 torneo coi giri (con le bandiere dalla 1.3.35): prima del debito solo le bandiere (classe), nessun orologio; col debito l'orologio rosso «0/2» nella metà alta a destra e le bandiere a sinistra (3 semi)",
+            len(TT) == 3 and metro.tutti(t["tor"] and t["giri"] and t["segnali"] and t["prima"] is not None and t["prima"]["flag"] == ["classe"] and t["prima"]["orologio"] is None and t["primaOr"] is None and t["oro"] == "0/2" and t["flag"] == ["classe"]
+                and t["rect"] and t["rect"][1] + t["rect"][3] < 325 and t["rect2"] and t["rect2"][1] + t["rect2"][3] < 325 and t["pix"] and all(t["pix"][q] == "rosso" for q in ("ore3", "ore6", "ore9")) for t in TT))
         chk("O0 nessun errore di pagina", not errs, str(errs[:2]))
         await ctx.close()
         # ---- O7: pagina come la carica un giocatore ----

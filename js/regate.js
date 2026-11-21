@@ -1371,7 +1371,7 @@
   }
   function torRc(){
     const k = tor.ris.length, g = tor.regate[k];
-    return { title: "Torneo, regata " + (k + 1) + " di " + torN(tor), wind: g.wind, tws: g.tws, gusts: 1, shifts: true, tor: true, giri: torGiri(tor, k), precedenze: true, tri: torTri(k), up: torTri(k) ? (tor.lungo ? LATO_TRI : TRI_L) : tor.lungo ? LATO_BAS : undefined, lungo: !!tor.lungo };
+    return { title: "Torneo, regata " + (k + 1) + " di " + torN(tor), wind: g.wind, tws: g.tws, gusts: 1, shifts: true, tor: true, giri: torGiri(tor, k), precedenze: true, segnali: true, tri: torTri(k), up: torTri(k) ? (tor.lungo ? LATO_TRI : TRI_L) : tor.lungo ? LATO_BAS : undefined, lungo: !!tor.lungo };
   }
   const torBrief = () => "Torneo, " + torNome(tor.ris.length) + ". Punti: 1 al primo, 2 al secondo e così via; chi non arriva o si ritira ne prende " +
     (tor.av.length + 2) + (torGiri(tor, tor.ris.length) ? ". In questa regata un contatto con colpa costa due giri di penalità e toccare una boa un giro (regola 44.2); chi arriva senza averli fatti è squalificato e prende i punti di chi non arriva"

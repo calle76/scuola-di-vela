@@ -1,6 +1,6 @@
 # Proposta: le bandiere del via con il conto da 3 minuti come con quello da 5 (voce 67)
 
-*Fermata 1, 20 novembre 2026. Richiesta di Ale: «le bandiere del via che funzionino tutte e tre nei 3 minuti come nei 5». Nessun codice finché non arriva il via. **Prima va chiarito cosa non funziona**: dal codice non lo vedo (sotto). Collegata a `PROPOSTA-SEGNALI-PARTENZA.md` e `PROPOSTA-RIQUADRO-BANDIERE.md`.*
+*FATTO nella 1.3.35 (21 novembre 2026, via di Ale): vedi in fondo «Cosa è stato fatto». Fermata 1, 20 novembre 2026. Richiesta di Ale: «le bandiere del via che funzionino tutte e tre nei 3 minuti come nei 5». Nessun codice finché non arriva il via. **Prima va chiarito cosa non funziona**: dal codice non lo vedo (sotto). Collegata a `PROPOSTA-SEGNALI-PARTENZA.md` e `PROPOSTA-RIQUADRO-BANDIERE.md`.*
 
 ## Cosa fa il codice oggi (letto, non ancora provato guidando)
 
@@ -60,3 +60,9 @@ Il metro di B2 e B3 non deve dipendere dal gioco: le sequenze attese si scrivono
 1. Guardare guidando le tre sequenze (1, 3, 5 minuti) e confermare dov'è il difetto; riportare cosa si vede.
 2. Cambiare solo ciò che serve; criteri B1-B6.
 3. Documenti, versione, `CHANGELOG.md`.
+
+## Cosa è stato fatto (1.3.35, 21 novembre 2026)
+
+Il meccanismo delle bandiere era già pronto e legato a una sola opzione, `segnali`: acceso solo nella regata dei giri della Scuola. Per le regate di Deriva (torneo, stagione e finale, che usano la stessa regata) basta `segnali: true` (`js/regate.js`, riga della regata del torneo). La sequenza da 3 minuti (classe a −180 s, P a −120 s, P giù a −60 s) è la stessa regola dei 5 minuti: `bandiereAl` dà classe a −cd e P un minuto dopo per ogni conto da almeno 180 s. I messaggi delle bandiere («Avviso: alzata la bandiera di classe…») sostituiscono quelli di testo vecchi («Segnale di avviso…»). Le bandiere non toccano la fisica né la guida: solo disegno, messaggi e registratore.
+
+Collaudo nuovo `collaudo_segnali_deriva.py`: B1 bandiere a ogni decimo (9.251 letture in 5 regate: bastone, triangolo, lunga; 1, 3 e 5 minuti), B2 messaggi una volta al tempo giusto, B3 la X (con barca oltre la linea 3 su 3, senza nessuno 3 su 3 senza X), B4 il riquadro del Coach sta sotto quello delle bandiere, B5 pannello 1360x650 senza eccesso, B6 arrivi identici con bandiere e senza, B7 torneo aperto dal menu come un giocatore. Chromium e Firefox. La sequenza da 3 minuti resta un'ipotesi dichiarata nostra (il regolamento descrive i 5).
