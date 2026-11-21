@@ -19,6 +19,12 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.32 — Coach in regata: il suggerimento resta più a lungo (voce 68)
+
+- Un commento del Coach resta a schermo da 8 a 14 secondi, in proporzione alla frase: `5 + caratteri/15` s, con minimo 8 e massimo 14 (prima sempre 6 s). Ipotesi nostre, senza fonte.
+- Un commento forzato (penalità, giri fatti, contatto con colpa, partenza anticipata) non cancella più quello in corso prima di 4 s: resta in coda (l'ultimo) e compare appena passano. La pausa di 30 s fra due commenti normali non cambia.
+- Collaudo `collaudo_coach_regata.py`: D1 (durata ricalcolata dalla lunghezza del testo, 60 commenti controllati), D2 (nessuno sostituito prima di 4 s, 48 coppie) e D2b (prova diretta del forzato in coda). La regata non cambia: P4 uguale al bit con Coach acceso e spento.
+
 ## 1.3.31 — Coach in regata: frase dell'ultimo lato neutra
 
 - «Fontana è a 3 s: puoi prenderla, ogni manovra conta.» diventa «Fontana è a 3 s davanti a te: puoi superare quella barca, ogni manovra conta.» Prima la frase era sbagliata quando davanti c'era un rivale uomo (Ale, 21 nov). `collaudo_coach_regata` verde: 60 commenti ricontrollati, 0 sbagliati, 8 con questa frase.

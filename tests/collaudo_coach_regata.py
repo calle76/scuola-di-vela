@@ -6,6 +6,7 @@
 #   P4 spento è spento: stessa regata col Coach acceso e spento, arrivi e classifica identici; spento, 0 commenti
 #   P5 non copre: il riquadro sta in alto a sinistra sul mare (dentro i 970 px del mare, nella metà alta), lontano dal centro dove sta la barca; pannello 0 px di eccesso
 #   P6 costo: tempo della regata acceso contro spento (solo riportato: sul PC di Ale il rumore supera il 3% della soglia)
+#   D1-D2 (voce 68, 1.3.32): durata a schermo = min(14, max(8, 5 + caratteri/15)) s; un forzato non sostituisce un commento prima di 4 s (D3 = P4, D4 = P5, D5 = P1, D6 = P7)
 #   P7 pagina senza #collaudo: una regata di Deriva, Coach attivo e riga nelle impostazioni visibile; 0 errori
 # Uso: python tests/collaudo_coach_regata.py [--semi N]   (BROWSER=firefox per Firefox)
 import asyncio, os, pathlib, re, statistics as st, sys
@@ -26,11 +27,12 @@ CORSA = """async ([k, seme, acceso]) => {
   semina(); sv.torApri(); document.getElementById('torGo').click();
   const T = sv.tor; T.ris.length = 0; for (let j = 0; j < k; j++) T.ris.push(T.av.concat([0]).map((x, i) => ({ fin: i + 1, pp: 0 })));
   sv.rot.spento = true; semina(); sv.simTime = 0; sv.openItem(["r", "t"]);
-  const R = sv.R, me = R.boats[0], dt = 1 / 60, snap = [], toasts = []; R.tor = false; let n = 0, prevNeed = R.need || 0, prevPp = 0, prevPen = 0, prevLeg = 0, t0 = performance.now();
+  const R = sv.R, me = R.boats[0], dt = 1 / 60, snap = [], toasts = []; R.tor = false; let n = 0, durate = [], curPrima = null, prevNeed = R.need || 0, prevPp = 0, prevPen = 0, prevLeg = 0, t0 = performance.now();
   while (R.t < 1500 && R.boats.some(b => b.fin === null && !b.dnf)){
     const pn = R.need || 0, ppp = me.pp || 0, ppe = me.pen || 0, pl = me.leg;
     sv.pilota(dt); sv.run(dt, 1);
     const tt = sv.toast; if (tt && (!toasts.length || toasts[toasts.length - 1][1] !== tt)) toasts.push([R.t, tt]);
+    if (R.cr && R.cr.cur && R.cr.cur !== curPrima){ curPrima = R.cr.cur; durate.push([curPrima.testo, curPrima.dur, R.t - curPrima.t0]); }
     const L = R.cr ? R.cr.log : [];
     while (n < L.length){ const c = L[n++], w = sv.windAt(me.S.x, me.S.y), a = sv.norm180(w.twd - me.S.h);
       const dav = R.boats.filter(b => !b.me && b.fin === null).map(b => [b.etich || b.name, sv.distacco ? sv.distacco(b) : null]);
@@ -39,7 +41,7 @@ CORSA = """async ([k, seme, acceso]) => {
         posVero: sv.posizione(), dav, nMarks: R.marks.length }); }
   }
   const ms = performance.now() - t0;
-  return { fin: R.boats.map(b => b.fin), snap, toasts, ms, rect: R.crRect || null, n: R.cr ? R.cr.log.length : 0 };
+  return { fin: R.boats.map(b => b.fin), durate, snap, toasts, ms, rect: R.crRect || null, n: R.cr ? R.cr.log.length : 0 };
 }"""
 async def main():
     async with async_playwright() as p:
@@ -57,6 +59,16 @@ async def main():
         forzati = re.compile(r"partito prima|Penalità|Giri fatti|Contatto con colpa")
         vicini = [(s, k, c1["t"], c2["t"]) for s, k, a in corse for c1, c2 in zip(a["snap"], a["snap"][1:]) if c2["t"] - c1["t"] < 30 - 1e-6 and not forzati.search(c2["testo"])]
         chk("P1", 4 <= st.median(ncom) <= 12 and not vicini, f"P1 commenti per regata {ncom} (mediana {st.median(ncom)}); a meno di 30 s senza essere penalità o partenza anticipata: {vicini[:3]}")
+        # D1, D2 (voce 68, 1.3.32): durata a schermo proporzionale alla frase (ricalcolata qui dalla lunghezza del testo, non letta dal gioco) e il forzato non taglia prima di 4 s
+        dur_sb, tagli, nd = [], [], 0
+        for s, k, a in corse:
+            for t, d, _ in a["durate"]:
+                nd += 1; att = min(14, max(8, 5 + len(t) / 15))
+                if abs(d - att) > 0.01: dur_sb.append((s, k, t[:40], d, round(att, 2)))
+            for c1, c2 in zip(a["snap"], a["snap"][1:]):
+                if c2["t"] - c1["t"] < 3.9: tagli.append((s, k, round(c1["t"], 1), round(c2["t"], 1)))
+        chk("D1", nd >= 50 and not dur_sb, f"D1 durata a schermo: {nd} commenti controllati (servono almeno 50); durate diverse dall'attesa {len(dur_sb)}: {dur_sb[:3]}")
+        chk("D2", len(corse) >= 12 and not tagli, f"D2 nessun commento sostituito prima di 4 s: {sum(len(a['snap']) - 1 for _, _, a in corse)} coppie di commenti consecutivi, tagliati {len(tagli)}: {tagli[:3]}")
         # P2
         per_tipo, sbagli = {}, []
         for s, k, a in corse:
@@ -89,6 +101,14 @@ async def main():
             if k % 2: sp = await q.evaluate(CORSA, [k, seme, False]); acc = await q.evaluate(CORSA, [k, seme, True])   # ordine alternato, per il tempo (P6)
             else: acc = await q.evaluate(CORSA, [k, seme, True]); sp = await q.evaluate(CORSA, [k, seme, False])
             chk("P4", sp["fin"] == acc["fin"] and sp["n"] == 0, f"P4 seme {seme} regata {k + 1}: arrivi acceso {acc['fin']}, spento {sp['fin']}; commenti da spento {sp['n']}; tempo acceso {acc['ms'] / 1000:.1f} s, spento {sp['ms'] / 1000:.1f} s (P6, solo riportato)")
+        # D2b: prova diretta del forzato in coda (le regate non lo esercitano quasi mai): un commento normale, un forzato dopo 1 s, un altro forzato dopo 2 s
+        d2 = await q.evaluate("""() => { const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
+          sv.fast(0); sel('aiLevel', 'medio'); sv.opt.coachReg = true; sv.torApri(); document.getElementById('torGo').click(); sv.openItem(["r", "t"]);
+          const R = sv.R; R.t = 100; R.cr = { ult: -1e9, cur: null, log: [], part: true, cop: 0, sc: 0, leg: 1, pos: null, need: 0, done: 0, pp: 0, pen: 0, vicino: true, sponsor: true };
+          const v = []; crDi("serio", "uno"); R.t = 101; crDi("arrabbiato", "due", true); v.push(R.cr.cur.testo); R.t = 102; crDi("arrabbiato", "tre", true); v.push(R.cr.cur.testo, !!R.cr.coda);
+          R.t = 103.9; crAggiorna(0.01); v.push(R.cr.cur.testo); R.t = 104.1; crAggiorna(0.01); v.push(R.cr.cur.testo, R.cr.log.map(c => c.testo).join(","), R.cr.cur.t0);
+          return v; }""")
+        chk("D2b", d2[0] == "uno" and d2[1] == "uno" and d2[2] is True and d2[3] == "uno" and d2[4] == "tre" and d2[5] == "uno,tre" and abs(d2[6] - 104.1) < 1e-6, f"D2b forzato in coda: {d2}")
         # P5: un commento a schermo e il suo riquadro
         r = await q.evaluate("""() => { __sv.opt.coachReg = true; const R = __sv.R; R.cr = R.cr || { ult: -1e9, cur: null, log: [] }; R.cr.cur = { t0: R.t, umore: 'serio', testo: "Sei nel cono d'ombra della Rossa: vira o poggia per avere vento libero, e controlla la frase più lunga che può capitare." };
             __sv.draw(0.016); const ecc = Math.max(document.documentElement.scrollWidth - innerWidth, document.documentElement.scrollHeight - innerHeight, 0); return { rect: R.crRect, ecc, W: W, H: H }; }""")

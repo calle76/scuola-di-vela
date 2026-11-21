@@ -354,22 +354,25 @@
 
   // ---- coach in regata (1.3.28, voce 65, docs/PROPOSTA-COACH-IN-REGATA.md; idea e via di Ale del 20 novembre 2026: «se acceso, suggerisce cosa sarebbe meglio fare») ----
   // Solo nelle regate di Deriva (R.r1516: torneo, stagione, finale, regate di Deriva; non negli esercizi), con opt.coachReg. Un volto e una frase in alto a sinistra sul mare,
-  // per CR_DUR s; al più un commento ogni CR_PAUSA s, tranne partenza anticipata e penalità. Dice solo cose che il gioco sa adesso. Legge lo stato della regata e non lo cambia,
+  // per CR_BASE + caratteri/CR_LETTURA s (8-14); al più un commento ogni CR_PAUSA s, tranne partenza anticipata e penalità. Dice solo cose che il gioco sa adesso. Legge lo stato della regata e non lo cambia,
   // senza numeri a caso: la regata è identica col Coach acceso o spento (P4). Ogni commento va nel file della regata come riga «C». Soglie: ipotesi nostre
-  const CR_OGNI = 0.25, CR_DUR = 6, CR_PAUSA = 30, CR_COP = 8, CR_SCARSO = 7, CR_SCARSO_T = 8, CR_BOA_LONTANA = 80, CR_DIST = 10, CR_W = 330;
+  const CR_OGNI = 0.25, CR_BASE = 5, CR_LETTURA = 15, CR_DMIN = 8, CR_DMAX = 14, CR_MIN_VISTO = 4, CR_PAUSA = 30, CR_COP = 8, CR_SCARSO = 7, CR_SCARSO_T = 8, CR_BOA_LONTANA = 80, CR_DIST = 10, CR_W = 330;
   const crImg = {};
   const crVolto = u => crImg[u] || (crImg[u] = Object.assign(new Image(), { src: "img/coach-" + u + ".jpg" }));
   const crNome = b => (FLEET_LOOK.some(l => l.name === b.name) ? "la " : "") + (b.etich || b.name);
   const crAttivo = () => !!(opt.coachReg && R && R.r1516 && !R.es);
   function crDi(umore, testo, forza){
     const c = R.cr; if (!forza && R.t - c.ult < CR_PAUSA) return false;
-    c.ult = R.t; c.cur = { t0: R.t, umore, testo }; c.log.push({ t: +R.t.toFixed(2), umore, testo });
+    /* 1.3.32 (voce 68): un commento forzato non cancella quello in corso prima di CR_MIN_VISTO s: resta in coda (l'ultimo) e compare appena possono passare */
+    if (forza && c.cur && R.t - c.cur.t0 < CR_MIN_VISTO && R.t - c.cur.t0 >= 0){ c.coda = { umore, testo }; return true; }
+    c.ult = R.t; c.cur = { t0: R.t, umore, testo, dur: Math.min(CR_DMAX, Math.max(CR_DMIN, CR_BASE + testo.length / CR_LETTURA)) }; c.log.push({ t: +R.t.toFixed(2), umore, testo });
     if (typeof ses !== "undefined" && ses.on) sesLine("C " + sesT() + " " + umore + " " + testo);
     return true;
   }
   function crAggiorna(dt){
     if (!crAttivo()) return;
     const me = R.boats[0], c = R.cr || (R.cr = { ult: -1e9, cur: null, log: [], part: false, cop: 0, sc: 0, leg: 0, pos: null, need: R.need || 0, done: R.done || 0, pp: 0, pen: 0, vicino: false, sponsor: false });
+    if (c.coda && c.cur && R.t - c.cur.t0 >= CR_MIN_VISTO){ const q = c.coda; c.coda = null; crDi(q.umore, q.testo, true); }
     if (me.fin !== null || me.dnf) return;
     if (!c.sponsor && R.tor && R.t >= -50){ c.sponsor = true; /* l'obiettivo dello sponsor, nelle tappe della stagione in carriera */
       const D = modo === "carriera" && progress.sponsor && progress.sponsor.c, S = progress.stagione;
@@ -413,8 +416,8 @@
   }
   function crDisegna(){
     R && (R.crRect = null); if (!crAttivo() || !R.cr || !R.cr.cur) return;
-    const c = R.cr.cur, eta = R.t - c.t0; if (eta > CR_DUR || eta < 0) return;
-    const alfa = Math.min(1, (CR_DUR - eta) / 0.8, eta / 0.3 + 0.2), pad = 8, F = 48, x = RQ_X, y = R.rqRect ? R.rqRect[1] + R.rqRect[3] + 8 : RQ_YS;
+    const c = R.cr.cur, eta = R.t - c.t0; if (eta > c.dur || eta < 0) return;
+    const alfa = Math.min(1, (c.dur - eta) / 0.8, eta / 0.3 + 0.2), pad = 8, F = 48, x = RQ_X, y = R.rqRect ? R.rqRect[1] + R.rqRect[3] + 8 : RQ_YS;
     ctx.save(); ctx.globalAlpha = alfa; ctx.font = font(600, 14);
     const parole = c.testo.split(" "), righe = []; let r = "";
     for (const p of parole){ const t = r ? r + " " + p : p; if (ctx.measureText(t).width > CR_W - F - 3 * pad && r){ righe.push(r); r = p; } else r = t; }
