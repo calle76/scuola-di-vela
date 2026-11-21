@@ -59,3 +59,9 @@ ESITO firefox FALLITO
 
 ~~ collaudo_coach.py (regate lunghe) | tutti | E2: costo del passo misurato con l'orologio (+6,2% su GitHub in Chromium, 21 nov 2026; sul PC entro la soglia)
 E2 passo di simulazione
+
+== collaudo_triangolo.py | chromium | T2b noto dalla 1.0.55; dal 21 nov 2026 il collaudo apre e corre nello stesso evaluate (prima il ciclo della pagina consumava i numeri a caso del seme e il numero cambiava a ogni lancio e a ogni giro su GitHub): ora 132 su 171, uguale a ogni lancio
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 132 su 171 confronti (162 col segno giusto), entro 3 s dopo il via 31/57, dopo la boa 1 60/60, dopo la boa 2 41/54, errore massimo 13.1 s, giocatore arrivato in 20 regate su 20
+
+== collaudo_triangolo.py | firefox | come in Chromium (T2b noto dalla 1.0.55), con la correzione del 21 nov 2026: 114 su 166
+FALLITO  T2b: distacchi coerenti (segno giusto, errore entro 3 s) a 10 s da ogni giro di boa — 114 su 166 confronti (157 col segno giusto), entro 3 s dopo il via 23/60, dopo la boa 1 57/58, dopo la boa 2 34/48, errore massimo 19.7 s, giocatore arrivato in 20 regate su 20

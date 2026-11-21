@@ -78,8 +78,11 @@ async def main(a, b, RIT=10):
         # T2b
         conf = giusti = segno = 0; d1 = [0, 0]; d1_peggio = 0.0; peggio = 0.0; per_lato = {1: 0, 2: 0, 3: 0}; buoni_lato = {1: 0, 2: 0, 3: 0}; arrivati = 0; ist = [0, 0]
         for seme in range(a, b + 1):
-            ctx, pg = await pagina(); assert await pg.evaluate(APRI, [seme, (seme % 8) * 45, True]); await pg.evaluate("__sv.R.tor = false")
-            r = await pg.evaluate(CORSA, [seme, RIT]); arrivati += r["arrivato"]
+            ctx, pg = await pagina()
+            # 21 nov 2026 (indagine GitHub contro PC): apertura e corsa nello STESSO evaluate. Fra due evaluate il ciclo della pagina gira (suoni, registratore) e consuma i numeri a caso del seme:
+            # con 150 ms di attesa T2b dava 135 su 173 invece di 126 su 166, e su GitHub, dove l'intervallo cambia, il numero cambiava a ogni giro
+            ok, r = await pg.evaluate("([a, c]) => { const ok = (" + APRI + ")(a); __sv.R.tor = false; return [ok, (" + CORSA + ")(c)]; }", [[seme, (seme % 8) * 45, True], [seme, RIT]]); assert ok
+            arrivati += r["arrivato"]
             if r["arrivato"]:    # D1 di collaudo_distacchi.py sul triangolo: 5 s prima del mio arrivo, la barca arrivata subito prima di me
                 tm = r["fineT"]["Tu"]; prima = sorted((t, n) for n, t in r["fineT"].items() if n != "Tu" and t < tm)
                 if prima and tm - prima[-1][0] < 60:
