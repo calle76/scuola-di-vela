@@ -14,6 +14,10 @@ Il conto alla rovescia si sceglie fra 1, 3 e 5 minuti (`#cdSel`, di partenza 3).
 
 La sequenza da 3 minuti è una scelta nostra (ipotesi dichiarata), non del regolamento, che descrive solo i 5 minuti. **Le bandiere compaiono solo nelle regate con `R.segnali`**, cioè oggi solo la «Regata con i giri di penalità» della Scuola. Nelle regate di Deriva (torneo, stagione, finale) **non ci sono bandiere**: ci sono i messaggi di testo. Con 3 minuti anche la P c'è, per 60 s invece di 180.
 
+## Chiarimento di Ale (21 novembre 2026)
+
+La richiesta vera è: **le bandiere del via si vedano in tutte le regate col conto da 3 minuti**, non solo in quella coi giri di penalità. È la «lettura 2» qui sotto, e le altre tre cadono. Ale sta comunque verificando a mano che nei 3 minuti dei giri le bandiere si vedano. La proposta va quindi riscritta: oggi il codice lega le bandiere a `R.segnali` (regata dei giri, `js/regate.js` righe 63, 210, 1112, 1146, 1882) e nelle altre regate i messaggi di testo seguono un'altra sequenza (righe 1154-1155). Da decidere: riquadro e barca giuria nel torneo, nella stagione e nella finale (in Deriva il mare è più affollato e c'è già il riquadro dei giri, voce 61), una sola sequenza di messaggi per tutte, e `collaudo_segnali.py` e `collaudo_riquadro_bandiere.py` da estendere. Lavoro più grosso del previsto: passo a Opus. *Il resto del testo è la versione precedente, da riscrivere.*
+
 ## Le possibili letture della richiesta
 
 Non so a quale si riferisce Ale. Le elenco in ordine di probabilità (mia stima, non misurata):
