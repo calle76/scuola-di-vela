@@ -1,7 +1,7 @@
 # La finale (1.3.7, tappa 3, docs/PROPOSTA-FINALE.md, criteri F1-F5 scritti prima).
 #   F1 chi entra: 200 nazionali simulati (4 tappe chiuse con stChiudiTappa, posti a caso): i 5 rivali della finale sono i primi 5 della classifica del nazionale
 #      escluso te, 200 su 200; in carriera senza il diritto il pulsante «La finale» non c'è, col diritto sì; nel gioco libero sempre
-#   F2 si corre davvero: 10 finali col pilota (40 regate a 6 barche): finiscono tutte; il posto salvato è quello della classifica del torneo; il diritto si consuma
+#   F2 si corre davvero: 10 finali col pilota (40 regate a 6 barche, 30 con --lungo): finiscono tutte; il posto salvato è quello della classifica del torneo; il diritto si consuma
 #   F3 salvataggio: ricaricando dopo 2 regate la finale è la stessa (rivali, regate fatte); «Azzera i progressi» la cancella; ritirarsi in carriera chiude il diritto
 #   F4 le regate non cambiano: lo dicono polare.js, raffiche_e_virate.js, impronta1b.js e collaudo_torneo (lanciati a parte)
 #   F5 riquadro della finale a 1360x650 senza scorrere; pagina senza #collaudo, Chromium e Firefox: dal menu di Deriva al torneo, «La finale», regata a 6 barche; 0 errori
@@ -10,6 +10,8 @@ from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
+LUNGO = "--lungo" in sys.argv   # 21 nov 2026 (voce 66c): finale e tornei della stagione a 3 regate lunghe (__sv.lungo = true; con #collaudo restano corte). Uso: collaudo_finale.py [--lungo]
+N = 3 if LUNGO else 4
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
 fail, casi = [], {}
@@ -18,9 +20,9 @@ def chk(parte, ok, testo):
     if not ok or os.environ.get("TUTTO"): print(("ok      " if ok else "FALLITO ") + testo, flush=True)
     if not ok: fail.append(testo)
 
-F1 = """n => { const sv = __sv, out = []; for (let s = 0; s < n; s++){ __seed(9000 + s); delete sv.progress.finaleRivali; delete sv.progress.finale;
+F1 = """([n, NR]) => { const sv = __sv, out = []; sv.lungo = NR === 3; for (let s = 0; s < n; s++){ __seed(9000 + s); delete sv.progress.finaleRivali; delete sv.progress.finale;
     const S = sv.progress.stagione = sv.st.nuova(null, "naz");
-    for (let k = 0; k < 4; k++){ const T = torNuovo(S, 5), mio = 1 + Math.floor(Math.random() * 6); T.ris = [0, 1, 2, 3].map(() => [0, 1, 2, 3, 4, 5].map(i => ({ fin: i === 0 ? mio : (i < mio ? i : i + 1), pp: 0 }))); sv.st.chiudi(T); }
+    for (let k = 0; k < 4; k++){ const T = torNuovo(S, 5), mio = 1 + Math.floor(Math.random() * 6); T.ris = Array.from({ length: NR }, (_, j) => j).map(() => [0, 1, 2, 3, 4, 5].map(i => ({ fin: i === 0 ? mio : (i < mio ? i : i + 1), pp: 0 }))); sv.st.chiudi(T); }
     const cl = sv.st.classifica(S).filter(x => x.id !== "*").slice(0, 5).map(x => x.id), pos = S.fine ? S.fine.pos : null;
     out.push([JSON.stringify(cl) === JSON.stringify(sv.progress.finaleRivali), JSON.stringify(torNuovoFinale().av.map(a => a.nome)) === JSON.stringify(cl), pos, !!sv.progress.finale === (pos <= 3)]); }
   return out; }"""
@@ -37,10 +39,12 @@ async def main():
             q.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
             await q.add_init_script(SEME); await q.goto(BASE + hash_)
             await q.evaluate("([m, d]) => { localStorage.clear(); localStorage.setItem('scuolaVelaModo', m); localStorage.setItem('scuolaVelaLivello', 'deriva'); if (d) localStorage.setItem(m === 'carriera' ? 'scuolaVelaCarriera.v1' : 'scuolaVelaSim.v1', d); }", [modo, json.dumps(salv) if salv else None])
-            await q.reload(); await q.wait_for_timeout(300); return ctx, q
+            await q.reload(); await q.wait_for_timeout(300)
+            if hash_ == "#collaudo": await q.evaluate("v => { __sv.lungo = v; }", LUNGO)
+            return ctx, q
         # ---- F1
         ctx, q = await pagina()
-        r = await q.evaluate(F1, 200)
+        r = await q.evaluate(F1, [200, N])
         chk("F1", len(r) == 200 and all(x[0] and x[1] and x[3] for x in r), f"F1 rivali della finale = primi 5 del nazionale, e diritto ai primi 3: {sum(x[0] and x[1] and x[3] for x in r)} su {len(r)}")
         print(f"F1: {sum(x[0] and x[1] for x in r)} su {len(r)} finali coi primi 5; posti del giocatore nel nazionale {sorted({x[2] for x in r})}; col diritto {sum(x[2] <= 3 for x in r)}", flush=True)
         chk("F1", len({x[2] for x in r}) >= 5, "F1 il metro: posti del giocatore abbastanza diversi")
@@ -60,13 +64,14 @@ async def main():
             await q.click("#goTor"); await q.wait_for_timeout(100); await q.click("#finApri"); await q.wait_for_timeout(100)
             tit = await q.inner_text("#torTitle")
             fatte = 0; barche = set(); ok = True
-            for k in range(4):
+            for k in range(N):
                 if k:
                     await q.evaluate("() => __sv.torApri()"); await q.wait_for_timeout(50)
                 r = await q.evaluate(CORRI); barche.add(r["n"]); fatte += 1
                 if k == 1 and n == 0:   # F3: ricarica dopo 2 regate
                     prima = await q.evaluate("() => JSON.stringify({ f: __sv.progress.torneo.finale, av: __sv.progress.torneo.av.map(a => a.nome), k: __sv.progress.torneo.ris.length })")
                     await q.evaluate("() => document.getElementById('torDlg').close()"); await q.reload(); await q.wait_for_timeout(300)
+                    await q.evaluate("v => { __sv.lungo = v; }", LUNGO)
                     dopo = await q.evaluate("() => JSON.stringify({ f: __sv.progress.torneo.finale, av: __sv.progress.torneo.av.map(a => a.nome), k: __sv.progress.torneo.ris.length })")
                     chk("F3", prima == dopo and json.loads(dopo)["k"] == 2 and json.loads(dopo)["f"], f"F3 ricarica a metà finale: {prima} → {dopo}")
             fin = await q.evaluate("() => { const T = __sv.tor; return T && T.fine ? { pos: T.fine.pos, serie: torSerie(T.ris).findIndex(x => x.i === 0) + 1, salvato: __sv.progress.finaleFatta && __sv.progress.finaleFatta.pos, finale: !!T.finale } : null; }")
