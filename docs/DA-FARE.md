@@ -36,7 +36,6 @@
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
 | 41, 6 | **`collaudo_torneo` C11 in Firefox:** 4 tornei su 40 chiusi a metà non risultano conclusi (1 su 40 nel giro prima); forse è il ritiro che non si salva alla chiusura. Da rifare sul PC, una misura per volta col freno | oss. 86; `COLLAUDI.md` | Opus |
-| 40 | **«Rotta ottimale» non compare in 3 regate su 100** (semi 2415, 2420 di `collaudo_rotta_assoluta.py`); indizio: riaprirla due volte | `PROPOSTA-ROTTA-ASSOLUTA.md` §10 | Opus |
 | 35 | **Messaggio «Contatto» coperto da un altro** (`collaudo_registro` in Firefox su GitHub). Se compaiono le note del collaudo, dare priorità ai messaggi delle penalità | `CHANGELOG.md` 1.3.8 | Sonnet |
 | 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa | `CHANGELOG.md` 1.2.28 | — |
 | 8, 18 | **Suoni:** boa poco forte e sartiame in `collaudo_suoni_si_sentono` (il bordo si sposta fra un giro e l'altro) | `CHANGELOG.md` 1.2.12 | Sonnet |

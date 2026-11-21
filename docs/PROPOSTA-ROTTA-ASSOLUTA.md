@@ -187,7 +187,7 @@ Il PC del collaudo è quello di Ale.
 2. Con vento costante dava ancora 0 su 20, e c'era un errore mio nel codice nuovo: i 7 punti seguivano il vento impostato invece della linea vera. Nel gioco normale il vento impostato non cambia, quindi era invisibile, ma era sbagliato: ora i punti stanno fra spillo e comitato. Rifatte le 100 regate: stessi numeri.
 3. Detto chiaro: con vento costante le 20 regate sono in pratica **2 situazioni** (vento girato di +10° e di −10°), ripetute.
 
-**Trovato strada facendo:** in 3 regate su 100 (semi 2415 R3 e R4, 2420 R4) il pulsante «Rotta ottimale» non compare, anche col codice della 1.2.39: il pilota arriva, il taglio della linea è registrato. Causa non cercata: va in `DA-FARE.md`.
+**Chiarito il 21 nov 2026 (voce 40 chiusa):** il pilota in quei casi NON arriva (`fin` nullo) e il pulsante si nasconde apposta; l'ipotesi seguente era sbagliata. **Trovato strada facendo (17 nov, superato):** in 3 regate su 100 (semi 2415 R3 e R4, 2420 R4) il pulsante «Rotta ottimale» non compare, anche col codice della 1.2.39: il pilota arriva, il taglio della linea è registrato. Causa non cercata: va in `DA-FARE.md`.
 
 **Strade per Ale:**
 - **Tempo (P3, A3):**
