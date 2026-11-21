@@ -22,7 +22,7 @@ def chk(parte, ok, testo):
 CORSA = """async ([k, seme, acceso]) => {
   const sv = __sv, sel = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change')); };
   const semina = () => (s => { Math.random = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; })(seme);
-  sv.fast(0); sel('aiLevel', 'medio'); sel('cdSel', '60'); window.confirm = () => true; sv.lungo = true; sv.opt.coachReg = acceso;
+  sv.fast(0); sv.suoni.reg.length = 0; sel('aiLevel', 'medio'); sel('cdSel', '60'); window.confirm = () => true; sv.lungo = true; sv.opt.coachReg = acceso;
   if (sv.tor){ sv.torApri(); const rit = document.getElementById('torRit'); if (rit) rit.click(); }
   semina(); sv.torApri(); document.getElementById('torGo').click();
   const T = sv.tor; T.ris.length = 0; for (let j = 0; j < k; j++) T.ris.push(T.av.concat([0]).map((x, i) => ({ fin: i + 1, pp: 0 })));
@@ -41,7 +41,7 @@ CORSA = """async ([k, seme, acceso]) => {
         posVero: sv.posizione(), dav, nMarks: R.marks.length }); }
   }
   const ms = performance.now() - t0;
-  return { fin: R.boats.map(b => b.fin), durate, snap, toasts, ms, rect: R.crRect || null, n: R.cr ? R.cr.log.length : 0 };
+  return { fin: R.boats.map(b => b.fin), durate, camp: sv.suoni.reg.filter(e => e[1] === 'campanello').length, snap, toasts, ms, rect: R.crRect || null, n: R.cr ? R.cr.log.length : 0 };
 }"""
 async def main():
     async with async_playwright() as p:
@@ -69,6 +69,9 @@ async def main():
                 if c2["t"] - c1["t"] < 3.9: tagli.append((s, k, round(c1["t"], 1), round(c2["t"], 1)))
         chk("D1", nd >= 50 and not dur_sb, f"D1 durata a schermo: {nd} commenti controllati (servono almeno 50); durate diverse dall'attesa {len(dur_sb)}: {dur_sb[:3]}")
         chk("D2", len(corse) >= 12 and not tagli, f"D2 nessun commento sostituito prima di 4 s: {sum(len(a['snap']) - 1 for _, _, a in corse)} coppie di commenti consecutivi, tagliati {len(tagli)}: {tagli[:3]}")
+        # C1 (1.3.34): un campanello per ogni commento mostrato (registro dei suoni); spento, nessun campanello
+        sb_c = [(s, k, a["camp"], a["n"]) for s, k, a in corse if a["camp"] != a["n"]]
+        chk("C1", sum(a["n"] for _, _, a in corse) >= 40 and not sb_c, f"C1 un campanello per commento: {sum(a['n'] for _, _, a in corse)} commenti, regate dove il conto non torna {sb_c[:3]}")
         # P2
         per_tipo, sbagli = {}, []
         for s, k, a in corse:

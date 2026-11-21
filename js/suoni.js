@@ -5,8 +5,8 @@
   // ======================================================================
   // ---- impostazione e stato ----
   // 1.3.33 (voce 70, Ale 20 novembre 2026): niente più livelli di volume, solo acceso o spento (il resto lo fa il volume del PC): acceso = 0,6, il livello «alto»
-  // di prima, su cui è misurato il picco. A zoom 100% o più vicino i suoni sono pieni; allontanando lo zoom calano solo onde e gabbiani (l'ambiente), fino a SUONI_MIN.
-  // I suoni della propria barca e i segnali (tromba, contatto, boa) non dipendono dallo zoom. SUONI_MIN 0,35 (−9 dB): ipotesi nostra, da regolare a orecchio.
+  // di prima, su cui è misurato il picco. A zoom 100% o più vicino i suoni sono pieni; allontanando lo zoom calano tutti gli altri (nodo sMondo), fino a SUONI_MIN.
+  // 1.3.34 (Ale, 21 novembre): cala tutto, tranne i segnali (tromba, contatto, boa, arrivo) e il campanello del Coach, che restano pieni. SUONI_MIN 0,35 (−9 dB): ipotesi nostra, da regolare a orecchio.
   const SUONI_KEY = "scuolaVelaSuoni", SUONI_LIV = { spento: 0, acceso: 0.6 }, SUONI_MIN = 0.35;
   let suoniLiv = "acceso";
   try { const v = localStorage.getItem(SUONI_KEY); if (v && v in SUONI_LIV) suoniLiv = v; } catch(e){}
@@ -26,11 +26,11 @@
     strambata:  k => { sTaglio("colpo", 0.5 + 0.5 * k.v, 0.06, k.t); sTaglio("boma", 0.6, 0.04, k.t + 0.05); },
     scuffia:    k => sTaglio("tuffo", 1, 0.04, k.t),
     raddrizzata: k => sTaglio("scolo", 1, 0.05, k.t),
-    contatto:   k => sTaglio("scafo", 1, 0.05, k.t),
-    boa:        k => sTaglio("boa", 0.8, 0.05, k.t),
-    tromba:     k => sTaglio("tromba", 0.5, 0, k.t),
-    tromba_lunga: k => sTaglio("tromba_lunga", 0.5, 0, k.t),
-    arrivo:     k => sTaglio("arrivo", 0.6, 0, k.t)
+    contatto:   k => sTaglio("scafo", 1, 0.05, k.t, sMaster),
+    boa:        k => sTaglio("boa", 0.8, 0.05, k.t, sMaster),
+    tromba:     k => sTaglio("tromba", 0.5, 0, k.t, sMaster),
+    tromba_lunga: k => sTaglio("tromba_lunga", 0.5, 0, k.t, sMaster),
+    arrivo:     k => sTaglio("arrivo", 0.6, 0, k.t, sMaster)
   };
   const suoniMuta = {};                         // solo per il collaudo che ascolta: { sartiame: true } spegne quel suono per confrontare con e senza
   const COLPI_VOL = 0.28 * 4;                   // volume dei colpi di vela col vento forte: 0,28 nella 1.2.7, ×4 (+12 dB) dalla 1.2.8 (Ale, 3 novembre 2026, ascoltando il gioco registrato)
@@ -46,12 +46,12 @@
     if (!actx){
       try { actx = new AC(); } catch(e){ actx = null; return; }
       sMaster = actx.createGain(); sMaster.gain.value = SUONI_LIV[suoniLiv]; sMaster.connect(actx.destination);
-      sMondo = actx.createGain(); sMondo.gain.value = zoomVol(userZoom); sMondo.connect(sMaster); /* onde e gabbiani, che seguono lo zoom */
+      sMondo = actx.createGain(); sMondo.gain.value = zoomVol(userZoom); sMondo.connect(sMaster); /* tutti i suoni tranne i segnali, che seguono lo zoom */
       const buf = actx.createBuffer(1, actx.sampleRate * 2, actx.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = sRand() * 2 - 1;
       const catena = (tipo, f, q) => { const src = actx.createBufferSource(); src.buffer = buf; src.loop = true; src.playbackRate.value = 0.8 + sRand() * 0.4;
         const fl = actx.createBiquadFilter(); fl.type = tipo; fl.frequency.value = f; fl.Q.value = q; const g = actx.createGain(); g.gain.value = 0;
-        src.connect(fl); fl.connect(g); g.connect(sMaster); src.start(); return { fl, g }; };
+        src.connect(fl); fl.connect(g); g.connect(sMondo); src.start(); return { fl, g }; };
       sCh = { vento: catena("bandpass", 400, 0.6), acqua: catena("lowpass", 500, 0.7), vela: catena("highpass", 900, 0.8) };
       sCh.buf = buf;
       suoniRegistrati();
@@ -64,7 +64,7 @@
   function sGiro(buffer, f, inizio, dest){ // un giro registrato senza fine, a volume 0: filtro passa-basso, volume e velocità li comanda suoniAgg
     const src = actx.createBufferSource(); src.buffer = buffer; src.loop = true;
     const fl = actx.createBiquadFilter(); fl.type = "lowpass"; fl.frequency.value = f; const g = actx.createGain(); g.gain.value = 0;
-    src.connect(fl); fl.connect(g); g.connect(dest || sMaster); src.start(0, inizio * buffer.duration); return { src, fl, g };
+    src.connect(fl); fl.connect(g); g.connect(dest || sMondo); src.start(0, inizio * buffer.duration); return { src, fl, g };
   }
   function suoniRegistrati(){
     if (typeof SUONI_DATI === "undefined" || !actx){ suoniFonte = "errore: dati mancanti"; return; }
@@ -89,12 +89,12 @@
     const src = actx.createBufferSource(); src.buffer = buffer; src.playbackRate.value = 1 - varia + sRand() * 2 * varia;
     const g = actx.createGain(); g.gain.value = v; src.connect(g); let out = g;
     if (pan && actx.createStereoPanner){ const sp = actx.createStereoPanner(); sp.pan.value = pan; g.connect(sp); out = sp; }
-    out.connect(dest || sMaster); src.start(actx.currentTime + 0.01, voce[0], voce[1]);
+    out.connect(dest || sMondo); src.start(actx.currentTime + 0.01, voce[0], voce[1]);
   }
-  function sTaglio(nome, v, varia, t){ // un ritaglio a caso di un suono breve registrato; se è silenziato per il collaudo non parte
+  function sTaglio(nome, v, varia, t, dest){ // un ritaglio a caso di un suono breve registrato; se è silenziato per il collaudo non parte
     if (suoniMuta[nome]) return;
     const L = SUONI_DATI.eventi[nome], voce = L[Math.floor(sRand() * L.length)], src = actx.createBufferSource(); src.buffer = sAmb.eventi; src.playbackRate.value = 1 - varia + sRand() * 2 * varia;
-    const g = actx.createGain(); g.gain.value = v; src.connect(g); g.connect(sMaster); src.start(t, voce[0], voce[1]);
+    const g = actx.createGain(); g.gain.value = v; src.connect(g); g.connect(dest || sMondo); src.start(t, voce[0], voce[1]);
   }
   function sGabbiano(){ // ipotesi nostre: volume da 0,30 a 0,60, altezza ±6%, dovunque fra sinistra e destra
     suoniVal.gabbiani++; const L = SUONI_DATI.gabbiani, voce = L[Math.floor(sRand() * L.length)], v = 0.3 + sRand() * 0.3, pan = sRand() * 1.6 - 0.8;
@@ -110,7 +110,7 @@
     const i = lista[Math.floor(sRand() * lista.length)], t = actx.currentTime + 0.01;
     const src = actx.createBufferSource(); src.buffer = sReg.colpi; src.playbackRate.value = 0.95 + sRand() * 0.1;
     const g = actx.createGain(); g.gain.value = v * Math.pow(10, (sRand() * 6 - 4) / 20);
-    src.connect(g); g.connect(sMaster); src.start(t, i * C.spazio, C.lungo);
+    src.connect(g); g.connect(sMondo); src.start(t, i * C.spazio, C.lungo);
   }
   addEventListener("keydown", suoniAvvia); addEventListener("pointerdown", suoniAvvia);
   document.addEventListener("visibilitychange", () => { if (actx) (document.hidden ? actx.suspend() : actx.resume()).catch(() => {}); });
@@ -139,7 +139,13 @@
     let out = o; if (filtro){ const fl = actx.createBiquadFilter(); fl.type = "lowpass"; fl.frequency.value = filtro; o.connect(fl); out = fl; }
     out.connect(g); g.connect(sMaster); o.start(t0); o.stop(t0 + dur + 0.05);
   }
+  /* 1.3.34: il campanello del Coach, leggerissimo (due armoniche che si spengono come una campana); non segue lo zoom, come i segnali. Ipotesi nostre: 1760 e 2637 Hz, 0,9 s, volumi 0,09 e 0,045 (portati da 0,06 e 0,03 dopo la prima misura: C3 3,5 dB in una prova su tre) */
+  function sCampana(t0){
+    [[1760, 0.09, 0.9], [2637, 0.045, 0.55]].forEach(([f, vol, dur]) => { const o = actx.createOscillator(); o.type = "sine"; o.frequency.value = f; const g = actx.createGain();
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); o.connect(g); g.connect(sMaster); o.start(t0); o.stop(t0 + dur + 0.05); });
+  }
   const SUONO = {
+    campanello: k => sCampana(k.t),
     virata:     k => { sRumore(k.t, 0.5, "bandpass", 700, 0.35, 0.08); sTono(k.t + 0.25, 0.18, "sine", 110, 0.25, 70); },
     strambata:  k => { sRumore(k.t, 0.25, "highpass", 1500, 0.4 + 0.4 * k.v); sTono(k.t, 0.25, "sine", 90, 0.5 + 0.4 * k.v, 55, 0.003); },
     scuffia:    k => { sTono(k.t, 0.3, "sine", 80, 0.6, 40, 0.003); sRumore(k.t + 0.05, 1.4, "lowpass", 1400, 0.6, 0.02); },

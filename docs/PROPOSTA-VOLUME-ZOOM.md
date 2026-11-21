@@ -53,3 +53,7 @@ Il metro non deve dipendere da ciò che misura: V1 e V8 si calcolano nel collaud
 1. Leggere i nodi in `js/suoni.js`, dividere «mondo» e «barca/segnali», aggiungere `zoomVol` (un solo punto in `suoniAgg`, che già legge lo stato) e l'interruttore; togliere `SUONI_LIV` a più livelli.
 2. `collaudo_suoni_zoom.py` (V1-V9, Chromium e Firefox dove si può); rimisurare `collaudo_suoni_si_sentono.py` (H4, H5).
 3. Documenti, versione, `CHANGELOG.md`. Opus per la lettura dei nodi audio.
+
+## Cambio del 21 novembre 2026 (1.3.34, Ale: «sì, tutto cala»)
+
+La condizione (2) di sopra (i suoni della propria barca non dipendono dallo zoom) è **superata**: allontanando lo zoom cala tutto, tranne i segnali (tromba, contatto, boa, arrivo) che restano pieni. Stessa curva e stesso minimo (0,35). Il collaudo `collaudo_suoni_zoom.py` ha il grafo audio aggiornato; V3 diventa «la barca cala come l'ambiente». Aggiunto il campanello del Coach (voce 68, `PROPOSTA-COACH-DURATA.md`): non segue lo zoom.

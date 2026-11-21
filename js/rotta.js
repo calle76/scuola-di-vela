@@ -366,6 +366,7 @@
     /* 1.3.32 (voce 68): un commento forzato non cancella quello in corso prima di CR_MIN_VISTO s: resta in coda (l'ultimo) e compare appena possono passare */
     if (forza && c.cur && R.t - c.cur.t0 < CR_MIN_VISTO && R.t - c.cur.t0 >= 0){ c.coda = { umore, testo }; return true; }
     c.ult = R.t; c.cur = { t0: R.t, umore, testo, dur: Math.min(CR_DMAX, Math.max(CR_DMIN, CR_BASE + testo.length / CR_LETTURA)) }; c.log.push({ t: +R.t.toFixed(2), umore, testo });
+    if (typeof suona === "function") suona("campanello"); /* 1.3.34: campanello leggerissimo quando compare il Coach */
     if (typeof ses !== "undefined" && ses.on) sesLine("C " + sesT() + " " + umore + " " + testo);
     return true;
   }

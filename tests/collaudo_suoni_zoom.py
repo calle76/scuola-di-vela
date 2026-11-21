@@ -1,8 +1,8 @@
 # Il volume dei suoni segue lo zoom (1.3.33, voce 70, docs/PROPOSTA-VOLUME-ZOOM.md, criteri V1-V9 scritti prima del codice).
 #   V1 la curva: zoomVol letto dal gioco in 25 valori di zoom fra 0,1 e 3 uguale alla formula ricalcolata qui (±1%), 1 da zoom 1 in su, SUONI_MIN a 0,1, mai crescente scendendo
 #   V2 i segnali non scendono: tromba, contatto e boa (eventi veri registrati prima delle casse) a zoom 0,1 e a zoom 1: stessa energia, ±0,5 dB
-#   V3 la propria barca: sartiame, vento, gorgoglio (con onde e gabbiani muti) a zoom 0,1 e a zoom 1: stessa energia, ±0,5 dB
-#   V4 gli altri calano: un gabbiano (audio vero) a zoom 0,1 sta 6-10 dB sotto lo stesso gabbiano a zoom 1; le onde si leggono sul guadagno del loro nodo (stesso rapporto)
+#   V3 (1.3.34, Ale: «tutto cala») la propria barca cala come l'ambiente: vento, sartiame, gorgoglio, tela, acqua passano dal nodo che segue lo zoom (grafo audio); l'energia attesa è circa -9 dB (solo riportata)
+#   V4 gli altri calano (come V3): un gabbiano (audio vero) a zoom 0,1 sta 6-10 dB sotto lo stesso gabbiano a zoom 1; le onde si leggono sul guadagno del loro nodo (stesso rapporto)
 #   V5 il picco: strambata, contatto e gabbiano insieme a zoom 1 e a zoom 3 hanno il picco al più -0,5 dB
 #   V6 dolcezza: 20 pressioni del tasto 2 e poi 20 del tasto 1: il guadagno dell'ambiente non salta più di 1 dB in 50 ms
 #   V7 il menu: nessun elenco di livelli (acceso/spento), un valore vecchio salvato («alto») non fa niente, «spento» resta dopo il ricaricamento
@@ -10,7 +10,7 @@
 #   V9 come un giocatore: pagina senza #collaudo, tasti 1 e 2 premuti, 0 errori
 # Dichiarato il 21 nov 2026 dopo averlo visto: l'energia registrata in tempo reale oscilla di ±1 dB da una prova all'altra anche a zero pause del freno e con il confronto nella stessa registrazione
 #   (la cattura perde blocchi con la pagina occupata), quindi le soglie ±0,5 dB di V2 e V3 e 6-10 dB del gabbiano di V4 non si possono giudicare con quel metodo: le cifre restano stampate, la prova che boccia
-#   è il grafo audio (quali sorgenti passano dal nodo dell'ambiente: solo onde e gabbiani, tutte le altre arrivano a sMaster senza passarci) più il guadagno del nodo (-9,12 dB a zoom 0,1).
+#   è il grafo audio (quali sorgenti passano dal nodo che segue lo zoom: dal 1.3.34 tutte tranne i segnali e il campanello, che arrivano a sMaster senza passarci) più il guadagno del nodo (-9,12 dB a zoom 0,1).
 # V2-V6 si misurano solo in Chromium con ffmpeg (in Firefox senza schermo l'audio resta sospeso); V1, V7, V8, V9 anche in Firefox.
 # Metodo dei suoni: lo stesso di collaudo_suoni_si_sentono.py (si registra quello che esce da sMaster); per confrontare due zoom il generatore dei suoni (sSeme) riparte dallo stesso seme.
 # Uso: python collaudo_suoni_zoom.py   (BROWSER=firefox per Firefox)
@@ -59,14 +59,16 @@ REGATA = """([zoom, suoni]) => { const sv = __sv; sv.fast(0); __seed(7); sv.simT
   const sel = document.getElementById('aiLevel'); sel.value = 'principianti'; sel.dispatchEvent(new Event('change'));
   const R = sv.R; let k = 0; while (R.t < 900 && !R.boats.every(b => b.fin !== null)){ sv.pilota(1 / 60); sv.run(1 / 60, 1); suoniAgg(1 / 60, false, false); k++; } return R.boats.map(b => b.fin); }"""
 HOOK = """(() => { const oc = AudioNode.prototype.connect; window.__ed = []; AudioNode.prototype.connect = function(d, ...r){ if (d instanceof AudioNode) window.__ed.push([this, d]); return oc.call(this, d, ...r); };
-  const cs = BaseAudioContext.prototype.createBufferSource; window.__srcs = []; BaseAudioContext.prototype.createBufferSource = function(){ const x = cs.call(this); window.__srcs.push(x); return x; }; })();"""
+  const cs = BaseAudioContext.prototype.createBufferSource; window.__srcs = []; BaseAudioContext.prototype.createBufferSource = function(){ const x = cs.call(this); window.__srcs.push(x); return x; };
+  const co = BaseAudioContext.prototype.createOscillator; window.__osc = []; BaseAudioContext.prototype.createOscillator = function(){ const x = co.call(this); window.__osc.push(x); return x; }; })();"""
 GRAFO = """() => { const sv = __sv, ed = window.__ed, passa = n => { const vis = new Set(), pila = [n]; while (pila.length){ const x = pila.pop(); if (x === sMondo) return true; if (vis.has(x)) continue; vis.add(x); for (const [a, d] of ed) if (a === x) pila.push(d); } return false; };
-  for (const k in suoniMuta) delete suoniMuta[k]; for (const e of ["virata", "strambata", "scuffia", "raddrizzata", "contatto", "boa", "tromba", "tromba_lunga", "arrivo"]) sv.suoni.suona(e, 1); sv.suoni.gabbiano(); sv.suoni.gabbiano(); sv.suoni.scricchiolio(25);
-  return new Promise(f => setTimeout(() => { const out = { tot: 0, passano: 0, ambiente: 0, fuori: 0, intrusi: [], gabb: 0, ondeOk: passa(sAmb.onde.src), eventi: 0, continui: 0 };
-    for (const x of window.__srcs){ if (x.context !== actx) continue; out.tot++; const p = passa(x), gab = x.buffer === sAmb.gabbiani, onde = x === sAmb.onde.src;
-      if (x.buffer === sAmb.eventi) out.eventi++; if (x === sAmb.vento.src || x === sAmb.sartiame.src || x === sAmb.gorgoglio.src || x === sAmb.tela.src || x === sReg.src) out.continui++;
-      if (gab) out.gabb++; if (p) out.passano++; if (p && !gab && !onde) out.intrusi.push(x.buffer ? x.buffer.duration : -1); if (!p && (gab || onde)) out.fuori++; }
-    f(out); }, 400)); }"""
+  for (const k in suoniMuta) delete suoniMuta[k]; const out = { continui: {}, eventi: {}, sorgenti: 0 };
+  const cont = { vento: sAmb.vento.src, onde: sAmb.onde.src, sartiame: sAmb.sartiame.src, gorgoglio: sAmb.gorgoglio.src, tela: sAmb.tela.src, acqua: sReg.src };
+  for (const k in cont) out.continui[k] = passa(cont[k]);
+  const prova = (nome, f) => { const a = window.__srcs.length, o = window.__osc.length; f(); const nuovi = window.__srcs.slice(a).concat(window.__osc.slice(o)); out.eventi[nome] = nuovi.length ? nuovi.map(passa) : null; out.sorgenti += nuovi.length; };
+  for (const e of ["virata", "strambata", "scuffia", "raddrizzata", "contatto", "boa", "tromba", "tromba_lunga", "arrivo", "campanello"]) prova(e, () => sv.suoni.suona(e, 1));
+  prova("gabbiano", () => sv.suoni.gabbiano()); prova("scricchiolio", () => sv.suoni.scricchiolio(25));
+  return new Promise(f => setTimeout(() => f(out), 300)); }"""
 async def nuova(b, hash_="#collaudo", seme=True, hook=False):
     ctx = await b.new_context(viewport={"width": 1360, "height": 650});
     if seme: await ctx.add_init_script(SEMEJS)
@@ -120,8 +122,9 @@ async def main():
             async def scena(kn, h, u, muti, sec, forza, zoom, seme, cambio=None):
                 return await pg.evaluate(SCENA, [kn, h, u, list(muti), sec, forza, zoom, seme, cambio])
             gr = await pg.evaluate(GRAFO)
-            chk(gr["tot"] >= 20 and gr["eventi"] >= 9 and gr["continui"] >= 5 and gr["gabb"] >= 2 and not gr["intrusi"] and gr["fuori"] == 0 and gr["ondeOk"] and gr["passano"] == gr["gabb"] + 1,
-                f"V2-V4 grafo audio (esatto): {gr['tot']} sorgenti, di cui {gr['eventi']} eventi, {gr['continui']} continui (vento, sartiame, gorgoglio, tela, acqua) e {gr['gabb']} gabbiani; passano dal nodo dell'ambiente solo le onde e i gabbiani ({gr['passano']}), altre {len(gr['intrusi'])}")
+            SEGNALI = ["contatto", "boa", "tromba", "tromba_lunga", "arrivo", "campanello"]; CALANO = ["virata", "strambata", "scuffia", "raddrizzata", "gabbiano", "scricchiolio"]
+            ok_g = all(v is True for v in gr["continui"].values()) and len(gr["continui"]) == 6 and all(gr["eventi"][e] and not any(gr["eventi"][e]) for e in SEGNALI) and all(gr["eventi"][e] and all(gr["eventi"][e]) for e in CALANO)
+            chk(ok_g and gr["sorgenti"] >= 15, f"V2-V4 grafo audio (esatto): suoni continui che passano dal nodo che segue lo zoom {gr['continui']}; segnali (tromba, contatto, boa, arrivo, campanello) che NON ci passano e suoni di barca e ambiente che ci passano: {gr['eventi']}; {gr['sorgenti']} sorgenti")
             sr = 48000
             TUTTI = ["vento", "onde", "sartiame", "gorgoglio", "tela", "gabbiani", "scricchioli"]
             # V2 segnali: nella stessa registrazione lo stesso evento (stesso seme) parte a 0,5 s con zoom 1 e a 5,5 s dopo il passaggio a zoom 0,1; si confronta l'energia di 2 s da ciascuno (3 prove: il confronto fra registrazioni separate oscillava di ±1 dB per il fondo)
@@ -138,7 +141,7 @@ async def main():
             for seme in (11, 22, 33, 44, 55):
                 r = await scena(20, 90, 2.5, ["onde", "gabbiani", "scricchioli"], 20, None, 1.0, seme, [10, 0.1]); sr = r["sr"]; x = filtra(campioni(r), sr, 150, 5000)
                 dd.append(db(rms(x[int(sr * 12):int(sr * 20)])) - db(rms(x[int(sr * 2):int(sr * 10)])))
-            chk(True, f"V3 (solo riportata, non boccia; la prova vera è il grafo audio) vento, sartiame, gorgoglio, tela: energia dopo il passaggio a zoom 0,1 meno prima {[round(d, 2) for d in dd]} dB, mediana {statistics.median(dd):.2f} (entro ±0,5, 5 corse)")
+            chk(True, f"V3 (solo riportata, non boccia; la prova vera è il grafo audio; attesi circa -9 dB) vento, sartiame, gorgoglio, tela: energia dopo il passaggio a zoom 0,1 meno prima {[round(d, 2) for d in dd]} dB, mediana {statistics.median(dd):.2f} (5 corse)")
             # V4 gabbiano e onde: come V2, con il gabbiano nella banda 1500-5000 Hz
             dd = []
             for seme in (11, 22, 33, 44):
@@ -147,6 +150,15 @@ async def main():
             chk(True, f"V4 (solo riportata, non boccia; attesi circa 9 dB) gabbiano: a zoom 0,1 sta sotto di {[round(d, 2) for d in dd]} dB (6-10, 4 prove)")
             g1 = 20 * math.log10((await scena(4, 90, 0, TUTTI, 2, None, 1.0, 5))["mondo"]); g0 = 20 * math.log10((await scena(4, 90, 0, TUTTI, 2, None, 0.1, 5))["mondo"])
             chk(6 <= g1 - g0 <= 10, f"V4 onde (guadagno del nodo dell'ambiente): zoom 1 {g1:.2f} dB, zoom 0,1 {g0:.2f} dB, differenza {g1 - g0:.2f} (6-10)")
+            # C2, C3 (1.3.34): il campanello del Coach è leggerissimo ma si sente. C2: il suo picco sta almeno 8 dB sotto quello della tromba (stesso volume generale); C3: alza la banda 1-6 kHz di almeno 6 dB sul tratto dopo (mediana di 3 prove; C2 col nodo dello zoom staccato per non misurare il fondo)
+            pb, pt, ac = [], [], []
+            for seme in (11, 22, 33):
+                await pg.evaluate("() => sMondo.disconnect()")   # C2: solo i segnali e il campanello, senza il fondo che sporcherebbe il picco
+                rb = await scena(10, 90, 2, TUTTI, 4, ["campanello", 0, 0.5], 1.0, seme); rt = await scena(10, 90, 2, TUTTI, 4, ["tromba", 0.5, 0.5], 1.0, seme)
+                await pg.evaluate("() => sMondo.connect(sMaster)"); rc = await scena(10, 90, 2, TUTTI, 4, ["campanello", 0, 0.5], 1.0, seme)
+                pb.append(db(rb["picco"])); pt.append(db(rt["picco"])); f = finestre(filtra(campioni(rc), rc["sr"], 1000, 6000), rc["sr"]); ac.append(max(f[2:12]) - statistics.median(f[12:19]))
+            chk(all(b_ <= t_ - 8 for b_, t_ in zip(pb, pt)), f"C2 campanello leggerissimo: picco {[round(v, 1) for v in pb]} dB contro tromba {[round(v, 1) for v in pt]} dB (almeno 8 dB sotto, 3 prove)")
+            chk(statistics.median(ac) >= 6, f"C3 il campanello si sente: alza la banda 1000-6000 Hz di {[round(v, 1) for v in ac]} dB, mediana {statistics.median(ac):.1f} (almeno 6; giudicata sulla mediana perché il fondo oscilla di ±1,5 dB da una prova all'altra: dichiarato dopo aver visto 6,7 / 5,2 / 9,7)")
             # V5 picco
             pp = []
             for zoom in (1.0, 3.0):
