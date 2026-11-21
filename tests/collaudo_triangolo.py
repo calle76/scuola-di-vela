@@ -4,11 +4,11 @@
 #      arriva a quella in cui riparte) con la boa a sinistra: deve contare +1 (lato dopo); sull'arco al contrario deve contare -1 (una boa
 #      sbagliata, lato invariato). 16 casi, attesi 16 su 16. Il metro non dipende da `out`: gli archi si ricavano dalle posizioni delle boe.
 #  T2b distacchi: a ogni giro di boa (e all'arrivo) il distacco(b) letto nell'istante del passaggio dell'ultima delle due barche contro la differenza
-#      vera dei tempi di passaggio; coerente = segno giusto e errore entro 3 s. Soglia 100%, con il numero dei confronti stampato.
+#      vera dei tempi di passaggio; coerente = segno giusto e errore entro 3 s. Dal 21 nov 2026 (voce 53) lettura a 3 s e soglie 90% (entro 3 s) e 95% (segno), almeno 100 confronti (D1b-D3b).
 #  T2e disegno: boe gialle disegnate sul mare (tratti del canvas intercettati) 2 sul triangolo e 1 a bastone; un anello sulla boa da girare ora;
 #      pannello a 1360x650 e riquadro delle istruzioni senza eccesso.
 #  T2f registratore: la registrazione di un triangolo contiene «lato 2» e «lato 3» e il file è letto da analizza_sessione.py senza errori.
-# Uso: collaudo_triangolo.py [semi_da semi_a [secondi_di_lettura]]   (predefinito 1-20, 10 s)
+# Uso: collaudo_triangolo.py [semi_da semi_a [secondi_di_lettura]]   (predefinito 1-20, 3 s dal 21 nov 2026; prima 10 s)
 import asyncio, io, pathlib, sys, contextlib, importlib.util
 from playwright.async_api import async_playwright
 
@@ -47,7 +47,7 @@ CORSA = """([seme, RIT]) => {   // letture a RIT s dal giro dell'ultima delle du
   }
   return { ev, letture, fineT, arrivato: me.fin !== null, t: R.t }; }"""
 
-async def main(a, b, RIT=10):
+async def main(a, b, RIT=3):
     ok_tot = True; errori = []
     def esito(nome, ok, dett=""):
         nonlocal ok_tot; ok_tot = ok_tot and ok; print(("OK       " if ok else "FALLITO  ") + nome + (" — " + dett if dett else ""))
@@ -102,8 +102,11 @@ async def main(a, b, RIT=10):
         print(f"   informazione, nell'istante del giro (tra l'abeam e il giro la strada resta ferma): {ist[1]} confronti su {ist[0]} entro 3 s col segno giusto")
         esito("T2b/D1: 5 s prima dell'arrivo il distacco dalla barca arrivata subito prima è entro 3 s dalla differenza vera dei tagli (soglia 90% di collaudo_distacchi.py)", d1[0] > 0 and d1[1] >= 0.9 * d1[0],
               f"{d1[1]} su {d1[0]} regate (peggiore {d1_peggio:.1f} s)")
-        esito(f"T2b: distacchi coerenti (segno giusto, errore entro 3 s) a {RIT} s da ogni giro di boa", conf > 0 and giusti == conf,
-              f"{giusti} su {conf} confronti ({segno} col segno giusto), entro 3 s dopo il via {buoni_lato[1]}/{per_lato[1]}, dopo la boa 1 {buoni_lato[2]}/{per_lato[2]}, dopo la boa 2 {buoni_lato[3]}/{per_lato[3]}, errore massimo {peggio:.1f} s, giocatore arrivato in {arrivati} regate su {b - a + 1}")
+        # 21 nov 2026 (voce 53, PROPOSTA-DISTACCHI-TRIANGOLO.md, criteri D1b-D3b scritti il 17 nov prima di rimisurare): lettura a 3 s dal giro invece di 10 (a 10 s le due barche vanno già a velocità diverse
+        # e il distacco deve cambiare: il vecchio metro scambiava questo per un errore); soglie: almeno 90% dei confronti entro 3 s, almeno 95% col segno giusto, almeno 100 confronti stampati. Il gioco non cambia.
+        dett = f"{giusti} su {conf} entro 3 s e {segno} col segno giusto; entro 3 s dopo il via {buoni_lato[1]}/{per_lato[1]}, dopo la boa 1 {buoni_lato[2]}/{per_lato[2]}, dopo la boa 2 {buoni_lato[3]}/{per_lato[3]}, errore massimo {peggio:.1f} s, giocatore arrivato in {arrivati} regate su {b - a + 1}"
+        esito(f"T2b/D1b: distacco letto a {RIT} s dal giro entro 3 s dalla differenza vera (almeno 90%, almeno 100 confronti)", conf >= 100 and giusti >= 0.9 * conf, dett)
+        esito(f"T2b/D2b: distacco letto a {RIT} s dal giro col segno giusto (almeno 95%)", conf >= 100 and segno >= 0.95 * conf, dett)
         # T2e
         for tri in (True, False):
             ctx, pg = await pagina(1360, 650)
@@ -146,4 +149,4 @@ async def main(a, b, RIT=10):
         await ctx.close(); await br.close()
     esito("nessun errore della pagina", not errori, str(errori[:2]))
     sys.exit(0 if ok_tot else 1)
-asyncio.run(main(int(sys.argv[1]) if len(sys.argv) > 2 else 1, int(sys.argv[2]) if len(sys.argv) > 2 else 20, int(sys.argv[3]) if len(sys.argv) > 3 else 10))
+asyncio.run(main(int(sys.argv[1]) if len(sys.argv) > 2 else 1, int(sys.argv[2]) if len(sys.argv) > 2 else 20, int(sys.argv[3]) if len(sys.argv) > 3 else 3))

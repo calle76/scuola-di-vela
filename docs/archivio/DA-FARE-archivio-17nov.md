@@ -51,3 +51,5 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 62 | Ripassi: lezione «da rivedere» (1.3.25) |
 | 63 | Regate lunghe in Deriva: fatte nella 1.3.26 (il seguito è la voce 66) |
 | 65 | Coach durante la regata: fatto nella 1.3.28 |
+
+**Voce 53 (T2b, distacchi del triangolo) chiusa il 21 nov 2026** (via di Ale «vai avanti con test e punti della lista», solo collaudi): lettura a 3 s dal giro, soglie D1b 90% e D2b 95%, almeno 100 confronti; Chromium 160/170 entro 3 s e 163 col segno giusto, Firefox 161/166 e 165. Il collaudo apriva e correva in due evaluate: il ciclo della pagina consumava i numeri a caso del seme e T2b cambiava a ogni lancio (126, 135, 124, 132 secondo l'intervallo); ora è in un solo evaluate e ripetibile. Tolte le voci di T2b da `tests/fallimenti_noti.txt`.
