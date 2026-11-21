@@ -89,8 +89,8 @@ async def main():
         # ---- B6 la regata non cambia ----
         fin = []
         for acceso in (True, False):
-            ctx, pg, errs = await pagina(b); await pg.evaluate(APRI, [0, 8, False, "180", "principianti"])
-            fin.append(await pg.evaluate("""([acceso]) => { const sv = __sv, R = sv.R; if (!acceso) R.segnali = false; let n = 0; while (R.t < 700 && R.boats.some(b => b.fin === null && !b.dnf)){ sv.pilota(1 / 60); sv.run(1 / 60, 1); n++; } return R.boats.map(b => [b.fin, b.pen]); }""", [acceso])); await ctx.close()
+            ctx, pg, errs = await pagina(b)   # 21 nov: apertura e corsa nello STESSO evaluate (regola evaluate-separati: su GitHub, con due evaluate, gli arrivi con e senza bandiere risultavano diversi)
+            fin.append(await pg.evaluate("""([ap, acceso]) => { (""" + APRI + """)(ap); const sv = __sv, R = sv.R; if (!acceso) R.segnali = false; let n = 0; while (R.t < 700 && R.boats.some(b => b.fin === null && !b.dnf)){ sv.pilota(1 / 60); sv.run(1 / 60, 1); n++; } return R.boats.map(b => [b.fin, b.pen]); }""", [[0, 8, False, "180", "principianti"], acceso])); await ctx.close()
         chk(fin[0] == fin[1] and all(f[0] is not None for f in fin[0]), f"B6 arrivi con bandiere e senza (stessa regata, pilota): {[round(f[0], 2) for f in fin[0]]}, identici: {fin[0] == fin[1]}")
         # ---- B7 ----
         ctx, pg, errs = await pagina(b, "", seme=False)

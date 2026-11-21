@@ -174,7 +174,8 @@ DISEGNO = """(() => { window.__fr = []; window.__rg = 0; let cur = null; const P
   P.scale = function(x, y){ if (cur && !cur.boat && x === y && x > 1){ const m = this.getTransform(); cur.boat = [m.e / devicePixelRatio, m.f / devicePixelRatio]; cur.dopoScale = true; } return sc.call(this, x, y); };
   P.translate = function(x, y){ const r = tr.call(this, x, y); if (cur && cur.dopoScale && !cur.M){ const m = this.getTransform(); cur.M = [m.a, m.b, m.c, m.d, m.e, m.f]; } return r; };
   P.fill = function(...a){ if (cur && String(this.fillStyle).toLowerCase() === '#f28c1b'){ const m = this.getTransform();
-      if (Math.abs(Math.hypot(m.a, m.b) - devicePixelRatio) < 1e-6) cur.arrow = Math.atan2(m.b, m.a); } return fi.apply(this, a); };
+      const kk = Math.hypot(m.a, m.b) / devicePixelRatio; /* 1.3.36 (voce 72): la freccia lontana pulsa da 1,00 a 1,15 volte, prima era sempre 1: criterio cambiato per scelta */
+      if (kk > 0.999 && kk < 1.16) cur.arrow = Math.atan2(m.b, m.a); } return fi.apply(this, a); };
   P.fillText = function(t, ...a){ if (cur) cur.testi.push(String(t)); return ft.call(this, t, ...a); };
 })();"""
 ULTIMO = "(() => { const f = window.__fr.filter(f => f.boat); return f.length ? f[f.length - 1] : null; })()"
