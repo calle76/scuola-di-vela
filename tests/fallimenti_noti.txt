@@ -56,3 +56,6 @@ ESITO chromium FALLITO
 == collaudo_avversari_deriva.py | firefox | caso 81 fuori soglia come in Chromium; in Firefox il caso 83 passa (10 su 10)
 FALLITO caso 81: 6 su 10 (soglia 9)
 ESITO firefox FALLITO
+
+~~ collaudo_coach.py (regate lunghe) | tutti | E2: costo del passo misurato con l'orologio (+6,2% su GitHub in Chromium, 21 nov 2026; sul PC entro la soglia)
+E2 passo di simulazione

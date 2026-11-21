@@ -437,7 +437,8 @@ async def main():
             ctx, pg, errs = await pagina(b); await c1(pg); await ctx.close()
             await c6(b)
             if VELOCE:
-                await c2(b, [1, 2], False); await c3(b, 2); await c4(b, 2); await c11(b, 1)
+                await c2(b, [1, 2], False); await c3(b, 2); await c4(b, 2)
+                if not LUNGO: await c11(b, 1) # 21 nov 2026: con --lungo la chiusura a 1 s non basta (torChiudi simula tutto il resto della regata, 3-6 s, voce 71): su GitHub in Firefox C11 cadeva a 7/8. C11 lungo si rimisura solo col via della voce 71
             else:
                 # --solo c2a,c2b,c3,c4,c11,c10: solo quelle parti, in pezzi più corti (c2a1 = semi 1-10, c2a2 = 11-20, c2b1 = 101-110, c2b2 = 111-120). Le soglie dei conteggi valgono per la parte intera
                 # solo se la parte gira intera (c2a e c2b = c2a1+c2a2 e c2b1+c2b2); altrimenti si riporta quanto è uscito
