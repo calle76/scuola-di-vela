@@ -2,7 +2,7 @@
 # (Xeon X5660, senza AVX né FMA) e sui computer di GitHub? Non è un collaudo: non boccia mai, stampa solo numeri da confrontare fra le due macchine.
 #   1) la macchina (modello della CPU, se ci sono AVX2 e FMA), il browser e la sua versione;
 #   2) l'impronta delle funzioni matematiche del browser (sin, cos, exp, pow, atan2…) su 2000 valori fissi: se differisce, la causa è lì;
-#   3) la prima regata di un torneo lungo col pilota (seme 201), un'impronta di tutte le barche ogni 5 s di gioco per i primi 120 s e i valori esatti
+#   3) la prima regata di un torneo lungo col pilota (seme 201), un'impronta di tutte le barche ogni 5 s di gioco per tutta la regata e i valori esatti
 #      del giocatore a 10, 30 e 60 s: dove le due macchine cominciano a differire.
 # Uso: python tests/impronta_macchina.py   (BROWSER=firefox per Firefox). Confrontare le uscite con diff, per esempio
 #      grep -E "^(M|T|V) " uscita_pc.txt > a; grep -E "^(M|T|V) " uscita_github.txt > b; diff a b
@@ -24,10 +24,11 @@ REGATA = """() => {
   const R = sv.R, dt = 1 / 60, out = { T: [], V: [] }, f64 = new Float64Array(1), u32 = new Uint32Array(f64.buffer);
   const h = (x) => { f64[0] = x; return u32[0] ^ Math.imul(u32[1], 16777619); };
   let n = 0, prossimo = 0; const vedi = { 10: 1, 30: 1, 60: 1 };
-  while (R.t < 120){
+  const asinO = Math.asin; let aa = 0, na = 0; Math.asin = (x) => { const y = asinO(x); aa = (Math.imul(aa, 31) + h(y)) | 0; na++; return y; };
+  while (R.t < 900 && R.boats.some(b => b.fin === null && !b.dnf)){
     sv.pilota(dt); sv.run(dt, 1); n++;
     if (R.t >= prossimo){ let a = 0; for (const b of R.boats){ a = (Math.imul(a, 31) + h(b.S.x)) | 0; a = (Math.imul(a, 31) + h(b.S.y)) | 0; a = (Math.imul(a, 31) + h(b.S.h)) | 0; }
-      out.T.push(Math.round(R.t) + " " + (a >>> 0).toString(16)); prossimo += 5; }
+      out.T.push(Math.round(R.t) + " " + (a >>> 0).toString(16) + " asin " + na + " " + (aa >>> 0).toString(16)); prossimo += 5; }
     const r = Math.round(R.t); if (vedi[r] && R.t >= r){ delete vedi[r]; const S = R.boats[0].S; out.V.push(r + " x " + S.x + " y " + S.y + " h " + S.h + " u " + S.u); }
   }
   return out; }"""
