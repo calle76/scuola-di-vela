@@ -4,11 +4,13 @@
   // SUONI
   // ======================================================================
   // ---- impostazione e stato ----
-  // Livelli: volume generale; ipotesi nostre, da regolare a orecchio. All'inizio «basso» (Ale, 2 novembre 2026).
-  const SUONI_KEY = "scuolaVelaSuoni", SUONI_LIV = { spento: 0, basso: 0.22, medio: 0.45, alto: 0.6 };
-  let suoniLiv = "basso";
+  // 1.3.33 (voce 70, Ale 20 novembre 2026): niente più livelli di volume, solo acceso o spento (il resto lo fa il volume del PC): acceso = 0,6, il livello «alto»
+  // di prima, su cui è misurato il picco. A zoom 100% o più vicino i suoni sono pieni; allontanando lo zoom calano solo onde e gabbiani (l'ambiente), fino a SUONI_MIN.
+  // I suoni della propria barca e i segnali (tromba, contatto, boa) non dipendono dallo zoom. SUONI_MIN 0,35 (−9 dB): ipotesi nostra, da regolare a orecchio.
+  const SUONI_KEY = "scuolaVelaSuoni", SUONI_LIV = { spento: 0, acceso: 0.6 }, SUONI_MIN = 0.35;
+  let suoniLiv = "acceso";
   try { const v = localStorage.getItem(SUONI_KEY); if (v && v in SUONI_LIV) suoniLiv = v; } catch(e){}
-  let actx = null, sMaster = null, sCh = null; // contesto audio, volume generale, catene dei suoni continui
+  let actx = null, sMaster = null, sMondo = null, sCh = null; // contesto audio, volume generale, catene dei suoni continui
   const suoniReg = [];                         // registro degli eventi suonati, [istante di simulazione, nome, tempo di regata]: lo leggono i collaudi
   const suoniVal = { vento: 0, acqua: 0, vela: 0, acquaVel: 1, acquaFiltro: 0, ritmo: 0, colpi: 0 }; // suoni continui all'ultimo fotogramma (anche senza audio): per i collaudi
   // 1.2.7: acquaVel e acquaFiltro = velocità e filtro del giro d'acqua; ritmo = colpi di vela al secondo; colpi = colpi di vela partiti (anche a gioco muto)
@@ -44,6 +46,7 @@
     if (!actx){
       try { actx = new AC(); } catch(e){ actx = null; return; }
       sMaster = actx.createGain(); sMaster.gain.value = SUONI_LIV[suoniLiv]; sMaster.connect(actx.destination);
+      sMondo = actx.createGain(); sMondo.gain.value = zoomVol(userZoom); sMondo.connect(sMaster); /* onde e gabbiani, che seguono lo zoom */
       const buf = actx.createBuffer(1, actx.sampleRate * 2, actx.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < d.length; i++) d[i] = sRand() * 2 - 1;
       const catena = (tipo, f, q) => { const src = actx.createBufferSource(); src.buffer = buf; src.loop = true; src.playbackRate.value = 0.8 + sRand() * 0.4;
@@ -58,10 +61,10 @@
   // ---- suoni registrati (1.2.7): decodificati una volta, al primo avvio dell'audio ----
   const sDec = nome => new Promise((ok, no) => { try { const t = atob(SUONI_DATI.ogg[nome]), a = new Uint8Array(t.length); for (let i = 0; i < t.length; i++) a[i] = t.charCodeAt(i);
     const p = actx.decodeAudioData(a.buffer, ok, no); if (p && p.catch) p.catch(no); } catch(e){ no(e); } });
-  function sGiro(buffer, f, inizio){ // un giro registrato senza fine, a volume 0: filtro passa-basso, volume e velocità li comanda suoniAgg
+  function sGiro(buffer, f, inizio, dest){ // un giro registrato senza fine, a volume 0: filtro passa-basso, volume e velocità li comanda suoniAgg
     const src = actx.createBufferSource(); src.buffer = buffer; src.loop = true;
     const fl = actx.createBiquadFilter(); fl.type = "lowpass"; fl.frequency.value = f; const g = actx.createGain(); g.gain.value = 0;
-    src.connect(fl); fl.connect(g); g.connect(sMaster); src.start(0, inizio * buffer.duration); return { src, fl, g };
+    src.connect(fl); fl.connect(g); g.connect(dest || sMaster); src.start(0, inizio * buffer.duration); return { src, fl, g };
   }
   function suoniRegistrati(){
     if (typeof SUONI_DATI === "undefined" || !actx){ suoniFonte = "errore: dati mancanti"; return; }
@@ -76,17 +79,17 @@
   function suoniAmbiente(){ // 1.2.9: la seconda decodifica parte solo dopo la prima, che così resta veloce come prima
     const t0 = performance.now(), nomi = ["vento", "onde", "sartiame", "gorgoglio", "gabbiani", "scricchioli", "tela", "eventi"]; sAmbFonte = "decodifica";
     Promise.all(nomi.map(sDec)).then(([vento, onde, sartiame, gorgoglio, gabbiani, scricchioli, tela, eventi]) => {
-      sAmb = { vento: sGiro(vento, 2000, sRand()), onde: sGiro(onde, 8000, sRand()), sartiame: sGiro(sartiame, 8000, sRand()), gorgoglio: sGiro(gorgoglio, 8000, sRand()), tela: sGiro(tela, 8000, sRand()), gabbiani, scricchioli, eventi };
+      sAmb = { vento: sGiro(vento, 2000, sRand()), onde: sGiro(onde, 8000, sRand(), sMondo), sartiame: sGiro(sartiame, 8000, sRand()), gorgoglio: sGiro(gorgoglio, 8000, sRand()), tela: sGiro(tela, 8000, sRand()), gabbiani, scricchioli, eventi };
       sCh.vela.g.gain.setTargetAtTime(0, actx.currentTime, 0.02);   // il fruscio sintetico del boma spinto tace: ora suona la tela registrata
       sCh.vento.g.gain.setTargetAtTime(0, actx.currentTime, 0.1);   // il fruscio sintetico del vento tace: ora suona quello registrato
       sAmbMs = performance.now() - t0; sAmbFonte = "registrati";
     }).catch(e => { sAmbFonte = "errore: " + (e && e.message || e); });
   }
-  function sPezzo(buffer, voce, v, varia, pan){ // un ritaglio di un file registrato, una volta sola, con altezza a caso (±varia) e posizione stereo
+  function sPezzo(buffer, voce, v, varia, pan, dest){ // un ritaglio di un file registrato, una volta sola, con altezza a caso (±varia) e posizione stereo
     const src = actx.createBufferSource(); src.buffer = buffer; src.playbackRate.value = 1 - varia + sRand() * 2 * varia;
     const g = actx.createGain(); g.gain.value = v; src.connect(g); let out = g;
     if (pan && actx.createStereoPanner){ const sp = actx.createStereoPanner(); sp.pan.value = pan; g.connect(sp); out = sp; }
-    out.connect(sMaster); src.start(actx.currentTime + 0.01, voce[0], voce[1]);
+    out.connect(dest || sMaster); src.start(actx.currentTime + 0.01, voce[0], voce[1]);
   }
   function sTaglio(nome, v, varia, t){ // un ritaglio a caso di un suono breve registrato; se è silenziato per il collaudo non parte
     if (suoniMuta[nome]) return;
@@ -95,7 +98,7 @@
   }
   function sGabbiano(){ // ipotesi nostre: volume da 0,30 a 0,60, altezza ±6%, dovunque fra sinistra e destra
     suoniVal.gabbiani++; const L = SUONI_DATI.gabbiani, voce = L[Math.floor(sRand() * L.length)], v = 0.3 + sRand() * 0.3, pan = sRand() * 1.6 - 0.8;
-    if (suoniAttivi() && sAmb && !suoniMuta.gabbiani) try { sPezzo(sAmb.gabbiani, voce, v, 0.06, pan); } catch(e){}
+    if (suoniAttivi() && sAmb && !suoniMuta.gabbiani) try { sPezzo(sAmb.gabbiani, voce, v, 0.06, pan, sMondo); } catch(e){}
   }
   function sScricchiolio(heel){ // ipotesi nostre: più forte più la barca sbanda, altezza ±8%
     suoniVal.scricchioli++; const L = SUONI_DATI.scricchioli, voce = L[Math.floor(sRand() * L.length)], v = 0.4 + 0.4 * Math.min(1, Math.max(0, heel - 18) / 15);
@@ -111,6 +114,8 @@
   }
   addEventListener("keydown", suoniAvvia); addEventListener("pointerdown", suoniAvvia);
   document.addEventListener("visibilitychange", () => { if (actx) (document.hidden ? actx.suspend() : actx.resume()).catch(() => {}); });
+  /* guadagno dell'ambiente secondo lo zoom: 1 da zoom 1 in su, poi scende con il logaritmo dello zoom (ogni tasto 1/2 cambia lo zoom dello stesso fattore, quindi il volume dello stesso tanto) fino a SUONI_MIN a ZMIN */
+  const zoomVol = z => z >= 1 ? 1 : SUONI_MIN + (1 - SUONI_MIN) * Math.min(1, Math.max(0, Math.log(z / ZMIN) / Math.log(1 / ZMIN)));
   function suoniImposta(v){
     if (!(v in SUONI_LIV)) return;
     suoniLiv = v; try { localStorage.setItem(SUONI_KEY, v); } catch(e){}
@@ -182,6 +187,7 @@
       if (suoniAttivi() && sReg) try { sColpo(COLPI_VOL * Math.min(1, aws / 8)); } catch(e){} } }
     // 1.2.9 (PROPOSTA-SUONI-FINE.md §3, ipotesi nostre): vento registrato, sciabordio, sartiame sopra i 12 nodi apparenti, gorgoglio con la pala in stallo
     suoniVal.ventoVel = 0.9 + 0.2 * Math.min(1, aws / 10); suoniVal.ventoFiltro = 1000 + 350 * aws;
+    suoniVal.zoomVol = zoomVol(userZoom);
     suoniVal.onde = muto ? 0 : 0.10 + 0.08 * Math.min(1, local.tws / 8);
     const kSart = Math.min(1, Math.max(0, aws * KN - 12) / 10); suoniVal.sartiame = muto ? 0 : 0.22 * kSart; suoniVal.sartiameVel = 0.9 + 0.2 * kSart;
     suoniVal.tela = muto || !S.pushing ? 0 : 0.42 + Math.min(1, aws / 10); suoniVal.telaVel = 0.9 + 0.2 * Math.min(1, aws / 10); // 1.2.10: boma spinto (Z), ipotesi nostre
@@ -195,6 +201,7 @@
     }
     if (suoniAttivi()){
       const t = actx.currentTime;
+      if (sMondo) sMondo.gain.setTargetAtTime(suoniVal.zoomVol, t, 0.15);
       if (sAmb){
         const su = (ch, n) => ch.g.gain.setTargetAtTime(suoniMuta[n] ? 0 : suoniVal[n], t, 0.25);
         su(sAmb.vento, "vento"); su(sAmb.onde, "onde"); su(sAmb.sartiame, "sartiame"); su(sAmb.gorgoglio, "gorgoglio"); sAmb.tela.g.gain.setTargetAtTime(suoniMuta.tela ? 0 : suoniVal.tela, t, 0.05); sAmb.tela.src.playbackRate.setTargetAtTime(suoniVal.telaVel, t, 0.3);

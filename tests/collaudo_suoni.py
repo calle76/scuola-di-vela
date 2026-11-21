@@ -163,7 +163,7 @@ async def main():
         spento = await pg.evaluate("() => [suoniLiv, localStorage.getItem('scuolaVelaSuoni'), suoniAttivi()]")
         await pg.reload(); await pg.wait_for_timeout(400); await pg.keyboard.press("Shift"); await pg.wait_for_timeout(200)
         ric = await pg.evaluate("() => [suoniLiv, document.getElementById('suoniSel').value, !!actx]")
-        chk("S5", prima == [False, "basso", "basso"] and dopo[0], f"S5 all'inizio «bassi» e nessun audio; dopo il primo tasto l'audio esiste ({dopo[1]})")
+        chk("S5", prima == [False, "acceso", "acceso"] and dopo[0], f"S5 all'inizio «accesi» (livello fisso) e nessun audio; dopo il primo tasto l'audio esiste ({dopo[1]})")
         chk("S5", spento == ["spento", "spento", False] and ric == ["spento", "spento", False], f"S5 «spenti»: {spento}; dopo il ricaricamento {ric}")
         chk("S6", d6[0] >= 0 and d6[1] <= d6[2] and d6[3] <= 0, f"S6 impostazioni dentro la finestra: da {d6[0]:.0f} a {d6[1]:.0f} su {d6[2]}, scorre di {d6[3]} px")
         chk("S6", d6p[0] >= 0 and d6p[1] <= d6p[2] and d6p[3] <= 0, f"S6 caso peggiore (registrazione accesa e marcatori): da {d6p[0]:.0f} a {d6p[1]:.0f} su {d6p[2]}, scorre di {d6p[3]} px")

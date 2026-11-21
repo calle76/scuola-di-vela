@@ -83,7 +83,7 @@ async def main():
         # ---- controprova del metro: il silenzio deve misurarsi come silenzio ----
         await pg.evaluate("() => sMaster.gain.setValueAtTime(0, actx.currentTime)")
         r = await scena(10, 90, 2, sec=2); x = campioni(r)
-        await pg.evaluate("() => sMaster.gain.setValueAtTime(SUONI_LIV[suoniLiv], actx.currentTime)"); await pg.wait_for_timeout(200)
+        await pg.evaluate("() => sMaster.gain.setValueAtTime(0.22, actx.currentTime)"); await pg.wait_for_timeout(200)
         # il volume a zero è sulla stessa catena della registrazione: lì dentro non passa niente solo se il metro legge davvero dopo sMaster
         chk(len(x) > r["sr"] and db(rms(x)) < -70, f"controprova: volume generale a zero, {len(x) / r['sr']:.1f} s registrati a {db(rms(x)):.1f} dB (sotto -70)")
 
@@ -160,15 +160,15 @@ async def main():
         # ---- H5: a «alto», i più forti insieme ----
         p5 = []
         for i in range(3):
-            r = await scena(20, 0, 0.3, sheet=1, sec=4, forza=["misto", 0, 1], liv="alto"); p5.append(db(r["picco"])); salva(cart, f"alto_misto_{i + 1}", campioni(r), sr)
-        await pg.evaluate("() => suoniImposta('basso')")
+            r = await scena(20, 0, 0.3, sheet=1, sec=4, forza=["misto", 0, 1], liv="acceso"); p5.append(db(r["picco"])); salva(cart, f"alto_misto_{i + 1}", campioni(r), sr)
+        await pg.evaluate("() => sMaster.gain.setValueAtTime(0.22, actx.currentTime)")   # torna al livello di riferimento della 1.2.8 (era «basso»)
         chk(metro.tutti(v <= -0.5 for v in p5), f"H5 volume «alto», 20 nodi, strambata, contatto e gabbiano insieme: picco {[round(v, 1) for v in p5]} dB (al più -0,5)")
 
         # ---- non satura: volume «alto», caso peggiore ----
         pp = []
         for i in range(3):
-            r = await scena(20, 0, 0.3, sheet=1, sec=7, forza=["gabbiani", 0, 1], liv="alto"); pp.append(db(r["picco"])); salva(cart, f"alto_{i + 1}", campioni(r), sr)
-        await pg.evaluate("() => suoniImposta('basso')")
+            r = await scena(20, 0, 0.3, sheet=1, sec=7, forza=["gabbiani", 0, 1], liv="acceso"); pp.append(db(r["picco"])); salva(cart, f"alto_{i + 1}", campioni(r), sr)
+        await pg.evaluate("() => sMaster.gain.setValueAtTime(0.22, actx.currentTime)")   # torna al livello di riferimento della 1.2.8 (era «basso»)
         chk(metro.tutti(v <= -0.5 for v in pp), f"volume «alto», 20 nodi con la prua al vento e un gabbiano: picco {[round(v, 1) for v in pp]} dB (al più -0,5)")
         chk(not errs, f"errori della pagina {errs[:1]}")
         await b.close()

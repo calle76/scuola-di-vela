@@ -176,6 +176,7 @@ TESTS=(
     "collaudo_medaglie.py|py|chiaro|0||collaudo_medaglie.py"
     "collaudo_suoni.py|py|chiaro|0||collaudo_suoni.py"
     "collaudo_suoni_si_sentono.py|py|chiaro|0|audio|collaudo_suoni_si_sentono.py"
+    "collaudo_suoni_zoom.py (volume e zoom, voce 70)|py|chiaro|0|audio|collaudo_suoni_zoom.py"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"
     "collaudo_fantasma.py|py|chiaro|0||collaudo_fantasma.py"
