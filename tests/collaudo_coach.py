@@ -107,6 +107,8 @@ async def main():
         pg, errs, elenco = await regate(br, (ROOT / "index.html").as_uri(), NREG)
         nclou = nfr = nbravo = nmanca = 0; umori = {}
         for n, (k, s) in enumerate(elenco):
+            if LUNGO and n > 0:   # 21 nov 2026 (indagine GitHub contro PC): una pagina NUOVA per ogni regata lunga, perché nella stessa pagina la regata dipende da quelle fatte prima (stato che resta) e cambia da una macchina all'altra
+                await pg.close(); pg, _e, _el = await regate(br, (ROOT / "index.html").as_uri(), NREG); pg.on("pageerror", lambda e: errs.append(str(e)))
             await pg.evaluate(CORSA, [k, s, 0]); es = await pg.evaluate(ESITO)
             if not LUNGO: chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
             g0 = await pg.evaluate(REGC)
