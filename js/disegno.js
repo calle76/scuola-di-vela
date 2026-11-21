@@ -282,15 +282,34 @@
     if (mode === "race" && ay < 80 && Math.abs(ax - W / 2) < 170) ay = 80; // non coprire l'orologio della regata
     return [ax, ay, ang];
   }
+  /* 1.3.36 (voce 72, docs/PROPOSTA-FRECCIA-OBIETTIVO.md): freccia da 34 px con contorno scuro, nome dell'obiettivo (solo in regata) e pulsazione oltre 150 m; costanti: ipotesi nostre */
+  const FR_LUN = 34, FR_LAR = 28, FR_CONTORNO = 2, FR_LONTANO = 150, FR_PULSA = 0.15, FR_HZ = 1.2;
+  let frUltima = null;
+  function frNome(){
+    if (mode !== "race" || !R) return "";
+    const g = goal(); if (!g) return "";
+    return g.kind === "line" ? "Linea" : g.kind === "finish" ? "Arrivo" : R.tri ? "Boa " + R.boats[0].leg : "Boa";
+  }
+  function frScala(dist, t){ return dist > FR_LONTANO ? 1 + FR_PULSA * (0.5 + 0.5 * Math.sin(2 * Math.PI * FR_HZ * t)) : 1; }
   function offscreenArrow(v, m){
+    frUltima = null;
     const a = arrowAt(v, m); if (!a) return;
-    ctx.save(); ctx.translate(a[0], a[1]); ctx.rotate(a[2]); ctx.fillStyle = "#F28C1B";
-    ctx.beginPath(); ctx.moveTo(14, 0); ctx.lineTo(-8, -9); ctx.lineTo(-8, 9); ctx.closePath(); ctx.fill(); ctx.restore();
+    const dist = Math.hypot(m.x - S.x, m.y - S.y), nome = frNome(), k = frScala(dist, Date.now() / 1000);
+    const dx = -Math.cos(a[2]), dy = -Math.sin(a[2]), txt = Math.round(dist / 5) * 5 + " m";
+    /* il testo sta verso l'interno dello schermo; se la freccia cade su un riquadro (bandiere, penalità, Coach) scende sotto di lui */
+    const R_ = mode === "race" && R ? [R.rqRect, R.rqRect2, R.crRect].filter(Boolean) : [];
+    const box = () => { const tx = a[0] + dx * 44, ty = a[1] + dy * 30, x0 = Math.min(a[0] - 24, tx - 40), x1 = Math.max(a[0] + 24, tx + 40), y0 = Math.min(a[1] - 24, ty - 20), y1 = Math.max(a[1] + 24, ty + 20); return [x0, y0, x1, y1]; };
+    for (let i = 0; i < 6; i++){ const bx = box(), r = R_.find(q => bx[0] < q[0] + q[2] && bx[2] > q[0] && bx[1] < q[1] + q[3] && bx[3] > q[1]); if (!r) break; a[1] = Math.min(H - 30, r[1] + r[3] + 34); }
+    ctx.save(); ctx.translate(a[0], a[1]); ctx.rotate(a[2]); ctx.scale(k, k);
+    ctx.beginPath(); ctx.moveTo(FR_LUN * 0.6, 0); ctx.lineTo(-FR_LUN * 0.4, -FR_LAR / 2); ctx.lineTo(-FR_LUN * 0.4, FR_LAR / 2); ctx.closePath();
+    ctx.lineJoin = "round"; ctx.lineWidth = FR_CONTORNO * 2; ctx.strokeStyle = "rgba(10,24,36,.85)"; ctx.stroke(); ctx.fillStyle = "#F28C1B"; ctx.fill(); ctx.restore();
+    frUltima = { x: a[0], y: a[1], ang: a[2], lun: FR_LUN * k, lar: FR_LAR * k, contorno: FR_CONTORNO, nome, dist, scala: k, txt };
     if (!fontsOk) return;
-    // distanza dalla barca, ai 5 m, verso l'interno dello schermo rispetto alla freccia
-    const txt = Math.round(Math.hypot(m.x - S.x, m.y - S.y) / 5) * 5 + " m";
-    ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.fillText(txt, a[0] - Math.cos(a[2]) * 30, a[1] - Math.sin(a[2]) * 22); ctx.restore();
+    /* nome e distanza dalla barca (ai 5 m) verso l'interno dello schermo rispetto alla freccia */
+    ctx.save(); ctx.font = font(700, 13); ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round"; ctx.lineWidth = 3; ctx.strokeStyle = "rgba(10,24,36,.85)";
+    const tx = a[0] + dx * 44, ty = a[1] + dy * 30, riga = (t, y) => { ctx.strokeText(t, tx, y); ctx.fillStyle = "rgba(255,255,255,.95)"; ctx.fillText(t, tx, y); };
+    if (nome){ riga(nome, ty - 8); riga(txt, ty + 8); } else riga(txt, ty);
+    ctx.restore();
   }
   function boatMarker(v){
     const [x, y] = toScreen(v, S.x, S.y);
