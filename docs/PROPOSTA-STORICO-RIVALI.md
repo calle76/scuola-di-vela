@@ -60,3 +60,7 @@ Il metro non deve dipendere dal gioco: R1 si ricalcola dal registro della regata
 1. Passo 1: struttura `progress.rivali`, raccolta dal registro del torneo, scheda e fine torneo; criteri R1-R6 (Chromium e Firefox). **Opus** per il modello dei dati e il passo 2.
 2. Passo 2: una sola conseguenza (a), poi eventualmente b o c in una versione a parte.
 3. Documenti, versione, `CHANGELOG.md`.
+
+## Cosa è stato fatto (1.3.37, 21 novembre 2026): passo 1
+
+Decisioni di Ale: l'identità del rivale è il nome (il colore non conta); nessuna conseguenza sulla guida per ora. Fatto da Sonnet, rivisto da Opus prima del commit. Rispetto alla bozza: i contatori sono nove (regate, davanti, dietro, partenza davanti/dietro, fuori linea, regate con contatti, colpa sua, colpa tua); **non** ci sono il contatore di versione, la riga «in fondo al torneo» (c'è solo nella scheda), le scuffie e le penalità dei rivali; l'amico della stagione non entra nello storico. Conta dalle regate corse dalla 1.3.37. Criteri R1-R6 in `tests/collaudo_storico_rivali.py` (R1 40 tornei; R1b casi costruiti; R7 della bozza, la frase a inizio regata, è del passo 2). Il passo 2 aspetta il via.

@@ -175,7 +175,7 @@
     if (lista.some(([n]) => !g[n] || !Array.isArray(g[n].tr))){
       const mescola = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
       const col = TRATTI.map(() => mescola((naz ? MIX_NAZIONALE : MIX_ZONALE).slice()));
-      lista.forEach(([n], i) => { g[n] = { tr: col.map(c => c[i]) }; });
+      lista.forEach(([n], i) => { g[n] = { ...g[n], tr: col.map(c => c[i]) }; }); /* 1.3.37: ...g[n] tiene lo storico (st) */
     }
     return g[nome].tr;
   }
@@ -1423,6 +1423,7 @@
       b.dsq ? { dsq: true } : {}, b.me && R.need ? { g: R.need } : {},
       b.tLinea !== undefined ? { l: Math.round(b.tLinea * 100) / 100 } : {}, b.tBoa1 !== undefined ? { b: Math.round(b.tBoa1 * 100) / 100 } : {},
       b.fuori ? { x: true } : {}, b.toccate ? { c: b.toccate } : {}))); // 1.2.30 (scheda dei rivali): l e b = secondi alla linea e alla boa 1, x = fuori linea, c = contatti col giocatore; dsq: squalificata per i giri non fatti (fin null: punti di chi non arriva); g: giri di penalità del giocatore
+    stoAgg(tor, tor.ris.length - 1); /* 1.3.37: lo storico dei rivali */
     if (tor.ris.length === torN(tor)) torFine();
     saveProgress();
   }
@@ -1468,6 +1469,26 @@
     return T.ris.map(r => ({ pos: torPosArrivo(r, i), fuori: !!r[i].x, part: r[i].x ? null : torDavanti(r[i].l, r[0].l), boa: torDavanti(r[i].b, r[0].b), c: r[i].c || "" }));
   }
   const torRegate = n => n === 1 ? "1 regata" : n + " regate";
+  /* 1.3.37 (voce 74, passo 1, docs/PROPOSTA-STORICO-RIVALI.md): lo storico dei rivali con nome, dentro progress.rivali[nome].st, solo mostrato. Si aggiorna una volta per regata
+     (torChiudi, protetto da R.torOk); legge il risultato appena entrato in tor.ris, non usa numeri casuali e non cambia la guida: la regata è identica */
+  const STO_CAMPI = ["n", "dav", "die", "pDav", "pDie", "fuori", "cont", "cS", "cT"];
+  function stoAgg(T, k){
+    const r = T.ris[k]; if (!r) return;
+    T.av.forEach((a, n) => { if (!a.nome || !r[n + 1]) return;
+      const g = progress.rivali || (progress.rivali = {}), e = g[a.nome] || (g[a.nome] = {}), st = e.st || (e.st = {}), x = r[n + 1], rp = torPosArrivo(r, n + 1), mp = torPosArrivo(r, 0);
+      for (const c of STO_CAMPI) st[c] = st[c] || 0;
+      st.n++;
+      if (rp && (!mp || rp < mp)) st.dav++; else if (mp && (!rp || rp > mp)) st.die++;
+      if (x.x) st.fuori++; else { const d = torDavanti(x.l, r[0].l); if (d === true) st.pDav++; else if (d === false) st.pDie++; }
+      if (x.c){ st.cont++; if (x.c.includes("s")) st.cS++; if (x.c.includes("t")) st.cT++; } });
+  }
+  /* la frase della scheda; "" se non c'è nulla (rivale senza nome, nessuna regata). Conta solo le regate corse da questa versione in poi (dalla 1.3.37) */
+  function stoRiga(nome){
+    const st = nome && progress.rivali && progress.rivali[nome] && progress.rivali[nome].st; if (!st || !st.n) return "";
+    const cont = st.cont ? `contatti con te in ${torRegate(st.cont)} (colpa sua in ${st.cS}, colpa tua in ${st.cT})` : "nessun contatto con te";
+    return `Storico, ${torRegate(st.n)} insieme: all'arrivo davanti a te ${st.dav} ${st.dav === 1 ? "volta" : "volte"}, dietro di te ${st.die}; ${cont}${st.fuori ? `; fuori linea alla partenza ${st.fuori} ${st.fuori === 1 ? "volta" : "volte"}` : ""}.`;
+  }
+
   function torFrase(nome, v, si, no){ // v: elenco true/false/null; con una sola regata «una volta», da 2 «in X regate su Y» (soglia nostra, ipotesi)
     const d = v.filter(x => x !== null), n = d.filter(x => x).length;
     if (!d.length) return "";
@@ -1481,7 +1502,7 @@
       const i = n + 1, f = torFatti(T, i), a = T.av[n];
       const riga = (tit, g) => `<tr><td>${tit}</td>${f.map(x => `<td>${g(x)}</td>`).join("")}</tr>`;
       const S = progress.stagione, cl = T.st !== undefined && S && S.tappe.some(stFatta) ? stClassifica(S) : null, pc = cl ? cl.findIndex(x => x.id === a.nome) : -1; // 1.2.36
-      const nome = avNome(T, n), storia = a.nome ? storiaDi(a.nome) + " · barca " + COLORI_BARCA[n] + (pc >= 0 ? " · nel circuito " + (pc + 1) + "° con " + cl[pc].tot + " punti" : "") : "";
+      const sto = stoRiga(a.nome), nome = avNome(T, n), storia = a.nome ? storiaDi(a.nome) + " · barca " + COLORI_BARCA[n] + (pc >= 0 ? " · nel circuito " + (pc + 1) + "° con " + cl[pc].tot + " punti" : "") : "";
       const tab = `<table class="tor"><thead><tr><th>${a.nome ? cognome(a.nome) : l.name}</th>${f.map((x, j) => `<th>R${j + 1}</th>`).join("")}</tr></thead><tbody>
         ${riga("Arrivo", x => x.pos ? x.pos + "°" : "non arr.")}${riga("Partenza", x => x.fuori ? "fuori linea" : cella(x.part, "davanti", "dietro"))}
         ${riga("Boa 1", x => cella(x.boa, "davanti", "dietro"))}${riga("Contatto", x => x.c ? (x.c.includes("t") ? "colpa tua" : "") + (x.c.includes("t") && x.c.includes("s") ? " e " : "") + (x.c.includes("s") ? "colpa sua" : "") : "–")}</tbody></table>`;
@@ -1489,7 +1510,7 @@
       const frasi = torFrase("Partenza", f.map(x => x.fuori ? null : x.part), "davanti a te", "dietro di te") + (fuori ? `<li>Partenza: fuori linea in ${torRegate(fuori)} su ${f.length}</li>` : "")
         + torFrase("Boa 1", f.map(x => x.boa), "davanti a te", "dietro di te")
         + `<li>Contatti con te: ${tocc ? `${torRegate(tocc)} su ${f.length} (colpa sua in ${colpaSua}, colpa tua in ${colpaTua})` : "nessuno"}</li>`;
-      return `<div class="tor-sch"${n === torSchedaN ? "" : " hidden"}><h3>${nome}</h3>${storia ? `<p class="tor-storia">${storia}</p>` : ""}<p class="tor-tratti">${trattiRighe(a.ai, a.char)}</p>${k ? tab + `<ul>${frasi}</ul>` : "<p>Ancora nessuna regata insieme.</p>"}</div>`;
+      return `<div class="tor-sch"${n === torSchedaN ? "" : " hidden"}><h3>${nome}</h3>${storia ? `<p class="tor-storia">${storia}</p>` : ""}${sto ? `<p class="tor-storia">${sto}</p>` : ""}<p class="tor-tratti">${trattiRighe(a.ai, a.char)}</p>${k ? tab + `<ul>${frasi}</ul>` : "<p>Ancora nessuna regata insieme.</p>"}</div>`;
     }).join("");
     // una scheda per volta (13 nov: le tre insieme non stanno nei 650 px di altezza), coi pulsanti dei tre colori
     const linguette = T.av.map((l, n) => `<button class="tor-ling${n === torSchedaN ? " primary" : ""}" data-n="${n}">${T.av.length > AV_N && T.av[n].nome ? cognome(T.av[n].nome) : avNome(T, n)}</button>`).join(""); // 1.2.38: con 5 rivali solo il cognome, se no i pulsanti vanno su due righe
