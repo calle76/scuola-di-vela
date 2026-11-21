@@ -47,15 +47,22 @@ async def main():
         # P3: torneo corto salvato prima
         r = await q.evaluate("""() => { const T = torNuovo(); delete T.n; delete T.lungo; tor = T; const rc = torRc(); const out = { n: torN(T), up: rc.up, lungo: rc.lungo, sc: torSerie([0, 1, 2, 3].map(() => [{ fin: 1, pp: 0 }, { fin: 2, pp: 0 }])).map(x => x.sc) }; tor = null; return out; }""")
         chk("P3", r["n"] == 4 and r["up"] is None and r["lungo"] is False and all(x >= 0 for x in r["sc"]), f"P3 torneo corto già cominciato: {r}")
-        # P2: torneo lungo intero
-        r = await q.evaluate(TORNEO, 4242)
+        # P2: torneo lungo intero (21 nov 2026: in una pagina nuova; dopo il torNuovo non seminato di P1/P3 il risultato cambiava a ogni lancio, anche sul PC)
+        ctx2 = await b.new_context(viewport={"width": 1360, "height": 650}); q2 = await ctx2.new_page(); q2.on("pageerror", lambda e: errs.append(str(e)))
+        await q2.goto((ROOT / "index.html").as_uri() + "#collaudo"); await q2.wait_for_timeout(400)
+        r = await q2.evaluate(TORNEO, 4242); await ctx2.close()
         print("P2:", r, flush=True)
         chk("P2", r["n"] == 3 and r["regate"] == 3 and r["fine"] and all(x == -1 for x in r["scarti"]) and "niente scarto" in r["leg"] and [u for u, _ in r["ups"]] == [560, 440, 560],
             f"P2 torneo lungo: {r['regate']} regate, finito {r['fine']}, scarti {r['scarti']}, lati {r['ups']}")
         # P4: L1-L3
         R = []; await q.evaluate("() => { tor = null; delete progress.torneo; }")   # dopo P2: il torneo finito non deve restare in mezzo
+        # 21 nov 2026 (indagine GitHub contro PC): una pagina NUOVA per ogni regata. Nella stessa pagina la regata dipendeva da quelle fatte prima (stato che resta fra una regata
+        # e l'altra: la stessa regata dava 651,8 s da prima e 624,5 s dopo un'altra), e il risultato cambiava fra una macchina e l'altra. Con la pagina nuova è identica al bit sul PC e su GitHub (impronta_macchina.py).
         for seme in range(201, 206):
-            for k in (0, 1): R.append(await q.evaluate(MIS, [k, seme, True, None]))
+            for k in (0, 1):
+                ctx4 = await b.new_context(viewport={"width": 1360, "height": 650}); q4 = await ctx4.new_page(); q4.on("pageerror", lambda e: errs.append(str(e)))
+                await q4.goto((ROOT / "index.html").as_uri() + "#collaudo"); await q4.wait_for_timeout(300)
+                R.append(await q4.evaluate(MIS, [k, seme, True, None])); await ctx4.close()
         for nome, tri in (("bastone", False), ("triangolo", True)):
             X = [x for x in R if x["tri"] == tri and x["fin"]]; d = [v for x in X for v in x["dur"]]
             dur = st.median(x["fin"] for x in X) / 60; vir = st.median(x["vir"] for x in X); raf = sum(x["nr"] for x in X) / max(1, sum(x["nb"] for x in X)); dr = st.median(d) if d else 0
