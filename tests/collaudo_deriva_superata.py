@@ -33,11 +33,12 @@ def unisci(*d):
 STAGIONE = """([posto, lascia, quante]) => { const sv = __sv; sv.progress.stagione = sv.st.nuova(); const S = sv.progress.stagione;
   for (let k = 0; k < quante; k++){
     if (k === lascia){ sv.st.chiudi(null); continue; }
-    const T = sv.torNuovo(S); T.ris = [0, 1, 2, 3].map(() => [0, 1, 2, 3].map(i => ({ fin: i === 0 ? posto : (i < posto ? i : i + 1), pp: 0 })));
+    const T = sv.torNuovo(S); T.ris = Array.from({ length: window.NREG || 4 }, (_, j) => j).map(() => [0, 1, 2, 3].map(i => ({ fin: i === 0 ? posto : (i < posto ? i : i + 1), pp: 0 })));
     sv.st.chiudi(T);
   }
   return { fine: S.fine || null, pulita: !!sv.progress.zonalePulita, naz: !!sv.progress.nazionale, tappa: sv.progress.derivaTappa || null, fatta: sv.progress.stagioneFatta || null }; }"""
 
+LUNGO = "--lungo" in sys.argv   # 21 nov 2026 (voce 66c): tornei delle stagioni a 3 regate lunghe (__sv.lungo = true, window.NREG = 3). Uso: collaudo_deriva_superata.py [--lungo]
 async def main():
     async with async_playwright() as p:
         b = await getattr(p, BR).launch(); errs = []
@@ -47,6 +48,7 @@ async def main():
             await q.evaluate("([d, m, l]) => { localStorage.clear(); localStorage.setItem('scuolaVelaModo', m); localStorage.setItem('scuolaVelaLivello', l); if (d) localStorage.setItem(m === 'carriera' ? 'scuolaVelaCarriera.v1' : 'scuolaVelaSim.v1', d); }",
                              [json.dumps(salv) if salv else None, modo, liv])
             await q.reload(); await q.wait_for_timeout(300)
+            if hash_ == "#collaudo": await q.evaluate("v => { __sv.lungo = v; window.NREG = v ? 3 : 4; }", LUNGO)
             return ctx, q
         stato = "() => ({ d: __sv.progress.deriva || null, dlg: document.getElementById('derivaDlg').open, m: meritiD(__sv.progress) })"
         # ---- D6a: stagione vera vinta
@@ -56,7 +58,8 @@ async def main():
         await q.evaluate("() => { saveProgress(); showMenu(); }"); r = await q.evaluate(stato)
         chk("D6", s["fine"] and s["fine"]["pos"] <= 3 and s["naz"] and s["pulita"] and r["d"] and r["d"]["strada"] == "piazzamento" and r["dlg"], f"D6a stagione vinta: {s} → {r['d']}, riquadro {r['dlg']}")
         await q.evaluate("() => { document.getElementById('derivaDlg').close(); showMenu(); }"); r2 = await q.evaluate(stato)
-        await q.reload(); await q.wait_for_timeout(300); r3 = await q.evaluate(stato)
+        await q.reload(); await q.wait_for_timeout(300)
+        await q.evaluate("v => { __sv.lungo = v; window.NREG = v ? 3 : 4; }", LUNGO); r3 = await q.evaluate(stato)
         chk("D6", not r2["dlg"] and not r3["dlg"] and r3["d"] == r["d"], f"D6a il riquadro una volta sola, e alla ricarica resta: {r2['dlg']}, {r3}")
         lib = await q.inner_text("#libDManca") if await q.locator("#libDManca").count() else ""
         chk("D6", lib.startswith("Deriva superata il"), f"D6a libretto di Deriva: «{lib}»")

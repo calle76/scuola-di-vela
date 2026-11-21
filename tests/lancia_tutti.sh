@@ -128,6 +128,7 @@ TESTS=(
     "collaudo_menu_livelli.py|py|chiaro|0||collaudo_menu_livelli.py"
     "collaudo_deriva_lezioni.py|py|chiaro|0||collaudo_deriva_lezioni.py"
     "collaudo_deriva_superata.py|py|chiaro|0||collaudo_deriva_superata.py"
+    "collaudo_deriva_superata.py (regate lunghe)|py|chiaro|1||collaudo_deriva_superata.py --lungo"
     "collaudo_finale.py|py|chiaro|0||collaudo_finale.py"
     "collaudo_finale.py (regate lunghe)|py|chiaro|1||collaudo_finale.py --lungo"
     "collaudo_sponsor.py|py|chiaro|0||collaudo_sponsor.py"
