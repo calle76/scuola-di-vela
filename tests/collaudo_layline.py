@@ -4,10 +4,11 @@
 # P2 è giusta: angolo = rotLay della polare; vento girato di 10° = linee girate di 10°; una barca della polare da un punto della layline a 100 m,
 #    alla rotta sul fondo della layline col vento costante, passa entro 2 m dalla boa.
 # P4 pagina senza #collaudo: la riga «Layline» c'è e cambia il disegno (pixel gialli), nessun errore.
-# Uso: python tests/collaudo_layline.py
+# Uso: python tests/collaudo_layline.py [--lungo]   (--lungo, dal 21 nov 2026, voce 66c: il torneo di P1 è quello lungo, 3 regate da circa 10 minuti)
 import asyncio, os, pathlib, sys
 from playwright.async_api import async_playwright
 BASE = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri()
+LUNGO = "--lungo" in sys.argv
 errori = []
 def no(m): errori.append(m); print("  NO  " + m, flush=True)
 def ok(m): print("  ok  " + m, flush=True)
@@ -23,16 +24,16 @@ async def main():
         casi = []
         for scelta in ("no", "regate", "tutte"):
             for dove in ("tema", "scuola", "torneo", "esercizio"):
-                v = await pg.evaluate("""([scelta, dove]) => { const sv = __sv; const e = document.getElementById('laySel'); e.value = scelta; e.dispatchEvent(new Event('change'));
+                v = await pg.evaluate("""([scelta, dove, lungo]) => { const sv = __sv; sv.lungo = lungo; const e = document.getElementById('laySel'); e.value = scelta; e.dispatchEvent(new Event('change'));
                   sv.fast(0); window.confirm = () => true;
                   if (dove === 'tema') sv.openItem(['r', 2]); else if (dove === 'scuola') sv.openItem(['r', 0]);
                   else if (dove === 'torneo'){ sv.torApri(); if (document.getElementById('torRit')){ document.getElementById('torRit').click(); sv.torApri(); } document.getElementById('torGo').click(); }
                   else { const L = sv.LESSONS; let li = -1, si = -1; L.forEach((l, i) => l.steps.forEach((s, j) => { if (li < 0 && s.esercizio && s.esercizio.regata >= 2) { li = i; si = j; } })); sv.apriEsercizio(li, si); }
-                  sv.run(1 / 60, 30); return sv.layVisibile(); }""", [scelta, dove])
+                  sv.run(1 / 60, 30); return sv.layVisibile(); }""", [scelta, dove, LUNGO])
                 atteso = (scelta == "regate" and dove == "tema") or (scelta == "tutte" and dove in ("tema", "torneo"))
                 casi.append((scelta, dove, v, atteso))
                 if v != atteso: no(f"P1 «{scelta}» {dove}: visibile {v}, atteso {atteso}")
-        ok(f"P1 {sum(c[2] == c[3] for c in casi)} casi giusti su {len(casi)}")
+        ok(f"P1 {sum(c[2] == c[3] for c in casi)} casi giusti su {len(casi)}" + (" (torneo lungo)" if LUNGO else ""))
         # P1: dopo il giro della boa sparisce; e i pixel gialli seguono layVisibile nella regata a tema
         r = await pg.evaluate("""async () => { const sv = __sv, e = document.getElementById('laySel'); e.value = 'regate'; e.dispatchEvent(new Event('change'));
           sv.openItem(['r', 2]); sv.run(1 / 60, 30); const R = sv.R; const me = R.boats[0];

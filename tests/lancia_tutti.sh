@@ -178,6 +178,7 @@ TESTS=(
     "collaudo_suoni_si_sentono.py|py|chiaro|0|audio|collaudo_suoni_si_sentono.py"
     "collaudo_suoni_zoom.py (volume e zoom, voce 70)|py|chiaro|0|audio|collaudo_suoni_zoom.py"
     "collaudo_segnali_deriva.py (bandiere del via in Deriva, voce 67)|py|chiaro|0||collaudo_segnali_deriva.py"
+    "collaudo_layline.py (torneo lungo, voce 66c)|py|chiaro|1||collaudo_layline.py --lungo"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"
     "collaudo_fantasma.py|py|chiaro|0||collaudo_fantasma.py"
