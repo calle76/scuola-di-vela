@@ -68,3 +68,7 @@ Chromium e Firefox, uno per volta col freno.
 ## Lavoro stimato
 
 Testi e passi in `js/contenuti.js` (lezione e quiz), il passo 5 (vento persistente con rotazione propria, boa con layline, condizione di riuscita) e la riga nelle lezioni in `js/gioco.js` e `js/disegno.js`, un collaudo nuovo (`collaudo_lezione_salti.py`, L1-L4). Una versione (1.3.43). Modello: Opus (il passo 5 e i piloti), i testi si possono rileggere con Sonnet.
+
+## Seconda fonte (23 nov 2026, notte, in autonomia)
+
+Trovate **F113** (guida Raymarine con i consigli dell'allenatore Mark Rushall) e **F114** (SailZing, senza autore), autori diversi da F41 (le altre pagine trovate sono tutte di Dellenbaugh: F41 stesso). Dicono le stesse cose di F41: oscillante, virare quando si è scarsi sotto la media; persistente, andare verso il salto prendendo per prime le mure scarse (F113), senza superare la layline (F114). **In più, utile al passo «riconoscere il persistente»:** F113 lo definisce col tempo (oscillazione più lunga della bolina: per tutto il lato il vento gira da una parte) e con la bussola (vento a destra, numeri più grandi); F114 dà 5° come salto che si nota in acqua piatta e 10° con onde. La frase «come si vede dal numero» non è più solo regola del gioco: è in F113. Il resto della proposta non cambia; aspetta il via di Ale per il testo e l'esercizio.
