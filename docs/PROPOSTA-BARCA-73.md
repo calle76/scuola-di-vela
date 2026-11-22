@@ -103,6 +103,30 @@ Se B1 non si raggiunge con le costanti fissate, **non si ritoccano per arrivarci
 Due tentativi (16 e 17 ottobre) non hanno trovato la causa; il 17 ottobre Ale ha scelto «limite noto». Lo studio aggiunge solo che, contando lo scarroccio, il −15% diventa −20%. **Propongo di non toccare il motore in questa voce.** Al suo posto una misura (Node, senza browser): resistenze della barca del gioco a 6 nodi di vento, voce per voce (scafo, pala e deriva, indotta, vela), contro la figura 11 di Day (`fonti-pdf/day2017`), e lo scarroccio contro quello di Day. Se una voce è fuori di oltre il 30% dalla figura, si scrive una proposta per quella; altrimenti il limite resta dichiarato (`FISICA-E-TARATURE.md`) e va nella pagina dello studio (voce 80) così com'è.
 **Modello:** Opus, solo misura.
 
+## 5b. Virata normale contro F109 (fermata 1, 22 nov 2026, notte)
+
+Misure nuove, tutte in `sperimentale/virata-rollata-73/` (Node, nessun numero a caso: un giro basta; `js/` non toccato).
+
+**Metro nuovo, indipendente dal giocatore (`prua_imposta.js`):** la prua gira come nelle virate vere di F109 (fig. 4.11, letta a occhio: da −45° a +45° in circa 10 s con 3,2 nodi e in 5 s con 11), senza timone. Così si confronta la barca, non la mano di chi la guida.
+
+| | F109 (Laser in acqua) | gioco, prua imposta | gioco, virata da tastiera (2,5-8,6 s) |
+| --- | --- | --- | --- |
+| 3,2 nodi: metri persi da −15 a +15 s | 0,67 | 3,37 | 2,2-2,7 |
+| 3,2 nodi: velocità minima | circa 70% | 43% | 54-60% |
+| 11 nodi: metri persi | 4,39 | 6,70 | 2,2-3,0 |
+| 11 nodi: velocità minima | circa 51% | 18% | 47-55% |
+
+- A regime il gioco va come F109: con 3,2 nodi VMG 0,60 m/s in tutti e due, velocità 1,04 m/s a 55° (F109 1,05). **Il problema è solo il transitorio**: orzando, la barca del gioco perde velocità subito (prima del vento in prua +0,2 m contro +1,48), quella vera quasi non rallenta finché la prua non è al vento.
+- La virata da tastiera del gioco sembra buona col vento medio solo perché gira in 2,5-3,4 s, più in fretta del vero.
+- **Sensibilità (`sensibilita.js`, una costante per volta, solo in memoria):** nessuna avvicina F109 senza rovinare la polare. Senza il +0,2 di resistenza della vela che sbatte: 3,37 → 3,08 m; angolo morto più stretto (luffA0 15°): 3,03 m; transizione più larga (luffW 14°): 1,65 m ma VMG con 4 nodi −26%; scafo −20%: peggio; massa +20%: quasi niente; indotta spenta: quasi niente.
+- **Causa: non trovata.** Non è una costante sola; è legata alla bolina con poco vento (passo C: −20% contro F17), perché tutte e due riguardano come la vela spinge vicino al vento.
+
+**Proposta (aspetta il via, come sempre per il motore):**
+1. **Prima la diagnosi del passo C allargata** (solo misura): resistenze voce per voce contro Day (F17 fig. 11) e, per il transitorio, quanta spinta deve dare la vela fra 29° e 0° di vento apparente per tenere la velocità di F109 fig. 4.12 nei 5 s prima del vento in prua (si ricava dai dati, non si sceglie).
+2. Poi un solo cambio del motore, con questi criteri scritti adesso: con la prua imposta, metri persi **fra 0,3 e 1,5 m con 3,2 nodi** e **fra 3 e 6 m con 11 nodi**; velocità minima entro 15 punti da F109; **polare `polare.js` con VMG di bolina entro ±3%** di oggi (a regime il gioco va già come F109); la virata da tastiera si riporta.
+3. Solo dopo, la rollata (prova v2 + spinta della raddrizzata tarata sui due punti di F109).
+Fonte unica (un velista, un giorno per vento, figure lette a occhio): le soglie sono larghe apposta.
+
 ## 6. Decisione per Ale (una per volta)
 
 **Prima domanda:** via al **passo A** (scotta dei rivali con la lasca; motore intatto)? Le domande sul passo B (tasto `R`, lezione nuova o passo in più, cercare prima la fonte sul gesto) vengono dopo.
