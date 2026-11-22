@@ -1488,6 +1488,15 @@
     const cont = st.cont ? `contatti con te in ${torRegate(st.cont)} (colpa sua in ${st.cS}, colpa tua in ${st.cT})` : "nessun contatto con te";
     return `Storico, ${torRegate(st.n)} insieme: all'arrivo davanti a te ${st.dav} ${st.dav === 1 ? "volta" : "volte"}, dietro di te ${st.die}; ${cont}${st.fuori ? `; fuori linea alla partenza ${st.fuori} ${st.fuori === 1 ? "volta" : "volte"}` : ""}.`;
   }
+  /* 1.3.38 (voce 74, passo 2 a, via di Ale del 22 novembre 2026): la frase del Coach prima del via. Il rivale in acqua con più regate in cui ti ha toccato con colpa sua (st.cS),
+     se sono almeno STO_SOGLIA (di Ale); a parità il primo nell'ordine delle barche. "" se nessuno. Solo testo: la guida non cambia, niente numeri a caso */
+  const STO_SOGLIA = 2, STO_T = -150;
+  function stoFrase(T){
+    let m = -1, v = 0;
+    T.av.forEach((a, n) => { const st = a.nome && progress.rivali && progress.rivali[a.nome] && progress.rivali[a.nome].st, c = st ? st.cS || 0 : 0;
+      if (c >= STO_SOGLIA && c > v){ m = n; v = c; } });
+    return m < 0 ? "" : `${T.av[m].nome}, barca ${COLORI_BARCA[m]}: in ${v} regate ti ha toccato con colpa sua. Tieni d'occhio la sua barca.`;
+  }
 
   function torFrase(nome, v, si, no){ // v: elenco true/false/null; con una sola regata «una volta», da 2 «in X regate su Y» (soglia nostra, ipotesi)
     const d = v.filter(x => x !== null), n = d.filter(x => x).length;

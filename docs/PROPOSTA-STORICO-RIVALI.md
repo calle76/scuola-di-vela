@@ -64,3 +64,41 @@ Il metro non deve dipendere dal gioco: R1 si ricalcola dal registro della regata
 ## Cosa è stato fatto (1.3.37, 21 novembre 2026): passo 1
 
 Decisioni di Ale: l'identità del rivale è il nome (il colore non conta); nessuna conseguenza sulla guida per ora. Fatto da Sonnet, rivisto da Opus prima del commit. Rispetto alla bozza: i contatori sono nove (regate, davanti, dietro, partenza davanti/dietro, fuori linea, regate con contatti, colpa sua, colpa tua); **non** ci sono il contatore di versione, la riga «in fondo al torneo» (c'è solo nella scheda), le scuffie e le penalità dei rivali; l'amico della stagione non entra nello storico. Conta dalle regate corse dalla 1.3.37. Criteri R1-R6 in `tests/collaudo_storico_rivali.py` (R1 40 tornei; R1b casi costruiti; R7 della bozza, la frase a inizio regata, è del passo 2). Il passo 2 aspetta il via.
+
+## Passo 2, fermata 1 (22 novembre 2026, Opus): decisione 1, la frase a inizio regata (a)
+
+Si decide una cosa per volta; (b) e (c) solo dopo, in una versione a parte. Nessun codice finché non arriva il via.
+
+**Cosa conta davvero il passo 1.** `st.cS` conta le **regate** in cui c'è stato almeno un contatto con colpa sua, non i contatti (due contatti nella stessa regata valgono 1). Quindi la soglia «≥ 2 contatti con colpa sua» diventa, con i dati che ci sono, **«in almeno 2 regate ti ha toccato con colpa sua»**, e la frase lo dice così. Conta solo dalle regate corse dalla 1.3.37 in poi, e comprende le regate già corse dello stesso torneo (lo storico si aggiorna a fine regata, in `torChiudi`).
+
+**Proposta.**
+- **Dove:** nel Coach durante la regata (il riquadro con volto e frase che c'è già dalla 1.3.28), volto «serio», commento normale (non forzato), col suo campanello e la sua riga «C» nel file della regata. Vale solo nelle regate di Deriva (torneo, tappe, finale) e si spegne con l'interruttore del Coach (principio 3). Alternativa scartata per ora: una riga nella finestra del torneo prima di «Corri la regata» (sempre visibile, ma è un'altra riga da far stare a 1360x650 e non si registra nel file).
+- **Quando:** una volta per regata, nel conto alla rovescia a **−150 s** (la frase dello sponsor resta a −50 s: fra le due ci sono 100 s, più dei 30 s di pausa del Coach). Se il conto alla rovescia parte dopo −150, al primo istante utile.
+- **Con quali numeri:** compare se un rivale in acqua ha `cS ≥ 2` (soglia di Ale). Se sono più d'uno, **uno solo**: quello con più regate «colpa sua»; a parità, il primo nell'ordine delle barche. Gli altri restano nella scheda.
+- **Testo** (niente aggettivi col genere, niente giudizi; un conteggio, non un carattere): «Rossi, barca Verde: in 3 regate ti ha toccato con colpa sua. Tieni d'occhio la sua barca.»
+- **Niente di nuovo nel salvataggio**; la guida non cambia e non si usano numeri a caso.
+
+**Costanti nuove (ipotesi nostre):** `STO_SOGLIA = 2` (di Ale), `STO_T = −150` s.
+
+**Criteri (soglie nostre, dichiarate prima):**
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| R7 | La frase dice il vero | lo storico si **ricalcola dal registro** (`tor.ris` dei tornei corsi nel collaudo, più quello costruito a mano), non da `progress.rivali`: la frase compare se e solo se il ricalcolo dà `cS ≥ 2`, con nome, barca e numero giusti. 0 sbagliate su almeno 100 casi con la frase **e** almeno 100 senza (controprova); il collaudo stampa i due conteggi |
+| R7b | Una sola, al momento giusto | al più una frase dello storico per regata, fra −151 e −149 s (o al primo istante se il conto parte dopo); 0 casi fuori |
+| R7c | Si spegne | col Coach spento 0 frasi su 20 regate |
+| R3 | La regata non cambia | arrivi e tempi identici al bit con e senza frase, 20 regate a semi fissi |
+| R5 | Riquadro | il nome più lungo dei rivali sta nel riquadro del Coach (330 px) senza uscire dal mare a 1360x650 |
+| R6 | Come un giocatore | pagina senza `#collaudo`, storico costruito con 2 contatti: la frase compare, 0 errori |
+
+Chromium e Firefox, uno per volta col freno. I casi «con frase» si costruiscono riempiendo lo storico prima del torneo (a semi fissi i contatti naturali in 2 regate sono rari); il collaudo dice quanti casi sono naturali e quanti costruiti.
+
+**Rischi.** Un fatto contato su poche regate sembra un carattere (per questo il numero sta nella frase). Con il Coach spento la frase non c'è: chi lo spegne la vede solo nella scheda. Il nome più lungo dei rivali va controllato nel riquadro.
+
+**Punti aperti del passo 1 (decisione 3, dopo):** contatore di versione del salvataggio; riga a fine torneo; scuffie e penalità dei rivali; amico in rete.
+
+## Cosa è stato fatto (1.3.38, 22 novembre 2026): passo 2 a, la frase
+
+Via di Ale: «prima la frase, nel Coach». Fatto come proposto sopra (Coach, −150 s, `cS ≥ 2`, uno solo). In più la frase dello sponsor riprova se il Coach è in pausa (prima andava persa). Criteri R7, R7b, R7c, R3, R5, R6 in `tests/collaudo_storico_frase.py`; numeri in `CHANGELOG.md` 1.3.38. Il collaudo è stato corretto dopo i primi giri senza toccare le soglie (dettagli nel CHANGELOG).
+
+**Prossima decisione (2):** cautela (b) o nemesi (c), in una versione a parte. Ale il 22 nov ha proposto i versi: «se l'ho toccato io, lui mi schiva» (cautela al contrario rispetto alla bozza) e «se ha perso da me più volte, mi ostacola» (nemesi). Prima della proposta: fonti scritte o video su marcatura e copertura in regata.

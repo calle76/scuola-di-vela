@@ -375,9 +375,12 @@
     const me = R.boats[0], c = R.cr || (R.cr = { ult: -1e9, cur: null, log: [], part: false, cop: 0, sc: 0, leg: 0, pos: null, need: R.need || 0, done: R.done || 0, pp: 0, pen: 0, vicino: false, sponsor: false });
     if (c.coda && c.cur && R.t - c.cur.t0 >= CR_MIN_VISTO){ const q = c.coda; c.coda = null; crDi(q.umore, q.testo, true); }
     if (me.fin !== null || me.dnf) return;
-    if (!c.sponsor && R.tor && R.t >= -50){ c.sponsor = true; /* l'obiettivo dello sponsor, nelle tappe della stagione in carriera */
+    /* 1.3.38 (voce 74, passo 2 a): lo storico dei rivali, una volta per regata da STO_T s; se il Coach ha appena parlato riprova, ma solo prima del via */
+    if (!c.sto && R.tor && tor && R.t >= STO_T){ const f = stoFrase(tor); if (!f || R.t >= 0 || crDi("serio", f)) c.sto = true; }
+    if (!c.sponsor && R.tor && R.t >= -50){ /* l'obiettivo dello sponsor, nelle tappe della stagione in carriera */
       const D = modo === "carriera" && progress.sponsor && progress.sponsor.c, S = progress.stagione;
-      if (D && S && tor && tor.st !== undefined && stNaz(S) === (D.circ === "naz")) crDi("serio", "Per lo sponsor: " + D.ob.map(x => spTesto(x)).join(" e ") + ". Ogni regata conta."); }
+      /* 1.3.38: se il Coach ha appena parlato (la frase dello storico con la preparazione da 1 minuto) riprova, ma solo prima del via; prima andava persa */
+      c.sponsor = !(D && S && tor && tor.st !== undefined && stNaz(S) === (D.circ === "naz")) || R.t >= 0 || crDi("serio", "Per lo sponsor: " + D.ob.map(x => spTesto(x)).join(" e ") + ". Ogni regata conta."); }
     // penalità: sempre (forza), anche prima del via
     if ((R.need || 0) > c.need){ crDi("arrabbiato", "Penalità: fai i giri subito, lontano dalle altre barche, ognuno con una virata e una strambata (lezione 20).", true); }
     if ((R.done || 0) > c.done && (R.done || 0) >= (R.need || 0) && (R.need || 0) > 0){ crDi("contento", "Giri fatti: ora riparti e riprendi velocità.", true); }

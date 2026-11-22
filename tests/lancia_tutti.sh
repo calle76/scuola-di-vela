@@ -180,6 +180,7 @@ TESTS=(
     "collaudo_segnali_deriva.py (bandiere del via in Deriva, voce 67)|py|chiaro|0||collaudo_segnali_deriva.py"
     "collaudo_freccia.py (freccia dell'obiettivo, voce 72)|py|chiaro|0||collaudo_freccia.py"
     "collaudo_storico_rivali.py (storico dei rivali, voce 74)|py|chiaro|0||collaudo_storico_rivali.py"
+    "collaudo_storico_frase.py (frase del Coach dallo storico, voce 74 passo 2 a)|py|chiaro|0||collaudo_storico_frase.py"
     "collaudo_layline.py (torneo lungo, voce 66c)|py|chiaro|1||collaudo_layline.py --lungo"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"
