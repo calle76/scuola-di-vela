@@ -67,7 +67,7 @@ Il guadagno vero della rollata è che, raddrizzando di colpo la barca sul nuovo 
 
 1. **Sbandamento con un lato fisso.** Oggi `S.heel` è contato «verso sottovento»: quando il vento passa la prua il riferimento cambia lato di colpo. Una barca rollata di 20° verso il vecchio sopravento è, dopo il passaggio, sbandata di 20° verso il **nuovo sottovento**; il motore invece la tiene a −20°, cioè sbandata verso il nuovo sopravento. Nelle virate normali lo sbandamento al passaggio è circa 0 e non si vede; con la rollata conta. Correzione: sbandamento e sua velocità conservati nel lato fisico della barca (dritta/sinistra) quando cambia il lato del vento. **Cambia il motore** (vedi §4.5).
 2. **Vento apparente della rollata.** La vela si muove di lato alla velocità `velocità di rollio × zCE` (zCE = 2,0 m, la costante che c'è già); questa velocità si somma al vento apparente della vela. Nessuna costante nuova per l'effetto: è geometria.
-3. **Il gesto del giocatore (un tasto, `R`, una volta per virata):** premuto mentre la barca passa il vento, il timoniere fa rollare la barca (la sbanda sul vecchio lato sopravento, che diventa sottovento del nuovo bordo) e poi la raddrizza con un colpo di peso. **Costanti nuove, ipotesi nostre fissate prima di misurare:** sbandamento della rollata 20°, raddrizzata in 0,8 s; finestra di tempo buona ±0,5 s attorno al passaggio del vento. Premuto troppo presto o troppo tardi: nessun guadagno o una perdita (si sbanda senza raddrizzare al momento giusto). È una capacità del giocatore, non un aiuto: non si spegne (principio 3 vale per gli aiuti).
+3. **Il gesto del giocatore (tasto `X` tenuto premuto; decisione di Ale del 22 nov):** si preme quando la prua passa il vento e il timoniere fa inclinare la barca sul nuovo sottovento (fino a 20°); si lascia quando la vela si gonfia sul nuovo lato e il timoniere la raddrizza con un colpo di peso (in 0,8 s). **Costanti nuove, ipotesi nostre fissate prima di misurare:** 20° e 0,8 s (F107-F108 non danno numeri). La scotta resta al giocatore: non si chiede di lascare e ricazzare (F108 lo dice; semplificazione dichiarata). Sequenza con 6 nodi: freccia a 0 s, X giù a circa 2 s, X su a circa 3,5 s, barra al centro a circa 5 s. X lasciata troppo presto: nessuna spinta; tenuta troppo a lungo: barca inclinata che orza e rallenta. È una capacità del giocatore, non un aiuto: non si spegne (principio 3 vale per gli aiuti).
 4. **Rivali:** in questo passo **non rollano** (si vede quanto vale il gesto per il giocatore); la rollata dei rivali va con il loro lavoro (voci 4B, 2, 3: «prima la barca, poi i rivali»). Con 10-12 nodi la differenza attesa è piccola (§4.3, B2).
 
 ### 4.3 Criteri (soglie nostre, scritte ora, misurate col metro `studio_barca.js` parte B più un modo «rollata»)
@@ -79,14 +79,15 @@ Il guadagno vero della rollata è che, raddrizzando di colpo la barca sul nuovo 
 | B3 | Regola 42.3(b) | velocità a fine virata (prua a 5° dalla nuova bolina) **mai sopra** quella prima della virata, a tutti i venti e tutti i tempi del gesto; perdita mai negativa |
 | B4 | È una capacità | gesto 1 s prima o dopo la finestra: perdita **non minore** di quella senza gesto |
 | B5 | Virata senza gesto | perdita uguale a oggi entro 0,1 m da 4 a 16 nodi (cambia solo il lato fisso dello sbandamento) |
-| B6 | Niente scuffie nuove | col gesto, nessuna scuffia da 4 a 18 nodi |
+| B6 | Niente scuffie nuove | col gesto, nessuna scuffia da 4 a 14 nodi; da 16 a 18 si riporta (F107: con vento forte non si rolla) |
+| B9 | Rollata e barra (Maiusc) | con la rollata la virata riesce con la sola freccia da 4 a 14 nodi; i numeri con Maiusc si riportano accanto |
 | B7 | Ha misurato davvero | ogni riga stampa quanti casi; tempi del gesto provati da −1,5 a +1,5 s a passi di 0,25 s, per ogni vento |
 | B8 | Polare | `polare.js` identico carattere per carattere (a regime il lato fisso non cambia niente) |
 
 Se B1 non si raggiunge con le costanti fissate, **non si ritoccano per arrivarci**: si riporta il numero e si decide con Ale.
 
 ### 4.4 Cosa serve oltre al motore
-- Tasto `R` (`js/gioco.js`), riga nella scheda dei comandi, una frase nel pannello.
+- Tasto `X` tenuto premuto (`js/gioco.js`), riga nella scheda dei comandi, una frase nel pannello.
 - Una lezione breve «Virata rollata» nella Scuola (gruppo «La barca», dopo la virata): **da decidere con Ale** se è lezione nuova (cambiano numerazione e meriti) o un passo in più della lezione della virata. Testo con le fonti di §4.1 e la regola 42 detta semplice.
 - Registratore: il gesto va scritto nel file (sennò la moviola e il Coach non lo vedono).
 

@@ -51,6 +51,7 @@ Costo di cambiamento:
 | Dal livello 2 in poi i tasti non si stravolgono a ogni livello | 6 ott | alto | — | memoria del progetto |
 | Zoom sui tasti 1 e 2, senza pulsanti sul mare | 26 ott (1.0.48) | basso | — | `CHANGELOG.md` |
 | Moviola («Rivedi») sul tasto **O**; **M** resta al marcatore del registratore. I tasti della mano sinistra (W S A Q Z 1 2, E D riservati) non si toccano | 29 ott (1.0.59) | basso | Un solo punto in `moviola.js` e nei testi | `CHANGELOG.md` |
+| **Virata rollata sul tasto X tenuto premuto** (voce 73, passo B): si preme quando la prua passa il vento (la barca si inclina sul nuovo sottovento), si lascia quando la vela si gonfia sul nuovo lato (il timoniere raddrizza). Le coppie W/S, E/D, R/F restano per azioni a coppie (cazza/lascia); X è fuori dalle coppie, accanto a Maiusc | 22 nov (Ale: «2» tenuto premuto, «Ok X») | basso finché non è nel gioco, poi medio | Testi, lezione, registratore, collaudi da tastiera | `PROPOSTA-BARCA-73.md` §4.2 |
 | Si lavora su `main`, senza rami; tag solo all'uscita di un livello | 26 ott | basso | — | `METODO.md` §6 |
 
 ## Livelli e ruoli
