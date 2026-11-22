@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.43"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.44"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -42,8 +42,10 @@
   // (js/rotta.js) con quello registrato. Stessi conti di prima, nello stesso ordine: la regata non cambia (criterio S6 della proposta)
   const windAt = (x, y) => ventoDa(gusts, shiftSt ? shiftDeg : 0, simTime, x, y);
   function ventoDa(gs, sd, sim, x, y){
-    let k = 0, sh = 0;
-    for (const g of gs){ const d2 = gustGeom(g, x, y); if (d2 < 1){ const f = (g.big ? Math.min(1, (1 - d2) * 4) : (1 - d2) ** 2) * g.life; k += f * g.k; sh += f * g.sh; } } // la raffica garantita ha un fronte netto
+    let k = 0, sh = 0, kMax = 0;
+    for (const g of gs){ const d2 = gustGeom(g, x, y); if (d2 < 1){ const f = (g.big ? Math.min(1, (1 - d2) * 4) : (1 - d2) ** 2) * g.life; k += f * g.k; if (f * g.k > kMax) kMax = f * g.k; sh += f * g.sh; } } // la raffica garantita ha un fronte netto
+    /* 1.3.44 (voce 78, docs/PROPOSTA-RAFFICHE-VERE.md): nelle regate lunghe la raffica più forte conta tutta, le altre sovrapposte solo per RAFF_SOMMA (le rare erano più forti che in mare) */
+    if (gustZona) k = kMax + RAFF_SOMMA * (k - kMax);
     const osc = gustLevel ? Math.sin(sim / 45) * 3 + Math.sin(sim / 17) * 1.5 : 0;
     const twd = env.twd + sh + osc;
     return { twd: norm360(twd + sd), tws: env.tws * (1 + k) };
@@ -62,6 +64,7 @@
   // 1.3.26 (voce 63, docs/PROPOSTA-PERCORSO-LUNGO.md; via di Ale del 20 nov): raffiche come zone sull'acqua nelle regate lunghe di Deriva (gustZona). Stesse forze di oggi;
   // più grandi, più lunghe, più rade e sparse su tutto il campo. Stesse estrazioni a caso nello stesso ordine: con gustZona spento il gioco non cambia. Numeri: ipotesi nostre, misurate
   let gustZona = false;
+  const RAFF_SOMMA = 0.3; /* 1.3.44 (voce 78): peso delle raffiche sovrapposte oltre la più forte, solo nelle regate lunghe; ipotesi nostra, scelta sui fattori di raffica NOAA (F105) coi semi 1-200 della copia in Node, confermata sui 2001-2200 */
   const RAFF_R = [80, 80], RAFF_VITA = [120, 120], RAFF_INT = 7, RAFF_DIST = [150, 150], RAFF_LAT = 3; // raggio e vita: minimo e ampiezza (80-160 m, 120-240 s); intervallo: 7 volte quello di oggi (6 nella prima stesura: 35-42% di bolina in raffica, sul bordo della soglia; ritoccato e riconfermato sui semi 301-310); distanza sopravento 150-300 m; larghezza: 3 volte. Scelti sui semi 1-10 (tre prove), confermati sui 101-110
   function setGusts(level, all = false, zona = false){
     gustLevel = level; gustAll = all; gustZona = zona; gusts.length = 0;

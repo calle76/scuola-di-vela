@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 22 novembre 2026, notte (gioco alla **1.3.43**, tag `v1.3.43`).*
+*Aggiornato: 23 novembre 2026, notte, in autonomia (gioco alla **1.3.44**, tag `v1.3.44`).*
 
 ## Dove siamo
 
@@ -10,7 +10,7 @@
 - **1.3.40 (voce 75):** niente raffiche ammucchiate al via delle regate lunghe (vento al via 0,96 della media, prima 1,77; 0 scuffie a comandi fermi su 80). **1.3.39:** il riquadro «Raddrizza» non resta sul resoconto. **1.3.38 (voce 74, passo 2a):** il Coach nomina il rivale che ti ha toccato in 2 regate. Prima: 1.3.32-1.3.37 (Coach più a lungo, volume con lo zoom, bandiere del via, freccia dell'obiettivo, storico dei rivali): `CHANGELOG.md`.
 - **Studio della barca (voce 73, commit 7105a2c):** `STUDIO-BARCA.md` e `tests/fisica/studio_barca.js` (25 s, Node). Virata 0,7-0,9 lunghezze con 10-14 nodi (F106: media circa 1); con poco vento 0,7 contro 0 (manca la virata rollata); bolina lenta con poco vento (−20% a 6 nodi contro F17); sopra 16-18 nodi la virata non riesce con la regola della scotta. Le correzioni (rollata, vento forte, bolina lenta) vanno in una **sessione nuova con Opus** e solo col via; lo script è il metro prima/dopo.
 - **1.3.42 (voci 48 e 77, via di Ale del 22 nov):** in regata col vento che gira, di bolina, sopra la bussola «scarso N°», «buono N°» o «nella media» (numero e soglie della lezione 11; opzione «Scarso/buono» come la layline, nel torneo spenta). Il Coach ora dice anche «se continua a girare dalla stessa parte, no»: la misura dal punto della barca gli dà ragione (88-90% contro 68% a caso), tranne col salto persistente (65-73%). `collaudo_aiuto_scarso.py` OK in Chromium e Firefox.
-- **Voce 78 (raffiche contro NOAA):** tipiche come in mare, le rare un po' troppo forti; correzione (raffiche sommate) da proporre, col via.
+- **1.3.44 (voce 78, 23 nov, in autonomia):** nelle regate lunghe le raffiche sovrapposte contano 0,3 oltre la più forte: raffiche rare come in mare (99° con 2 minuti da 1,40 a 1,28, tipiche quasi uguali), vento locale massimo dei rivali da 23,6 a 18,0 nodi. Regate corte, lezioni e prove identiche. Così il passo A della 73 non serve più.
 - **Voce 74:** restano la decisione 2 (cautela o nemesi, prima le fonti) e la 3 (contatore, riga a fine torneo, scuffie/penalità, amico in rete).
 - **1.3.43 (22 nov sera): corretti i rossi del giro GitHub sulla 1.3.42 (run 45037412599).** Finestra Impostazioni: «Scarso/buono» andava a capo con la Layline (+36 px, torneo fuori di 1 px); ora finestra larga 760 px, «Scarso/buono» nascosta in navigazione libera; altezze uguali alla 1.3.41 (i «+2 px» di Frecce e Vista non si ritrovano). Collaudi corretti: `collaudo_vista` (in regata Q mostra tutto il campo), `collaudo_menu` M4 (commenti `/* */`), `collaudo_coach` K0 (**difetto del collaudo**: leggeva il pulsante «Rotta ottimale» prima dell'aggiornamento del pannello; solo Chromium, già dalla 1.3.31; ora 0 su 20). Cono, registratore, suoni, menu_livelli, aiuto_scarso, menu, vista OK in Chromium e Firefox; coach OK in Chromium. **`collaudo_aiuto_scarso` scalda: 81 °C col freno 64/55, 61 °C col 58/50.**
 - **Giro GitHub sulla 1.3.43 (run 45058628198):** i sei corretti verdi (anche `suoni_zoom` V5). Rossi solo i noti: sartiame in `suoni_si_sentono` (Chromium, +1,6/+1,4/+3,6 dB contro +2) e C11 di `collaudo_torneo` in Firefox («torneo non chiuso» alla quarta regata, 1 caso; voci 41 e 6). E2 e Q7 solo tempi. Voce 73: **fermata 1 fatta (22 nov sera), `PROPOSTA-BARCA-73.md`.** Passo A (scotta dei rivali con la lasca) **rimandato insieme alla voce 78** (misura: rivali sbandati oltre 12° il 15,7% del tempo, 0 scuffie, 5 virate bloccate su 842, raffiche locali fino a 23,6 nodi). Passo C solo diagnosi.
@@ -40,6 +40,7 @@
 ## Cosa aspetta Ale
 
 - **Push:** `git push origin main --tags` (dopo ogni sessione; dalla 1.3.23 alla 1.3.31 e i collaudi di questa notte sono da pushare).
+- **Giro completo su GitHub dopo il push della 1.3.44** (Actions → «Collaudi» → «Run workflow», completo): cambia solo il vento delle regate lunghe; poi si leggono i rossi come al solito.
 - **Giro completo su GitHub dopo il push** (commit della notte del 21 nov): conferma che P4, K0 e T2b escono come sul PC; poi si leggono i rossi come al solito.
 - **Chiedere a Lucio** per il finale dell'osservazione 135: «in quella regata (21:20) sei arrivato primo?» e a che secondo succede la situazione.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ogni due settimane circa e dopo regate nuove; a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Lo script copia anche i `stagione-*.json`; **non** copre i salvataggi del browser (carriera: voce 54).
