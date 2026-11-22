@@ -103,29 +103,23 @@ Se B1 non si raggiunge con le costanti fissate, **non si ritoccano per arrivarci
 Due tentativi (16 e 17 ottobre) non hanno trovato la causa; il 17 ottobre Ale ha scelto «limite noto». Lo studio aggiunge solo che, contando lo scarroccio, il −15% diventa −20%. **Propongo di non toccare il motore in questa voce.** Al suo posto una misura (Node, senza browser): resistenze della barca del gioco a 6 nodi di vento, voce per voce (scafo, pala e deriva, indotta, vela), contro la figura 11 di Day (`fonti-pdf/day2017`), e lo scarroccio contro quello di Day. Se una voce è fuori di oltre il 30% dalla figura, si scrive una proposta per quella; altrimenti il limite resta dichiarato (`FISICA-E-TARATURE.md`) e va nella pagina dello studio (voce 80) così com'è.
 **Modello:** Opus, solo misura.
 
-## 5b. Virata normale contro F109 (fermata 1, 22 nov 2026, notte)
+## 5b. Virata normale contro F109 (fermata 1, 22-23 nov 2026, notte; Ale: «continua in autonomia»)
 
-Misure nuove, tutte in `sperimentale/virata-rollata-73/` (Node, nessun numero a caso: un giro basta; `js/` non toccato).
+Misure in `sperimentale/virata-rollata-73/` (Node, nessun numero a caso: un giro basta; `js/` non toccato).
 
-**Metro nuovo, indipendente dal giocatore (`prua_imposta.js`):** la prua gira come nelle virate vere di F109 (fig. 4.11, letta a occhio: da −45° a +45° in circa 10 s con 3,2 nodi e in 5 s con 11), senza timone. Così si confronta la barca, non la mano di chi la guida.
+**Metro indipendente dal giocatore (`prua_imposta.js`):** la prua gira come nelle virate vere di F109 (fig. 4.11, letta a occhio: da −45° a +45° in circa 10 s con 3,2 nodi e in 5 s con 11), col timone allineato all'acqua che arriva (niente freno della pala che ruota). **Correzione del 23 nov:** la prima versione del metro teneva la barra al centro, e la pala, investita di traverso dalla rotazione, frenava fino a 90 N; i numeri scritti qui la sera prima (3,37 e 6,70 m) erano gonfiati da quel difetto del metro, non della barca.
 
-| | F109 (Laser in acqua) | gioco, prua imposta | gioco, virata da tastiera (2,5-8,6 s) |
+| | F109 (Laser in acqua) | gioco, prua imposta | gioco, virata da tastiera |
 | --- | --- | --- | --- |
-| 3,2 nodi: metri persi da −15 a +15 s | 0,67 | 3,37 | 2,2-2,7 |
-| 3,2 nodi: velocità minima | circa 70% | 43% | 54-60% |
-| 11 nodi: metri persi | 4,39 | 6,70 | 2,2-3,0 |
-| 11 nodi: velocità minima | circa 51% | 18% | 47-55% |
+| 3,2 nodi: metri persi da −15 a +15 s | 0,67 | 1,74 | 2,2-2,7 |
+| 3,2 nodi: velocità minima | circa 70% | 59% | 54-60% |
+| 11 nodi: metri persi | 4,39 | 3,35 | 2,2-3,0 |
+| 11 nodi: velocità minima | circa 51% | 44% | 47-55% |
 
-- A regime il gioco va come F109: con 3,2 nodi VMG 0,60 m/s in tutti e due, velocità 1,04 m/s a 55° (F109 1,05). **Il problema è solo il transitorio**: orzando, la barca del gioco perde velocità subito (prima del vento in prua +0,2 m contro +1,48), quella vera quasi non rallenta finché la prua non è al vento.
-- La virata da tastiera del gioco sembra buona col vento medio solo perché gira in 2,5-3,4 s, più in fretta del vero.
-- **Sensibilità (`sensibilita.js`, una costante per volta, solo in memoria):** nessuna avvicina F109 senza rovinare la polare. Senza il +0,2 di resistenza della vela che sbatte: 3,37 → 3,08 m; angolo morto più stretto (luffA0 15°): 3,03 m; transizione più larga (luffW 14°): 1,65 m ma VMG con 4 nodi −26%; scafo −20%: peggio; massa +20%: quasi niente; indotta spenta: quasi niente.
-- **Causa: non trovata.** Non è una costante sola; è legata alla bolina con poco vento (passo C: −20% contro F17), perché tutte e due riguardano come la vela spinge vicino al vento.
-
-**Proposta (aspetta il via, come sempre per il motore):**
-1. **Prima la diagnosi del passo C allargata** (solo misura): resistenze voce per voce contro Day (F17 fig. 11) e, per il transitorio, quanta spinta deve dare la vela fra 29° e 0° di vento apparente per tenere la velocità di F109 fig. 4.12 nei 5 s prima del vento in prua (si ricava dai dati, non si sceglie).
-2. Poi un solo cambio del motore, con questi criteri scritti adesso: con la prua imposta, metri persi **fra 0,3 e 1,5 m con 3,2 nodi** e **fra 3 e 6 m con 11 nodi**; velocità minima entro 15 punti da F109; **polare `polare.js` con VMG di bolina entro ±3%** di oggi (a regime il gioco va già come F109); la virata da tastiera si riporta.
-3. Solo dopo, la rollata (prova v2 + spinta della raddrizzata tarata sui due punti di F109).
-Fonte unica (un velista, un giorno per vento, figure lette a occhio): le soglie sono larghe apposta.
+- **Col vento medio il gioco è vicino al vero** (perde 1 m in meno). **Col poco vento perde circa 1 m in più**, e parte della differenza è la barca più lenta: a regime, prua a 45°, 0,88 m/s contro 1,05 di F109 (−16%). È il «limite noto» della bolina con poco vento (decisione di Ale del 17 ottobre, `archivio/PROPOSTA-BOLINA.md` §11), qui confermato da una terza fonte indipendente.
+- Nelle virate da tastiera la perdita del gioco viene soprattutto dalla pala tutta alla banda (con la prua imposta e il timone allineato si perde meno).
+- **Sensibilità (`sensibilita.js`, `misura_sensibilita.txt`):** senza il +0,2 di resistenza della vela che sbatte (senza fonte) 1,36 / 2,69 m: avvicina il poco vento, allontana il medio. Angolo morto che si sgonfia più gradualmente verso il vento (luffA0 8°, luffW 21°: la vela porta del tutto da 29° come oggi, polare uguale) 1,24 / 2,49. Nessuna costante sola mette a posto tutti e due i venti.
+- **Decisione (Claude, su mandato di Ale):** **nessun cambio del motore per la virata normale.** Col vento medio va già; col poco vento la differenza è per buona parte il limite noto, che resta (non si riapre senza Ale). Va scritto nello studio (voce 80).
 
 ## 6. Decisione per Ale (una per volta)
 
@@ -147,3 +141,5 @@ Fonte unica (un velista, un giorno per vento, figure lette a occhio): le soglie 
   - **Prova v2** (`rollata_v2.patch`, `misura_v2.js`, `misura_v2.txt`; 144 corse): rollio imposto coi numeri di F109 (sbanda a 25°/s finché X è giù, raddrizza a 50°/s). Con 3,2 nodi (Maiusc) persi 2,2 m senza X, 1,3 m con X: guadagno 0,9 m contro 3,0 m di F109 (rollata contro piatta); con 11 nodi 2,2 → 1,2 m (F109: 2,4 m). Sbandare di più rende di meno (H20 1,3 m, H55 1,6 m), al contrario di F109: il vento in più del rollio, calcolato in modo stazionario, non basta; il guadagno vero viene dai vortici (non modellati).
   - **Scoperta più grossa: la virata normale del gioco non va come quella vera** (`diagnosi_piatta.js`, `misura_piatta.txt`). Con 3,2 nodi il gioco perde 2,2-2,7 m, F109 0,67 m; con 11 nodi il gioco 2,2-3,0 m, F109 **4,39 m**. Quindi col poco vento la virata del gioco costa 3-4 volte troppo, col vento medio circa la metà del vero. Il pezzo che manca è soprattutto **prima del vento in prua**: il gioco guadagna 0,2 m, F109 1,48 m (poco vento) e 0,67 m (medio): la barca vera porta la velocità verso il vento, quella del gioco frena subito (vela che sbatte: con 11 nodi e prua al vento −44 N, in 3 s scende al 28%). Con meno barra va peggio, non meglio (gira più piano e frena prima di arrivare al vento).
   - **Decisione presa (Ale ha lasciato decidere):** (1) il lato fisso dello sbandamento resta nelle patch, non entra da solo: serve solo alla rollata; (2) la rollata non si chiude, ma **prima va sistemata la virata piatta contro F109** (è quella su cui si tara tutto il resto: regola «meno lavoro dopo»), poi la rollata con un termine in più per la raddrizzata tarato sui due punti di F109. Tutti e due chiedono una **nuova fermata 1** (proposta con soglie), che è il prossimo passo della voce 73.
+- **Terza prova della rollata (23 nov 2026, notte; `rollata_v3.patch`, `taratura_v3.js`, `misura_v3.js`, misure nei `.txt`).** v2 più una spinta dei vortici durante la raddrizzata, proporzionale al quadrato della velocità con cui la vela spazza l'aria (una costante, `cv`). Taratura su F109 con 3,2 nodi: con cv 6 la rollata guadagna 3,07 m sulla piatta (F109 3,04), ma dopo la virata la barca va al **146%** della velocità di prima (F109 circa 115%, già contro la regola 42.3(b) per l'autore) e con 11 nodi guadagna 1,46 m contro 2,44 (controllo senza ritocchi: −40%). **Scelta:** cv = 2, il valore più alto (a passi di 0,5) per cui la barca non esce mai più veloce di prima fino a 12 nodi (regola 42.3(b); sopra 14 nodi si arriva a 101-104% anche con cv 0). Con cv 2 (126 corse): **B1** con Maiusc passa (0,9 / 1,3 / 1,3 m = 0,21-0,31 L con 4 / 6 / 8 nodi), con la sola freccia **no** a 6 e 8 nodi (1,7 e 1,6 m = 0,40 e 0,38 L contro 0,35); **B2 no** (la rollata serve quanto col poco vento: freccia 1,8 m in meno con 4 nodi, 1,7 con 12); **B4 no** (X tardo di 1 s rende ancora quasi tutto: 3,2 nodi 0,6 m contro 0,5 al momento giusto e 2,2 senza X); **B3, B6, B9 sì**. **Non adottata: tre criteri su nove non passano e le soglie non si ritoccano.** Con poco vento il guadagno del gioco (1,7 m sulla piatta) è circa metà di F109 (3,0), che però è una rollata oltre la regola 42.
+  - **Per Ale (al ritorno):** se si vuole comunque la rollata nel gioco, la v3 con cv 2 è pronta come patch; servono tre decisioni sui criteri non passati (B1 con la sola freccia, B2, B4: B4 forse era troppo severo, una rollata fatta un po' tardi aiuta anche in acqua). Senza decisione resta fuori.

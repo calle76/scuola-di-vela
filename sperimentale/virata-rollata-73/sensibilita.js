@@ -2,6 +2,7 @@
 // (a) virata con la prua imposta come in F109 (3,2 nodi in 10 s, 11 nodi in 5 s), metri contro il dritto da −15 a +15 s e velocità minima;
 // (b) effetto collaterale: VMG di bolina a regime (45° e 55°) con 4 e 11 nodi. Uso: node sperimentale/virata-rollata-73/sensibilita.js
 const fs = require("fs"), path = require("path");
+const allinea = S => S.u > 0.05 ? Math.max(-1, Math.min(1, -Math.atan2(S.r * Math.PI / 180 * 1.9, S.u) * 180 / Math.PI / 45)) : 0; // timone allineato all'acqua che arriva (RUD2.xR = 1,9 m): niente freno finto della pala che ruota
 const SRC = fs.readFileSync(path.join(__dirname, "..", "..", "js", "motore.js"), "utf8");
 const motore = rep => { let s = SRC; for (const [a, b] of rep){ if (!s.includes(a)) throw new Error("non trovato: " + a); s = s.replace(a, b); }
   return new Function(s + "\nreturn { step, BOAT };")(); };
@@ -10,7 +11,7 @@ function prova(M){ const { step, BOAT } = M, sheetFor = awa => clamp((Math.max(B
   for (const [kn, T] of [[3.2, 10], [11, 5]]){ const prua = t => t <= -T / 2 ? -45 : t >= T / 2 ? 45 : -45 * Math.cos(Math.PI * (t + T / 2) / T);
     const S = { x: 0, y: 0, h: 315, u: 1, vl: 0, r: 0, lv: 2 }, E = { twd: 0, tws: kn / KN }; let info = { awa: 45 }, vmg0, u0, tot = 0, umin = 9;
     for (let i = 0; i < 7500; i++){ const t = i * DT - 60, h = t < -15 ? -45 : prua(t); S.r = (prua(t + DT) - h) / DT; S.h = (h + 360) % 360;
-      const yp = S.y; info = step(S, { sheet: sheetFor(info.awa), tiller: 0 }, E, DT); S.h = (h + 360) % 360;
+      const yp = S.y; info = step(S, { sheet: sheetFor(info.awa), tiller: allinea(S) }, E, DT); S.h = (h + 360) % 360;
       if (t < -15 && t > -15 - 2 * DT){ vmg0 = -(S.y - yp) / DT; u0 = S.u; }
       if (t >= -15){ tot += -(S.y - yp) - vmg0 * DT; umin = Math.min(umin, S.u); } }
     out["v" + kn] = tot; out["m" + kn] = umin / u0; }
@@ -25,7 +26,10 @@ const VAR = [
   ["angolo morto più largo nella transizione: luffW 14°", [["luffW: 7,", "luffW: 14,"]]],
   ["scafo −20% (hullScale 0,8)", [["hullScale: 1,", "hullScale: 0.8,"]]],
   ["massa +20% (162 kg: acqua trascinata, ipotesi)", [["mass: 135,", "mass: 162,"]]],
-  ["indotta spenta (TE 0)", [["TE: 0.80", "TE: 0"]]] ];
+  ["indotta spenta (TE 0)", [["TE: 0.80", "TE: 0"]]],
+  ["vela piena sempre da 29°, parziale da 15° (luffA0 15, luffW 14)", [["luffA0: 22,", "luffA0: 15,"], ["luffW: 7,", "luffW: 14,"]]],
+  ["vela piena da 29°, parziale da 8° (luffA0 8, luffW 21)", [["luffA0: 22,", "luffA0: 8,"], ["luffW: 7,", "luffW: 21,"]]],
+  ["idem (luffA0 8, luffW 21) e niente +0,2 della vela che sbatte", [["luffA0: 22,", "luffA0: 8,"], ["luffW: 7,", "luffW: 21,"], ["(alpha < 6 ? 0.2 * (1 - alpha / 6) : 0)", "0"]]] ];
 const f = (x, d = 2) => x.toFixed(d);
 console.log("F109: 3,2 nodi −0,67 m (minima ~70%); 11 nodi −4,39 m (minima ~51%). Polare: VMG in nodi a 45° e 55°.");
 let base = null;

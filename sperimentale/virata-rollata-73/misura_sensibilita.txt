@@ -1,0 +1,11 @@
+F109: 3,2 nodi −0,67 m (minima ~70%); 11 nodi −4,39 m (minima ~51%). Polare: VMG in nodi a 45° e 55°.
+motore del gioco                                     | 3,2 nodi -1.74 m, minima 59% | 11 nodi -3.35 m, minima 44% | VMG 4 nodi 1.45 / 1.38, 11 nodi 3.22 / 2.91
+vela che sbatte: niente +0,2 di resistenza           | 3,2 nodi -1.36 m, minima 64% | 11 nodi -2.69 m, minima 50% | VMG 4 nodi 1.45 (+0.0%) / 1.38 (+0.0%), 11 nodi 3.22 / 2.91
+angolo morto più stretto: luffA0 15°                 | 3,2 nodi -1.10 m, minima 67% | 11 nodi -2.28 m, minima 52% | VMG 4 nodi 1.46 (+0.5%) / 1.38, 11 nodi 3.22 / 2.91
+angolo morto più largo nella transizione: luffW 14°  | 3,2 nodi -1.21 m, minima 55% | 11 nodi -2.64 m, minima 43% | VMG 4 nodi 1.08 (-25.7%) / 1.28 (-6.8%), 11 nodi 2.73 (-15.3%) / 2.91
+scafo −20% (hullScale 0,8)                           | 3,2 nodi -1.62 m, minima 61% | 11 nodi -3.62 m, minima 45% | VMG 4 nodi 1.51 (+3.9%) / 1.49 (+8.1%), 11 nodi 3.44 (+6.7%) / 3.15 (+8.2%)
+massa +20% (162 kg: acqua trascinata, ipotesi)       | 3,2 nodi -1.49 m, minima 64% | 11 nodi -3.13 m, minima 49% | VMG 4 nodi 1.45 (-0.0%) / 1.38 (-0.0%), 11 nodi 3.22 (-0.0%) / 2.91 (-0.0%)
+indotta spenta (TE 0)                                | 3,2 nodi -1.74 m, minima 59% | 11 nodi -3.20 m, minima 43% | VMG 4 nodi 1.48 (+1.7%) / 1.41 (+2.2%), 11 nodi 3.37 (+4.4%) / 2.99 (+2.8%)
+vela piena sempre da 29°, parziale da 15° (luffA0 15, luffW 14) | 3,2 nodi -1.41 m, minima 63% | 11 nodi -2.78 m, minima 48% | VMG 4 nodi 1.46 (+0.1%) / 1.38, 11 nodi 3.22 / 2.91
+vela piena da 29°, parziale da 8° (luffA0 8, luffW 21) | 3,2 nodi -1.24 m, minima 65% | 11 nodi -2.49 m, minima 51% | VMG 4 nodi 1.46 (+0.2%) / 1.38, 11 nodi 3.22 / 2.91
+idem (luffA0 8, luffW 21) e niente +0,2 della vela che sbatte | 3,2 nodi -0.83 m, minima 71% | 11 nodi -1.81 m, minima 58% | VMG 4 nodi 1.46 (+0.2%) / 1.38 (+0.0%), 11 nodi 3.22 / 2.91

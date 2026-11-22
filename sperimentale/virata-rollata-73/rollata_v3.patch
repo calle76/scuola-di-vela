@@ -1,0 +1,70 @@
+diff --git a/js/motore.js b/js/motore.js
+index 3712da7..eaef20d 100644
+--- a/js/motore.js
++++ b/js/motore.js
+@@ -98,6 +98,9 @@ function stepShift(st, dt, rnd, ruota = true){ // avanza di dt secondi; restitui
+ // classe (F37), barca dritta, scia della deriva sulla pala a zero: side = ½ρ·K·u·vl, K = 1,70 m² (deriva 1,176, pala 0,527 con l'acqua al 90%).
+ // Al posto di u si usa √(u² + u0²): u0 è ricavato perché da ferma la barca scarrocci come l'1a (q·u0 = 0,4·foilK + 60 = 268 con foilK = 520 dell'1a; ipotesi).
+ const DERIVA2 = { q: 873, u0: 0.307 }; // q = ½·ρ·K (N·s/m²), u0 in m/s
++// PROVA v2 (voce 73 passo B): rollata con i numeri di F109 (Schutt 2017, Laser in acqua, fig. 4.10): con X tenuto la barca sbanda verso sottovento a vIn gradi/s
++// (0 → 60° in circa 2,5 s con 3,2 nodi), lasciato X si raddrizza a vOut gradi/s (60° → 0 in circa 1,2 s). Rollio imposto: il timoniere comanda.
++const ROLL = { vIn: 25, vOut: 50, cv: 0 }; // cv: spinta dei vortici nella raddrizzata (F109: forza 6 volte in vasca), tarata su F109 con 3,2 nodi
+ function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso segno della barra
+   return tiller * RUD2.maxRudder + Math.atan2(S.r * D2R * RUD2.xR, S.u) / D2R;
+ }
+@@ -130,10 +133,18 @@ function step(S, C, E, dt){
+   const tdir = (E.twd + 180) * D2R, tw = [Math.sin(tdir) * E.tws, -Math.cos(tdir) * E.tws];
+   // velocità barca: avanti + scarroccio
+   const bv = [fwd[0] * S.u + stbd[0] * S.vl, fwd[1] * S.u + stbd[1] * S.vl];
+-  const aw = [tw[0] - bv[0], tw[1] - bv[1]];
++  // 1.3.44 (voce 73 passo B): la barca che rolla muove la vela di lato a velocità di rollio × zCE (S.heel è verso sottovento del lato S.heelLato); la vela sente quel vento in più.
++  // Solo durante il gesto (S.rollT definito): nei rolli di tutti i giorni lo smorzamento dell'aria si intende compreso in rollDamp (provato su tutti i rolli: raffica 10→16 nodi da 37° a 28°, fuori dalla proposta)
++  S.heel = S.heel || 0; S.heelRate = S.heelRate || 0;
++  const vRoll = S.heelLato && S.rollT !== undefined ? S.heelRate * BOAT.zCE * Math.cos(S.heel * D2R) * (S.heelLato > 0 ? -1 : 1) : 0; // m/s verso dritta
++  const aw = [tw[0] - bv[0] - stbd[0] * vRoll, tw[1] - bv[1] - stbd[1] * vRoll];
+   const aws = Math.hypot(aw[0], aw[1]);
+   const awFrom = norm360(Math.atan2(-aw[0], aw[1]) / D2R); // direzione DA cui arriva
+   const awa = norm180(awFrom - S.h);                         // + = vento da dritta
++  // 1.3.44: lo sbandamento resta dalla stessa parte della barca quando il vento passa dall'altro lato (prima, a ogni cambio di lato, si girava di colpo)
++  const latoV = awa >= 0 ? 1 : -1;
++  if (S.heelLato && S.heelLato !== latoV){ S.heel = -S.heel; S.heelRate = -S.heelRate; if (S.rollV !== undefined) S.rollV = -S.rollV; }
++  S.heelLato = latoV;
+   const A = Math.abs(awa);
+   // boma: limitato dalla scotta, il vento lo spinge sottovento
+   const sheetMax = BOAT.minBoom + C.sheet * (BOAT.maxBoom - BOAT.minBoom); // anche cazzata a ferro la randa non sta a 0°
+@@ -171,16 +182,23 @@ function step(S, C, E, dt){
+   const latTarget = leewardSign * side / (DERIVA2.q * Math.sqrt(S.u * S.u + DERIVA2.u0 * DERIVA2.u0));
+   S.vl += (Math.max(-0.8, Math.min(0.8, latTarget)) - S.vl) * Math.min(1, dt * 2);
+   // sbandamento: momento sbandante della vela contro timoniere sporto fuori e forma dello scafo
+-  S.heel = S.heel || 0; S.heelRate = S.heelRate || 0; S.hike = S.hike === undefined ? 0.2 : S.hike;
++  S.hike = S.hike === undefined ? 0.2 : S.hike;
+   const phi = S.heel * D2R;
+   const mHeel = side * BOAT.zCE * Math.cos(phi);
+   const rmMax = BOAT.sailorMass * 9.81 * BOAT.hikeArm;
+   const hikeTarget = Math.max(0, Math.min(1, (mHeel - BOAT.formK * 0.08) / rmMax)); // punta a tenere la barca quasi piatta
++  if (C.roll && S.rollT === undefined) S.rollT = -1;
++  if (!C.roll && S.rollT === -1) S.rollT = S.heel > 0 ? 1 : undefined;
+   S.hike += (hikeTarget - S.hike) * Math.min(1, dt / 0.9); // il timoniere reagisce con un certo ritardo
+   const mRight = rmMax * S.hike * Math.cos(phi) + BOAT.formK * Math.sin(2 * phi) / 2;
+   const acc = (mHeel - mRight) / BOAT.rollI - BOAT.rollDamp / BOAT.rollI * S.heelRate;
+-  S.heelRate += acc * dt;
++  if (S.rollT === -1) S.heelRate = ROLL.vIn * D2R;
++  else if (S.rollT === 1){ S.heelRate = -ROLL.vOut * D2R;
++    if (S.heel + S.heelRate / D2R * dt <= 0){ S.heelRate = dt > 0 ? -S.heel * D2R / dt : 0; S.rollT = 2; } }
++  else S.heelRate += acc * dt;
+   S.heel += S.heelRate / D2R * dt;
++  if (S.rollT === 1 && ROLL.cv > 0){ const vs = ROLL.vOut * D2R * BOAT.zCE; S.u += 0.5 * BOAT.rho * BOAT.sailArea * ROLL.cv * vs * vs / BOAT.mass * dt; } // spinta dei vortici mentre la vela spazza l'aria
++  if (S.rollT === 2){ S.rollT = undefined; S.heelRate = 0; S.hike = hikeTarget; }
+   if (pala){ // la forza della pala (che stalla oltre stallA) contro lo smorzamento dello scafo
+     const F = Math.max(-RUD2.stallA, Math.min(RUD2.stallA, a2)) * D2R;
+     const V2 = S.u * S.u + (S.r * D2R * RUD2.xR) ** 2;
+diff --git a/tests/fisica/motore.js b/tests/fisica/motore.js
+index 5b66452..78cf3af 100644
+--- a/tests/fisica/motore.js
++++ b/tests/fisica/motore.js
+@@ -3,4 +3,4 @@
+ const fs = require("fs"), path = require("path");
+ if (process.env.MOTORE === "1a") return module.exports = require("./motore1a.js");
+ const src = fs.readFileSync(path.join(__dirname, "..", "..", "js", "motore.js"), "utf8");
+-module.exports = new Function(src + "\nreturn { step, BOAT, RUD2, RUD2_SICURA, DERIVA2, BOMA2, SALTI2, newShift, stepShift, CL, CD, norm180, norm360, hullDrag };")();
++module.exports = new Function(src + "\nreturn { step, ROLL: typeof ROLL !== 'undefined' ? ROLL : null, BOAT, RUD2, RUD2_SICURA, DERIVA2, BOMA2, SALTI2, newShift, stepShift, CL, CD, norm180, norm360, hullDrag };")();

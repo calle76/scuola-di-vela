@@ -1,6 +1,7 @@
 // Voce 73: con la prua imposta come in F109 (vedi prua_imposta.js), quanto pesa ogni forza fra −15 e +15 s: spinta della vela (positiva o negativa),
 // scafo (con l'aumento per lo sbandamento), resistenza indotta. In newton·secondo (impulso) e in metri al secondo di velocità persa (impulso / massa).
 const { step, BOAT, hullDrag } = require("../../tests/fisica/motore.js");
+const allinea = S => S.u > 0.05 ? Math.max(-1, Math.min(1, -Math.atan2(S.r * Math.PI / 180 * 1.9, S.u) * 180 / Math.PI / 45)) : 0; // timone allineato all'acqua che arriva (RUD2.xR = 1,9 m): niente freno finto della pala che ruota
 const DT = 0.01, KN = 1.943844, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), D2R = Math.PI / 180;
 const sheetFor = awa => clamp((Math.max(BOAT.minBoom, Math.abs(awa) - 17) - BOAT.minBoom) / (BOAT.maxBoom - BOAT.minBoom), 0, 1);
 for (const [kn, T] of [[3.2, 10], [11, 5]]){
@@ -9,7 +10,7 @@ for (const [kn, T] of [[3.2, 10], [11, 5]]){
   const I = { velaPiu: 0, velaMeno: 0, scafo: 0, indotta: 0 }, Ib = { velaPiu: 0, velaMeno: 0, scafo: 0, indotta: 0 }; let tMorto = 0;
   for (let i = 0; i < 7500; i++){ const t = i * DT - 60;
     const h = t < -15 ? -45 : prua(t); S.r = (prua(t + DT) - h) / DT; S.h = (h + 360) % 360;
-    const u = S.u, heel = S.heel || 0; info = step(S, { sheet: sheetFor(info.awa), tiller: 0 }, E, DT); S.h = (h + 360) % 360;
+    const u = S.u, heel = S.heel || 0; info = step(S, { sheet: sheetFor(info.awa), tiller: allinea(S) }, E, DT); S.h = (h + 360) % 360;
     const scafo = hullDrag(u) * (1 + Math.pow(Math.abs(heel) / 30, 2) * 0.6);
     const ind = info.side * info.side * u * Math.abs(u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (u * u + 0.4) ** 2);
     const J = t < 0 ? I : Ib;

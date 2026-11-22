@@ -1,0 +1,10 @@
+F109: prima +1,48, dopo −2,15, totale −0,67 m; minima ~70%, a +15 s ~85%
+  3.2 nodi, virata in 6 s: prima 0.26, dopo -1.23, totale -0.97 m; minima 71%, a +15 s 94%; velocità di partenza 0.88 m/s
+  3.2 nodi, virata in 8 s: prima 0.28, dopo -1.63, totale -1.35 m; minima 65%, a +15 s 91%; velocità di partenza 0.88 m/s
+  3.2 nodi, virata in 10 s: prima 0.28, dopo -2.02, totale -1.74 m; minima 59%, a +15 s 88%; velocità di partenza 0.88 m/s
+  3.2 nodi, virata in 12 s: prima 0.25, dopo -2.48, totale -2.23 m; minima 53%, a +15 s 85%; velocità di partenza 0.88 m/s
+F109: prima +0,50, dopo −4,89, totale −4,39 m; minima ~51%, a +15 s ~93%
+  11 nodi, virata in 3 s: prima 0.27, dopo -1.99, totale -1.72 m; minima 59%, a +15 s 100%; velocità di partenza 2.47 m/s
+  11 nodi, virata in 4 s: prima 0.24, dopo -2.75, totale -2.50 m; minima 50%, a +15 s 100%; velocità di partenza 2.47 m/s
+  11 nodi, virata in 5 s: prima 0.18, dopo -3.53, totale -3.35 m; minima 44%, a +15 s 100%; velocità di partenza 2.47 m/s
+  11 nodi, virata in 6 s: prima 0.08, dopo -4.33, totale -4.26 m; minima 38%, a +15 s 100%; velocità di partenza 2.47 m/s
