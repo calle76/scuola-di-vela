@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.39"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.40"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -65,7 +65,10 @@
   const RAFF_R = [80, 80], RAFF_VITA = [120, 120], RAFF_INT = 7, RAFF_DIST = [150, 150], RAFF_LAT = 3; // raggio e vita: minimo e ampiezza (80-160 m, 120-240 s); intervallo: 7 volte quello di oggi (6 nella prima stesura: 35-42% di bolina in raffica, sul bordo della soglia; ritoccato e riconfermato sui semi 301-310); distanza sopravento 150-300 m; larghezza: 3 volte. Scelti sui semi 1-10 (tre prove), confermati sui 101-110
   function setGusts(level, all = false, zona = false){
     gustLevel = level; gustAll = all; gustZona = zona; gusts.length = 0;
-    if (level){ spawnGust(22, -14, true); spawnGust(45, 18, true); spawnGust(70, -6, true); spawnGust(95, 25, true); gustTimer = 3; }
+    /* 1.3.40 (voce 75, docs/PROPOSTA-RAFFICHE-AL-VIA.md; Lucio, 21 nov: scuffia appena dopo «Parti»): nelle regate lunghe le 4 raffiche iniziali, larghe 80-160 m, a 22-95 m
+       stavano tutte sulla barca e si sommavano (vento al via 1,6-1,9 volte la media, 40 semi su 40). Ora nascono sparse come le altre (RAFF_DIST, RAFF_LAT); senza zone com'era */
+    if (level){ if (zona) for (let i = 0; i < 4; i++) spawnGust(RAFF_DIST[0] + Math.random() * RAFF_DIST[1], (Math.random() - 0.5) * 90 * RAFF_LAT, true);
+      else { spawnGust(22, -14, true); spawnGust(45, 18, true); spawnGust(70, -6, true); spawnGust(95, 25, true); } gustTimer = 3; }
   }
   function updateGusts(dt){
     if (shiftSt) shiftDeg = stepShift(shiftSt, dt, Math.random, !(mode === "race" && R && R.t < 0)); // il salto persistente comincia al via (la linea è allineata poco prima)

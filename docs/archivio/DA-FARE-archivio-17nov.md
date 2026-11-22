@@ -61,3 +61,5 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 - **Voce 67 (bandiere del via nelle regate coi 3 minuti), chiusa il 21 nov 2026 nella 1.3.35:** `segnali` acceso nelle regate del torneo (stagione e finale comprese); `collaudo_segnali_deriva.py` B1-B7 OK in Chromium e Firefox.
 
 | 72 | **Freccia dell'arrivo/boa più visibile, niente zoom più largo** (Ale e Lucio, 21 nov: con i lati lunghi la vista Q non mostra tutto il campo, soprattutto alla partenza; Ale: non allargare lo zoom, rendere più visibile la freccia). Proposta scritta (21 nov): freccia da 22 a 34 px con contorno, nome dell'obiettivo, pulsazione oltre 150 m; CHIUSA nella 1.3.36 (21 nov), collaudo_freccia.py F1-F7 OK | `PROPOSTA-FRECCIA-OBIETTIVO.md` | Sonnet |
+
+- **Voce 75 (scuffia appena dopo «Parti» nelle regate lunghe), chiusa il 22 nov 2026 nella 1.3.40:** le 4 raffiche iniziali sparse come le altre; vento al via 0,96 volte la media (prima 1,77), 0 scuffie a comandi fermi su 80. `PROPOSTA-RAFFICHE-AL-VIA.md`.

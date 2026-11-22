@@ -39,4 +39,4 @@ Il metro (vento medio del campo su una griglia di 21x18 punti) non dipende dalla
 
 ## Esito
 
-*(da scrivere dopo il via)*
+Via di Ale il 22 nov. Fatto come proposto nella 1.3.40; V1-V5 tutti verdi in Chromium e Firefox, numeri in `CHANGELOG.md` 1.3.40 (mediana 0,96 al posto di 1,77; 0 scuffie a comandi fermi su 80). Controprova: lo stesso collaudo sulla 1.3.39 fallisce V1, V2 e V5.
