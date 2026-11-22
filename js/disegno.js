@@ -67,12 +67,6 @@
       cls = Math.abs(off) < 6 ? "good" : "bad";
       msg = "Rotta da tenere " + deg3(S.course) + ", ora " + deg3(S.h) + (Math.abs(off) < 6 ? ": in rotta." : off > 0 ? ": la prua è troppo a dritta." : ": la prua è troppo a sinistra.");
     }
-    if (mode === "lesson" && st.scarsoHint && !stepDone && !S.capsized && !base.daBuono && simTime - (base.tScarso ?? -1e9) < 1){ // 1.2.26: lezione B5, quanto sei scarso o buono (lo stesso numero che controlla il passo)
-      const sc = Math.round(base.scarso);
-      if (sc >= 7){ cls = "good"; msg = "Sei scarso di " + sc + "°: vira adesso."; }
-      else if (sc <= -3){ cls = ""; msg = "Sei buono di " + -sc + "°: resta su queste mure."; }
-      else { cls = ""; msg = "Sei vicino alla media: aspetta di essere scarso (almeno 7°)."; }
-    }
     if (mode === "lesson" && st.turnHint && !S.capsized && S.u > -0.05 && S.heel <= 25 && Math.abs(S.r) > 3){
       const a = norm180(local.twd - S.h), orza = Math.sign(a) === Math.sign(S.r);
       cls = "good"; msg = orza ? "Stai orzando: la prua va verso il vento." : "Stai poggiando: la prua si allontana dal vento.";
@@ -740,9 +734,14 @@
   // rispetto al vento medio; scarso da 7°, buono da 3° (soglie della lezione). Non dice «vira». Il gioco conosce il vento medio esatto, il velista lo stima con la bussola.
   const SCARSO_SI = 7, BUONO_SI = 3;
   function scarsoVisibile(){
-    if (mode !== "race" || !R || R.es || riv.on || !shiftSt || R.t < 0 || S.capsized) return null;
-    const me = R.boats[0]; if (me.fin !== null || me.dnf || me.leg < 1) return null;
-    if (!(opt.scarso === "tutte" || (opt.scarso === "regate" && !R.tor))) return null;
+    if (!shiftSt || S.capsized) return null;
+    if (mode === "lesson"){ const st = curStep(); if (!st || !st.scarsoRiga) return null; } /* 1.3.45 (voce 79): nell'esercizio «Vira sullo scarso» della lezione 11 la riga al posto del suggerimento */
+    else {
+      if (mode !== "race" || !R || riv.on || R.t < 0) return null;
+      const me = R.boats[0]; if (me.fin !== null || me.dnf || me.leg < 1) return null;
+      if (R.es){ if (!R.es.def.scarso) return null; } /* 1.3.45: l'esercizio «Vai verso il salto» la mostra sempre */
+      else if (!(opt.scarso === "tutte" || (opt.scarso === "regate" && !R.tor))) return null;
+    }
     const a = norm180(local.twd - S.h); if (Math.abs(a) < 35 || Math.abs(a) > 75) return null;
     return -Math.sign(a) * norm180(local.twd - env.twd);
   }

@@ -28,7 +28,7 @@ async def main():
                   sv.fast(0); window.confirm = () => true;
                   if (dove === 'tema') sv.openItem(['r', 2]); else if (dove === 'scuola') sv.openItem(['r', 0]);
                   else if (dove === 'torneo'){ sv.torApri(); if (document.getElementById('torRit')){ document.getElementById('torRit').click(); sv.torApri(); } document.getElementById('torGo').click(); }
-                  else { const L = sv.LESSONS; let li = -1, si = -1; L.forEach((l, i) => l.steps.forEach((s, j) => { if (li < 0 && s.esercizio && s.esercizio.regata >= 2) { li = i; si = j; } })); sv.apriEsercizio(li, si); }
+                  else { const L = sv.LESSONS; let li = -1, si = -1; L.forEach((l, i) => l.steps.forEach((s, j) => { if (li < 0 && s.esercizio && s.esercizio.regata >= 2 && !s.esercizio.layline) { li = i; si = j; } })); sv.apriEsercizio(li, si); }
                   sv.run(1 / 60, 30); return sv.layVisibile(); }""", [scelta, dove, LUNGO])
                 atteso = (scelta == "regate" and dove == "tema") or (scelta == "tutte" and dove in ("tema", "torneo"))
                 casi.append((scelta, dove, v, atteso))

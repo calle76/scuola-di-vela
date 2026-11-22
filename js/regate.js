@@ -206,6 +206,7 @@
     if (es && es.def.linea){ S.u = es.def.linea[3]; ctl.sheet = 1; info = step(S, ctl, local, 0); } // 1.2.2 (C2): ferma, con la vela tutta lascata che sbatte
     setGusts(rc.gusts, !!rc.tor, !!rc.lungo);
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
+    if (es && es.def.salto){ setShifts("pers"); shiftSt.rate = es.def.salto; shiftSt.drift = 0; shiftDeg = stepShift(shiftSt, 0, Math.random); } /* 1.3.45 (voce 79): esercizio della lezione 11, vento persistente che gira a destra a def.salto gradi al secondo */
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
     R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, r1516: !es && (!!rc.tor || rc.scuola === false), prec: {}, /* r1516 (1.3.10): regole 15 e 16, solo nelle regate di Deriva */ ombra: OMBRA && !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };

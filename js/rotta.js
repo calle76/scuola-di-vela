@@ -168,7 +168,9 @@
   // «regate» (di partenza): non nel torneo; «tutte»: anche nel torneo (decisione di Ale: nel torneo parte spenta ma si può accendere).
   const LAY_LUNGA = 0.5; // 1.2.24 (osservazione 110, Ale: «non è troppo lunga?»): in acqua lunghe metà bolina; nella vista della rotta ottimale restano 1,3 volte
   const layDir = w => { const a = rotLay(w.tws); return [-1, 1].map(k => norm360(w.twd + 180 + k * a)); }; // direzioni dalla boa verso le due layline
-  function layVisibile(){ if (!R || !R.rotta || R.es || riv.on) return false; const me = R.boats[0];
+  function layVisibile(){ if (!R || riv.on) return false; const me = R.boats[0];
+    if (R.es) return !!R.es.def.layline && me.leg <= 1 && me.fin === null; /* 1.3.45 (voce 79): l'esercizio «Vai verso il salto» le disegna sempre */
+    if (!R.rotta) return false;
     return (opt.layline === "tutte" || (opt.layline === "regate" && !R.tor)) && me.leg <= 1 && me.fin === null && !me.dnf; }
   function layDisegna(v){
     if (!layVisibile()) return;

@@ -3,7 +3,9 @@
 #   S2 il numero scritto è quello della lezione 11: regata nei salti di vento, pilota, 10 semi, un campione al secondo; vento sulla barca letto con windAt
 #      nel punto e nell'istante in cui il passo lo legge (dopo lo spostamento delle raffiche, come local), 0 differenze con almeno 500 campioni scritti.
 #      Prima stesura (22 nov): windAt prima del passo, cioè prima di updateGusts: 6 diversi su 2139, tutti di 1° all'arrotondamento (difetto del metro)
-#   S3 compare solo dove deve: 0 volte nelle regate della Scuola, prima del via, fuori dalla bolina, nella lezione 11, nel torneo con «regate»; viste tutte e tre le forme
+#   S3 compare solo dove deve: 0 volte nelle regate della Scuola, prima del via, fuori dalla bolina, nel torneo con «regate»; viste tutte e tre le forme.
+#      Dalla 1.3.45 (voce 79) nella lezione 11 compare nell'esercizio «Vira sullo scarso» anche con l'opzione spenta, e non negli altri passi (S3e;
+#      fino alla 1.3.44 S3e contava 0 scritte, ma la barca restava al traverso e la riga non poteva comparire comunque: il controllo non misurava)
 #   S4 spazio: la scritta non tocca bussola, «N» e scritta del vento (rettangoli misurati nella pagina); il pannello e le Impostazioni: collaudo_pannello.py e collaudo_menu_livelli.py
 # Uso: python tests/collaudo_aiuto_scarso.py   (BROWSER=firefox per Firefox)
 import asyncio, os, pathlib
@@ -34,8 +36,9 @@ S2 = """([seme, gara, opz]) => { const sv = __sv, dt = 1 / 60; sv.fast(0); __see
       out.push({ t: R.t, a: Math.abs(a), leg: me.leg, cap: sv.S.capsized, salti: sv.salti(), scritto: __scritte.length ? __scritte[0].t : null, atteso }); } }
   return out; }"""
 LEZ = """() => { const sv = __sv, dt = 1 / 60; sv.fast(0); __seed(77); const li = LESSONS.findIndex(l => l.steps.some(s => s.title === "Vira sullo scarso"));
-  sv.opt.scarso = "tutte"; sv.openItem(["l", li]); const si = LESSONS[li].steps.findIndex(s => s.title === "Vira sullo scarso"); for (let k = 0; k < si; k++) document.getElementById("lNext").click();
-  __scritte.length = 0; for (let k = 0; k < 3600; k++){ sv.run(dt, 1); if (k % 30 === 0) sv.draw(dt); } return [li, si, __scritte.length, sv.salti()]; }"""
+  sv.opt.scarso = "no"; const conta = titolo => { sv.openItem(["l", li]); const si = LESSONS[li].steps.findIndex(s => s.title === titolo); for (let k = 0; k < si; k++) document.getElementById("lNext").click();
+    __scritte.length = 0; let n = 0; for (let k = 0; k < 3600; k++){ S.h = norm360(local.twd + 50); S.r = 0; sv.run(dt, 1); if (k % 30 === 0){ __scritte.length = 0; sv.draw(dt); n += __scritte.length; } } return [si, n]; };
+  const v = conta("Vira sullo scarso"), r = conta("Riepilogo"); return [li, v[0], v[1], r[1], sv.salti()]; }"""
 # rettangoli: scritta contro bussola (cerchio di fondo r + 4), «N» (a r + 9 dal centro, in qualunque verso) e scritta del vento
 S4 = """() => { const sv = __sv, dt = 1 / 60; sv.fast(0); __seed(1530); sv.opt.scarso = "tutte"; sv.openItem(["r", 2]); const R = sv.R; let pegg = 1e9, n = 0;
   ctx.save(); ctx.font = font(600, 14); const tw = ctx.measureText(windTesto()).width, cx = W - 16 - tw / 2, cy = H - 18 - 16 - 26 - 4; ctx.restore();
@@ -75,7 +78,7 @@ async def main():
         nt = [sum(1 for c in await corsa(S2, [seme, "tor", o]) if c["scritto"]) for seme in (1536, 1537) for o in ("regate", "tutte")]
         chk(nt[0] == 0 and nt[2] == 0 and nt[1] > 0 and nt[3] > 0, f"S3d torneo: con «regate» {nt[0]} e {nt[2]} scritte, con «anche torneo» {nt[1]} e {nt[3]}")
         ctx, pg = await pagina(); r = await pg.evaluate(LEZ); await ctx.close()
-        chk(r[0] >= 0 and r[1] >= 0 and r[3] and r[2] == 0, f"S3e lezione 11, passo «Vira sullo scarso» (lezione {r[0]}, passo {r[1]}, salti {r[3]}): {r[2]} scritte in 60 s")
+        chk(r[0] >= 0 and r[1] >= 0 and r[4] and r[2] > 50 and r[3] == 0, f"S3e lezione 11 (opzione spenta, barca tenuta di bolina, 60 s): «Vira sullo scarso» {r[2]} scritte su 120 disegni (dalla 1.3.45 ci deve essere), «Riepilogo» {r[3]} (0)")
         # ---- S4 ----
         ctx, pg = await pagina(); r = await pg.evaluate(S4); await ctx.close()
         chk(r[0] >= 50 and r[1] >= 2, f"S4 spazio: {r[0]} scritte misurate, margine minimo da «N», bussola e vento {r[1]:.1f} px (soglia 2)")
