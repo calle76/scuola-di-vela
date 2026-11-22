@@ -1,0 +1,241 @@
+<title>Carta d'identità della barca</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Archivo:wght@600;700&display=swap">
+<style>
+/* Impaginazione: un quaderno di prove in vasca. Colonna di lettura stretta, tabelle e grafici a tutta larghezza, fonti a margine di ogni misura. */
+:root {
+  --bg: #f6f8f9; --panel: #ffffff; --fg: #12202a; --fg2: #46555f; --muted: #6b7a84; --rule: #d7dee3; --grid: #e6ebee;
+  --gioco: #2a78d6; --fonte: #eb6834; --dopo: #1baf7a; --banda: #eaf1f9;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif; --body: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f171d; --panel: #16212a; --fg: #e8eef2; --fg2: #b7c3cb; --muted: #8796a0; --rule: #2a3843; --grid: #22303a;
+  --gioco: #3987e5; --fonte: #d95926; --dopo: #199e70; --banda: #1a2a38; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0f171d; --panel: #16212a; --fg: #e8eef2; --fg2: #b7c3cb; --muted: #8796a0; --rule: #2a3843; --grid: #22303a;
+  --gioco: #3987e5; --fonte: #d95926; --dopo: #199e70; --banda: #1a2a38; color-scheme: dark; }
+body { background: var(--bg); color: var(--fg); font: 15px/1.6 var(--body); }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 32px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 40px; }
+header { display: grid; gap: 10px; border-bottom: 2px solid var(--fg); padding-bottom: 18px; }
+.eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font: 700 clamp(28px, 5vw, 44px)/1.1 var(--display); margin: 0; text-wrap: balance; }
+h2 { font: 600 22px/1.25 var(--display); margin: 0; text-wrap: balance; }
+h3 { font: 600 16px/1.3 var(--body); margin: 0; }
+p { margin: 0; max-width: 68ch; color: var(--fg2); }
+p strong, li strong { color: var(--fg); }
+.lead { font-size: 17px; color: var(--fg); }
+section { display: grid; gap: 16px; }
+.specs { display: flex; flex-wrap: wrap; gap: 8px 22px; font: 400 13px/1.5 var(--mono); color: var(--fg2); }
+.specs b { color: var(--fg); font-weight: 500; }
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 18px; display: grid; gap: 12px; min-width: 0; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.fonte { font: 400 12.5px/1.5 var(--mono); color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--fg2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 3px; border-radius: 2px; display: inline-block; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font: 500 12px/1.4 var(--mono); padding: 5px 8px; border-radius: 4px; white-space: nowrap; transform: translate(-50%, -120%); }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; font: 400 13px/1.45 var(--body); width: 100%; font-variant-numeric: tabular-nums; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--grid); text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font: 500 11.5px/1.3 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--rule); }
+td.txt { white-space: normal; text-align: left; min-width: 220px; }
+.pill { display: inline-block; font: 500 11px/1 var(--mono); padding: 4px 7px; border-radius: 999px; border: 1px solid var(--rule); color: var(--fg2); }
+.pill.ok { border-color: var(--dopo); color: var(--fg); }
+.pill.no { border-color: var(--fonte); color: var(--fg); }
+ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--fg2); max-width: 70ch; }
+a { color: var(--gioco); }
+a:focus-visible { outline: 2px solid var(--gioco); outline-offset: 2px; }
+footer { border-top: 1px solid var(--rule); padding-top: 16px; }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Scuola di vela · studio della barca · aggiornato al 23 novembre 2026 (gioco 1.3.44)</div>
+  <h1>Carta d'identità della barca</h1>
+  <p class="lead">Che cosa fa la barca del gioco, misurata sul suo stesso motore, e quanto somiglia a una deriva vera. Dove esiste una misura pubblicata, la si mette accanto; dove non c'è, il numero è solo riportato.</p>
+  <div class="specs"><span>lunghezza <b>4,2 m</b></span><span>vela <b>7,0 m²</b></span><span>massa con il timoniere <b>135 kg</b></span><span>timoniere <b>75 kg</b></span><span>misure di una deriva singola olimpica, senza il nome</span></div>
+</header>
+
+<section>
+  <h2>Come si è misurato</h2>
+  <p>Ogni numero viene da uno script che usa il motore del gioco senza pagina e senza numeri a caso: vento costante, acqua piatta, un timoniere automatico che tiene la rotta. Il gioco non ha onde né corrente. <strong>L</strong> vuol dire una lunghezza di barca, 4,2 m. Le fonti sono indicate col loro codice (F17, F109…) e sono elencate in fondo.</p>
+</section>
+
+<section>
+  <h2>Di bolina: quanto si guadagna verso il vento</h2>
+  <p>La velocità utile di bolina (VMG) è quanto la barca sale verso il vento. Il gioco è vicino alla previsione di Day col vento medio e forte; <strong>con poco vento è più lento del 15-20%</strong>. È un limite noto dal 17 ottobre: due ricerche non hanno trovato la causa, e una terza fonte (F109, una barca vera misurata in acqua) lo conferma.</p>
+  <div class="panel">
+    <div class="legend"><span><i class="sw" style="background:var(--gioco)"></i>gioco</span><span><i class="dot" style="background:var(--fonte)"></i>Day 2017, previsione dalla vasca (F17)</span></div>
+    <div class="chart" id="c-vmg"></div>
+    <div class="fonte">Asse orizzontale: vento in nodi. Verticale: VMG di bolina in nodi. Gioco: script dello studio, parte A. F17: fig. 8, letta dal grafico.</div>
+  </div>
+  <div class="panel">
+    <h3>Velocità della barca per angolo dal vento (nodi)</h3>
+    <div class="scroll"><table id="t-polare"></table></div>
+    <div class="fonte">Scotta migliore, prua ferma. Sopra i 9 nodi di velocità è un'estrapolazione: la vasca (F16) misura fino a 9 e il gioco non ha la planata.</div>
+  </div>
+</section>
+
+<section>
+  <h2>La virata</h2>
+  <p>Con la virata da tastiera (barra a fondo, poi rotta sulla nuova bolina) il gioco perde circa 3 m con quasi tutti i venti. La misura vera più affidabile trovata (F109, un Laser con i sensori) dice 0,67 m con 3,2 nodi e 4,39 m con 11. Per confrontare la barca e non la mano di chi guida, il gioco è stato fatto girare anche con la prua che gira <strong>come nelle virate misurate</strong>.</p>
+  <div class="panel">
+    <div class="legend"><span><i class="sw" style="background:var(--gioco)"></i>gioco, virata da tastiera</span><span><i class="dot" style="background:var(--dopo)"></i>gioco, prua girata come in F109</span><span><i class="dot" style="background:var(--fonte)"></i>F109, Laser misurato in acqua</span></div>
+    <div class="chart" id="c-virata"></div>
+    <div class="fonte">Metri persi verso il vento rispetto a chi va dritto. Gioco da tastiera: parte B dello studio (60 s). Prua imposta e F109: finestra da −15 a +15 s attorno al vento in prua.</div>
+  </div>
+  <p><strong>Cosa vuol dire.</strong> Col vento medio la barca del gioco perde un po' meno di quella vera. Con poco vento ne perde circa 1 m in più: la barca vera, orzando, porta la sua velocità quasi fino al vento in prua, quella del gioco rallenta prima. Una parte è il limite noto della bolina lenta con poco vento.</p>
+  <div class="two">
+    <div class="panel"><h3>Velocità durante la virata, 3,2 nodi</h3><div class="chart" id="c-curva32"></div></div>
+    <div class="panel"><h3>Velocità durante la virata, 11 nodi</h3><div class="chart" id="c-curva11"></div></div>
+  </div>
+  <div class="legend"><span><i class="sw" style="background:var(--gioco)"></i>gioco, prua girata come in F109</span><span><i class="sw" style="background:var(--fonte)"></i>F109, virata piatta (curva media letta dalla fig. 4.12)</span></div>
+  <div class="fonte">Asse orizzontale: secondi dal vento in prua. Verticale: velocità in m/s.</div>
+</section>
+
+<section>
+  <h2>La virata rollata: provata, non nel gioco</h2>
+  <p>Nella virata rollata il timoniere fa sbandare molto la barca mentre gira e poi la raddrizza di colpo: la vela spazza l'aria e spinge. Secondo F109, con poco vento rende la virata più conveniente che andare dritti. Sono state provate tre versioni nel motore; nessuna è entrata, perché ogni volta almeno tre dei nove criteri scritti prima non passavano.</p>
+  <div class="panel"><div class="scroll"><table>
+    <thead><tr><th>Prova</th><th>Idea</th><th>Metri recuperati sulla virata normale, poco vento</th><th>Esito</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="txt">Barca sbandata a 20° e raddrizzata in 0,8 s; vento in più sulla vela mentre si raddrizza</td><td>0,0-0,1 (4-6 nodi)</td><td><span class="pill no">no</span></td></tr>
+      <tr><td>2</td><td class="txt">Angoli e tempi di F109 (fino a 55-60°, raddrizzata in circa 1,2 s)</td><td>0,9 (3,2 nodi)</td><td><span class="pill no">no</span></td></tr>
+      <tr><td>3</td><td class="txt">Come la 2, più la spinta dei vortici, tenuta entro la regola 42.3(b): dopo la virata la barca non va più veloce di prima</td><td>1,7 (3,2 nodi)</td><td><span class="pill no">3 criteri su 9 no</span></td></tr>
+      <tr><td>F109</td><td class="txt">Laser in acqua, rollata contro virata piatta (per l'autore, oltre la regola 42)</td><td>3,0 (3,2 nodi)</td><td>misura</td></tr>
+    </tbody></table></div>
+    <div class="fonte">Le patch delle tre prove sono pronte nella cartella sperimentale del progetto.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Le raffiche contro il vento vero</h2>
+  <p>Il fattore di raffica è la raffica più forte di 5 secondi divisa per il vento medio nello stesso intervallo, come lo misurano le stazioni meteo. Il gioco aveva raffiche tipiche come in mare ma quelle rare (l'1% più forte) troppo forti. <strong>Dalla 1.3.44</strong>, nelle regate lunghe le raffiche che si sovrappongono non si sommano più per intero.</p>
+  <div class="panel">
+    <div class="legend"><span><i class="dot" style="background:var(--gioco)"></i>gioco prima (1.3.43)</span><span><i class="dot" style="background:var(--dopo)"></i>gioco dopo (1.3.44)</span><span><i class="dot" style="background:var(--fonte)"></i>stazioni NOAA (F105)</span></div>
+    <div class="chart" id="c-raffiche"></div>
+    <div class="fonte">Per ogni riga: il trattino corto è la mediana, il cerchio il 99° percentile. Vento medio fra 10 e 14 nodi. Gioco: 30 regate lunghe del torneo, misurate nel browser. Stazioni: dati del 2023, anemometri a 5-30 m d'altezza.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Altre misure, senza fonte con cui confrontarle</h2>
+  <div class="panel"><div class="scroll"><table>
+    <thead><tr><th>Misura</th><th>6 nodi</th><th>10 nodi</th><th>14 nodi</th></tr></thead>
+    <tbody>
+      <tr><td>Partenza da ferma a 60°: al 50% / 90% della velocità</td><td>4,2 / 10,4 s</td><td>2,2 / 5,4 s</td><td>1,6 / 6,6 s</td></tr>
+      <tr><td>Metri fatti nei primi 10 s</td><td>10 m</td><td>20 m</td><td>26 m</td></tr>
+      <tr><td>Frenare a 60° con la scotta lasca: sotto 1 nodo</td><td>16,7 s, 15 m</td><td>17,2 s, 18 m</td><td>16,1 s, 18 m</td></tr>
+      <tr><td>Giro di penalità (720°), sola freccia / Maiusc</td><td>29 / 22 s</td><td>20 / 15 s</td><td>17 / 12 s</td></tr>
+      <tr><td>Diametro del giro, sola freccia / Maiusc</td><td>6,8 / 5,2 m</td><td>6,8 / 5,3 m</td><td>7,0 / 5,6 m</td></tr>
+      <tr><td>Prua al vento da ferma: arretra dopo / velocità a 20 s</td><td>1,7 s / −0,8 nodi</td><td>0,5 s / −2,0 nodi</td><td>0,3 s / −2,8 nodi</td></tr>
+      <tr><td>Abbattuta con il boma oltre 45° (strambata violenta)</td><td>persi 2,1 m</td><td>persi 2,9 m</td><td>scuffia (da 12 nodi)</td></tr>
+    </tbody></table></div>
+    <div class="fonte">Raffica improvvisa che fa scuffiare senza reagire (bolina, scotta e prua ferme, 8 s): 19-20 nodi, qualunque sia il vento di prima. L'abbattuta fatta bene non costa niente nel motore: tutto il costo è nella regola della strambata violenta.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Limiti dichiarati</h2>
+  <ul>
+    <li><strong>Bolina lenta con poco vento</strong>: −15/−20% contro F17, −16% di velocità contro F109 con 3,2 nodi. Causa non trovata.</li>
+    <li><strong>Virata con poco vento</strong>: circa 1 m più cara di quella misurata; niente virata rollata.</li>
+    <li><strong>Bolina sopra i 12 nodi</strong>: il gioco continua a crescere (3,4 → 4,1 nodi di VMG da 12 a 20), la previsione di Day resta quasi ferma.</li>
+    <li><strong>Vento forte</strong>: sopra 16-18 nodi la regola di scotta insegnata non basta e la virata con la sola freccia non riesce. Le regate del gioco sono a 10-12 nodi.</li>
+    <li>Niente onde, corrente né planata; timoniere che si sporge da solo.</li>
+  </ul>
+</section>
+
+<footer class="panel">
+  <h3>Fonti</h3>
+  <ul class="fonte">
+    <li>F16, F17: A. H. Day, «Performance prediction for sailing dinghies», Ocean Engineering 136, 2017 (CC BY-NC-ND), <a href="https://strathprints.strath.ac.uk/59980/">strathprints.strath.ac.uk/59980</a></li>
+    <li>F105: NOAA National Data Buoy Center, dati 2023 delle stazioni BUZM3, DBLN6 e 44005 (pubblico dominio), <a href="https://www.ndbc.noaa.gov/">ndbc.noaa.gov</a></li>
+    <li>F106: D. Dellenbaugh, Speed &amp; Smarts n. 155, «Tacking» (stima di un allenatore, solo confronto)</li>
+    <li>F109: R. R. Schutt, Unsteady Aerodynamics of Sailing Maneuvers and Kinetic Techniques, tesi, Cornell University, 2017 (CC BY 4.0), <a href="https://doi.org/10.7298/X4VT1Q28">doi.org/10.7298/X4VT1Q28</a>. Figure lette a occhio; un velista, un giorno per vento.</li>
+    <li>Regolamento di regata World Sailing 2025-2028, regola 42.3(b).</li>
+  </ul>
+</footer>
+</div>
+
+<script>
+(() => {
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const fmt = (v, d = 2) => v.toFixed(d).replace(".", ",");
+  /* grafico a linee e punti, una sola scala per asse; serie: {nome, colore, punti:[[x,y]], linea, punti visibili} */
+  function grafico(id, o){
+    const el = document.getElementById(id), W = 640, H = o.h || 300, m = { l: 48, r: 16, t: 12, b: 36 };
+    const sx = x => m.l + (x - o.x[0]) / (o.x[1] - o.x[0]) * (W - m.l - m.r), sy = y => H - m.b - (y - o.y[0]) / (o.y[1] - o.y[0]) * (H - m.t - m.b);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.aria}">`;
+    for (const t of o.yt) s += `<line x1="${m.l}" x2="${W - m.r}" y1="${sy(t)}" y2="${sy(t)}" stroke="var(--grid)" stroke-width="1"/><text x="${m.l - 8}" y="${sy(t) + 4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--mono)">${String(t).replace(".", ",")}</text>`;
+    for (const t of o.xt) s += `<text x="${sx(t)}" y="${H - m.b + 18}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--mono)">${String(t).replace(".", ",")}</text>`;
+    s += `<line x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}" stroke="var(--rule)"/>`;
+    if (o.xlab) s += `<text x="${W - m.r}" y="${H - 4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--mono)">${o.xlab}</text>`;
+    const hit = [];
+    for (const se of o.serie){
+      if (se.linea) s += `<path d="${se.punti.map((p, i) => (i ? "L" : "M") + sx(p[0]).toFixed(1) + " " + sy(p[1]).toFixed(1)).join(" ")}" fill="none" stroke="var(${se.colore})" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+      for (const p of se.punti){ if (se.mostra !== false) s += `<circle cx="${sx(p[0])}" cy="${sy(p[1])}" r="${se.linea ? 3.5 : 5.5}" fill="var(${se.colore})" stroke="var(--panel)" stroke-width="2"/>`;
+        hit.push({ x: sx(p[0]), y: sy(p[1]), t: `${se.nome}: ${o.tx(p[0])} → ${o.ty(p[1])}` }); }
+    }
+    s += `</svg><div class="tip" hidden></div>`;
+    el.innerHTML = s;
+    const svg = el.querySelector("svg"), tip = el.querySelector(".tip");
+    svg.addEventListener("pointermove", e => { const r = svg.getBoundingClientRect(), k = W / r.width, px = (e.clientX - r.left) * k, py = (e.clientY - r.top) * k;
+      let b = null, bd = 30 * 30; for (const h of hit){ const d = (h.x - px) ** 2 + (h.y - py) ** 2; if (d < bd){ bd = d; b = h; } }
+      if (!b){ tip.hidden = true; return; } tip.hidden = false; tip.textContent = b.t; tip.style.left = (b.x / k) + "px"; tip.style.top = (b.y / k) + "px"; });
+    svg.addEventListener("pointerleave", () => tip.hidden = true);
+  }
+  grafico("c-vmg", { aria: "VMG di bolina del gioco e di Day 2017", x: [4, 20], y: [1, 4.5], xt: [4, 6, 8, 10, 12, 14, 16, 18, 20], yt: [1, 2, 3, 4], xlab: "vento, nodi",
+    tx: v => v + " nodi", ty: v => fmt(v) + " nodi",
+    serie: [{ nome: "gioco", colore: "--gioco", linea: true, punti: [[4, 1.48], [6, 2.13], [8, 2.66], [10, 3.08], [12, 3.42], [14, 3.70], [16, 3.92], [20, 4.13]] },
+            { nome: "Day (F17)", colore: "--fonte", punti: [[6, 2.66], [10, 3.62], [15, 3.80]] }] });
+  grafico("c-virata", { aria: "Metri persi in virata, gioco e F109", x: [2, 17], y: [0, 6], xt: [3.2, 6, 8, 10, 11, 12, 14, 16], yt: [0, 1, 2, 3, 4, 5, 6], xlab: "vento, nodi",
+    tx: v => fmt(v, 1) + " nodi", ty: v => fmt(v) + " m persi",
+    serie: [{ nome: "gioco, tastiera", colore: "--gioco", linea: true, punti: [[4, 2.9], [6, 2.9], [8, 2.8], [10, 2.8], [12, 3.2], [14, 3.7], [16, 4.8]] },
+            { nome: "gioco, prua come F109", colore: "--dopo", punti: [[3.2, 1.74], [11, 3.35]] },
+            { nome: "F109", colore: "--fonte", punti: [[3.2, 0.67], [11, 4.39]] }] });
+  const curva = (id, gioco, vera, ymax, aria) => grafico(id, { aria, h: 240, x: [-5, 15], y: [0, ymax], xt: [-5, 0, 5, 10, 15], yt: ymax > 2 ? [0, 1, 2, 3] : [0, 0.5, 1], xlab: "s dal vento in prua",
+    tx: v => (v > 0 ? "+" : "") + fmt(v, 1) + " s", ty: v => fmt(v) + " m/s",
+    serie: [{ nome: "gioco", colore: "--gioco", linea: true, punti: gioco }, { nome: "F109", colore: "--fonte", linea: true, punti: vera }] });
+  const T = [-5, -2.5, 0, 2.5, 5, 10, 15], z = (a) => T.map((t, i) => [t, a[i]]);
+  curva("c-curva32", z([0.88, 0.80, 0.65, 0.53, 0.58, 0.70, 0.78]), z([1.05, 1.02, 0.95, 0.76, 0.75, 0.85, 0.88]), 1.2, "Velocità nella virata con 3,2 nodi");
+  curva("c-curva11", z([2.47, 2.47, 1.50, 1.45, 2.06, 2.43, 2.47]), z([2.35, 2.33, 2.0, 1.25, 1.75, 2.1, 2.2]), 3, "Velocità nella virata con 11 nodi");
+
+  /* raffiche: una riga per serie, mediana (trattino) e 99° (cerchio) sulla stessa scala */
+  (() => {
+    const el = document.getElementById("c-raffiche"), R = [
+      ["2 minuti", "gioco prima", "--gioco", 1.14, 1.40], ["2 minuti", "gioco dopo", "--dopo", 1.12, 1.28], ["2 minuti", "baia BUZM3", "--fonte", 1.08, 1.27], ["2 minuti", "lago DBLN6", "--fonte", 1.15, 1.85],
+      ["8 minuti", "gioco prima", "--gioco", 1.25, 1.59], ["8 minuti", "gioco dopo", "--dopo", 1.22, 1.35], ["8 minuti", "boa 44005", "--fonte", 1.22, 1.49]];
+    const W = 640, rh = 30, top = 10, H = top + R.length * rh + 46, l = 170, r = 20, x0 = 1, x1 = 1.9, sx = v => l + (v - x0) / (x1 - x0) * (W - l - r);
+    let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Fattore di raffica, gioco e stazioni NOAA">`;
+    for (const t of [1, 1.2, 1.4, 1.6, 1.8]) s += `<line x1="${sx(t)}" x2="${sx(t)}" y1="${top}" y2="${top + R.length * rh}" stroke="var(--grid)"/><text x="${sx(t)}" y="${top + R.length * rh + 18}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--mono)">${fmt(t, 1)}</text>`;
+    s += `<text x="${W - r}" y="${H - 6}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--mono)">raffica / vento medio</text>`;
+    const hit = [];
+    R.forEach(([g, n, c, med, p99], i) => { const y = top + i * rh + rh / 2;
+      if (i === 4) s += `<line x1="0" x2="${W}" y1="${y - rh / 2}" y2="${y - rh / 2}" stroke="var(--rule)"/>`;
+      s += `<text x="0" y="${y + 4}" font-size="12" fill="var(--fg2)" font-family="var(--body)">${g} · ${n}</text>`;
+      s += `<line x1="${sx(med)}" x2="${sx(p99)}" y1="${y}" y2="${y}" stroke="var(${c})" stroke-width="2"/><line x1="${sx(med)}" x2="${sx(med)}" y1="${y - 7}" y2="${y + 7}" stroke="var(${c})" stroke-width="3" stroke-linecap="round"/>`;
+      s += `<circle cx="${sx(p99)}" cy="${y}" r="5.5" fill="var(${c})" stroke="var(--panel)" stroke-width="2"/>`;
+      s += `<text x="${sx(p99) + 10}" y="${y + 4}" font-size="11" fill="var(--fg2)" font-family="var(--mono)">${fmt(p99)}</text>`;
+      hit.push({ x: sx(p99), y, t: `${g}, ${n}: mediana ${fmt(med)}, 99° ${fmt(p99)}` }, { x: sx(med), y, t: `${g}, ${n}: mediana ${fmt(med)}` }); });
+    s += `</svg><div class="tip" hidden></div>`; el.innerHTML = s;
+    const svg = el.querySelector("svg"), tip = el.querySelector(".tip");
+    svg.addEventListener("pointermove", e => { const b0 = svg.getBoundingClientRect(), k = W / b0.width, px = (e.clientX - b0.left) * k, py = (e.clientY - b0.top) * k;
+      let b = null, bd = 26 * 26; for (const h of hit){ const d = (h.x - px) ** 2 + (h.y - py) ** 2; if (d < bd){ bd = d; b = h; } }
+      if (!b){ tip.hidden = true; return; } tip.hidden = false; tip.textContent = b.t; tip.style.left = (b.x / k) + "px"; tip.style.top = (b.y / k) + "px"; });
+    svg.addEventListener("pointerleave", () => tip.hidden = true);
+  })();
+
+  /* tabella della polare */
+  const ang = [35, 40, 45, 50, 60, 90, 110, 135, 150, 180], P = {
+    4: [1.1, 1.6, 2.2, 2.4, 2.7, 3.1, 2.9, 2.3, 1.9, 1.7], 6: [1.7, 2.4, 3.2, 3.4, 3.9, 4.2, 4.0, 3.4, 2.8, 2.6], 8: [2.2, 3.2, 4.0, 4.3, 4.7, 5.1, 4.9, 4.3, 3.7, 3.4],
+    10: [2.7, 3.9, 4.6, 4.9, 5.4, 6.0, 5.7, 4.9, 4.4, 4.1], 12: [3.2, 4.5, 5.1, 5.5, 6.3, 7.2, 6.7, 5.6, 5.0, 4.7], 14: [3.6, 5.0, 5.5, 6.0, 6.9, 8.9, 8.2, 6.4, 5.7, 5.1],
+    16: [4.1, 5.4, 5.8, 6.3, 7.3, 10.1, 9.6, 7.5, 6.4, 5.6], 20: [4.8, 5.6, 6.1, 6.6, 7.9, 11.0, 12.0, 9.8, 8.3, 6.0] };
+  document.getElementById("t-polare").innerHTML = `<thead><tr><th>vento</th>${ang.map(a => `<th>${a}°</th>`).join("")}</tr></thead><tbody>` +
+    Object.entries(P).map(([k, r]) => `<tr><td>${k} nodi</td>${r.map(v => `<td>${fmt(v, 1)}</td>`).join("")}</tr>`).join("") + "</tbody>";
+})();
+</script>
