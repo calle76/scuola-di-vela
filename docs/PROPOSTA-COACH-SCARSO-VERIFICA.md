@@ -40,6 +40,16 @@ Semi 1101-1120 per guardare, 1121-1140 per confermare (regola dei semi).
 - La rotta ottimale non tiene conto delle altre barche: un consiglio giusto per la tattica può non coincidere con lei (lo si dice nei risultati).
 - Se K1 o K2 falliscono, la correzione (per esempio aspettare più secondi, o non parlare dentro una raffica) va proposta a parte.
 
-## Esito
+## Esito della misura (22 nov, via di Ale; `tests/misura_coach_scarso.py`, Chromium, 1.3.40)
 
-*(da scrivere dopo il via)*
+| | semi 1101-1120 (60 regate) | semi 1121-1140 (60 regate) |
+| --- | --- | --- |
+| consigli | 147 | 158 |
+| K1 scarso dura 15 s o più (soglia 75%) | 84% | 90% |
+| K2 rotta ottimale vira entro 30 s (soglia 60%) | 48% | 38% |
+| K3 consigli con salto persistente / non seguiti | 41 / 20 | 61 / 34 |
+| in raffica al momento del consiglio | 78 | 89 |
+
+**Moneta** (aggiunta dopo la prima misura, su domanda di Ale, solo riportata): secondi di bolina lontano dalla boa, rotta ottimale che vira nei 30 s dopo: qualunque 48% e 45%; con lo scarso 42% e 39%; col buono 41% e 36%. **Con questo metro il consiglio non vale più di un momento a caso.** K1 passa, K2 non passa, K4 passa (305). Le due misure danno gli stessi consigli (147 e 158): ripetibile.
+
+**Limite del metro (detto prima di decidere):** la rotta ottimale parte dal taglio della linea del giocatore e va più veloce: nello stesso istante è altrove, dove le raffiche cambiano la direzione del vento. **Metro migliore, proposto ad Ale:** dal punto e dall'istante della barca, «la rotta ottimale per la prossima boa comincia con una virata entro 30 s?», per i consigli e per 10 momenti a caso per regata (la moneta). Poi: se il Coach non batte la moneta, si toglie «conviene virare» e resta il fatto («il vento ti è scarso di N°»).

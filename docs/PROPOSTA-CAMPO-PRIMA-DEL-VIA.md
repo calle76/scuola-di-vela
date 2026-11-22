@@ -39,6 +39,36 @@ Chromium e Firefox, uno per volta col freno.
 
 Via ad A, a B o a tutte e due.
 
+## Riscrittura del 22 novembre, sera: «tutto il campo, come nella realtà»
+
+Ale riporta che Lucio l'ha ribadito più volte: vuole vedere **tutto** il campo, perché in mare la boa e la linea si vedono. Quindi non solo la boa prima del via: il campo intero, quando lo si vuole. Tre modi, dal più semplice:
+
+| | Come | Pro | Contro |
+| --- | --- | --- | --- |
+| **A2** | **Q tenuto mostra sempre tutto il campo** (linea, boe, arrivo, barche), prima e dopo il via. Oggi dopo il via Q mostra solo l'obiettivo | un tasto che c'è già, niente spazio in più sul mare | finché tieni Q le barche sono piccole; non si vede mentre si guida |
+| **C** | **Minimappa fissa** in un angolo del mare: campo intero, boe, linea, tutte le barche, la tua evidenziata; si spegne dalle impostazioni (principio 3) | si vede sempre, come in mare; utile per la tattica | spazio: a 1360x650 il mare è 970x650 e gli angoli in alto sono occupati (bandiere, Coach, vento); va misurato dove sta senza coprire niente |
+| B | la freccia piccola verso la boa prima del via (vedi sopra) | | con A2 o C diventa quasi inutile |
+
+**Consiglio:** A2 subito (è piccolo e risponde a «prima della partenza»), poi C se Lucio la vuole sempre a schermo. Per C i criteri in più: nessuna sovrapposizione con i riquadri (32 casi con controprova, come la freccia), 0 px di eccesso a 1360x650, posizioni delle barche nella minimappa entro 2 px dal calcolo del collaudo, regata identica al bit accesa e spenta.
+
+## Via di Ale (22 nov, sera): A2, niente minimappa
+
+«La mappa piccola a lato no.» Si fa A2: **in regata, Q tenuto inquadra tutto il campo** (linea di partenza, boe, linea d'arrivo, tutte le barche), prima e dopo il via. Nelle prove e negli esercizi Q resta com'è (verso l'obiettivo). Al rilascio di Q tutto torna come prima.
+
+**Costante nuova (ipotesi nostra):** con Q in regata la vista può allontanarsi fino a `ZQ_MIN = 0,02` (oggi il limite è `ZMIN = 0,1`: a 0,1 un campo di 560 m non sta nei 650 px). Margine come oggi, `VIEW_M` 50 px.
+
+**Criteri della A2 (soglie nostre, scritte prima del codice):**
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| Q1 | Tutto dentro | 20 regate lunghe e 20 corte, Q tenuto 2 s a −120 s, +30 s e a metà regata: linea, boe e tutte le barche dentro lo schermo con almeno 20 px di margine, vista a prua e vista a nord; 0 casi fuori su almeno 240 controlli |
+| Q2 | Torna com'era | 1 s dopo il rilascio di Q, zoom e spostamento a meno dell'1% da quelli di prima |
+| Q3 | Prove come prima | nelle prove e negli esercizi Q dà la stessa vista della 1.3.40 (20 casi, a meno dell'1%) |
+| Q4 | La regata non cambia | 20 regate identiche al bit con Q tenuto a lungo e senza Q |
+| Q5 | Come un giocatore | pagina senza `#collaudo`, regata lunga, Q tenuto prima del via: boa e linea dentro lo schermo, 0 errori |
+
+Chromium e Firefox, uno per volta col freno. Da sapere: i suoni calano con lo zoom (1.3.33), quindi tenendo Q si sentono più piano.
+
 ## Esito
 
-*(da scrivere dopo il via)*
+*(da scrivere dopo il codice)*
