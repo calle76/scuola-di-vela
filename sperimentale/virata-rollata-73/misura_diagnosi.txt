@@ -1,0 +1,9 @@
+4 senza guadagno su senza X: 0.00 L minima 1.28 giù null su null
+4 giusto guadagno su senza X: -0.00 L minima 1.19 giù 2.64 su 5.90
+4 solo guadagno su senza X: 0.12 L minima 1.28 giù 2.64 su 5.09
+6 senza guadagno su senza X: 0.00 L minima 1.86 giù null su null
+6 giusto guadagno su senza X: 0.00 L minima 1.78 giù 1.91 su 4.22
+6 solo guadagno su senza X: 0.12 L minima 1.86 giù 1.91 su 3.51
+12 senza guadagno su senza X: 0.00 L minima 2.79 giù null su null
+12 giusto guadagno su senza X: 0.22 L minima 2.79 giù 1.29 su 2.29
+12 solo guadagno su senza X: 0.24 L minima 2.79 giù 1.29 su 2.23

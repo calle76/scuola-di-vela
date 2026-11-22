@@ -1,0 +1,18 @@
+
+== B. VIRATA (da 45° a 45° sulle altre mure; manovra a 5 s, confronto con 60 s dritti; distanza utile verso il vento)
+vento | timoniere: durata (prua a 5° dalla nuova rotta), minima % e dopo quanti s, ritorno al 90%, persi m / lunghezze / s, sbandamento max, scuffia
+   4  | VMG 1.45 nodi | pulito: 7.2 s, minima 55% a 6.3 s, 90% a 18.5 s, persi 2.9 m = 0.69 L = 3.9 s, sbanda 6° | tastiera: 7.1 s, minima 55% a 6.2 s, 90% a 18.4 s, persi 2.9 m = 0.68 L = 3.8 s, sbanda 6°
+   6  | VMG 2.10 nodi | pulito: 5.0 s, minima 54% a 4.3 s, 90% a 12.7 s, persi 2.9 m = 0.70 L = 2.7 s, sbanda 9° | tastiera: 4.9 s, minima 54% a 4.3 s, 90% a 12.7 s, persi 2.9 m = 0.69 L = 2.7 s, sbanda 9°
+   8  | VMG 2.63 nodi | pulito: 4.1 s, minima 53% a 3.5 s, 90% a 9.9 s, persi 2.8 m = 0.68 L = 2.1 s, sbanda 12° | tastiera: 4.0 s, minima 53% a 3.4 s, 90% a 9.8 s, persi 2.8 m = 0.67 L = 2.1 s, sbanda 12°
+  10  | VMG 3.06 nodi | pulito: 3.6 s, minima 51% a 3.0 s, 90% a 8.5 s, persi 2.9 m = 0.69 L = 1.8 s, sbanda 17° | tastiera: 3.5 s, minima 51% a 3.0 s, 90% a 8.4 s, persi 2.8 m = 0.68 L = 1.8 s, sbanda 17°
+  12  | VMG 3.40 nodi | pulito: 3.3 s, minima 48% a 2.7 s, 90% a 8.1 s, persi 3.2 m = 0.77 L = 1.8 s, sbanda 22° | tastiera: 3.2 s, minima 48% a 2.7 s, 90% a 8.1 s, persi 3.2 m = 0.76 L = 1.8 s, sbanda 22°
+  14  | VMG 3.64 nodi | pulito: 3.3 s, minima 45% a 2.5 s, 90% a 8.4 s, persi 3.8 m = 0.90 L = 2.0 s, sbanda 28° | tastiera: 3.2 s, minima 45% a 2.5 s, 90% a 8.4 s, persi 3.7 m = 0.88 L = 2.0 s, sbanda 28°
+  16  | VMG 3.45 nodi | pulito: 6.5 s, minima 36% a 2.8 s, 90% a 8.6 s, persi 4.9 m = 1.16 L = 2.8 s, sbanda 33° | tastiera: 6.3 s, minima 36% a 2.8 s, 90% a 8.5 s, persi 4.8 m = 1.13 L = 2.7 s, sbanda 33°
+  18  | VMG 3.17 nodi | pulito: — s, minima 17% a 3.5 s, 90% a — s, persi 80.2 m = 19.10 L = 49.2 s, sbanda 35° | tastiera: — s, minima 18% a 3.5 s, 90% a — s, persi 80.2 m = 19.09 L = 49.2 s, sbanda 36°
+  20  | VMG -0.06 nodi | pulito: — s, minima -14% a 2.6 s, 90% a — s, persi 11.3 m = 2.68 L = -349.6 s, sbanda 25° | tastiera: — s, minima -14% a 2.6 s, 90% a — s, persi 11.3 m = 2.68 L = -349.6 s, sbanda 25°
+
+== CRITERI (docs/STUDIO-BARCA.md)
+S1 virata timoniere pulito 10/12/14 nodi: persi 2.9 / 3.2 / 3.8 m (soglia ≤ 4.2 m): PASSA
+S2 contro 0,5 lunghezze (2.1 m) di F106: 1.4 volte / 1.5 volte / 1.8 volte
+S3 gesto da tastiera 10/12/14 nodi: persi 2.8 / 3.2 / 3.7 m (segnale se > 8.4 m): sotto
+S6 casi per parte: {"B":18}
