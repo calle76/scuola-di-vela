@@ -115,7 +115,7 @@
   // Ipotesi nostre: 60% della mezza larghezza e della mezza altezza, barca fra il 20% e l'80% dello schermo, spostamento in circa 0,25 s,
   // allontanamento in circa 0,4 s (VIEW_ZK), margine VIEW_M px. Al rilascio tutto torna com'era: userZoom non si tocca.
   // Una futura vista tattica con pausa (livello 4) sarebbe una condizione in più in «paused» nel ciclo.
-  const VIEW_SHIFT = 0.6, VIEW_K = 12, VIEW_ZK = 7.5, VIEW_M = 50; // VIEW_K, VIEW_ZK: 1/s, al 95% in 0,25 s e in 0,4 s
+  const VIEW_SHIFT = 0.6, VIEW_K = 12, VIEW_ZK = 7.5, VIEW_M = 50, ZQ_MIN = 0.02; /* ZQ_MIN (1.3.41): zoom minimo con Q in regata, ipotesi nostra */ // VIEW_K, VIEW_ZK: 1/s, al 95% in 0,25 s e in 0,4 s
   let zoomQ = 1; // fattore di zoom del tasto vista (1 = nessun effetto)
   const RIP_Z0 = 0.35, RIP_Z1 = 0.5; // dissolvenza delle increspature fra questi due zoom (ipotesi nostra)
   let viewOff = [0, 0], windX = null, fontsOk = false, rippleCells = 0;
@@ -131,7 +131,15 @@
   function viewUpdate(dt){
     const v = { ...view(), cx: W / 2, cy: H * (opt.view === "prua" ? 0.6 : 0.5) }, g = viewOn() && keys.has("q") ? goal() : null;
     let tx = 0, ty = 0, tz = 1;
-    if (g){
+    /* 1.3.41 (voce 76, A2, docs/PROPOSTA-CAMPO-PRIMA-DEL-VIA.md; Lucio, 21-22 nov: «vedere tutto il campo, come nella realtà»): in regata (non negli esercizi) Q tenuto
+       inquadra linea di partenza, boe e tutte le barche, prima e dopo il via, fino allo zoom ZQ_MIN. Nelle prove Q resta verso l'obiettivo. Solo disegno */
+    if (g && mode === "race" && R && !R.es){
+      const P = [[R.pin.x, R.pin.y], [R.cb.x, R.cb.y], ...R.marks.map(m => [m.x, m.y]), ...R.boats.map(b => [b.S.x, b.S.y])].map(([x, y]) => { const [sx, sy] = toScreen(v, x, y); return [(sx - v.cx) / zoomQ, (sy - v.cy) / zoomQ]; });
+      const xs = P.map(p => p[0]), ys = P.map(p => p[1]), x0 = Math.min(0, ...xs), x1 = Math.max(0, ...xs), y0 = Math.min(0, ...ys), y1 = Math.max(0, ...ys);
+      tz = clamp(Math.min(1, (W - 2 * VIEW_M) / Math.max(1, x1 - x0), (H - 2 * VIEW_M) / Math.max(1, y1 - y0)), ZQ_MIN / camZoom, 1);
+      tx = W / 2 - tz * (x0 + x1) / 2 - v.cx; ty = H / 2 - tz * (y0 + y1) / 2 - v.cy;
+    }
+    else if (g){
       const [gx, gy] = toScreen(v, g.x, g.y), dx = (gx - v.cx) / zoomQ, dy = (gy - v.cy) / zoomQ, d = Math.hypot(dx, dy); // dx, dy: senza l'effetto del tasto
       if (d > 1){
         const bx = clamp(v.cx - dx / d * VIEW_SHIFT * W / 2, 0.2 * W, 0.8 * W), by = clamp(v.cy - dy / d * VIEW_SHIFT * H / 2, 0.2 * H, 0.8 * H);

@@ -69,6 +69,16 @@ Ale riporta che Lucio l'ha ribadito più volte: vuole vedere **tutto** il campo,
 
 Chromium e Firefox, uno per volta col freno. Da sapere: i suoni calano con lo zoom (1.3.33), quindi tenendo Q si sentono più piano.
 
-## Esito
+## Esito (1.3.41, 22 nov)
 
-*(da scrivere dopo il codice)*
+Fatto come scritto: `viewUpdate` (js/disegno.js), solo in regata (non negli esercizi), `ZQ_MIN = 0,02`. `tests/collaudo_campo_q.py`, soglie non cambiate:
+
+| # | Chromium | Firefox |
+| --- | --- | --- |
+| Q1 | 240 inquadrature, 0 con qualcosa fuori; zoom più lontano 0,068 | 240, 0 fuori; zoom 0,069 |
+| Q2 | 240 su 240 | 240 su 240 |
+| Q3 | 20 su 20 | 20 su 20 |
+| Q4 | 20 regate identiche al bit con Q tenuto e senza, 20 su 20 | 5 su 5 (5 regate, deciso con Ale prima di lanciarlo) |
+| Q5 | pagina da giocatore, regata da 560 m, Q a −177 s: 0 punti fuori su 7, zoom 0,102, 0 errori | 0 fuori su 7, zoom 0,102, 0 errori |
+
+La parte B (freccia verso la boa) e la minimappa C non si fanno (Ale: «la mappa piccola a lato no», poi «lascia così»).
