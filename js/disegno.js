@@ -21,7 +21,8 @@
     $("vSh").textContent = "boma a " + Math.round(S.boom) + "°";
     if (!dragTiller) $("tiller").value = Math.round(ctl.tiller * 100);
     $("sheet").value = Math.round(ctl.sheet * 100);
-    const noRight = !!(st && st.noRight); // lezione 6, «La scuffia»: niente raddrizzamento finché non si passa al passo dopo
+    /* lezione 6, «La scuffia»: niente raddrizzamento finché non si passa al passo dopo. 1.3.39 (Ale, 22 nov: scuffia sulla linea d'arrivo, il riquadro restava sopra il resoconto): a regata finita per il giocatore non serve */
+    const noRight = !!(st && st.noRight) || !!(mode === "race" && R && R.boats[0] && (R.boats[0].fin !== null || R.boats[0].dnf));
     $("rightBtn").hidden = !S.capsized || S.righting > 0 || noRight;
     $("capOverlay").hidden = !S.capsized || S.righting > 0 || noRight;
     $("capText").textContent = S.capCause === "gybe"
