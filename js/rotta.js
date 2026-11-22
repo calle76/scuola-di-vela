@@ -405,7 +405,7 @@
     // scarso: lontano dalla boa, di bolina
     const g = R.marks[me.leg - 1], lontana = g ? Math.hypot(g.x - me.S.x, g.y - me.S.y) > CR_BOA_LONTANA : false;
     const sc = -Math.sign(a) * norm180(w.twd - env.twd);
-    if (bolina && lontana && sc >= CR_SCARSO){ c.sc += dt; if (c.sc >= CR_SCARSO_T && crDi("serio", "Il vento ti è scarso di " + Math.round(sc) + "°: se oscilla, conviene virare (lezione 11).")) c.sc = -60; }
+    if (bolina && lontana && sc >= CR_SCARSO){ c.sc += dt; if (c.sc >= CR_SCARSO_T && crDi("serio", "Il vento ti è scarso di " + Math.round(sc) + "°: se oscilla, conviene virare; se continua a girare dalla stessa parte, no (lezione 11).")) c.sc = -60; }
     else if (c.sc > 0) c.sc = 0; else if (c.sc < 0) c.sc = Math.min(0, c.sc + dt);
     // boa girata: posizioni
     const pos = ranking().indexOf(me) + 1;

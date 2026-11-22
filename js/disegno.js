@@ -271,6 +271,7 @@
     if (mode === "lesson" && st && (st.scena || S.scenaMob)) drawScenaScritte(v, st);
     drawCompass(v);
     drawWindBox(v);
+    drawScarso();
     const heelG = !st || st.hud >= 3;
     if (heelG) drawHeelGauge();
     // rosa dell'angolo morto (0.16): dove c'è lo sbandamento e nei passi pratici delle lezioni, tranne quando c'è già la rosa grande
@@ -733,6 +734,27 @@
   }
   // 1.0.38: vento e bussola nello stesso angolo (in alto a destra, sotto la bussola); la versione sul mare non c'è più (sta nel menu), l'angolo in alto a sinistra è libero; 1.0.48: riga più corta, senza «Vento reale» (check di Ale)
   const windTesto = () => card(env.twd) + " (" + deg3(env.twd) + "), " + (env.tws * KN).toFixed(0) + " nodi";
+  // ---- scarso / buono (1.3.42, voce 48, docs/PROPOSTA-AIUTO-SCARSO.md; Ale, 16 nov: «mentre faccio le regate come applico queste tattiche?») ----
+  // Aiuto disattivabile (⚙ «Scarso/buono», come la layline: «regate» non nel torneo, «anche torneo»): solo in regata col vento che gira, dopo il via, di bolina
+  // (35-75° dal vento, come la lezione 11). Il numero è quello della lezione (base.scarso, js/gioco.js): di quanti gradi il vento sulla barca è girato verso la prua
+  // rispetto al vento medio; scarso da 7°, buono da 3° (soglie della lezione). Non dice «vira». Il gioco conosce il vento medio esatto, il velista lo stima con la bussola.
+  const SCARSO_SI = 7, BUONO_SI = 3;
+  function scarsoVisibile(){
+    if (mode !== "race" || !R || R.es || riv.on || !shiftSt || R.t < 0 || S.capsized) return null;
+    const me = R.boats[0]; if (me.fin !== null || me.dnf || me.leg < 1) return null;
+    if (!(opt.scarso === "tutte" || (opt.scarso === "regate" && !R.tor))) return null;
+    const a = norm180(local.twd - S.h); if (Math.abs(a) < 35 || Math.abs(a) > 75) return null;
+    return -Math.sign(a) * norm180(local.twd - env.twd);
+  }
+  function scarsoTesto(sc){ const n = Math.round(sc); return sc >= SCARSO_SI ? ["scarso " + n + "°", "#E8935A"] : sc <= -BUONO_SI ? ["buono " + (-n) + "°", "#5CC393"] : ["nella media", "rgba(255,255,255,.9)"]; }
+  function drawScarso(){
+    const sc = scarsoVisibile(); if (sc === null) return;
+    const [t, col] = scarsoTesto(sc), r = 26;
+    ctx.save(); ctx.font = font(600, 14); const cx = W - 16 - ctx.measureText(windTesto()).width / 2, cy = H - 18 - 16 - r - 4;
+    ctx.fillStyle = col; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic"; ctx.fillText(t, cx, cy - r - 24);
+    ctx.restore();
+  }
+  $("scarsoSel").onchange = e => { opt.scarso = e.target.value; };
   function drawWindBox(v){
     ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
     const t = windTesto();

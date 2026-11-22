@@ -2,14 +2,14 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 22 novembre 2026, sera (gioco alla **1.3.41**, tag `v1.3.41`).*
+*Aggiornato: 22 novembre 2026, sera (gioco alla **1.3.42**, tag `v1.3.42`).*
 
 ## Dove siamo
 
 - **1.3.41 (voce 76, via di Ale del 22 nov):** in regata Q tenuto inquadra tutto il campo (linea, boe, barche), prima e dopo il via; nelle prove come prima; niente minimappa. `collaudo_campo_q.py` Q1-Q5 OK in Chromium e Firefox (240 inquadrature, 0 fuori; regate identiche al bit con e senza Q).
 - **1.3.40 (voce 75):** niente raffiche ammucchiate al via delle regate lunghe (vento al via 0,96 della media, prima 1,77; 0 scuffie a comandi fermi su 80). **1.3.39:** il riquadro «Raddrizza» non resta sul resoconto. **1.3.38 (voce 74, passo 2a):** il Coach nomina il rivale che ti ha toccato in 2 regate. Prima: 1.3.32-1.3.37 (Coach più a lungo, volume con lo zoom, bandiere del via, freccia dell'obiettivo, storico dei rivali): `CHANGELOG.md`.
 - **Studio della barca (voce 73, commit 7105a2c):** `STUDIO-BARCA.md` e `tests/fisica/studio_barca.js` (25 s, Node). Virata 0,7-0,9 lunghezze con 10-14 nodi (F106: media circa 1); con poco vento 0,7 contro 0 (manca la virata rollata); bolina lenta con poco vento (−20% a 6 nodi contro F17); sopra 16-18 nodi la virata non riesce con la regola della scotta. Le correzioni (rollata, vento forte, bolina lenta) vanno in una **sessione nuova con Opus** e solo col via; lo script è il metro prima/dopo.
-- **Voce 77 (consiglio «scarso, conviene virare»): il consiglio è giusto.** Seconda misura dal punto della barca (`tests/misura_coach_scarso2.py`, 120 regate, 305 consigli): la rotta ottimale vira subito nell'88-90% dei consigli contro il 68% dei momenti a caso (soglia +10 punti: passa, +20 e +22). Debole solo col salto persistente (65-73%). Proposta A (frase più onesta) o B (tacere) aspetta il via.
+- **1.3.42 (voci 48 e 77, via di Ale del 22 nov):** in regata col vento che gira, di bolina, sopra la bussola «scarso N°», «buono N°» o «nella media» (numero e soglie della lezione 11; opzione «Scarso/buono» come la layline, nel torneo spenta). Il Coach ora dice anche «se continua a girare dalla stessa parte, no»: la misura dal punto della barca gli dà ragione (88-90% contro 68% a caso), tranne col salto persistente (65-73%). `collaudo_aiuto_scarso.py` OK in Chromium e Firefox.
 - **Voce 78 (raffiche contro NOAA):** tipiche come in mare, le rare un po' troppo forti; correzione (raffiche sommate) da proporre, col via.
 - **Voce 74:** restano la decisione 2 (cautela o nemesi, prima le fonti) e la 3 (contatore, riga a fine torneo, scuffie/penalità, amico in rete).
 - **Giro su GitHub del 22 nov (sulla 1.3.37):** rossi solo H4 «boa» (noto) e `collaudo_registro` «contatto» in Chromium (il pilota non ha toccato nessuno in 180 s): da riguardare, nessun difetto del gioco. Dopo il push serve un giro nuovo (dalla 1.3.38 in poi).

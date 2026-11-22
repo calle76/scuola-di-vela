@@ -184,6 +184,7 @@ TESTS=(
     "collaudo_scuffia_arrivo.py (riquadro Raddrizza a regata finita)|py|chiaro|0||collaudo_scuffia_arrivo.py"
     "collaudo_raffiche_al_via.py (raffiche al via delle regate lunghe, voce 75)|py|chiaro|0||collaudo_raffiche_al_via.py"
     "collaudo_campo_q.py (Q in regata inquadra tutto il campo, voce 76)|py|chiaro|1||collaudo_campo_q.py"
+    "collaudo_aiuto_scarso.py (aiuto scarso/buono, voce 48)|py|chiaro|1||collaudo_aiuto_scarso.py"
     "collaudo_layline.py (torneo lungo, voce 66c)|py|chiaro|1||collaudo_layline.py --lungo"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"

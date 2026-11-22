@@ -48,3 +48,27 @@ S5 è l'unico che può dire «la tattica nel gioco non rende»: se succede, prim
 ## Lavoro stimato
 
 Codice: una funzione di disegno in `js/disegno.js`, una riga nelle Impostazioni (`index.html`, `js/gioco.js`), un collaudo nuovo (`collaudo_aiuto_scarso.py`, S2-S3). Versione nuova del gioco (1.3.18).
+
+## Fermata 2 (22 nov 2026, via di Ale: «ok completiamo l'argomento», dopo la misura della voce 77)
+
+Fatto come scritto, con queste differenze **dichiarate prima di vedere i risultati del collaudo**:
+
+- **Posto:** sotto la scritta del vento non c'è spazio (sta sul bordo in basso); la riga sta **sopra la bussola**, centrata su di lei, nello spazio libero.
+- **Opzione:** «Scarso/buono» nelle Impostazioni, accanto a «Layline», con gli stessi tre valori e lo stesso predefinito («regate»). Il titolo dell'opzione dice la semplificazione («il gioco conosce il vento medio; in mare lo stimi con la bussola»). La riga nel riepilogo della lezione 11 non si aggiunge (la lezione insegna già il conto a mano).
+- **S1** in Firefox su 5 regate invece di 20 (come per la vista Q, deciso con Ale il 22 nov: la proprietà è del codice, Chromium la prova su 20). Si aggiungono `impronta1b.js`, `polare.js`, `raffiche_e_virate.js`.
+- **S2:** il metro è il vento sulla barca letto dal collaudo con `windAt` prima del passo (quello che il gioco mette in `local`), vento medio e prua: stessa formula di `base.scarso`, letta fuori dal disegno; si confronta con la scritta davvero disegnata.
+- **S4:** margine misurato nella pagina fra la scritta e «N», bussola e scritta del vento (almeno 2 px), più `collaudo_pannello.py` e `collaudo_menu_livelli.py` per la riga nuova delle Impostazioni.
+- **S5 non si lancia:** il contenuto lo ha già misurato la voce 77 (`PROPOSTA-COACH-SCARSO-VERIFICA.md`, 120 regate): col vento scarso di almeno 7° la rotta ottimale vira subito nell'88-92% dei momenti, col buono nel 41-43%. Se Ale vuole anche S5 (80 regate col pilota da giocatore), si fa a parte.
+- **Insieme (voce 77, proposta A):** la frase del Coach diventa «Il vento ti è scarso di N°: se oscilla, conviene virare; se continua a girare dalla stessa parte, no (lezione 11).»
+
+## Esito (1.3.42, 22 nov; `tests/collaudo_aiuto_scarso.py`, soglie non cambiate)
+
+| | Chromium | Firefox |
+| --- | --- | --- |
+| S1 torneo identico al bit, aiuto acceso e spento | 20 su 20 | 5 su 5 |
+| S2 numero scritto contro il conto | 0 diversi su 2139 | 0 su 2155 |
+| S3 fuori posto (regata nei salti / Scuola / lezione 11 / torneo con «regate») | 0 su 4509 / 0 / 0 / 0 | 0 su 4507 / 0 / 0 / 0 |
+| S3 forme viste | scarso, buono, nella media | uguale |
+| S4 margine da bussola e «N» | 4,0 px | 4,0 px |
+
+**S2 alla prima stesura è fallito per un difetto del metro**, non del gioco: il collaudo leggeva il vento prima che il passo spostasse le raffiche (6 diversi su 2139, tutti di 1° all'arrotondamento). Corretto il metro (vento nel punto e nell'istante del passo), soglia invariata, rilanciato: 0. `collaudo_pannello`, `collaudo_menu_livelli` e `collaudo_coach_regata` OK in Chromium; fisica identica. S5 non lanciato (vedi sopra).
