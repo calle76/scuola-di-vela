@@ -1,6 +1,7 @@
 # Tasto vista (0.19.2, «vista del percorso» dalla 0.19.3): Q tenuto sposta la barca sullo schermo dalla parte opposta all'obiettivo
 # e, se serve, allontana l'inquadratura finché l'obiettivo entra; al rilascio torna posizione e zoom di prima.
 # Parte 1 (#collaudo, tasto vero, tempo vero): 5 prove x 3 venti + regata prima del via, con «prua in alto» e «nord in alto».
+#   Dalla 1.3.41 (voce 76) in regata Q inquadra tutto il campo: per la regata la direzione non si controlla più (collaudo_campo_q), il ritorno sì.
 #   Direzione: prodotto scalare fra spostamento e direzione dell'obiettivo sullo schermo negativo, spostamento di almeno 50 px,
 #   barca fra il 20% e l'80% dello schermo. Ritorno: dopo il rilascio, sotto 2 px e zoom del tasto tornato a 1 (entro 0,002) entro 1 s.
 #   Nessun effetto: lezione con la boa, navigazione libera, prova finita, focus in un campo di testo. Bloc Maiusc (tasto «Q»).
@@ -59,8 +60,11 @@ async def parte1(b):
                 s = await tieni_q(pg)
                 ox, oy = s["off"]; d = math.hypot(ox, oy); dot = ox * s["gx"] + oy * s["gy"]
                 dentro = 0.2 * s["W"] - 0.5 <= s["cx"] <= 0.8 * s["W"] + 0.5 and 0.2 * s["H"] - 0.5 <= s["cy"] <= 0.8 * s["H"] + 0.5
-                esito(f"direzione ({vista} in alto)", s["goal"] and dot < 0 and d >= 50 and dentro,
-                      f"{nome}: spostamento ({ox:.0f}, {oy:.0f}) px, obiettivo ({s['gx']:.0f}, {s['gy']:.0f}) m, barca a ({s['cx']:.0f}, {s['cy']:.0f})")
+                if nome.startswith("regata"):   # 1.3.41 (voce 76): in regata Q inquadra tutto il campo invece di guardare verso la boa: lo misura collaudo_campo_q (Q1-Q5); qui resta solo il ritorno
+                    print(f"        (regata, {vista} in alto: direzione non controllata dalla 1.3.41; spostamento ({ox:.0f}, {oy:.0f}) px)")
+                else:
+                    esito(f"direzione ({vista} in alto)", s["goal"] and dot < 0 and d >= 50 and dentro,
+                          f"{nome}: spostamento ({ox:.0f}, {oy:.0f}) px, obiettivo ({s['gx']:.0f}, {s['gy']:.0f}) m, barca a ({s['cx']:.0f}, {s['cy']:.0f})")
                 await pg.keyboard.up("q"); t, d2 = await pg.evaluate(RITORNO)
                 esito("ritorno sotto 2 px entro 1 s", t is not None and t <= 1000, f"{nome} ({vista}): {t} ms, {d2:.2f} px")
                 if t is not None: tempi.append(t)

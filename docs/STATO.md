@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 22 novembre 2026, sera (gioco alla **1.3.42**, tag `v1.3.42`).*
+*Aggiornato: 22 novembre 2026, sera (gioco alla **1.3.43**, tag `v1.3.43`).*
 
 ## Dove siamo
 
@@ -12,12 +12,8 @@
 - **1.3.42 (voci 48 e 77, via di Ale del 22 nov):** in regata col vento che gira, di bolina, sopra la bussola «scarso N°», «buono N°» o «nella media» (numero e soglie della lezione 11; opzione «Scarso/buono» come la layline, nel torneo spenta). Il Coach ora dice anche «se continua a girare dalla stessa parte, no»: la misura dal punto della barca gli dà ragione (88-90% contro 68% a caso), tranne col salto persistente (65-73%). `collaudo_aiuto_scarso.py` OK in Chromium e Firefox.
 - **Voce 78 (raffiche contro NOAA):** tipiche come in mare, le rare un po' troppo forti; correzione (raffiche sommate) da proporre, col via.
 - **Voce 74:** restano la decisione 2 (cautela o nemesi, prima le fonti) e la 3 (contatore, riga a fine torneo, scuffie/penalità, amico in rete).
-- **Giro su GitHub del 22 nov sera (run 45037412599, sulla 1.3.42): 7 pezzi rossi su 8, quasi tutti delle versioni di oggi. Da correggere per primi (sessione nuova):**
-  1. **Finestra Impostazioni che sfora (1.3.42, riga «Scarso/buono»):** `collaudo_cono` K14 (torneo +1 px), `collaudo_registratore` (3 casi, lezione e navigazione libera), `collaudo_suoni` S6 (scorre 23 px), Chromium e Firefox. Nel torneo la finestra era a 580 px su 585 (90vh) e ora è a 585+1; i 5 px in più compaiono anche nelle righe «Frecce» e «Vista» (+2 ciascuna): forse il caricamento del carattere, non verificato. In navigazione libera «Scarso/buono» va a capo da sola (va nascosta come la Layline). Il mio `collaudo_menu_livelli` non guardava questi casi.
-  2. **`collaudo_vista`** da aggiornare: prima del via si aspetta Q verso la boa, dalla 1.3.41 Q in regata mostra tutto il campo (voluto).
-  3. **`collaudo_menu` M4:** legge come testo il commento `/* lezione 6, «La scuffia»… */` di js/disegno.js (passato da `//` a `/* */` nella 1.3.39): difetto del collaudo.
-  4. **`collaudo_coach` K0:** rotta ottimale assente in 4 regate su 20 (soglia 2): causa da cercare (forse i numeri a caso cambiati dalla 1.3.38).
-  5. Noti o solo tempi: sartiame in `suoni_si_sentono`, `suoni_zoom` V5 (−0,49 contro −0,5 dB), E2 e C11 (tempi).
+- **1.3.43 (22 nov sera): corretti i rossi del giro GitHub sulla 1.3.42 (run 45037412599).** Finestra Impostazioni: «Scarso/buono» andava a capo con la Layline (+36 px, torneo fuori di 1 px); ora finestra larga 760 px, «Scarso/buono» nascosta in navigazione libera; altezze uguali alla 1.3.41 (i «+2 px» di Frecce e Vista non si ritrovano). Collaudi corretti: `collaudo_vista` (in regata Q mostra tutto il campo), `collaudo_menu` M4 (commenti `/* */`), `collaudo_coach` K0 (**difetto del collaudo**: leggeva il pulsante «Rotta ottimale» prima dell'aggiornamento del pannello; solo Chromium, già dalla 1.3.31; ora 0 su 20). Cono, registratore, suoni, menu_livelli, aiuto_scarso, menu, vista OK in Chromium e Firefox; coach OK in Chromium. **`collaudo_aiuto_scarso` scalda: 81 °C col freno 64/55, 61 °C col 58/50.**
+- **Restano dal giro del 22 nov (noti o tempi):** sartiame in `suoni_si_sentono`, `suoni_zoom` V5 (−0,49 contro −0,5 dB), E2 e C11 (tempi). Da riguardare sul prossimo giro GitHub.
 - **Il gioco:** Scuola chiusa come contenuti; Deriva nel gioco (lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16, Coach in regata e nella moviola). Com'è fatto: `IL-GIOCO.md`.
 - **Da sapere:** con `#collaudo` le regate restano corte (servono `--lungo`); apertura e corsa in un solo `evaluate`, pagina nuova per regata (sennò PC e GitHub danno numeri diversi). Collaudi qui uno per volta col freno; Firefox per i collaudi nuovi.
 

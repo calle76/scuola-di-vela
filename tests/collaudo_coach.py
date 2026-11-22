@@ -112,6 +112,7 @@ async def main():
             await pg.evaluate(CORSA, [k, s, 0]); es = await pg.evaluate(ESITO)
             if not LUNGO: chk("K1", es == rif[n], f"K1 regata {s}-{k}: arrivi e penalità diversi dal riferimento {RIF}: {es} contro {rif[n]}")
             g0 = await pg.evaluate(REGC)
+            await pg.wait_for_timeout(300)   # 1.3.43: la schermata finale (e il pulsante) la mostra il pannello, aggiornato ogni 0,1 s dai fotogrammi (js/avvio.js); letto subito dopo la corsa, in Chromium mancava in 2-5 regate su 20 (K0), dopo l'attesa 0 su 20
             if not await pg.is_visible("#finRot"): nmanca += 1; print(f"  {s}-{k}: pulsante «Rotta ottimale» non visibile (voce 40): regata non controllata", flush=True); continue   # 1.3.32
             await pg.click("#finRot"); await pg.wait_for_timeout(120)
             d = await pg.evaluate(DATI)
