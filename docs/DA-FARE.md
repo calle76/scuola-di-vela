@@ -2,6 +2,8 @@
 
 **L'ordine lo decide Ale.** Una riga per voce; il dettaglio sta nella proposta o nell'osservazione indicata, e, per gli stati lunghi di prima del 17 novembre, in `archivio/DA-FARE-lunga-17nov.md`. Quando una voce è fatta si toglie (resta nel `CHANGELOG.md`; le chiuse sono in `archivio/DA-FARE-archivio-17nov.md`). Stato generale: `STATO.md`.
 
+**Regola di Ale (22 nov): in ordine di ciò che costerà meno lavoro dopo** (prima ciò su cui si tarano le altre voci). **Ordine di oggi:** 73 barca → 78 raffiche rare (vento: stesso giro della barca) → 9 fonti su strambata e filetti (contenuti della barca, leggera) → 80 pagina dello studio (dopo 73 e 78) → 79 lezione 11 (si tara sulla barca e sul vento) → 55 registrazioni più ricche (leggera; servono per capire i rivali) → avversari 4B, 3, 2 (usano la barca; la 2 aspetta registrazioni di Lucio) → 74 storico dei rivali (comportamento dei rivali) → 49 regola 18 (rivali che danno spazio, poi lezione) → 36 Allenamento e 71 uscita lenta (girano sui rivali finali) → Coach: 42, 69, 66 → medaglie e tempi per ultimi (7).
+
 **Regola di Ale (17 nov):** i «via» alle correzioni grosse si danno **tutti insieme quando i crediti sono ripristinati**, con questa lista. Con pochi crediti: solo testi, collaudi, proposte. Dal 9 novembre: le voci sugli avversari si misurano sulle regate del torneo; la Scuola basta che non peggiori (`DECISIONI.md`).
 
 **Modello consigliato** (colonna «Mod.»): **Opus** per motore, guida dei rivali, fisica e cause da cercare; **Sonnet** per testi, collaudi, proposte e correzioni piccole.
