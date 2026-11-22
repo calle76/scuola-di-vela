@@ -53,3 +53,38 @@ Semi 1101-1120 per guardare, 1121-1140 per confermare (regola dei semi).
 **Moneta** (aggiunta dopo la prima misura, su domanda di Ale, solo riportata): secondi di bolina lontano dalla boa, rotta ottimale che vira nei 30 s dopo: qualunque 48% e 45%; con lo scarso 42% e 39%; col buono 41% e 36%. **Con questo metro il consiglio non vale più di un momento a caso.** K1 passa, K2 non passa, K4 passa (305). Le due misure danno gli stessi consigli (147 e 158): ripetibile.
 
 **Limite del metro (detto prima di decidere):** la rotta ottimale parte dal taglio della linea del giocatore e va più veloce: nello stesso istante è altrove, dove le raffiche cambiano la direzione del vento. **Metro migliore, proposto ad Ale:** dal punto e dall'istante della barca, «la rotta ottimale per la prossima boa comincia con una virata entro 30 s?», per i consigli e per 10 momenti a caso per regata (la moneta). Poi: se il Coach non batte la moneta, si toglie «conviene virare» e resta il fatto («il vento ti è scarso di N°»).
+
+## Seconda misura, col metro dal punto della barca (via di Ale, 22 nov; soglia scritta prima di misurare)
+
+Per ogni consiglio «scarso» e per 10 momenti di bolina a caso per regata (lontano dalla boa, come il Coach), dal punto, dall'istante e dalle mure della barca: la rotta ottimale (isocrone, vento registrato della regata) fino alla prossima boa **comincia con una virata entro 30 s?**
+
+| # | Criterio | Soglia (attesa nostra) |
+| --- | --- | --- |
+| K5 | Il consiglio batte la moneta | quota «vira entro 30 s» nei consigli ≥ quota nei momenti a caso + 10 punti, in **tutti e due** i gruppi di semi (1101-1120 e 1121-1140, 3 regate per seme) |
+| K5b | Lo scarso conta | fra i momenti a caso, quota con vento scarso (≥ 7°) maggiore di quella col vento buono (≤ −7°): solo riportato |
+| K6 | Ha misurato davvero | almeno 100 consigli e 500 momenti a caso calcolati per gruppo; si stampano anche i casi in cui la rotta non si calcola |
+
+Se K5 non passa: proposta di togliere «conviene virare» e lasciare il fatto («Il vento ti è scarso di N° (lezione 11)»). Se passa: proposta per farlo tacere nei casi in cui sbaglia di più (raffica, salto persistente), da misurare con lo stesso metro.
+
+## Esito della seconda misura (22 nov, `tests/misura_coach_scarso2.py`, Chromium, 1.3.41; soglie non cambiate)
+
+| | semi 1101-1120 (60 regate) | semi 1121-1140 (60 regate) |
+| --- | --- | --- |
+| consigli (calcolati) | 147 (139) | 158 (149) |
+| momenti a caso (calcolati) | 600 (568) | 590 (560) |
+| **K5** vira entro 30 s: consigli / a caso | **90% / 68%: +22 punti** | **88% / 68%: +20 punti** |
+| K5b a caso: vento scarso / buono / in mezzo | 92% / 43% / 74% | 88% / 41% / 78% |
+| consigli in raffica / fuori raffica | 93% / 87% | 91% / 84% |
+| consigli con salto persistente / oscillante | 65% (37) / 99% (102) | 73% (56) / 97% (93) |
+| K6 | 139 e 568: passa | 149 e 560: passa |
+
+**K5 passa in tutti e due i gruppi; K6 passa.** Dal punto della barca, quando il Coach dice «scarso» la rotta ottimale vira subito 9 volte su 10, contro 7 su 10 in un momento qualunque di bolina; e lo scarso conta davvero (K5b: 88-92% contro 41-43% col buono). La prima misura («come una moneta») sbagliava per il metro: guardava la rotta ottimale da dove era lei, non dalla barca. I consigli sono gli stessi della prima misura (147 e 158): ripetibile. In questa seconda misura i casi in cui la rotta non si calcola sono 8-9 consigli e 30-32 momenti per gruppo (fuori dal conto).
+
+**Dove sbaglia di più:** non in raffica (anzi, 91-93% contro 84-87% fuori), ma col **salto persistente**: 65-73%, circa come un momento a caso (68%). È quello che dice la fonte (F41): col vento che gira sempre dalla stessa parte non si vira sugli scarsi.
+
+## Proposta che segue (fermata 1, senza codice: aspetta il via di Ale)
+
+Il consiglio resta. Due strade per il salto persistente, da scegliere:
+
+- **A, frase più onesta (consigliata):** «Il vento ti è scarso di N°: se oscilla conviene virare; se continua a girare dalla stessa parte, no (lezione 11).» Non usa niente che il giocatore non possa sapere; insegna la differenza, che è la lezione 11. Criterio: nessuno sul gioco (cambia solo il testo); collaudo dei testi del Coach.
+- **B, tacere col persistente:** il gioco sa il tipo di salto della regata (`shiftSt.kind`) e potrebbe non dirlo. Ma è un'informazione che il velista in acqua non ha, e il Coach sembrerebbe indovino; misura: quota nei consigli rimasti ≥ 90% in tutti e due i gruppi, con lo stesso script.
