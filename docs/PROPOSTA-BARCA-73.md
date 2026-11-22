@@ -88,7 +88,7 @@ Se B1 non si raggiunge con le costanti fissate, **non si ritoccano per arrivarci
 
 ### 4.4 Cosa serve oltre al motore
 - Tasto `X` tenuto premuto (`js/gioco.js`), riga nella scheda dei comandi, una frase nel pannello.
-- Una lezione breve «Virata rollata» nella Scuola (gruppo «La barca», dopo la virata): **da decidere con Ale** se è lezione nuova (cambiano numerazione e meriti) o un passo in più della lezione della virata. Testo con le fonti di §4.1 e la regola 42 detta semplice.
+- **Lezione 26 di Deriva, «Virata rollata», tecnica avanzata** (decisione di Ale del 22 nov): testo con F107-F108, F106 e la regola 42.3(b) detta semplice; esercizio con poco vento.
 - Registratore: il gesto va scritto nel file (sennò la moviola e il Coach non lo vedono).
 
 ### 4.5 Costo (onesto)
