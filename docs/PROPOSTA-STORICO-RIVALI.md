@@ -116,4 +116,4 @@ Le due idee di Ale del 22 novembre, confrontate con le fonti (`FONTI-PUBBLICHE.m
 2. **Al suo posto, la marcatura nell'ultima regata del torneo**, decisa dalla classifica e detta dal Coach («Verde ti marca: se ti batte, ti passa in classifica»). Tocca la guida dei rivali: va con le voci sui rivali (2, 4B), con proposta e criteri propri (arrivo dei rivali, contatti, nessuna regola rotta mentre marcano).
 3. **Cautela:** non farla, o farla come invenzione dichiarata; proposta: non farla finché non c'è una fonte.
 
-**Risposta di Ale (23 nov sera):** punti 1 e 2 sì: niente nemesi, marcatura nell'ultima regata decisa dalla classifica. Resta da decidere il punto 3 (cautela).
+**Risposta di Ale (23 nov sera):** punti 1 e 2 sì: niente nemesi, marcatura nell'ultima regata decisa dalla classifica. Resta da decidere il punto 3 (cautela). **Punto 3 (stessa sera): niente cautela finché non c'è una fonte.**
