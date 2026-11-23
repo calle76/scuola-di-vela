@@ -2,7 +2,7 @@
 
 **L'ordine lo decide Ale.** Una riga per voce; il dettaglio sta nella proposta o nell'osservazione indicata, e, per gli stati lunghi di prima del 17 novembre, in `archivio/DA-FARE-lunga-17nov.md`. Quando una voce è fatta si toglie (resta nel `CHANGELOG.md`; le chiuse sono in `archivio/DA-FARE-archivio-17nov.md`). Stato generale: `STATO.md`.
 
-**Regola di Ale (22 nov): in ordine di ciò che costerà meno lavoro dopo** (prima ciò su cui si tarano le altre voci). **Ordine di oggi:** avversari 4B, 3, 2 (usano la barca; la 2 aspetta registrazioni di Lucio) → 74 storico dei rivali (comportamento dei rivali) → 49 regola 18 (rivali che danno spazio, poi lezione) → 36 Allenamento e 71 uscita lenta (girano sui rivali finali) → Coach: 42, 69, 66 → medaglie e tempi per ultimi (7).
+**Regola di Ale (22 nov): in ordine di ciò che costerà meno lavoro dopo** (prima ciò su cui si tarano le altre voci). **Ordine di oggi:** avversari 4B e 3 (misurate il 23 nov, aspettano una decisione), 2 (usano la barca; la 2 aspetta registrazioni di Ale e Lucio sulla fisica completa, decisione del 10 nov: forse già bastano) → 74 storico dei rivali (comportamento dei rivali) → 49 regola 18 (rivali che danno spazio, poi lezione) → 36 Allenamento e 71 uscita lenta (girano sui rivali finali) → Coach: 42, 69, 66 → medaglie e tempi per ultimi (7).
 
 **Regola di Ale (17 nov):** i «via» alle correzioni grosse si danno **tutti insieme quando i crediti sono ripristinati**, con questa lista. Con pochi crediti: solo testi, collaudi, proposte. Dal 9 novembre: le voci sugli avversari si misurano sulle regate del torneo; la Scuola basta che non peggiori (`DECISIONI.md`).
 
@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** lezione, regola per il giocatore come la 15-16 (zona disegnata, ingaggio, colpa, semaforo), poi rivali che danno e prendono spazio. Tocca circa 9 contatti su 52 | `PROPOSTA-REGOLA-18.md` | Opus |
 | 36 | **Allenamento** al posto delle due regate di Deriva: una regata singola come quelle del torneo, con scelta di percorso, penalità, barche e livello | `PROPOSTA-ALLENAMENTO.md` | Sonnet (Opus per la regata singola) |
-| 4B | **Rivali che virano e orzano addosso (versione B, guida dei rivali):** la A (regole 15-16) è nella 1.3.10; la B è scritta ma **spenta** (non passa M1 e M5) | `PROPOSTA-REGOLE-15-16.md` | Opus |
+| 4B | **Rivali che virano e orzano addosso (versione B, guida dei rivali):** rimisurata il 23 nov insieme alla voce 3: col rinvio 4-8 s passa tutto tranne il «fuori» per una barca (39 contro 38); insieme alla 3 va peggio. Spenta, patch in `sperimentale/coppie-4b-3/`. **Decide Ale** (lasciarla, più semi, o altro) | `PROPOSTA-COPPIE.md` §15; `PROPOSTA-REGOLE-15-16.md` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via
 
@@ -25,8 +25,8 @@
 | 74 | **Storico dei rivali: passo 1 (1.3.37) e frase del Coach (2a, 1.3.38) fatti; resta la decisione 2** (cautela «l'ho toccato io, mi schiva» o nemesi «ha perso da me, mi ostacola», versione a parte, prima le fonti); punti aperti: contatore di versione, riga a fine torneo, scuffie e penalità, amico in rete | `PROPOSTA-STORICO-RIVALI.md` | Opus |
 | 71 | **Uscita da una regata lunga del torneo: la pagina resta ferma 3-6 s** (misurato il 21 nov col C11 `--lungo`: R7 6,33 s al massimo contro 2 s; nelle regate corte 2,7 s). Causa letta nel codice: `torChiudi` (`js/regate.js`) simula di colpo, in un ciclo solo, tutto il resto della regata dei rivali (fino a 1800 s). Da decidere: simulare a pezzi fra un fotogramma e l'altro, o accorciare il resto; **non** cambiare il passo (cambierebbe gli arrivi). Il C11 intero in lungo non è nella suite finché non si decide. Proposta scritta (21 nov); prima Ale dice se il ritardo si sente | `PROPOSTA-USCITA-REGATA-LUNGA.md` | Opus |
 | 42 | **Coach, terza mano:** la finestra di «altre barche» può contenere una scuffia e la perdita è detta due volte | `PROPOSTA-COACH-2.md` §8; oss. 131 | Opus per la proposta |
-| 2 | **Avversari tutti insieme:** bolina e avvicinamento alla boa, uscire dal vento sporco, casi 81 e 83 di Deriva. Aspettano registrazioni di Lucio | `PROPOSTA-CONO-D-OMBRA.md`; `PROPOSTA-AVVERSARI-BOLINA.md` §14 | Opus |
-| 3 | **Barche affiancate che si tengono** («chi si libera resta libero»), insieme alla 4B | `PROPOSTA-COPPIE.md` §12-13 | Opus |
+| 2 | **Avversari tutti insieme:** bolina e avvicinamento alla boa, uscire dal vento sporco, casi 81 e 83 di Deriva. Aspetta registrazioni di Ale e Lucio sulla fisica completa (`DECISIONI.md`, 10 nov); dall’11 al 21 nov ce ne sono 37, da guardare se bastano | `PROPOSTA-CONO-D-OMBRA.md`; `PROPOSTA-AVVERSARI-BOLINA.md` §14 | Opus |
+| 3 | **Barche affiancate che si tengono** («chi si libera resta libero»): misurata il 23 nov con la 4B, non adottata: passa tutto tranne K1 per un episodio (11 coppie dopo il via contro 10, base 18). Metà delle coppie che restano è su rotta diretta, dove la regola non vale. **Decide Ale** fra le tre strade del §15 | `PROPOSTA-COPPIE.md` §15 | Opus |
 
 ## 3. Da guardare (collaudi e difetti senza causa nota)
 

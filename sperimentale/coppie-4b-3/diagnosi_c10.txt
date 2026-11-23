@@ -1,0 +1,12 @@
+{"t": 104, "i": 2, "j": 0, "leg": 1, "ramo": 0, "u": 2.53, "stesse": true, "twa": -70, "lib": 7, "d": 6.5, "oMe": true, "vir": false, "seme": 2207, "k": 3}
+{"t": 178, "i": 1, "j": 0, "leg": 3, "ramo": 0, "u": 2.86, "stesse": true, "twa": -120, "lib": 152, "d": 8.3, "oMe": true, "vir": false, "seme": 2210, "k": 1}
+{"t": 194, "i": 1, "j": 2, "leg": 3, "ramo": 162.27150116115808, "u": 2.9, "stesse": true, "twa": -134, "lib": 181, "d": 7.7, "oMe": false, "vir": false, "seme": 2215, "k": 3}
+{"t": 155, "i": 2, "j": 1, "leg": 2, "ramo": 0, "u": 2.9, "stesse": true, "twa": 114, "lib": 88, "d": 6.7, "oMe": false, "vir": false, "seme": 2216, "k": 1}
+{"t": 66, "i": 1, "j": 3, "leg": 1, "ramo": 55.141206552274525, "u": 2.61, "stesse": true, "twa": 70, "lib": 3, "d": 6.4, "oMe": false, "vir": false, "seme": 2219, "k": 0}
+{"t": 20, "i": 3, "j": 1, "leg": 1, "ramo": 54.69050590818127, "u": 3.17, "stesse": true, "twa": 69, "lib": 6, "d": 5.6, "oMe": false, "vir": false, "seme": 2221, "k": 0}
+{"t": 137, "i": 3, "j": 2, "leg": 3, "ramo": 0, "u": 3.42, "stesse": true, "twa": -104, "lib": 12, "d": 7.6, "oMe": false, "vir": false, "seme": 2223, "k": 1}
+{"t": 18, "i": 2, "j": 1, "leg": 1, "ramo": 51.85343202063814, "u": 3.09, "stesse": true, "twa": 57, "lib": 1, "d": 6.6, "oMe": false, "vir": false, "seme": 2225, "k": 1}
+{"t": 52, "i": 2, "j": 0, "leg": 1, "ramo": 0, "u": 2.47, "stesse": true, "twa": -63, "lib": null, "d": 6.4, "oMe": true, "vir": false, "seme": 2226, "k": 1}
+{"t": 21, "i": 2, "j": 0, "leg": 1, "ramo": 48.975018843542784, "u": 2.43, "stesse": true, "twa": 64, "lib": 6, "d": 6.2, "oMe": true, "vir": false, "seme": 2228, "k": 0}
+{"t": 47, "i": 2, "j": 1, "leg": 1, "ramo": 44.68816682510078, "u": 2.28, "stesse": true, "twa": -59, "lib": 6, "d": 8.2, "oMe": false, "vir": false, "seme": 2228, "k": 1}
+freno: 0 pause, picco 58 °C, uscita 0

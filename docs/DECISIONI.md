@@ -53,6 +53,7 @@ Costo di cambiamento:
 | Moviola («Rivedi») sul tasto **O**; **M** resta al marcatore del registratore. I tasti della mano sinistra (W S A Q Z 1 2, E D riservati) non si toccano | 29 ott (1.0.59) | basso | Un solo punto in `moviola.js` e nei testi | `CHANGELOG.md` |
 | **Virata rollata sul tasto X tenuto premuto** (voce 73, passo B): si preme quando la prua passa il vento (la barca si inclina sul nuovo sottovento), si lascia quando la vela si gonfia sul nuovo lato (il timoniere raddrizza). Le coppie W/S, E/D, R/F restano per azioni a coppie (cazza/lascia); X è fuori dalle coppie, accanto a Maiusc | 22 nov (Ale: «2» tenuto premuto, «Ok X») | basso finché non è nel gioco, poi medio | Testi, lezione, registratore, collaudi da tastiera | `PROPOSTA-BARCA-73.md` §4.2 |
 | **La virata rollata si insegna in Deriva, lezione 26, come tecnica avanzata** (in fondo: la numerazione non cambia; cambiano in proporzione i meriti di Deriva). Le lezioni sul fiocco arriveranno col livello Fiocco | 22 nov (Ale: «Ok C come tecnica avanzata») | basso | Menu di Deriva, meriti, collaudi della carriera | `PROPOSTA-BARCA-73.md` §4.4 |
+| **La pagina internet sulla barca si rifà quando la barca sarà definitiva** (oggi `docs/pagina-studio-barca.html`, pubblicata privata: resta com'è, non si aggiorna a ogni ritocco) | 23 nov (Ale: «meglio farla quando sarà la barca definitiva») | basso | — | `STATO.md` |
 | Si lavora su `main`, senza rami; tag solo all'uscita di un livello | 26 ott | basso | — | `METODO.md` §6 |
 
 ## Livelli e ruoli

@@ -1,0 +1,97 @@
+diff --git a/js/avvio.js b/js/avvio.js
+index 8ca7c80..fb5c3e7 100644
+--- a/js/avvio.js
++++ b/js/avvio.js
+@@ -38,7 +38,7 @@
+     suoni: { reg: suoniReg, val: suoniVal, agg: suoniAgg, imposta: suoniImposta, get liv(){ return suoniLiv; }, vol: z => zoomVol(z), get mondo(){ return sMondo ? sMondo.gain.value : null; }, get attivi(){ return suoniAttivi(); }, get fonte(){ return suoniFonte; }, get decodificaMs(){ return sReg ? sReg.ms : null; }, get ambFonte(){ return sAmbFonte; }, get ambMs(){ return sAmbMs; }, muta: suoniMuta, suona, gabbiano: () => sGabbiano(), scricchiolio: h => sScricchiolio(h), reset: seme => { sGabb = sScr = null; if (seme !== undefined) sSeme = seme; }, get master(){ return sMaster; }, get actx(){ return actx; } }, // 1.2.5; fonte e decodifica 1.2.7
+     openItem, chiCede, hullWorld, hullOverlap, estraiEsame, meriti, torPunti, torSerie, torChiudi, torEsci, torApri, get tor(){ return tor; }, startSpots, st: { nuova: stNuova, chiudi: stChiudiTappa, classifica: stClassifica, frasi: stFrasi, estrai: stEstrai, forza: stForza, mostra: stMostra, B: ST_B, ordine: stOrdine, codice: stCodice, leggi: stLeggiCodice, file: stFile, carica: stCarica, riprendi: stRiprendi, amico: stAmicoMostra, torNuovo: S => torNuovo(S), dodicesimo: stDodicesimo, nazAperto: stNazAperto, showMenu }, /* 1.2.36, collaudo_stagione */ set triL(v){ TRI_L = v; }, lay: m => { LAY_MARG = m; }, ombra: v => { OMBRA = !!v; }, ombraDi, ombraDir, down: e => { DOWN_E = e; }, vmgPoppa, layDir, layVisibile, apriEsercizio, get LESSONS(){ return LESSONS; }, rotLay, rotRiga, get progress(){ return progress; }, nomeSet, nomeGet, rot, rotFili, rotLargo, get riv(){ return riv; }, rotCalcola, rotAssoluta, rotBoa1Da, envTwd: () => env.twd, fromWF, envTwdAdd: d => { env.twd = norm360(env.twd + d); }, setGusts, rotLatiBarca, rotSpiega, rotTesto, rotRaffiche, ventoDa, norm180, ripos: (x, t) => { X_RIPOS = x; if (t !== undefined) T_RIPOS = t; }, gustLevel: () => gustLevel, salti: () => !!shiftSt, boa: (p, q, m, r) => { PASSO_M = p ?? 3; SOPRA_M = q ?? 2; M_DIR = m == null ? 3 : (m < 0 ? null : m); R_DIR = r ?? 15; }, windAt, envTws: () => env.tws, showStep, setShifts, // setShifts(null): i collaudi del timone e del boma misurano senza salti di vento (1.0.28)
+     completeStep, startMission, readI, get R(){ return R; }, ghosts: () => ghosts, fast: n => timeScale = n, kick: n => GYBE_KICK = n, rank: () => ranking().map(b => b.name + ":" + legName(b)), get S(){ return S; }, get stepDone(){ return stepDone; }, get base(){ return base; },
+-    ctl, autoSheet, opt, autoK: (h0, k) => { AUTO_HEEL0 = h0; AUTO_K = k; }, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get toasts(){ return TOAST_LOG; }, manovre: (on, max) => { MANOVRE = on; if (max !== undefined) RINVIO_MAX = max; }, /* 1.3.11: per le misure della voce 4 */ get mg(){ return MG; }, set lungo(v){ LUNGO = !!v; }, set lati(v){ LATO_BAS = v[0]; LATO_TRI = v[1]; }, roundCheck, set benvenuto(v){ benvSkip = !v; }, carCarica, attCarica, carFile, get riquadro(){ return R && (R.segnali || R.giri) ? rqDati() : null; }, get rqRect(){ return R ? R.rqRect : null; }, get rqRect2(){ return R ? R.rqRect2 : null; }, get freccia(){ return frUltima; }, stoAgg, stoRiga, /* 1.3.37: storico dei rivali */ frScala, frNome, /* 1.3.36: voce 72 */ get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
++    ctl, autoSheet, opt, autoK: (h0, k) => { AUTO_HEEL0 = h0; AUTO_K = k; }, get marks(){ return curMarks; }, get toast(){ return S.toast ? S.toast.text : null; }, get toasts(){ return TOAST_LOG; }, manovre: (on, max, part) => { MANOVRE = on; if (max !== undefined) RINVIO_MAX = max; MANOVRE_P = part !== false; }, coppie: (on, t) => { COPPIE = on; if (t !== undefined) T_LIBERO = t; }, /* voce 3, per le misure */ /* 1.3.11: per le misure della voce 4 */ get mg(){ return MG; }, set lungo(v){ LUNGO = !!v; }, set lati(v){ LATO_BAS = v[0]; LATO_TRI = v[1]; }, roundCheck, set benvenuto(v){ benvSkip = !v; }, carCarica, attCarica, carFile, get riquadro(){ return R && (R.segnali || R.giri) ? rqDati() : null; }, get rqRect(){ return R ? R.rqRect : null; }, get rqRect2(){ return R ? R.rqRect2 : null; }, get freccia(){ return frUltima; }, stoAgg, stoRiga, /* 1.3.37: storico dei rivali */ frScala, frNome, /* 1.3.36: voce 72 */ get twd(){ return local.twd; }, get mode(){ return mode; }, get reg(){ return reg; }, set skipBrief(v){ briefSkip = v; }, get briefing(){ return briefing; }, hideBrief, panel, set simTime(v){ simTime = v; },
+     run: (dt, n) => { for (let k = 0; k < n; k++){ simulate(dt, curStep()); simTime += dt; sesTick(dt, true); } }, ses,
+     frame: dt => { simulate(dt, curStep()); simTime += dt; draw(dt); }, get viewOff(){ return viewOff; }, get zoomQ(){ return zoomQ; }, get camZoom(){ return camZoom; }, draw: dt => draw(dt), gusts: () => gusts.map(g => [g.x, g.y, g.r, g.k, g.sh, g.ttl]), get rippleCells(){ return rippleCells; }, goal, cam: () => { const v = view(); return { cx: v.cx, cy: v.cy, W, H }; } }; // avanza la simulazione a passi fissi, senza il ciclo del browser (taratura delle fasce); sesTick è il registratore, solo lettura
+     briefSkip = true; // i collaudi guidano subito; __sv.skipBrief = false per collaudare il riquadro
+diff --git a/js/regate.js b/js/regate.js
+index feb0412..d51373a 100644
+--- a/js/regate.js
++++ b/js/regate.js
+@@ -312,11 +312,19 @@
+   // con la stessa previsione con cui cede (passaggio, a velocità costante): con una barca a meno di RINVIO_D m rimanda di 1 s, al più RINVIO_MAX s in tutto.
+   // Lo stesso prima di partire (mezzo secondo, mai oltre lo sparo). E i rivali decidono chi cede anche con le regole 15 e 16 (chiCede1516).
+   // RINVIO_MAX da scegliere fra 4, 8 e 12 s sui semi 2201-2230 e confermare sui semi 2231-2260; RINVIO_D = 2 lunghezze: ipotesi nostre. MANOVRE = false: com'era
++  let MANOVRE_P = true; /* voce 4B, 23 nov: false = solo la parte delle virate, senza l'attesa alla partenza (per le misure) */
+   let MANOVRE = false, RINVIO_MAX = 8; // 1.3.11: spenta, perché sui semi di scelta nessun RINVIO_MAX passa M5 (CHANGELOG 1.3.11); si accende solo nelle misure (__sv.manovre)
+   const RINVIO_D = 2 * BOAT.length;
+   const guarda = () => MANOVRE && R.r1516;
++  // Voce 3 (docs/PROPOSTA-COPPIE.md §11 e §13, terzo modello «chi si libera resta libero»): nelle regate di Deriva chi deve cedere a una barca sulle stesse mure
++  // si libera virando (o strambando) se la virata passa libera; poi non rivira per T_LIBERO s, e chi aveva la precedenza per T_LIBERO s non vira verso di lei
++  // (rimanda la virata a tempo di 1 s se dopo passerebbe a meno di 3 lunghezze). COPPIE = false: com'era. T_LIBERO fra 10, 15 e 20 s: ipotesi nostra, da scegliere sui semi
++  let COPPIE = false, T_LIBERO = 15;
++  const coppie = () => COPPIE && R.r1516;
+   function cambiaBordoGuarda(b, ai, twd, ang){ // ang: l'angolo dal vento del bordo nuovo (ai.up di bolina, l'angolo di poppa)
+     if (guarda() && (b.rinvio || 0) < RINVIO_MAX && passaggio(b, twd + b.side * ang) < RINVIO_D){ b.boardMax += 1; b.rinvio = (b.rinvio || 0) + 1; return; } // la nuova prua: twd - (-side)·ang
++    if (coppie() && b.libAltra && R.t - b.libAltra.t < T_LIBERO && passaggio(b, twd + b.side * ang, b.libAltra.o) < 3 * BOAT.length){ b.boardMax += 1; return; } /* voce 3: non inseguire chi si è appena liberata */
++    if (coppie() && b.libAltra && R.t - b.libAltra.t < T_LIBERO) R.nInsegue = (R.nInsegue || 0) + 1; /* voce 3: per le misure, chi aveva la precedenza vira lo stesso entro T_LIBERO */
+     cambiaBordo(b, ai);
+   }
+   function aiControl(b, dt){
+@@ -354,7 +362,7 @@
+         b.simT = (b.simT || 0) - dt;
+         if (b.simT <= 0){ b.simT = 0.25; const T = startTime(b, lineAim, w, -R.t + 2); // simula fin poco oltre lo zero: se non arriva in tempo, parte subito
+           if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)){
+-            if (guarda() && R.t < 0 && passaggio(b, lineAim) < RINVIO_D) b.simT = 0.5; // 1.3.11: una barca sulla rotta di partenza: si aspetta mezzo secondo
++            if (guarda() && MANOVRE_P && R.t < 0 && passaggio(b, lineAim) < RINVIO_D) b.simT = 0.5; // 1.3.11: una barca sulla rotta di partenza: si aspetta mezzo secondo
+             else { b.goStart = true; b.tGo = R.t; } } } // il margine fa arrivare dopo lo zero, mai prima
+       }
+       b.holdA = holdAngle(by);
+@@ -377,6 +385,7 @@
+     const brg = bearingTo(s, dest);
+     const rel = norm180(brg - twd);
+     b.boardT += dt;
++    b.ramo = 0; /* voce 3: si libera virando solo a bordi (assegnato nei rami qui sotto) */
+     if (hold){ desired = twd + (pre ? HOLD_S * b.holdA : 62); } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
+     else if (pre){ desired = b.preDesired; }
+     else if (Math.abs(rel) < ai.up + (LAY_MARG === null || b.leg < 1 ? 0 : layLee(w.tws, ai.up) + LAY_MARG)){ // solo dopo il via: l'avvicinamento alla linea resta com'era // bolina: bordi alternati (1.2.23: fino alla layline col proprio scarroccio)
+@@ -385,11 +394,12 @@
+         const best = Math.abs(norm180(twd - ai.up - brg)) < Math.abs(norm180(twd + ai.up - brg)) ? 1 : -1;
+         if (best !== b.side && b.boardT > 8){ b.side = best; b.boardT = 0; } // isteresi: niente virate a raffica
+       } else if (b.boardT > b.boardMax) cambiaBordoGuarda(b, ai, twd, ai.up);
+-      desired = twd - b.side * ai.up;
++      desired = twd - b.side * ai.up; b.ramo = near ? 0 : ai.up; /* voce 3: di bolina a bordi, angolo del bordo */
+     } else if (Math.abs(rel) > (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155)){ // bersaglio in poppa piena: lasco con abbattute (1.2.24: angolo dalla polare)
+       if (b.boardT > b.boardMax) cambiaBordoGuarda(b, ai, twd, DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155);
+       desired = twd - b.side * (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155); // solo dopo il via: prima della partenza resta com'era
+-    } else {
++      b.ramo = Math.hypot(dest.x - s.x, dest.y - s.y) < 30 ? 0 : (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155); /* voce 3: in poppa a bordi */
++    } else { b.ramo = 0; /* voce 3: rotta diretta, niente bordi da cambiare */
+       desired = brg; b.side = sgn(norm180(twd - brg)); b.boardT = Math.min(b.boardT, b.boardMax * 0.5);
+       if (LAY_MARG !== null && b.leg >= 1 && Math.abs(rel) < 90){ const ns = sgn(norm180(twd - brg)); desired = brg + ns * layLee(w.tws, Math.abs(rel)); // 1.2.23: sopravento dello scarroccio, mai più stretta della bolina
+         if (Math.abs(norm180(desired - twd)) < ai.up) desired = twd - ns * ai.up; }
+@@ -492,6 +502,13 @@
+     if (b.cedeDa === null || b.cedeDa === undefined) b.cedeDa = R.t;
+     if (R.t - b.cedeDa > SCARTO_MAX){ b.rottaU = null; return desired; } // nessuno scarto dura per sempre: due barche parallele e vicine si tenevano a vicenda su una rotta (misurato: 2 barche mai arrivate)
+     if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = s.h; // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
++    if (devo && coppie() && R.t >= 0 && b.ramo > 0 && s.u >= U_ABBRIVIO && tackOf(b) === tackOf(o) && !(R.t - (b.libMia ?? -1e9) < T_LIBERO)){ /* voce 3: si libera virando */
++      const nd = twd + side * b.ramo, lib = passaggio(b, nd);
++      let ora = 1e9; for (const x of R.boats){ if (x !== b && x.fin === null && !x.dnf && !x.S.capsized) ora = Math.min(ora, Math.hypot(x.S.x - s.x, x.S.y - s.y)); }
++      if (lib >= 2 * L || (lib >= ora - 0.1 && lib >= L)){
++        cambiaBordo(b, ai); b.side = -side; b.boardMax = Math.max(b.boardMax, T_LIBERO); b.libMia = R.t; o.libAltra = { t: R.t, o: b };
++        b.cedeA = null; b.rottaU = null; b.cedeDa = null; R.nLibera = (R.nLibera || 0) + 1; return nd; }
++    }
+     // Deriva, fette 2 e 3 (docs/PROPOSTA-AVVERSARI-DERIVA.md): si prova lo scarto più piccolo che passa lontano da TUTTE le barche vicine. Chi cede parte dalla rotta che vuole,
+     // chi ha la precedenza dalla rotta che ha: mai dentro l'angolo morto né oltre il vento, e quindi niente ritorni di bolina a chi sta scendendo.
+     const lato = devo ? side : (sgn(norm180(twd - b.rottaU)) || side);
+@@ -520,11 +537,11 @@
+   let X_RIPOS = -25, T_RIPOS = 40;
+   const SCARTI = [15, 28, 45, 60]; // gradi, ipotesi nostre; il 28 è il CEDE_A di prima
+   // a che distanza si passa da tutte le barche vicine tenendo la prua nd, entro T_CEDE s, a velocità costante (almeno 1 m/s: chi è quasi fermo riparte)
+-  function passaggio(b, nd){
++  function passaggio(b, nd, solo){ /* solo (voce 3): una barca sola */
+     const s = b.S, u = Math.max(s.u, 1), vx = Math.sin(nd * D2R) * u, vy = -Math.cos(nd * D2R) * u;
+     let min = 1e9;
+     for (const o of R.boats){
+-      if (o === b || o.fin !== null || o.dnf || o.S.capsized) continue;
++      if (o === b || o.fin !== null || o.dnf || o.S.capsized || (solo && o !== solo)) continue;
+       const rx = o.S.x - s.x, ry = o.S.y - s.y; if (Math.hypot(rx, ry) > D_CEDE) continue;
+       const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
+       const t = w2 > 1e-6 ? clamp(-(rx * wx + ry * wy) / w2, 0, T_CEDE) : 0;

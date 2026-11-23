@@ -81,7 +81,7 @@ async def main():
         tit = await pg.evaluate("() => Object.fromEntries(LESSONS.map(L => [L.name.split(' ')[1], L.title]))")
         chk("M4", all(tit[n] == t for n, t in attesi.items()), f"M4 i numeri dei rimandi puntano a {[(n, tit[n]) for n in attesi]}")
         br = await pg.evaluate("() => LESSONS.flatMap((L, i) => L.steps.filter(s => s.esercizio).map(s => [L.name, (s.esercizio.brief.match(/lezione (\\d+)/) || [])[1]]))")
-        chk("M4", len(br) == 7 and all(n == "Lezione " + str(k) for n, k in br), f"M4 ogni esercizio in regata dice il numero della sua lezione: {br}")
+        chk("M4", len(br) == 8 and all(n == "Lezione " + str(k) for n, k in br), f"M4 ogni esercizio in regata dice il numero della sua lezione: {br}")  # 8 dalla 1.3.45 (esercizio nuovo della lezione 11)
         gl = await pg.evaluate("() => GLOSS.map(g => [g[0], g[2]])"); glm = dict(gl)
         att_gl = {"Stallo della pala": "Il timone che stalla", "Spingere il boma": "Spingere il boma", "Scarso": "I salti di vento", "Precedenza": "Mure opposte",
                   "Sovrapposte": "Stesse mure", "Avviso": "I segnali di partenza", "Richiamo individuale": "La partenza anticipata", "Giro di penalità": "Boe e giri di penalità",

@@ -203,3 +203,49 @@ Ale ha chiesto cos'era la voce 3 e ha detto «vai avanti»; questa è la propost
 **Rischi:**
 - un bordo minimo più lungo può portare oltre la layline: lo controlla K4, l'arrivo mediano;
 - K1 potrebbe ancora non arrivare a -40%, perché 28 coppie su 88 nascono prima del via e restano alla voce 2.
+
+## 15. Voci 4B e 3 insieme: fermata 2 (23 novembre 2026, notte; Ale: «parti con 4B e 3 insieme, vai in autonomia»)
+
+**Scritto prima di misurare.** Codice (gioco 1.3.46, `js/regate.js`): la voce 3 come al §11 più §13, accanto alla 4B già scritta e spenta (`MANOVRE`); interruttore `COPPIE` (spento) e `__sv.coppie(on, T_LIBERO)` per le misure; in più `__sv.manovre(on, max, false)` toglie alla 4B l'attesa alla partenza (la «strada 2» dell'esito della 4B, `PROPOSTA-REGOLE-15-16.md`: scritta dopo aver visto i semi 2201-2230, quindi va dichiarata e conta solo come variante). **Tutte e due valgono solo nelle regate di Deriva (`R.r1516`)**: la Scuola resta identica (decisione del 9 novembre, «la Scuola basta che non peggiori»).
+
+**Cosa cambia nel metro, dichiarato:** i K1-K6 del §5 si misuravano col rigioco delle regate della Scuola di Ale; ora la voce 3 vale solo in Deriva, quindi si misura come la 4B, sulle regate del torneo col pilota (`tests/misura_manovre.py`), dove S8 è già contata («coppie»). Lo strumento ora apre **una pagina nuova per ogni regata** (prima una per configurazione) e conta `liberate` (virate per liberarsi) e `insegue` (chi aveva la precedenza vira lo stesso entro `T_LIBERO`). Controllo fatto prima: con tutto spento le regate del seme 2201 sono identiche a quelle della 1.3.46 (`RADICE` = copia del commit c422bad).
+
+**Criteri (soglie dei §5 e della 4B, non cambiate; base = tutto spento sugli stessi semi):**
+- **Voce 3 da sola:** K1 coppie almeno −40%; K2 contatti (M3) al massimo +10%; K3 `liberate` almeno 20, piantati al massimo base +2; K4 arrivo mediano dei rivali non peggiore della base; fuori linea e non arrivati al massimo base +2 (come M5).
+- **4B da sola:** M1-M5 come scritti (M1 −50%, M2 −30% se nella base ci sono almeno 15 casi, M3 non più della base, M4 entro +2%, M5 al massimo base +2).
+- **Insieme:** tutte e due le liste; dove si sovrappongono vale la più severa (contatti non più della base, arrivo mediano non peggiore).
+- **M6 / K5-K6:** Scuola identica (guardiano degli avversari), `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici.
+
+**Semi:** scelta 2201-2230 (120 regate per configurazione; già guardati per la 4B il 16 novembre), conferma 2231-2260 mai guardati, Chromium; la configurazione scelta anche in Firefox sulla conferma. `T_LIBERO` fra 10, 15 e 20 s e `RINVIO_MAX` fra 4, 8 e 12 s si scelgono sui semi di scelta: la configurazione che passa tutti i suoi criteri con più margine su K1 (voce 3) o M1 (4B).
+
+**Correzione del metro (23 nov, dopo le prime due configurazioni, prima di confrontarle):** il campo «coppie» di `misura_manovre.py` conta le coppie diverse per regata **anche prima del via**, mentre K1 parla di coppie dopo il via. Aggiunto `coppie_dopo_via`: episodi S8 (chi cede alla stessa barca da 10 s, entro 12,6 m, prue a meno di 20°) che arrivano ai 10 s dopo lo sparo. **K1 si giudica su `coppie_dopo_via`.** Le due configurazioni già fatte (base e `T_LIBERO` 10) si rifanno.
+
+### Esito (23 novembre 2026, notte): **nessuna configurazione passa, il gioco resta la 1.3.46**
+
+Chromium, semi di scelta 2201-2230, 120 regate del torneo col pilota per configurazione, una pagina nuova per regata; 1440 regate in tutto, picco 65 °C col freno 64/55. Uscite in `sperimentale/coppie-4b-3/misura_scelta1.txt` e `misura_scelta2.txt`. In grassetto i criteri non passati.
+
+| | coppie dopo il via (K1 ≤ 10) | M1 (≤ 16) | M2 | M3 contatti | M4 arrivo (s) | piantati | fuori | non arrivati | liberate / insegue |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| base | 18 | 33 | 11 | 119 | 188,7 | 0 | 36 | 144 | — |
+| voce 3, `T_LIBERO` 10 | **11 (−39%)** | 20 | 11 | 107 | 187,1 | 0 | 35 | 130 | 353 / 4 |
+| voce 3, 15 | **14 (−22%)** | 22 | 11 | 107 | 186,6 | 0 | 35 | 132 | 327 / 3 |
+| voce 3, 20 | **11 (−39%)** | 19 | 11 | 100 | 186,6 | 0 | 35 | 128 | 307 / 11 |
+| 4B, rinvio 4 | 9 | 16 (−52%) | 0 | 109 | 190,9 (+1,2%) | 0 | **39 (+3)** | 144 | — |
+| 4B, 8 | 10 | 16 (−52%) | 0 | 109 | 191,7 (+1,6%) | 0 | **39 (+3)** | 146 | — |
+| 4B, 12 | 10 | **21 (−36%)** | 0 | 112 | 191,2 (+1,3%) | 0 | **39 (+3)** | 146 | — |
+| 4B senza attesa al via (v4, variante dichiarata) | 4 | 14 (−58%) | 6 | 107 | 192,0 (+1,7%) | 0 | **54 (+18)** | 136 | — |
+| 4B 4 + voce 3 10 | 9 | **19** | 0 | 107 | **189,2** | 0 | **42** | **147** | 302 / 13 |
+| 4B 4 + voce 3 20 | 11 | **19** | 0 | 103 | **190,8** | 0 | **42** | **157** | 266 / 19 |
+| 4B 8 + voce 3 10 | 9 | **18** | 0 | 105 | 188,4 | 0 | **42** | 145 | 298 / 12 |
+| 4B 8 + voce 3 20 | 9 | **17** | 0 | 102 | **189,8** | 0 | **42** | **157** | 261 / 17 |
+
+- **M2** ha 11 casi nella base (meno di 15): non misurabile su questi semi, come scritto.
+- **Voce 3 da sola:** passa tutto (contatti −10/−16%, arrivo mediano 1,6-2,1 s meglio, non arrivati meno) **tranne K1, per un episodio**: 11 coppie contro le 10 che servivano. La soglia non si tocca.
+- **4B da sola:** col rinvio di 4 o 8 s passa M1, M3, M4, piantati e non arrivati; **non passa il «fuori» per una barca** (39 contro 38). Il «fuori» sale sempre (39-42) quando c'è l'attesa alla partenza; senza l'attesa (v4) sale molto di più (54): non è l'attesa da sola la causa. Rumore del «fuori» con tutto spento su altri gruppi di semi (16 nov): 36-43.
+- **Insieme** va peggio di ciascuna da sola: M1 risale (17-19), «fuori» 42 in tutte e quattro, arrivo mediano peggiore in tre su quattro.
+- La 4B da sola toglie già metà delle coppie dopo il via (18 → 9-10): le virate rimandate fanno anche partire meno barche appaiate.
+- La conferma (semi 2231-2260) **non è stata guardata**: resta libera per una prova futura.
+
+**Diagnosi delle 11 coppie che restano con la voce 3 (10 s)** (`diagnosi_c10.txt`, `diag_coppie.py`, stessi semi): 5 su rotta diretta (traverso o lasco, 63-120° dal vento), dove la regola non vale perché non si va a bordi; 5 si riformano da 1 a 7 s dopo una virata per liberarsi (la virata non basta: l'altra barca o una terza è di nuovo lì); 1 in poppa, con la strambata che non passava libera. In 4 su 11 l'altra barca è quella del pilota, che non conosce la regola «non inseguire».
+
+**Stato:** `js/` identico alla 1.3.46. Codice in `sperimentale/coppie-4b-3/voce3_e_4b.patch` (si applica con `git apply`; le configurazioni `c*` e `v*` di `misura_manovre.py` la richiedono). **Da decidere con Ale:** (1) lasciare le due voci ferme; (2) la sola voce 3 con 10 s manca K1 di un episodio su 18 casi: si potrebbe allargare il metro (più semi, sempre gli stessi criteri) prima di dire che non passa, come previsto per M1-M2 sotto i 15 casi; (3) una voce 3 anche per la rotta diretta (metà delle coppie che restano), che chiede una fermata 1 nuova.

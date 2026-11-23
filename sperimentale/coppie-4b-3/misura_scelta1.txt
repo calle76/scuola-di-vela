@@ -1,0 +1,9 @@
+{"conf": "off", "semi": "2201-2230", "regate": 120, "M1": 33, "M2": 11, "M3": 119, "M4": 188.7, "piantati": 0, "coppie": 43, "coppie_dopo_via": 18, "fuori": 36, "non_arrivati": 144, "liberate": 0, "insegue": 0, "errori": 0}
+{"conf": "c10", "semi": "2201-2230", "regate": 120, "M1": 20, "M2": 11, "M3": 107, "M4": 187.1, "piantati": 0, "coppie": 39, "coppie_dopo_via": 11, "fuori": 35, "non_arrivati": 130, "liberate": 353, "insegue": 4, "errori": 0}
+{"conf": "c15", "semi": "2201-2230", "regate": 120, "M1": 22, "M2": 11, "M3": 107, "M4": 186.6, "piantati": 0, "coppie": 39, "coppie_dopo_via": 14, "fuori": 35, "non_arrivati": 132, "liberate": 327, "insegue": 3, "errori": 0}
+{"conf": "c20", "semi": "2201-2230", "regate": 120, "M1": 19, "M2": 11, "M3": 100, "M4": 186.6, "piantati": 0, "coppie": 38, "coppie_dopo_via": 11, "fuori": 35, "non_arrivati": 128, "liberate": 307, "insegue": 11, "errori": 0}
+{"conf": "m4", "semi": "2201-2230", "regate": 120, "M1": 16, "M2": 0, "M3": 109, "M4": 190.9, "piantati": 0, "coppie": 47, "coppie_dopo_via": 9, "fuori": 39, "non_arrivati": 144, "liberate": 0, "insegue": 0, "errori": 0}
+{"conf": "m8", "semi": "2201-2230", "regate": 120, "M1": 16, "M2": 0, "M3": 109, "M4": 191.7, "piantati": 0, "coppie": 48, "coppie_dopo_via": 10, "fuori": 39, "non_arrivati": 146, "liberate": 0, "insegue": 0, "errori": 0}
+{"conf": "m12", "semi": "2201-2230", "regate": 120, "M1": 21, "M2": 0, "M3": 112, "M4": 191.2, "piantati": 0, "coppie": 48, "coppie_dopo_via": 10, "fuori": 39, "non_arrivati": 146, "liberate": 0, "insegue": 0, "errori": 0}
+{"conf": "v4", "semi": "2201-2230", "regate": 120, "M1": 14, "M2": 6, "M3": 107, "M4": 192.0, "piantati": 0, "coppie": 32, "coppie_dopo_via": 4, "fuori": 54, "non_arrivati": 136, "liberate": 0, "insegue": 0, "errori": 0}
+freno: 1 pause, picco 65 °C, uscita 0

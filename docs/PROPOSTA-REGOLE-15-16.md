@@ -120,3 +120,7 @@ Semi di scelta 2201-2230, 120 regate del torneo col pilota per configurazione; l
 - **Il cono** abbassa i contatti in tutto (148 → 117) e quelli dopo le virate (28 → 20).
 
 **Esito: la versione B non si adotta così.** Resta spenta. Strade per Ale: (1) lasciarla spenta; (2) provare solo la parte delle virate, senza l'attesa alla partenza che fa uscire i rivali dalla linea (M1 resterebbe da riguardare: −45% col rinvio di 4 s); (3) riprenderla con la voce 2 (bolina dei rivali), che tocca gli stessi punti.
+
+## Versione B, misura del 23 novembre 2026 (insieme alla voce 3)
+
+Rimisurata sulla 1.3.46 con lo strumento corretto (una pagina nuova per regata), semi di scelta 2201-2230: col rinvio di 4 o 8 s passa M1 (−52%), M3, M4 (+1,2/+1,6%) e i piantati e non arrivati, ma **non il «fuori» per una barca** (39 contro 36+2). Insieme alla voce 3 va peggio. Tabella e diagnosi: `PROPOSTA-COPPIE.md` §15. Resta spenta; la conferma (2231-2260) è ancora mai guardata.
