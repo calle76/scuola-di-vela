@@ -2,7 +2,7 @@
 
 **L'ordine lo decide Ale.** Una riga per voce; il dettaglio sta nella proposta o nell'osservazione indicata, e, per gli stati lunghi di prima del 17 novembre, in `archivio/DA-FARE-lunga-17nov.md`. Quando una voce è fatta si toglie (resta nel `CHANGELOG.md`; le chiuse sono in `archivio/DA-FARE-archivio-17nov.md`). Stato generale: `STATO.md`.
 
-**Regola di Ale (22 nov): in ordine di ciò che costerà meno lavoro dopo** (prima ciò su cui si tarano le altre voci). **Ordine di oggi:** avversari 4B e 3 (misurate il 23 nov, aspettano una decisione), 2 (usano la barca; la 2 aspetta registrazioni di Ale e Lucio sulla fisica completa, decisione del 10 nov: forse già bastano) → 74 storico dei rivali (comportamento dei rivali) → 49 regola 18 (rivali che danno spazio, poi lezione) → 36 Allenamento e 71 uscita lenta (girano sui rivali finali) → Coach: 42, 69, 66 → medaglie e tempi per ultimi (7).
+**Regola di Ale (22 nov): in ordine di ciò che costerà meno lavoro dopo** (prima ciò su cui si tarano le altre voci). **Ordine di oggi:** avversari 4B (conferma della variante x4 il 23 nov pomeriggio; la 3 è chiusa), 2 (usano la barca; la 2 aspetta registrazioni di Ale e Lucio sulla fisica completa, decisione del 10 nov: forse già bastano) → 74 storico dei rivali (comportamento dei rivali) → 49 regola 18 (rivali che danno spazio, poi lezione) → 36 Allenamento e 71 uscita lenta (girano sui rivali finali) → Coach: 42, 69, 66 → medaglie e tempi per ultimi (7).
 
 **Regola di Ale (17 nov):** i «via» alle correzioni grosse si danno **tutti insieme quando i crediti sono ripristinati**, con questa lista. Con pochi crediti: solo testi, collaudi, proposte. Dal 9 novembre: le voci sugli avversari si misurano sulle regate del torneo; la Scuola basta che non peggiori (`DECISIONI.md`).
 
@@ -26,7 +26,6 @@
 | 71 | **Uscita da una regata lunga del torneo: la pagina resta ferma 3-6 s** (misurato il 21 nov col C11 `--lungo`: R7 6,33 s al massimo contro 2 s; nelle regate corte 2,7 s). Causa letta nel codice: `torChiudi` (`js/regate.js`) simula di colpo, in un ciclo solo, tutto il resto della regata dei rivali (fino a 1800 s). Da decidere: simulare a pezzi fra un fotogramma e l'altro, o accorciare il resto; **non** cambiare il passo (cambierebbe gli arrivi). Il C11 intero in lungo non è nella suite finché non si decide. Proposta scritta (21 nov); prima Ale dice se il ritardo si sente | `PROPOSTA-USCITA-REGATA-LUNGA.md` | Opus |
 | 42 | **Coach, terza mano:** la finestra di «altre barche» può contenere una scuffia e la perdita è detta due volte | `PROPOSTA-COACH-2.md` §8; oss. 131 | Opus per la proposta |
 | 2 | **Avversari tutti insieme:** bolina e avvicinamento alla boa, uscire dal vento sporco, casi 81 e 83 di Deriva. Aspetta registrazioni di Ale e Lucio sulla fisica completa (`DECISIONI.md`, 10 nov); dall’11 al 21 nov ce ne sono 37, da guardare se bastano | `PROPOSTA-CONO-D-OMBRA.md`; `PROPOSTA-AVVERSARI-BOLINA.md` §14 | Opus |
-| 3 | **Barche affiancate che si tengono:** misurata il 23 nov su corte e lunghe: difetto raro (una coppia ogni 7-8 regate) e la regola non lo toglie sui semi nuovi (−18/−21% nelle corte, 0% nelle lunghe). **Proposta: chiuderla** (decide Ale) | `PROPOSTA-COPPIE.md` §15 | — |
 
 ## 3. Da guardare (collaudi e difetti senza causa nota)
 
@@ -64,6 +63,6 @@
 
 ## Archivio
 
-- Voci chiuse: `archivio/DA-FARE-archivio-17nov.md` (23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36 «Tornei online», 37, 38, 52 e le ferme 1, 11, 13, 20).
+- Voci chiuse: `archivio/DA-FARE-archivio-17nov.md` (3 il 23 nov, 23, 24, 25, 26, 28, 29, 30, 32, 33, 34, 36 «Tornei online», 37, 38, 52 e le ferme 1, 11, 13, 20).
 - Voci fatte il 17 nov e tolte da qui nel riordino: **45** (T2b su GitHub, voci a frammento), **51** (1.3.20), **60** (1.3.22). Altre voci fatte: 9 prima parte (1.3.21).
 - Testo intero com'era prima: `archivio/DA-FARE-lunga-17nov.md`.

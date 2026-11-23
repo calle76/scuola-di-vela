@@ -308,3 +308,12 @@ Copie del gioco con un pezzo della 4B tolto alla volta (diagnosi, non modelli da
 **Per Ale, una cosa alla volta:**
 1. **Voce 3: proposta di chiuderla.** Difetto raro (una coppia ogni 7-8 regate) e la regola non lo toglie sui semi nuovi né nelle lunghe.
 2. **4B: x4 è la strada più promettente.** Serve decidere se la 4B si giudica sulle regate lunghe (quelle del torneo vero), dove x4 manca solo i «non arrivati» (+8), o anche sulle corte, dove manca tre soglie di poco. Poi conferma su semi nuovi.
+
+**Voce 3 chiusa da Ale il 23 novembre 2026, pomeriggio** (`DECISIONI.md`): il gioco resta senza la regola «chi si libera resta libero».
+
+### Conferma della variante x4 su semi nuovi (23 novembre 2026, pomeriggio; Ale: «fai tutte le prove necessarie»), scritta prima di misurare
+
+- **Cosa si misura:** la 4B intera col rinvio di 4 s (`m4`) più la variante x4 (regole 15-16 nelle decisioni dei rivali solo dopo lo sparo), cioè `voce3_e_4b.patch` + `variante_x4_1516_dopo_il_via.patch` su una copia del gioco 1.3.48 (`RADICE`; `js/regate.js` della 1.3.48 è identico a quello della 1.3.46). Voce 3 spenta. Base = tutto spento (`off`) sugli stessi semi, nella stessa copia.
+- **Semi mai guardati:** corte 2601-2660 (240 regate per configurazione), lunghe (`--lungo`) 2701-2760 (180 regate per configurazione). Chromium. Poi, se il tempo e la temperatura lo permettono, la x4 e la base anche in Firefox sulle lunghe.
+- **Criteri e soglie: quelli della 4B del §15, non cambiati:** M1 almeno −50%; M2 almeno −30% se nella base ci sono almeno 15 casi (altrimenti non misurabile); M3 contatti non più della base; M4 arrivo mediano dei rivali entro +2%; piantati, fuori linea e non arrivati al massimo base +2.
+- **Come si riporta:** esito separato per corte e lunghe (la domanda di Ale su quali regate giudicarla resta sua). Ogni criterio fuori soglia si scrive com'è.
