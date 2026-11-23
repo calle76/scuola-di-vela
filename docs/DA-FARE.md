@@ -14,7 +14,7 @@
 | --- | --- | --- | --- |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** lezione, regola per il giocatore come la 15-16 (zona disegnata, ingaggio, colpa, semaforo), poi rivali che danno e prendono spazio. Tocca circa 9 contatti su 52 | `PROPOSTA-REGOLA-18.md` | Opus |
 | 36 | **Allenamento** al posto delle due regate di Deriva: una regata singola come quelle del torneo, con scelta di percorso, penalità, barche e livello | `PROPOSTA-ALLENAMENTO.md` | Sonnet (Opus per la regata singola) |
-| 4B | **Rivali che virano e orzano addosso (versione B, guida dei rivali):** rimisurata il 23 nov insieme alla voce 3: col rinvio 4-8 s passa tutto tranne il «fuori» per una barca (39 contro 38); insieme alla 3 va peggio. Spenta, patch in `sperimentale/coppie-4b-3/`. **Decide Ale** (lasciarla, più semi, o altro) | `PROPOSTA-COPPIE.md` §15; `PROPOSTA-REGOLE-15-16.md` | Opus |
+| 4B | **Rivali che virano e orzano addosso (versione B):** misurata il 23 nov su corte e lunghe (1980 regate): fa partire in anticipo molte barche (fuori linea 72 → 97 e 68 → 101). Causa trovata: le regole 15-16 nelle decisioni dei rivali prima del via. La variante x4 (solo dopo il via) lo toglie; nelle lunghe manca solo «non arrivati» +8. **Decide Ale** su che regate giudicarla, poi conferma su semi nuovi | `PROPOSTA-COPPIE.md` §15; patch in `sperimentale/coppie-4b-3/` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via
 
@@ -26,7 +26,7 @@
 | 71 | **Uscita da una regata lunga del torneo: la pagina resta ferma 3-6 s** (misurato il 21 nov col C11 `--lungo`: R7 6,33 s al massimo contro 2 s; nelle regate corte 2,7 s). Causa letta nel codice: `torChiudi` (`js/regate.js`) simula di colpo, in un ciclo solo, tutto il resto della regata dei rivali (fino a 1800 s). Da decidere: simulare a pezzi fra un fotogramma e l'altro, o accorciare il resto; **non** cambiare il passo (cambierebbe gli arrivi). Il C11 intero in lungo non è nella suite finché non si decide. Proposta scritta (21 nov); prima Ale dice se il ritardo si sente | `PROPOSTA-USCITA-REGATA-LUNGA.md` | Opus |
 | 42 | **Coach, terza mano:** la finestra di «altre barche» può contenere una scuffia e la perdita è detta due volte | `PROPOSTA-COACH-2.md` §8; oss. 131 | Opus per la proposta |
 | 2 | **Avversari tutti insieme:** bolina e avvicinamento alla boa, uscire dal vento sporco, casi 81 e 83 di Deriva. Aspetta registrazioni di Ale e Lucio sulla fisica completa (`DECISIONI.md`, 10 nov); dall’11 al 21 nov ce ne sono 37, da guardare se bastano | `PROPOSTA-CONO-D-OMBRA.md`; `PROPOSTA-AVVERSARI-BOLINA.md` §14 | Opus |
-| 3 | **Barche affiancate che si tengono** («chi si libera resta libero»): misurata il 23 nov con la 4B, non adottata: passa tutto tranne K1 per un episodio (11 coppie dopo il via contro 10, base 18). Metà delle coppie che restano è su rotta diretta, dove la regola non vale. **Decide Ale** fra le tre strade del §15 | `PROPOSTA-COPPIE.md` §15 | Opus |
+| 3 | **Barche affiancate che si tengono:** misurata il 23 nov su corte e lunghe: difetto raro (una coppia ogni 7-8 regate) e la regola non lo toglie sui semi nuovi (−18/−21% nelle corte, 0% nelle lunghe). **Proposta: chiuderla** (decide Ale) | `PROPOSTA-COPPIE.md` §15 | — |
 
 ## 3. Da guardare (collaudi e difetti senza causa nota)
 

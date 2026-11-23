@@ -1,0 +1,6 @@
+{"conf": "off", "semi": "2301-2360", "regate": 180, "lungo": true, "M1": 29, "M2": 13, "M3": 193, "M4": 583.4, "piantati": 0, "coppie": 91, "coppie_dopo_via": 22, "fuori": 68, "non_arrivati": 172, "liberate": 0, "insegue": 0, "errori": 0}
+{"conf": "c10", "semi": "2301-2360", "regate": 180, "lungo": true, "M1": 28, "M2": 13, "M3": 193, "M4": 580.3, "piantati": 0, "coppie": 90, "coppie_dopo_via": 22, "fuori": 68, "non_arrivati": 173, "liberate": 701, "insegue": 17, "errori": 0}
+{"conf": "c20", "semi": "2301-2360", "regate": 180, "lungo": true, "M1": 26, "M2": 13, "M3": 193, "M4": 581.4, "piantati": 0, "coppie": 90, "coppie_dopo_via": 24, "fuori": 68, "non_arrivati": 191, "liberate": 626, "insegue": 34, "errori": 0}
+{"conf": "m4", "semi": "2301-2360", "regate": 180, "lungo": true, "M1": 19, "M2": 0, "M3": 161, "M4": 583.1, "piantati": 0, "coppie": 88, "coppie_dopo_via": 13, "fuori": 101, "non_arrivati": 182, "liberate": 0, "insegue": 0, "errori": 0}
+{"conf": "m8+c10", "semi": "2301-2360", "regate": 180, "lungo": true, "M1": 19, "M2": 0, "M3": 154, "M4": 586.1, "piantati": 0, "coppie": 90, "coppie_dopo_via": 15, "fuori": 100, "non_arrivati": 181, "liberate": 578, "insegue": 19, "errori": 0}
+freno: 32 pause, picco 67 °C, uscita 0

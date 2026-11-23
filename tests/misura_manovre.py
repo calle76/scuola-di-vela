@@ -7,7 +7,7 @@
 #   coppie_dopo_via (23 nov): episodi S8 che arrivano a 10 s dopo il via (il K1 di PROPOSTA-COPPIE.md); «coppie» conta anche prima del via
 #   coppie (16 nov): la scena S8 di tests/scene_strane.py, un rivale che cede a X da almeno 10 s con X entro 12,6 m e le prue a meno di 20°: coppie diverse per regata
 #   configurazioni: off (versione B spenta), 4 / 8 / 12 (RINVIO_MAX), nocono (versione B spenta e cono d'ombra spento, solo per contare le coppie)
-# Uso: python tests/misura_manovre.py --semi 2201-2230 --conf off,4,8,12   (BROWSER=firefox); stampa una riga JSON per configurazione
+# Uso: python tests/misura_manovre.py --semi 2201-2230 --conf off,4,8,12 [--lungo]   (BROWSER=firefox); stampa una riga JSON per configurazione
 import asyncio, json, os, pathlib, statistics, sys
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -15,6 +15,8 @@ GIOCO = pathlib.Path(os.environ["RADICE"]).resolve() if os.environ.get("RADICE")
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
 a, b_ = arg("--semi", "2201-2230").split("-"); SEMI = range(int(a), int(b_) + 1)
 CONF = arg("--conf", "off,4,8,12").split(",")
+LUNGO = "--lungo" in sys.argv  # 23 nov: regate lunghe come nel torneo vero (__sv.lungo, 3 regate da circa 10 minuti invece di 4 corte)
+NK = 3 if LUNGO else 4
 src = (ROOT / "tests" / "collaudo_rotta_assoluta.py").read_text().split("async def main")[0]
 A = {"__file__": str(ROOT / "tests" / "collaudo_rotta_assoluta.py")}; exec(src, A)
 # la corsa di collaudo_rotta_assoluta.py, con in più il conto dei piantati (campione ogni secondo)
@@ -51,10 +53,10 @@ async def main():
             js = imposta(conf)
             m1 = m2 = m3 = fuori = piant = nonarr = coppie = lib = ins = copd = 0; arrivi = []
             for s in SEMI:
-                for k in range(4):
+                for k in range(NK):
                     pg = await br.new_page(viewport={"width": 1360, "height": 650}); pg.on("pageerror", lambda e: errs.append(str(e)))
                     await pg.goto((GIOCO / "index.html").as_uri() + "#collaudo"); await pg.wait_for_timeout(300)
-                    await pg.evaluate("() => { " + js + " }")
+                    await pg.evaluate("v => { __sv.lungo = v; }", LUNGO); await pg.evaluate("() => { " + js + " }")
                     r = await pg.evaluate(CORSA, [k, s, 0]); await pg.close()
                     for c in r["log"]:
                         m3 += 1; riv = [x for x, idx in ((0, c["i"]), (1, c["j"])) if idx != 0]
@@ -62,7 +64,7 @@ async def main():
                         if -5 <= c["t"] < 0 and any(c["go"][x] <= 5 for x in riv): m2 += 1
                     arrivi += [f for f in r["fin"] if f is not None]; nonarr += sum(f is None for f in r["fin"]); fuori += r["fuori"]; piant += r["piant"]; coppie += r["coppie"]
                     lib += r.get("lib", 0); copd += r["copDopo"]; ins += r.get("ins", 0)
-            out = {"conf": conf, "semi": f"{SEMI[0]}-{SEMI[-1]}", "regate": 4 * len(SEMI), "M1": m1, "M2": m2, "M3": m3, "M4": round(statistics.median(arrivi), 1) if arrivi else None,
+            out = {"conf": conf, "semi": f"{SEMI[0]}-{SEMI[-1]}", "regate": NK * len(SEMI), "lungo": LUNGO, "M1": m1, "M2": m2, "M3": m3, "M4": round(statistics.median(arrivi), 1) if arrivi else None,
                    "piantati": piant, "coppie": coppie, "coppie_dopo_via": copd, "fuori": fuori, "non_arrivati": nonarr, "liberate": lib, "insegue": ins, "errori": len(errs)}
             print(json.dumps(out), flush=True)
         await br.close()

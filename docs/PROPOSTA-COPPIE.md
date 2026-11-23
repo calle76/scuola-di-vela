@@ -249,3 +249,62 @@ Chromium, semi di scelta 2201-2230, 120 regate del torneo col pilota per configu
 **Diagnosi delle 11 coppie che restano con la voce 3 (10 s)** (`diagnosi_c10.txt`, `diag_coppie.py`, stessi semi): 5 su rotta diretta (traverso o lasco, 63-120° dal vento), dove la regola non vale perché non si va a bordi; 5 si riformano da 1 a 7 s dopo una virata per liberarsi (la virata non basta: l'altra barca o una terza è di nuovo lì); 1 in poppa, con la strambata che non passava libera. In 4 su 11 l'altra barca è quella del pilota, che non conosce la regola «non inseguire».
 
 **Stato:** `js/` identico alla 1.3.46. Codice in `sperimentale/coppie-4b-3/voce3_e_4b.patch` (si applica con `git apply`; le configurazioni `c*` e `v*` di `misura_manovre.py` la richiedono). **Da decidere con Ale:** (1) lasciare le due voci ferme; (2) la sola voce 3 con 10 s manca K1 di un episodio su 18 casi: si potrebbe allargare il metro (più semi, sempre gli stessi criteri) prima di dire che non passa, come previsto per M1-M2 sotto i 15 casi; (3) una voce 3 anche per la rotta diretta (metà delle coppie che restano), che chiede una fermata 1 nuova.
+
+### Seconda misura (23 novembre 2026, mattina; Ale: «prova sulle regate lunghe oltre a nuovi semi su quelle corte»), scritta prima di misurare
+
+- **Configurazioni** (scelte sui semi 2201-2230, prima di guardare i nuovi): base, voce 3 con 10 s e con 20 s (pari su K1), 4B col rinvio di 4 s, 4B 8 s + voce 3 10 s (la combinazione migliore).
+- **Regate corte, semi nuovi 2231-2290** (240 regate per configurazione; i 2231-2260 erano la conferma mai guardata).
+- **Regate lunghe** (`--lungo`, come il torneo vero: 3 regate da circa 10 minuti), **semi 2301-2360** (180 regate per configurazione), mai guardati.
+- **Criteri e soglie: gli stessi del §15**, base = tutto spento sugli stessi semi. Se nella base un criterio ha meno di 15 casi si dichiara non misurabile.
+- Il codice si misura su una copia del gioco con la patch applicata (`RADICE`), `js/` del repository resta com'è.
+
+#### Risultati della seconda misura (Chromium; uscite in `sperimentale/coppie-4b-3/misura_corte_2231-2290.txt` e `misura_lunghe_2301-2360.txt`; picco 67 °C col freno)
+
+**Regate corte, semi nuovi 2231-2290 (240 regate per riga).** In grassetto i criteri non passati.
+
+| | coppie dopo il via (K1 ≤ 20) | M1 (≤ 21) | M2 (≤ 12) | M3 contatti | M4 arrivo (s) | fuori (≤ 74) | non arrivati (≤ 273) | liberate / insegue |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| base | 34 | 42 | 18 | 249 | 188,4 | 72 | 271 | — |
+| voce 3, 10 s | **27 (−21%)** | 43 | 18 | 248 | **188,6** | 68 | **287** | 721 / 11 |
+| voce 3, 20 s | **28 (−18%)** | 43 | 18 | 245 | **188,6** | 68 | **290** | 638 / 24 |
+| 4B, 4 s | 22 | **25 (−40%)** | 0 | 189 | **193,7 (+2,8%)** | **97** | 267 | — |
+| 4B 8 s + voce 3 10 s | 14 | **26 (−38%)** | 0 | 184 | **193,2 (+2,5%)** | **93** | **289** | 618 / 18 |
+
+**Regate lunghe (`--lungo`), semi 2301-2360 (180 regate per riga, 3 per torneo).**
+
+| | coppie dopo il via (K1 ≤ 13) | M1 (≤ 14) | M2 | M3 contatti | M4 arrivo (s) | fuori (≤ 70) | non arrivati (≤ 174) | liberate / insegue |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| base | 22 | 29 | 13 (non misurabile) | 193 | 583,4 | 68 | 172 | — |
+| voce 3, 10 s | **22 (0%)** | 28 | 13 | 193 | 580,3 | 68 | 173 | 701 / 4 |
+| voce 3, 20 s | **24 (+9%)** | 26 | 13 | 193 | 581,4 | 68 | **191** | 626 / 34 |
+| 4B, 4 s | 13 (−41%) | **19 (−34%)** | 0 | 161 | 583,1 (−0,1%) | **101** | **182** | — |
+| 4B 8 s + voce 3 10 s | **15** | **19** | 0 | 154 | **586,1** | **100** | **181** | 578 / 19 |
+
+**Lettura:**
+- **Le coppie sono rare** e nelle regate lunghe lo sono ancora di più per minuto: 22 in 180 regate da circa 10 minuti (una ogni 8 regate, come nelle corte, che durano un terzo).
+- **La voce 3 non regge sui semi nuovi:** nelle corte −18/−21% (sui semi di scelta −39%), **nelle lunghe niente** (22 → 22 e 24), pur virando per liberarsi 600-700 volte. Il −39% dei semi di scelta era in buona parte caso, su 18 coppie.
+- **La 4B toglie davvero i contatti** (−24% nelle corte, −17% nelle lunghe; quelli dopo una virata −34/−40%) e anche le coppie (−35/−41%), ma **fa partire in anticipo molte più barche**: fuori linea 72 → 97 nelle corte e 68 → 101 nelle lunghe. È l'effetto che sui semi di scelta sembrava di una barca sola (36 → 39).
+- **Esito: né la voce 3 né la 4B si adottano**; la voce 3 si può chiudere (difetto raro, e la regola non lo toglie). Per la 4B la diagnosi qui sotto cerca quale pezzo fa uscire le barche.
+
+#### Diagnosi della 4B: perché fa partire in anticipo (stessi semi corti 2231-2290, poi i lunghi 2301-2360; `diagnosi_fuori_linea.txt`)
+
+Copie del gioco con un pezzo della 4B tolto alla volta (diagnosi, non modelli da adottare):
+
+| | fuori linea (base 72) | M1 (base 42) | M3 (base 249) | M4 (base 188,4) | non arrivati (base 271) |
+| --- | --- | --- | --- | --- | --- |
+| 4B intera | 97 | 25 | 189 | 193,7 | 267 |
+| x1: rinvio della virata solo dopo il via | 97 (uguale al bit: prima del via il rinvio non scatta mai) | 25 | 189 | 193,7 | 267 |
+| x2: senza rinvio della virata | 97 | 28 | 198 | 194,4 | 273 |
+| x3: solo le regole 15-16 nelle decisioni dei rivali (né rinvio né attesa) | **114** | 26 | 193 | 195,8 | 259 |
+| **x4: 4B intera, ma regole 15-16 nelle decisioni dei rivali solo dopo il via** | **63** | 22 (−48%) | 240 | 192,5 (+2,2%) | 293 (+22) |
+| x4 nelle regate lunghe (base: fuori 68, M1 29, M3 193, M4 583,4, non arrivati 172) | **57** | 13 (−55%) | 193 | 584,7 (+0,2%) | 180 (+8) |
+
+- **Causa trovata:** le barche escono dalla linea perché prima del via i rivali decidono chi cede **con le regole 15 e 16** (`chiCede1516`): x3, solo quel pezzo, ne fa uscire 114 contro 72. L'attesa alla partenza ne toglie un po' (97). Il rinvio delle virate non c'entra.
+- **x4** (le regole 15-16 nelle decisioni dei rivali solo dopo lo sparo) riporta il «fuori» sotto la base, in tutte e due le lunghezze. Nelle corte manca M1 (−48% contro −50%) e M4 (+2,2% contro +2%), e i contatti in tutto tornano quasi come la base (240: era proprio quel pezzo a toglierli). **Nelle lunghe passa tutto tranne «non arrivati» (+8 su 540).**
+- **Cosa vuol dire «non arrivati»** (letto nel codice, `js/regate.js` riga 1185): nel torneo la regata si chiude quando arriva la barca del pilota; sono i rivali ancora in acqua in quel momento, cioè quelli dietro al pilota. +8 vuol dire rivali un po' più lenti rispetto al pilota, non barche che non finiscono.
+- I semi 2231-2360 sono ormai stati guardati tutti: una prova di x4 da adottare va confermata su semi nuovi (per esempio 2601-2660 corti e 2701-2760 lunghi).
+- Patch della variante: `sperimentale/coppie-4b-3/variante_x4_1516_dopo_il_via.patch` (si applica sopra `voce3_e_4b.patch`).
+
+**Per Ale, una cosa alla volta:**
+1. **Voce 3: proposta di chiuderla.** Difetto raro (una coppia ogni 7-8 regate) e la regola non lo toglie sui semi nuovi né nelle lunghe.
+2. **4B: x4 è la strada più promettente.** Serve decidere se la 4B si giudica sulle regate lunghe (quelle del torneo vero), dove x4 manca solo i «non arrivati» (+8), o anche sulle corte, dove manca tre soglie di poco. Poi conferma su semi nuovi.
