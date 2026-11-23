@@ -700,6 +700,23 @@
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
       text: ["Precedenza presa con una tua manovra: dai all'altra il tempo di scansarsi (regola 15). Precedenza e cambio di rotta verso l'altra: lasciale spazio (regola 16). Il semaforo giallo te lo ricorda."] }
   ];
+  /* 1.3.49 (voce 49, docs/PROPOSTA-REGOLA-18.md): lezione 25, regola 18 parafrasata da F15 (18, 43.1(b)); solo testo come la 24 */
+  const LE5 = [
+    { title: "La zona", ...PAUSE, zoom: 2,
+      text: ["Attorno a ogni boa da girare c'è la <em>zona</em>: l'area entro tre lunghezze di scafo dalla boa (nel gioco 12,6 m). Quando la prima di due barche entra nella zona, si decide chi dovrà lasciare all'altra lo spazio per girare la boa (regola 18).",
+             "Lo spazio è quello che serve per girare la boa da buon marinaio, non un permesso di tagliare la strada."] },
+    { title: "Chi ha diritto allo spazio", ...PAUSE, zoom: 2,
+      text: ["Se in quel momento le due barche sono sovrapposte (nel regolamento: ingaggiate), quella all'<em>esterno</em> deve dare spazio a quella all'<em>interno</em>, più vicina alla boa. Se non lo sono, quella dietro deve darlo a quella davanti, che è entrata prima nella zona.",
+             "Quello che si decide all'ingresso resta: vale anche se dopo la sovrapposizione si rompe o ne nasce una nuova."] },
+    { title: "Quando non vale", ...PAUSE, zoom: 2,
+      text: ["Di bolina, fra due barche con mure opposte, la regola 18 non vale: restano le regole di sempre. Non vale neanche fra chi arriva alla boa e chi se ne allontana, né alle boe della partenza.",
+             "Se viri dentro la zona e ti ritrovi mure a dritta, non hai diritto allo spazio verso una barca mure a dritta che sta già arrivando alla boa (regola 18.3). Il diritto finisce quando hai girato la boa, se esci dalla zona o se passi con la prua nel vento."] },
+    { title: "Nel gioco", ...PAUSE, zoom: 2,
+      text: ["Nelle regate di Deriva la zona è il cerchio tratteggiato attorno alle boe (si nasconde nelle Impostazioni; la regola vale lo stesso). Finché lo spazio è dovuto, un contatto è colpa di chi lo doveva, anche se per le altre regole aveva la precedenza (regola 43.1).",
+             "Il semaforo è verde se lo spazio ti è dovuto; se lo devi tu è rosso, o giallo se per le altre regole avresti la precedenza. Semplificazioni: il gioco non giudica se lo spazio preso è quello giusto, della 18.3 tiene solo che chi vira nella zona deve lo spazio, e gli avversari per ora non ne tengono conto quando manovrano. Nella Scuola restano le regole 10-13."] },
+    { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
+      text: ["Alla boa conta chi entra per primo nella zona: sovrapposte, l'esterna dà spazio all'interna; altrimenti chi è dietro lo dà a chi è davanti. Non vale di bolina con mure opposte. Chi vira nella zona non ha diritto allo spazio."] }
+  ];
   const LESSONS = [
     { name: "Lezione 1", title: "La barca e il vento", steps: L1, desc: "Le parti della barca, il vento, orzare e poggiare, cazzare e lascare." },
     { name: "Lezione 2", title: "Il timone", steps: L2, desc: "La barra si sposta dalla parte opposta: barra sottovento orza, sopravento poggia." },
@@ -835,6 +852,11 @@
              ["La precedenza ti arriva perché è l'altra barca a virare. Devi darle tempo?", "No: lo spazio deve trovarlo lei", ["Sì, sempre", "Sì, ma solo di bolina", "Solo se siamo affiancate"], "La regola 15 vale quando prendi la precedenza con una manovra tua, non quando te la dà la manovra dell'altra."],
              ["Sei mure a dritta, di bolina; una mure a sinistra ti sta passando dietro. Puoi poggiare addosso a lei?", "No: chi ha la precedenza e cambia rotta deve lasciarle spazio", ["Sì: ho la precedenza", "Sì, se poggio poco", "Solo dopo il via"], "Regola 16: anche chi ha la precedenza, cambiando rotta, deve lasciare all'altra lo spazio per stare lontana."],
              ["Nelle regate di Deriva, che cosa vuol dire il semaforo giallo tratteggiato?", "Hai la precedenza, ma se tocchi adesso la penalità è tua", ["Devi lasciare strada", "Hai la precedenza e puoi tirare dritto", "Sta per arrivare una raffica"], "Il giallo ricorda le regole 15 e 16: l'hai appena presa, o hai appena cambiato rotta verso l'altra."]] },
+    { name: "Lezione 25", title: "Spazio alla boa", steps: LE5, livello: "deriva", desc: "La zona di tre lunghezze attorno alla boa: chi entra per primo, interna ed esterna, quando la regola non vale (regola 18).",
+      quiz: [["Due barche sovrapposte entrano nella zona della boa. Chi deve dare spazio?", "Quella all'esterno, a quella all'interno", ["Quella all'interno", "Quella mure a sinistra, sempre", "Nessuna delle due"], "Sovrapposte all'ingresso nella zona: l'esterna dà spazio all'interna (regola 18)."],
+             ["Quanto è grande la zona attorno a una boa?", "Tre lunghezze di scafo", ["Una lunghezza", "Dieci metri per tutte le barche", "Fino alla layline"], "Tre lunghezze dello scafo: nel gioco 12,6 m."],
+             ["Di bolina, due barche con mure opposte arrivano alla boa. Vale la regola 18?", "No: restano le regole di sempre", ["Sì, sempre", "Sì, ma solo per chi è mure a dritta", "Solo se sono sovrapposte"], "Fra barche con mure opposte di bolina la regola 18 non vale: mure a sinistra lascia strada."],
+             ["Viri dentro la zona e ti ritrovi mure a dritta, con un'altra barca mure a dritta che arriva alla boa. Hai diritto allo spazio?", "No", ["Sì: sei mure a dritta", "Sì, se sei all'interno", "Solo dopo aver girato la boa"], "Regola 18.3: chi vira nella zona non ha diritto allo spazio verso chi era già mure a dritta."]] },
   ];
 
   // ---- prove ----
@@ -1001,6 +1023,7 @@
     ["Lascare", "Mollare una scotta: la vela si apre verso l'esterno.", "Lezione 1"],
     ["Lasciare strada", "Navigare in modo che l'altra barca possa tenere la sua rotta senza manovrare per evitarti. Con mure diverse lascia strada la barca mure a sinistra (regola 10).", "Lezione 12"],
     ["Lasco", "Andatura con il vento che arriva da dietro il fianco, circa 120°.", "Lezione 3"],
+    ["Zona (regola 18)", "L'area entro tre lunghezze di scafo da una boa da girare. Quando la prima di due barche ci entra si decide chi deve all'altra lo spazio per girare la boa: sovrapposte, l'esterna all'interna; altrimenti chi è dietro a chi è davanti.", "Lezione 25"],
     ["Layline", "La linea da cui, di bolina, si arriva alla boa senza virare più; una per mura. Il vento che gira la sposta.", "Lezione 23"],
     ["Libera dietro, libera avanti", "Con le stesse mure, una barca che sta tutta dietro la linea tirata al traverso dal punto più a poppa dell'altra è libera dietro, e lascia strada a quella libera avanti (regola 12).", "Lezione 13"],
     ["Linea di partenza", "La linea dalla barca giuria alla boa arancione. Al via si deve essere dietro, dalla parte da cui si parte; poi la si taglia.", "Lezione 16"],

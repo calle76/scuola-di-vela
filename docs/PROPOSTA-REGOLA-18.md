@@ -86,3 +86,20 @@ Codice in `js/regate.js` (sezione nuova dopo le regole 15 e 16, come quella), le
 1. **Sì, la 18 entra dentro Deriva** (16 novembre 2026, sera).
 2. **Sì, zona disegnata** come aiuto disattivabile, come la layline (16 novembre 2026, sera).
 3. **Sì, versione A prima della B**, se Z5 passa. **Via di Ale**, ma il lavoro aspetta i crediti rigenerati, tra qualche giorno (16 novembre 2026, sera).
+
+## Fermata 2 (23 novembre 2026, pomeriggio; via di Ale del 16 novembre, crediti tornati)
+
+**Scritto prima di misurare, differenze dalla proposta:**
+- La lezione è la **25** (in Deriva ci sono le 21-24). Con lei il libretto di Deriva cresce come con la 24: Conoscenza da 8 a 10, Esperienza da 6 a 7, quota del merito da 22 a 25 (stessa proporzione, 22 × 27 / 24 = 24,75). Scelta di Claude, da guardare con Ale.
+- **Semaforo:** se lo spazio lo devi tu ma per le regole 10-16 la precedenza sarebbe tua, il colore è il **giallo** già in uso per le 15-16 («hai la precedenza, ma la penalità sarebbe tua»), non il rosso.
+- **Mentre una delle due barche vira** la decisione aspetta la fine della virata (ipotesi nostra).
+- **Collaudo:** `tests/collaudo_regola18.py`, 13 casi a mano (Z2), Z1 con il riferimento v1.3.48, Z3-Z5 su 90 regate lunghe del torneo col pilota (semi 2801-2830, mai usati), dal registro dei contatti di `#collaudo` che porta la colpa con e senza la 18 e la distanza dalla boa (le traiettorie sono le stesse: la colpa si calcola due volte sullo stesso contatto). Z3 vale con almeno 50 contatti fuori dalla zona.
+
+**Cambiato dopo il primo lancio, detto com'è:** il caso C4 (virata dentro la zona, 18.3) falliva: mentre la barca orzava per virare, sotto i 35° dal vento non era più «di bolina» e il gioco decideva lì chi doveva lo spazio. La costante «di bolina» per la 18.1(a) passa da «fra 35° e 75°» a «**al massimo 75°**» (chi orza per virare è ancora di bolina). La soglia del caso non è cambiata.
+
+### Esito (23 novembre 2026, sera): versione A nel gioco, 1.3.49
+
+- **Z1** Scuola identica (12 corse su 12, riferimento v1.3.48; polare, raffiche, impronta identiche). **Z2** 13 casi su 13. **Z6** lezione 25 e Impostazioni senza eccesso in Chromium e Firefox.
+- **Z3-Z5 sulle regate lunghe (90, semi 2801-2830): Z4 non passa**, con 267 debiti aperti e nessun contatto nella zona (tutti gli 89 contatti lontani dalle boe): il pilota e i rivali quasi non si toccano alle boe. **Sulle regate corte (120, semi 2901-2930):** Z3 0 diversi su 127, Z4 677 debiti e 1 contatto deciso dalla 18, Z5 4 → 4 colpe dei rivali alla boa. **Firefox, corte (80, semi 2951-2970):** 0 su 68, 427 debiti e 2 contatti, 1 → 1.
+- **Detto com'è:** i contatti alla boa col pilota sono pochissimi (6 in 120 regate corte, 0 in 90 lunghe), quindi Z4 e Z5 si reggono su 1-2 contatti. Il caso vero sono le regate giocate (10 dei 12 contatti alla boa delle registrazioni erano col giocatore): **Z7** si fa sulle prime regate di Ale e Lucio con la 1.3.49.
+

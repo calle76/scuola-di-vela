@@ -2,17 +2,17 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 23 novembre 2026, notte fonda, in autonomia (gioco alla **1.3.46**, tag `v1.3.46`; voci 4B e 3 misurate, non adottate).*
+*Aggiornato: 23 novembre 2026, sera (gioco alla **1.3.49**, tag `v1.3.49`; regola 18 versione A).*
 
 ## Dove siamo
 
-- **Voci 4B e 3 (23 nov, notte e mattina; via di Ale, in autonomia): non adottate, gioco ancora alla 1.3.46.** 1980 regate del torneo col pilota, corte (semi 2201-2290) e lunghe (`--lungo`, semi 2301-2360). **Voce 3:** le coppie sono rare (una ogni 7-8 regate) e la regola non le toglie sui semi nuovi (−18/−21% nelle corte, 0% nelle lunghe): proposta di chiuderla. **4B:** toglie contatti e coppie ma fa partire in anticipo molte barche (72 → 97 corte, 68 → 101 lunghe); causa trovata, le regole 15-16 nelle decisioni dei rivali prima del via; la variante x4 (solo dopo il via) lo toglie e nelle lunghe manca solo «non arrivati» +8 (= rivali dietro al pilota). Tabelle in `PROPOSTA-COPPIE.md` §15, patch in `sperimentale/coppie-4b-3/`.
-- **Giro GitHub sulla 1.3.46 (run 45095888548):** rossi `collaudo_menu` M4 in Chromium e Firefox (**difetto del collaudo**: contava 7 esercizi in regata, dalla 1.3.45 sono 8; corretto, verde sul PC nei due browser) e `suoni_si_sentono` H4 boa in Chromium (5,8 dB in una delle tre letture contro 6: voce 8, già nota). Noti: `collaudo_partenze` (1). `collaudo_rotta` «da controllare» come sempre.
-- **1.3.46 (voce 55):** registrazioni più ricche (semaforo, colpa dei contatti, 60 s dopo l'arrivo). **1.3.45 (voce 79):** lezione 11 rifatta (due venti diversi, esercizio col vento persistente). **1.3.44 (voce 78):** raffiche sovrapposte nelle regate lunghe contano 0,3 oltre la più forte (vento locale massimo dei rivali da 23,6 a 18,0 nodi). **1.3.41-1.3.43:** Q inquadra tutto il campo in regata; «scarso/buono» sopra la bussola; Impostazioni larghe 760 px. Prima: `CHANGELOG.md`.
-- **Voci 73 e 80 chiuse (23 nov):** rollata non adottata (tre prove, 3 criteri su 9 no; patch in `sperimentale/virata-rollata-73/`; per riprenderla servono tre decisioni di Ale su B1, B2, B4); virata normale contro F109: nessun cambio. **Pagina dello studio:** `docs/pagina-studio-barca.html` (privata su https://claude.ai/artifact/FDoEW98baSGuo17ih1uQj1); Ale (23 nov): si rifà quando la barca sarà definitiva.
-- **Voce 74:** restano la decisione 2 (cautela o nemesi, prima le fonti) e la 3 (contatore, riga a fine torneo, scuffie/penalità, amico in rete).
-- **Il gioco:** Scuola chiusa come contenuti; Deriva nel gioco (lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16, Coach in regata e nella moviola). Com'è fatto: `IL-GIOCO.md`.
-- **Da sapere:** con `#collaudo` le regate restano corte (servono `--lungo`); apertura e corsa in un solo `evaluate`, pagina nuova per regata (sennò PC e GitHub danno numeri diversi). Collaudi qui uno per volta col freno; Firefox per i collaudi nuovi. `tests/misura_manovre.py` misura rivali e coppie nel torneo (configurazioni nell'intestazione).
+- **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
+- **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (scelta di Claude). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
+- **1.3.47-1.3.48 (Lucio):** lezione 11, esempio con la boa a nord; lezione 17, la X sale solo per chi è oltre allo sparo (le sue note: gioco giusto, osservazione 142).
+- **Voce 3 chiusa** (Ale). **Voce 4B, variante x4, confermata su semi nuovi:** passa M1, M4, fuori linea, non arrivati; **M3 (contatti in tutto) no** nelle corte (+3,5%) e nelle lunghe in Firefox (+6%). Non adottata, da rivedere a fine giro (`PROPOSTA-COPPIE.md` §15).
+- **Voce 2:** nelle 8 regate lunghe di Ale e Lucio (principianti) i rivali vanno di bolina come voi (mediana 326 s contro 326 s), coperture brevi: nessuna proposta per ora (`PROPOSTA-AVVERSARI-BOLINA.md` §15, `tests/misura_bolina_registrazioni.py`). Servirebbero regate lunghe con gli esperti.
+- **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
+- **Da sapere:** con `#collaudo` le regate restano corte (servono `--lungo`); apertura e corsa in un solo `evaluate`, pagina nuova per regata. Collaudi qui uno per volta col freno; Firefox per i collaudi nuovi.
 
 ## A inizio sessione
 
@@ -27,22 +27,21 @@
 - Le altre batterie del circuito **non** si simulano: la classifica a sorteggio resta (voce 52 archiviata). Niente carriera di prova. «Rifai questo tratto» e le domande sulle penalità vanno nel livello Coach dopo Deriva. Il Coach resta a «scarso» = 6° (`DECISIONI.md`).
 - Già con via, rimandate ai crediti: regola 18 in Deriva (voce 49), Allenamento (36). Domande risposte, via non dato: aiuto «scarso/buono» (48).
 
-## Prossimi passi, quando tornano i crediti
+## Prossimi passi (giro della lista)
 
-1. Dare i «via» con la lista di `DA-FARE.md` (4B e 3 misurate il 23 nov: aspettano una decisione; ordine consigliato ora: 71 (uscita lenta dalle regate lunghe), 66 (altri collaudi in lungo, rotta «in assoluto»), 67-69 (dopo le risposte di Ale), 49 regola 18, 4B rivali, 36 Allenamento, 42 Coach; leggeri: 55 registrazioni più ricche, 57 volto felice, 53 distacchi T2b). L'ordine lo decide Ale.
+1. Voce 74 (storico dei rivali, decisione 2: prima le fonti), poi 36 Allenamento e 71 uscita lenta, poi Coach (42, 69, 66), poi 7. Versione B della 18 quando si arriva ai rivali.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
-3. Regate nuove di Ale e Lucio nella cartella: leggerle (formato e cosa non contengono: voce 55).
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main --tags` (commit della notte del 23 nov: misura delle voci 4B e 3, collaudo del menu corretto).
-- **Giro GitHub dopo il push** (Actions → «Collaudi» → «Run workflow», veloce basta: il gioco non è cambiato): fatto il 23 nov (run 45130583576): `collaudo_menu` verde, rosso solo il sartiame già noto.
-- **Due decisioni** (`PROPOSTA-COPPIE.md` §15, una per volta): chiudere la voce 3? La 4B (variante x4) si giudica sulle regate lunghe o anche sulle corte?
-- **Chiedere a Lucio** per il finale dell'osservazione 135: «in quella regata (21:20) sei arrivato primo?» e a che secondo succede la situazione.
-- **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ogni due settimane circa e dopo regate nuove; a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Lo script copia anche i `stagione-*.json`; **non** copre i salvataggi del browser (carriera: voce 54).
-- **File sciolti nella radice del repo** (non tracciati): `stagione-*.json` (i vostri salvataggi; sono copiati dallo script), `Coach_*.png/jpeg` (gli originali; i jpg usati dal gioco sono in `img/`), `regata-…(1).txt` (duplicati identici: si possono cancellare). Decide Ale.
-- **Regolamento applicato:** salvare in `fonti-pdf/` le pagine utili di https://www.racingrulesofsailing.org/ (da qui il sito risponde 403): casi per le regole 11, 15, 16, 18.
-- Giocare e mandare le registrazioni: «Scarica l'ultima regata»; per un momento che sorprende, tasto **M** o scrivere il secondo.
+- **Push:** `git push origin main --tags` (1.3.47, 1.3.48, 1.3.49 e i documenti del 23 nov).
+- **Giro GitHub dopo il push** (Actions → «Collaudi» → «Run workflow», completo: il gioco è cambiato).
+- **Giocare il torneo con la 1.3.49 e mandare le regate:** servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
+- **Libretto di Deriva:** la quota del merito passa da 22 a 25 (stessa proporzione della 24): va bene?
+- **Chiedere a Lucio** per il finale dell'osservazione 135 e di rileggere la lezione 11 nuova.
+- **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ultima il 17 nov).
+- **File sciolti nella radice** (non tracciati): `stagione-*.json`, `Coach_*`, foto WhatsApp, `sessione-20261122-1909*.txt` (di Lucio), `regata-20261122-1617-intera.txt`: da spostare in `registrazioni/` o cancellare, decide Ale.
+- **Regolamento applicato:** salvare in `fonti-pdf/` le pagine utili di https://www.racingrulesofsailing.org/ (casi per le regole 11, 15, 16, 18).
 
 ## Come si lavora qui
 

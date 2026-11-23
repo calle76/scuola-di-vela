@@ -9,11 +9,11 @@
   let gustLevel = 0, gustTimer = 0, gustAll = false; // gustAll: torneo dell'1b, le raffiche nascono attorno a tutte le barche
   const gusts = [], wake = [];
   const ctl = { sheet: 0.4, tiller: 0 };
-  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false, scarso: "regate", layline: "regate", cono: true, coachReg: true }; /* coachReg (1.3.28): il Coach durante le regate di Deriva */ // layline (1.2.23): "no", "regate" (non nel torneo), "tutte"
+  const opt = { helm: "barra", view: "prua", autoCenter: true, autoCenterComp: false, hint: true, arrows: true, dead: true, sem: false, allInstr: false, ghost: true, aiLevel: "principianti", countdown: 180, autoSheet: false, scarso: "regate", layline: "regate", cono: true, coachReg: true, zona: true }; /* zona (1.3.49): la zona della regola 18 disegnata attorno alle boe, nelle regate di Deriva */ /* coachReg (1.3.28): il Coach durante le regate di Deriva */ // layline (1.2.23): "no", "regate" (non nel torneo), "tutte"
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.48"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.49"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -193,7 +193,8 @@
   // zonale senza ritiri (progress.zonalePulita, dalla 1.3.5) e almeno QUOTA_MERITO punti. Tutti i numeri sono ipotesi nostre; QUOTA_MERITO è provvisoria e si misura
   // nella tappa 7 del piano, dopo i rivali (PIANO-CHIUSURA-DERIVA.md).
   // 1.3.10: con la lezione 24 Conoscenza va da 6 a 8 ed Esperienza da 5 a 6 (totale da 21 a 24); la quota provvisoria del merito, nella stessa proporzione, da 19 a 22
-  const MERITI_D = [["abil", "Abilità", 4], ["cono", "Conoscenza", 8], ["comp", "Competizione", 6], ["esp", "Esperienza", 6]], QUOTA_MERITO = 22;
+  // 1.3.49: con la lezione 25 Conoscenza va da 8 a 10 ed Esperienza da 6 a 7 (totale da 24 a 27); la quota, nella stessa proporzione, da 22 a 25 (22 × 27 / 24 = 24,75)
+  const MERITI_D = [["abil", "Abilità", 4], ["cono", "Conoscenza", 10], ["comp", "Competizione", 6], ["esp", "Esperienza", 7]], QUOTA_MERITO = 25;
   function meritiD(p){
     const m = MISSIONS.findIndex(x => x.livello === "deriva"), k = medalOf(m, p.best[recK("m" + m)]), sf = p.stagioneFatta, tp = p.derivaTappa;
     const pt = {
@@ -432,7 +433,7 @@
       : `<p class="gl-empty">Nessun termine trovato. Prova con una parola più breve.</p>`;
   }
   function openGloss(){ releaseKeys(); $("glSearch").value = ""; renderGloss(); $("gloss").showModal(); }
-  $("openSet").onclick = () => { releaseKeys(); $("conoRiga").hidden = !(mode === "race" && R && R.ombra); $("coachRegRiga").hidden = !(mode === "race" && R && R.r1516 && !R.es); $("setNome").value = nomeGet(); $("setDlg").showModal(); }; // 1.2.25; 1.2.33 il nome
+  $("openSet").onclick = () => { releaseKeys(); $("conoRiga").hidden = !(mode === "race" && R && R.ombra); $("coachRegRiga").hidden = !(mode === "race" && R && R.r1516 && !R.es); $("zonaRiga").hidden = !(mode === "race" && R && R.r1516 && !R.es); $("setNome").value = nomeGet(); $("setDlg").showModal(); }; // 1.2.25; 1.2.33 il nome
   $("setNome").oninput = e => nomeSet(e.target.value); // 1.2.33 (PROPOSTA-RIVALI-E-SPONSOR §13-14): salvato coi progressi, vuoto vale «Tu»: la casella del cono solo dove il cono c'è (altrove la finestra a 650 px sforava)
   $("setClose").onclick = () => $("setDlg").close();
   $("glClose").onclick = () => $("gloss").close();
@@ -854,6 +855,7 @@
   $("showHint").onchange = e => { opt.hint = e.target.checked; if (mode !== "lesson") $("hint").hidden = !opt.hint; };
   $("showArrows").onchange = e => opt.arrows = e.target.checked;
   $("showCono").onchange = e => opt.cono = e.target.checked; // 1.2.25
+  $("showZona").onchange = e => opt.zona = e.target.checked; /* 1.3.49 */
   $("showCoachReg").onchange = e => opt.coachReg = e.target.checked; // 1.3.28
   $("showDead").onchange = e => opt.dead = e.target.checked;
   $("showSem").onchange = e => opt.sem = e.target.checked; // 1.0.40: spento di default

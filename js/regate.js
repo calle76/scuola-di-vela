@@ -769,6 +769,7 @@
   function chiCede1516(A, B){
     const base = chiCede(A, B);
     if (!R.r1516 || !(base.regola >= 10 && base.regola <= 13)) return base;
+    const z = debito18(A, B); if (z) return { cede: z.deve, regola: 18, base, r183: z.r183 }; /* 1.3.49: regola 18 e 43.1(b), sopra le 10-16 */
     const ha = base.cede === A ? B : A, altra = base.cede, i = R.boats.indexOf(A), j = R.boats.indexOf(B), p = R.prec[Math.min(i, j) + "-" + Math.max(i, j)];
     if (p && p.ha === ha && R.t - p.t < T15){ return p.autore === ha ? { cede: ha, regola: 15, base } : base; }
     const h0 = prua16(ha);
@@ -777,6 +778,58 @@
       if (Math.abs(norm180(brg - ha.S.h)) < Math.abs(norm180(brg - h0))) return { cede: ha, regola: 16, base };
     }
     return base;
+  }
+  // ---- regola 18, spazio alla boa (1.3.49, versione A, docs/PROPOSTA-REGOLA-18.md; F15 18 e 43.1(b), parafrasate) ----
+  // Solo nelle regate di Deriva (R.r1516), dopo lo sparo, e solo per la colpa al contatto e il semaforo: la guida dei rivali non cambia (versione B, a parte).
+  // Per ogni coppia di barche dirette alla stessa boa (stesso lato del percorso: fra chi arriva e chi se ne va non vale, 18.1(b)) si decide chi deve lo spazio
+  // quando la prima delle due entra nella zona (ZONA18, tre lunghezze), se allora sono entro PREC_VICINE m l'una dall'altra: sovrapposte (nessuna dietro
+  // all'altra, dietroA) lo deve la esterna, cioè la più lontana dalla boa; altrimenti lo deve quella fuori dalla zona, o se sono dentro tutte e due quella dietro.
+  // Chi arriva vicino dopo, con l'altra già nella zona, lo deve a lei. Il debito finisce quando chi ne ha diritto gira la boa (cambia lato), esce dalla zona
+  // (oltre ZONA18 + ZONA18_ESCE m) o passa con la prua nel vento (comincia una virata), o quando una delle due cambia lato o arriva.
+  // Mentre una delle due sta virando la decisione aspetta la fine della virata (ipotesi nostra).
+  // 18.1(a): con mure opposte e tutte e due di bolina (al massimo BOL_MAX gradi dal vento, anche più strette: chi orza per virare è ancora di bolina) la regola non vale: niente decisione e, se c'è un debito, non conta.
+  // 18.3 (semplificata): chi vira da mure a sinistra a mure a dritta dentro la zona deve lo spazio alle barche mure a dritta con cui si decide dopo; la regola vera
+  // dice che non ha diritto allo spazio e non deve farle orzare sopra la bolina. 43.1(b): col debito aperto la colpa al contatto è di chi lo deve, anche se per
+  // le regole 10-16 doveva cedere l'altra (navigare «nello spazio» non si giudica: basta il debito aperto). Le regole 21.1 e 21.2 restano sopra la 18.
+  // Non fatte: 18.1(a)(2), 18.2(d), 18.2(e), 18.4, la regola 19, le boe della partenza e dell'arrivo. ZONA18_ESCE e BOL_MAX: ipotesi nostre.
+  let R18 = true; /* false: com'era nella 1.3.48, solo per le misure (__sv.r18) */
+  const ZONA18 = 3 * BOAT.length, ZONA18_ESCE = 1, BOL_MAX = 75;
+  const diBolina = b => Math.abs(norm180(windOf(b) - b.S.h)) <= BOL_MAX;
+  const mureOpposteBolina = (A, B) => tackOf(A) !== tackOf(B) && diBolina(A) && diBolina(B);
+  const boaDi = b => b.fin === null && !b.dnf && b.leg >= 1 && b.leg <= R.marks.length ? R.marks[b.leg - 1] : null;
+  function aggiornaZona18(){
+    if (!R18 || !R.r1516 || R.t < 0) return;
+    const bs = R.boats, Z = R.zona = R.zona || {}, F = R.zonaFatta = R.zonaFatta || {};
+    for (const b of bs){
+      const mk = boaDi(b), tk = tackOf(b); b.dBoa = mk ? Math.hypot(b.S.x - mk.x, b.S.y - mk.y) : 1e9;
+      if (b.tk18 === -1 && tk === 1 && b.dBoa <= ZONA18) b.v183 = b.leg; /* 18.3: ha virato a mure a dritta dentro la zona della boa di questo lato */
+      b.tk18 = tk;
+    }
+    for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
+      const A = bs[i], B = bs[j], key = i + "-" + j, p = Z[key];
+      if (p){
+        const a = p.a, d = p.deve;
+        if (!boaDi(a) || !boaDi(d) || a.leg !== p.leg || d.leg !== p.leg || a.dBoa > ZONA18 + ZONA18_ESCE || (a.virT !== undefined && a.virT > p.t)) delete Z[key];
+        continue;
+      }
+      const mk = boaDi(A); if (!mk || mk !== boaDi(B)) continue;
+      const leg = A.leg, fk = key + "-" + leg;
+      if (F[fk] || Math.min(A.dBoa, B.dBoa) > ZONA18 || Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y) > PREC_VICINE || mureOpposteBolina(A, B) || A.virando || B.virando) continue; /* in virata si decide dopo */
+      F[fk] = true;
+      let deve;
+      const v3A = A.v183 === leg && tackOf(B) === 1 && B.v183 !== leg, v3B = B.v183 === leg && tackOf(A) === 1 && A.v183 !== leg;
+      if (v3A !== v3B) deve = v3A ? A : B;
+      else if (!dietroA(A.S, B.S) && !dietroA(B.S, A.S)) deve = A.dBoa > B.dBoa ? A : B;      /* sovrapposte: la esterna */
+      else if ((A.dBoa <= ZONA18) !== (B.dBoa <= ZONA18)) deve = A.dBoa > ZONA18 ? A : B;       /* una sola nella zona: l'altra */
+      else deve = dietroA(A.S, B.S) ? A : B;                                                     /* tutte e due dentro: quella dietro */
+      Z[key] = { deve, a: deve === A ? B : A, leg, t: R.t, r183: v3A !== v3B }; R.nZona = (R.nZona || 0) + 1;
+    }
+  }
+  /* il debito di spazio aperto fra A e B, o null (anche quando la 18.1(a) lo sospende) */
+  function debito18(A, B){
+    if (!R18 || !R.r1516 || !R.zona) return null;
+    const i = R.boats.indexOf(A), j = R.boats.indexOf(B), p = R.zona[Math.min(i, j) + "-" + Math.max(i, j)];
+    return p && !mureOpposteBolina(A, B) ? p : null;
   }
   // ---- giri di penalità (livello 2a, 1.0.61, docs/PROPOSTA-LIVELLO-2A.md; F15 44.1 e 44.2) ----
   // Solo nelle regate con R.giri e solo per il giocatore. Ogni contatto con colpa dà un debito di due giri (R.need). 1.2.16 (docs/PROPOSTA-GIRI-GIOCATORE.md, osservazione 98): un giro
@@ -982,6 +1035,8 @@
               13: v("eri", "era") + " in virata: " + v("dovevi", "doveva") + " lasciare strada finché non " + v("eri", "era") + " di nuovo di bolina",
               15: v("avevi", "aveva") + " appena preso la precedenza con una " + v("tua", "sua") + " manovra e non " + v("le hai", "le ha") + " dato il tempo di scansarsi",
               16: v("avevi", "aveva") + " la precedenza ma " + v("hai", "ha") + " cambiato rotta verso l'altra barca, senza lasciarle spazio",
+              18: cc.r183 ? v("hai", "ha") + " virato dentro la zona della boa e " + v("dovevi", "doveva") + " lasciare spazio a chi era già mure a dritta"
+                          : v("dovevi", "doveva") + " lasciare spazio alla boa all'altra barca, che ne aveva diritto (era all'interno, o era entrata prima nella zona)",
               21.1: v("stavi", "stava") + " tornando dietro la linea dopo una partenza anticipata e " + v("dovevi", "doveva") + " lasciare strada a chi non lo faceva",
               21.2: v("stavi", "stava") + " scontando una penalità e " + v("dovevi", "doveva") + " lasciare strada a chi non la scontava" })[cc.regola] + " (regola " + cc.regola + ")";
   }
@@ -1002,6 +1057,8 @@
       // mure di ciascuna col vento nel suo punto
       const cc = chiCede1516(A, B), guilty = cc.cede; // 1.3.10: con le regole 15 e 16 nelle regate di Deriva
       (R.contColpa = R.contColpa || {})[key] = { g: guilty, r: cc.regola }; /* 1.3.46 (voce 55): chi ha la colpa del contatto, per il registratore */
+      if (R.contLog){ const z = R18; R18 = false; const c0 = chiCede1516(A, B); R18 = z; /* 1.3.49: per collaudo_regola18 (solo #collaudo): colpa con e senza la regola 18, distanza dalla boa */
+        Object.assign(R.contLog[R.contLog.length - 1], { g: guilty === A ? i : j, r: cc.regola, g0: c0.cede === A ? i : j, r0: c0.regola, dm: Math.min(...[A, B].map(x => { const mk = boaDi(x); return mk ? Math.hypot(x.S.x - mk.x, x.S.y - mk.y) : 1e9; })) }); }
       const why = motivoContatto(cc, guilty);
       if (R.punti) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri){ if (guilty.me) giriDebito(); else guilty.gDebt = (guilty.gDebt || 0) + 2; } else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
       for (const o of [A, B]){ o.S.u *= 0.6; }
@@ -1173,7 +1230,7 @@
     }
     for (const b of R.boats){ if (!b.me) stepAI(b, dt); raceLegs(b); }
     rotCapture(dt);
-    aggiornaVirate(); aggiornaPrecedenze(); // 1.3.10
+    aggiornaVirate(); aggiornaPrecedenze(); aggiornaZona18(); /* 1.3.10; 1.3.49 la regola 18 */
     contacts();
     if (R.giri){ boeToccate(); giriPenalita(); }
     semaforo();
@@ -1921,6 +1978,8 @@
       ctx.fillStyle = "#F2D43C"; ctx.beginPath(); ctx.arc(mk.x, mk.y, Math.max(0.9, 3 / v.ppm), 0, Math.PI * 2); ctx.fill();
       if (next === k + 1){ ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.lineWidth = 0.2; ctx.beginPath(); ctx.arc(mk.x, mk.y, Math.max(1.8, 6 / v.ppm), 0, Math.PI * 2); ctx.stroke(); }
       drawRoundArrow(mk, 7, "rgba(255,226,122,.9)");
+      if (R.r1516 && opt.zona){ ctx.strokeStyle = "rgba(255,255,255,.35)"; ctx.lineWidth = Math.max(0.12, 1.2 / v.ppm); ctx.setLineDash([0.8, 0.8]); /* 1.3.49: la zona della regola 18, tre lunghezze */
+        ctx.beginPath(); ctx.arc(mk.x, mk.y, ZONA18, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
     });
     drawOmbre(); // 1.2.25: coni d'ombra, sotto le barche
     // avversari

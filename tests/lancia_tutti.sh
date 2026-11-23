@@ -137,6 +137,7 @@ TESTS=(
     "collaudo_carriera_file.py|py|chiaro|0||collaudo_carriera_file.py"
     "collaudo_regole_15_16.py|py|chiaro|0||collaudo_regole_15_16.py"
     "collaudo_regole_15_16.py (regate lunghe)|py|chiaro|1||collaudo_regole_15_16.py --lungo --regate 30"
+    "collaudo_regola18.py (regola 18, voce 49)|py|chiaro|1||collaudo_regola18.py --regate 120 --semi-da 2901"
     "controllo_commenti.py|py|chiaro|0||controllo_commenti.py"
     "collaudo_prova_giri.py|py|chiaro|0||collaudo_prova_giri.py"
     "collaudo_carriera_esame.py|py|chiaro|0||collaudo_carriera_esame.py"
