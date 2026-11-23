@@ -7,7 +7,7 @@
 ## Dove siamo
 
 - **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
-- **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (scelta di Claude). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
+- **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (approvata da Ale il 23 nov). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
 - **1.3.47-1.3.48 (Lucio):** lezione 11, esempio con la boa a nord; lezione 17, la X sale solo per chi è oltre allo sparo (le sue note: gioco giusto, osservazione 142).
 - **Voce 3 chiusa** (Ale). **Voce 4B, variante x4, confermata su semi nuovi:** passa M1, M4, fuori linea, non arrivati; **M3 (contatti in tutto) no** nelle corte (+3,5%) e nelle lunghe in Firefox (+6%). Non adottata, da rivedere a fine giro (`PROPOSTA-COPPIE.md` §15).
 - **Voce 2:** nelle 8 regate lunghe di Ale e Lucio (principianti) i rivali vanno di bolina come voi (mediana 326 s contro 326 s), coperture brevi: nessuna proposta per ora (`PROPOSTA-AVVERSARI-BOLINA.md` §15, `tests/misura_bolina_registrazioni.py`). Servirebbero regate lunghe con gli esperti.
@@ -36,8 +36,7 @@
 
 - **Push:** `git push origin main --tags` (1.3.47, 1.3.48, 1.3.49 e i documenti del 23 nov).
 - **Giro GitHub dopo il push** (Actions → «Collaudi» → «Run workflow», completo: il gioco è cambiato).
-- **Giocare il torneo con la 1.3.49 e mandare le regate:** servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
-- **Libretto di Deriva:** la quota del merito passa da 22 a 25 (stessa proporzione della 24): va bene?
+- **Giocare il torneo con la 1.3.49 e mandare le regate** (Ale: ok, 23 nov): servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
 - **Chiedere a Lucio** per il finale dell'osservazione 135 e di rileggere la lezione 11 nuova.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ultima il 17 nov).
 - **File sciolti nella radice** (non tracciati): `stagione-*.json`, `Coach_*`, foto WhatsApp, `sessione-20261122-1909*.txt` (di Lucio), `regata-20261122-1617-intera.txt`: da spostare in `registrazioni/` o cancellare, decide Ale.
