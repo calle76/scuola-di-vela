@@ -42,7 +42,7 @@
 ## Cosa aspetta Ale
 
 - **Push:** `git push origin main --tags` (dopo ogni sessione; dalla 1.3.23 alla 1.3.31 e i collaudi di questa notte sono da pushare).
-- **Giro completo su GitHub dopo il push (1.3.44-1.3.46)** (Actions → «Collaudi» → «Run workflow», completo): vento delle regate lunghe, lezione 11 nuova, registrazioni più ricche; due collaudi nuovi (`collaudo_lezione_salti`, `collaudo_registrazioni_ricche`) da aggiungere alla suite se non li prende da soli; poi si leggono i rossi come al solito. Sul PC E2 di `collaudo_registrazione` resta rosso come sempre (tempi col freno).
+- **Giro completo su GitHub dopo il push (1.3.44-1.3.46)** (Actions → «Collaudi» → «Run workflow», completo): vento delle regate lunghe, lezione 11 nuova, registrazioni più ricche; due collaudi nuovi (`collaudo_lezione_salti`, `collaudo_registrazioni_ricche`), già nella suite; poi si leggono i rossi come al solito. Sul PC E2 di `collaudo_registrazione` resta rosso come sempre (tempi col freno).
 - **Giro completo su GitHub dopo il push** (commit della notte del 21 nov): conferma che P4, K0 e T2b escono come sul PC; poi si leggono i rossi come al solito.
 - **Chiedere a Lucio** per il finale dell'osservazione 135: «in quella regata (21:20) sei arrivato primo?» e a che secondo succede la situazione.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ogni due settimane circa e dopo regate nuove; a inizio sessione ricordargli di collegare il disco; ultima copia il 17 nov, 74 file verificati). Lo script copia anche i `stagione-*.json`; **non** copre i salvataggi del browser (carriera: voce 54).
