@@ -506,7 +506,8 @@
   const LD6 = [
     { title: "Il richiamo individuale", ...PAUSE, zoom: 2,
       text: ["Se al segnale di partenza una parte dello scafo è già oltre la linea, la barca è partita in anticipo. La giuria alza subito la <em>X</em>, bianca con la croce blu, con un suono: è il richiamo individuale (regola 29.1).",
-             "Chi è in anticipo deve tornare con lo scafo tutto dietro la linea e partire di nuovo. La X resta su finché tutte le barche in anticipo sono tornate, ma non più di quattro minuti dal via."] },
+             "Chi è in anticipo deve tornare con lo scafo tutto dietro la linea e partire di nuovo. La X resta su finché tutte le barche in anticipo sono tornate, ma non più di quattro minuti dal via.",
+             "Conta solo dove sei allo sparo: se passi la linea prima del via e torni dietro in tempo, non sei in anticipo e la X non sale. Prima del via, con i Suggerimenti accesi, il gioco scrive «Oltre la linea: torna dietro»: è un aiuto del gioco, non un segnale della giuria."] },
     { title: "Tornare lasciando strada", ...PAUSE, zoom: 2,
       text: ["Mentre torni verso la linea dopo il via, lasci strada a tutte le barche che non lo stanno facendo, finché lo scafo non è tutto dietro la linea (regola 21.1).",
              "Nel gioco questa regola vale nella regata con i giri di penalità. Il gioco considera tornata la barca quando il suo centro è dietro la linea, non ogni punto dello scafo: è una semplificazione."] },

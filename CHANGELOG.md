@@ -22,6 +22,11 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.48 — Lezione 17: la X sale solo allo sparo (Lucio)
+
+- **Perché** (Lucio, 23 nov, osservazione 142 b): «se passo fra −10 s e lo sparo la X c'è; se passo ancora prima non c'è, c'è solo il richiamo». Nella sua sessione del 22 nov (19:09) il gioco fa giusto: nel primo tentativo passa la linea a −26 s, torna dietro a −8 s e allo sparo è 6 m sotto la linea; nel secondo è oltre a −17 s e allo sparo è di nuovo dietro. La X sale solo per chi è oltre allo sparo (regola 29.1); il «richiamo» che vedeva prima del via è la scritta del riquadro «Oltre la linea: torna dietro», un aiuto dei Suggerimenti.
+- Nel primo passo della lezione 17 una frase nuova lo dice: conta solo dove sei allo sparo; la scritta di prima del via è un aiuto del gioco, non un segnale della giuria. Codice delle regate invariato.
+
 ## 1.3.47 — Lezione 11: l'esempio dice dov'è la boa (Lucio)
 
 - **Perché** (Lucio, chat del 22-23 nov, osservazione 142): «Il vento viene da nord, come la boa» non era chiaro. Nei due passi «Un esempio» ora: «Il vento viene da nord e devi raggiungere la boa, posizionata anch'essa a nord.» Il resto dell'esempio è invariato.
