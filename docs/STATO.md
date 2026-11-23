@@ -30,7 +30,7 @@
 
 ## Prossimi passi (giro della lista)
 
-1. Voce 74 (storico dei rivali): scrivere la proposta della **marcatura** decisa dalla classifica (Ale ha scelto la marcatura al posto della nemesi; niente «cautela» senza fonte; fonti F115, F116 già lette), poi 36 Allenamento e 71 uscita lenta, poi Coach (42, 69, 66), poi 7. Versione B della 18 quando si arriva ai rivali.
+1. Voce 74: **proposta della marcatura scritta** (`PROPOSTA-MARCATURA.md`, K1-K9): aspetta il via di Ale e la risposta «tutti i livelli o solo da un livello in su?» (consiglio: tutti). Poi 36 Allenamento e 71 uscita lenta, poi Coach (42, 69, 66), poi 7. Versione B della 18 quando si arriva ai rivali.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
 
 ## Cosa aspetta Ale
