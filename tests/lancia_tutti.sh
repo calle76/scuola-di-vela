@@ -182,6 +182,7 @@ TESTS=(
     "collaudo_freccia.py (freccia dell'obiettivo, voce 72)|py|chiaro|0||collaudo_freccia.py"
     "collaudo_storico_rivali.py (storico dei rivali, voce 74)|py|chiaro|0||collaudo_storico_rivali.py"
     "collaudo_storico_frase.py (frase del Coach dallo storico, voce 74 passo 2 a)|py|chiaro|0||collaudo_storico_frase.py"
+    "collaudo_marcatura.py (marcatura nell'ultima regata, voce 74; solo la parte altri)|py|chiaro|0||collaudo_marcatura.py altri"
     "collaudo_scuffia_arrivo.py (riquadro Raddrizza a regata finita)|py|chiaro|0||collaudo_scuffia_arrivo.py"
     "collaudo_raffiche_al_via.py (raffiche al via delle regate lunghe, voce 75)|py|chiaro|0||collaudo_raffiche_al_via.py"
     "collaudo_campo_q.py (Q in regata inquadra tutto il campo, voce 76)|py|chiaro|1||collaudo_campo_q.py"

@@ -383,6 +383,8 @@
       const D = modo === "carriera" && progress.sponsor && progress.sponsor.c, S = progress.stagione;
       /* 1.3.38: se il Coach ha appena parlato (la frase dello storico con la preparazione da 1 minuto) riprova, ma solo prima del via; prima andava persa */
       c.sponsor = !(D && S && tor && tor.st !== undefined && stNaz(S) === (D.circ === "naz")) || R.t >= 0 || crDi("serio", "Per lo sponsor: " + D.ob.map(x => spTesto(x)).join(" e ") + ". Ogni regata conta."); }
+    /* 1.3.50 (voce 74, docs/PROPOSTA-MARCATURA.md): chi ti marca nell'ultima regata, da MARCA_T s; dopo lo sponsor, che ha la precedenza se capitano insieme; riprova solo prima del via */
+    if (!c.marca && R.tor && R.marca && R.t >= MARCA_T){ if (R.t >= 0 || crDi("serio", marcaFrase())) c.marca = true; }
     // penalità: sempre (forza), anche prima del via
     if ((R.need || 0) > c.need){ crDi("arrabbiato", "Penalità: fai i giri subito, lontano dalle altre barche, ognuno con una virata e una strambata (lezione 20).", true); }
     if ((R.done || 0) > c.done && (R.done || 0) >= (R.need || 0) && (R.need || 0) > 0){ crDi("contento", "Giri fatti: ora riparti e riprendi velocità.", true); }

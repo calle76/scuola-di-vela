@@ -72,6 +72,8 @@
       for (const k in Z) if (P[k] !== Z[k]) sesEv("zona", regNome(Z[k].deve) + " deve_spazio " + regNome(Z[k].a) + (Z[k].r183 ? " 18.3" : ""));
       for (const k in P) if (Z[k] !== P[k]) sesEv("zona_fine", regNome(P[k].deve) + " " + regNome(P[k].a));
       L.zona = Object.assign({}, Z); }
+    if (R.marca){ const b = R.boats[R.marca], on = !!b.marcaOn, prima = L.marcaR === R && L.marca; /* 1.3.50 (voce 74): la marcatura comincia e finisce */
+      if (on !== !!prima) sesEv(on ? "marca" : "marca_fine", regNome(b)); L.marcaR = R; L.marca = on; }
     L.ct = Object.assign({}, R.contacts);
     for (; L.pl < R.penList.length; L.pl++) sesLine("Q " + sesT() + " " + R.penList[L.pl]);
     if (riga) for (const b of R.boats){
@@ -200,6 +202,7 @@
   "#  E avv_fermo/avv_riparte nome   sotto 0,5 nodi per 5 s di gioco dopo il via (con lato e posizione), poi sopra 1 nodo; avv_lato nome N; avv_arrivo nome Ns;",
   "#    avv_ocs, avv_scuffia, avv_penalita nome +15s o +1pt, avv_boa_lato_sbagliato nome; contatto_barche nome1 nome2 (anche con «Tu»), uno per contatto",
   "#  E zona nome1 deve_spazio nome2 [18.3]   (dalla 1.3.49, regate di Deriva) nome1 deve lo spazio alla boa a nome2 (regola 18); zona_fine nome1 nome2 quando il debito finisce",
+  "#  E marca nome / marca_fine nome   (dalla 1.3.50, ultima regata del torneo) il rivale comincia o smette di marcarti di bolina (docs/PROPOSTA-MARCATURA.md)",
   "#  E coperta nome da nome2 N%   (dalla 1.2.25, solo nel torneo) nel cono d'ombra di nome2 con più del 10% di vento tolto da 2 s; libera nome quando ne esce",
   "#  Q t testo   motivo di una penalità, la stessa voce dell'elenco a fine regata",
   "#  L t lezione.passo «titolo»   passo di lezione mostrato",

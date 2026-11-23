@@ -230,6 +230,7 @@
       b.info = step(bs, b.ctl, env, 0); bs.dispBoom = bs.boomSide * bs.boom;
       R.boats.push(b);
     });
+    if (rc.tor && liv !== "nessuno"){ const m = marcaScelta(tor); R.marca = m + 1; if (m >= 0) R.boats[m + 1].marca = true; } /* 1.3.50: marcatura nell'ultima regata */
     if (es) rec.key = null; else recStart(recK("r" + i) + "b"); // senza chiave il fantasma non si salva (recSave)
     errPulisci(); rivReset(); rotReset(); // 1.2.28: via il vecchio riquadro d'errore; 1.2.22: registrazione del vento per la rotta ottimale (js/rotta.js)
     $("rTitle").textContent = es ? "Esercizio: " + LESSONS[es.lezione].steps[es.passo].title : rc.title;
@@ -243,7 +244,7 @@
 
   // il testo che si legge prima della regata (dopo la creazione delle barche: dice i caratteri degli avversari)
   function introRegata(rc, liv){
-    let t = (rc.tor ? torBrief() : "") + "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
+    let t = (rc.tor ? torBrief() + marcaRiga() : "") + "Vento da " + cardName(env.twd) + ", " + rc.tws + " nodi" + (rc.gusts ? " con raffiche" : "") +
       (rc.tor ? (rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte" : "") : rc.shifts ? ", che gira: oscilla di una dozzina di gradi ogni due minuti circa, oppure ruota sempre dalla stessa parte. Boa a 300 m" : "") +
       ". Partenza tra la barca giuria e la boa arancione, " + (rc.tri ? "girare la boa 1 e poi la boa 2, tutte e due lasciandole a sinistra, e tornare a tagliare la stessa linea" : "girare la boa gialla di bolina lasciandola a sinistra e tornare a tagliare la stessa linea") + ". Allo scadere del conto alla rovescia devi essere dietro la linea: conviene aspettare vicino alla linea, quasi fermo con la vela lascata, e cazzare negli ultimi secondi per essere già veloce allo zero. Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, senza attese." +
       (liv === "nessuno" ? " Sei da solo: dalla seconda regata gareggi contro il fantasma del tuo record."
@@ -319,6 +320,40 @@
     if (guarda() && (b.rinvio || 0) < RINVIO_MAX && passaggio(b, twd + b.side * ang) < RINVIO_D){ b.boardMax += 1; b.rinvio = (b.rinvio || 0) + 1; return; } // la nuova prua: twd - (-side)·ang
     cambiaBordo(b, ai);
   }
+  // ---- marcatura nell'ultima regata del torneo (1.3.50, voce 74, docs/PROPOSTA-MARCATURA.md; F115 Caso 78, F116) ----
+  /* Nell'ultima regata del torneo marca il giocatore il rivale a cui il duello con lui decide la classifica: con un'ultima regata finta (il rivale e il giocatore
+     primi, gli altri nel loro ordine di classifica), se arrivando subito davanti al giocatore finisce la serie davanti a lui e arrivando subito dietro finisce dietro.
+     Se sono più d'uno, quello con meno punti di differenza; a parità il primo nell'ordine delle barche. In acqua: di bolina, sullo stesso lato del percorso, davanti
+     (più vicino alla boa) e a meno di MARCA_D, vira sulle mure del giocatore dopo MARCA_REAZ s (F116: virare quando vira lui), se la rotta nuova è libera; chi deve
+     cedere cede come sempre (F115: senza rompere altre regole). Niente numeri a caso. MARCA_D (portata del cono d'ombra) e MARCA_REAZ: ipotesi nostre */
+  let MARCA = true; /* false: com'era nella 1.3.49, solo per le misure (__sv.marca) */
+  const MARCA_D = 10 * BOAT.length, MARCA_REAZ = 3, MARCA_T = -100;
+  function marcaScelta(T){ /* indice in T.av del rivale che marca, -1 se nessuno */
+    if (!MARCA || !T || !T.ris.length || T.ris.length !== torN(T) - 1) return -1;
+    const cl = torSerie(T.ris), ord = cl.map(x => x.i), tot = i => cl.find(x => x.i === i).tot;
+    const davanti = (i, seq) => { const r = seq.map(() => null); seq.forEach((x, k) => { r[x] = { fin: k + 1, pp: 0 }; });
+      const s = torSerie([...T.ris, r]); return s.findIndex(x => x.i === i) < s.findIndex(x => x.i === 0); };
+    let m = -1, v = Infinity;
+    for (let i = 1; i <= T.av.length; i++){
+      const altri = ord.filter(x => x !== 0 && x !== i);
+      if (davanti(i, [i, 0, ...altri]) && !davanti(i, [0, i, ...altri])){ const d = Math.abs(tot(i) - tot(0)); if (d < v){ m = i - 1; v = d; } }
+    }
+    return m;
+  }
+  function marcaOra(b){ /* le mure del giocatore (1 o -1) se il marcatore lo sta marcando adesso, se no null */
+    if (!b.marca || R.t < 0 || b.fin !== null || b.dnf || b.ocs || b.leg < 1 || b.leg > R.marks.length || b.S.capsized || (R.giri && b.gDebt > 0)) return null;
+    const me = R.boats[0]; if (me.fin !== null || me.dnf || me.leg !== b.leg || me.S.capsized) return null;
+    const mk = R.marks[b.leg - 1];
+    if (Math.hypot(b.S.x - mk.x, b.S.y - mk.y) >= Math.hypot(me.S.x - mk.x, me.S.y - mk.y) || Math.hypot(me.S.x - b.S.x, me.S.y - b.S.y) > MARCA_D) return null;
+    return sgn(norm180(windAt(me.S.x, me.S.y).twd - me.S.h)) || null;
+  }
+  function marcaRiga(){ /* la riga del testo della regata; "" se nessuno marca */
+    if (!R || !R.marca || !tor) return "";
+    const m = R.marca - 1, cl = torSerie(tor.ris), dav = cl.findIndex(x => x.i === R.marca) < cl.findIndex(x => x.i === 0);
+    return "Ultima regata: " + avNomeBarca(tor, m) + (dav ? " è davanti a te in classifica e ti marca: se gli arrivi davanti lo passi." : " è dietro di te in classifica e ti marca: se ti arriva davanti ti passa.") +
+      " Di bolina, quando è davanti e vicino, proverà a stare fra te e la boa e a virare quando viri tu. È lecito perché gli serve per la classifica (regola 2, caso 78 di World Sailing). ";
+  }
+  const marcaFrase = () => !R || !R.marca || !tor ? "" : avNome(tor, R.marca - 1) + ", barca " + COLORI_BARCA[R.marca - 1] + ", ti marca in quest'ultima regata: di bolina proverà a stare fra te e la boa e a virare quando viri tu.";
   function aiControl(b, dt){
     const s = b.S, w = windAt(s.x, s.y), twd = w.twd, twa = norm180(twd - s.h), side = sgn(twa), A = Math.abs(twa);
     const ai = b.ai;
@@ -377,13 +412,18 @@
     const brg = bearingTo(s, dest);
     const rel = norm180(brg - twd);
     b.boardT += dt;
+    const marcava = b.marcaOn; b.marcaOn = false; /* 1.3.50: marcatura */
     if (hold){ desired = twd + (pre ? HOLD_S * b.holdA : 62); } // in attesa: quasi di bolina con la vela che sbatte, la barca resta quasi ferma
     else if (pre){ desired = b.preDesired; }
     else if (Math.abs(rel) < ai.up + (LAY_MARG === null || b.leg < 1 ? 0 : layLee(w.tws, ai.up) + LAY_MARG)){ // solo dopo il via: l'avvicinamento alla linea resta com'era // bolina: bordi alternati (1.2.23: fino alla layline col proprio scarroccio)
       const near = Math.hypot(dest.x - s.x, dest.y - s.y) < 30;
+      const mt = near || !b.marca ? null : marcaOra(b); /* 1.3.50: le mure del giocatore marcato */
+      if (mt !== null){ b.marcaOn = true; if (!marcava || mt === b.side) b.mDiv = R.t; }
       if (near){ // vicino al bersaglio: il bordo che punta più vicino
         const best = Math.abs(norm180(twd - ai.up - brg)) < Math.abs(norm180(twd + ai.up - brg)) ? 1 : -1;
         if (best !== b.side && b.boardT > 8){ b.side = best; b.boardT = 0; } // isteresi: niente virate a raffica
+      } else if (mt !== null){ /* 1.3.50: marca, niente virate a tempo; vira sulle mure del giocatore se la rotta nuova è libera (la stessa prova di cambiaBordoGuarda) */
+        if (mt !== b.side && R.t - b.mDiv >= MARCA_REAZ && b.boardT > 8 && passaggio(b, twd + b.side * ai.up) >= RINVIO_D){ b.side = -b.side; b.boardT = 0; b.mDiv = R.t; }
       } else if (b.boardT > b.boardMax) cambiaBordoGuarda(b, ai, twd, ai.up);
       desired = twd - b.side * ai.up;
     } else if (Math.abs(rel) > (DOWN_E === null || b.leg < 1 ? ai.down : vmgPoppa(w.tws) - DOWN_E + ai.down - 155)){ // bersaglio in poppa piena: lasco con abbattute (1.2.24: angolo dalla polare)
@@ -398,6 +438,7 @@
       const newSide = sgn(norm180(twd - brg));
       if (newSide !== side && Math.abs(rel) < 90) desired = A > ai.up + 12 ? twd - side * ai.up : twd - newSide * ai.up;
     }
+    if (marcava && !b.marcaOn) b.boardT = Math.min(b.boardT, b.boardMax * 0.5); /* 1.3.50: finita la marcatura il bordo non scade subito */
     // carattere aggressivo: prima del via punta le barche mure a sinistra che ha vicine, per costringerle a manovrare.
     // Spirito delle regole 14 e 16: sotto AGGRO_OFF smette di stringere, così una manovra per evitarla esiste sempre,
     // e sotto il raggio del blocco qui sotto cerca comunque di non urtare. La colpa resta decisa solo da mure e sopravento.

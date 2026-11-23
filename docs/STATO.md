@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 23 novembre 2026, sera (gioco alla **1.3.49**, tag `v1.3.49`; regola 18 versione A).*
+*Aggiornato: 23 novembre 2026, notte (gioco alla **1.3.50**, tag `v1.3.50`; marcatura nell'ultima regata).*
 
 ## Dove siamo
 
 - **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
+- **1.3.50 (voce 74, marcatura, via di Ale a tutti i livelli):** nell'ultima regata del torneo il rivale a cui il duello con te decide la classifica ti marca di bolina (vira quando viri tu, da davanti e a meno di 42 m); riga nel testo della regata, Coach a −100 s, righe `marca` nel file. `collaudo_marcatura.py` su 80 tornei: K1, K2, K5-K9 passano; **K3 non misurato** (15 regate utili su 20; 94% contro 57%), **K4 no** (2 contatti con colpa del marcatore nei corti: uno identico senza marcatura, l'altro dalla virata normale alla layline). Il pilota sta vicino al marcatore pochi secondi: la prova vera sono le vostre ultime regate. **Da Ale: tenerla così o spegnerla** (`PROPOSTA-MARCATURA.md` §Esito).
 - **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (approvata da Ale il 23 nov). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
 - **1.3.47-1.3.48 (Lucio):** lezione 11, esempio con la boa a nord; lezione 17, la X sale solo per chi è oltre allo sparo (le sue note: gioco giusto, osservazione 142).
 - **Voce 3 chiusa** (Ale). **Voce 4B, variante x4, confermata su semi nuovi:** passa M1, M4, fuori linea, non arrivati; **M3 (contatti in tutto) no** nelle corte (+3,5%) e nelle lunghe in Firefox (+6%). Non adottata, da rivedere a fine giro (`PROPOSTA-COPPIE.md` §15).
@@ -30,12 +31,12 @@
 
 ## Prossimi passi (giro della lista)
 
-1. Voce 74: **proposta della marcatura scritta** (`PROPOSTA-MARCATURA.md`, K1-K9): aspetta il via di Ale e la risposta «tutti i livelli o solo da un livello in su?» (consiglio: tutti). Poi 36 Allenamento e 71 uscita lenta, poi Coach (42, 69, 66), poi 7. Versione B della 18 quando si arriva ai rivali.
+1. Voce 74: marcatura fatta (1.3.50); Ale decide se tenerla. Poi 36 Allenamento e 71 uscita lenta, poi Coach (42, 69, 66), poi 7. Versione B della 18 quando si arriva ai rivali.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main --tags` (1.3.47, 1.3.48, 1.3.49 e i documenti del 23 nov).
+- **Push:** `git push origin main --tags` (1.3.50 e i documenti del 23 nov notte).
 - **Giro GitHub dopo il push** (Actions → «Collaudi» → «Run workflow», completo: il gioco è cambiato).
 - **Giocare il torneo con la 1.3.49 e mandare le regate** (Ale: ok, 23 nov): servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
 - **Chiedere a Lucio** per il finale dell'osservazione 135 e di rileggere la lezione 11 nuova.
