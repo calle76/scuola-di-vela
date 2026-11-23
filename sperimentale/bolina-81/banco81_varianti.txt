@@ -1,0 +1,7 @@
+CD027                  Day6 -9% (fuori 26%) Day10 -4% (fuori 71%) Day15 +11% (fuori 100%) | B9 -11 -7 -9 -11 | B12 +3 +4 +5 +4 +4 | fuori a 46,5°: 6n 26 8n 45 9n 58 10n 71 12n 96
+CD027 z2.4             Day6 -9% (fuori 32%) Day10 -4% (fuori 87%) Day15 +6% (fuori 100%) | B9 -11 -7 -10 -11 | B12 +2 +0 +1 +0 +1 | fuori a 46,5°: 6n 32 8n 55 9n 70 10n 86 12n 97
+CD027 z2.8             Day6 -9% (fuori 38%) Day10 -5% (fuori 100%) Day15 +2% (fuori 100%) | B9 -11 -7 -10 -11 | B12 -2 -3 -4 -3 -4 | fuori a 46,5°: 6n 38 8n 65 9n 82 10n 100 12n 100
+CD027 z3.2             Day6 -9% (fuori 44%) Day10 -6% (fuori 99%) Day15 -2% (fuori 100%) | B9 -11 -7 -10 -11 | B12 -4 -6 -6 -8 -7 | fuori a 46,5°: 6n 44 8n 74 9n 95 10n 99 12n 100
+CD021 z3.2             Day6 -4% (fuori 46%) Day10 -3% (fuori 98%) Day15 +0% (fuori 100%) | B9 -8 -3 -7 -9 | B12 -2 -3 -5 -5 -5 | fuori a 46,5°: 6n 42 8n 79 9n 93 10n 100 12n 100
+CD021 z3.6             Day6 -4% (fuori 52%) Day10 -5% (fuori 100%) Day15 -4% (fuori 99%) | B9 -8 -5 -7 -9 | B12 -4 -7 -8 -8 -8 | fuori a 46,5°: 6n 47 8n 89 9n 100 10n 100 12n 100
+freno: 0 pause, picco 49 °C, uscita 0

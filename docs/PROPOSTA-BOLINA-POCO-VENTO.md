@@ -44,3 +44,47 @@ Cambia la barca: polare e `raffiche_e_virate.js` con riferimenti nuovi (dichiara
 
 - Le fonti potrebbero non dare un numero usabile per il fattore di appiattimento: allora ci si ferma e il limite resta (come il 17 ottobre).
 - Il gioco «sembra» diverso: con poco vento la barca va più forte; le lezioni che parlano di bolina con poco vento vanno rilette.
+
+## Fermata 1: cosa dicono le fonti e cosa dà il banco (23 novembre 2026, sera)
+
+### Le fonti [fonte]
+
+- **Ipotesi 2 (vento all'altezza della vela): esclusa.** F109 misura il vento **in testa d'albero** (anemometro su un'asta sopra la cima, cap. 1.3.2): il vento vero alla vela è un po' più debole, quindi semmai la barca vera va forte con *meno* vento del gioco, e il divario cresce invece di spiegarsi. Binns (F10, in F17 §4) non dice dove era misurato il vento; Day non usa un gradiente.
+- **Ipotesi 1 (fattore «flat»): riformulata.** In Day (F17 §2.3, eq. 2 e 6) FLAT *toglie* portanza e si usa solo quando la barca è al limite del momento raddrizzante; con poco vento vale 1 (vela piena). Non può quindi dare più velocità con poco vento. Il gioco ha già il suo modo di sventare (la scotta, §11.1 dell'archivio: con 15 nodi CL 0,93).
+- **Il numero che conta, invece:** Day (§6.2 e §6.3) dice che **il timoniere comincia a sventare intorno ai 9 nodi** (da lì in su vince chi pesa di più). Nel gioco, a 46,5° dal vento, il timoniere è fuori al 58% con 9 nodi e arriva al massimo solo verso i 12-15 nodi. È questo che separa 9 da 12 nodi: la barca vera con 12 nodi è già frenata dallo sbandamento, quella del gioco no. Per questo, a ottobre, una vela più forte alzava anche i 12 nodi.
+- **Braccio sbandante `zCE` (2,0 m, senza fonte):** Day mette il centro velico al 36,4% dell'inferitura sopra il boma, ma le misure dell'armo non ci sono né in Day né nel regolamento ILCA scaricato (`HANDBOOK_2025.pdf`: solo area 7,06 m², lunghezze dello scafo). **La costante resta senza fonte.**
+
+### Il banco [misura]
+
+`sperimentale/bolina-81/banco81.js` (copia del motore in memoria, nessun numero casuale: un giro basta; uscita in `banco81_varianti.txt`). Resistenza della vela al punto di lavoro: oggi 0,34; 0,27 = Flay in galleria; 0,21 ≈ ORC come Day.
+
+| Variante | Day 6 / 10 / 15 nodi | Binns 9 nodi, 42°-60° | Binns 12 nodi, 42°-60° | Timoniere fuori a 9 nodi |
+|---|---|---|---|---|
+| oggi | −16 / −10 / +6% | −15 −12 −14 −15 | −2 −2 −2 −1 0 | 58% |
+| vela 0,27 | −9 / −4 / +11% | −11 −7 −9 −11 | +3 +4 +5 +4 +4 | 58% |
+| vela 0,27, `zCE` 2,8 | −9 / −5 / +2% | −11 −7 −10 −11 | −2 −3 −4 −3 −4 | 82% |
+| vela 0,27, `zCE` 3,2 | −9 / −6 / −2% | −11 −7 −10 −11 | −4 −6 −6 −8 −7 | 95% |
+| vela 0,21, `zCE` 3,2 | **−4** / −3 / 0% | −8 −3 −7 −9 | −2 −3 −5 −5 −5 | 93% |
+| vela 0,21, `zCE` 3,6 | −4 / −5 / −4% | −8 −5 −7 −9 | −4 −7 −8 −8 −8 | 100% |
+
+Virata con la prua imposta (`prua_imposta.js`, 3,2 nodi, virata in 10 s; F109: velocità 1,05 m/s, −0,67 m):
+
+| Variante | Velocità prima | Metri persi | Di cui «prima» (F109 +1,48) |
+|---|---|---|---|
+| oggi | 0,88 m/s (−16%) | −1,74 | +0,28 |
+| vela 0,27, `zCE` 3,2 | 0,92 m/s (−12%) | −1,65 (−5%) | +0,29 |
+| vela 0,21, `zCE` 3,2 | 0,94 m/s (−10%) | −1,57 (−10%) | +0,30 |
+
+### Contro i criteri scritti prima
+
+La variante migliore (vela 0,21, `zCE` 3,2): **B1 passa** (−4%), **B4 passa** (0%), **B2 no** (−3…−9%, soglia ±5%), **B3 no** (fino a −5%, soglia ±3%), **B5 no** (−10%, soglia −8%), **B6 no** (−10%, soglia −30%), **B8 no** (due costanti cambiate, `zCE` senza fonte). Nessuna variante passa tutti i criteri.
+
+### Cosa se ne ricava
+
+1. La **forma** si raddrizza: con un braccio più lungo la barca del gioco comincia a sventare verso i 9 nodi come in Day, e il salto 9 → 12 nodi diventa simile a Binns. Il **livello** resta basso del 3-9% a tutti i venti.
+2. La **virata** non migliora con la velocità: la barca vera guadagna 1,48 m nella prima metà (porta l'abbrivio verso il vento), quella del gioco 0,3 m con tutte le varianti. È un'altra cosa (abbrivio nella orzata), non la vela.
+3. Il braccio `zCE` manca di fonte: per la fermata 2 servirebbero le misure dell'armo (altezza del boma, lunghezza dell'inferitura, profondità della deriva) da una fonte usabile.
+
+### Proposta
+
+Secondo la regola del giro della lista (Ale, 23 nov): **la voce 81 non passa e va fra quelle da rivedere alla fine.** Il motore non cambia. Da riprendere, se Ale vuole: (a) cercare le misure dell'armo per dare una fonte a `zCE`; (b) guardare a parte l'abbrivio nella prima metà della virata.
