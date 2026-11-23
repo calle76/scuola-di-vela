@@ -102,3 +102,17 @@ Chromium e Firefox, uno per volta col freno. I casi «con frase» si costruiscon
 Via di Ale: «prima la frase, nel Coach». Fatto come proposto sopra (Coach, −150 s, `cS ≥ 2`, uno solo). In più la frase dello sponsor riprova se il Coach è in pausa (prima andava persa). Criteri R7, R7b, R7c, R3, R5, R6 in `tests/collaudo_storico_frase.py`; numeri in `CHANGELOG.md` 1.3.38. Il collaudo è stato corretto dopo i primi giri senza toccare le soglie (dettagli nel CHANGELOG).
 
 **Prossima decisione (2):** cautela (b) o nemesi (c), in una versione a parte. Ale il 22 nov ha proposto i versi: «se l'ho toccato io, lui mi schiva» (cautela al contrario rispetto alla bozza) e «se ha perso da me più volte, mi ostacola» (nemesi). Prima della proposta: fonti scritte o video su marcatura e copertura in regata.
+
+## Passo 2, decisione 2: le fonti (23 novembre 2026, sera; Opus)
+
+Le due idee di Ale del 22 novembre, confrontate con le fonti (`FONTI-PUBBLICHE.md` F115, F116):
+
+- **«Nemesi»: se ha perso da me più volte, mi ostacola.** Il regolamento lo vieta così com'è. Secondo il Caso 78 di World Sailing (riportato in F115) ostacolare apposta un'altra barca in una regata di flotta è lecito **solo se serve alla propria classifica in quella manifestazione** e ha una ragionevole possibilità di riuscire; farlo per rivalsa, senza vantaggio proprio, rompe la regola 2 (correttezza). Un rivale che ti ostacola «perché ha perso da te» insegnerebbe una cosa sbagliata (principio 4).
+- **La versione lecita esiste ed è una tattica vera:** la **marcatura** (coprire: restare fra l'avversario e la boa, virare quando vira lui, F116), usata contro un rivale di velocità simile che si deve battere. Non dipende dalla storia dei contatti ma dalla **classifica**: per esempio nell'ultima regata del torneo un rivale che ti sta appena davanti o dietro in classifica ti copre di bolina, se batterti gli serve.
+- **«Cautela»: se l'ho toccato io, mi schiva.** Nessuna fonte trovata (ricerche del 23 nov su regolamento, sportività e comportamento dopo un contatto): è un'idea plausibile ma non documentata. Se si fa, va dichiarata come invenzione del gioco.
+
+**Proposta di Claude (da decidere con Ale, una cosa per volta):**
+1. **Niente «nemesi» per rivalsa** (vietata dalla regola 2).
+2. **Al suo posto, la marcatura nell'ultima regata del torneo**, decisa dalla classifica e detta dal Coach («Verde ti marca: se ti batte, ti passa in classifica»). Tocca la guida dei rivali: va con le voci sui rivali (2, 4B), con proposta e criteri propri (arrivo dei rivali, contatti, nessuna regola rotta mentre marcano).
+3. **Cautela:** non farla, o farla come invenzione dichiarata; proposta: non farla finché non c'è una fonte.
+
