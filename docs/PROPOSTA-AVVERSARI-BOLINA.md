@@ -257,3 +257,14 @@ L0 vale: la regola scatta in 630-644 passaggi su 720.
 - Con la griglia sono emerse due cose da tenere: chi entra mure a dritta perde quanto chi entra mure a sinistra (11,6 contro 11,0 s su questi semi; nel §12 erano 8-9 contro 11-14 s), quindi la differenza fra le mure non è stabile fra gruppi di semi; e il rimbalzo del punto di passaggio (§11) c'è ancora, ma il §12 ha già mostrato che non costa tempo.
 
 **Cosa resta.** Negli ultimi 40 m gli avversari perdono circa 11 s, ma non è né il giro diretto (§10), né il rimbalzo (§11-12), né la layline (§13-14). La parte che resta da guardare è il giro vero e proprio: il punto 1 sta 16 m e più oltre la boa e 10 m sopra, e la misura finisce al passaggio del cancello della boa. Proposta: **fermare qui la bolina degli avversari** (tre prove di fila senza effetto) e passare alla voce successiva di `DA-FARE.md`, il cono d'ombra, lasciando la bolina com'è: è la scelta di Ale.
+
+## 15. Le registrazioni bastano? (voce 2, 23 novembre 2026, pomeriggio)
+
+Lette le regate **lunghe** di Ale e Lucio (fisica di oggi, regate da 3 del torneo): 8 file, 20-21 novembre, gioco 1.3.31 e 1.3.37, **tutte con avversari principianti** (`tests/misura_bolina_registrazioni.py`).
+
+- **Bolina, dal via alla prima boa (o dalla seconda all'arrivo):** giocatori mediana **325,6 s** (10 lati), rivali **325,9 s** (27 lati). In queste regate i rivali principianti vanno di bolina **come Ale e Lucio**.
+- **Vento coperto:** per rivale e per regata quasi sempre sotto 15 s in tutto; il massimo è 69 s (Rossa, 20 nov 23:41), poi 31 e 21 s.
+- **Cambi di mure dei rivali in bolina:** 6-12 per lato (circa 300 s).
+- **Non ci sono regate lunghe con gli esperti**, né casi nuovi come l'81 e l'83 (Deriva).
+
+**Cosa vuol dire:** con la fisica di oggi le registrazioni non mostrano rivali lenti in bolina né incastrati nel vento sporco; il difetto misurato col pilota sulle regate corte della 1.2.24 (11 s persi negli ultimi 40 m) qui non si vede contro due giocatori veri. **Nessuna proposta nuova per ora**: la voce resta in lista per il giro finale. Per riprenderla servirebbero regate lunghe con gli **esperti** o una situazione segnata col tasto M.

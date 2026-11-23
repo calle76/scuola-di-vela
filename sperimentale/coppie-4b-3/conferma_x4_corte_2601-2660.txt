@@ -1,0 +1,3 @@
+{"conf": "off", "semi": "2601-2660", "regate": 240, "lungo": false, "M1": 49, "M2": 18, "M3": 260, "M4": 188.7, "piantati": 0, "coppie": 98, "coppie_dopo_via": 34, "fuori": 74, "non_arrivati": 312, "liberate": 0, "insegue": 0, "errori": 0}
+{"conf": "m4", "semi": "2601-2660", "regate": 240, "lungo": false, "M1": 20, "M2": 1, "M3": 269, "M4": 190.0, "piantati": 0, "coppie": 103, "coppie_dopo_via": 19, "fuori": 65, "non_arrivati": 303, "liberate": 0, "insegue": 0, "errori": 0}
+freno: 0 pause, picco 57 °C, uscita 0

@@ -317,3 +317,19 @@ Copie del gioco con un pezzo della 4B tolto alla volta (diagnosi, non modelli da
 - **Semi mai guardati:** corte 2601-2660 (240 regate per configurazione), lunghe (`--lungo`) 2701-2760 (180 regate per configurazione). Chromium. Poi, se il tempo e la temperatura lo permettono, la x4 e la base anche in Firefox sulle lunghe.
 - **Criteri e soglie: quelli della 4B del §15, non cambiati:** M1 almeno −50%; M2 almeno −30% se nella base ci sono almeno 15 casi (altrimenti non misurabile); M3 contatti non più della base; M4 arrivo mediano dei rivali entro +2%; piantati, fuori linea e non arrivati al massimo base +2.
 - **Come si riporta:** esito separato per corte e lunghe (la domanda di Ale su quali regate giudicarla resta sua). Ogni criterio fuori soglia si scrive com'è.
+
+#### Risultati della conferma (Chromium; uscite in `sperimentale/coppie-4b-3/conferma_x4_corte_2601-2660.txt` e `conferma_x4_lunghe_2701-2760.txt`; picco 64 °C col freno)
+
+| | M1 (−50%) | M2 (−30%) | M3 contatti (≤ base) | M4 arrivo (+2%) | piantati | fuori (base +2) | non arrivati (base +2) | coppie dopo il via |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| corte, base | 49 | 18 | 260 | 188,7 | 0 | 74 | 312 | 34 |
+| corte, x4 | 20 (−59%) | 1 (−94%) | **269 (+3,5%)** | 190,0 (+0,7%) | 0 | 65 | 303 | 19 |
+| lunghe, base | 37 | 13 (non misurabile) | 200 | 585,1 | 0 | 108 | 175 | 20 |
+| lunghe, x4 | 15 (−59%) | 0 | 198 | 587,5 (+0,4%) | 0 | 81 | 164 | 20 |
+
+- **Regate lunghe (quelle del torneo vero): passano tutti i criteri.** Le partenze anticipate, il difetto della 4B intera, scendono sotto la base (108 → 81).
+- **Regate corte: passano tutti tranne M3**, i contatti in tutto: 269 contro 260 (+9). Non si cerca la causa ora (Ale, 23 nov: prima il giro di tutta la lista).
+
+**Firefox, regate lunghe, stessi semi 2701-2760** (`conferma_x4_lunghe_2701-2760_firefox.txt`; picco 65 °C, 36 pause del freno): base M1 33, M2 14 (non misurabile), M3 192, M4 585,8, fuori 100, non arrivati 178; x4 M1 14 (−58%), M2 0, **M3 204 (+6%)**, M4 591,5 (+1,0%), fuori 82, non arrivati 167. In Firefox anche le lunghe mancano M3.
+
+**Esito della conferma:** la x4 passa M1, M4, piantati, fuori linea e non arrivati in tutte e tre le misure; **M3 (contatti in tutto) passa solo in Chromium sulle lunghe** (198 contro 200) e non passa nelle corte (+3,5%) né in Firefox sulle lunghe (+6%). Per le soglie scritte la x4 **non si adotta**; resta in lista per il giro finale (Ale, 23 nov: «quando finiremo il giro di tutti i punti vedremo cosa rimane»).
