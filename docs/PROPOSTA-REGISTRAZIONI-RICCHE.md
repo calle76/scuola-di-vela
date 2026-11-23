@@ -1,0 +1,36 @@
+# Proposta: registrazioni delle regate più ricche (voce 55)
+
+*23 novembre 2026, notte (Opus), in autonomia (Ale: «vai in autonomia, non chiedere permessi»). Fermata 1 e fermata 2 nella stessa sessione; le soglie sono scritte qui prima di misurare.*
+
+## Da dove viene
+
+Osservazioni 135 e 136: per capire una situazione raccontata da Lucio («ero in mezzo a due barche, il semaforo rosso») il file della regata non bastava. Mancavano:
+1. **il colore del semaforo** del giocatore (rosso, giallo, verde) e con quale barca;
+2. **chi aveva la colpa di un contatto**, nella riga del contatto (oggi solo nella riga Q della penalità, a parole);
+3. **quello che succede dopo il proprio arrivo**: la registrazione si chiudeva al traguardo del giocatore, e i rivali che arrivavano dopo non c'erano.
+
+## Il modello più semplice
+
+- `E t semaforo rosso|giallo|verde|spento Nome`: una riga a ogni cambio di colore (calcolato dal gioco anche quando il semaforo non è acceso sullo schermo); nelle impostazioni dell'intestazione `semaforo=sì|no` dice se il giocatore lo vedeva.
+- `E t contatto_barche A B colpa C regola N`: la stessa riga di prima con chi ha preso la penalità e la regola.
+- **Dopo il proprio arrivo** la registrazione continua finché arrivano tutti, o per al più **60 s** (`REG_DOPO`, ipotesi nostra); si chiude prima se il giocatore esce dalla regata, apre la rotta ottimale o scarica il file (la chiusura resta «arrivo»).
+- Il registratore resta in sola lettura: il gioco si annota solo due cose in più dentro la regata (con quale barca è calcolato il semaforo e la colpa di ogni contatto), che la simulazione non legge.
+
+## Criteri (soglie nostre, scritte prima)
+
+| # | Criterio | Soglia |
+| --- | --- | --- |
+| G1 | La regata non cambia | torneo e regata col pilota identici al bit con e senza registrazione (come già `collaudo_registratore`) |
+| G2 | Semaforo | ogni cambio di `R.sem` misurato dal collaudo compare nel file, nello stesso ordine; almeno 20 cambi visti |
+| G3 | Colpa | ogni `contatto_barche` ha la colpa, e coincide con la riga Q della penalità; almeno 3 contatti visti |
+| G4 | Dopo l'arrivo | le righe continuano dopo il proprio arrivo; ogni rivale arrivato entro 60 s ha la sua riga `avv_arrivo`; la chiusura resta «arrivo» |
+| G5 | Peso | regata lunga del torneo: ogni pezzo al più 1 MB, il file intero al più 2,5 MB (oggi circa 2 MB, voce 66b: «lasciali così») |
+
+## Rischi
+
+- Chi apre la rotta ottimale prima che la registrazione si chiuda: la si chiude in quel momento, così le righe del Coach finiscono nel file come prima.
+- Il collaudo del registratore che controlla la chiusura proprio all'arrivo va riletto (G4 cambia la regola).
+
+## Esito (23 nov 2026, versione 1.3.46)
+
+G1-G5 passano (numeri in `CHANGELOG.md` 1.3.46). Una scelta cambiata durante la prova, detta: il semaforo si scrive anche quando, con lo stesso colore, cambia la barca con cui è calcolato (il collaudo li vedeva e il file no). **G3 misurato solo in parte:** il collaudo controlla che ogni contatto abbia la colpa, non che coincida con la riga Q (stessa fonte nel gioco, `chiCede1516`; da aggiungere se serve). Collaudi vecchi adattati alla chiusura dopo l'arrivo: `collaudo_coach` K12, `collaudo_registrazione` A, F3, F5.

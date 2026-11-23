@@ -967,6 +967,7 @@
       if (d < bd){ bd = d; best = o; }
     }
     R.semNome = best ? best.name : null; // per i collaudi: con quale barca è calcolato il colore
+    R.semB = best; /* 1.3.46 (voce 55): la barca del semaforo, per il registratore */
     R.sem = best && !me.S.capsized && me.fin === null && !me.dnf && R.t <= (R.semUntil || -1) && bd < SEM_OFF ? semColore(me, best) : null;
   }
   // 1.3.10: il colore segue chi prenderebbe la penalità (chiCede1516): rosso = tua e la precedenza è dell'altra; giallo = tua anche se la precedenza è tua
@@ -1000,6 +1001,7 @@
       if (TOAST_LOG) (R.contLog = R.contLog || []).push({ t: R.t, i, j, vir: [A, B].map(x => x.virT === undefined ? 1e9 : R.t - x.virT), go: [A, B].map(x => x.tGo === undefined ? 1e9 : R.t - x.tGo) }); // 1.3.11: per le misure (solo #collaudo)
       // mure di ciascuna col vento nel suo punto
       const cc = chiCede1516(A, B), guilty = cc.cede; // 1.3.10: con le regole 15 e 16 nelle regate di Deriva
+      (R.contColpa = R.contColpa || {})[key] = { g: guilty, r: cc.regola }; /* 1.3.46 (voce 55): chi ha la colpa del contatto, per il registratore */
       const why = motivoContatto(cc, guilty);
       if (R.punti) guilty.pp = (guilty.pp || 0) + 1; else if (R.giri){ if (guilty.me) giriDebito(); else guilty.gDebt = (guilty.gDebt || 0) + 2; } else guilty.pen += 15; // torneo: penalità sul punteggio (F15 44.3), non sul tempo; regata dei giri (1.0.61): il giocatore deve due giri
       for (const o of [A, B]){ o.S.u *= 0.6; }

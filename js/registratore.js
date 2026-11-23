@@ -18,7 +18,7 @@
   const sesEv = (type, det) => { ses.cnt[type] = (ses.cnt[type] || 0) + 1; sesLine("E " + sesT() + " " + type + (det ? " " + det : "")); };
   const sesTyping = () => { const a = document.activeElement; return !!a && (a.tagName === "TEXTAREA" || a.isContentEditable || (a.tagName === "INPUT" && !["checkbox", "radio", "range", "button"].includes(a.type))); };
   const sesSet = () => "frecce=" + opt.helm + " vista=" + opt.view + " barra_al_centro=" + (opt.autoCenter ? "sì" : "no") + " barra_al_centro_prove=" + (opt.autoCenterComp ? "sì" : "no") +
-    " scotta_automatica=" + (opt.autoSheet ? "sì" : "no") + " suggerimenti=" + (opt.hint ? "sì" : "no") + " frecce_vento=" + (opt.arrows ? "sì" : "no") + " rosa_angolo_morto=" + (opt.dead ? "sì" : "no") + " tutti_strumenti=" + (opt.allInstr ? "sì" : "no") + " layline=" + opt.layline + " scarso_buono=" + opt.scarso + " cono=" + (opt.cono ? "sì" : "no") +
+    " scotta_automatica=" + (opt.autoSheet ? "sì" : "no") + " suggerimenti=" + (opt.hint ? "sì" : "no") + " frecce_vento=" + (opt.arrows ? "sì" : "no") + " rosa_angolo_morto=" + (opt.dead ? "sì" : "no") + " tutti_strumenti=" + (opt.allInstr ? "sì" : "no") + " layline=" + opt.layline + " scarso_buono=" + opt.scarso + " semaforo=" + (opt.sem ? "sì" : "no") + " cono=" + (opt.cono ? "sì" : "no") +
     " fantasma=" + (opt.ghost ? "sì" : "no") + " vento=" + Math.round(env.twd) + "° " + Math.round(env.tws * KN) + "kn raffiche=" + gustLevel + " avversari=" + opt.aiLevel + " preparazione=" + opt.countdown + "s" + (LAB ? labSet() : "");
   const sesMode = () => mode + (mode === "lesson" ? lessonIdx : mode === "mission" ? missionIdx : mode === "race" ? raceIdx : "");
   const sesModeName = () => mode === "lesson" ? "lezione " + (lessonIdx + 1) + " «" + LESSONS[lessonIdx].title + "»" : mode === "mission" ? "«" + $("mTitle").textContent + "»"
@@ -42,7 +42,7 @@
   function sesAltre(dSim, riga){
     const L = ses.L;
     if (mode !== "race" || !R){ L.AR = null; return; }
-    if (R !== L.AR){ L.AR = R; L.A = {}; L.cop = {}; R.boats.forEach(b => { if (!b.me) L.A[regNome(b)] = sesAvv(b); }); L.ct = Object.assign({}, R.contacts); L.pl = R.penList.length; } // accesa a regata in corso: le voci già presenti non si scrivono
+    if (R !== L.AR){ L.AR = R; L.A = {}; L.cop = {}; L.sem = undefined; L.semC = L.semO = 0; R.boats.forEach(b => { if (!b.me) L.A[regNome(b)] = sesAvv(b); }); L.ct = Object.assign({}, R.contacts); L.pl = R.penList.length; } // accesa a regata in corso: le voci già presenti non si scrivono
     for (const b of R.boats){
       if (b.me) continue;
       const A = L.A[regNome(b)], n = regNome(b), kn = Math.abs(b.S.u) * KN;
@@ -61,7 +61,9 @@
       }
       Object.assign(A, { leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba });
     }
-    for (const key in R.contacts) if (L.ct[key] !== R.contacts[key]){ const [i, j] = key.split("-"); sesEv("contatto_barche", regNome(R.boats[i]) + " " + regNome(R.boats[j])); }
+    for (const key in R.contacts) if (L.ct[key] !== R.contacts[key]){ const [i, j] = key.split("-"), c = R.contColpa && R.contColpa[key];
+      sesEv("contatto_barche", regNome(R.boats[i]) + " " + regNome(R.boats[j]) + (c ? " colpa " + (c.g ? regNome(c.g) : "nessuno") + " regola " + c.r : "")); } /* 1.3.46 (voce 55): con chi ha la colpa */
+    if (R.sem !== L.semC || R.semB !== L.semO){ const sem = (R.sem || "spento") + (R.sem && R.semB ? " " + regNome(R.semB) : ""); if (L.sem !== undefined && sem !== L.sem) sesEv("semaforo", sem); L.sem = sem; L.semC = R.sem; L.semO = R.semB; } /* 1.3.46: colore del semaforo del giocatore e la sua barca, a ogni cambioo */
     // 1.2.25 (docs/PROPOSTA-CONO-D-OMBRA.md): una barca coperta da un'altra per più del 10% del vento da almeno 2 s di gioco, e quando torna libera
     if (R.ombra && dSim > 0) for (const b of R.boats){ const C = L.cop[regNome(b)] || (L.cop[regNome(b)] = { t: 0, on: false }), k = b.fin === null && !b.dnf ? b.cop || 0 : 0;
       if (k > 0.10){ C.t += dSim; if (!C.on && C.t >= 2){ C.on = true; sesEv("coperta", regNome(b) + " da " + regNome(b.copDa) + " " + Math.round(k * 100) + "%"); } }
@@ -155,7 +157,7 @@
     sesAltre(dSim, riga);
     if (ses.auto){
       ses.ult = R.t;
-      if (R.phase === "done"){ sesChiudi("arrivo"); return; }
+      if (R.phase === "done" && (R.boats.every(b => b.fin !== null || b.dnf) || R.t - R.doneAt >= REG_DOPO)){ sesChiudi("arrivo"); return; } /* 1.3.46 (voce 55): dopo il proprio arrivo si registra ancora, fino all'arrivo di tutti o per REG_DOPO s */
       if (R.t >= ses.taglio && ses.lines.length > n0) regTaglia(n0);
     }
     // spia sullo schermo (sul mare, non nel pannello)
@@ -250,6 +252,7 @@
   // ---- registrazione automatica delle regate (1.0.60, docs/PROPOSTA-COACH-REGISTRATORE.md) ----
   // In ogni regata il registratore parte da solo col conto alla rovescia e si chiude all'arrivo; il file è a pezzi, salvati in IndexedDB (le ultime REG_MAX regate).
   // Solo lettura come il resto: non tocca il motore né Math.random. Se la registrazione a mano è già accesa, quella ha la precedenza; se la si accende a regata in corso, l'automatica si chiude.
+  const REG_DOPO = 60; /* 1.3.46 (voce 55): secondi di registrazione dopo il proprio arrivo, al più; ipotesi nostra */
   const REG_HZ = 10, PEZZO_0 = 120, PEZZO_S = 300, REG_MAX = 5, REG_MIN = 2; // ipotesi nostre: righe S e B al secondo; fine del primo pezzo e durata degli altri (secondi di regata); regate tenute; secondi sotto i quali una regata chiusa non si tiene
   const REG_LEGENDA = [
     "#  REGISTRAZIONE AUTOMATICA DI REGATA (formato 3, dalla 1.0.60): come il formato 2, con queste differenze",
@@ -257,6 +260,9 @@
     "#   il file è un pezzo: il primo va dall'inizio del conto alla rovescia a t=" + PEZZO_0 + ", gli altri durano " + PEZZO_S + " s; le prime righe S e B di ogni pezzo sono le ultime del pezzo prima (un fotogramma in comune) e danno le posizioni di tutte le barche;",
     "#   F t nome posto tempo pen_s pen_pt stato   riga di controllo, una per barca, alla chiusura (posto e tempo solo per chi ha già tagliato l'arrivo, altrimenti «-»);",
     "#   E registrazione_chiusa arrivo|interrotta|manuale|pagina_chiusa   fine del file; E segno_rivedi n   segno n del giocatore (tasto O) per «Rivedi»;",
+    "#   E semaforo rosso|giallo|verde|spento nome   (dalla 1.3.46) il colore del semaforo del giocatore e la barca con cui è calcolato, a ogni cambio dell'uno o dell'altra, anche se sullo schermo è spento (semaforo=sì|no nelle impostazioni);",
+    "#   contatto_barche nome1 nome2 colpa nome regola N   (dalla 1.3.46) chi ha preso la penalità del contatto e per quale regola;",
+    "#   dopo l'arrivo del giocatore (dalla 1.3.46) le righe continuano fino all'arrivo di tutti o per " + REG_DOPO + " s; si chiude prima se esci, apri la rotta ottimale o scarichi;",
     "#   E giro_penalita fatti/dovuti   un giro di penalità riconosciuto (regata dei giri, 1.0.61); la riga Q «penalità scontata» chiude il debito; «verso_opposto» (1.0.74): giro nel verso opposto, il conto della penalità in corso ricomincia",
     "#   E bandiere elenco   le bandiere della partenza sulla barca giuria a ogni cambio (regata dei giri, 1.0.65): classe, P, X, blu, o «nessuna»",
     "#   E sconta inizio|fine   il giocatore comincia o smette di scontare la penalità, e lascia strada a chi non la sconta (regola 21.2, regata dei giri, 1.0.66)",
@@ -317,6 +323,7 @@
   }
   function sesChiudi(motivo){
     if (!ses.auto) return;
+    if ((motivo === "interrotta" || motivo === "pagina_chiusa") && sesAutoR && sesAutoR.phase === "done" && sesAutoR.boats[0].fin !== null) motivo = "arrivo"; /* 1.3.46: già arrivato, si esce durante le righe dopo l'arrivo */
     const t = ses.ult.toFixed(1);
     sesLine("E " + t + " registrazione_chiusa " + motivo);
     if (motivo === "arrivo" || motivo === "interrotta"){ // riga di controllo: classifica secondo il gioco, per chi ha già tagliato l'arrivo
@@ -330,6 +337,7 @@
   // 1.3.14 (Ale, 16 novembre 2026: «credevo le registrasse»): le frasi del Coach in fondo all'ultimo pezzo della regata, una volta sola, quando la rotta ottimale si apre la prima volta
   // (prima il Coach non ha calcolato niente). Solo scrittura nel testo già chiuso: non tocca la regata. G è la regata della rotta ottimale: se non è l'ultima registrata non si scrive niente
   function regCoach(G, C, umore, rotta){
+    if (ses.auto && sesAutoR === G) sesChiudi("arrivo"); /* 1.3.46: la rotta ottimale si apre mentre si registra il dopo-arrivo: si chiude adesso */
     if (!regUltima || regUltima.R !== G) return;
     const pz = regPezzi.filter(p => p.reg === regUltima.reg).sort((a, b) => b.n - a.n)[0];
     if (!pz || pz.coach || /\nA - volto /.test(pz.testo)) return;
@@ -337,8 +345,10 @@
     pz.testo += ["A - volto " + umore, "A - rotta " + una(rotta), ...(C.length ? C.map(x => "A " + x.t.toFixed(1) + " " + x.tipo + " " + x.peso.toFixed(1) + " " + una(x.txt)) : ["A - nessuna frase"]), ""].join("\n");
     pz.coach = true; regIdb("readwrite", st => st.put(pz)); regUi();
   }
-  $("regGet").onclick = () => { const p = regPezzi.find(x => x.id === document.querySelector("#regBox select").value); if (p) sesFile("regata-" + p.file + "-pezzo-" + p.n + ".txt", p.testo); };
+  const regChiudiFinita = () => { if (ses.auto && sesAutoR && sesAutoR.phase === "done" && sesAutoR.boats[0].fin !== null) sesChiudi("arrivo"); }; /* 1.3.46: scaricando durante il dopo-arrivo il file c'è già */
+  $("regGet").onclick = () => { regChiudiFinita(); const p = regPezzi.find(x => x.id === document.querySelector("#regBox select").value); if (p) sesFile("regata-" + p.file + "-pezzo-" + p.n + ".txt", p.testo); };
   $("regLast").onclick = () => { // un solo file: il browser può bloccare più scaricamenti partiti da un solo clic
+    regChiudiFinita();
     if (!regPezzi.length) return;
     const reg = Math.max(...regPezzi.map(p => p.reg)), pz = regPezzi.filter(p => p.reg === reg).sort((a, b) => a.n - b.n);
     sesFile("regata-" + pz[0].file + "-intera.txt", pz.map(p => p.testo).join("\n"));

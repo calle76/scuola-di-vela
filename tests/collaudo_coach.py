@@ -15,7 +15,7 @@
 #       frase pesa almeno 10 s, serio altrimenti) e l'immagine è caricata davvero (128 px); dalla 1.3.6 arrabbiato anche con una scuffia
 #   K11 (1.3.6) la scuffia: con la barca rovesciata per 20 s a metà regata (costruito sulle copie della moviola) il coach la dice, coi secondi (±1), e il volto è arrabbiato;
 #       senza scuffia mai (nelle 20 regate vere, controllate)
-#   K12 (1.3.14) le frasi nel file della regata: prima di aprire la rotta ottimale l'ultimo pezzo registrato non ha righe «A»; dopo ha «A - volto» col volto mostrato, «A - rotta» e una riga
+#   K12 (1.3.14) le frasi nel file della regata: prima di aprire la rotta ottimale l'ultimo pezzo registrato non ha righe «A» (dalla 1.3.46 la registrazione può essere ancora aperta: continua dopo l'arrivo e si chiude all'apertura della rotta); dopo ha «A - volto» col volto mostrato, «A - rotta» e una riga
 #       per frase, nello stesso ordine, con lo stesso testo e lo stesso momento (±0,05 s); chiesta una seconda volta la scrittura non raddoppia le righe; la copia in IndexedDB le ha (ultima regata)
 #   K0 (1.3.32) regate dove la rotta ottimale non compare: contate e non controllate (prima il collaudo cadeva con un errore di Python); al più max(2, 10% delle regate)
 #   K13 (1.3.23, voce 57) contento anche col primo posto (almeno un'altra barca, squalificati esclusi) o col nuovo record, se non c'è niente da arrabbiato (costruito);
@@ -46,7 +46,7 @@ DATI = """() => { const r = rot.res; if (!r || !r.ott) return { manca: true };  
     tratti: coaCoperto(tu).map(x => [x.t0, x.t1]) }; }"""
 
 REGC = """() => { if (!regPezzi.length) return null; const reg = Math.max(...regPezzi.map(p => p.reg)), pz = regPezzi.filter(p => p.reg === reg).sort((a, b) => b.n - a.n)[0], r = pz.testo.split("\\n");
-  return { righe: r.filter(l => l.startsWith("A ")), ultima: r.filter(l => l).pop(), mia: !!regUltima && regUltima.R === R && regUltima.reg === reg, id: pz.id, fine: pz.fine, lung: pz.testo.length }; }"""
+  return { righe: r.filter(l => l.startsWith("A ")), ultima: r.filter(l => l).pop(), mia: !!regUltima && regUltima.R === R && regUltima.reg === reg, id: pz.id, fine: pz.fine, lung: pz.testo.length, aperta: ses.auto && sesAutoR === R }; }"""
 IDB = """(id) => new Promise(ok => { const o = indexedDB.open("scuolaVelaReg", 1); o.onerror = () => ok(null);
   o.onsuccess = () => { const q = o.result.transaction("pezzi", "readonly").objectStore("pezzi").get(id); q.onsuccess = () => { ok(q.result ? q.result.testo.split("\\n").filter(l => l.startsWith("A ")) : null); o.result.close(); }; q.onerror = () => ok(null); }; })"""
 
@@ -119,9 +119,10 @@ async def main():
             if d.get("manca"): nmanca += 1; print(f"  {s}-{k}: rotta ottimale assente (voce 40): regata non controllata", flush=True); await pg.keyboard.press("Escape"); await pg.wait_for_timeout(80); continue   # Escape chiude la moviola come a fine ciclo (senza, la moviola aperta nascondeva «Rotta ottimale» nelle regate dopo)
             C = d["coach"] or []; nfr += len(C)
             g1 = await pg.evaluate(REGC); um = await pg.evaluate("() => document.getElementById('coachVolto').dataset.umore")
-            chk("K12", bool(g0) and g0["mia"] and g0["fine"] == "ultimo" and not g0["righe"], f"K12 {s}-{k}: prima della rotta ottimale {g0 and {**g0, 'righe': g0['righe'][:2]}}")
+            # 1.3.46 (voce 55): dopo l'arrivo la registrazione continua (fino all'arrivo di tutti o 60 s) e si chiude quando si apre la rotta ottimale: prima può essere ancora aperta
+            chk("K12", bool(g0) and (g0["aperta"] or (g0["mia"] and g0["fine"] == "ultimo" and not g0["righe"])), f"K12 {s}-{k}: prima della rotta ottimale {g0 and {**g0, 'righe': g0['righe'][:2]}}")
             fr = [l for l in (g1 or {}).get("righe", []) if not l.startswith("A - ")]
-            chk("K12", bool(g1) and g1["id"] == g0["id"] and g1["righe"][:1] == ["A - volto " + um] and g1["righe"][1:2] == ["A - rotta " + " ".join(await pg.evaluate("() => rot.res.testo.split(/\\s+/)"))] and len(fr) == len(C) >= 1
+            chk("K12", bool(g1) and g1["mia"] and g1["fine"] == "ultimo" and (g0["aperta"] or g1["id"] == g0["id"]) and g1["righe"][:1] == ["A - volto " + um] and g1["righe"][1:2] == ["A - rotta " + " ".join(await pg.evaluate("() => rot.res.testo.split(/\\s+/)"))] and len(fr) == len(C) >= 1
                 and all(l.endswith(" " + " ".join(x["txt"].split())) and l.split()[2] == x["tipo"] and abs(float(l.split()[1]) - x["t"]) <= 0.05 for l, x in zip(fr, C)) and g1["ultima"] == g1["righe"][-1],
                 f"K12 {s}-{k}: righe del Coach nel file {g1 and g1['righe']}, volto {um}, frasi {[x['txt'] for x in C]}")
             print(f"  {s}-{k}: " + " | ".join(f"{x['tipo']} {x['peso']:.0f}" for x in C), flush=True)

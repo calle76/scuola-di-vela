@@ -1,6 +1,6 @@
 # Collaudo della registrazione automatica delle regate (1.0.60, docs/PROPOSTA-COACH-REGISTRATORE.md, fase 1).
 # Uso: .venv-collaudi/bin/python tests/collaudo_registrazione.py [regate=20] [cartella di una copia di riferimento senza registrazione automatica, per il confronto al bit e il costo]
-# Parti: A) regate di fila col pilota (un file per regata, pre-via, 10 al secondo, pezzi, riga di controllo, marcatori); B) regate lunghe lasciate a metà (pezzi da 300 s, «interrotto»);
+# Parti: A) regate di fila col pilota (un file per regata, pre-via, 10 al secondo, pezzi, riga di controllo, marcatori; dalla 1.3.46 dopo l'arrivo si aspetta la chiusura della registrazione); B) regate lunghe lasciate a metà (pezzi da 300 s, «interrotto»);
 #        C) registrazione a mano: ha la precedenza; D) pagina come la carica un giocatore (senza #collaudo): parte da sola, si salva, si ricarica e si scarica.
 import asyncio, json, pathlib, sys, os, re, statistics
 import metro   # controlli che cadono anche a zero casi (docs/PROPOSTA-TEST-DEI-TEST.md)
@@ -22,6 +22,9 @@ CORRI = """async ([n, seme0, conReg, spegni]) => {
     }
     if (R.phase === "done") pos = sv.rank().findIndex(x => x.startsWith("Tu:")) + 1;
     const ms = performance.now() - t0;
+    /* 1.3.46 (voce 55): dopo l'arrivo la registrazione continua fino all'arrivo di tutti o per 60 s: si aspetta che si chiuda da sola prima di leggere i file */
+    if (conReg && !spegni) for (let k = 0; k < 60 * 70 && ses.auto && sesAutoR === R; k++){ const t1 = R.t; sv.run(dt, 1); if (R.t === t1) break; }
+    if (conReg && !spegni && R.phase === "done") pos = sv.rank().findIndex(x => x.startsWith("Tu:")) + 1; /* il posto alla chiusura: conta anche chi arriva dopo con un tempo corretto migliore */
     out.push({ j, fin: R.boats.map(b => b.fin), pen: R.penList.length, pp: R.boats.map(b => b.pp || 0), fine: R.boats.map(b => [Math.round(b.S.x * 1000), Math.round(b.S.y * 1000), Math.round(b.S.h * 1000)]),
       ms, passi: np, tfin: R.t, premi, pos, nbarche: R.boats.length, finMe: me.fin === null ? null : me.fin.toFixed(1), penMe: me.pen || 0, ppMe: me.pp || 0, countdown: opt.countdown,
       pezzi: conReg ? regPezzi.filter(p => !vecchi.includes(p.id)).map(p => ({ n: p.n, fine: p.fine, testo: p.testo, reg: p.reg })) : [], autoOn: conReg ? ses.auto : null });
@@ -152,7 +155,7 @@ async def main():
         f = await pg.evaluate("""async () => { const sv = __sv, dt = 1 / 60, gira = (R, sec) => { const t1 = R.t + sec, me = R.boats[0]; while (R.t < t1 && R.t < 900 && me.fin === null && !me.dnf){ sv.pilota(dt); sv.run(dt, 1); } };
           sv.fast(0); __seed(611); sv.openItem(["r", 1]); gira(sv.R, 0.5); const vuota = sv.R; sv.openItem(["r", 1]); sv.run(dt, 2); const dopoVuota = regPezzi.length;
           gira(sv.R, 10); sv.openItem(["r", 1]); sv.run(dt, 2); const dopoCorta = regPezzi.map(p => p.fine);
-          gira(sv.R, 2000); sv.run(dt, 10); await new Promise(r => setTimeout(r, 500));
+          gira(sv.R, 2000); sv.run(dt, 10); for (let k = 0; k < 60 * 70 && ses.auto; k++){ const t1 = sv.R.t; sv.run(dt, 1); if (sv.R.t === t1) break; } /* 1.3.46: si aspetta la fine della registrazione dopo l'arrivo */ await new Promise(r => setTimeout(r, 500));
           return { dopoVuota, dopoCorta, pezzi: regPezzi.map(p => [p.n, p.fine]), fine: sv.R.boats[0].fin === null ? null : sv.R.boats[0].fin - (sv.R.boats[0].pen || 0), pen: sv.R.boats[0].pen || 0 }; }""") # fin comprende le penalità, il file finisce all'arrivo vero
         chk("F2 una regata chiusa entro 2 s non resta nel menu; una di 10 s sì", f["dopoVuota"] == 0 and f["dopoCorta"] == ["interrotto"], str(f))
         chk("F3 la regata intera ha due pezzi (altrimenti F4 non misura niente)", f["fine"] is not None and [x for x in f["pezzi"] if x[1] != "interrotto"] == [[1, ""], [2, "ultimo"]], str(f))
@@ -164,7 +167,7 @@ async def main():
         testo = pathlib.Path(await scaricati[0].path()).read_text(encoding="utf-8") if scaricati else ""
         tS = [float(x[1]) for x in righe(testo, "S")]
         chk("F4 un solo file, con i due pezzi in ordine e senza l'altra regata", len(scaricati) == 1 and scaricati[0].suggested_filename.endswith("-intera.txt") and "· pezzo 1 ·" in testo and "· pezzo 2 (ultimo) ·" in testo and "(interrotto)" not in testo and "registrazione_chiusa arrivo" in testo, str([d.suggested_filename for d in scaricati]))
-        chk("F5 il file copre la regata dall'inizio all'arrivo, senza buchi oltre 0,2 s", bool(tS) and tS[0] < -100 and abs(tS[-1] - f["fine"]) < 1 and metro.tutti(0 <= q - w <= 0.2 for w, q in zip(tS, tS[1:])), str(tS[:1] + tS[-1:]))
+        chk("F5 il file copre la regata dall'inizio all'arrivo (dalla 1.3.46 fino a 60 s dopo), senza buchi oltre 0,2 s", bool(tS) and tS[0] < -100 and -1 < tS[-1] - f["fine"] < 61 and metro.tutti(0 <= q - w <= 0.2 for w, q in zip(tS, tS[1:])), str(tS[:1] + tS[-1:]))
         al = await pg.evaluate("() => { const d = document.getElementById('regDlg'); return [d.scrollWidth <= d.clientWidth, d.scrollHeight <= d.clientHeight, document.getElementById('regLast').getBoundingClientRect().height > 0]; }")
         chk("F6 il pannello delle registrazioni contiene il pulsante, senza eccessi", al == [True, True, True], str(al))
         await pg.screenshot(path=os.environ["FOTO_REG"]) if os.environ.get("FOTO_REG") else None
