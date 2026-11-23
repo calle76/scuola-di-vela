@@ -10,6 +10,7 @@
 - **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (approvata da Ale il 23 nov). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
 - **1.3.47-1.3.48 (Lucio):** lezione 11, esempio con la boa a nord; lezione 17, la X sale solo per chi è oltre allo sparo (le sue note: gioco giusto, osservazione 142).
 - **Voce 3 chiusa** (Ale). **Voce 4B, variante x4, confermata su semi nuovi:** passa M1, M4, fuori linea, non arrivati; **M3 (contatti in tutto) no** nelle corte (+3,5%) e nelle lunghe in Firefox (+6%). Non adottata, da rivedere a fine giro (`PROPOSTA-COPPIE.md` §15).
+- **Voce 81 (bolina e virata con poco vento), fermata 1 fatta:** vento in quota escluso, «flat» non c'entra; un braccio sbandante (`zCE`) più lungo fa sventare a 9 nodi come Day, ma la barca resta −3/−9% e la virata −10% (soglia −30%); `zCE` senza fonte. **Non passa, motore invariato, da rivedere a fine giro** (`PROPOSTA-BOLINA-POCO-VENTO.md`, `sperimentale/bolina-81/`). Per riprenderla: misure dell'armo con fonte; abbrivio nella prima metà della virata (vera +1,48 m, gioco +0,3).
 - **Voce 2:** nelle 8 regate lunghe di Ale e Lucio (principianti) i rivali vanno di bolina come voi (mediana 326 s contro 326 s), coperture brevi: nessuna proposta per ora (`PROPOSTA-AVVERSARI-BOLINA.md` §15, `tests/misura_bolina_registrazioni.py`). Servirebbero regate lunghe con gli esperti.
 - **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
 - **Da sapere:** con `#collaudo` le regate restano corte (servono `--lungo`); apertura e corsa in un solo `evaluate`, pagina nuova per regata. Collaudi qui uno per volta col freno; Firefox per i collaudi nuovi.
@@ -29,7 +30,7 @@
 
 ## Prossimi passi (giro della lista)
 
-1. Voce 74 (storico dei rivali, decisione 2: prima le fonti), poi 36 Allenamento e 71 uscita lenta, poi Coach (42, 69, 66), poi 7. Versione B della 18 quando si arriva ai rivali.
+1. Voce 74 (storico dei rivali): scrivere la proposta della **marcatura** decisa dalla classifica (Ale ha scelto la marcatura al posto della nemesi; niente «cautela» senza fonte; fonti F115, F116 già lette), poi 36 Allenamento e 71 uscita lenta, poi Coach (42, 69, 66), poi 7. Versione B della 18 quando si arriva ai rivali.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
 
 ## Cosa aspetta Ale
