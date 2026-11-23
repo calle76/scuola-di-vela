@@ -22,6 +22,11 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.47 — Lezione 11: l'esempio dice dov'è la boa (Lucio)
+
+- **Perché** (Lucio, chat del 22-23 nov, osservazione 142): «Il vento viene da nord, come la boa» non era chiaro. Nei due passi «Un esempio» ora: «Il vento viene da nord e devi raggiungere la boa, posizionata anch'essa a nord.» Il resto dell'esempio è invariato.
+- Le altre critiche di Lucio alla lezione 11 (passi «In regata», esercizio e riepilogo) erano sulla 1.3.43, prima della lezione rifatta nella 1.3.45: si aspetta che la rilegga.
+
 ## 1.3.46 — Registrazioni delle regate più ricche: semaforo, colpa dei contatti, dopo l'arrivo (voce 55)
 
 - **Perché** (osservazioni 135-136, `docs/PROPOSTA-REGISTRAZIONI-RICCHE.md`): per capire una situazione raccontata da Lucio («ero in mezzo a due barche, il semaforo rosso») il file non bastava.
