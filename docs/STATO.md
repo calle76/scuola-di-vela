@@ -7,6 +7,7 @@
 ## Dove siamo
 
 - **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
+- **Voce 82 (24 nov), fermata 1 scritta:** rivali che crescono e finale con albo (`PROPOSTA-RIVALI-CHE-CRESCONO.md`), aspetta il via. **Difetto trovato, non corretto:** la registrazione scrive il livello del menu, non della regata: il «principianti» delle regate lunghe della voce 2 è da verificare.
 - **1.3.53 (voci 41 e 6, via di Ale il 24 nov):** il ritiro si salva anche chiudendo la scheda di colpo; regate lunghe in Firefox da 0-4 su 20 a 20 su 20. `collaudo_ritiro_provvisorio.py` (nuovo) verde in Chromium e Firefox.
 - **1.3.52 (voce 42):** il Coach non conta due volte la scuffia e non conta quella prima del via (6 frasi su 8 nelle registrazioni); `collaudo_coach` K14 verde in Chromium, Firefox e regate lunghe.
 - **1.3.51 (voce 36, allenamento):** in Deriva una regata singola come quelle del torneo, con scelta di percorso, penalità, barche, rivali; le regate dei salti e dei giri escono dal menu. A1 40 su 40 identiche al torneo, A2 16 su 16, A4-A5 OK. **Idea di Ale (24 nov): chiedere a lui e Lucio regate «su misura»** con questo riquadro: per Z7 triangolo, 6 barche, giri; per la voce 2 bastone, 4 barche, esperti.
