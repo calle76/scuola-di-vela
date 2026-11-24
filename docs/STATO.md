@@ -7,7 +7,9 @@
 ## Dove siamo
 
 - **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
-- **1.3.55 (voce 83, via di Ale):** nell'Allenamento si scelgono i rivali fra i 20; A7 nuovo verde in Chromium e Firefox, senza scelte identico alla 1.3.54. **Da fare poi:** il rosso nuovo di `collaudo_marcatura` K2 (14 su 15, Chromium, giro 45392948517 sulla 1.3.53) e finire di leggere le voci «da controllare» di quel giro.
+- **1.3.55 (voce 83, via di Ale):** nell'Allenamento si scelgono i rivali fra i 20; A7 nuovo verde in Chromium e Firefox, senza scelte identico alla 1.3.54.
+- **K2 di `collaudo_marcatura`: era il collaudo, non il gioco** (24 nov, corretto, gioco invariato): i fotogrammi disegnati fra due `evaluate` consumano numeri a caso. 15 su 15 in Chromium e Firefox, anche con un'attesa in più; rosso (9 su 15) su una copia guastata apposta. **Da guardare:** `collaudo_storico_rivali` R3 è scritto allo stesso modo (verde in Chromium; in Firefox 8 e 11 su 20, forse per questo).
+- **Voce 82, idea di Ale (24 nov sera):** una regola sola per tutti i livelli (bravura 0-100 per barca, gradini da 10 rivali, scambi di posto); risposta data in chat, **aspetta le sue risposte**, proposta da riscrivere.
 - **1.3.54 (voce 82, tappa 2, via di Ale):** albo d'oro e campione in carica della finale; la registrazione scrive il livello vero della regata (prima quello del menu): il «principianti» delle 8 regate lunghe della voce 2 resta da verificare. **Tappe 1 (rivali che crescono) e 3 (salire e scendere) aspettano il via** (`PROPOSTA-RIVALI-CHE-CRESCONO.md`).
 - **1.3.53 (voci 41 e 6, via di Ale il 24 nov):** il ritiro si salva anche chiudendo la scheda di colpo; regate lunghe in Firefox da 0-4 su 20 a 20 su 20. `collaudo_ritiro_provvisorio.py` (nuovo) verde in Chromium e Firefox.
 - **1.3.52 (voce 42):** il Coach non conta due volte la scuffia e non conta quella prima del via (6 frasi su 8 nelle registrazioni); `collaudo_coach` K14 verde in Chromium, Firefox e regate lunghe.
@@ -41,7 +43,7 @@
 
 ## Cosa aspetta Ale
 
-- **Giro GitHub completo sulla 1.3.53** (run 45392948517, letto il 24 nov): 3 rossi. `collaudo_marcatura` K2 in Chromium 14 su 15 (nuovo, **da capire**: una regata non identica con e senza marcatura); `collaudo_suoni_zoom` V5 in Chromium (picco 0,28 dB in 1 prova su 6, soglia −0,5; suoni misurati in tempo reale); `collaudo_regola18` Z5 in Firefox 3 → 4, già noto. Torneo, ritiro provvisorio e allenamento verdi nei due browser. Le voci «da controllare» sono misure di tempo e casi noti, non guardate una per una.
+- **Giro GitHub completo sulla 1.3.55** (run 45463715322, `6d3df80`, letto per intero il 24 nov, anche «da controllare»): 2 rossi, tutti e due già visti. `collaudo_suoni_zoom` V5 in Chromium (picco 0,52 dB in 1 prova su 6, soglia −0,5; sulla 1.3.53 era 0,28) e `collaudo_regola18` Z5 in Firefox 3 → 4. `collaudo_marcatura` verde. «Da controllare»: `collaudo_registrazione` E2 +11,2% e `collaudo_riquadro_bandiere` Q7 10,1% in Chromium (misure di tempo, sulla 1.3.53 +9,7% e 12,2%); lezioni semi 1-100 identiche nei due giri e nei due browser, con **3.3 (1 su 100) e 3.5 (4 su 100) che non sono nell'elenco dei casi noti, e 5.8 a 5 su 100 (già noto)**: da capire da quando; `collaudo_rotta`, `_competizione`, `_fasce` come da riferimento.
 - **Giocare il torneo con la 1.3.49 o dopo e mandare le regate** (Ale: ok, 23 nov): servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
 - **Chiedere a Lucio** per il finale dell'osservazione 135 e di rileggere la lezione 11 nuova.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ultima il 17 nov).

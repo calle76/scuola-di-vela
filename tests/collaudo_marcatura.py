@@ -3,6 +3,7 @@
 #      0 scelte diverse; con la marcatura spenta nessuno marca; stampa quanti tornei con e senza marcatore (almeno 20 e 20, su corti e lunghi insieme)
 #   K2 il resto non cambia: ultima regata identica al bit con e senza marcatura quando nessuno marca; regate prima dell'ultima identiche al bit (5 tornei corti interi
 #      corsi due volte). Solo Chromium: in Firefox la stessa versione contro se stessa non è identica al bit (collaudo_storico_rivali R3), lì solo riportato
+#      (24 nov, dopo un 14 su 15 su GitHub: pagina nuova per regata e seme dentro la corsa; MARCA_ATTESA=400 aggiunge un'attesa, il conto non deve cambiare. In Firefox ora 15 su 15, resta riportato)
 #   K3 marca davvero: le tue virate (dalle prue campionate qui, non dallo stato del gioco) fatte mentre lui è davanti, a meno di 42 m, tutti e due sul primo lato (bolina),
 #      con lui sulle tue stesse mure prima della virata: seguite da una sua entro 10 s in >= 50% e almeno il doppio che senza marcatura. Contano le regate con almeno
 #      60 s di quelle condizioni: se sono meno di 20, «non misurato»
@@ -28,6 +29,7 @@ BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
 LUNGO = "--lungo" in sys.argv
 PARTE = sys.argv[1] if len(sys.argv) > 1 else "banco"
+ATTESA = int(os.environ.get("MARCA_ATTESA", 0))   # controprova di K2: ms in più prima delle regate con la marcatura accesa, il conto non deve cambiare
 OUT = pathlib.Path(os.environ.get("MARCA_OUT", os.environ.get("TMPDIR", "/tmp")))
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
@@ -68,7 +70,7 @@ def marcatore(ris):
     return m
 
 # ---- una regata del torneo, aperta e corsa in un solo evaluate; campiona ogni 0,25 s la barca osservata (wb) e il giocatore ----
-CORRI = """async ([coach, wb]) => { const sv = __sv, dt = 1 / 60; sv.opt.coachReg = coach; document.getElementById("torGo").click();
+CORRI = """async ([coach, wb, seme]) => { const sv = __sv, dt = 1 / 60; if (seme !== undefined) __seed(seme); sv.opt.coachReg = coach; document.getElementById("torGo").click();
   const R = sv.R, me = R.boats[0], B = wb ? R.boats[wb] : null, lato = b => Math.sign(((windAt(b.S.x, b.S.y).twd - b.S.h + 540) % 360) - 180), twa = b => Math.abs(((windAt(b.S.x, b.S.y).twd - b.S.h + 540) % 360) - 180);
   const mk = R.marks[0], camp = [], cont = [], prec = {}; let k = 0, ultMarca = -1e9;
   while (me.fin === null && !me.dnf && R.t < 2400){ sv.pilota(dt); sv.run(dt, 1); k++;
@@ -192,9 +194,15 @@ async def altri():
         for sd in range(3301, 3306):
             f = []
             for var in (True, False):
-                ctx, pg, errs = await pagina(b); await apri(pg, sd, var); fr = []
-                for k in range(3): r = await pg.evaluate(CORRI, [True, 0]); fr.append(r["firma"])
-                f.append(fr); await ctx.close()
+                fr = []; T = None
+                for k in range(3):   # 24 nov: pagina nuova per ogni regata e seme rimesso dentro CORRI; prima le regate 2 e 3 dipendevano dai fotogrammi disegnati fra i due evaluate (2 numeri a caso l'uno, disegno.js draw)
+                    ctx, pg, errs = await pagina(b)
+                    if k: await riprendi(pg, T, sd + 1000 * k, var)
+                    else: await apri(pg, sd, var)
+                    if ATTESA: await pg.wait_for_timeout(ATTESA if var else 0)
+                    r = await pg.evaluate(CORRI, [True, 0, sd + 1000 * k]); fr.append(r["firma"])
+                    T = await pg.evaluate("() => JSON.parse(JSON.stringify(__sv.tor))"); await ctx.close()
+                f.append(fr)
             for x, y in zip(*f): tot += 1; uguali += x == y
         # K2 ultima regata identica quando nessuno marca: dal banco
         uguali2 = tot2 = 0
