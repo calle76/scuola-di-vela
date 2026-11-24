@@ -132,7 +132,7 @@ Secondo la regola del giro della lista (Ale, 23 nov): **la voce 81 non passa e v
 
 **Perché a ottobre la rampa sembrava esclusa:** provata da sola, con la barca lenta il vento apparente sta a 29° e la rampa non si vede. Tolto il freno della vela, la barca accelera, l'apparente stringe e la rampa la ferma. Le due cose si nascondono a vicenda.
 
-**Banco** (esplorazione, conti senza numeri a caso; `banco_pennanen.js`, `banco81.js`; 15 e 5 scelti da noi, 18 e 7 danno lo stesso). Variante **R** = `luffA0` 15, `minBoom` 5, vela 0,27, braccio 3,0.
+**Banco** (esplorazione, conti senza numeri a caso; `banco_pennanen.js`, `banco81.js`; 15 e 5 scelti da noi; 18 e 7 danno lo stesso **solo in linea retta**, non in virata: 18 e 9 −1,46 m, 15 e 9 −1,24, 9 e 9 −1,05). Variante **R** = `luffA0` 15, `minBoom` 5, vela 0,27, braccio 3,0.
 
 | | Oggi | Vela 0,27, braccio 3,0 | Variante R |
 |---|---|---|---|
@@ -149,3 +149,5 @@ Secondo la regola del giro della lista (Ale, 23 nov): **la voce 81 non passa e v
 **Cosa se ne ricava:** il difetto ha una spiegazione fisica con fonte (vela che a 28° non porta tutto) e la virata col poco vento migliora da sola; restano **circa −6/−11% a 9 nodi oltre i 46°**, senza causa, e la prova di ottobre va corretta. Non è un limite da chiudere, ma nemmeno una soluzione: serve una proposta nuova.
 
 **Errori della ricerca sul web** (da non riportare): «la regressione Delft può rendere il modello troppo lento» è al contrario (Delft sottostima la resistenza, e il gioco usa la vasca); CL 1,36 e 1,30 attribuiti per certi a turbolento e liscio, mentre in Day l'ordine è ambiguo. Virata rollata +5,3% e +2,8% (Kudo, F122): è un Laser Radial, in acqua, con 2-4 e 4-6 m/s di vento; confermato solo dal riassunto.
+
+**Seguito:** `PROPOSTA-VELA-E-RAMPA-81.md` (25 novembre 2026).
