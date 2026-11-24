@@ -209,7 +209,7 @@
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
     if (es && es.def.salto){ setShifts("pers"); shiftSt.rate = es.def.salto; shiftSt.drift = 0; shiftDeg = stepShift(shiftSt, 0, Math.random); } /* 1.3.45 (voce 79): esercizio della lezione 11, vento persistente che gira a destra a def.salto gradi al secondo */
     const [pinX, pinY] = fromWF(-LINE_HALF, 0), [cbX, cbY] = fromWF(LINE_HALF, 0), [mX, mY] = fromWF(0, -up), [cX, cY] = fromWF(0, 0);
-    R = { cd, t: -cd, phase: "pre", es: es || null, up, tri, tor: !!rc.tor, all: !!rc.all, r1516: !es && (!!rc.tor || rc.scuola === false), prec: {}, /* r1516 (1.3.10): regole 15 e 16, solo nelle regate di Deriva */ ombra: OMBRA && !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
+    R = { cd, t: -cd, phase: "pre", es: es || null, liv, /* 1.3.54: il livello vero, per la registrazione */ up, tri, tor: !!rc.tor, all: !!rc.all, r1516: !es && (!!rc.tor || rc.scuola === false), prec: {}, /* r1516 (1.3.10): regole 15 e 16, solo nelle regate di Deriva */ ombra: OMBRA && !!rc.tor, punti: !!rc.tor && !rc.giri, rotta: !es && (!!rc.tor || rc.scuola === false), giri: !!rc.giri, segnali: !!rc.segnali, need: 0, done: 0, base: 0, giro: null, giroDir: 0, pin: { x: pinX, y: pinY }, cb: { x: cbX, y: cbY }, mark: { x: mX, y: mY, out: env.twd }, center: { x: cX, y: cY },
           boats: [], contacts: {}, penList: [], signals: new Set(), doneAt: null };
     R.marks = [R.mark]; // le boe nell'ordine del giro, tutte da lasciare a sinistra; il bastone ne ha una
     if (tri){ const [m2x, m2y] = fromWF(-0.866 * up, -0.5 * up); R.marks.push({ x: m2x, y: m2y, out: norm360(env.twd - 90) }); } // a sinistra guardando il vento: i lati al lasco sono a 120° dal vento
@@ -1466,6 +1466,17 @@
     if (salvati && salvati.length === 5) return salvati.slice();
     return RIVALI_NAZIONALE.map(r => r[0]).map((id, k) => ({ id, f: stForza(id), k })).sort((a, b) => b.f - a.f || a.k - b.k).slice(0, 5).map(x => x.id);
   }
+  /* 1.3.54 (voce 82, tappa 2, docs/PROPOSTA-RIVALI-CHE-CRESCONO.md; via di Ale del 24 novembre 2026): l'albo d'oro. progress.albo: una riga per finale corsa fino in fondo, { v, pos }:
+     v = chi ha vinto ("*" sei tu), pos = il tuo posto. Le finali non corse o lasciate non ci sono (semplificazione). Solo testo: la guida non cambia */
+  const ALB_N = 5; /* quante finali si leggono nel riquadro */
+  const alb = () => Array.isArray(progress.albo) ? progress.albo : [];
+  function albAgg(T, pos){ const i = torSerie(T.ris)[0].i; progress.albo = [...alb(), { v: i ? T.av[i - 1].nome : "*", pos }]; }
+  const albCampione = () => alb().length ? alb()[alb().length - 1].v : null;
+  function albTesto(){ /* "" se non hai mai finito una finale */
+    const a = alb(), f = progress.finaleFatta, chi = v => v === "*" ? "tu" : escH(v), c = albCampione();
+    return (f ? "Il tuo miglior posto: " + f.pos + "°. " : "") + (c ? "Campione in carica: " + (c === "*" ? "sei tu" : escH(c)) + ". Albo d'oro" + (a.length > ALB_N ? " (ultime " + ALB_N + " finali)" : "") + ": " +
+      a.map((x, k) => (k + 1) + "ª " + chi(x.v)).slice(-ALB_N).join(", ") + "." : "");
+  }
   function torNuovoFinale(){
     const T = torNuovo(null, 5), liv = (progress.stagione && stNaz(progress.stagione) && progress.stagione.liv) || T.liv, aggro = sorteggiaAggressiva(liv, 5);
     T.liv = liv; T.finale = true; T.av = finRivali().map((nome, k) => ({ nome, ai: aiTratti(liv, rivaleTr(nome)), char: carattere(k, aggro) }));
@@ -1567,6 +1578,7 @@
     const old = progress.torneoFatto || { pos: 9, mer: 0 };
     progress.torneoFatto = { pos: Math.min(pos, old.pos), mer: Math.max(mer, old.mer) }; // il migliore di sempre, piazzamento e meriti
     tor.fine = { pos, mer }; delete progress.torneo;
+    if (tor.finale) albAgg(tor, pos);
     if (tor.finale){ const f = progress.finaleFatta; progress.finaleFatta = { pos: f ? Math.min(f.pos, pos) : pos }; if (modo === "carriera") delete progress.finale; } // 1.3.7: la finale
     if (tor.st !== undefined && progress.stagione && !progress.stagione.fine) stChiudiTappa(tor);
   }
@@ -1680,7 +1692,7 @@
       const i = n + 1, f = torFatti(T, i), a = T.av[n];
       const riga = (tit, g) => `<tr><td>${tit}</td>${f.map(x => `<td>${g(x)}</td>`).join("")}</tr>`;
       const S = progress.stagione, cl = T.st !== undefined && S && S.tappe.some(stFatta) ? stClassifica(S) : null, pc = cl ? cl.findIndex(x => x.id === a.nome) : -1; // 1.2.36
-      const sto = stoRiga(a.nome), nome = avNome(T, n), storia = a.nome ? storiaDi(a.nome) + " · barca " + COLORI_BARCA[n] + (pc >= 0 ? " · nel circuito " + (pc + 1) + "° con " + cl[pc].tot + " punti" : "") : "";
+      const sto = stoRiga(a.nome), nome = avNome(T, n), storia = a.nome ? storiaDi(a.nome) + " · barca " + COLORI_BARCA[n] + (pc >= 0 ? " · nel circuito " + (pc + 1) + "° con " + cl[pc].tot + " punti" : "") + (a.nome === albCampione() ? " · campione in carica della finale" : "") : "";
       const tab = `<table class="tor"><thead><tr><th>${a.nome ? cognome(a.nome) : l.name}</th>${f.map((x, j) => `<th>R${j + 1}</th>`).join("")}</tr></thead><tbody>
         ${riga("Arrivo", x => x.pos ? x.pos + "°" : "non arr.")}${riga("Partenza", x => x.fuori ? "fuori linea" : cella(x.part, "davanti", "dietro"))}
         ${riga("Boa 1", x => cella(x.boa, "davanti", "dietro"))}${riga("Contatto", x => x.c ? (x.c.includes("t") ? "colpa tua" : "") + (x.c.includes("t") && x.c.includes("s") ? " e " : "") + (x.c.includes("s") ? "colpa sua" : "") : "–")}</tbody></table>`;
@@ -1705,9 +1717,9 @@
     const nomi = [escH(mioNome()), ...T.av.map((l, i) => avNome(T, i))], car = T.av.map((a, i) => avNomeBarca(T, i)).join(", ");
     const tab = k ? torTabella(T, nomi) : "";
     const S = progress.stagione, inSt = T.st !== undefined && S, tp = inSt ? S.tappe[T.st] : null; // 1.2.36: il torneo è una tappa della stagione
-    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p>${T.finale ? `<p><b>${T.fine.pos === 1 ? "Hai vinto la finale del circuito." : "Finale del circuito: " + T.fine.pos + "° posto."}</b></p>` : ""}<p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}${tp && stFatta(tp) ? ` Nella tappa sei ${stOrdine(S, tp).indexOf("*") + 1}° su ${stOrdine(S, tp).length} della flotta del circuito: la classifica è in «Il circuito».` : ""}</p>` : "";
+    const fine = T.fine ? `<p class="score">${T.fine.pos}° su ${nomi.length}</p>${T.finale ? `<p><b>${T.fine.pos === 1 ? "Hai vinto la finale del circuito." : "Finale del circuito: " + T.fine.pos + "° posto."}</b></p><p class="tor-leg" id="finAlbo">${albTesto()}</p>` : ""}<p>${modo === "carriera" ? "Meriti di Competizione del torneo: " + T.fine.mer + "." : "Nel gioco libero il torneo non dà meriti."}${tp && stFatta(tp) ? ` Nella tappa sei ${stOrdine(S, tp).indexOf("*") + 1}° su ${stOrdine(S, tp).length} della flotta del circuito: la classifica è in «Il circuito».` : ""}</p>` : "";
     const testaSt = inSt && !k ? `<p><b>Stagione, tappa ${T.st + 1} di ${ST_N}: ${tp.posto}.</b> Corri nella batteria ${ST_BAT[(tp.col || [0])[0]]}; ${stNaz(S) ? "l'altra corre" : "le altre " + (S.codice ? "sono quella dell'amico e una" : "due") + " corrono"} lo stesso giorno e conta${stNaz(S) ? "" : "no"} per la classifica del circuito ${stCircNome(S)}.</p>` : "";
-    const testaFin = T.finale && !k ? `<p><b>La finale del circuito, ${FIN_POSTO}.</b> ${progress.finaleRivali && progress.finaleRivali.length === 5 ? "I primi sei del nazionale, tu compreso" : "Tu e i cinque rivali nazionali con più doti"}: un solo torneo, tutti in acqua.${modo === "carriera" ? " Il diritto vale una volta: ritirarsi la chiude." : ""}</p>` : ""; // 1.3.7
+    const testaFin = T.finale && !k ? `<p><b>La finale del circuito, ${FIN_POSTO}.</b> ${progress.finaleRivali && progress.finaleRivali.length === 5 ? "I primi sei del nazionale, tu compreso" : "Tu e i cinque rivali nazionali con più doti"}: un solo torneo, tutti in acqua.${modo === "carriera" ? " Il diritto vale una volta: ritirarsi la chiude." : ""}</p>${albTesto() ? `<p class="tor-leg" id="finAlbo">${albTesto()}</p>` : ""}` : ""; // 1.3.7; 1.3.54: l'albo
     const testa = !k ? testaSt + testaFin + `<p>${torN(T) === 3 ? "Tre" : "Quattro"} regate contro gli stessi ${T.av.length === 5 ? "cinque" : "tre"} avversari (${T.liv}): ${car}. Chi sono e come vanno: pulsante «I rivali». Il vento è quello di un campo di regata vero, con raffiche e salti insieme. ${T.regate.map((g, j) => (j + 1) + ") " + torFormato(T, j)).join("; ")}.</p>
       <p>Punti come nel regolamento di regata: 1 al primo, 2 al secondo e così via, ${nomi.length + 1} a chi non arriva o si ritira; ${torN(T) >= TOR_N ? "dopo la quarta regata la peggiore si scarta" : "con tre regate niente scarto"}. Vince chi ha meno punti. Nelle regate 1 e 2 un contatto con colpa vale 1 punto in più; ${torN(T) >= TOR_N ? "nelle 3 e 4" : "nella 3"} costa due giri, e chi arriva senza averli fatti è squalificato. Il torneo si salva dopo ogni regata: se esci o chiudi la pagina a regata iniziata, quella regata vale come ritirata.</p>`
       : T.fine ? "" : `<p>Prossima: ${torNome(k)}.</p>`;

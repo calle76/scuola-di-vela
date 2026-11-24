@@ -7,6 +7,7 @@
 #  A4 non salva quello che non deve: dopo un allenamento finito, con un torneo e una stagione in corso nel salvataggio, cambiano solo done.ra e il record della sua combinazione;
 #     con una penalità sul punteggio o la squalifica il record non cambia; lasciato a metà non cambia niente
 #  A5 riquadro e menu di Deriva a 1360x650 e 1360x768 senza eccesso, pagina senza #collaudo, 0 errori; nel menu niente regate dei salti e dei giri; Ricomincia e Cambia vento ci sono
+#  A6 (1.3.54) la registrazione scrive il livello vero: avversari= della regata in corso, non quello del menu: allenamento, torneo e regata della Scuola x i due livelli (nella Scuola è quello del menu), coi due livelli del menu
 # Uso: python tests/collaudo_allenamento.py   (BROWSER=firefox per Firefox; --lungo: A2 con le regate lunghe, come chi gioca; A1 A2 A4 A5: solo quelle parti)
 import asyncio, json, os, pathlib, sys
 import metro
@@ -14,7 +15,7 @@ from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
-SOLO = [a for a in sys.argv[1:] if a in ("A1", "A2", "A4", "A5")]   # solo queste parti
+SOLO = [a for a in sys.argv[1:] if a in ("A1", "A2", "A4", "A5", "A6")]   # solo queste parti
 LUNGO = "--lungo" in sys.argv
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
@@ -83,6 +84,16 @@ async def main():
             if c in (0, 7): print(f"        esempio {r['titolo']}: {r['ris']}", flush=True)
             await ctx.close()
         if not SOLO or "A2" in SOLO: chk("A2", ok2 == 16, f"A2 combinazioni partite e finite col formato scelto, 0 errori: {ok2} su 16{' (regate lunghe)' if LUNGO else ''}; note {note[:2]}")
+        # ---- A6 ----
+        ctx, pg, errs = await pagina(b)
+        r6 = await pg.evaluate("""() => { const sv = __sv, out = []; sv.fast(0); sv.skipBrief = true; const L = ["principianti", "esperti"], leggi = () => /avversari=(\w+)/.exec(sesSet())[1];
+          for (const menu of L) for (const vero of L){ opt.aiLevel = menu;
+            allSel.esp = vero === "esperti"; allen = allNuovo(); openItem(["r", "a"]); out.push(["allenamento", menu, vero, leggi()]); showMenu();
+            tor = progress.torneo = torNuovo(null, 3, vero); openItem(["r", "t"]); out.push(["torneo", menu, vero, leggi()]); R.torOk = true; delete progress.torneo; tor = null; showMenu();
+            openItem(["r", 0]); out.push(["scuola", menu, menu, leggi()]); showMenu(); }
+          opt.aiLevel = "esperti"; out.push(["menu", "esperti", "esperti", leggi()]); return out; }""")
+        chk("A6", len(r6) == 13 and all(x[2] == x[3] for x in r6) and sum(x[1] != x[2] for x in r6) == 4 and not errs, f"A6 livello della registrazione giusto {sum(x[2] == x[3] for x in r6)} su {len(r6)}, di cui col menu diverso {sum(x[1] != x[2] for x in r6)}; sbagliati {[x for x in r6 if x[2] != x[3]][:3]}; errori {errs[:1]}")
+        await ctx.close()
         # ---- A4 ----
         ctx, pg, errs = await pagina(b)
         r = await pg.evaluate("""() => { const sv = __sv, dt = 1 / 60; sv.fast(0); sv.store = 'scuolaVelaSim.v1'; sv.skipBrief = true; __seed(77);
@@ -135,6 +146,6 @@ async def main():
         await b.close()
     print("casi per parte:", casi)
     if fail: print(f"ESITO: FALLITO ({len(fail)})"); sys.exit(1)
-    if any(casi.get(k, 0) == 0 for k in (SOLO or ("A1", "A2", "A4", "A5"))): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in (SOLO or ("A1", "A2", "A4", "A5", "A6"))): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

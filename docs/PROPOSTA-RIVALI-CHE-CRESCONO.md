@@ -1,6 +1,6 @@
 # Proposta: rivali che crescono e finale che resta (voce 82)
 
-*Fermata 1, 24 novembre 2026. Idea di Ale: «non c'è livello ma punteggi che fanno crescere le capacità». Nessun codice nel gioco finché non arriva il via.*
+*Fermata 1, 24 novembre 2026. Idea di Ale: «non c'è livello ma punteggi che fanno crescere le capacità». Via alla tappa 2 lo stesso giorno («La due è l'albo d'oro? Ok»): fatta nella 1.3.54. Tappe 1 e 3: nessun codice finché non arriva il via.*
 
 ## Com'è oggi (letto nel codice il 24 nov, provato in pagina dove detto)
 
@@ -69,4 +69,8 @@ Partenza 10-30 e 45-70; tetti 50-100 e 75-100; velocità di crescita; soglia 70 
 
 Il via, tutto o a tappe. **Consiglio:** prima la 2 (piccola), poi la 1, la 3 solo dopo aver giocato la 1.
 
-Trovato strada facendo, da correggere comunque: la registrazione scrive `avversari=` dal menu e non dalla regata (provato: allenamento con esperti scritto «principianti»); per questo il «principianti» delle 8 regate lunghe della voce 2 è da verificare.
+Trovato strada facendo e corretto nella 1.3.54: la registrazione scriveva `avversari=` dal menu e non dalla regata (provato: allenamento con esperti scritto «principianti»); per questo il «principianti» delle 8 regate lunghe della voce 2 è da verificare.
+
+## Esito della tappa 2 (1.3.54, 24 novembre 2026)
+
+Fatta come scritta. G7 passa (`collaudo_finale.py` F6): 20 finali su 20 con vincitore e posto giusti, 19 su 19 con campione e scheda giusti, riquadro e schede 0 px a 1360x650. Il posto del giocatore si legge come «miglior posto» e, per le finali dell'albo, solo il vincitore: il posto di ogni finale è salvato (`pos`) ma non mostrato, per non allungare il riquadro. Numeri in `CHANGELOG.md` 1.3.54.
