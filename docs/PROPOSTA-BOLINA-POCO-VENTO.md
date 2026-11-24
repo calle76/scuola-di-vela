@@ -1,5 +1,7 @@
 # Proposta: bolina e virata con poco vento (voce 81)
 
+**Stato: chiusa come limite noto** (Ale, 25 novembre 2026), motore invariato.
+
 *Fermata 1, 23 novembre 2026, sera. Ale: «sì ok» a riaprire il «limite noto» del 17 ottobre come voce nuova. Nessun codice nel motore finché non arriva il via.*
 
 ## Da dove viene

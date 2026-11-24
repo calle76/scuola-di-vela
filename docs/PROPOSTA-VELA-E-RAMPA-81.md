@@ -1,5 +1,7 @@
 # Proposta: vela, braccio e rampa insieme (voce 81, seconda proposta)
 
+**Stato: chiusa come limite noto** (Ale, 25 novembre 2026), motore invariato.
+
 *Fermata 1, 25 novembre 2026. Ale: «Si vai». Nessun codice nel motore finché non arriva il via. Parte da `PROPOSTA-BOLINA-POCO-VENTO.md` (ultime due parti).*
 
 ## Il difetto

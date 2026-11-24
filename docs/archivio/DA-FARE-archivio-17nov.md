@@ -76,3 +76,4 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 36 | **Allenamento** al posto delle due regate di Deriva | `PROPOSTA-ALLENAMENTO.md` | **Fatto nella 1.3.51 (24 nov 2026)** |
 | 42 | **Coach, terza mano:** la finestra di «altre barche» con una scuffia, perdita detta due volte | `PROPOSTA-COACH-2.md` §8; oss. 131 | **Fatto nella 1.3.52 (24 nov 2026)**, con in più la scuffia prima del via |
 | 41, 6 | **Chiudere la scheda a metà regata può non salvare il ritiro** (`collaudo_torneo` C11 in Firefox: 4, poi 1, poi 1 tornei su 40): causa nota, la simulazione alla chiusura dura troppo. **Fatta il 24 nov (1.3.53)** | `PROPOSTA-RITIRO-PROVVISORIO.md`; oss. 86 | Opus |
+| 81 | **Bolina e virata con poco vento** | `PROPOSTA-VELA-E-RAMPA-81.md`, `PROPOSTA-BOLINA-POCO-VENTO.md` | **Chiusa da Ale il 25 nov 2026 come limite noto**, motore invariato («sì, chiudila come limite noto») |
