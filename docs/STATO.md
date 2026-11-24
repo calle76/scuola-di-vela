@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 24 novembre 2026 (gioco alla **1.3.51**, tag `v1.3.51`; allenamento).*
+*Aggiornato: 24 novembre 2026 (gioco alla **1.3.52**, tag `v1.3.52`; Coach e scuffie).*
 
 ## Dove siamo
 
 - **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
+- **1.3.52 (voce 42):** il Coach non conta due volte la scuffia e non conta quella prima del via (6 frasi su 8 nelle registrazioni); `collaudo_coach` K14 verde in Chromium, Firefox e regate lunghe.
 - **1.3.51 (voce 36, allenamento):** in Deriva una regata singola come quelle del torneo, con scelta di percorso, penalità, barche, rivali; le regate dei salti e dei giri escono dal menu. A1 40 su 40 identiche al torneo, A2 16 su 16, A4-A5 OK. **Idea di Ale (24 nov): chiedere a lui e Lucio regate «su misura»** con questo riquadro: per Z7 triangolo, 6 barche, giri; per la voce 2 bastone, 4 barche, esperti.
 - **1.3.50 (voce 74, marcatura, via di Ale a tutti i livelli):** nell'ultima regata del torneo il rivale a cui il duello con te decide la classifica ti marca di bolina (vira quando viri tu, da davanti e a meno di 42 m); riga nel testo della regata, Coach a −100 s, righe `marca` nel file. `collaudo_marcatura.py` su 80 tornei: K1, K2, K5-K9 passano; **K3 non misurato** (15 regate utili su 20; 94% contro 57%), **K4 no** (2 contatti con colpa del marcatore nei corti: uno identico senza marcatura, l'altro dalla virata normale alla layline). Il pilota sta vicino al marcatore pochi secondi: la prova vera sono le vostre ultime regate. **Ale la tiene (24 nov).** Voce 71 (uscita lenta) chiusa da Ale: si lascia com'è.
 - **Giro GitHub del 24 nov notte (run 45298592556, completo sulla 1.3.50 e `f37f21d`), letto per intero:** 240 voci OK, 3 rosse. `collaudo_storico_rivali` R3 (nuova, Chromium): 18 su 20, perché la marcatura cambia apposta le ultime regate; marcatura spenta 20 su 20: collaudo corretto. `collaudo_regola18` Z5 in Firefox 3 → 4 (+33%, soglia +30%): identico al giro prima. `collaudo_suoni_si_sentono` sartiame in Chromium: noto (voce 18). `collaudo_torneo` C11 in Firefox: 1 torneo su 40 (voce 41). `collaudo_esame_nuove` di nuovo verde.
@@ -30,16 +31,16 @@
 
 - **I «via» alle correzioni grosse si danno tutti insieme quando i crediti sono ripristinati**, con la lista completa (`DA-FARE.md`). Con pochi crediti: solo lavori leggeri (testi, collaudi, proposte). Le proposte restano scritte e ferme.
 - Le altre batterie del circuito **non** si simulano: la classifica a sorteggio resta (voce 52 archiviata). Niente carriera di prova. «Rifai questo tratto» e le domande sulle penalità vanno nel livello Coach dopo Deriva. Il Coach resta a «scarso» = 6° (`DECISIONI.md`).
-- Già con via, rimandate ai crediti: regola 18 in Deriva (voce 49), Allenamento (36). Domande risposte, via non dato: aiuto «scarso/buono» (48).
+- Domande risposte, via non dato: aiuto «scarso/buono» (48).
 
 ## Prossimi passi (giro della lista)
 
-1. Coach (42, 66; la 69 aspetta le immagini di Ale), poi 7. Versione B della 18 quando si arriva ai rivali.
+1. Coach (66; la 69 aspetta le immagini di Ale), poi 7. Versione B della 18 quando si arriva ai rivali.
 2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main` (collaudo e documenti del 24 nov; la 1.3.50 è già pushata). Nessun giro GitHub: il gioco non è cambiato.
+- **Push:** `git push origin main --tags` (1.3.51, 1.3.52 e documenti del 24 nov), poi **giro GitHub completo** (Actions → «Collaudi» → «Run workflow»): il menu è cambiato e molti collaudi con lui.
 - **Giocare il torneo con la 1.3.49 e mandare le regate** (Ale: ok, 23 nov): servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
 - **Chiedere a Lucio** per il finale dell'osservazione 135 e di rileggere la lezione 11 nuova.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ultima il 17 nov).

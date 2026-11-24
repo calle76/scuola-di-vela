@@ -260,6 +260,13 @@
     chiudi();
     return out.map(o => ({ ...o, da: +Object.entries(o.chi).sort((a, b) => b[1] - a[1])[0][0] }));
   }
+  /* 1.3.52 (voce 42, osservazione 131): i tratti a barca rovesciata dal via all'arrivo, di almeno 1 s: [{ t0, t1 }]. La scuffia prima del via non è una perdita della regata */
+  function coaRovescia(fine){
+    const out = []; let cur = null;
+    for (const f of riv.all){ if (f.t < 0 || f.t > fine) continue;
+      if (f.b[0][8]){ if (!cur) out.push(cur = { t0: f.t, t1: f.t }); cur.t1 = f.t; } else cur = null; }
+    return out.filter(o => o.t1 - o.t0 >= 1);
+  }
   // il clou: per ogni secondo, quanti metri di percorso ti mancano in più della rotta ottimale (distanza dalla prossima boa più i lati dopo, fino al centro
   // della linea d'arrivo); la finestra di COA_FIN s in cui questo cresce di più. Prima stesura (scartata il 15 nov, prima di misurare le soglie): la lunghezza
   // del filo, cioè la distanza fra le due barche nello stesso istante; ma due rotte su lati diversi del campo si allontanano anche senza perdere niente
@@ -273,11 +280,13 @@
       if (q && f) g.push({ s, d: resto(f[0], f[1], latoDi(s, tuFine)) - resto(q[0], q[1], latoDi(s, lati)) }); }
     const aff = new Set();
     for (const f of tu){ const me = f.b[0]; if (f.t < me0.taglio.t + COA_AFF_VIA) continue; if ((f.c && f.c[0] >= COA_COP) || f.b.some((b, k) => k && Math.hypot(b[0] - me[0], b[1] - me[1]) < COA_AFF)) aff.add(Math.floor(f.t)); }
+    const rov = coaRovescia(tu[tu.length - 1].t); /* 1.3.52: una finestra con una scuffia (fino a COA_RIPARTI s dopo la raddrizzata) non è né clou né «altre barche»: la perdita la dice la frase della scuffia */
     const vel = (t0, t1) => { const fr = tu.filter(f => f.t >= t0 && f.t <= t1); return fr.length ? fr.reduce((a, f) => a + f.b[0][4], 0) / fr.length : 1; };
     let best = null, tutto = null;
     for (let i = 0; i + COA_FIN < g.length; i++){
       const a = g[i], b = g[i + COA_FIN], w = { t0: a.s, t1: b.s, m: b.d - a.d };
       let nAff = 0; for (let s = Math.floor(a.s); s <= b.s; s++) if (aff.has(s)) nAff++;
+      if (rov.some(o => o.t0 <= w.t1 && o.t1 + COA_RIPARTI >= w.t0)) continue;
       const libero = nAff < COA_AFF_S; w.libero = libero;
       if (!tutto || w.m > tutto.m) tutto = w;
       if (libero && (!best || w.m > best.m)) best = w;
@@ -319,8 +328,7 @@
     else if (rit >= COA_VIA) F.push({ tipo: "partenza", t: 0, peso: rit, s: Math.round(rit), kn: +kn.toFixed(1), txt: `Hai tagliato la linea ${Math.round(rit)} s dopo il via; allo sparo andavi a ${kn.toFixed(1).replace(".", ",")} nodi (lezione 18).` });
     // 1.3.6 (Ale, 15 nov: «arrivato ultimo e scuffiato, il coach … non ha citato la scuffiata»): la prima scuffia della regata, coi secondi a barca rovesciata
     // (le copie della moviola, colonna 8); peso = quei secondi più COA_RIPARTI per tornare a velocità (stima nostra, solo per ordinare)
-    { const cap = riv.all.filter(f => f.t >= rivT0() && f.b[0][8]); if (cap.length){ const t0 = cap[0].t; let t1 = t0; for (const f of riv.all) if (f.t >= t0){ if (!f.b[0][8]) break; t1 = f.t; }
-      const quante = riv.all.reduce((a, f, i) => a + (i && f.b[0][8] && !riv.all[i - 1].b[0][8] ? 1 : 0), cap[0] === riv.all[0] ? 1 : 0);
+    { const rov = coaRovescia(fineTu); if (rov.length){ const { t0, t1 } = rov[0], quante = rov.length;
       F.push({ tipo: "scuffia", t: t0, peso: t1 - t0 + COA_RIPARTI, s: Math.round(t1 - t0), n: quante,
         txt: `A ${T(t0)} hai scuffiato: ${Math.round(t1 - t0)} s con la barca rovesciata${quante === 2 ? " (e un'altra volta)" : quante > 2 ? ` (e altre ${quante - 1} volte)` : ""} (lezione 8).` }); } }
     // penalità: il primo contatto con colpa tua e la prima boa toccata

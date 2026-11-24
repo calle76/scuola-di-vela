@@ -18,6 +18,10 @@
 #   K12 (1.3.14) le frasi nel file della regata: prima di aprire la rotta ottimale l'ultimo pezzo registrato non ha righe «A» (dalla 1.3.46 la registrazione può essere ancora aperta: continua dopo l'arrivo e si chiude all'apertura della rotta); dopo ha «A - volto» col volto mostrato, «A - rotta» e una riga
 #       per frase, nello stesso ordine, con lo stesso testo e lo stesso momento (±0,05 s); chiesta una seconda volta la scrittura non raddoppia le righe; la copia in IndexedDB le ha (ultima regata)
 #   K0 (1.3.32) regate dove la rotta ottimale non compare: contate e non controllate (prima il collaudo cadeva con un errore di Python); al più max(2, 10% delle regate)
+#   K14 (1.3.52, voce 42, osservazione 131; criteri scritti prima di lanciarlo): a) una scuffia costruita (12 s) al centro della finestra del clou o di «altre barche» di quella regata:
+#       nessuna finestra tocca più [inizio, fine + 10 s], 0 casi sbagliati e almeno 8 regate col caso (prima della costruzione la finestra conteneva quel tratto: il caso c'è davvero);
+#       b) una scuffia costruita prima del via (da -40 a -20 s: qui il conto alla rovescia è di 60 s): nessuna frase di scuffia e le stesse frasi di senza, 0 casi sbagliati e almeno 15 regate; c) una scuffia subito al via resta detta.
+#       Dopo il primo giro: gli istanti sono quelli dei fotogrammi costruiti (10 al secondo); con m esatto 5 finestre confinanti sembravano toccare per meno di 0,12 s
 #   K13 (1.3.23, voce 57) contento anche col primo posto (almeno un'altra barca, squalificati esclusi) o col nuovo record, se non c'è niente da arrabbiato (costruito);
 #       K10 nelle regate vere ricalcola primo posto e record e li conta
 # Uso: python tests/collaudo_coach.py [--regate N] [--rif v1.3.2]   (BROWSER=firefox per Firefox)
@@ -42,13 +46,22 @@ DATI = """() => { const r = rot.res; if (!r || !r.ott) return { manca: true };  
   const t0 = performance.now(); const F = coaFrasi(r.ott, r.sp); const ms = performance.now() - t0;
   return { coach: r.coach, ms, uguali: JSON.stringify(F) === JSON.stringify(r.coach), punti: r.ott.punti.map(q => [q.t, q.x, q.y]), lati: r.ott.lati, giri: o.giri.map(g => g.t), leg: o.taglio.leg,
     marks: R.marks.map(m => [m.x, m.y]), fin: [(R.pin.x + R.cb.x) / 2, (R.pin.y + R.cb.y) / 2], aff: COA_AFF, cop: COA_COP, fin60: COA_FIN, min: COA_MIN, affS: COA_AFF_S, affVia: COA_AFF_VIA, taglio: o.taglio.t,
-    tu: tu.map(f => [f.t, f.b[0][0], f.b[0][1], f.b[0][4], f.c ? f.c[0] : 0, Math.min(1e9, ...f.b.slice(1).map(b => Math.hypot(b[0] - f.b[0][0], b[1] - f.b[0][1])))]),
+    tu: tu.map(f => [f.t, f.b[0][0], f.b[0][1], f.b[0][4], f.c ? f.c[0] : 0, Math.min(1e9, ...f.b.slice(1).map(b => Math.hypot(b[0] - f.b[0][0], b[1] - f.b[0][1]))), f.b[0][8] ? 1 : 0]),
     tratti: coaCoperto(tu).map(x => [x.t0, x.t1]) }; }"""
 
 REGC = """() => { if (!regPezzi.length) return null; const reg = Math.max(...regPezzi.map(p => p.reg)), pz = regPezzi.filter(p => p.reg === reg).sort((a, b) => b.n - a.n)[0], r = pz.testo.split("\\n");
   return { righe: r.filter(l => l.startsWith("A ")), ultima: r.filter(l => l).pop(), mia: !!regUltima && regUltima.R === R && regUltima.reg === reg, id: pz.id, fine: pz.fine, lung: pz.testo.length, aperta: ses.auto && sesAutoR === R }; }"""
 IDB = """(id) => new Promise(ok => { const o = indexedDB.open("scuolaVelaReg", 1); o.onerror = () => ok(null);
   o.onsuccess = () => { const q = o.result.transaction("pezzi", "readonly").objectStore("pezzi").get(id); q.onsuccess = () => { ok(q.result ? q.result.testo.split("\\n").filter(l => l.startsWith("A ")) : null); o.result.close(); }; q.onerror = () => ok(null); }; })"""
+
+K14JS = """() => { const tu = riv.all, r = rot.res, salva = tu.map(f => f.b[0][8]), rimetti = () => tu.forEach((f, i) => { f.b[0][8] = salva[i]; });
+  const senza = () => tu.forEach(f => { f.b[0][8] = 0; }), metti = (a, z) => tu.forEach(f => { if (f.t >= a && f.t <= z) f.b[0][8] = 1; }), frasi = () => coaFrasi(r.ott, r.sp), fine = R.boats[0].fin;
+  const out = { a: null, b: null, c: null };
+  senza(); const F0 = frasi(), w = F0.find(x => x.tipo === "clou" || x.tipo === "affollato");
+  if (w){ const m = (w.t0 + w.t1) / 2 - 6, qui = tu.filter(f => f.t >= m && f.t <= m + 12), a = qui[0].t, z = qui[qui.length - 1].t, tocca = x => x.t0 <= z + 10 && x.t1 >= a; metti(a, z); const F = frasi();
+    out.a = { prima: tocca(w), dopo: F.filter(x => (x.tipo === "clou" || x.tipo === "affollato") && tocca(x)).length, sc: F.filter(x => x.tipo === "scuffia").length, az: [a, z], rov: coaRovescia(fine).map(o => [o.t0, o.t1]), f: F.filter(x => (x.tipo === "clou" || x.tipo === "affollato") && tocca(x)).map(x => [x.t0, x.t1]) }; senza(); }
+  if (tu[0].t < -45){ metti(-40, -20); const F = frasi(); out.b = { scuffia: F.filter(x => x.tipo === "scuffia").length, uguali: JSON.stringify(F) === JSON.stringify(F0) }; senza(); }
+  metti(5, 20); const v = coaRovescia(fine === null ? 1e9 : fine); out.c = v.length === 1 && v[0].t0 < 6 && v[0].t1 > 19; rimetti(); return out; }"""
 
 def interp(A, T):   # A: [[t, x, y], ...] ordinati
     lo, hi = 0, len(A) - 1
@@ -73,8 +86,16 @@ def clou(d):   # ricalcolo indipendente del clou
         s += 1
     aff = {math.floor(f[0]) for f in d["tu"] if f[0] >= d["taglio"] + d["affVia"] and (f[4] >= d["cop"] or f[5] < d["aff"])}   # 1.3.13: i primi affVia secondi dopo il taglio non contano
     best = None
+    rov, cur = [], None   # 1.3.52: tratti a barca rovesciata (almeno 1 s), ricalcolati qui
+    for f in d["tu"]:
+        if f[6]:
+            if cur is None: cur = [f[0], f[0]]; rov.append(cur)
+            cur[1] = f[0]
+        else: cur = None
+    rov = [o for o in rov if o[1] - o[0] >= 1]
     for i in range(len(g) - d["fin60"]):
         a, b = g[i], g[i + d["fin60"]]
+        if any(o[0] <= b[0] and o[1] + 10 >= a[0] for o in rov): continue   # una finestra con una scuffia (fino a 10 s dopo) non conta
         if sum(1 for t in range(math.floor(a[0]), math.floor(b[0]) + 1) if t in aff) >= d["affS"]: continue   # 1.3.13: affollata solo con almeno affS secondi su 60
         if best is None or b[1] - a[1] > best[2]: best = (a[0], b[0], b[1] - a[1])
     return best
@@ -105,7 +126,7 @@ async def main():
             for k, s in elenco: await pg.evaluate(CORSA, [k, s, 0]); rif.append(await pg.evaluate(ESITO))
             await pg.close()
         pg, errs, elenco = await regate(br, (ROOT / "index.html").as_uri(), NREG)
-        nclou = nfr = nbravo = nmanca = 0; umori = {}
+        nclou = nfr = nbravo = nmanca = n14a = n14b = 0; umori = {}
         for n, (k, s) in enumerate(elenco):
             if LUNGO and n > 0:   # 21 nov 2026 (indagine GitHub contro PC): una pagina NUOVA per ogni regata lunga, perché nella stessa pagina la regata dipende da quelle fatte prima (stato che resta) e cambia da una macchina all'altra
                 await pg.close(); pg, _e, _el = await regate(br, (ROOT / "index.html").as_uri(), NREG); pg.on("pageerror", lambda e: errs.append(str(e)))
@@ -125,6 +146,10 @@ async def main():
             chk("K12", bool(g1) and g1["mia"] and g1["fine"] == "ultimo" and (g0["aperta"] or g1["id"] == g0["id"]) and g1["righe"][:1] == ["A - volto " + um] and g1["righe"][1:2] == ["A - rotta " + " ".join(await pg.evaluate("() => rot.res.testo.split(/\\s+/)"))] and len(fr) == len(C) >= 1
                 and all(l.endswith(" " + " ".join(x["txt"].split())) and l.split()[2] == x["tipo"] and abs(float(l.split()[1]) - x["t"]) <= 0.05 for l, x in zip(fr, C)) and g1["ultima"] == g1["righe"][-1],
                 f"K12 {s}-{k}: righe del Coach nel file {g1 and g1['righe']}, volto {um}, frasi {[x['txt'] for x in C]}")
+            k14 = await pg.evaluate(K14JS); n14a += k14["a"] is not None; n14b += k14["b"] is not None
+            chk("K14", k14["a"] is None or (k14["a"]["prima"] and k14["a"]["dopo"] == 0), f"K14a {s}-{k}: {k14}")
+            chk("K14", k14["b"] is None or (k14["b"]["scuffia"] == 0 and k14["b"]["uguali"]), f"K14b {s}-{k}: {k14}")
+            chk("K14", k14["c"] is None or k14["c"], f"K14c {s}-{k}: la scuffia subito dopo il via non è fra i tratti {k14}")
             print(f"  {s}-{k}: " + " | ".join(f"{x['tipo']} {x['peso']:.0f}" for x in C), flush=True)
             chk("K11", not any(x["tipo"] == "scuffia" for x in C) or await pg.evaluate("() => riv.all.some(f => f.b[0][8])"), f"K11 {s}-{k}: scuffia detta senza scuffia")
             chk("K3", 1 <= len(C) <= 3 and all(re.search(r"\d", x["txt"]) for x in C), f"K3 {s}-{k}: {len(C)} frasi, una senza numero? {[x['txt'] for x in C]}")
@@ -177,6 +202,8 @@ async def main():
             const mb = document.getElementById('movBar').getBoundingClientRect(); return { ecc: Math.max(document.documentElement.scrollWidth - innerWidth, document.documentElement.scrollHeight - innerHeight, 0), top: mb.top, bottom: mb.bottom, H: innerHeight }; }""")
         chk("K2", w["ecc"] == 0 and w["top"] >= 0 and w["bottom"] <= w["H"] + 0.5, f"K2 caso peggiore: {w}")
         print("K2 caso peggiore:", w, flush=True)
+        chk("K14", n14a >= 8 * NREG / 20 and n14b >= 15 * NREG / 20, f"K14 casi: {n14a} regate con la finestra, {n14b} con la scuffia prima del via")
+        print(f"K14: {n14a} regate con la scuffia nella finestra, {n14b} con la scuffia prima del via", flush=True)
         await pg.keyboard.press("Escape"); await pg.wait_for_timeout(80)
         for twa, kn, c, D in ((45, 10, 0.3, 40), (90, 12, 0.5, 30), (150, 8, 0.2, 60), (60, 15, 0.45, 50)):
             r = await pg.evaluate("""([twa, kn, c, D]) => { const w = rotVento(R.marks[0].x, R.marks[0].y, rotRaffiche(rot.reg[0].t)), tws = w.tws, fr = [];
