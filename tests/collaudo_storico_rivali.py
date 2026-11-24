@@ -3,7 +3,7 @@
 #   R1 lo storico dice il vero: per ogni rivale i nove contatori dello storico (regate, davanti, dietro, partenza davanti/dietro, fuori linea, contatti, colpa sua, colpa tua) uguali a quelli
 #      ricalcolati QUI dal registro delle regate del torneo (tor.ris), con un calcolo scritto nel collaudo (non quello del gioco); 0 righe diverse e almeno 500 confronti
 #   R2 dura: pagina chiusa e riaperta fra due tornei: storico identico; un salvataggio senza progress.rivali si apre con storico vuoto, la scheda si apre e 0 errori
-#   R3 (solo Chromium: in Firefox la stessa versione contro se stessa dà 14 su 20 identiche, quindi lì è solo riportato) il passo 1 non cambia la regata: con la marcatura della 1.3.50 spenta, arrivi, penalità e giri uguali al bit alla 1.3.36 (commit ba7c653, senza storico), 5 tornei da 4 regate (20 regate)
+#   R3 (Chromium e Firefox; fino al 24 nov in Firefox era solo riportato, per un difetto del collaudo: due evaluate nella stessa pagina) il passo 1 non cambia la regata: con la marcatura della 1.3.50 spenta, arrivi, penalità e giri uguali al bit alla 1.3.36 (commit ba7c653, senza storico), 5 tornei da 4 regate (20 regate)
 #   R4 identità: lo stesso nome in due tornei di fila nella stessa pagina si somma (contatori = somma dei due); due rivali con lo stesso colore e nomi diversi restano separati
 #   R1b casi costruiti: 200 registri a mano (contatti di ogni colpa, fuori linea, squalifiche, giocatore o rivale non arrivato, linea mancante) contro `atteso()`; ogni tipo almeno 10 volte
 #   R5 finestra dei rivali (torDlg e torBody): la scheda con lo storico lungo (999 regate) a 1360x650 senza eccesso, con 3 e con 5 rivali
@@ -18,6 +18,7 @@ BR = os.environ.get("BROWSER", "chromium")
 RIF = "ba7c653"   # 1.3.36
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
+R3_ATTESA = int(os.environ.get("R3_ATTESA", 0)); R3_MARCA = os.environ.get("R3_MARCA") == "1"   # controprove di R3: attesa in più (il conto non deve cambiare); marcatura accesa (il conto deve scendere)
 bad = []; n_casi = 0
 def chk(ok, m):
     global n_casi; n_casi += 1
@@ -46,7 +47,7 @@ def atteso(ris_lista, i):
         if c:
             st["cont"] += 1; st["cS"] += "s" in c; st["cT"] += "t" in c
     return st
-CORRI = """async ([ritiro]) => { const sv = __sv, dt = 1 / 60; document.getElementById("torGo").click();
+CORRI = """async ([ritiro, seme]) => { const sv = __sv, dt = 1 / 60; if (seme !== undefined) __seed(seme); document.getElementById("torGo").click();
   const R = sv.R, me = R.boats[0];
   if (ritiro){ window.confirm = () => true; document.getElementById("rRet").click(); sv.run(dt, 1); }
   else while (me.fin === null && !me.dnf && R.t < 1500){ sv.pilota(dt); sv.run(dt, 1); }
@@ -69,6 +70,19 @@ async def torneo(pg, seme, ritiro=False):
         d = await pg.evaluate(LEGGI)
         if d["ris"] is not None and d["nomi"]: ris, nomi = d["ris"], d["nomi"]
     return ris, nomi, firme
+async def torneo_r3(b, url, seme, attesa=0):
+    """le firme delle 4 regate, una pagina nuova per regata e il seme rimesso dentro la corsa (24 nov, come K2 di collaudo_marcatura: i fotogrammi disegnati fra due evaluate usano numeri a caso, disegno.js draw)"""
+    firme = []; T = RV = None
+    for k in range(4):
+        ctx, pg, errs = await pagina(b, url=url)
+        await pg.evaluate("(m) => { if (__sv.marca) __sv.marca(m); }", R3_MARCA)   # dalla 1.3.50 l'ultima regata cambia apposta se un rivale marca: qui si misura solo lo storico (la marcatura la misura collaudo_marcatura.py)
+        if k: await pg.evaluate("([T, RV]) => { __sv.fast(0); __sv.store = 'scuolaVelaSim.v1'; progress.torneo = T; progress.rivali = RV; __sv.torApri(); }", [T, RV])
+        else: await apri(pg, seme)
+        if attesa: await pg.wait_for_timeout(attesa)
+        firme.append(await pg.evaluate(CORRI, [False, seme * 1000 + k]))
+        if k < 3: T, RV = await pg.evaluate("() => [JSON.parse(JSON.stringify(__sv.tor)), JSON.parse(JSON.stringify(progress.rivali || {}))]")
+        await ctx.close()
+    return firme
 PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clientHeight}"
 def attesi(tors):
     out = {}
@@ -146,14 +160,9 @@ async def main():
         for seme in range(101, 106):
             f = []
             for url in (BASE + "#collaudo", VECCHIA):
-                ctx, pg, errs = await pagina(b, url=url)
-                await pg.evaluate("() => { if (__sv.marca) __sv.marca(false); }")   # dalla 1.3.50 l'ultima regata cambia apposta se un rivale marca: qui si misura solo lo storico (la marcatura la misura collaudo_marcatura.py)
-                _, _, fr = await torneo(pg, seme); f.append(fr); await ctx.close()
+                f.append(await torneo_r3(b, url, seme, R3_ATTESA if url != VECCHIA else 0))
             for x, y in zip(*f): tot += 1; uguali += x == y
-        if BR == "chromium":
-            chk(tot == 20 and uguali == 20, f"R3 {uguali} regate su {tot} identiche al bit alla 1.3.36 (arrivi, penalità, giri, posizioni finali)")
-        else:   # dichiarato il 21 nov dopo averlo visto: in Firefox la stessa versione contro se stessa dà 14 su 20 identiche (0 pause), quindi il confronto fra pagine non misura il codice; qui solo riportato
-            print(f"RIPORTATO R3 ({BR}): {uguali} regate su {tot} identiche alla 1.3.36; il controllo vale in Chromium (in Firefox attuale contro attuale: 14 su 20)", flush=True)
+        chk(tot == 20 and uguali == 20, f"R3 {uguali} regate su {tot} identiche al bit alla 1.3.36 (arrivi, penalità, giri, posizioni finali)")
         # ---- R5: pannello ----
         for n6 in (False, True):
             ctx, pg, errs = await pagina(b); await apri(pg, 7)
