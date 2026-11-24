@@ -88,3 +88,10 @@ Mai provato prima: il 23 ottobre era stato solo rimandato («novità grossa»), 
 | 3,0 con svergolamento fino a 0,45 | −3 … −6% | 0% | 3,94 | 63° / 36° | 5,2 s, 9% |
 
 Non riporta i 12 nodi entro ±3% e non salva la virata a 16 nodi. Aiuta un po' le raffiche. Non è la prova che nessun modello più fine possa riuscirci: è la versione semplice di Day. **Alternativa 5 chiusa.**
+
+## Assomiglia a una deriva che esiste? (25 novembre 2026, chiesto da Ale)
+
+- **Per misure è l'ILCA 7:** 4,2 m, vela 7,0 m², 75 kg di timoniere e 60 di scafo, resistenza dello scafo presa dalla sua vasca (F16, F17). Scafo e vela simili ma altra vela (latina): Sunfish (4,2 m, 7,0 m², circa 59 kg; misure discordanti fra i siti).
+- **Per prestazioni non somiglia a nessuna.** Conto nostro su bolina e poppa di uguale lunghezza contro Day (bolina −16 / −10 / +6%, poppa −8/−10%): tempo in più del 15% con 6 nodi, 10% con 10, 0% con 15. Nei numeri di compenso statunitensi per forza del vento (F123, tabella 2017) **nessuna delle 90 classi con quattro valori** perde tanti punti rispetto all'ILCA 7 fra 4-10 e 11-16 nodi: al massimo 6,7, il gioco circa 10. Le più vicine come profilo: il 420 (doppio, +10 / +8 / +4 / +3%) e la Sunfish (+10 / +9 / +7,5 / +9%, quasi costante). La deriva più simile per dimensioni, quindi, va più piano del gioco a 15 nodi.
+- **Limiti:** i numeri di compenso vengono da regate vere (equipaggi, mare) e F123 è del 2017; il tempo del gioco è un conto su due andature sole; con meno di 4 nodi (Bft 0-1) non è stato contato.
+
