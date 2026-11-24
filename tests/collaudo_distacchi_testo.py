@@ -3,7 +3,7 @@
 #     finisce come dice distacco(b): arrotondato r > 0 «r s avanti», r < 0 «-r s dietro», 0 «alla pari», null niente. Stampa quante righe ha confrontato
 #     (se poche, ESITO NON VALIDO). Nessun «+N s»/«−N s» col vecchio segno.
 #  D3 nessuna riga della classifica va a capo (altezza della riga uguale alla più bassa dello stesso momento, con tolleranza di 2 px) -- vedi anche collaudo_pannello.py per l'eccesso.
-# Uso: python collaudo_distacchi_testo.py
+# Uso: python collaudo_distacchi_testo.py [--lungo: il torneo con le regate lunghe, voce 66c]
 import asyncio, pathlib, re, sys
 from playwright.async_api import async_playwright
 
@@ -62,7 +62,7 @@ async def main():
                 await ctx.close()
         for seme in range(1, 4):
             ctx, pg, errs = await nuova(b)
-            await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); document.getElementById('torGo').click(); }", seme)
+            await pg.evaluate("([s, l]) => { __sv.fast(0); if (l) __sv.lungo = true; __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); document.getElementById('torGo').click(); }", [seme, "--lungo" in sys.argv])
             for i, righe in enumerate(await pg.evaluate(CORSA)): controlla(f"torneo seme {seme} lettura {i}", righe)
             if errs: no(f"torneo seme {seme}: errore nella pagina {errs[0]}")
             await ctx.close()

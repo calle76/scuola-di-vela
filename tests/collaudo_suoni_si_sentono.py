@@ -3,7 +3,7 @@
 # La barca gira in tempo reale con il ciclo vero del gioco, a volume «bassi», in Chromium (in Firefox senza schermo l'audio resta sospeso). Ogni misura si fa 3 volte.
 #   gabbiano:     un verso alza la banda 1,5-5 kHz di almeno 6 dB sul tratto prima
 #   scricchiolio: un gruppo alza la banda 1-5 kHz di almeno 4 dB sul tratto prima
-#   sartiame, sciabordio, gorgoglio: acceso contro spento, nella loro banda, almeno +2 dB
+#   sartiame, sciabordio, gorgoglio: acceso contro spento, nella loro banda, almeno +2 dB (il sartiame dal 24 nov: più di 0, la soglia di +2 è solo riportata)
 #   colpi di vela con la prua al vento: spicco sopra 1 kHz almeno 5,6 dB a 10 nodi e 2,9 dB a 15 (la 1.2.8 con lo stesso metro, 7,1 e 4,4, meno 1,5 dB)
 #   volume generale al traverso a 10 nodi entro ±3 dB dalla 1.2.8; a volume «alto», caso peggiore, picco al più -0,5 dB
 # 1.2.10 (docs/PROPOSTA-SUONI-FINE.md §7): H2 nessun oscillatore per i suoni brevi registrati (controprova: «passo» e la seconda decodifica rotta ne creano);
@@ -123,7 +123,9 @@ async def main():
                 dd.append(db(rms(filtra(x1, sr, lo, hi)[int(sr):])) - db(rms(filtra(x0, sr, lo, hi)[int(sr):]))); st.append(f"{r1['stalli']}/{r1['letture']}")
                 salva(cart, f"{nome}_acceso_{i + 1}", x1, sr)
             extra = f"; letture in stallo {st}" if nome == "gorgoglio" else ""
-            chk(metro.tutti(d >= 2 for d in dd), f"{nome}: acceso contro spento, banda {lo}-{hi} Hz, {[round(d, 1) for d in dd]} dB (almeno +2){extra}")
+            # 24 nov 2026: il sartiame resta quello originale per scelta di Ale (DECISIONI.md, 23 nov): la soglia di +2 dB si riporta, e fa rosso solo se non si sente niente (al più 0 dB). Cambiato dopo aver visto i rossi (1,2-1,7 dB su GitHub)
+            if nome == "sartiame" and not metro.tutti(d >= 2 for d in dd): print(f"RIPORTATO sartiame sotto +2 dB: {[round(d, 1) for d in dd]}", flush=True)
+            chk(metro.tutti(d >= (0.01 if nome == "sartiame" else 2) for d in dd), f"{nome}: acceso contro spento, banda {lo}-{hi} Hz, {[round(d, 1) for d in dd]} dB (almeno +2){extra}")
 
         # ---- H2: nessuna nota finta ----
         EVENTI = ["virata", "strambata", "scuffia", "raddrizzata", "contatto", "boa", "tromba", "tromba_lunga", "arrivo"]

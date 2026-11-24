@@ -13,7 +13,6 @@
 - **Giro GitHub del 24 nov notte (run 45298592556, completo sulla 1.3.50 e `f37f21d`), letto per intero:** 240 voci OK, 3 rosse. `collaudo_storico_rivali` R3 (nuova, Chromium): 18 su 20, perché la marcatura cambia apposta le ultime regate; marcatura spenta 20 su 20: collaudo corretto. `collaudo_regola18` Z5 in Firefox 3 → 4 (+33%, soglia +30%): identico al giro prima. `collaudo_suoni_si_sentono` sartiame in Chromium: noto (voce 18). `collaudo_torneo` C11 in Firefox: 1 torneo su 40 (voce 41). `collaudo_esame_nuove` di nuovo verde.
 - **Esploratore del 23 nov (run 45166551760, sulla 1.3.46):** 0 eccezioni, 0 numeri non finiti, 0 errori; barche non arrivate 52 in 1440 corse (Chromium) e 39 in 1600 (Firefox), il giro prima (1.3.11, altri semi) 45 e 42 in 1600. «Annullato» solo perché in un pezzo su 20 (Chromium semi 71-80) l'installazione del browser è rimasta ferma 2 ore: guasto di GitHub, semi non misurati.
 - **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (approvata da Ale il 23 nov). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
-- **1.3.47-1.3.48 (Lucio):** lezione 11, esempio con la boa a nord; lezione 17, la X sale solo per chi è oltre allo sparo (le sue note: gioco giusto, osservazione 142).
 - **Voce 3 chiusa** (Ale). **Voce 4B, variante x4, confermata su semi nuovi:** passa M1, M4, fuori linea, non arrivati; **M3 (contatti in tutto) no** nelle corte (+3,5%) e nelle lunghe in Firefox (+6%). Non adottata, da rivedere a fine giro (`PROPOSTA-COPPIE.md` §15).
 - **Voce 81 (bolina e virata con poco vento), fermata 1 fatta:** vento in quota escluso, «flat» non c'entra; un braccio sbandante (`zCE`) più lungo fa sventare a 9 nodi come Day, ma la barca resta −3/−9% e la virata −10% (soglia −30%); `zCE` senza fonte. **Non passa, motore invariato, da rivedere a fine giro** (`PROPOSTA-BOLINA-POCO-VENTO.md`, `sperimentale/bolina-81/`). Per riprenderla: misure dell'armo con fonte; abbrivio nella prima metà della virata (vera +1,48 m, gioco +0,3).
 - **Voce 2:** nelle 8 regate lunghe di Ale e Lucio (principianti) i rivali vanno di bolina come voi (mediana 326 s contro 326 s), coperture brevi: nessuna proposta per ora (`PROPOSTA-AVVERSARI-BOLINA.md` §15, `tests/misura_bolina_registrazioni.py`). Servirebbero regate lunghe con gli esperti.
@@ -35,8 +34,7 @@
 
 ## Prossimi passi (giro della lista)
 
-1. Coach (66; la 69 aspetta le immagini di Ale), poi 7. Versione B della 18 quando si arriva ai rivali.
-2. **Il C11 di `collaudo_torneo` in Firefox** (voci 41 e 6): una misura per volta, col freno.
+1. Il giro è quasi finito: la 69 aspetta le immagini di Ale, la 41 il suo via (`PROPOSTA-RITIRO-PROVVISORIO.md`), la 49 B le regate alla boa (`PROPOSTA-REGOLA-18-B.md`: consiglio «non ora», 7 momenti utili in 90 regate), la 7 i suoi tempi. Poi **rivedere quello che è rimasto**: 4B, 81, 2.
 
 ## Cosa aspetta Ale
 

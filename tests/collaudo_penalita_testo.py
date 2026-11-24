@@ -3,7 +3,7 @@
 #  P2 regate guidate dal pilota (regate 0, 1 e «nei salti di vento», semi 1-12; torneo, semi 1-6) fino all'arrivo: ogni barca con pen o pp
 #     ha il testo giusto, nessuna barca senza penalità ha la parola «penalità». Riporta quante barche con penalità ha visto
 #     (se zero il controllo non ha misurato niente: ESITO NON VALIDO).
-# Uso: python collaudo_penalita_testo.py
+# Uso: python collaudo_penalita_testo.py [--lungo: il torneo con le regate lunghe, voce 66c]
 import asyncio, pathlib, sys
 from playwright.async_api import async_playwright
 
@@ -54,7 +54,7 @@ async def main():
                 await ctx.close()
         for seme in range(1, 7):
             ctx, pg, errs = await nuova(b)
-            await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); document.getElementById('torGo').click(); }", seme)
+            await pg.evaluate("([s, l]) => { __sv.fast(0); if (l) __sv.lungo = true; __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); document.getElementById('torGo').click(); }", [seme, "--lungo" in sys.argv])
             await pg.evaluate("() => { const sv = __sv, R = sv.R, me = R.boats[0]; while (R.t < 1500 && me.fin === null && !me.dnf){ sv.pilota(1 / 60); sv.run(1 / 60, 1); } }")
             controlla(f"P2 torneo seme {seme}", await pg.evaluate(RIGHE))
             if errs: no(f"P2 torneo seme {seme}: errore nella pagina {errs[0]}")
