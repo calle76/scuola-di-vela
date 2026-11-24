@@ -81,3 +81,5 @@ Vale **a tutti i livelli dei rivali** (anche principianti) o solo da un livello 
 Via di Ale: «vai su tutti i livelli». Fatto come proposto sopra; numeri completi in `CHANGELOG.md` 1.3.50. Passano K1, K2, K5, K6, K7, K8, K9. **K3 non misurato** (15 regate utili su 20; 94% contro 57%, sopra il 50% ma non il doppio). **K4 non passa:** 2 contatti con colpa del marcatore, tutti e due nei corti (0 nei lunghi); uno è identico anche senza marcatura, l'altro viene dalla virata normale alla layline, non da quella di marcatura. Una distanza minima per la virata di marcatura è stata provata e tolta (diagnosi sbagliata). Soglie invariate; il controllo «testo intero» di K8, non scritto qui, è solo riportato perché falliva anche senza marcatura.
 
 **Cosa resta da Ale:** decidere se tenerla così (K3 e K4 come sopra) o spegnerla (`MARCA = false`, una riga). La prova vera sono le vostre ultime regate del torneo: il pilota del collaudo sta vicino al marcatore pochi secondi (mediana 0,75 s nei corti, 17,5 s nei lunghi).
+
+**Decisione di Ale (24 novembre 2026): «sì, la tengo».** `MARCA = true` resta; la prova vera sono le ultime regate del torneo giocate.

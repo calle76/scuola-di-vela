@@ -46,3 +46,7 @@ Il metro di U1 non deve dipendere dalla modifica: i risultati attesi si calcolan
 1. Spezzare il ciclo in `torChiudi` (stesso corpo, stesso `dt`), scritta e blocco; `torEsci` e `rTor` aspettano la fine.
 2. C11 `--lungo` completo (R1-R7) e U1-U7; poi C11 torna nel torneo veloce `--lungo`.
 3. Documenti, versione, `CHANGELOG.md`. Opus.
+
+## Esito (24 novembre 2026)
+
+Ale: «non ci impazzirei per l'attesa di qualche secondo, ma se hai la soluzione pulita allora ok». La strada A non è una correzione piccola (vedi sopra: asincrona, blocco sui menu, `pagehide` sincrono, U1 su 20 tornei lunghi). **Strada D: si lascia com'è, voce chiusa.** Si riapre se l'attesa dà fastidio giocando.
