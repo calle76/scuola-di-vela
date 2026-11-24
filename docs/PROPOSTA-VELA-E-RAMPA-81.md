@@ -70,7 +70,7 @@ I numeri del banco sopra sono noti: i criteri nuovi sono **quelli non ancora vis
 ## Alternative per Ale
 
 1. **Fare questa** (consiglio se vuoi la barca più vera col poco vento, sapendo che non passa i criteri vecchi e che le raffiche si fanno più dure).
-2. **Solo la rampa a 15°** (una costante): col poco vento −9 −11 −12 −5% sulla tesi (oggi −11 −12 −12 −5%), Day 6 nodi −15%: quasi niente da sola.
+2. **Solo la rampa a 15°** (una costante): col poco vento −9 −11 −12 −5% sulla tesi (oggi −11 −12 −12 −5%), Day 6 nodi −15%: quasi niente da sola **sulla velocità; sulla virata invece molto: vedi l'ultima parte**.
 3. **Rampa e resistenza, braccio 2,0:** raffiche e virata più facili, ma 12 e 15 nodi troppo veloci (+4/+5%, +11%): sconsigliata.
 4. **Non fare niente**, limite noto come a ottobre, ma con la causa trovata e scritta.
 5. **Svergolamento della vela e braccio 3,0:** provato il 25 novembre, sotto: non risolve.
@@ -94,4 +94,20 @@ Non riporta i 12 nodi entro ±3% e non salva la virata a 16 nodi. Aiuta un po' l
 - **Per misure è l'ILCA 7:** 4,2 m, vela 7,0 m², 75 kg di timoniere e 60 di scafo, resistenza dello scafo presa dalla sua vasca (F16, F17). Scafo e vela simili ma altra vela (latina): Sunfish (4,2 m, 7,0 m², circa 59 kg; misure discordanti fra i siti).
 - **Per prestazioni non somiglia a nessuna.** Conto nostro su bolina e poppa di uguale lunghezza contro Day (bolina −16 / −10 / +6%, poppa −8/−10%): tempo in più del 15% con 6 nodi, 10% con 10, 0% con 15. Nei numeri di compenso statunitensi per forza del vento (F123, tabella 2017) **nessuna delle 90 classi con quattro valori** perde tanti punti rispetto all'ILCA 7 fra 4-10 e 11-16 nodi: al massimo 6,7, il gioco circa 10. Le più vicine come profilo: il 420 (doppio, +10 / +8 / +4 / +3%) e la Sunfish (+10 / +9 / +7,5 / +9%, quasi costante). La deriva più simile per dimensioni, quindi, va più piano del gioco a 15 nodi.
 - **Limiti:** i numeri di compenso vengono da regate vere (equipaggi, mare) e F123 è del 2017; il tempo del gioco è un conto su due andature sole; con meno di 4 nodi (Bft 0-1) non è stato contato.
+
+## Rollata (tasto X) insieme alle costanti nuove (25 novembre 2026, domanda di Ale; copia del motore)
+
+La rollata della voce 73 (tre prove, l'ultima v3 con `cv` 2) vale solo in virata: **non cambia la velocità in linea retta**. Comandi in `sperimentale/bolina-81/rollata_con_rampa.md`. Metri persi (X giù al passaggio del vento, sbandamento 30°):
+
+| Vento | Oggi, senza X / con X | Solo rampa 15 | Rampa 15, vela 0,27, braccio 2,4 |
+|---|---|---|---|
+| 3,2 nodi (freccia) | 2,8 / 0,7 | 2,2 / **0,3** | 2,2 / −0,2 (guadagna, 103%) |
+| 4 | 2,9 / 1,2 | 2,2 / 0,7 | 2,2 / 0,2 |
+| 6 | 2,9 / 1,7 | 2,1 / **1,1** | 1,9 / 0,8 |
+| 8 | 2,8 / 1,6 | 2,0 / **1,2** | 1,9 / 0,9 |
+| 12 | 3,2 / 1,5 | 2,2 / 1,1 | 2,5 / 0,8 |
+
+- **Criteri della rollata (73):** con la sola rampa 15, **B1 passa anche con la freccia** (4, 6, 8 nodi: 0,7, 1,1, 1,2 m, soglia 1,47; prima no a 6 e 8). **B3** fino a 12 nodi col rilascio a 20-40°: velocità al massimo 100%, ma a 3,2 nodi con 55° 102%, a 14 nodi con 40° 101% e a 16 nodi 101-103% (freccia). **B2 no** (a 10-14 nodi persi 1,1-1,2 m, 0,26-0,29 L, sotto la fascia 0,4-0,8; col poco vento serve di più che col medio: questo passa). **B4 no** (X in ritardo di 1 s rende quasi uguale). Con 0,27 e 2,4 B3 cade (a 3,2 nodi fino al 115%, a 16 fino al 117%): servirebbe abbassare `cv`.
+- **Rampa 15 da sola, senza X** (nessun'altra costante): virata con 3,2 nodi e prua imposta −1,74 → **−1,10 m (B6, −37%: passa)**; raffiche, poppa, 12 e 15 nodi **come oggi**. In cambio, con 11 nodi la virata perde 2,28 m invece di 3,35 mentre **F109 ne perde 4,39: col vento medio si allontana dalla fonte.** `virata1b` criterio 1 fuori a 6, 8 e 14 nodi (minima troppo alta), oggi solo a 16. Con rampa 18: −1,31 m (−25%) e 2,62.
+- Velocità in linea retta con la sola rampa: Day 6 nodi −15% (oggi −16%), 3,2 nodi 0,92 (oggi 0,89): quasi niente. L'angolo morto si stringe come detto sopra.
 
