@@ -4,7 +4,7 @@
 
 ## Cosa c'è oggi
 
-- **Tre volti**, file in `img/coach-*.jpg`: *contento*, *serio*, *arrabbiato*. Gli originali di Ale sono `Coach_contento.png`, `Coach_serio.png`, `Coach_arrabbiato.jpeg` nella radice del repo (non tracciati).
+- **Tre volti**, file in `img/coach-*.jpg`: *contento*, *serio*, *arrabbiato*. Gli originali di Ale sono `Coach_contento.png`, `Coach_serio.png`, `Coach_arrabbiato.jpeg` in `registrazioni/` (non tracciati).
 - Il Coach li usa in due posti: nella moviola a fine regata (3 frasi coi numeri) e durante la regata in Deriva (1.3.28), dove ogni commento ha un umore: `contento`, `serio`, `arrabbiato` (`js/rotta.js`, `crDi`, `crVolto`).
 - Nel codice ci sono circa 15 punti in cui il Coach parla in regata (`crDi`); quali umori compaiono più spesso non è misurato: si conta dai file delle regate con le righe «C».
 

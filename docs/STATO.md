@@ -8,7 +8,8 @@
 
 - **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
 - **1.3.50 (voce 74, marcatura, via di Ale a tutti i livelli):** nell'ultima regata del torneo il rivale a cui il duello con te decide la classifica ti marca di bolina (vira quando viri tu, da davanti e a meno di 42 m); riga nel testo della regata, Coach a −100 s, righe `marca` nel file. `collaudo_marcatura.py` su 80 tornei: K1, K2, K5-K9 passano; **K3 non misurato** (15 regate utili su 20; 94% contro 57%), **K4 no** (2 contatti con colpa del marcatore nei corti: uno identico senza marcatura, l'altro dalla virata normale alla layline). Il pilota sta vicino al marcatore pochi secondi: la prova vera sono le vostre ultime regate. **Ale la tiene (24 nov).** Voce 71 (uscita lenta) chiusa da Ale: si lascia com'è.
-- **Giro GitHub del 23 sera (run 45255236868, sulla 1.3.49), controllato il 24 nov:** `collaudo_esame_nuove` G0 e G4 contavano ancora 78 voci del glossario (manca «Zona (regola 18)»): collaudo corretto, 15 OK su 15 in Chromium e Firefox. `collaudo_regola18` Z5 in Firefox: colpe dei rivali alla boa 3 → 4 (+33%, soglia +30%; sul PC era 4 → 4): riportato, è +1 contatto su pochi casi. `collaudo_suoni_si_sentono` H4 boa in Chromium: noto (voce 18). Il resto: solo misure di tempo, non rosse.
+- **Giro GitHub del 24 nov notte (run 45298592556, completo sulla 1.3.50 e `f37f21d`), letto per intero:** 240 voci OK, 3 rosse. `collaudo_storico_rivali` R3 (nuova, Chromium): 18 su 20, perché la marcatura cambia apposta le ultime regate; marcatura spenta 20 su 20: collaudo corretto. `collaudo_regola18` Z5 in Firefox 3 → 4 (+33%, soglia +30%): identico al giro prima. `collaudo_suoni_si_sentono` sartiame in Chromium: noto (voce 18). `collaudo_torneo` C11 in Firefox: 1 torneo su 40 (voce 41). `collaudo_esame_nuove` di nuovo verde.
+- **Esploratore del 23 nov (run 45166551760, sulla 1.3.46):** 0 eccezioni, 0 numeri non finiti, 0 errori; barche non arrivate 52 in 1440 corse (Chromium) e 39 in 1600 (Firefox), il giro prima (1.3.11, altri semi) 45 e 42 in 1600. «Annullato» solo perché in un pezzo su 20 (Chromium semi 71-80) l'installazione del browser è rimasta ferma 2 ore: guasto di GitHub, semi non misurati.
 - **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (approvata da Ale il 23 nov). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
 - **1.3.47-1.3.48 (Lucio):** lezione 11, esempio con la boa a nord; lezione 17, la X sale solo per chi è oltre allo sparo (le sue note: gioco giusto, osservazione 142).
 - **Voce 3 chiusa** (Ale). **Voce 4B, variante x4, confermata su semi nuovi:** passa M1, M4, fuori linea, non arrivati; **M3 (contatti in tutto) no** nelle corte (+3,5%) e nelle lunghe in Firefox (+6%). Non adottata, da rivedere a fine giro (`PROPOSTA-COPPIE.md` §15).
@@ -37,12 +38,10 @@
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main --tags` (1.3.50 e i documenti del 23 nov notte).
-- **Giro GitHub dopo il push** (Actions → «Collaudi» → «Run workflow», completo: il gioco è cambiato).
+- **Push:** `git push origin main` (collaudo e documenti del 24 nov; la 1.3.50 è già pushata). Nessun giro GitHub: il gioco non è cambiato.
 - **Giocare il torneo con la 1.3.49 e mandare le regate** (Ale: ok, 23 nov): servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
 - **Chiedere a Lucio** per il finale dell'osservazione 135 e di rileggere la lezione 11 nuova.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ultima il 17 nov).
-- **File sciolti nella radice** (non tracciati): `stagione-*.json`, `Coach_*`, foto WhatsApp, `sessione-20261122-1909*.txt` (di Lucio), `regata-20261122-1617-intera.txt`: da spostare in `registrazioni/` o cancellare, decide Ale.
 - **Regolamento applicato:** salvare in `fonti-pdf/` le pagine utili di https://www.racingrulesofsailing.org/ (casi per le regole 11, 15, 16, 18).
 
 ## Come si lavora qui

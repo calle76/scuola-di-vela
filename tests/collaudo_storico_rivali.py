@@ -3,7 +3,7 @@
 #   R1 lo storico dice il vero: per ogni rivale i nove contatori dello storico (regate, davanti, dietro, partenza davanti/dietro, fuori linea, contatti, colpa sua, colpa tua) uguali a quelli
 #      ricalcolati QUI dal registro delle regate del torneo (tor.ris), con un calcolo scritto nel collaudo (non quello del gioco); 0 righe diverse e almeno 500 confronti
 #   R2 dura: pagina chiusa e riaperta fra due tornei: storico identico; un salvataggio senza progress.rivali si apre con storico vuoto, la scheda si apre e 0 errori
-#   R3 (solo Chromium: in Firefox la stessa versione contro se stessa dà 14 su 20 identiche, quindi lì è solo riportato) il passo 1 non cambia la regata: arrivi, penalità e giri uguali al bit alla 1.3.36 (commit ba7c653, senza storico), 5 tornei da 4 regate (20 regate)
+#   R3 (solo Chromium: in Firefox la stessa versione contro se stessa dà 14 su 20 identiche, quindi lì è solo riportato) il passo 1 non cambia la regata: con la marcatura della 1.3.50 spenta, arrivi, penalità e giri uguali al bit alla 1.3.36 (commit ba7c653, senza storico), 5 tornei da 4 regate (20 regate)
 #   R4 identità: lo stesso nome in due tornei di fila nella stessa pagina si somma (contatori = somma dei due); due rivali con lo stesso colore e nomi diversi restano separati
 #   R1b casi costruiti: 200 registri a mano (contatti di ogni colpa, fuori linea, squalifiche, giocatore o rivale non arrivato, linea mancante) contro `atteso()`; ogni tipo almeno 10 volte
 #   R5 finestra dei rivali (torDlg e torBody): la scheda con lo storico lungo (999 regate) a 1360x650 senza eccesso, con 3 e con 5 rivali
@@ -146,7 +146,9 @@ async def main():
         for seme in range(101, 106):
             f = []
             for url in (BASE + "#collaudo", VECCHIA):
-                ctx, pg, errs = await pagina(b, url=url); _, _, fr = await torneo(pg, seme); f.append(fr); await ctx.close()
+                ctx, pg, errs = await pagina(b, url=url)
+                await pg.evaluate("() => { if (__sv.marca) __sv.marca(false); }")   # dalla 1.3.50 l'ultima regata cambia apposta se un rivale marca: qui si misura solo lo storico (la marcatura la misura collaudo_marcatura.py)
+                _, _, fr = await torneo(pg, seme); f.append(fr); await ctx.close()
             for x, y in zip(*f): tot += 1; uguali += x == y
         if BR == "chromium":
             chk(tot == 20 and uguali == 20, f"R3 {uguali} regate su {tot} identiche al bit alla 1.3.36 (arrivi, penalità, giri, posizioni finali)")
