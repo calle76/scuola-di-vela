@@ -30,7 +30,7 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | `TE` | 0,80 m | **Dalla 1.0.11** profondità efficace di scafo e deriva per la resistenza indotta (ipotesi: dà il 14% di F17 §3.4 con 10 nodi). 0 = senza. Costante: in Delft cala sbandando e cambia col numero di Froude (`archivio/PROPOSTA-BOLINA.md`) |
 | `turnLen` | 1,05 m | Lunghezza efficace per la rotazione |
 | `maxRudder` | 30° | Angolo massimo della pala |
-| `zCE` | 2,0 m | Altezza del centro velico. **Più bassa del vero, dichiarato** (Ale, 23 ottobre 2026, `archivio/PROPOSTA-CENTRO-VELICO-1B.md`): Day 2017 e l'inferitura danno circa 2,5-2,8 m, ma il motore non ha lo svergolamento della vela che con vento forte abbassa il centro velico e toglie potenza; con 2,6 m la bolina dell'1b con 15-20 nodi va sotto Day e F24 (−4% / −8%), con 2,0 m ci sta dentro. Si riprende con lo svergolamento, dopo il congelamento |
+| `zCE` | 2,0 m | Altezza del centro velico. **Più bassa del vero, dichiarato** (Ale, 23 ottobre 2026, `archivio/PROPOSTA-CENTRO-VELICO-1B.md`): Day 2017 e l'inferitura danno circa 2,5-2,8 m, ma il motore non ha lo svergolamento della vela che con vento forte abbassa il centro velico e toglie potenza; con 2,6 m la bolina dell'1b con 15-20 nodi va sotto Day e F24 (−4% / −8%), con 2,0 m ci sta dentro. Si riprende con lo svergolamento, dopo il congelamento. 25 nov 2026: con le misure della classe (F119) il centro velico è a 2,7-2,8 m sull'acqua e il braccio fino alla deriva a 3,0-3,15 m; `PROPOSTA-BOLINA-POCO-VENTO.md` ultima parte |
 | `sailorMass`, `hikeArm` | 75 kg, 1,0 m | Timoniere e braccio massimo fuori bordo |
 | `formK` | 400 Nm | Stabilità di forma |
 | `rollI`, `rollDamp` | 260, 520 | Inerzia e smorzamento del rollio |

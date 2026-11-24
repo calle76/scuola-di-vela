@@ -88,3 +88,36 @@ La variante migliore (vela 0,21, `zCE` 3,2): **B1 passa** (−4%), **B4 passa** 
 ### Proposta
 
 Secondo la regola del giro della lista (Ale, 23 nov): **la voce 81 non passa e va fra quelle da rivedere alla fine.** Il motore non cambia. Da riprendere, se Ale vuole: (a) cercare le misure dell'armo per dare una fonte a `zCE`; (b) guardare a parte l'abbrivio nella prima metà della virata.
+
+## Ricerca del braccio (25 novembre 2026, via di Ale: «si cerca il braccio della vela»; motore intatto)
+
+**Correzione:** più sopra, e ad Ale in chat, c'è scritto che `zCE` non ha fonte. È inesatto: Day (altezza in frazione dell'inferitura) e l'inferitura c'erano già il 23 ottobre (`archivio/PROPOSTA-CENTRO-VELICO-1B.md`, 2,5-2,8 m). Mancavano le misure dell'armo e della deriva: stanno nei disegni di misura della classe (`HANDBOOK_2025.pdf`, già sul PC di Ale: F38 e F119).
+
+| Pezzo | Valore | Da dove |
+|---|---|---|
+| Attacco del boma sopra il piede dell'albero | 0,945 m ± 5 mm | F119, disegno a pag. 35 |
+| Inferitura | 5,13 m massimo (5,12 in F120) | F119 pag. 35; F120 tab. 1 |
+| Centro velico sopra il boma | 36,4% dell'inferitura, 32% svergolata a 15 nodi | Day, F17 §2.2 e eq. 4 |
+| Controllo: baricentro della vela dalle larghezze del disegno | 36,2% | conto nostro su F119 |
+| Deriva sotto la chiglia | 680 mm lungo il bordo inclinato, circa 0,63 m in verticale (angolo stimato su un disegno non in scala) | F119 pag. 34 |
+| Immersione della carena | circa 0,094 m (conto nostro da Day, tab. 2) | F17 |
+| Piede dell'albero rispetto all'acqua | **senza fonte**: da 0,09 m sotto a 0 m | ipotesi; il fondo del pozzo sta vicino alla chiglia |
+| Centro della spinta della deriva | 43% dell'immersione totale, 0,31-0,34 m sotto l'acqua | Day, F17 (Keuning e Vermeulen) |
+
+- **Centro velico sopra l'acqua: 2,7-2,8 m** (2,5-2,6 svergolata). Conferma il conto del 23 ottobre.
+- **Braccio della coppia sbandante, fino al centro della deriva: 3,0-3,15 m** (2,8-2,9 svergolata). Il motore usa un braccio solo (`zCE`, 2,0) contro il peso del timoniere, quindi il numero da confrontare dovrebbe essere questo; che Day lo conti così è una deduzione nostra, il testo non lo dice in modo esplicito.
+
+**Banco** (stesso di novembre, 8 varianti, ripetute due righe vecchie per controllo: uguali entro 1 punto). Attenzione: 0,21 è ORC **senza** timoniere; Day aggiunge il timoniere a parte (circa 0,07, conto del 16 ottobre), quindi il valore coerente con Day è circa 0,27.
+
+| Variante | Day 6 / 10 / 15 nodi | Binns 9 nodi, 42°-60° | Binns 12 nodi, 42°-60° | Timoniere fuori a 9 nodi |
+|---|---|---|---|---|
+| oggi | −16 / −10 / +6% | −15 −12 −14 −15 | −2 −2 −2 −1 0 | 58% |
+| braccio 3,05, il resto com'è | −16 / −10 / −3% | −16 −12 −14 −15 | **−7 −8 −9 −9 −8** | 90% |
+| braccio 2,85, il resto com'è | −16 / −10 / −2% | −16 −12 −14 −15 | −5 −7 −7 −8 −7 | 84% |
+| vela 0,27, braccio 3,05 (le due cose con fonte) | −10 / −6 / −1% | −12 −7 −10 −11 | −3 −5 −5 −6 −6 | 90% |
+| vela 0,21, braccio 3,05 | −4 / −2 / +1% | −8 −3 −7 −9 | 0 −2 −3 −3 −3 | 89% |
+| vela 0,21, braccio 2,85 | −4 / −1 / +4% | −8 −3 −7 −9 | +1 0 −1 −1 −1 | 83% |
+
+**Contro i criteri scritti prima:** con le due cose che hanno fonte (vela 0,27, braccio 3,05) B4 passa; **B1 (−10%), B2 e B3 no**. Con 0,21 passano B1, B3 e B4, **B2 no**, e 0,21 non conta il timoniere. B5 e B6 rimisurati in novembre solo a braccio 3,2: non passavano. B7 non rimisurato.
+
+**Cosa se ne ricava:** il braccio ora ha una fonte (salvo il piede dell'albero), ma **col poco vento non cambia la velocità** (−16% con 6 nodi, uguale a oggi): sotto i 10 nodi il timoniere non è ancora al limite. Da solo peggiora i 12 nodi. **La 81 non si risolve con il braccio.**
