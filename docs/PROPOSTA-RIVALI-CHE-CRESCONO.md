@@ -1,75 +1,87 @@
-# Proposta: rivali che crescono e finale che resta (voce 82)
+# Proposta: rivali che crescono, circuiti che si rifanno ogni anno (voce 82)
 
-*Fermata 1, 24 novembre 2026. Idea di Ale: «non c'è livello ma punteggi che fanno crescere le capacità». Via alla tappa 2 lo stesso giorno («La due è l'albo d'oro? Ok»): fatta nella 1.3.54. Tappe 1 e 3: nessun codice finché non arriva il via.*
+*Seconda stesura, notte del 24 novembre 2026, dopo le domande di Ale («vorrei che fosse una dinamica chiara, che valesse ora per tutti i livelli»; «ma come sono le regole nella realtà?»; «vai, A»). La prima (bravura in Deriva e scambi fra circuiti) è superata da questa. **Fermata 1: nessun codice nel gioco finché Ale non dà il via alle tappe.** Già fatta: la tappa 2 della prima stesura (albo d'oro, 1.3.54; esito in fondo).*
 
-## Com'è oggi (letto nel codice il 24 nov, provato in pagina dove detto)
+## Com'è oggi (letto nel codice il 24 nov)
 
-- **Livello:** due soli, principianti ed esperti. Torneo e stagione prendono `opt.aiLevel` quando cominciano, e se lo tengono. La scelta si vede solo nelle regate della Scuola e torna «principianti» a ogni ricarica (provato): quasi sempre si corre coi principianti.
-- **Rivali:** 10 zonali e 10 nazionali, gruppi fissi. Ognuno ha due tratti (partenza, bolina: dote, media, difetto) che restano. Solo il rivale meglio piazzato dello zonale corre anche il nazionale (`stDodicesimo`).
-- **Parametri di guida** (`aiTratti`): angolo di bolina e di poppa, errore di regolazione, ritardo in partenza, timone, lunghezza dei bordi. Fra i due livelli cambiano i numeri; con gli esperti c'è in più una barca aggressiva in partenza (`sorteggiaAggressiva`).
-- **Batterie in cui non corri:** ordine sorteggiato coi tratti (`stEstrai`). La guida in acqua non c'entra.
-- **Finale:** il miglior posto si salva (`progress.finaleFatta`) e nessuna riga lo rilegge. Dà un titolo in una frase e niente altro.
+- Due soli livelli di guida, principianti ed esperti, presi da un menu che nelle regate di Deriva non si vede: quasi sempre principianti.
+- 10 rivali zonali e 10 nazionali, gruppi fissi. Il nazionale è in 12: tu, i dieci e il migliore dello zonale (`stDodicesimo`). Lo zonale è in 11.
+- Le batterie in cui non corri si estraggono coi tratti (`stEstrai`).
+- Sponsor a contratto (1-2 stagioni): decide lui in quale circuito corri. «Niente retrocessione automatica» (Ale, 14 nov).
+
+## Come funziona nella realtà (F117-F118, lette la notte del 24 nov)
+
+- **Non ci sono promozioni e retrocessioni fra singoli: ci si qualifica ogni anno.** ILCA 6 maschile 2026: le prime due Italia Cup hanno 140 posti, 30 ai primi della classifica nazionale dell'anno prima e 110 alle zone; poi le regate sono aperte. Optimist 2026: al campionato italiano 150 posti, 138 dalle selezioni zonali, gli altri a chi ha diritti internazionali o è campione in carica. Nelle norme nazionali FIV la parola «retrocessione» non c'è (cercata, non letta per intero).
+- Chi non è fra i posti garantiti ripassa dallo zonale. Le selezioni zonali ILCA sono aperte a tutti. Se qualcuno rinuncia si scorre la classifica.
+- Cambio di barca: nell'ILCA le zonali di fine stagione valgono già per l'anno dopo. Campionato italiano delle classi in doppio (scheda 420): ammissione libera.
+- Promozioni e retrocessioni esistono nella lega tedesca **a squadre** (F88).
+- **Non trovato:** regole per cui uno sponsor fa salire o lascia a piedi; quanta bravura si porta da una barca all'altra.
 
 ## Modello più semplice
 
-**Tappa 1: il numero.**
-1. Ogni rivale ha un numero da 0 a 100 (`progress.rivali[nome].c`). 0 = il principiante di oggi, 100 = l'esperto di oggi; in mezzo ogni parametro è la media pesata dei due: `p·(1−c/100) + e·c/100`. I tratti restano come sono.
-2. All'inizio: zonali 10-30, nazionali 45-70. Ognuno ha anche un **tetto personale** (zonali 50-100, nazionali 75-100), sorteggiato una volta.
-3. Cresce a fine stagione: un po' per ogni tappa corsa, un po' di più se l'ha vinta, sempre più piano vicino al tetto. Solo nelle stagioni: i tornei singoli non cambiano niente, così non si può farli crescere apposta.
-4. Nella scheda: «Esperienza: poca, discreta, buona, molta» (quattro fasce), e cosa ha vinto. Il numero non si mostra.
-5. La barca aggressiva si sorteggia fra i rivali in acqua con c ≥ 70; se non ce n'è, nessuna.
-6. Nel torneo e nella stagione il testo «(principianti)» diventa l'elenco delle fasce. Nell'Allenamento la scelta diventa «come sono oggi / principianti / esperti».
-7. **Non cambia:** le regate della Scuola (`opt.aiLevel`), la stagione con un amico (i due giochi devono avere gli stessi rivali: livello dal codice), tornei e stagioni già cominciati.
+**Bravura (quanto sei bravo) e posto (dove corri) sono due cose separate.**
 
-**Tappa 2: la finale che resta** (può andare prima o senza la 1).
-8. **Albo d'oro:** `progress.albo`, una riga per finale corsa (chi ha vinto, il tuo posto), mostrata nel riquadro della finale col tuo miglior posto. Le finali non corse da te non ci sono (semplificazione).
-9. **Campione in carica:** il nome di chi ha vinto l'ultima finale nella sua scheda, o «sei tu». Solo testo, nessuna guida diversa.
+1. **Bravura `c`: 0-100 per ogni barca** (`progress.rivali[nome].c = { deriva: 34, fiocco: 12 }`). 0 = il principiante di quella barca, 100 = l'esperto; in mezzo ogni parametro di guida è la media pesata. I tratti restano come sono.
+2. **Tetto personale**, uno per persona e per tutta la carriera. Si cresce a fine stagione, sempre più piano vicino al tetto, un po' di più per ogni tappa vinta. Solo nelle stagioni.
+3. **Cambio di barca:** chi sale porta il 40% della bravura (o quella che aveva già su quella barca, se è più alta). Chi torna ritrova la sua meno 10 (ruggine), una volta sola.
+4. **Ogni livello ha due circuiti da 12:** zonale (tre batterie da 4) e nazionale (due da 6). In Deriva 24 posti con te dentro: 23 rivali, **3 nomi nuovi** da approvare. Il «dodicesimo» sparisce.
+5. **Il nazionale si rifà ogni anno:** i migliori 9 del nazionale e i primi 3 dello zonale. Gli ultimi tre del nazionale tornano a qualificarsi dallo zonale. Vale per tutti, te compreso.
+   - Sei fra i primi tre dello zonale ma scegli uno sponsor zonale: il posto passa al quarto.
+   - **Sei negli ultimi tre del nazionale con un contratto nazionale ancora in corso: resti, con un posto riservato (scelta A di Ale, 24 nov).** In quel caso i migliori 8 rivali e non 9, così i posti restano 12. Finito il contratto, vale la regola di tutti.
+6. **Fra i livelli** (quando ci sarà il Fiocco): a fine stagione uno sponsor chiama uno dei primi tre rivali del nazionale, senza bisogno di 100; l'ultimo dello zonale del Fiocco resta a piedi e torna nello zonale di Deriva. Se sali o scendi tu, uno in più fa il viaggio opposto: i posti restano sempre 24 per livello. Fino ad allora in cima non sale nessuno.
+7. **I circuiti dove non corri** fanno la loro stagione a numeri (ordine estratto, i più bravi hanno più probabilità). Poi una riga: chi ha vinto, chi si è qualificato, chi è tornato allo zonale.
+8. **Il tuo valore**, sulla stessa scala, stimato dai rivali che batti; è solo un'informazione, non cambia niente in acqua. Si registra una riga per stagione per te e per ogni rivale (circuito, posto, bravura a fasce): è la base della curva dei progressi (voce 56). Le fasce: poca, discreta, buona, molta esperienza.
+9. **La barca aggressiva** in partenza: sorteggiata fra i rivali in acqua con `c` ≥ 70; nessuno, nessuna.
+10. **Non cambiano:** regate della Scuola, stagione con un amico (stessi rivali dal codice), tornei e stagioni già cominciati.
 
-**Tappa 3: salire e scendere** (da decidere dopo aver giocato la 1). A fine stagione il primo dello zonale sale e l'ultimo del nazionale scende. I circuiti oggi sono liste fisse usate da sorteggi, stagione, finale e obiettivi degli sponsor, e il nazionale ha già un dodicesimo che viene dallo zonale: vanno ripensati insieme. È la parte più grossa. Per il giocatore resta «niente retrocessione» (`DECISIONI.md`, 14 nov).
+**Semplificazioni da dichiarare nel gioco:** nella realtà quasi tutti i posti vengono dalle zone (110 su 140), qui 3 su 12; chi corre il nazionale corre anche gli zonali, qui no; lo sponsor che chiama o lascia a piedi e il posto riservato dal contratto sono invenzioni nostre (in un campionato giovanile ILCA la FIV può aggiungere fino a 3 atleti, F117); la quota di bravura che si porta è un'ipotesi.
 
-Fuori: chi passa al fiocco. Il numero resta salvato per quando servirà.
+## Misure di stanotte, prima di toccare il gioco (soglie scritte prima, commit a parte)
 
-## Perché il tetto personale
-
-Le quattro regole dette ad Ale il 24 nov avevano tetto 100 per tutti. Le ho simulate (`tests/simula_crescita_rivali.py`, 300 mondi da 30 stagioni, soli rivali, F = peso del numero nella forza, non misurato):
-
-| Regola (F = 4; con F = 2 e 8 cambia poco) | Titoli al più vincente | Rivali con c ≥ 90 dopo 10 / 30 stagioni | Distanza fra il più forte e il più debole dopo 30 |
-| --- | --- | --- | --- |
-| Solo chi vince cresce (+8 a vittoria) | 23% | 5 / 17 su 20 | 44 |
-| Le quattro regole, tetto 100 | 22% | 0 / 0 | **10: tutti uguali** |
-| Tetto personale | 23% | 0 / 0 | 36 |
-
-Due cose: **il rischio «vincono sempre gli stessi» non esce** con nessuna regola (nel sorteggio delle tappe il caso pesa molto; la simulazione però non ha barche in acqua). **E le mie quattro regole appiattivano tutti.** Nella simulazione «tetto personale» la crescita è 2,4·4·q² a stagione (q = quanto manca al tetto) + 3·q a tappa vinta: sono numeri di prova.
-
-## Criteri (soglie nostre, scritte prima)
+**In acqua** (`tests/misura_bravura.py`, regate lunghe del torneo col pilota, senza cambiare il gioco: i parametri dei rivali si scrivono nel torneo prima di aprire la regata; stesso seme, stessi tratti e stesso vento per ogni `c`):
 
 | # | Cosa | Soglia |
 | --- | --- | --- |
-| G1 | I due estremi sono i livelli di oggi | parametri di c = 0 e c = 100 uguali a principianti ed esperti: 1000 rivali su 1000 per livello, stesso seme, e regate identiche al bit 40 su 40 (Chromium) |
-| G2 | In mezzo si guida in mezzo | 40 regate del torneo col pilota per ogni c = 0, 25, 50, 75, 100 (semi 3801-3840): arrivo medio dei rivali che non peggiora mai di più dell'1% salendo di c; a c = 50 fra il 25% e il 75% della distanza fra i due estremi. Confermato su 3841-3880. Se la distanza fra gli estremi è sotto il 2% del tempo, il criterio non è misurabile e si dice |
-| G3 | Niente di già cominciato cambia | torneo e stagione salvati prima, 20 su 20 identici; stagione con amico: calendario, batterie e regate identici 20 su 20; regate della Scuola e Allenamento «principianti» ed «esperti» identici 20 su 20 |
-| G4 | La crescita resta nei limiti | 200 carriere da 10 stagioni con la funzione vera del gioco: nessuno oltre il suo tetto, nessuno scende, distanza fra il più forte e il più debole ≥ 25, rivali con c ≥ 90 al massimo 6 su 20, più vincente ≤ 40% dei titoli |
-| G5 | Le batterie non corse seguono il numero | la forza del sorteggio usa c; tarata sulle regate vere (semi 3801-3840), confermata su 3841-3880: scarto fra la quota di vittorie sorteggiata e quella in acqua ≤ 10 punti |
-| G6 | Non diventa imbattibile | 4 stagioni del pilota all'inizio e 4 con i rivali al decimo anno: solo riportate, perché il pilota non è un giocatore; la prova vera è di Ale e Lucio |
-| G7 | Finale | 20 finali col risultato scritto dal collaudo: albo e campione giusti, visibili, ricaricati uguali, cancellati da «Azzera i progressi» |
-| G8 | Pannello e non-regressione | 0 px a 1360x650 nelle schede coi testi nuovi; salvataggi vecchi 20 su 20; `polare`, `raffiche_e_virate`, `impronta1b` come prima; 0 errori in Chromium e Firefox |
+| G2 | Il numero si sente: 40 regate per ciascun `c` = 0, 25, 50, 75, 100 (semi 3801-3840), conferma su 3841-3880 | tempo medio d'arrivo dei rivali: da 0 a 100 almeno il 2% del tempo (se no «non misurabile» e la proposta va ripensata); mai peggio di più dell'1% salendo; a 50 fra il 25% e il 75% della distanza |
+| G2b | Si sente in gara: regate a 6 barche con i cinque rivali a `c` = 0, 25, 50, 75, 100 mescolati | chi ha `c` più alto arriva davanti in almeno il 65% delle coppie 0-100, e la quota cresce con la distanza (0-25 < 0-50 < 0-100) |
+| G5 | Peso F del numero nella forza del sorteggio, stimato da G2b su 3801-3840 | confermato su 3841-3880: scarto fra quota di vittorie stimata e vista ≤ 10 punti per ciascun `c` |
 
-## Costanti nuove (tutte ipotesi nostre)
+**A numeri** (`tests/simula_carriere_rivali.py`, 300 mondi da 30 stagioni, due livelli da 24 posti, tu in Deriva come uno dei 24, F da G5; regole scritte sopra):
 
-Partenza 10-30 e 45-70; tetti 50-100 e 75-100; velocità di crescita; soglia 70 dell'aggressiva; fasce della scheda (quattro da 25). Nessuna fonte: sono scelte di gioco, non di nautica.
+| # | Cosa | Soglia |
+| --- | --- | --- |
+| S1 | I posti tornano sempre | 0 circuiti diversi da 12, 0 persone in due posti o in nessuno, su tutte le stagioni |
+| S2 | Non vince sempre lo stesso | titoli al più vincente di ogni circuito nazionale ≤ 40% in media su 30 stagioni |
+| S3 | Ritrovi i rivali, ma cambiano | rivali dello stesso circuito dopo 3 stagioni fra il 30% e l'80%; almeno 14 rivali diversi passati dal nazionale di Deriva in 10 stagioni |
+| S4 | Restano diversi | distanza fra il più forte e il più debole del livello ≥ 25 alla stagione 30; media nazionale sopra la media zonale di almeno 10 alle stagioni 5, 10, 30 |
+| S5 | Chi torna giù non sparisce | chi torna dal Fiocco allo zonale di Deriva si qualifica al nazionale entro 2 stagioni almeno il 50% delle volte |
+| S6 | Lo zonale non diventa un muro | media dello zonale di Deriva ≤ 55 alla stagione 10 e alla 30; un giocatore da 50 si qualifica al nazionale entro 3 stagioni fra il 30% e il 90% delle volte (partendo alla stagione 1 e alla 10). Da 0 e da 100: solo riportati |
+
+## Criteri per il codice (dopo il via)
+
+| # | Cosa | Soglia |
+| --- | --- | --- |
+| G1 | I due estremi sono i livelli di oggi | parametri di `c` = 0 e 100 uguali a principianti ed esperti: 1000 rivali su 1000 per livello, stesso seme; regate identiche al bit 40 su 40 |
+| G3 | Niente di già cominciato cambia | tornei, stagioni e contratti salvati prima, 20 su 20 identici; stagione con amico 20 su 20; Scuola e Allenamento «principianti» ed «esperti» 20 su 20 |
+| G4 | Le regole del gioco sono quelle scritte qui | 200 carriere da 10 stagioni con le funzioni vere del gioco: S1-S4 di nuovo, più: scelta A, rinuncia al posto, quarto che entra, ognuna provata almeno 10 volte con un ricalcolo indipendente |
+| G6 | Non diventa imbattibile | 4 stagioni del pilota all'inizio e 4 al decimo anno: solo riportate; la prova vera è di Ale e Lucio |
+| G7 | Il tuo valore | su stagioni costruite con rivali noti, stima entro 15 punti dal vero nell'80% dei casi dopo una stagione; riga per stagione salvata e riletta uguale |
+| G8 | Pannello e non-regressione | 0 px a 1360x650 nelle finestre nuove; salvataggi vecchi 20 su 20; `polare`, `raffiche_e_virate`, `impronta1b` come prima; 0 errori in Chromium e Firefox |
+
+## Costanti nuove (tutte ipotesi nostre, senza fonte)
+
+Partenza zonali 10-40 e nazionali 45-75; tetti zonali 50-100, nazionali 75-100; crescita 2,4·4·q² a stagione (q = quanto manca al tetto, in frazione) + 3·q per tappa vinta; 40% al cambio barca; ruggine 10; 9 + 3 posti; soglia 70 dell'aggressiva; fasce da 25.
 
 ## Rischi
 
-- **Guida a metà strada:** un parametro a metà non dà per forza una guida a metà (G2 lo misura). I tratti sugli esperti si vedevano poco (bolina 5 su 10, `PROPOSTA-TRATTI-RIVALI.md`).
-- **Tutti i numeri del torneo cambiano un po'**, perché gli zonali partono a 10-30 e non a 0: collaudi e misure che usano i rivali del torneo vanno riguardati.
-- **Salvataggi:** chi ha una carriera in corso riceve i numeri di partenza; niente conversioni (`DECISIONI.md`: lo storico si può azzerare).
-- **Stima:** tappa 1 grossa (Opus), tappa 2 piccola, tappa 3 grossa.
+- **Parametri a metà non danno per forza una guida a metà** (G2).
+- **I numeri di oggi del torneo cambiano:** gli zonali non partono da 0. Collaudi e misure vanno riguardati.
+- **Circuiti da 12:** lo zonale passa da 11 a 12 e le batterie da 4-4-3 a 4-4-4; finale, obiettivi degli sponsor, frasi e salvataggi usano questi numeri.
+- **Salvataggi:** la carriera in corso riceve i numeri di partenza.
 
-## Cosa serve da Ale
+## Tappe del lavoro (dopo il via)
 
-Il via, tutto o a tappe. **Consiglio:** prima la 2 (piccola), poi la 1, la 3 solo dopo aver giocato la 1.
-
-Trovato strada facendo e corretto nella 1.3.54: la registrazione scriveva `avversari=` dal menu e non dalla regata (provato: allenamento con esperti scritto «principianti»); per questo il «principianti» delle 8 regate lunghe della voce 2 è da verificare.
+1. La bravura e la crescita (grossa). 2. Circuiti da 12 che si rifanno ogni anno, righe di fine stagione, scelta A (grossa). 3. Il tuo valore e la curva (media). 4. Il passaggio fra livelli: si scrive solo la regola e i dati salvati; il codice quando c'è il Fiocco.
 
 ## Esito della tappa 2 (1.3.54, 24 novembre 2026)
 
