@@ -46,10 +46,10 @@ Due cose: **il rischio «vincono sempre gli stessi» non esce** con nessuna rego
 | # | Cosa | Soglia |
 | --- | --- | --- |
 | G1 | I due estremi sono i livelli di oggi | parametri di c = 0 e c = 100 uguali a principianti ed esperti: 1000 rivali su 1000 per livello, stesso seme, e regate identiche al bit 40 su 40 (Chromium) |
-| G2 | In mezzo si guida in mezzo | 40 regate del torneo col pilota per ogni c = 0, 25, 50, 75, 100 (semi 3701-3740): arrivo medio dei rivali che non peggiora mai di più dell'1% salendo di c; a c = 50 fra il 25% e il 75% della distanza fra i due estremi. Confermato su 3741-3780. Se la distanza fra gli estremi è sotto il 2% del tempo, il criterio non è misurabile e si dice |
+| G2 | In mezzo si guida in mezzo | 40 regate del torneo col pilota per ogni c = 0, 25, 50, 75, 100 (semi 3801-3840): arrivo medio dei rivali che non peggiora mai di più dell'1% salendo di c; a c = 50 fra il 25% e il 75% della distanza fra i due estremi. Confermato su 3841-3880. Se la distanza fra gli estremi è sotto il 2% del tempo, il criterio non è misurabile e si dice |
 | G3 | Niente di già cominciato cambia | torneo e stagione salvati prima, 20 su 20 identici; stagione con amico: calendario, batterie e regate identici 20 su 20; regate della Scuola e Allenamento «principianti» ed «esperti» identici 20 su 20 |
 | G4 | La crescita resta nei limiti | 200 carriere da 10 stagioni con la funzione vera del gioco: nessuno oltre il suo tetto, nessuno scende, distanza fra il più forte e il più debole ≥ 25, rivali con c ≥ 90 al massimo 6 su 20, più vincente ≤ 40% dei titoli |
-| G5 | Le batterie non corse seguono il numero | la forza del sorteggio usa c; tarata sulle regate vere (semi 3701-3740), confermata su 3741-3780: scarto fra la quota di vittorie sorteggiata e quella in acqua ≤ 10 punti |
+| G5 | Le batterie non corse seguono il numero | la forza del sorteggio usa c; tarata sulle regate vere (semi 3801-3840), confermata su 3841-3880: scarto fra la quota di vittorie sorteggiata e quella in acqua ≤ 10 punti |
 | G6 | Non diventa imbattibile | 4 stagioni del pilota all'inizio e 4 con i rivali al decimo anno: solo riportate, perché il pilota non è un giocatore; la prova vera è di Ale e Lucio |
 | G7 | Finale | 20 finali col risultato scritto dal collaudo: albo e campione giusti, visibili, ricaricati uguali, cancellati da «Azzera i progressi» |
 | G8 | Pannello e non-regressione | 0 px a 1360x650 nelle schede coi testi nuovi; salvataggi vecchi 20 su 20; `polare`, `raffiche_e_virate`, `impronta1b` come prima; 0 errori in Chromium e Firefox |
