@@ -269,7 +269,7 @@ async def c11(b, n):
                             ctx2, pg2, _e = await pagina(b); await prepara(pg2, 500 + t, False); tempi.append(await pg2.evaluate(AVANTI, [m, "menu"])); await ctx2.close()
                         print(f"  C11 R7 {tag}: uscita lenta, rimisurata: {[round(x / 1000, 2) for x in tempi]} s, vale il migliore", flush=True); dt = min(tempi)
                     lento = max(lento, dt)
-                else: await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150); await pg.evaluate("v => { __sv.lungo = v; }", LUNGO)
+                else: await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150); await pg.evaluate("v => { __sv.lungo = v; }", LUNGO); await pg.evaluate("() => { __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); document.getElementById('torDlg').close(); }")   # 1.3.53: il ritiro interrotto è provvisorio e diventa risultato riaprendo il torneo, come fa il giocatore
                 tor = (await stato(pg) or {}).get("torneo")
                 if regata_ritirata(tor, 0, tag): totale[esci] += 1
                 await pg.evaluate("s => { __sv.fast(0); __seed(s); __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); }", 600 + t)
@@ -285,7 +285,7 @@ async def c11(b, n):
             for k in range(N - 1): await pg.evaluate(CORRI, "ritiro")
             await pg.evaluate("__sv.torApri()")
             dt = await pg.evaluate(AVANTI, [40, "menu" if esci == "menu" else None])
-            if esci == "chiusura": await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150); await pg.evaluate("v => { __sv.lungo = v; }", LUNGO)
+            if esci == "chiusura": await chiudi(pg); pg = await ctx.new_page(); await pg.add_init_script(SEME); await pg.goto(BASE + "#collaudo"); await pg.wait_for_timeout(150); await pg.evaluate("v => { __sv.lungo = v; }", LUNGO); await pg.evaluate("() => { __sv.store = 'scuolaVelaSim.v1'; __sv.torApri(); document.getElementById('torDlg').close(); }")
             pr = await stato(pg)
             if pr and "torneo" not in pr and pr.get("torneoFatto"): totale["q4"] += 1
             else: no(f"C11 torneo {t + 1} quarta regata {esci}: torneo non chiuso ({pr and pr.get('torneo') and len(pr['torneo']['ris'])})")

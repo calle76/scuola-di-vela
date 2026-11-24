@@ -29,7 +29,6 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 41, 6 | **Chiudere la scheda a metà regata può non salvare il ritiro** (`collaudo_torneo` C11 in Firefox: 4, poi 1, poi 1 tornei su 40): causa nota, la simulazione alla chiusura dura troppo. **Proposta scritta il 24 nov, aspetta il via** | `PROPOSTA-RITIRO-PROVVISORIO.md`; oss. 86 | Opus |
 | 35 | **Messaggio «Contatto» coperto da un altro** (`collaudo_registro` in Firefox su GitHub). Se compaiono le note del collaudo, dare priorità ai messaggi delle penalità | `CHANGELOG.md` 1.3.8 | Sonnet |
 | 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa | `CHANGELOG.md` 1.2.28 | — |
 | 8, 18 | **Suoni:** boa poco forte e sartiame in `collaudo_suoni_si_sentono` (il bordo si sposta fra un giro e l'altro). **Sartiame giudicato a orecchio da Ale il 23 nov: resta l'originale** (`DECISIONI.md`); dal 24 nov il collaudo la soglia la riporta e basta. Resta la boa | `CHANGELOG.md` 1.2.12 | Sonnet |

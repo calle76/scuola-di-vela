@@ -24,6 +24,7 @@
     panelT -= dt; if (panelT <= 0){ panel(); panelT = 0.1; }
   }
   env.twd = 0; freshState(0, 0, 90, 0.4);
+  addEventListener("beforeunload", () => { if (mode === "race") torProvv(); }); // 1.3.53: il ritiro provvisorio, scritto prima della simulazione di pagehide
   addEventListener("pagehide", () => { if (mode === "race") torEsci(); }); // 1.0.50: pagina chiusa o ricaricata a metà regata del torneo = ritiro
   showMenu();
   // aggancio per i collaudi automatici (attivo solo con #collaudo nell'indirizzo, o #collaudo-lab per il laboratorio)

@@ -1521,20 +1521,44 @@
     const dt = 1 / 60;
     for (let k = 0; k < 60 * 1800 && R.boats.some(b => b.fin === null && !b.dnf); k++){ updateGusts(dt); updateRace(dt); simTime += dt; }
     R.torOk = true;
-    tor.ris.push(R.boats.map(b => Object.assign({ fin: b.fin !== null && !b.dsq && b.fin <= R.torLim ? Math.round(b.fin * 10) / 10 : null, pp: b.pp || 0 },
+    delete tor.provv; torRegistra(R.boats.map(b => torRiga(b)));
+  }
+  /* il risultato di una barca. 1.2.30 (scheda dei rivali): l e b = secondi alla linea e alla boa 1, x = fuori linea, c = contatti col giocatore; dsq: squalificata per i giri non fatti (fin null: punti di chi non arriva); g: giri di penalità del giocatore */
+  const torRiga = (b, fin = b.fin !== null && !b.dsq && b.fin <= R.torLim ? Math.round(b.fin * 10) / 10 : null) => Object.assign({ fin, pp: b.pp || 0 },
       b.dsq ? { dsq: true } : {}, b.me && R.need ? { g: R.need } : {},
       b.tLinea !== undefined ? { l: Math.round(b.tLinea * 100) / 100 } : {}, b.tBoa1 !== undefined ? { b: Math.round(b.tBoa1 * 100) / 100 } : {},
-      b.fuori ? { x: true } : {}, b.toccate ? { c: b.toccate } : {}))); // 1.2.30 (scheda dei rivali): l e b = secondi alla linea e alla boa 1, x = fuori linea, c = contatti col giocatore; dsq: squalificata per i giri non fatti (fin null: punti di chi non arriva); g: giri di penalità del giocatore
+      b.fuori ? { x: true } : {}, b.toccate ? { c: b.toccate } : {});
+  function torRegistra(r){ /* il risultato entra nel torneo, una volta per regata */
+    tor.ris.push(r);
     stoAgg(tor, tor.ris.length - 1); /* 1.3.37: lo storico dei rivali */
     if (tor.ris.length === torN(tor)) torFine();
     saveProgress();
   }
+  /* 1.3.53 (voci 41 e 6, docs/PROPOSTA-RITIRO-PROVVISORIO.md): il ritiro salvato prima di simulare il resto della regata, che dura secondi: se il browser interrompe la simulazione
+     (pagina chiusa di colpo) vale questo. Si scrive anche in beforeunload (avvio.js): in Firefox quello che si scrive in pagehide si legge solo a simulazione finita. Se il giocatore annulla la chiusura,
+     torChiudi lo cancella. Chi naviga ancora è messo in fila nell'ordine della classifica di quel momento (semplificazione dichiarata) */
+  function torProvv(){
+    if (!torAperta()) return;
+    let t = Math.max(0, R.t, ...R.boats.map(b => b.fin ?? 0));
+    const fila = new Map(ranking().filter(b => !b.me && b.fin === null && !b.dnf && !b.dsq).map(b => [b, Math.round(++t * 10) / 10]));
+    tor.provv = { k: tor.ris.length, r: R.boats.map(b => fila.has(b) ? torRiga(b, fila.get(b)) : torRiga(b)) };
+    saveProgress();
+  }
+  /* alla riapertura: la regata interrotta prende il risultato provvisorio, una volta sola; torna true se l'ha messo */
+  function torRecupera(){
+    const p = tor && tor.provv; if (!p) return false;
+    delete tor.provv;
+    const si = p.k === tor.ris.length; if (si) torRegistra(p.r); else saveProgress();
+    return si;
+  }
+  const torAperta = () => !!(R && R.tor && !R.all && tor && !R.torOk); /* una regata del torneo non ancora registrata, anche se il giocatore ha finito */
   // 1.0.50: lasciare la regata a metà (menu, pagina chiusa) è un ritiro, dal clic su «Corri la regata»; chi ha già finito resta com'è
   const torInCorso = () => !!(R && R.tor && !R.all && tor && !R.torOk && R.phase !== "done");
   function torEsci(){
-    if (!R || !R.tor || R.all || !tor || R.torOk) return;
+    if (!torAperta()) return;
     const me = R.boats[0];
     if (me.fin === null && !me.dnf) me.dnf = me.ret = true;
+    torProvv();
     torChiudi();
   }
   const torEsciOk = () => !torInCorso() || confirm("Uscire dalla regata? Conta come ritirata: prendi " + (R.boats.length + 1) + " punti, come chi non arriva.");
@@ -1552,6 +1576,7 @@
        veniva chiuso qui senza punti. Ora resta: le regate fatte tengono i punti, quelle che mancano si corrono con la versione nuova. progress.torneo.ver resta la versione d'inizio.
        Una versione che cambia la forma di progress.torneo deve convertirlo qui */
     tor = progress.torneo || null; torBozza = null;
+    if (torRecupera()) nota = "La regata " + tor.ris.length + " è stata chiusa di colpo: " + (tor.ris[tor.ris.length - 1][0].fin === null ? "conta come ritiro." : "vale il tuo arrivo.");
     const S = progress.stagione;
     if (!tor && S && !S.fine) torBozza = torNuovo(S); // 1.2.36: la prossima tappa della stagione
     torMostra(nota);
