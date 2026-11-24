@@ -73,4 +73,18 @@ I numeri del banco sopra sono noti: i criteri nuovi sono **quelli non ancora vis
 2. **Solo la rampa a 15°** (una costante): col poco vento −9 −11 −12 −5% sulla tesi (oggi −11 −12 −12 −5%), Day 6 nodi −15%: quasi niente da sola.
 3. **Rampa e resistenza, braccio 2,0:** raffiche e virata più facili, ma 12 e 15 nodi troppo veloci (+4/+5%, +11%): sconsigliata.
 4. **Non fare niente**, limite noto come a ottobre, ma con la causa trovata e scritta.
-5. **Svergolamento della vela e braccio 3,0** (più grossa): l'unica strada per avere tutto giusto. Da studiare solo se si riprende la fisica a vento forte.
+5. **Svergolamento della vela e braccio 3,0:** provato il 25 novembre, sotto: non risolve.
+
+## Svergolamento, prova del 25 novembre 2026 (banco, motore intatto)
+
+Mai provato prima: il 23 ottobre era stato solo rimandato («novità grossa»), il 23 novembre escluso «flat», che è un'altra cosa. `sperimentale/bolina-81/svergola81.js`: formule di Day (eq. 4-5, coefficiente 8), automatico quando il timoniere è al limite, allungamento della vela 3,4 (ipotesi), rampa 15, vela 0,27, braccio 3,0.
+
+| | Binns 12 nodi | Day 15 | 20 nodi VMG | Raffica 10→18 senza reagire / lascando | Virata con la freccia, 16 nodi |
+|---|---|---|---|---|---|
+| Oggi | −2 … 0% | +6% | 4,36 | 52° / 28° | 2,9 s, minima 34% |
+| Braccio 2,4 (proposta) | 0 … +2% | +6% | 4,18 | 61° / 34° | 2,7 s, 44% |
+| Braccio 3,0 senza | −2 … −5% | 0% | 3,84 | 72° / 43° | 5,3 s, 8% |
+| **3,0 con svergolamento** fino a 0,186 (Day) | −3 … −5% | +1% | 3,97 | 67° / 38° | 5,2 s, 9% |
+| 3,0 con svergolamento fino a 0,45 | −3 … −6% | 0% | 3,94 | 63° / 36° | 5,2 s, 9% |
+
+Non riporta i 12 nodi entro ±3% e non salva la virata a 16 nodi. Aiuta un po' le raffiche. Non è la prova che nessun modello più fine possa riuscirci: è la versione semplice di Day. **Alternativa 5 chiusa.**
