@@ -59,3 +59,20 @@ Nessuna: tutto viene dal torneo. Le combinazioni del record sono 4 (percorso × 
 ## Esito (24 novembre 2026, 1.3.51)
 
 Fatto come scritto. A1 40 su 40 (il confronto è con una regata non ultima di un torneo di cinque, perché nell'ultima c'è la marcatura della 1.3.50; in Firefox solo riportabile e non lanciato), A2 16 su 16 (Chromium corte e lunghe, Firefox), A3 verde (elenco nel `CHANGELOG.md`), A4 e A5 OK in Chromium e Firefox. Dopo aver visto il primo rosso di A4 è stato corretto il collaudo, non la soglia: azzerava i tratti dei rivali, che poi rinascevano. Dallo screenshot si è visto che la scelta fatta non si distingueva: corretto (pulsanti a due posizioni). Aggiunte nostre: il record non conta con una penalità sul punteggio; gli aiuti «regate» valgono anche qui; storico dei rivali fuori.
+
+## Scegliere i rivali (voce 83; via di Ale del 24 novembre 2026: «Ok 83»; criteri scritti prima del codice)
+
+**Modello:** nel riquadro un pulsante «Scegli i rivali» apre l'elenco dei 20 (zonale e nazionale); si toccano fino a 3 nomi (5 con 6 barche). I posti non scelti restano ai sorteggiati; nessuno scelto = sorteggio, come prima. Scegliere non cambia il vento né il carattere (prudente, normale, aggressiva), che resta della barca. Passando da 6 a 4 barche restano i primi tre scelti. La scelta resta finché la pagina è aperta, come le altre. Anche in carriera si possono scegliere i nazionali. Il record non si separa per rivali (come per il livello).
+
+**Costanti nuove:** nessuna. **Semplificazione dichiarata:** scegliendo un nazionale mai incontrato, i tratti dei dieci nazionali nascono lì e restano, come già succede agli zonali col sorteggio.
+
+| # | Criterio (soglie nostre) | Soglia |
+| --- | --- | --- |
+| S1 | In acqua ci sono quelli scelti | 40 scelte a caso (seme fisso; 1-5 nomi dei due gruppi, 4 e 6 barche, due livelli): tutti gli scelti in regata, nomi tutti diversi, numero giusto, tratti uguali a quelli salvati: 40 su 40 |
+| S2 | Senza scelta non cambia niente | regata preparata identica alla 1.3.54 (stessi numeri a caso): 20 semi su 20; A1 ancora 40 su 40 |
+| S3 | Si corre | 16 regate col pilota con scelte a caso (4 tutte di nazionali esperti): partono e finiscono, 0 errori: 16 su 16 |
+| S4 | Non salva altro | dopo una regata con rivali scelti cambiano solo `done`, `best` e, coi nazionali mai visti, i loro tratti: niente storico, tratti già nati identici |
+| S5 | Spazio e comandi | riquadro ed elenco a 1360x650 e 1360x768: 0 px; al massimo 3 o 5 scelti; mouse e tastiera; pagina senza `#collaudo`, Chromium e Firefox, 0 errori |
+| S6 | Vento e barche | scegliere non cambia il vento; da 6 a 4 restano i primi tre |
+
+**Esito (24 novembre 2026, 1.3.55):** S1 40 su 40 (30 con scelta parziale), S2 20 su 20 e A1 40 su 40 (Chromium), S3 16 su 16, S4 OK, S5 0 px, S6 OK; S1 e S3-S6 anche in Firefox. Regate corte; soglie non toccate.

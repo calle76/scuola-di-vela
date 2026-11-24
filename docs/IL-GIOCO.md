@@ -48,7 +48,7 @@ Senza finire il torneo non si passa mai. Ripetere una cosa senza migliorare non 
 
 **Il cono d'ombra (1.2.25) [deciso]:** nel torneo, e poi in Deriva, le vele si tolgono il vento (`PROPOSTA-CONO-D-OMBRA.md`); il cono disegnato sul mare è un aiuto disattivabile, la fisica no. Scuola, prove e lezioni restano senza.
 
-**L'allenamento (1.3.51) [fatto]:** in Deriva, al posto delle regate dei salti e dei giri (che restano nel codice per gli esercizi delle lezioni), una regata singola come quelle del torneo, con scelta di percorso, penalità, barche (4 o 6) e livello dei rivali; salva solo il record del tempo per percorso e numero di barche. `PROPOSTA-ALLENAMENTO.md`.
+**L'allenamento (1.3.51) [fatto]:** in Deriva, al posto delle regate dei salti e dei giri (che restano nel codice per gli esercizi delle lezioni), una regata singola come quelle del torneo, con scelta di percorso, penalità, barche (4 o 6) e livello dei rivali; dalla 1.3.55 i rivali si possono scegliere dalla lista dei 20 (i posti liberi si sorteggiano); salva solo il record del tempo per percorso e numero di barche. `PROPOSTA-ALLENAMENTO.md`.
 
 **La marcatura nell'ultima regata (1.3.50) [fatto]:** nell'ultima regata di ogni torneo il rivale a cui il duello con te decide la classifica ti marca di bolina (vira quando viri tu, da davanti e vicino); lo dicono il testo della regata e il Coach. Lecita perché gli serve per la classifica (regola 2, Caso 78). `PROPOSTA-MARCATURA.md`.
 

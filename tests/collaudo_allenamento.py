@@ -8,14 +8,15 @@
 #     con una penalità sul punteggio o la squalifica il record non cambia; lasciato a metà non cambia niente
 #  A5 riquadro e menu di Deriva a 1360x650 e 1360x768 senza eccesso, pagina senza #collaudo, 0 errori; nel menu niente regate dei salti e dei giri; Ricomincia e Cambia vento ci sono
 #  A6 (1.3.54) la registrazione scrive il livello vero: avversari= della regata in corso, non quello del menu: allenamento, torneo e regata della Scuola x i due livelli (nella Scuola è quello del menu), coi due livelli del menu
-# Uso: python tests/collaudo_allenamento.py   (BROWSER=firefox per Firefox; --lungo: A2 con le regate lunghe, come chi gioca; A1 A2 A4 A5: solo quelle parti)
+#  A7 (1.3.55, voce 83) scegliere i rivali: S1 40 scelte a caso in acqua (nomi, numero, tratti), S3 16 regate col pilota, S4 cosa si salva, S5 riquadri a 1360x650 e 768 con mouse e tastiera, S6 vento e passaggio da 6 a 4
+# Uso: python tests/collaudo_allenamento.py   (BROWSER=firefox per Firefox; --lungo: A2 con le regate lunghe, come chi gioca; A1 A2 A4 A5 A6 A7: solo quelle parti)
 import asyncio, json, os, pathlib, sys
 import metro
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
-SOLO = [a for a in sys.argv[1:] if a in ("A1", "A2", "A4", "A5", "A6")]   # solo queste parti
+SOLO = [a for a in sys.argv[1:] if a in ("A1", "A2", "A4", "A5", "A6", "A7")]   # solo queste parti
 LUNGO = "--lungo" in sys.argv
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
@@ -42,6 +43,68 @@ CORRI = """([tri, giri, sei, seme, come]) => { const sv = __sv, dt = 1 / 60; sv.
     arrivate: R.boats.filter(b => b.fin !== null).length, n: R.boats.length, pen: R.boats.reduce((a, b) => a + (b.pp || 0) + (b.gFatti || 0), 0) }; }"""
 async def corsa(b, *a):
     ctx, pg, errs = await pagina(b); r = await pg.evaluate(CORRI, list(a)); await ctx.close(); return r, errs
+# scelte a caso dal riquadro, coi clic; naz: solo nazionali
+SCEGLI = """([seme, sei, esp, quanti, naz]) => { __seed(seme); Object.assign(allSel, { tri: seme % 2 === 0, giri: seme % 3 === 0, sei, esp, chi: [] }); allApri(); const vento0 = JSON.stringify(allen.regate), sorte = allen.av.map(a => a.nome);
+  document.getElementById("allScegli").click(); const pool = (naz ? RIVALI_NAZIONALE : [...RIVALI_ZONALE, ...RIVALI_NAZIONALE]).map(x => x[0]), chi = [];
+  while (chi.length < quanti){ const x = pool.splice(Math.floor(Math.random() * pool.length), 1)[0]; chi.push(x); document.querySelector(`[data-chi="${x}"]`).click(); }
+  const bloccati = document.querySelectorAll("[data-chi]:disabled").length; document.getElementById("allFatto").click();
+  return { chi, sorte, bloccati, vento: JSON.stringify(allen.regate) === vento0, testo: document.getElementById("torBody").textContent }; }"""
+async def a7(b):
+    # S1
+    ok = misti = 0; note = []
+    ctx, pg, errs = await pagina(b); await pg.evaluate("() => { __sv.fast(0); __sv.store = 'scuolaVelaSim.v1'; __sv.skipBrief = true; }")
+    for k in range(40):
+        sei, esp = k % 2 == 1, k % 4 >= 2; quanti = 1 + k // 4 % (5 if sei else 3)
+        q = await pg.evaluate(SCEGLI, [8301 + k, sei, esp, quanti, False])
+        r = await pg.evaluate("""() => { document.getElementById("allGo").click(); const B = R.boats.filter(b => !b.me), o = { nomi: B.map(b => b.name), tr: B.every((b, i) => JSON.stringify(b.ai.tr) === JSON.stringify(progress.rivali[b.name].tr)), liv: R.liv }; showMenu(); return o; }""")
+        n = 5 if sei else 3
+        bene = r["nomi"][:quanti] == q["chi"] and len(set(r["nomi"])) == len(r["nomi"]) == n and r["tr"] and r["liv"] == ("esperti" if esp else "principianti") and all(x in q["sorte"] for x in r["nomi"][quanti:]) and q["vento"] and q["bloccati"] == (20 - n if quanti == n else 0)
+        ok += bene; misti += 0 < quanti < n
+        if not bene: note.append((k, q, r))
+    chk("A7", ok == 40 and misti >= 10 and not errs, f"A7 S1 in acqua i rivali scelti, tratti, numero, vento e limite giusti: {ok} su 40 (scelta parziale {misti}); errori {errs[:1]}; note {note[:1]}")
+    # S6
+    r = await pg.evaluate("""() => { Object.assign(allSel, { sei: true, chi: RIVALI_NAZIONALE.slice(0, 5).map(x => x[0]) }); allApri(); const a = allen.av.map(x => x.nome); document.querySelector('[data-all="sei"][data-v="0"]').click(); const b = allen.av.map(x => x.nome);
+      document.getElementById("allScegli").click(); const c = document.getElementById("allConta").textContent; document.querySelector(`[data-chi="${b[0]}"]`).click(); const d = allen.av.map(x => x.nome), chi = allSel.chi.slice(); document.getElementById("allSorte").click();
+      return { a, b, c, d, chi, e: allen.av.map(x => x.nome).join() === allen.sorte.map(x => x.nome).join(), n: allSel.chi.length }; }""")
+    chk("A7", r["b"] == r["a"][:3] and r["c"] == "3 di 3" and r["chi"] == r["b"][1:] and r["d"][:2] == r["chi"] and r["b"][0] not in r["d"] and r["e"] and r["n"] == 0, f"A7 S6 da 6 a 4 restano i primi tre, togliere e «Tutti a sorte»: {r}")
+    await ctx.close()
+    # S3
+    ok = fin = 0; note = []
+    for k in range(16):
+        naz = k % 4 == 3; sei = k % 2 == 1 if not naz else k % 8 == 7; esp = naz or k % 4 == 2; quanti = (5 if sei else 3) if naz else 1 + k % (5 if sei else 3)
+        ctx, pg, errs = await pagina(b); await pg.evaluate("l => { __sv.fast(0); __sv.store = 'scuolaVelaSim.v1'; __sv.skipBrief = true; __sv.lungo = l; }", LUNGO)
+        r = await pg.evaluate("a => { const q = (" + SCEGLI + """)(a); document.getElementById("allGo").click(); const sv = __sv, me = sv.R.boats[0], dt = 1 / 60; let n = 0;
+          while (me.fin === null && !me.dnf && n++ < 60 * 1500){ sv.pilota(dt); sv.run(dt, 1); }
+          return { chi: q.chi, nomi: sv.R.boats.slice(1).map(x => x.name), fin: me.fin, dnf: !!me.dnf, ris: document.getElementById("rDoneText").textContent }; }""", [8401 + k, sei, esp, quanti, naz])
+        bene = r["nomi"][:quanti] == r["chi"] and (r["fin"] is not None or r["dnf"]) and bool(r["ris"]) and "undefined" not in r["ris"] and not errs; ok += bene; fin += r["fin"] is not None
+        if not bene: note.append((k, r, errs[:1]))
+        await ctx.close()
+    chk("A7", ok == 16, f"A7 S3 regate partite e finite coi rivali scelti, 0 errori: {ok} su 16 (arrivato {fin}); note {note[:1]}")
+    # S4
+    ctx, pg, errs = await pagina(b)
+    r = await pg.evaluate("() => { const sv = __sv, dt = 1 / 60; sv.fast(0); sv.store = 'scuolaVelaSim.v1'; sv.skipBrief = true; progress.torneo = torNuovo(); progress.rivali['Sara Fontana'].st = { n: 3 }; saveProgress();"
+      " const foto = () => JSON.parse(localStorage.getItem(sv.store)), a = foto(), q = (" + SCEGLI + """)([8501, false, false, 2, true]); allSel.chi = [q.chi[0], "Sara Fontana", q.chi[1]]; allScelti(allen); document.getElementById("allGo").click();
+      const me = sv.R.boats[0]; let n = 0; while (me.fin === null && !me.dnf && n++ < 60 * 1500){ sv.pilota(dt); sv.run(dt, 1); } const fin = me.fin, nomi = sv.R.boats.map(x => x.name); showMenu(); const z = foto(), J = JSON.stringify;
+      return { fin, nomi, d: [...new Set([...Object.keys(a), ...Object.keys(z)])].filter(k => J(a[k]) !== J(z[k])), vecchi: Object.keys(a.rivali).filter(k => J(a.rivali[k]) !== J(z.rivali[k])), nVecchi: Object.keys(a.rivali).length, nuovi: Object.keys(z.rivali).filter(k => !a.rivali[k]).map(k => [k, Object.keys(z.rivali[k]).join()]) }; }""")
+    chk("A7", r["fin"] is not None and "Sara Fontana" in r["nomi"] and set(r["d"]) <= {"done", "best", "rivali"} and r["vecchi"] == [] and r["nVecchi"] == 10 and len(r["nuovi"]) == 10 and all(x[1] == "tr" for x in r["nuovi"]) and not errs,
+        f"A7 S4 cambiati {r['d']}; rivali già nati cambiati {r['vecchi']} su {r['nVecchi']}, nuovi {len(r['nuovi'])} (solo tratti {all(x[1] == 'tr' for x in r['nuovi'])}); errori {errs[:1]}")
+    await ctx.close()
+    # S5, pagina di chi gioca, caso peggiore: i cinque nomi più lunghi
+    DLG = "() => { const d = document.getElementById('torDlg'), q = d.getBoundingClientRect(), t = [...d.querySelectorAll('button')].filter(x => x.scrollWidth > x.clientWidth + 1).length; return [d.scrollHeight - d.clientHeight, d.scrollWidth - d.clientWidth, Math.max(0, q.bottom - innerHeight), Math.max(0, -q.top), Math.max(0, ...[...d.querySelectorAll('.qz')].map(x => x.scrollHeight - x.clientHeight)), t]; }"
+    for h in (650, 768):
+        ctx = await b.new_context(viewport={"width": 1360, "height": h}); pg = await ctx.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e))); pg.on("dialog", lambda d: asyncio.ensure_future(d.accept()))
+        await pg.goto(BASE); await pg.evaluate("() => { localStorage.clear(); localStorage.setItem('scuolaVelaModo', 'libero'); localStorage.setItem('scuolaVelaLivello', 'deriva'); }"); await pg.reload(); await pg.wait_for_timeout(400); await pg.evaluate("document.fonts.ready")
+        await pg.click("#goAll"); await pg.click("[data-all='sei'][data-v='1']"); await pg.click("#allScegli"); await pg.wait_for_timeout(150); e0 = await pg.evaluate(DLG)
+        lunghi = await pg.evaluate("() => [...RIVALI_ZONALE, ...RIVALI_NAZIONALE].map(x => x[0]).sort((a, b) => b.length - a.length).slice(0, 5)")
+        for x in lunghi[:4]: await pg.click(f"[data-chi='{x}']")
+        await pg.focus(f"[data-chi='{lunghi[4]}']"); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(150)   # l'ultimo con la tastiera
+        e1 = await pg.evaluate(DLG); st = await pg.evaluate("() => [document.getElementById('allConta').textContent, document.querySelectorAll('[data-chi]:disabled').length, document.activeElement.dataset.chi]")
+        (ROOT / "tests/output").mkdir(exist_ok=True); await pg.screenshot(path=str(ROOT / f"tests/output/allenamento_scegli_{h}_{BR}.png"))
+        await pg.click("#allFatto"); await pg.wait_for_timeout(150); e2 = await pg.evaluate(DLG); scr = await pg.inner_text("#torBody"); await pg.screenshot(path=str(ROOT / f"tests/output/allenamento_scelti_{h}_{BR}.png"))
+        await pg.click("#torRivali"); await pg.wait_for_timeout(150); e3 = await pg.evaluate(DLG); await pg.click("#torIndietro"); await pg.click("#allGo"); await pg.wait_for_timeout(600)
+        nomi = await pg.evaluate("() => R.boats.filter(b => !b.me).map(b => b.name)")
+        chk("A7", max(e0 + e1 + e2 + e3) <= 0 and st == ["5 di 5", 15, lunghi[4]] and nomi == lunghi and "scelti da te" in scr and not errs, f"A7 S5 1360x{h}: eccessi elenco {e0} e {e1}, riquadro {e2}, schede {e3}; {st}; in regata {nomi == lunghi}; errori {errs[:1]}")
+        await ctx.close()
 async def main():
     async with async_playwright() as p:
         b = await getattr(p, BR).launch()
@@ -86,7 +149,7 @@ async def main():
         if not SOLO or "A2" in SOLO: chk("A2", ok2 == 16, f"A2 combinazioni partite e finite col formato scelto, 0 errori: {ok2} su 16{' (regate lunghe)' if LUNGO else ''}; note {note[:2]}")
         # ---- A6 ----
         ctx, pg, errs = await pagina(b)
-        r6 = await pg.evaluate("""() => { const sv = __sv, out = []; sv.fast(0); sv.skipBrief = true; const L = ["principianti", "esperti"], leggi = () => /avversari=(\w+)/.exec(sesSet())[1];
+        r6 = await pg.evaluate("""() => { const sv = __sv, out = []; sv.fast(0); sv.skipBrief = true; const L = ["principianti", "esperti"], leggi = () => /avversari=(\\w+)/.exec(sesSet())[1];
           for (const menu of L) for (const vero of L){ opt.aiLevel = menu;
             allSel.esp = vero === "esperti"; allen = allNuovo(); openItem(["r", "a"]); out.push(["allenamento", menu, vero, leggi()]); showMenu();
             tor = progress.torneo = torNuovo(null, 3, vero); openItem(["r", "t"]); out.push(["torneo", menu, vero, leggi()]); R.torOk = true; delete progress.torneo; tor = null; showMenu();
@@ -94,6 +157,8 @@ async def main():
           opt.aiLevel = "esperti"; out.push(["menu", "esperti", "esperti", leggi()]); return out; }""")
         chk("A6", len(r6) == 13 and all(x[2] == x[3] for x in r6) and sum(x[1] != x[2] for x in r6) == 4 and not errs, f"A6 livello della registrazione giusto {sum(x[2] == x[3] for x in r6)} su {len(r6)}, di cui col menu diverso {sum(x[1] != x[2] for x in r6)}; sbagliati {[x for x in r6 if x[2] != x[3]][:3]}; errori {errs[:1]}")
         await ctx.close()
+        # ---- A7 ----
+        if not SOLO or "A7" in SOLO: await a7(b)
         # ---- A4 ----
         ctx, pg, errs = await pagina(b)
         r = await pg.evaluate("""() => { const sv = __sv, dt = 1 / 60; sv.fast(0); sv.store = 'scuolaVelaSim.v1'; sv.skipBrief = true; __seed(77);
@@ -146,6 +211,6 @@ async def main():
         await b.close()
     print("casi per parte:", casi)
     if fail: print(f"ESITO: FALLITO ({len(fail)})"); sys.exit(1)
-    if any(casi.get(k, 0) == 0 for k in (SOLO or ("A1", "A2", "A4", "A5", "A6"))): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
+    if any(casi.get(k, 0) == 0 for k in (SOLO or ("A1", "A2", "A4", "A5", "A6", "A7"))): print("ESITO: NON VALIDA (una parte senza casi)"); sys.exit(1)
     print("ESITO: OK"); sys.exit(0)
 asyncio.run(main())

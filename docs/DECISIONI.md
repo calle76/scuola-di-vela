@@ -238,3 +238,4 @@ Da prendere **prima** di cominciare il livello a cui servono.
 | **Ritiro provvisorio: via** (voci 41 e 6; Ale, 24 nov: «ok se correzione piccola») | Basso: `torProvv` e `torRecupera` in `js/regate.js` | `PROPOSTA-RITIRO-PROVVISORIO.md` §Esito |
 | **Niente «Grafica leggera»** per gli scatti in Firefox (Ale, 24 nov: «no non serve», è fluido e la grafica è già essenziale) | Basso: misure già fatte | `OSSERVAZIONI-GIOCANDO.md` 107 |
 | **Albo d'oro della finale e campione in carica: via** (voce 82 tappa 2; Ale, 24 nov: «La due è l'albo d'oro? Ok»). Tappe 1 e 3 non decise | Basso: solo testo, `progress.albo` | `PROPOSTA-RIVALI-CHE-CRESCONO.md` |
+| **Scegliere i rivali nell'Allenamento: via** (voce 83; Ale, 24 nov: «Ok 83») | Basso: `allSel.chi` e `allScelti` in `js/regate.js` | `PROPOSTA-ALLENAMENTO.md` §Scegliere i rivali |

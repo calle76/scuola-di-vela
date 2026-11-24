@@ -1602,15 +1602,23 @@
   }
   // ---- allenamento (1.3.51, voce 36, docs/PROPOSTA-ALLENAMENTO.md): una regata sola, fatta come una del torneo ----
   /* Un torneo di una regata che non entra in progress.torneo: stesso vento, cono, regole e rivali; si scelgono percorso, penalità, barche e livello. Salva solo il record del tempo per
-     percorso e barche (4 chiavi ra.…) e progress.done.ra: niente storico dei rivali, meriti, stagione o punti di Deriva. Le scelte restano finché la pagina è aperta */
+     percorso e barche (4 chiavi ra.…) e progress.done.ra: niente storico dei rivali, meriti, stagione o punti di Deriva. Le scelte restano finché la pagina è aperta.
+     1.3.55 (voce 83): allSel.chi = i nomi scelti dal giocatore; i posti che restano vanno ai sorteggiati (allen.sorte) */
   let allen = null;
-  const allSel = { tri: false, giri: false, sei: false, esp: false };
+  const allSel = { tri: false, giri: false, sei: false, esp: false, chi: [] };
   const ALL_SCELTE = [["tri", "Percorso", "bastone", "triangolo"], ["giri", "Penalità", "sul punteggio", "giri"], ["sei", "Barche in acqua", "4", "6"], ["esp", "Rivali", "principianti", "esperti"]];
   const allKey = (tri, nBarche) => "ra." + (tri ? "t" : "b") + nBarche;
   const allRecord = () => [[false, 4], [false, 6], [true, 4], [true, 6]].filter(([t, n]) => progress.best[allKey(t, n)]).length;
   function allNuovo(){ // nuovi rivali e nuovo vento; percorso e penalità si cambiano senza risorteggiare
     const T = torNuovo(null, allSel.sei ? 5 : AV_N, allSel.esp ? "esperti" : "principianti");
-    T.all = true; T.n = 1; T.regate = [T.regate[0]]; return T;
+    T.all = true; T.n = 1; T.regate = [T.regate[0]]; T.sorte = T.av; return allScelti(T);
+  }
+  function allScelti(T){ // mette in acqua i rivali scelti, senza toccare il vento: il carattere è della barca, chi c'era già resta com'è; senza scelte nessun numero a caso
+    const n = T.sorte.length, v = [...T.av, ...T.sorte];
+    allSel.chi = allSel.chi.slice(0, n); // da 6 a 4 barche restano i primi tre
+    T.av = [...allSel.chi, ...T.sorte.map(a => a.nome).filter(x => !allSel.chi.includes(x))].slice(0, n).map((nome, k) =>
+      ({ nome, ai: (v.find(a => a.nome === nome) || { ai: aiTratti(T.liv, rivaleTr(nome)) }).ai, char: T.sorte[k].char }));
+    return T;
   }
   function allApri(){ allen = allNuovo(); allMostra(); }
   function allMostra(){
@@ -1619,15 +1627,30 @@
     const righe = ALL_SCELTE.map(([k, nome, a, b]) => `<div class="all-riga"><span>${nome}</span><div class="seg">${[a, b].map((t, j) => `<button data-all="${k}" data-v="${j}" aria-pressed="${allSel[k] === !!j}">${t}</button>`).join("")}</div></div>`).join("");
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Allenamento</h2><span></span></div>
       <p>Una regata sola, come quelle del torneo: stesso vento con raffiche e salti, vele che si tolgono il vento, stesse regole. Non entra in nessuna classifica.</p>${righe}
-      <p>Vento di ${allen.regate[0].tws} nodi. Avversari: ${allen.av.map((a, i) => avNomeBarca(allen, i)).join(", ")}.</p>
+      <p>Vento di ${allen.regate[0].tws} nodi. Avversari${allSel.chi.length ? " (" + (allSel.chi.length === allen.av.length ? "scelti da te" : allSel.chi.length === 1 ? "il primo scelto da te" : "i primi " + allSel.chi.length + " scelti da te") + ")" : ""}: ${allen.av.map((a, i) => avNomeBarca(allen, i)).join(", ")}.</p>
       <p class="tor-leg" id="allRec">${best ? "Il tuo record con questo percorso e queste barche: " + fmtTime(best) + "." : "Nessun record ancora con questo percorso e queste barche."} Un tempo con penalità sul punteggio non vale per il record.</p>
-      <div class="row"><button class="primary" id="allGo">Corri la regata</button><button id="torRivali">I rivali</button><button id="allMenu">Chiudi</button></div>`;
+      <div class="row"><button class="primary" id="allGo">Corri la regata</button><button id="allScegli">Scegli i rivali</button><button id="torRivali">I rivali</button><button id="allMenu">Chiudi</button></div>`;
     $("torBody").querySelectorAll("[data-all]").forEach(b => b.onclick = () => { const k = b.dataset.all, v = b.dataset.v === "1"; if (allSel[k] === v) return;
       allSel[k] = v; if (k === "sei" || k === "esp") allen = allNuovo(); allMostra(); $("torBody").querySelector(`[data-all="${k}"][data-v="${+v}"]`).focus(); });
+    $("allScegli").onclick = () => allScegliMostra();
     $("torRivali").onclick = () => torSchedeMostra(allen, "");
     $("allMenu").onclick = chiudi;
     $("allGo").onclick = () => { chiudi(); openItem(["r", "a"]); };
     releaseKeys(); if (!$("torDlg").open) $("torDlg").showModal();
+  }
+  function allScegliMostra(fuoco){ // 1.3.55: l'elenco dei 20; fuoco: il nome appena toccato
+    const n = allen.sorte.length, pieno = allSel.chi.length === n;
+    const gruppo = (tit, lista) => `<div><h3>${tit}</h3>${lista.map(([nome, storia]) => { const j = allSel.chi.indexOf(nome);
+      return `<button data-chi="${nome}" title="${storia}" aria-pressed="${j >= 0}"${pieno && j < 0 ? " disabled" : ""}>${nome}${j >= 0 ? " (" + COLORI_BARCA[j] + ")" : ""}</button>`; }).join("")}</div>`;
+    $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Scegli i rivali</h2><span id="allConta">${allSel.chi.length} di ${n}</span></div>
+      <p class="tor-leg">Tocca i nomi, fino a ${n === 5 ? "cinque" : "tre"}. I posti che lasci liberi si sorteggiano. I nazionali sono in media più forti; principianti o esperti vale per tutti.</p>
+      <div class="all-chi">${gruppo("Zonale", RIVALI_ZONALE)}${gruppo("Nazionale", RIVALI_NAZIONALE)}</div>
+      <div class="row"><button class="primary" id="allFatto">Fatto</button><button id="allSorte"${allSel.chi.length ? "" : " disabled"}>Tutti a sorte</button></div>`;
+    $("torBody").querySelectorAll("[data-chi]").forEach(b => b.onclick = () => { const c = b.dataset.chi;
+      allSel.chi = allSel.chi.includes(c) ? allSel.chi.filter(x => x !== c) : [...allSel.chi, c]; allScelti(allen); allScegliMostra(c); });
+    $("allFatto").onclick = () => { allMostra(); $("allScegli").focus(); };
+    $("allSorte").onclick = () => { allSel.chi = []; allScelti(allen); allScegliMostra(); };
+    (fuoco ? $("torBody").querySelector(`[data-chi="${fuoco}"]`) : $("allFatto")).focus();
   }
   function allArrivo(){ // il giocatore ha finito: risultato come nel torneo, e il record del tempo
     const me = R.boats[0], n = R.boats.length, bk = allKey(R.tri, n), prev = progress.best[bk], tot = me.fin !== null ? Math.round(me.fin) : 0;

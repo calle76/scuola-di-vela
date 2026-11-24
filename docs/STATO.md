@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 24 novembre 2026 (gioco alla **1.3.54**, tag `v1.3.54`; albo d'oro).*
+*Aggiornato: 24 novembre 2026 (gioco alla **1.3.55**, tag `v1.3.55`; rivali a scelta nell'Allenamento).*
 
 ## Dove siamo
 
 - **Regola Ale (23 nov): si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.** Chi non passa di poco si annota e si va avanti.
+- **1.3.55 (voce 83, via di Ale):** nell'Allenamento si scelgono i rivali fra i 20; A7 nuovo verde in Chromium e Firefox, senza scelte identico alla 1.3.54. **Da fare poi:** il rosso nuovo di `collaudo_marcatura` K2 (14 su 15, Chromium, giro 45392948517 sulla 1.3.53) e finire di leggere le voci «da controllare» di quel giro.
 - **1.3.54 (voce 82, tappa 2, via di Ale):** albo d'oro e campione in carica della finale; la registrazione scrive il livello vero della regata (prima quello del menu): il «principianti» delle 8 regate lunghe della voce 2 resta da verificare. **Tappe 1 (rivali che crescono) e 3 (salire e scendere) aspettano il via** (`PROPOSTA-RIVALI-CHE-CRESCONO.md`).
 - **1.3.53 (voci 41 e 6, via di Ale il 24 nov):** il ritiro si salva anche chiudendo la scheda di colpo; regate lunghe in Firefox da 0-4 su 20 a 20 su 20. `collaudo_ritiro_provvisorio.py` (nuovo) verde in Chromium e Firefox.
 - **1.3.52 (voce 42):** il Coach non conta due volte la scuffia e non conta quella prima del via (6 frasi su 8 nelle registrazioni); `collaudo_coach` K14 verde in Chromium, Firefox e regate lunghe.
