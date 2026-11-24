@@ -121,3 +121,31 @@ Secondo la regola del giro della lista (Ale, 23 nov): **la voce 81 non passa e v
 **Contro i criteri scritti prima:** con le due cose che hanno fonte (vela 0,27, braccio 3,05) B4 passa; **B1 (−10%), B2 e B3 no**. Con 0,21 passano B1, B3 e B4, **B2 no**, e 0,21 non conta il timoniere. B5 e B6 rimisurati in novembre solo a braccio 3,2: non passavano. B7 non rimisurato.
 
 **Cosa se ne ricava:** il braccio ora ha una fonte (salvo il piede dell'albero), ma **col poco vento non cambia la velocità** (−16% con 6 nodi, uguale a oggi): sotto i 10 nodi il timoniere non è ancora al limite. Da solo peggiora i 12 nodi. **La 81 non si risolve con il braccio.**
+
+## Seconda ricerca (25 novembre 2026, risposta di una ricerca sul web portata da Ale, controllata sulle fonti originali; motore intatto)
+
+**La fonte utile è la tesi di Pennanen (F121),** che la ricerca citava senza i numeri: stanno nelle figure, non nel testo.
+- **Centro velico: 2,68 m sopra l'acqua** (fig. 7, disegno quotato, boma a 0,60 m sulla coperta; stimato con Hazen, 39% della linea dal boma alla penna). Cade la parte «senza fonte» sul piede dell'albero. Con la spinta della deriva al 45% della profondità (F121 §2.6.3; 43% in Day) il **braccio è circa 3,0 m**.
+- **Terzo confronto col poco vento, vento vero a 45° (calcolato):** 2 nodi di barca con 3,28 di vento, 3 con 4,94, 4 con 6,91, 5 con 10,5 (fig. 23, 25, 27, 29). Coincide con la misura di F109 (3,2 nodi: 1,05 m/s = 2,04 nodi). **Limiti:** portanza della vela (Hazen) più alta di Day e nessuna resistenza del timoniere, quindi ottimista; l'autore dice che i valori assoluti della vela contano poco per lui.
+- **Resistenza totale in acqua (tesi / gioco, N):** 9,5 / 9,8, 21,7 / 23,2, 42,7 / 47,9, 91,5 / 99,5. La CFD della tesi è 4-6% sotto la vasca fra 3 e 5 nodi: **l'acqua nel gioco va bene** (circa 0-7% in più).
+- **Spinta della vela alla stessa velocità (N):** 9,5 / **5,4**, 21,7 / **12,4**, 42,7 / **28,9**, 91,5 / 87,6. **Il difetto è la spinta della vela, e solo col poco vento.** Alla velocità giusta il vento apparente è a circa 27,7°, dove il gioco taglia la portanza (rampa fra 22° e 29°, `luffA0` 22, `luffW` 7, senza fonte): 81% invece di 100%. La tabella ORC usata da Day dà CL 1,35 a 28° e 1,16 a 12°.
+
+**Perché a ottobre la rampa sembrava esclusa:** provata da sola, con la barca lenta il vento apparente sta a 29° e la rampa non si vede. Tolto il freno della vela, la barca accelera, l'apparente stringe e la rampa la ferma. Le due cose si nascondono a vicenda.
+
+**Banco** (esplorazione, conti senza numeri a caso; `banco_pennanen.js`, `banco81.js`; 15 e 5 scelti da noi, 18 e 7 danno lo stesso). Variante **R** = `luffA0` 15, `minBoom` 5, vela 0,27, braccio 3,0.
+
+| | Oggi | Vela 0,27, braccio 3,0 | Variante R |
+|---|---|---|---|
+| Tesi 2 / 3 / 4 / 5 nodi | −11 / −12 / −12 / −5% | −8 / −8 / −7 / −2% | **0 / −3 / −5 / −2%** |
+| B1, Day 6 nodi (−5%) | −16% | −10% | −9% no |
+| B2, Binns 9 (±5%) | −15 −12 −14 −15 | −12 −7 −10 −11 | −6 −7 −10 −11 no |
+| B3, Binns 12 (±3%) | −2 … 0 | −3 … −6 | −3 … −5 no |
+| B4, Day 15 nodi (≤ +6%) | +6% | −1% | 0% passa |
+| B5, 3,2 nodi a 45° contro 1,05 m/s (−8%) | 0,88 (−16%) | non misurato | 0,96 (−8,6%) no per poco |
+| B6, virata 10 s (−30%) | −1,74 m | non misurato | **−1,14 m (−34%) passa** |
+| B7, poppa e lasco (0,03 nodi) | — | non misurato | no (12 nodi: 180° −0,11, 90° +0,21) |
+| B8, una costante al massimo, con fonte | — | — | no (4 costanti; due con fonte, la rampa con fonte sul principio ma non sul numero) |
+
+**Cosa se ne ricava:** il difetto ha una spiegazione fisica con fonte (vela che a 28° non porta tutto) e la virata col poco vento migliora da sola; restano **circa −6/−11% a 9 nodi oltre i 46°**, senza causa, e la prova di ottobre va corretta. Non è un limite da chiudere, ma nemmeno una soluzione: serve una proposta nuova.
+
+**Errori della ricerca sul web** (da non riportare): «la regressione Delft può rendere il modello troppo lento» è al contrario (Delft sottostima la resistenza, e il gioco usa la vasca); CL 1,36 e 1,30 attribuiti per certi a turbolento e liscio, mentre in Day l'ordine è ambiguo. Virata rollata +5,3% e +2,8% (Kudo, F122): è un Laser Radial, in acqua, con 2-4 e 4-6 m/s di vento; confermato solo dal riassunto.
