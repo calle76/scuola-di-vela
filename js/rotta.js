@@ -171,7 +171,7 @@
   function layVisibile(){ if (!R || riv.on) return false; const me = R.boats[0];
     if (R.es) return !!R.es.def.layline && me.leg <= 1 && me.fin === null; /* 1.3.45 (voce 79): l'esercizio «Vai verso il salto» le disegna sempre */
     if (!R.rotta) return false;
-    return (opt.layline === "tutte" || (opt.layline === "regate" && !R.tor)) && me.leg <= 1 && me.fin === null && !me.dnf; }
+    return (opt.layline === "tutte" || (opt.layline === "regate" && (!R.tor || R.all))) && me.leg <= 1 && me.fin === null && !me.dnf; }
   function layDisegna(v){
     if (!layVisibile()) return;
     const mk = R.marks[0], L = R.up * LAY_LUNGA, lw = Math.max(0.12, 1.4 / v.ppm);

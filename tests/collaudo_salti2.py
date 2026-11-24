@@ -59,8 +59,8 @@ async def main():
         await pg.evaluate("document.getElementById('toMenu').click()")
         mn = await pg.evaluate("""() => { document.querySelector('#livSel [data-v=deriva]')?.click(); const m = document.getElementById('menu'); const t = [...m.querySelectorAll('button[data-r]')].map(b => b.textContent);
           return { titoli: t, eccesso: m.scrollHeight - m.clientHeight, alto: document.documentElement.scrollHeight - innerHeight }; }""")
-        check(any("salti di vento" in t for t in mn["titoli"]) and mn["eccesso"] <= 0 and mn["alto"] <= 0,
-              f"menu del gioco libero: regata nuova presente, eccesso {mn['eccesso']} px / pagina {mn['alto']} px")
+        check(not any("salti di vento" in t for t in mn["titoli"]) and mn["eccesso"] <= 0 and mn["alto"] <= 0,
+              f"menu di Deriva nel gioco libero: regata dei salti non più presente (1.3.51, allenamento), eccesso {mn['eccesso']} px / pagina {mn['alto']} px")
         await pg.evaluate("""document.querySelector('#modoSel [data-v="carriera"]').click()""")
         car = await pg.evaluate("[...document.querySelectorAll('#menu button[data-r]')].map(b => b.textContent)")
         check(len(car) == 2 and not any("salti" in t for t in car), f"menu della carriera: solo le 2 regate a bastone e nelle raffiche ({len(car)})")
@@ -68,7 +68,7 @@ async def main():
 
         # pagina come la carica un giocatore
         await pg.evaluate("location.href='about:blank'"); await pg.wait_for_url("about:blank"); await pg.wait_for_timeout(300); await pg.goto(BASE); await pg.wait_for_timeout(400)
-        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click('button[data-r="2"]'); await pg.wait_for_timeout(500)
+        await pg.evaluate("() => openItem(['r', 2])"); await pg.wait_for_timeout(500)
         tit = await pg.text_content("#rTitle"); check("salti di vento" in tit, f"senza #collaudo: la regata si apre ({tit.strip()})")
         check(not errori, f"nessun errore della pagina ({errori[:2]})")
         await b.close()

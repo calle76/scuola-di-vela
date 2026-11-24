@@ -109,7 +109,7 @@ async def anticipi_allo_sparo(b):
                 rit_cd[cd] = []
                 for seme in SEMI_SPARO:
                     pg = await b.new_page(viewport={"width":1280,"height":800}); pg.on("pageerror", lambda e: errs.append(str(e)))
-                    await pg.goto(URL); await pg.wait_for_timeout(300); await pg.evaluate("r => { const d = document.querySelector('#livSel [data-v=' + (r >= 2 ? 'deriva' : 'scuola') + ']'); d && d.click(); }", reg); await pg.click(f"[data-r='{reg}']"); await pg.wait_for_timeout(100)
+                    await pg.goto(URL); await pg.wait_for_timeout(300); await pg.evaluate("r => openItem(['r', r])", reg); await pg.wait_for_timeout(100)
                     r = await pg.evaluate(SPARO, [liv, cd, seme]); await pg.close()
                     if not r: non_valido.append(f"{nome_reg} {liv} {cd} s seme {seme}: regata non partita"); continue
                     r, m = r; ms.append(m); partenze += 1

@@ -58,7 +58,7 @@ async def main(uscita):
         for race, semi, npr in PIANO:
             for k, seme in enumerate(semi):
                 ctx, pg = await pagina()
-                await pg.evaluate("r => { const d = document.querySelector('#livSel [data-v=' + (r >= 2 ? 'deriva' : 'scuola') + ']'); d && d.click(); }", race); await pg.click("[data-r='%d']" % race); await pg.wait_for_timeout(100)
+                await pg.evaluate("r => openItem(['r', r])", race); await pg.wait_for_timeout(100)
                 r = await pg.evaluate(CORSA, [seme, "principianti" if k < npr else "esperti"])
                 righe.append("regata %d seme %d %s" % (race, seme, json.dumps(r, sort_keys=True, ensure_ascii=False)))
                 barche += len(r["boats"]); penal += len(r["pen"]); con_contatti += 1 if r["pen"] else 0

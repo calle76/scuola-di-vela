@@ -222,9 +222,9 @@ async def main():
         # ---- H ----
         ctx, pg, errs = await pagina(b, ROOT, "")
         titoli = await pg.evaluate("() => { document.querySelector('#livSel [data-v=deriva]')?.click(); return [...document.querySelectorAll('#menu [data-r]')].map(e => e.querySelector('.title').textContent); }")
-        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => openItem(['r', 3])"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
         h = await pg.evaluate("() => ({ giri: R && R.giri, need: R && R.need, mode: mode, titolo: document.getElementById('rTitle').textContent })")
-        chk("H1 pagina senza #collaudo: la regata «Regata con i giri di penalità» è nel menu, si apre e ha i giri attivi", "Regata con i giri di penalità" in titoli and h["giri"] and h["need"] == 0 and h["mode"] == "race", str(h))
+        chk("H1 pagina senza #collaudo: la regata «Regata con i giri di penalità» non è più nel menu (1.3.51, allenamento), si apre e ha i giri attivi", "Regata con i giri di penalità" not in titoli and h["titolo"] == "Regata con i giri di penalità" and h["giri"] and h["need"] == 0 and h["mode"] == "race", str(h))
         await pg.evaluate("() => { const o = R.boats[0]; giriDebito(); toast('prova'); racePanel(); }")
         r = await pg.evaluate("() => ({ regola: document.getElementById('rRule').textContent, nascosta: document.getElementById('rRule').hidden })")
         chk("H2 il debito compare nella riga delle regole del pannello", (not r["nascosta"]) and "giri" in r["regola"], r["regola"][:90])

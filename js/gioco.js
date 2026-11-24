@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.50"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.51"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -357,7 +357,7 @@
     const ripBtn = i => { const L = LESSONS[i], best = progress.quiz?.["q" + i], n = quizDi(i).length;
       return `<button data-q="${i}" title="${esc(ripName(i) + " · " + L.title + " · " + (best !== undefined ? "migliore: " + best + " su " + n : n + " domande"))}"><span>${numLez(i)} · ${L.title}</span>${best !== undefined && best * 5 >= n * 4 ? "<small>✓</small>" : ""}</button>`; };
     const LV = livMenu(); // 1.3.0: «scuola», «deriva», o null (carriera di prima)
-    const raceOk = rc => LV === null ? modo !== "carriera" || rc.scuola !== false : (rc.scuola === false) === (LV === "deriva"); // gli indici restano quelli di RACES
+    const raceOk = rc => rc.scuola !== false; // gli indici restano quelli di RACES; 1.3.51: le regate dei salti e dei giri servono solo agli esercizi delle lezioni, in Deriva c'è l'allenamento
     const races = RACES.map((rc, i) => { if (!raceOk(rc)) return ""; const b = progress.best[recK("r" + i)];
       return `<button class="item wide" data-r="${i}"><span class="num">⚑</span><span class="title">${rc.title}</span><span class="state ${b ? "ok" : "todo"}">${b ? "Record: " + fmtTime(b) : "Da fare"}${progress.clean[recK("r" + i)] ? STAR : ""}</span><span class="desc">${rc.desc}</span></button>`; }).join("");
     const torBtn = (() => { const chiuso = modo === "carriera" && !progress.brevetto, T = progress.torneo, F = progress.torneoFatto; // torneo dell'1b (1.0.34): in carriera dopo il brevetto
@@ -374,7 +374,7 @@
     const tiles = LV === "deriva" ? `<div class="tiles">
         <section class="tile"><div><div class="part-head"><h2>Deriva</h2><span>${DSEQ.filter(([t, i]) => progress.done[t + i]).length} di ${DSEQ.length} completate</span></div><div class="items">${DSEQ.map((v, k) => rigaVoce(v, ORD_L.length + k + 1)).join("")}</div></div>
           <div><div class="part-head"><h2>Ripassi</h2></div><div class="review"><div class="rip2">${ORD_D.map(ripBtn).join("")}</div></div></div></section>
-        <section class="tile"><div><div class="part-head"><h2>Regate</h2><span>contro il computer o il tuo fantasma</span></div><div class="items">${races}</div></div>
+        <section class="tile"><div><div class="part-head"><h2>Allenamento</h2><span>una regata singola</span></div><div class="items"><button class="item wide" id="goAll"><span class="num">⚑</span><span class="title">Allenamento</span><span class="state ${progress.done.ra ? "ok" : "todo"}">${allRecord() ? "Record: " + allRecord() + " su 4" : progress.done.ra ? "Fatta" : "Da fare"}</span><span class="desc">Una regata come quelle del torneo: scegli percorso, penalità, barche e rivali.</span></button></div></div>
           ${modo === "carriera" ? `<div><div class="part-head"><h2>Torneo</h2><span>tre regate</span></div><div class="items">${torBtn}</div><p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito.</p></div>` : ""}</section>
         <section class="tile">${modo === "carriera" ? librettoDHtml() : `<div><div class="part-head"><h2>Torneo</h2><span>tre regate</span></div><div class="items">${torBtn}</div>
           <p class="liv-nota">Dal riquadro del torneo anche la stagione del circuito, zonale o nazionale.</p></div>`}</section>
@@ -402,6 +402,7 @@
     if ($("schede")) $("schede").onclick = e => { const b = e.target.closest("button[data-g]"); if (b && +b.dataset.g !== menuGr){ menuGr = +b.dataset.g; showMenu(); } };
     if ($("goFree")) $("goFree").onclick = () => openItem("free");
     if ($("goTor")) $("goTor").onclick = torApri;
+    if ($("goAll")) $("goAll").onclick = allApri; // 1.3.51
     if ($("goEsame")) $("goEsame").onclick = openEsame;
     if ($("goAttest")) $("goAttest").onclick = openAttest;
     if (nuovo) openAttest(); else if (nuovoD) openDeriva(); else if (modo === "carriera" && LV === "deriva" && !progress.dvBenvenuto && !benvSkip) openBenvenuto(); // 1.3.23 (voce 64)

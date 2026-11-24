@@ -2,8 +2,8 @@
 # Pagina caricata come la carica un giocatore (senza #collaudo), nel browser di BROWSER (chromium o firefox).
 #  M1 spazio: a 1360x650 e 1360x768, gioco libero e carriera, livello salvato «scuola» e «deriva», carriera vuota e con il libretto al massimo
 #     (attestato, torneo aperto): pagina senza eccesso, né in altezza né in larghezza;
-#  M2 al suo posto: nel gioco libero la Scuola ha le regate 0-1 e la navigazione libera, non il torneo; Deriva ha le regate 2-3 e il torneo;
-#     in carriera (dalla 1.3.5) i due livelli: senza attestato Deriva è spenta e si resta nella Scuola; con l'attestato Deriva ha regate 2-3, torneo e libretto di Deriva;
+#  M2 al suo posto: nel gioco libero la Scuola ha le regate 0-1 e la navigazione libera, non il torneo; Deriva ha l'allenamento (1.3.51, al posto delle regate 2-3) e il torneo;
+#     in carriera (dalla 1.3.5) i due livelli: senza attestato Deriva è spenta e si resta nella Scuola; con l'attestato Deriva ha allenamento, torneo e libretto di Deriva;
 #  M3 ogni voce si apre: dal menu, cliccando, ogni regata apre la sua (titolo), il torneo apre il suo riquadro, la navigazione libera parte;
 #  M4 il livello scelto resta: dopo la ricarica della pagina, e tornando al menu da una regata di Deriva;
 #  M5 0 errori della pagina.
@@ -40,7 +40,7 @@ async def main():
         stato = """() => ({ ecc: document.documentElement.scrollHeight - innerHeight, eccx: document.documentElement.scrollWidth - innerWidth,
             piede: document.querySelector('.menu-foot').getBoundingClientRect().bottom, H: innerHeight,
             sel: document.getElementById('livSel') ? document.querySelector('#livSel [aria-pressed=true]').dataset.v : null,
-            r: [...document.querySelectorAll('#menu [data-r]')].map(x => +x.dataset.r), tor: !!document.getElementById('goTor'),
+            r: [...document.querySelectorAll('#menu [data-r]')].map(x => +x.dataset.r), tor: !!document.getElementById('goTor') && !!document.getElementById('goAll'),
             free: !!document.getElementById('goFree'), lib: !!document.getElementById('libManca') })"""
         # M1, M2
         for H in (650, 768):
@@ -50,24 +50,26 @@ async def main():
                     tag = f"1360x{H} {modo}{' col libretto pieno' if salv else ''}, livello salvato {liv}"
                     chk("M1", s["ecc"] <= 0 and s["eccx"] <= 0 and s["piede"] <= s["H"], f"M1 {tag}: eccesso {s['ecc']} px in altezza, {s['eccx']} in larghezza, piede a {s['piede']:.0f} su {s['H']}")
                     if modo == "libero":
-                        att = ([0, 1], False, True) if liv == "scuola" else ([2, 3], True, False)
+                        att = ([0, 1], False, True) if liv == "scuola" else ([], True, False)
                         chk("M2", s["sel"] == liv and (s["r"], s["tor"], s["free"]) == att and not s["lib"], f"M2 {tag}: {s}")
                     else:
                         # 1.3.5: in carriera i due livelli; senza attestato si resta nella Scuola (Deriva spenta), con l'attestato il livello salvato
                         lv = liv if salv else "scuola"
-                        att = ([0, 1], False, True, True) if lv == "scuola" else ([2, 3], True, False, False)
+                        att = ([0, 1], False, True, True) if lv == "scuola" else ([], True, False, False)
                         chk("M2", s["sel"] == lv and (s["r"], s["tor"], s["free"], s["lib"]) == att, f"M2 {tag}: {s}")
                     print(f"{tag}: eccesso {s['ecc']}/{s['eccx']} px, selettore {s['sel']}, regate {s['r']}, torneo {s['tor']}, navigazione {s['free']}", flush=True)
                     await ctx.close()
         # M3, M4: dal menu, cliccando come un giocatore
         ctx, q = await pagina(650, "libero", "scuola")
-        for r in (0, 1, 2, 3):
-            liv = "deriva" if r >= 2 else "scuola"
+        for r in (0, 1, "a"):
+            liv = "deriva" if r == "a" else "scuola"
             await q.click(f"#livSel button[data-v='{liv}']"); await q.wait_for_timeout(100)
-            atteso = await q.inner_text(f"#menu [data-r='{r}'] .title")
-            await q.click(f"#menu [data-r='{r}']"); await q.wait_for_timeout(400)
+            atteso = await q.inner_text("#goAll .title" if r == "a" else f"#menu [data-r='{r}'] .title")
+            if r == "a": await q.click("#goAll"); await q.wait_for_timeout(200); await q.click("#allGo")
+            else: await q.click(f"#menu [data-r='{r}']")
+            await q.wait_for_timeout(400)
             t = (await q.text_content("#rTitle") or "").strip()
-            chk("M3", t == atteso and await q.is_visible("#game"), f"M3 regata {r}: si apre «{t}», attesa «{atteso}»")
+            chk("M3", (t.startswith(atteso + ":") if r == "a" else t == atteso) and await q.is_visible("#game"), f"M3 regata {r}: si apre «{t}», attesa «{atteso}»")
             await q.keyboard.press("Enter"); await q.wait_for_timeout(300)
             await q.click("#toMenu"); await q.wait_for_timeout(300)
             s = await q.evaluate(stato)
@@ -76,7 +78,7 @@ async def main():
         chk("M3", await q.is_visible("#torDlg"), "M3 il torneo apre il suo riquadro")
         await q.evaluate("document.getElementById('torDlg').close()")
         await q.reload(); await q.wait_for_timeout(300); s = await q.evaluate(stato)
-        chk("M4", s["sel"] == "deriva" and s["r"] == [2, 3], f"M4 dopo la ricarica il livello resta Deriva: {s}")
+        chk("M4", s["sel"] == "deriva" and s["r"] == [] and s["tor"], f"M4 dopo la ricarica il livello resta Deriva: {s}")
         await q.click("#livSel button[data-v='scuola']"); await q.click("#goFree"); await q.wait_for_timeout(400)
         chk("M3", await q.is_visible("#game"), "M3 la navigazione libera parte")
         await q.reload(); await q.wait_for_timeout(300); s = await q.evaluate(stato)

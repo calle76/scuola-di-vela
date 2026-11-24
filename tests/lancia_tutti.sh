@@ -189,6 +189,7 @@ TESTS=(
     "collaudo_aiuto_scarso.py (aiuto scarso/buono, voce 48)|py|chiaro|1||collaudo_aiuto_scarso.py"
     "collaudo_lezione_salti.py (lezione 11, esercizio col vento persistente, voce 79)|py|chiaro|0||collaudo_lezione_salti.py"
     "collaudo_registrazioni_ricche.py (registrazioni più ricche, voce 55)|py|chiaro|1||collaudo_registrazioni_ricche.py"
+    "collaudo_allenamento.py (allenamento, voce 36)|py|chiaro|1||collaudo_allenamento.py"
     "collaudo_layline.py (torneo lungo, voce 66c)|py|chiaro|1||collaudo_layline.py --lungo"
     "collaudo_pannello.py (1360x768)|py|chiaro|0||collaudo_pannello.py 1360 768"
     "collaudo_fasce.py|py|ambiguo|0||collaudo_fasce.py"

@@ -229,7 +229,7 @@ async def main():
             chk("Q8 %dx%d: i due pezzi del riquadro (caso peggiore, prima e dopo lo sparo) stanno nel mare e non toccano bussola, orologio e messaggio, vento, indicatori (canvas %dx%d); rettangoli: %s" % (vp[0], vp[1], Wc, Hc, [ [round(v) for v in r] for r in solo_pezzi(pz["pre"]) + solo_pezzi(pz["post"])]), len(solo_pezzi(pz["pre"])) == 2 and len(solo_pezzi(pz["post"])) == 2 and not probl, str(probl[:3]))
         # ---- Q9 ----
         ctx, pg, errs = await pagina(b, ROOT, "")
-        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => openItem(['r', 3])"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
         h = await pg.evaluate("() => { const d = R && R.segnali ? rqDati() : null; return { flag: d ? d.flag : null, r: R ? R.rqRect : null }; }")
         chk("Q9 pagina senza #collaudo: la regata dei giri si apre e il riquadro mostra la bandiera di classe, disegnato", h["flag"] == ["classe"] and h["r"] is not None, str(h))
         await pg.wait_for_timeout(1000)

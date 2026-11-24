@@ -149,7 +149,7 @@ async def main():
             chk("G1 regate dell'1a e dell'1b: arrivi, penalità e posizioni finali identici al bit alla 1.0.62 su 20 regate", nuovo == vecchio and len(nuovo) == 20)
         else: print("     G1 saltato: manca la cartella di riferimento")
         ctx, pg, errs = await pagina(b, ROOT, "")
-        await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#menu [data-r='3']"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
+        await pg.evaluate("() => openItem(['r', 3])"); await pg.wait_for_timeout(300); await pg.keyboard.press("Enter"); await pg.wait_for_timeout(1500)
         h = await pg.evaluate("() => ({ giri: R && R.giri, mode: mode })")
         chk("H2 pagina senza #collaudo: la regata dei giri si apre", h["giri"] and h["mode"] == "race", str(h))
         chk("H3 nessun errore di pagina", not errs, str(errs[:2]))

@@ -55,3 +55,7 @@ Nessuna: tutto viene dal torneo. Le combinazioni del record sono 4 (percorso × 
 1. Il via.
 2. Va bene togliere dal menu le due regate di oggi (restano nel codice per le lezioni)?
 3. Il record: 4 combinazioni (percorso × barche) va bene?
+
+## Esito (24 novembre 2026, 1.3.51)
+
+Fatto come scritto. A1 40 su 40 (il confronto è con una regata non ultima di un torneo di cinque, perché nell'ultima c'è la marcatura della 1.3.50; in Firefox solo riportabile e non lanciato), A2 16 su 16 (Chromium corte e lunghe, Firefox), A3 verde (elenco nel `CHANGELOG.md`), A4 e A5 OK in Chromium e Firefox. Dopo aver visto il primo rosso di A4 è stato corretto il collaudo, non la soglia: azzerava i tratti dei rivali, che poi rinascevano. Dallo screenshot si è visto che la scelta fatta non si distingueva: corretto (pulsanti a due posizioni). Aggiunte nostre: il record non conta con una penalità sul punteggio; gli aiuti «regate» valgono anche qui; storico dei rivali fuori.

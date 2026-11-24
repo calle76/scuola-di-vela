@@ -740,7 +740,7 @@
       if (mode !== "race" || !R || riv.on || R.t < 0) return null;
       const me = R.boats[0]; if (me.fin !== null || me.dnf || me.leg < 1) return null;
       if (R.es){ if (!R.es.def.scarso) return null; } /* 1.3.45: l'esercizio «Vai verso il salto» la mostra sempre */
-      else if (!(opt.scarso === "tutte" || (opt.scarso === "regate" && !R.tor))) return null;
+      else if (!(opt.scarso === "tutte" || (opt.scarso === "regate" && (!R.tor || R.all)))) return null;
     }
     const a = norm180(local.twd - S.h); if (Math.abs(a) < 35 || Math.abs(a) > 75) return null;
     return -Math.sign(a) * norm180(local.twd - env.twd);
