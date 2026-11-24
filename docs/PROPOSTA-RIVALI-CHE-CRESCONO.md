@@ -86,3 +86,38 @@ Partenza zonali 10-40 e nazionali 45-75; tetti zonali 50-100, nazionali 75-100; 
 ## Esito della tappa 2 (1.3.54, 24 novembre 2026)
 
 Fatta come scritta. G7 passa (`collaudo_finale.py` F6): 20 finali su 20 con vincitore e posto giusti, 19 su 19 con campione e scheda giusti, riquadro e schede 0 px a 1360x650. Il posto del giocatore si legge come «miglior posto» e, per le finali dell'albo, solo il vincitore: il posto di ogni finale è salvato (`pos`) ma non mostrato, per non allungare il riquadro. Numeri in `CHANGELOG.md` 1.3.54.
+
+## Esito delle misure prima del codice (notte del 24 novembre 2026, gioco invariato)
+
+**In acqua** (`misura_bravura.py`, Chromium, regate lunghe, 400 da 4 barche e 80 da 6, 0 errori, tutti arrivati):
+
+| # | 3801-3840 | 3841-3880 (conferma) | Esito |
+| --- | --- | --- | --- |
+| G2 da 0 a 100 (≥ 2%) | 4,6% (609,5 → 581,2 s) | 5,5% (615,9 → 582,4 s) | passa |
+| G2 mai peggio di oltre l'1% salendo | peggiore +0,75% (50 → 75) | sempre meglio | passa |
+| G2 a 50 fra il 25 e il 75% della distanza | **94%** | 74% | **non passa** (83% sugli 80 insieme) |
+| G2b 0-100 (≥ 65%) | 33 su 40 | 26 su 40 (65%, al limite) | passa |
+| G2b 0-25 < 0-50 < 0-100 | 28, 31, 33 su 40 | **22, 28, 26** su 40 | **non confermata** |
+| G5, F scelto sul primo gruppo = 5,9 (scarti ≤ 10 punti) | al massimo 5,2 | al massimo 8,1 | passa |
+
+- **Il numero si sente, ma quasi tutto fra 0 e 50.** I secondi guadagnati per passo, sugli 80 semi: 13,5, 12,1, 1,5, 3,8. Da 50 in su il rivale va quasi come un esperto: 50 contro 100, 44 su 80. La scala 0-100 non è uniforme: o si stira (il numero conta di più in basso), o si dichiara che sopra 50 cambia poco. **È una scelta di Ale prima del codice.**
+- F stimato sul secondo gruppo: 4,3. Con 40 regate F ha un errore grosso; la simulazione con 4,3 dà gli stessi esiti.
+
+**A numeri** (`simula_carriere_rivali.py`, 300 mondi da 30 stagioni, F 5,9, giocatore 50, seme 11):
+
+| # | Misurato | Esito |
+| --- | --- | --- |
+| S1 | 0 circuiti sbagliati (guastato apposta: 150 stagioni sbagliate su 5 mondi, il controllo vede) | passa |
+| S2 (≤ 40%) | Deriva 15%, Fiocco 19% | passa |
+| S3 | stessi rivali dopo 3 stagioni 56%; 25,4 passati dal nazionale in 10 | passa |
+| S4 distanza alla 30 (≥ 25) | 44,5 | passa |
+| S4 nazionale sopra lo zonale di almeno 10 | stagione 5: 54 e 42 (+12); **10: 56 e 48 (+8); 30: 62 e 56 (+6)** | **non passa alla 10 e alla 30** |
+| S5 (≥ 50%) | **46%** (chi la Deriva l'aveva già fatta 57%, nati nel Fiocco 31%) | **non passa** |
+| S6 zonale ≤ 55 | alla 10: 48; **alla 30: 56** | **non passa di un punto** |
+| S6 da 50 si qualifica (30-90%) | dalla 1: 72%, dalla 10: 60% | passa |
+| S6 da 0 e da 100, solo riportati | 33% e 21%; 98% e 95% | — |
+
+- **Perché lo zonale raggiunge quasi il nazionale (spiegazione probabile, non provata a parte):** in 30 stagioni crescono tutti verso il loro tetto e la sorte pesa molto, quindi i due circuiti si mescolano. Nel modello nessuno invecchia e nessuno arriva da fuori.
+- **Tre varianti dichiarate, seme 12, soglie ferme:** crescita a metà (zonale alla 30: 48, +5 sotto il nazionale, S5 47%); tetti zonali 40-80 (49, +7, 47%); tetti zonali 40-90 e ruggine 5 (52, +7, 47%). Tutte passano S6, **nessuna S4 alla 30 né S5** (S4 alla 10: +10, +9, +9). Non cercate altre: servirebbe una regola in più (il ricambio: chi è da molti anni smette e arriva un nome nuovo), che è di Ale.
+- S5 complessivo dipende dai nati nel Fiocco, che arrivano in Deriva con poca bravura. Regola non scritta sopra e usata nel simulatore: **nati nel Fiocco che scendono: 40% della bravura di Fiocco, almeno 10.**
+- **Che cosa il simulatore non prova:** la scelta A (posto riservato), la rinuncia al posto, il giocatore che va al Fiocco, la sua bravura che cresce (qui è fissa), quanto la sorte conta davvero in una stagione lunga (F misurato su 80 regate in tutto). S1 vale per le regole del simulatore, non per il gioco (per quello G4).
