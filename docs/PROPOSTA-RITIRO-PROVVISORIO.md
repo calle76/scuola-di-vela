@@ -48,3 +48,5 @@ Il via, oppure «lascialo così» come per l'uscita lenta (voce 71).
 Passano tutti: P1, P2, P4, P5 in Chromium e Firefox. **P3** (Firefox, regate lunghe): prima 0, 4 e 4 su 20 riaprendo dopo 0, 3 e 10 s; dopo **20 su 20** in tutti e tre. La proposta non diceva quando si riapre: le tre attese sono state scelte dopo aver visto lo 0 su 20, e misurate allo stesso modo sul gioco di prima.
 
 Una cosa in più rispetto al modello: il provvisorio si scrive anche in `beforeunload`, perché scritto solo in `pagehide` in Firefox si legge troppo tardi (ancora 0 su 20 riaprendo subito). Aggiunto il criterio P6 (chiusura annullata, allenamento): 10 su 10 e 10 su 10. Al contrario di quanto scritto nei rischi, C11 non è rimasto com'era: ora riapre il torneo prima di leggere. Numeri completi in `CHANGELOG.md` 1.3.53.
+
+Prova di Ale (24 nov, Firefox, una volta): scheda chiusa pochi secondi dopo l'inizio, prima del via; rientrando aveva i 5 punti del ritiro.

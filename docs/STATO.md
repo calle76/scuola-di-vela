@@ -39,7 +39,7 @@
 
 ## Cosa aspetta Ale
 
-- **Push:** `git push origin main --tags` (1.3.51, 1.3.52, 1.3.53 e documenti del 24 nov), poi **giro GitHub completo** (Actions → «Collaudi» → «Run workflow»): il menu è cambiato e molti collaudi con lui.
+- **Giro GitHub completo sulla 1.3.53** (run 45392948517, lanciato da Ale il 24 nov): da leggere per intero quando finisce. Quello programmato (45387293758, vecchia `f37f21d`) interrotto da Ale: niente di perso, quel codice era già misurato.
 - **Giocare il torneo con la 1.3.49 o dopo e mandare le regate** (Ale: ok, 23 nov): servono contatti alla boa per Z7 della regola 18 (segnare col tasto M i momenti alla boa).
 - **Chiedere a Lucio** per il finale dell'osservazione 135 e di rileggere la lezione 11 nuova.
 - **Copia delle registrazioni sul disco esterno ogni tanto:** `bash tests/copia_su_disco.sh` (ultima il 17 nov).
