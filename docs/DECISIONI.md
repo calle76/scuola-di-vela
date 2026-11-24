@@ -236,3 +236,4 @@ Da prendere **prima** di cominciare il livello a cui servono.
 | **La marcatura nell'ultima regata resta accesa** con K3 non misurato e K4 a 2 contatti (Ale, 24 nov: «sì la tengo») | Basso: si spegne con una costante (`MARCA`, `js/regate.js`) | `PROPOSTA-MARCATURA.md` §Esito |
 | **Uscita lenta dalle regate lunghe (voce 71): si lascia com'è** (Ale, 24 nov: «non ci impazzirei per l'attesa di qualche secondo») | Medio: strada A della proposta, se si riapre | `PROPOSTA-USCITA-REGATA-LUNGA.md` §Esito |
 | **Ritiro provvisorio: via** (voci 41 e 6; Ale, 24 nov: «ok se correzione piccola») | Basso: `torProvv` e `torRecupera` in `js/regate.js` | `PROPOSTA-RITIRO-PROVVISORIO.md` §Esito |
+| **Niente «Grafica leggera»** per gli scatti in Firefox (Ale, 24 nov: «no non serve», è fluido e la grafica è già essenziale) | Basso: misure già fatte | `OSSERVAZIONI-GIOCANDO.md` 107 |
