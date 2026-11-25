@@ -16,7 +16,7 @@ def riepilogo(f):
         print(f" {liv}: {len(RR)} regate, {len(L)} lati")
         for t in sorted({t for t, _ in L}):
             g = [x for tt, x in L if tt == t]; p = [x["vero"] - x["ott"] for x in g]
-            print(f"   {t:9} lati {len(g):4}  persi mediana {med(p):6.1f} s ({med(a / x['ott'] for a, x in zip(p, g)):.1%}), media {statistics.mean(p):6.1f}, quota {sum(p) / tot:.0%}; virate {statistics.mean(x['vir'] for x in g):.1f} (ottimale {statistics.mean(x['manOtt'] for x in g):.1f}), cambi di mure {statistics.mean(x['cambi'] for x in g):.1f}; persi per virata in più {statistics.mean(p) / max(.01, statistics.mean(x['vir'] - x['manOtt'] for x in g)):.1f}")
+            print(f"   {t:9} lati {len(g):4}  persi mediana {med(p):6.1f} s ({med(a / x['ott'] for a, x in zip(p, g)):.1%}), media {statistics.mean(p):6.1f}, quota {sum(p) / tot:.0%}; virate {statistics.mean(x['vir'] for x in g):.1f} (ottimale {statistics.mean(x['manOtt'] for x in g):.1f}), cambi di mure {statistics.mean(x['cambi'] for x in g):.1f}")
         M = [b["m40"] for r in RR for b in r["barche"] if b.get("m40")]
         if M: print(f"   ultimi 40 m dalla boa 1: {len(M)} passaggi, persi media {statistics.mean(m['vero'] - m['ott'] for m in M):.1f} s (mediana {med(m['vero'] - m['ott'] for m in M):.1f}), virate {statistics.mean(m['vir'] for m in M):.2f}")
         ba = [b for r in RR for b in r["barche"]]

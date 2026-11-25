@@ -276,3 +276,37 @@ Le diagnosi dei §§7-14 sono sulle regate corte della 1.2.24 e le registrazioni
 - **Strumento:** `tests/misura_rivali_lunghe.py`: la corsa di `misura_avversari_rotta.py` (tempo vero di ogni rivale su ogni lato contro la rotta ottimale partita da dove e quando lui ha cominciato), con le regate lunghe, pagina nuova per ogni regata. Gioco 1.3.55 senza modifiche (regola 18 e marcatura come nel gioco, 4B spenta). Il metro (la rotta ottimale) è un conto a posteriori che conosce raffiche e salti: il valore assoluto non è raggiungibile, si confrontano fra loro lati, livelli e pezzi.
 - **Semi:** 4501-4520, tre regate, due livelli (120 regate), Chromium; poi 4521-4540, mai guardati, per la conferma di qualunque ipotesi ne esca. **Nessuna soglia: è una diagnosi.**
 - **Prova prima (seme 4500, 6 regate, solo per vedere se lo strumento gira, non conta):** non dà errori, i rivali arrivano tutti.
+
+#### Risultati della misura base (Chromium, semi 4501-4520, 120 regate, 360 rivali, 0 errori, picco 64 °C; `sperimentale/rivali_lunghe_4501-4520.txt`)
+
+| | principianti | esperti |
+| --- | --- | --- |
+| bolina: persi rispetto alla rotta ottimale, mediana | 64,1 s (23%) | 41,8 s (14%) |
+| lasco / poppa, mediana | 12,9 / 15,4 s | 8,5 / 14,9 s |
+| quota della bolina sulle perdite | 76% | 73% |
+| virate in bolina (ottimale) | 9,1 (4,8) | 7,1 (4,7) |
+| ultimi 40 m dalla boa 1: persi media, quota della bolina | 8,0 s, 12% | 7,3 s, 16% |
+| tempo coperto; legame con i secondi persi (r) | 2,9%; 0,07 | 3,2%; 0,18 |
+| boe toccate / non arrivati (entro 1500 s) | 6 / 1 | 20 / 0 |
+
+- **L'avvicinamento alla boa, che nelle regate corte valeva il 41%, qui vale il 12-16%.** Il vento coperto non spiega le perdite.
+- **Le perdite vanno con le virate in più** (4,2 e 2,4 per lato): circa 11 s (r 0,73) e 6 s (r 0,45) per virata in più. È un legame, non una prova di causa.
+- **Ipotesi:** i bordi a tempo (25-60 s i principianti, 35-90 s gli esperti, `aiParams`) sono quelli scritti per lati di 140 m; con 560 m danno troppe virate.
+
+#### Prova dell'ipotesi, scritta prima di misurare (solo una copia; gioco invariato)
+
+- **Cosa cambia:** la durata sorteggiata del bordo raddoppia quando il percorso è lungo (`R.up ≥ 400`, una riga in `cambiaBordo`). Stessi semi 4501-4520, stesso strumento. Moltiplicatore 2: ipotesi nostra, una sola prova e non una scelta fra valori.
+- **Attese (nostre):** bolina persa mediana almeno −15% in tutti e due i livelli; arrivo mediano non peggiore; contatti dopo il via al massimo +10%; boe toccate e non arrivati al massimo base +5. **Se regge, resta una diagnosi:** va confermata sui semi 4521-4540 e proposta ad Ale, dato che rende i rivali più forti (tocca la voce 82 e la differenza fra i livelli).
+
+#### Esito della prova «bordi lunghi il doppio» (25 nov, stessi 120 semi-regata in coppia; `sperimentale/rivali_lunghe_bordi_x2_4501-4520.txt`): **le attese non passano, ipotesi in gran parte sbagliata**
+
+| | principianti | esperti | attesa |
+| --- | --- | --- | --- |
+| bolina persa, mediana | 64,1 → 49,0 s (−24%) | 41,8 → 35,9 s (**−14%**) | −15% in tutti e due |
+| bolina persa, media (differenza in coppia, 5-95%) | −3,2 s (−6,7 … +0,4) | −7,1 s (−11,0 … −3,1) | |
+| arrivo mediano | 598,3 → 594,7 s | 577,5 → **581,4 s** | non peggiore |
+| contatti dopo il via | 32 → 25 | 12 → **17** | al massimo +10% |
+| boe toccate | 6 → **21** | 20 → 17 | base +5 |
+| virate in bolina | 9,1 → 5,9 | 7,1 → 5,1 | |
+
+Le virate in più spariscono quasi tutte, ma il tempo perso scende poco: erano più un segno che la causa. Nei principianti la media quasi non si muove (la mediana sì: pochi lati vanno molto peggio) e gli esperti non arrivano prima. **Non si conferma sui semi 4521-4540, non si propone.** Resta da capire che cosa valgono i 20-30 s di bolina che le virate non spiegano (angolo e regolazione dei livelli, salti non giocati: §§4-8); l'avvicinamento alla boa, qui, non è più il pezzo grosso.

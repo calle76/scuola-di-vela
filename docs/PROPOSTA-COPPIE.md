@@ -348,3 +348,24 @@ Copie del gioco con un pezzo della 4B tolto alla volta (diagnosi, non modelli da
 - **Da riportare senza soglia:** M3 vecchio (≤ base), fuori e non arrivati vecchi (base +2) per browser; contatti col pilota; contatti per colpa e regola; coppie dopo il via; risultati separati per principianti (semi dispari) ed esperti (pari).
 - **Regola d'arresto:** i semi sono questi, non se ne aggiungono dopo aver guardato. Se una corsa non finisce in tempo, si riporta quanti tornei completi ci sono e il criterio si dichiara su quelli.
 - **Esito:** se passa tutto, si propone ad Ale di accenderla (il codice nel gioco aspetta il suo via); se N1 non passa, proposta di chiudere la 4B (consiglio già detto ad Ale).
+
+### Esito della terza misura (25 nov, 2400 regate, 1:07-6:20): **tutto passa tranne M1 in Firefox; il gioco resta la 1.3.55**
+
+Uscita intera in `sperimentale/coppie-4b-3/terza_x4_1.3.55.txt`, righe grezze nei due `terza_x4_*.jsonl.gz`. 0 errori di pagina, 200 tornei completi per browser. Picco 67 °C in Chromium e 66 °C in Firefox col freno 64/55 (281 pause in Firefox; in Chromium una prova breve lanciata insieme ha alzato la temperatura: errore mio).
+
+| | Chromium 4001-4200 | Firefox 4201-4400 | insieme (1200 per parte) | criterio |
+| --- | --- | --- | --- | --- |
+| M1 contatti dopo una virata | 116 → 53 (−54%) | 105 → 59 (**−44%**) | 221 → 112 (−49%) | −50% in ciascun browser |
+| M2 contatti al via | 52 → 3 (−94%) | 56 → 0 | 108 → 3 | −30%, passa |
+| N1 contatti in tutto | 651 → 642 | 654 → 620 | 1305 → 1262 (−3,3%, al 95% +1,2%) | al 95% ≤ +10%, passa |
+| N2 fuori linea | 302 → 240 | 331 → 253 | 633 → 493 (−22%, al 95% −17%) | passa |
+| N3 non arrivati | 593 → 601 | 591 → 548 | 1184 → 1149 (−3,0%, al 95% +2,1%) | passa |
+| M4 arrivo mediano | +0,4% | +0,4% | | entro +2%, passa |
+| piantati | 0 → 0 | 0 → 0 | | passa |
+| soglie vecchie (M3, fuori, non arrivati) | M3 e fuori sì, non arrivati no (+8) | tutte sì | | solo riportate |
+
+- **Per i criteri scritti non si adotta da sola:** M1 chiedeva −50% in ciascun browser e in Firefox si ferma a −44% (intervallo 5-95%: −56% … −28%); anche insieme è −49%. I −55/−59% di prima, sui semi lunghi, erano più alti di quello che regge su semi nuovi. La soglia non si tocca.
+- **Il dubbio che aveva fermato la x4 (contatti in tutto) non c'è più:** −3%, e al peggio +1%. Quindi la regola «se N1 non passa si chiude» non scatta.
+- Coppie dopo il via 161 → 87. Contatti col pilota 762 → 737. Principianti ed esperti: i non arrivati si spostano in versi opposti nei due browser (esperti 208 → 231 in Chromium, 228 → 177 in Firefox): è rumore.
+- Contatti vicino alla boa (12,6 m): 7 → 14 in tutto, pochi casi ma raddoppiati; da guardare se si accende, perché tocca la regola 18.
+- **Decide Ale:** accenderla dichiarando M1 non passato in Firefox, o lasciarla spenta e chiudere. Il codice è già nel gioco, spento, più una riga (`variante_x4_1516_dopo_il_via_1.3.55.patch`).

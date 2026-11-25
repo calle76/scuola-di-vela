@@ -13,7 +13,7 @@
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** versione A fatta nella 1.3.49 (colpa, semaforo, zona disegnata, lezione 25). **Versione B (rivali che danno spazio): proposta e misura fatte il 24 nov, consiglio «non ora»** (7 momenti utili in 90 regate), si decide con Z7 (`PROPOSTA-REGOLA-18-B.md`). Z7: rifare `conta_boa_zona.py` sulle prime regate di Ale e Lucio con la 18 | `PROPOSTA-REGOLA-18.md` | Opus |
-| 4B | **Rivali che virano e orzano addosso (versione B), variante x4:** confermata il 23 nov su semi nuovi (corte 2601-2660, lunghe 2701-2760, lunghe anche in Firefox): passa M1, M4, fuori linea, non arrivati; **M3 contatti in tutto no** (+3,5% corte, +6% lunghe in Firefox; passa solo in Chromium sulle lunghe). Non adottata: **da rivedere a fine giro** | `PROPOSTA-COPPIE.md` §15; patch in `sperimentale/coppie-4b-3/` | Opus |
+| 4B | **Rivali che virano e orzano addosso (versione B), variante x4:** terza misura fatta il 25 nov sulla 1.3.55 (2400 regate lunghe, due browser, criteri scritti prima): **passa tutto** (contatti in tutto −3%, fuori linea −22%, contatti al via −97%, non arrivati −3%) **tranne M1 in Firefox** (−44% contro −50%; −49% insieme). Spenta. **Decide Ale: accenderla dichiarando M1 non passato, o chiudere** | `PROPOSTA-COPPIE.md` §16; `sperimentale/coppie-4b-3/` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via
 
@@ -23,7 +23,7 @@
 | 69 | **Più espressioni del Coach** (Ale, 20 nov): oggi i volti sono pochi (serio, contento, arrabbiato). Quali espressioni nuove e quando compaiono si decide con Ale; le immagini le fa lui (come per la voce 58), poi si aggancia ai commenti già esistenti. Proposta scritta | `PROPOSTA-COACH-ESPRESSIONI.md` | Sonnet |
 | 74 | **Storico dei rivali:** passo 1 (1.3.37), frase del Coach (1.3.38) e **marcatura nell'ultima regata (1.3.50)** fatti; niente nemesi né cautela senza fonte. Marcatura: K3 non misurato, K4 no (2 contatti con colpa nei corti); **Ale la tiene (24 nov)**; prova vera sulle vostre regate. Punti aperti: contatore, riga a fine torneo, scuffie/penalità, amico in rete | `PROPOSTA-MARCATURA.md` §Esito; `PROPOSTA-STORICO-RIVALI.md` | Opus |
 | 82 | **Rivali che crescono, finale con albo d'oro** (idea di Ale, 24 nov): bravura 0-100 per ogni barca, nazionale rifatto ogni anno (9 + primi 3 dello zonale, scelta A del 24 nov), vale per tutti i livelli; registra la base della 56. Albo fatto nella 1.3.54. **Misurata e simulata la notte del 24 nov, gioco invariato: G2 a metà scala, G2b in conferma, S4, S5 e S6 non passano. Aspetta due scelte di Ale (scala e ricambio) e il via** | `PROPOSTA-RIVALI-CHE-CRESCONO.md` | Opus |
-| 2 | **Avversari tutti insieme:** bolina e avvicinamento alla boa, uscire dal vento sporco, casi 81 e 83 di Deriva. Aspetta registrazioni di Ale e Lucio sulla fisica completa (`DECISIONI.md`, 10 nov); dall’11 al 21 nov ce ne sono 37, da guardare se bastano | `PROPOSTA-CONO-D-OMBRA.md`; `PROPOSTA-AVVERSARI-BOLINA.md` §14 | Opus |
+| 2 | **Avversari tutti insieme:** bolina e avvicinamento alla boa, uscire dal vento sporco, casi 81 e 83 di Deriva. Misurata il 25 nov sulle regate lunghe (120 col pilota, due livelli): il tempo perso è in mezzo alla bolina (la boa vale il 12-16%, il vento coperto quasi niente); provati i bordi lunghi il doppio, non passano. **Nessuna proposta pronta**; mancano regate vere con gli esperti | `PROPOSTA-AVVERSARI-BOLINA.md` §16 | Opus |
 
 ## 3. Da guardare (collaudi e difetti senza causa nota)
 
