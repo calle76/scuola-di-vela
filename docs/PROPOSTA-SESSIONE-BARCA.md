@@ -107,6 +107,14 @@ Scarto medio delle velocità 0,046 (3,2 nodi) e 0,066 (11 nodi); oggi 0,139 e 0,
 2. «Area confermata due volte» (secondo giro): falso, la vela di Flay è 5,91 m²; l'area ha una fonte sola.
 3. «Robustezza 99%» (secondo giro): con intervalli onesti è molto più bassa (sopra).
 
+### L'area: 7,5 (J) o 7,9?
+
+Due ragioni spingono verso 7,9, trovate dopo aver scelto J: (1) **F109 misura il vento in testa d'albero**; sulla vela è circa l'8% più debole, e allora la spinta che serve sale da 2,95 a 3,27 m², più di quella del candidato 7,92 (3,24); (2) il rapporto 1,125 con cui Day corregge Flay coincide con 7,92/7,03 della vela vera, quindi Day ha quasi certamente usato circa 7,9 m², e il suo modello è quello verificato su Binns. Contro: la regola scritta prima (minimo su Day e F121) sceglie 7,06. **Le fonti non decidono fra 7,5 e 7,9;** J resta al centro, 7,9 è il valore di Day.
+
+### Lezione 6.3 «La scuffia»
+
+Si fa a 15 nodi con raffiche e chiede di «tenere la vela tutta cazzata». Con la barca nuova il timoniere appiattisce e svergola la vela da solo (come in Day), e la barca non scuffia più a scotta ferma: la lezione va rifatta (più vento, o la vela piatta che arriva più piano). È anche una scelta di gioco: il timoniere automatico che appiattisce è un aiuto che oggi il giocatore non controlla.
+
 ### Consiglio
 
 **Non adottare un candidato preciso adesso.** Il risultato solido è che la vela di oggi è troppo debole col poco vento (cinque fonti) e che la barca deve pesare 160 kg e raddrizzare come F121; l'area esatta (7,0-7,9) e le ipotesi della vela che fileggia non sono decise dalle fonti. Se Ale vuole andare avanti: proposta per il motore con J, B2 e B8 dichiarati non passati, e prima di accenderla lezione 6.3, fasce, medaglie, partenza dei rivali. Se no: la 81 resta limite noto, con questa ricerca scritta.
