@@ -333,3 +333,18 @@ Copie del gioco con un pezzo della 4B tolto alla volta (diagnosi, non modelli da
 **Firefox, regate lunghe, stessi semi 2701-2760** (`conferma_x4_lunghe_2701-2760_firefox.txt`; picco 65 °C, 36 pause del freno): base M1 33, M2 14 (non misurabile), M3 192, M4 585,8, fuori 100, non arrivati 178; x4 M1 14 (−58%), M2 0, **M3 204 (+6%)**, M4 591,5 (+1,0%), fuori 82, non arrivati 167. In Firefox anche le lunghe mancano M3.
 
 **Esito della conferma:** la x4 passa M1, M4, piantati, fuori linea e non arrivati in tutte e tre le misure; **M3 (contatti in tutto) passa solo in Chromium sulle lunghe** (198 contro 200) e non passa nelle corte (+3,5%) né in Firefox sulle lunghe (+6%). Per le soglie scritte la x4 **non si adotta**; resta in lista per il giro finale (Ale, 23 nov: «quando finiremo il giro di tutti i punti vedremo cosa rimane»).
+
+## 16. Terza misura della x4, sulla 1.3.55 (Ale, 25 nov: «vai con C, fai tutti i test che vuoi in autonomia»), scritta prima di misurare
+
+**Perché una misura nuova.** La conferma del §15 è sulla 1.3.48; dopo sono arrivate la regola 18 (1.3.49) e la marcatura (1.3.50), che toccano i contatti. In più M3 («contatti in tutto non più della base») su 180 regate ha un caso di circa ±20-30 contatti: +9 e +12 non dicono né che peggiora né che non peggiora. Il metro cambia **dopo aver visto quei numeri**, e si dichiara: le soglie vecchie si riportano accanto.
+
+- **Cosa si misura:** x4 = `MANOVRE` col rinvio di 4 s (`m4`) più la riga «regole 15-16 nelle decisioni solo dopo lo sparo», su una copia della 1.3.55. La patch della voce 3 **non serve** (la x4 è una riga sola sopra il codice già spento nel gioco: `variante_x4_1516_dopo_il_via_1.3.55.patch`, `git apply --check` pulito). Con `MANOVRE` spento la copia è il gioco di oggi. `js/` del repository non si tocca.
+- **Solo regate lunghe** (Ale, 25 nov: le corte non esistono più fuori dalla Scuola; la 4B vale solo in Deriva). Le corte non si rimisurano.
+- **Semi mai guardati, gruppi separati:** Chromium 4001-4200, Firefox 4201-4400 (200 tornei = 600 regate per configurazione in ciascuno). Base e x4 alternate sulla stessa regata, pagina nuova per ognuna. Strumento: `tests/misura_x4.py` (la corsa è quella di `misura_manovre.py`).
+- **Criteri.** Ricampionamento dei tornei (4000 volte, coppie base/x4), limite superiore al 95% dell'aumento relativo:
+  - **N1 (era M3), sui due browser insieme (1200 regate per configurazione):** contatti in tutto, limite superiore **al massimo +10%**. Il 10% è la soglia già scritta per i contatti in K2 (§5), non scelta su questi numeri.
+  - **N2 fuori linea e N3 non arrivati:** stesso modo, limite superiore al massimo +10%, sui due insieme.
+  - **M1 almeno −50% e M2 almeno −30% (se la base ha almeno 15 casi), M4 arrivo mediano entro +2%, piantati al massimo base +2:** come prima, **in ciascun browser**.
+- **Da riportare senza soglia:** M3 vecchio (≤ base), fuori e non arrivati vecchi (base +2) per browser; contatti col pilota; contatti per colpa e regola; coppie dopo il via; risultati separati per principianti (semi dispari) ed esperti (pari).
+- **Regola d'arresto:** i semi sono questi, non se ne aggiungono dopo aver guardato. Se una corsa non finisce in tempo, si riporta quanti tornei completi ci sono e il criterio si dichiara su quelli.
+- **Esito:** se passa tutto, si propone ad Ale di accenderla (il codice nel gioco aspetta il suo via); se N1 non passa, proposta di chiudere la 4B (consiglio già detto ad Ale).
