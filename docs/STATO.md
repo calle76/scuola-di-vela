@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 25 novembre 2026 (gioco alla **1.3.58**, tag `v1.3.58`; stare fermi prima del via, voce 27).*
+*Aggiornato: 25 novembre 2026, sera (gioco alla **1.3.58**, tag `v1.3.58`; stare fermi prima del via, voce 27).*
 
 ## Dove siamo
 
@@ -23,7 +23,7 @@
 - **1.3.56 (voce 4B, via di Ale del 25 nov):** in Deriva i rivali guardano prima di virare e di partire, senza la regola 18 nella guida; contatti dopo una virata 221 → 116, al via 108 → 3, in tutto −3%, fuori linea −22%; **M1 non passa** (−47%/−48% contro −50%); contatti vicino alla boa 7 → 13, da riguardare con Z7. Nei collaudi `collaudo_torneo` C11 R7 rosso sul PC (uscita dal menu 3,26 s, soglia 2; già fuori soglia prima; Ale: lasciarla stare). **Voce 3 chiusa** (Ale).
 - **Voce 35 chiusa** (Ale, 25 nov: 0 messaggi su 9 sulle colpe del giocatore coperti). **Voce 22:** causa ancora ignota.
 - **Voce 81 chiusa come limite noto** (Ale, 25 nov; motore invariato): col poco vento la bolina è del 10-16% più lenta del vero e la virata costa di più; causa probabile la rampa della vela, braccio vero circa 3,0 m. Provati e scartati braccio, svergolamento, rampa con vela e braccio; pista migliore se si riapre: rampa con la rollata (X, voce 73), prima una fonte sulla virata a 10-12 nodi. `FISICA-E-TARATURE.md` (semplificazioni), `PROPOSTA-VELA-E-RAMPA-81.md`.
-- **Voce 84 (Ale, 25 nov):** sessione speciale sulla barca coi crediti ripristinati (`PROPOSTA-SESSIONE-BARCA.md`): chiedere ad Ale se sono tornati prima di partire con voci che si tarano sulla barca (2, 82).
+- **Voce 84, sessione sulla barca (25 nov, `js/` non toccato):** candidato in `sperimentale/barca-84/` (vela ORC su 7,92 m², 160 kg, raddrizzata F121, braccio 3,0, vela piatta al limite): Day −1,0 / −0,2 / +1,5%, Binns 9 +0,7…−5,1%, Binns 12 −1,1…+0,2%, poppa −3/−2/−2%, virata a 16 nodi 2,3 s, raffica 54°. **Non passano B2 (per 0,1) e B8**; virata a 11 nodi troppo facile (−1,45 m, F109 −4,39), angolo morto stretto; Marshall (F125) non passa. Dettaglio e consiglio: `PROPOSTA-SESSIONE-BARCA.md` §Esito. **Aspetta Ale.**
 - **Voce 2 (25 nov):** nelle regate lunghe i rivali perdono in mezzo alla bolina (64 s i principianti, 42 s gli esperti sulla rotta ottimale), non alla boa (12-16%) né per il vento coperto; bordi lunghi il doppio: non passa. Nessuna proposta (`PROPOSTA-AVVERSARI-BOLINA.md` §16). Le registrazioni di Ale e Lucio hanno solo principianti.
 - **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
 - **Da sapere:** con `#collaudo` le regate restano corte (servono `--lungo`); apertura e corsa in un solo `evaluate`, pagina nuova per regata. Collaudi qui uno per volta col freno; Firefox per i collaudi nuovi.
@@ -47,6 +47,7 @@
 
 ## Cosa aspetta Ale
 
+- **Voce 84: proposta per il motore col candidato, oppure limite noto?** (per il resto 2 e 82 restano fermi)
 - **Regate di Ale e Lucio con la 1.3.57 (Deriva, Allenamento, rivali esperti):** tipo A bastone, sul punteggio, 4 barche, 2 a testa (voce 2); tipo B triangolo, giri, 6 barche, 3 a testa (Z7). M sui momenti alla boa, scaricare dopo ogni regata (restano le ultime 5), a mano: una riga per ogni M e chi ha giocato.
 - **Giro GitHub sulla 1.3.56 (run 45623760335, letto per intero, anche «da controllare»):** 240 OK, 9 rossi, tutti nuovi (sulla 1.3.55 erano 2, ora verdi). Con la 4B spenta passano `avversari1b` scenario 5 (Chromium 7 contro 9 su 10; Firefox 7 contro 10 nel giro prima, non rilanciato), `non_partite` salti (seme 3), `regola21` K3 (Firefox) e K4 (Chromium), `distacchi_testo` (corretto nella 1.3.58). Pochi casi, non rilanciati: `giri_avversari` G4 (9 su 10) e `regola18` Z4, in Firefox; `registro` «contatto» noto. **Da Ale: giro completo sulla 1.3.58.** Nella 4B resta da guardare `avversari1b` (tre rivali alla boa), insieme a Z7; gli altri rossi della 4B no (da decidere se adattare i collaudi).
 - **Idea di Ale (25 nov), non in lista:** i rivali guardano l'ingaggio, non solo la distanza, prima di virare; oggi virano comunque dopo 4 s di attesa. Da misurare solo se la riprende.
