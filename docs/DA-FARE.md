@@ -53,7 +53,7 @@
 | # | Cosa |
 | --- | --- |
 | 10 | **Giudizio dei suoni** all'ascolto |
-| 14 | **Copia di sicurezza fuori da GitHub:** registrazioni copiate il 17 nov sul disco esterno; da ripetere ogni tanto con `bash tests/copia_su_disco.sh` |
+| 14 | **Copia di sicurezza fuori da GitHub:** registrazioni copiate il 25 nov sul disco esterno; da ripetere ogni tanto con `bash tests/copia_su_disco.sh` |
 | — | **Push** (`git push origin main --tags`), la domanda a Lucio sul finale (oss. 135), le pagine di `racingrulesofsailing.org` in `fonti-pdf/` |
 
 ## Archivio
