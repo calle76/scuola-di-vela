@@ -26,11 +26,11 @@
 
 ## Criteri (le soglie della prima proposta, `PROPOSTA-BOLINA-POCO-VENTO.md`: non si allentano)
 
-B1 Day 6 nodi −5%; B2 Binns 9 nodi ±5%; B3 Binns 12 nodi ±3%; B4 Day 15 nodi al più +7%; B5 3,2 nodi a 45° −8%; B6 virata a 3,2 nodi almeno −30% di metri persi; B7 poppa e lasco entro 0,03 nodi; B8 ogni costante cambiata con una fonte. B7 va discusso con Ale prima di cominciare: tiene la poppa com'è, ma contro Day è lenta dell'8-10%. In più, perché il gioco resti giocabile: a 16 nodi la virata con la sola freccia riesce entro 5 s; raffica da 10 a 18 senza reagire sotto 60° (oggi 52°); angolo morto: barca ferma a 0-15° sotto 0,3 nodi dopo 30 s.
+B1 Day 6 nodi −5%; B2 Binns 9 nodi ±5%; B3 Binns 12 nodi ±3%; B4 Day 15 nodi al più +7%; B5 3,2 nodi a 45° −8%; B6 virata a 3,2 nodi almeno −30% di metri persi; B7 poppa e lasco entro 0,03 nodi; B8 ogni costante cambiata con una fonte. B7 vale nella prima parte (bolina). **Seconda parte, solo se la bolina passa (Ale, 25 nov: «sì come proponi tu»): anche la poppa.** Al posto di B7 vale B7b, scritto ora prima di ogni prova: VMG di poppa contro Day (F17 fig. 8) entro ±4% a 6, 10 e 15 nodi (oggi −8/−10%), senza che B1-B6 e i tre criteri di gioco smettano di passare. ±4% è un'attesa nostra. Se B7b non passa, resta la sola correzione della bolina, con B7. In più, perché il gioco resti giocabile: a 16 nodi la virata con la sola freccia riesce entro 5 s; raffica da 10 a 18 senza reagire sotto 60° (oggi 52°); angolo morto: barca ferma a 0-15° sotto 0,3 nodi dopo 30 s.
 
 ## Quando ci si ferma
 
-- **Passa:** B1-B6 e B8 più i tre criteri di gioco. Allora proposta per il motore, e via di Ale.
+- **Passa:** B1-B6, B7 (o B7b nella seconda parte) e B8, più i tre criteri di gioco. Allora proposta per il motore, e via di Ale.
 - **Non passa:** rapporto con il candidato migliore e cosa gli manca, la 81 torna limite noto e **non si riapre senza una fonte nuova**.
 - Tetto: una giornata. Se il punto 1 non porta niente e il punto 3 nemmeno, ci si ferma lì e lo si dice.
 
