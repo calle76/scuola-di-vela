@@ -391,7 +391,7 @@
         b.simT = (b.simT || 0) - dt;
         if (b.simT <= 0){ b.simT = 0.25; const T = startTime(b, lineAim, w, -R.t + 2); // simula fin poco oltre lo zero: se non arriva in tempo, parte subito
           if (T === null || -R.t <= T - ai.startM - (b.char === "prudente" ? 1 : 0)){
-            if (guarda() && R.t < 0 && passaggio(b, lineAim) < RINVIO_D) b.simT = 0.5; // 1.3.11: una barca sulla rotta di partenza: si aspetta mezzo secondo
+            if (guarda() && R.t < 0 && passaggio(b, lineAim) < RINVIO_D){ b.simT = 0.5; b.rinvioVia = (b.rinvioVia || 0) + 1; } /* rinvioVia (1.3.57): solo per il registratore */ // 1.3.11: una barca sulla rotta di partenza: si aspetta mezzo secondo
             else { b.goStart = true; b.tGo = R.t; } } } // il margine fa arrivare dopo lo zero, mai prima
       }
       b.holdA = holdAngle(by);

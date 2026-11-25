@@ -38,7 +38,7 @@
   const FERMO_KN = 0.5, RIPARTE_KN = 1, FERMO_S = 5;
   const regNome = b => b.me ? "Tu" : (b.sigla || b.name); // 1.2.33: nelle righe del file il nome di sempre, senza spazi (Tu, Rossa, Verde, Blu); i nomi del torneo stanno nell'intestazione
   const sesStato = b => [b.ocs && "ocs", b.S.capsized && "scuf", b.fin !== null && "arr", b.dsq && "dsq", b.dnf && "dnf", b.goStart && b.leg === 0 && "via", b.cedeA && "cede:" + regNome(b.cedeA)].filter(Boolean).join(",") || "-";
-  const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0, still: 0, fermo: false });
+  const sesAvv = b => ({ leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba: b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0, rin: b.rinvio || 0, rv: b.rinvioVia || 0, still: 0, fermo: false });
   function sesAltre(dSim, riga){
     const L = ses.L;
     if (mode !== "race" || !R){ L.AR = null; return; }
@@ -54,12 +54,14 @@
       if ((b.pp || 0) > A.pp) sesEv("avv_penalita", n + " +" + ((b.pp || 0) - A.pp) + "pt");
       const sba = b.leg >= 1 && b.leg <= R.marks.length && b.rnd < 0;
       if (sba && !A.sba) sesEv("avv_boa_lato_sbagliato", n);
+      if ((b.rinvio || 0) > A.rin) sesLine("D " + sesT() + " " + n + " virata " + b.rinvio); /* 1.3.57: la 4B (cambiaBordoGuarda) rimanda la virata o la partenza */
+      if ((b.rinvioVia || 0) > A.rv) sesLine("D " + sesT() + " " + n + " partenza " + b.rinvioVia);
       if (dSim > 0 && R.t >= 0 && b.fin === null && !b.dnf){
         if (!A.fermo){ A.still = kn < FERMO_KN ? A.still + dSim : 0;
           if (A.still >= FERMO_S){ A.fermo = true; sesEv("avv_fermo", n + " lato " + b.leg + " " + b.S.x.toFixed(1) + " " + b.S.y.toFixed(1)); } }
         else if (kn > RIPARTE_KN){ A.fermo = false; A.still = 0; sesEv("avv_riparte", n); }
       }
-      Object.assign(A, { leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba });
+      Object.assign(A, { leg: b.leg, ocs: b.ocs, cap: b.S.capsized, fin: b.fin !== null, pen: b.pen || 0, pp: b.pp || 0, sba, rin: b.rinvio || 0, rv: b.rinvioVia || 0 });
     }
     for (const key in R.contacts) if (L.ct[key] !== R.contacts[key]){ const [i, j] = key.split("-"), c = R.contColpa && R.contColpa[key];
       sesEv("contatto_barche", regNome(R.boats[i]) + " " + regNome(R.boats[j]) + (c ? " colpa " + (c.g ? regNome(c.g) : "nessuno") + " regola " + c.r : "")); } /* 1.3.46 (voce 55): con chi ha la colpa */
@@ -76,8 +78,10 @@
       if (on !== !!prima) sesEv(on ? "marca" : "marca_fine", regNome(b)); L.marcaR = R; L.marca = on; }
     L.ct = Object.assign({}, R.contacts);
     for (; L.pl < R.penList.length; L.pl++) sesLine("Q " + sesT() + " " + R.penList[L.pl]);
+    const vs = Math.floor(R.t + 1e-6), conV = riga && (vs !== L.vs || L.vsR !== R); if (conV){ L.vs = vs; L.vsR = R; } /* 1.3.57: righe V, una al secondo */
     if (riga) for (const b of R.boats){
       if (b.me) continue;
+      if (conV) sesLine(["V", sesT(), regNome(b), (windAt(b.S.x, b.S.y).tws * KN).toFixed(1), Math.round((b.cop || 0) * 100)].join(" "));
       const st = sesStato(b);
       sesLine(["B", sesT(), regNome(b), b.S.x.toFixed(1), b.S.y.toFixed(1), Math.round(b.S.h), (b.S.u * KN).toFixed(1), Math.round(norm180(windAt(b.S.x, b.S.y).twd - b.S.h)), b.leg, st].join(" "));
     }
@@ -201,6 +205,8 @@
   "#    stato: - | ocs partenza anticipata | scuf scuffiata | arr arrivata | dsq squalificata (1.2.16) | dnf non arrivata | via sta partendo | cede:Nome a chi sta lasciando strada (separati da virgole)",
   "#  E avv_fermo/avv_riparte nome   sotto 0,5 nodi per 5 s di gioco dopo il via (con lato e posizione), poi sopra 1 nodo; avv_lato nome N; avv_arrivo nome Ns;",
   "#    avv_ocs, avv_scuffia, avv_penalita nome +15s o +1pt, avv_boa_lato_sbagliato nome; contatto_barche nome1 nome2 (anche con «Tu»), uno per contatto",
+  "#  V t nome tws coperta%   (dalla 1.3.57) il vento vero nel punto di un avversario, in nodi con raffiche e salti ma senza il cono d'ombra, e il vento che il cono gli toglie; una riga al secondo",
+  "#  D t nome virata|partenza N   (dalla 1.3.57, regate di Deriva) l'avversario rimanda la virata (N-esimo rinvio di questo bordo) o la partenza (N-esimo rinvio) perché ha una barca sulla strada",
   "#  E zona nome1 deve_spazio nome2 [18.3]   (dalla 1.3.49, regate di Deriva) nome1 deve lo spazio alla boa a nome2 (regola 18); zona_fine nome1 nome2 quando il debito finisce",
   "#  E marca nome / marca_fine nome   (dalla 1.3.50, ultima regata del torneo) il rivale comincia o smette di marcarti di bolina (docs/PROPOSTA-MARCATURA.md)",
   "#  E coperta nome da nome2 N%   (dalla 1.2.25, solo nel torneo) nel cono d'ombra di nome2 con più del 10% di vento tolto da 2 s; libera nome quando ne esce",

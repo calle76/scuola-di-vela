@@ -2,7 +2,7 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 25 novembre 2026 (gioco alla **1.3.56**, tag `v1.3.56`; rivali a scelta nell'Allenamento; notte di misure sulla 4B e sulla 2).*
+*Aggiornato: 25 novembre 2026 (gioco alla **1.3.57**, tag `v1.3.57`; rivali a scelta nell'Allenamento; notte di misure sulla 4B e sulla 2).*
 
 ## Dove siamo
 
@@ -18,6 +18,7 @@
 - **Giro GitHub del 24 nov notte (run 45298592556, completo sulla 1.3.50 e `f37f21d`), letto per intero:** 240 voci OK, 3 rosse. `collaudo_storico_rivali` R3 (nuova, Chromium): 18 su 20, perché la marcatura cambia apposta le ultime regate; marcatura spenta 20 su 20: collaudo corretto. `collaudo_regola18` Z5 in Firefox 3 → 4 (+33%, soglia +30%): identico al giro prima. `collaudo_suoni_si_sentono` sartiame in Chromium: noto (voce 18). `collaudo_torneo` C11 in Firefox: 1 torneo su 40 (voce 41). `collaudo_esame_nuove` di nuovo verde.
 - **Esploratore del 23 nov (run 45166551760, sulla 1.3.46):** 0 eccezioni, 0 numeri non finiti, 0 errori; barche non arrivate 52 in 1440 corse (Chromium) e 39 in 1600 (Firefox), il giro prima (1.3.11, altri semi) 45 e 42 in 1600. «Annullato» solo perché in un pezzo su 20 (Chromium semi 71-80) l'installazione del browser è rimasta ferma 2 ore: guasto di GitHub, semi non misurati.
 - **1.3.49 (voce 49, versione A):** regola 18 nelle regate di Deriva (zona di 12,6 m, chi entra per primo, esterna/interna, 18.1(a), 18.3 semplificata, 43.1(b)); semaforo, zona disegnata (casella nelle Impostazioni), lezione 25 «Spazio alla boa», righe `zona`/`zona_fine` nel file. Libretto di Deriva: Conoscenza 10, Esperienza 7, quota 25 (approvata da Ale il 23 nov). `collaudo_regola18.py`: 13 casi su 13, Scuola identica; nelle regate corte 0 colpe diverse fuori dalla zona e 1-2 contatti decisi dalla 18; **nelle lunghe nessun contatto alla boa col pilota (Z4 non passa)**: la prova vera è Z7, sulle vostre regate. Resta la versione B (rivali che danno spazio).
+- **1.3.57:** nel file delle regate il vento dei rivali (`V`) e quando la 4B li fa aspettare (`D`); la regata non cambia.
 - **1.3.56 (voce 4B, via di Ale del 25 nov):** in Deriva i rivali guardano prima di virare e di partire, senza la regola 18 nella guida; contatti dopo una virata 221 → 116, al via 108 → 3, in tutto −3%, fuori linea −22%; **M1 non passa** (−47%/−48% contro −50%); contatti vicino alla boa 7 → 13, da riguardare con Z7. Nei collaudi `collaudo_torneo` C11 R7 rosso sul PC (uscita dal menu 3,26 s, soglia 2; già fuori soglia prima; Ale: lasciarla stare). **Voce 3 chiusa** (Ale).
 - **Voce 35 chiusa** (Ale, 25 nov: 0 messaggi su 9 sulle colpe del giocatore coperti). **Voce 22:** causa ancora ignota.
 - **Voce 81 chiusa come limite noto** (Ale, 25 nov; motore invariato): col poco vento la bolina è del 10-16% più lenta del vero e la virata costa di più; causa probabile la rampa della vela, braccio vero circa 3,0 m. Provati e scartati braccio, svergolamento, rampa con vela e braccio; pista migliore se si riapre: rampa con la rollata (X, voce 73), prima una fonte sulla virata a 10-12 nodi. `FISICA-E-TARATURE.md` (semplificazioni), `PROPOSTA-VELA-E-RAMPA-81.md`.
@@ -44,6 +45,7 @@
 
 ## Cosa aspetta Ale
 
+- **Regate di Ale e Lucio con la 1.3.57 (Deriva, Allenamento, rivali esperti):** tipo A bastone, sul punteggio, 4 barche, 2 a testa (voce 2); tipo B triangolo, giri, 6 barche, 3 a testa (Z7). M sui momenti alla boa, scaricare dopo ogni regata (restano le ultime 5), a mano: una riga per ogni M e chi ha giocato.
 - **Giro GitHub sulla 1.3.56:** run 45621286773 (`739f28d`), lanciato da Ale il 25 nov alle 14:12, **da leggere per intero** (anche «da controllare»). La 2 e la 49 B aspettano regate lunghe in Deriva con gli esperti; senza aspettare nessuno: 27 o i punti piccoli della 74 (da chiedere ad Ale).
 - **Idea di Ale (25 nov), non in lista:** i rivali guardano l'ingaggio, non solo la distanza, prima di virare; oggi virano comunque dopo 4 s di attesa. Da misurare solo se la riprende.
 - **Giro GitHub completo sulla 1.3.55** (run 45463715322, `6d3df80`, letto per intero il 24 nov, anche «da controllare»): 2 rossi, tutti e due già visti. `collaudo_suoni_zoom` V5 in Chromium (picco 0,52 dB in 1 prova su 6, soglia −0,5; sulla 1.3.53 era 0,28) e `collaudo_regola18` Z5 in Firefox 3 → 4. `collaudo_marcatura` verde. «Da controllare»: `collaudo_registrazione` E2 +11,2% e `collaudo_riquadro_bandiere` Q7 10,1% in Chromium (misure di tempo, sulla 1.3.53 +9,7% e 12,2%); lezioni semi 1-100 identiche nei due giri e nei due browser, 3.3, 3.5 e 5.8 già noti (elenco aggiornato); `collaudo_rotta`, `_competizione`, `_fasce` come da riferimento.
