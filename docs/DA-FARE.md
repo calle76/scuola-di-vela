@@ -29,8 +29,8 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 35 | **Messaggio «Contatto» coperto da un altro** (`collaudo_registro` in Firefox su GitHub). Se compaiono le note del collaudo, dare priorità ai messaggi delle penalità | `CHANGELOG.md` 1.3.8 | Sonnet |
-| 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa | `CHANGELOG.md` 1.2.28 | — |
+| 35 | **Messaggio «Contatto» coperto da un altro:** misurato il 25 nov sulle vostre registrazioni (`tests/misura_messaggi_coperti.py`, 44 file): i messaggi sulle colpe del giocatore (contatto, boa toccata, partenza anticipata) coperti prima di 2,6 s sono **0 su 9**; coperti 4 su 13 di «Contatto: penalità a …» (colpa del rivale), 1 entro 1 s, di solito da «Partenza!». Su GitHub la nota del collaudo compare 1 volta su 14 (Firefox, 22 nov), ma il collaudo conta i testi diversi: due contatti uguali di fila gli sembrano uno, quindi non prova una copertura. **Proposta: chiudere; decide Ale** | `CHANGELOG.md` 1.3.8 | Sonnet |
+| 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa. Provato il 25 nov (Firefox 150): fra 74 forme di codice, quel testo esatto esce solo da `(a || b).t`, `(c ? a : b).t` e simili, e nel codice della 1.2.27 e di oggi non ce n'è nessuna (0 su 246 `.t` nella 1.2.27): causa ancora ignota | `CHANGELOG.md` 1.2.28 | — |
 | 8, 18 | **Suoni:** boa poco forte e sartiame in `collaudo_suoni_si_sentono` (il bordo si sposta fra un giro e l'altro). **Sartiame giudicato a orecchio da Ale il 23 nov: resta l'originale** (`DECISIONI.md`); dal 24 nov il collaudo la soglia la riporta e basta. Resta la boa | `CHANGELOG.md` 1.2.12 | Sonnet |
 
 ## 4. In sospeso, in coda o idee

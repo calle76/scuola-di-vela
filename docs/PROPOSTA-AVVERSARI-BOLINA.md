@@ -268,3 +268,11 @@ Lette le regate **lunghe** di Ale e Lucio (fisica di oggi, regate da 3 del torne
 - **Non ci sono regate lunghe con gli esperti**, né casi nuovi come l'81 e l'83 (Deriva).
 
 **Cosa vuol dire:** con la fisica di oggi le registrazioni non mostrano rivali lenti in bolina né incastrati nel vento sporco; il difetto misurato col pilota sulle regate corte della 1.2.24 (11 s persi negli ultimi 40 m) qui non si vede contro due giocatori veri. **Nessuna proposta nuova per ora**: la voce resta in lista per il giro finale. Per riprenderla servirebbero regate lunghe con gli **esperti** o una situazione segnata col tasto M.
+
+## 16. Misura base sulle regate lunghe, fisica di oggi (25 novembre 2026, notte; scritta prima di misurare, gioco invariato)
+
+Le diagnosi dei §§7-14 sono sulle regate corte della 1.2.24 e le registrazioni del §15 hanno solo principianti. Prima di una proposta nuova serve sapere **dove** perdono tempo oggi i rivali, principianti ed esperti, nelle regate lunghe vere.
+
+- **Strumento:** `tests/misura_rivali_lunghe.py`: la corsa di `misura_avversari_rotta.py` (tempo vero di ogni rivale su ogni lato contro la rotta ottimale partita da dove e quando lui ha cominciato), con le regate lunghe, pagina nuova per ogni regata. Gioco 1.3.55 senza modifiche (regola 18 e marcatura come nel gioco, 4B spenta). Il metro (la rotta ottimale) è un conto a posteriori che conosce raffiche e salti: il valore assoluto non è raggiungibile, si confrontano fra loro lati, livelli e pezzi.
+- **Semi:** 4501-4520, tre regate, due livelli (120 regate), Chromium; poi 4521-4540, mai guardati, per la conferma di qualunque ipotesi ne esca. **Nessuna soglia: è una diagnosi.**
+- **Prova prima (seme 4500, 6 regate, solo per vedere se lo strumento gira, non conta):** non dà errori, i rivali arrivano tutti.
