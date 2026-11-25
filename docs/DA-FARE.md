@@ -2,7 +2,7 @@
 
 **L'ordine lo decide Ale.** Una riga per voce; il dettaglio sta nella proposta o nell'osservazione indicata, e, per gli stati lunghi di prima del 17 novembre, in `archivio/DA-FARE-lunga-17nov.md`. Quando una voce è fatta si toglie (resta nel `CHANGELOG.md`; le chiuse sono in `archivio/DA-FARE-archivio-17nov.md`). Stato generale: `STATO.md`.
 
-**Regola di Ale (22 nov): in ordine di ciò che costerà meno lavoro dopo** (prima ciò su cui si tarano le altre voci). **Ordine di oggi:** (81 chiusa come limite noto, 4B accesa nella 1.3.56, 3 chiusa) → avversari 2 (usano la barca; la 2 aspetta registrazioni di Ale e Lucio sulla fisica completa, decisione del 10 nov: forse già bastano) → 74 storico dei rivali (comportamento dei rivali) → 49 regola 18 (fatta la versione A; resta B, rivali che danno spazio) → Coach: 69, 66 → medaglie e tempi per ultimi (7).
+**Regola di Ale (22 nov): in ordine di ciò che costerà meno lavoro dopo** (prima ciò su cui si tarano le altre voci). **Ordine di oggi:** (81 limite noto, riaperta solo per la ricerca con la 84, coi crediti; 4B accesa nella 1.3.56, 3 chiusa) → avversari 2 (usano la barca; la 2 aspetta registrazioni di Ale e Lucio sulla fisica completa, decisione del 10 nov: forse già bastano) → 74 storico dei rivali (comportamento dei rivali) → 49 regola 18 (fatta la versione A; resta B, rivali che danno spazio) → Coach: 69, 66 → medaglie e tempi per ultimi (7).
 
 **Regola di Ale (17 nov):** i «via» alle correzioni grosse si danno **tutti insieme quando i crediti sono ripristinati**, con questa lista. Con pochi crediti: solo testi, collaudi, proposte. Dal 9 novembre: le voci sugli avversari si misurano sulle regate del torneo; la Scuola basta che non peggiori (`DECISIONI.md`).
 
@@ -12,6 +12,7 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
+| 84 | **Sessione speciale sulla barca, «come un ILCA»** (idea di Ale, 25 nov): una giornata di ricerche e prove sul banco quando i crediti sono ripristinati; riapre la 81 solo per la ricerca, `js/` non si tocca. **Via di Ale alla ricerca, non al motore.** Se riesce va prima di 2 e 82 | `PROPOSTA-SESSIONE-BARCA.md` | Opus |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** versione A fatta nella 1.3.49 (colpa, semaforo, zona disegnata, lezione 25). **Versione B (rivali che danno spazio): proposta e misura fatte il 24 nov, consiglio «non ora»** (7 momenti utili in 90 regate), si decide con Z7 (`PROPOSTA-REGOLA-18-B.md`). Z7: rifare `conta_boa_zona.py` sulle prime regate di Ale e Lucio con la 18; dalla 1.3.56 (4B accesa) guardare anche i contatti entro 12,6 m dalla boa, col pilota 7 → 13, e `collaudo_avversari1b` scenario 5 (tre rivali alla boa: 9-10 → 7 su 10) | `PROPOSTA-REGOLA-18.md` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via
