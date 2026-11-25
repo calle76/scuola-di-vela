@@ -1,0 +1,43 @@
+
+senza18_chromium.jsonl: 200 tornei completi (4001-4200), 600 regate per configurazione, errori di pagina 0
+  M1        116 ->    61    -47.4%   [-59.3%, -33.6%]
+  M2         52 ->     3    -94.2%   [-98.6%, -87.3%]
+  M3        651 ->   646     -0.8%   [-7.0%, +5.6%]
+  pil       377 ->   373     -1.1%   [-8.4%, +6.9%]
+  fuori     302 ->   240    -20.5%   [-28.0%, -12.5%]
+  nonarr    593 ->   594     +0.2%   [-6.5%, +7.5%]
+  piant       0 ->     0         -   [-, -]
+  copd       76 ->    37    -51.3%   [-66.7%, -32.7%]
+  M4 arrivo mediano 582.5 -> 585.6 (+0.5%)
+  CRITERI del browser: M1 NO | M2 passa | M4 passa | piantati passa
+  soglie vecchie: M3 passa | fuori passa | non arrivati passa
+  principianti: M1 66->36, M3 349->364, pil 208->210, fuori 194->147, nonarr 385->369
+  esperti: M1 50->25, M3 302->282, pil 169->163, fuori 108->93, nonarr 208->225
+  contatti per regola: 10 151->154, 11 133->140, 13 108->99, 15 194->196, 16 51->49, 18 3->5, 21.1 7->2, 21.2 4->1
+  contatti per quando: dopo 109->103, prima del via 375->360, primi 60 s 167->183
+  contatti per vicino alla boa (12,6 m): False 646->637, True 5->9
+  contatti per colpa: pilota 191->212, rivale 460->434
+
+senza18_firefox.jsonl: 200 tornei completi (4201-4400), 600 regate per configurazione, errori di pagina 0
+  M1        105 ->    55    -47.6%   [-59.4%, -32.7%]
+  M2         56 ->     0   -100.0%   [-100.0%, -100.0%]
+  M3        654 ->   623     -4.7%   [-10.7%, +1.6%]
+  pil       385 ->   364     -5.5%   [-12.6%, +2.0%]
+  fuori     331 ->   253    -23.6%   [-30.4%, -16.2%]
+  nonarr    591 ->   544     -8.0%   [-15.1%, -0.3%]
+  piant       0 ->     0         -   [-, -]
+  copd       85 ->    48    -43.5%   [-58.6%, -24.6%]
+  M4 arrivo mediano 581.2 -> 584.7 (+0.6%)
+  CRITERI del browser: M1 NO | M2 passa | M4 passa | piantati passa
+  soglie vecchie: M3 passa | fuori passa | non arrivati passa
+  principianti: M1 62->32, M3 367->330, pil 200->178, fuori 225->176, nonarr 363->359
+  esperti: M1 43->23, M3 287->293, pil 185->186, fuori 106->77, nonarr 228->185
+  contatti per regola: 10 143->130, 11 148->156, 13 99->80, 15 204->199, 16 53->53, 18 2->0, 21.1 4->4, 21.2 1->1
+  contatti per quando: dopo 108->99, prima del via 373->339, primi 60 s 173->185
+  contatti per vicino alla boa (12,6 m): False 652->619, True 2->4
+  contatti per colpa: pilota 195->192, rivale 459->431
+
+INSIEME, 1200 regate per configurazione (criterio: 95% al massimo +10%)
+  N1 contatti in tutto   1305 -> 1269  -2.8%  [5% -6.9%, 95% +1.8%]  passa
+  N2 fuori linea         633 -> 493  -22.1%  [5% -27.3%, 95% -16.6%]  passa
+  N3 non arrivati        1184 -> 1138  -3.9%  [5% -8.8%, 95% +1.2%]  passa

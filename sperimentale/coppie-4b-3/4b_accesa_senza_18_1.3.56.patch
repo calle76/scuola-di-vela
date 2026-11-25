@@ -1,0 +1,55 @@
+diff --git a/js/gioco.js b/js/gioco.js
+index b94d738..e85dc33 100644
+--- a/js/gioco.js
++++ b/js/gioco.js
+@@ -13,7 +13,7 @@
+   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
+   let allowSem = [], allowTiller = false, allowSheet = false;
+   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
+-  const VERSIONE = "1.3.55"; // sola fonte: menu, mare e registratore la leggono da qui
++  const VERSIONE = "1.3.56"; // sola fonte: menu, mare e registratore la leggono da qui
+ 
+   function freshState(x, y, h, sheet){
+     const twa = norm180(env.twd - h);
+diff --git a/js/regate.js b/js/regate.js
+index 4555594..80e93bb 100644
+--- a/js/regate.js
++++ b/js/regate.js
+@@ -312,9 +312,10 @@
+   function cambiaBordo(b, ai){ b.side = -b.side; b.boardT = 0; b.boardMax = ai.boardMin + Math.random() * (ai.boardMax - ai.boardMin); b.rinvio = 0; } // scade il tempo del bordo: si vira, e si sorteggia la durata del prossimo
+   // 1.3.11 (docs/PROPOSTA-REGOLE-15-16.md, versione B; voce 4): nelle regate di Deriva, prima della virata a tempo il rivale prova la rotta dopo la virata
+   // con la stessa previsione con cui cede (passaggio, a velocità costante): con una barca a meno di RINVIO_D m rimanda di 1 s, al più RINVIO_MAX s in tutto.
+-  // Lo stesso prima di partire (mezzo secondo, mai oltre lo sparo). E i rivali decidono chi cede anche con le regole 15 e 16 (chiCede1516).
+-  // RINVIO_MAX da scegliere fra 4, 8 e 12 s sui semi 2201-2230 e confermare sui semi 2231-2260; RINVIO_D = 2 lunghezze: ipotesi nostre. MANOVRE = false: com'era
+-  let MANOVRE = false, RINVIO_MAX = 8; // 1.3.11: spenta, perché sui semi di scelta nessun RINVIO_MAX passa M5 (CHANGELOG 1.3.11); si accende solo nelle misure (__sv.manovre)
++  // Lo stesso prima di partire (mezzo secondo, mai oltre lo sparo). E i rivali decidono chi cede anche con le regole 15 e 16 (chiCede1516), ma solo dopo lo sparo:
++  // prima del via facevano uscire dalla linea più barche (docs/PROPOSTA-COPPIE.md §15, variante x4). RINVIO_MAX 4 s e RINVIO_D = 2 lunghezze: ipotesi nostre.
++  // Accesa nella 1.3.56 (via di Ale del 25 nov, misura del §16: passa tutto tranne M1 in Firefox). MANOVRE = false: com'era fino alla 1.3.55
++  let MANOVRE = true, RINVIO_MAX = 4;
+   const RINVIO_D = 2 * BOAT.length;
+   const guarda = () => MANOVRE && R.r1516;
+   function cambiaBordoGuarda(b, ai, twd, ang){ // ang: l'angolo dal vento del bordo nuovo (ai.up di bolina, l'angolo di poppa)
+@@ -528,7 +529,7 @@
+       bt = t; best = { o, d };
+     }
+     if (!best){ b.cedeA = null; b.rottaU = null; b.cedeDa = null; return desired; }
+-    const o = best.o, devo = (guarda() ? chiCede1516(b, o) : chiCede(b, o)).cede === b; b.cedeA = devo ? o : null; // 1.3.11: in Deriva anche le regole 15 e 16
++    const o = best.o, devo = (guarda() && R.t >= 0 ? chiCede1516(b, o, true) : chiCede(b, o)).cede === b; b.cedeA = devo ? o : null; // 1.3.11: in Deriva anche le regole 15 e 16; 1.3.56: solo dopo lo sparo
+     // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+     if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; }
+     if (b.cedeDa === null || b.cedeDa === undefined) b.cedeDa = R.t;
+@@ -807,11 +808,11 @@
+     }
+   }
+   function prua16(b){ const s = b.storiaH; if (!s || !s.length) return null; for (const [t, h] of s) if (R.t - t <= T15 + 1e-9) return h; return s[s.length - 1][1]; }
+-  // come chiCede, più le regole 15 e 16 nelle regate di Deriva; .base è la precedenza di base (10-13)
+-  function chiCede1516(A, B){
++  // come chiCede, più le regole 15 e 16 nelle regate di Deriva; .base è la precedenza di base (10-13). guida (1.3.56): le decisioni dei rivali, senza la regola 18 (versione B della voce 49, a parte)
++  function chiCede1516(A, B, guida){
+     const base = chiCede(A, B);
+     if (!R.r1516 || !(base.regola >= 10 && base.regola <= 13)) return base;
+-    const z = debito18(A, B); if (z) return { cede: z.deve, regola: 18, base, r183: z.r183 }; /* 1.3.49: regola 18 e 43.1(b), sopra le 10-16 */
++    const z = guida ? null : debito18(A, B); if (z) return { cede: z.deve, regola: 18, base, r183: z.r183 }; /* 1.3.49: regola 18 e 43.1(b), sopra le 10-16 */
+     const ha = base.cede === A ? B : A, altra = base.cede, i = R.boats.indexOf(A), j = R.boats.indexOf(B), p = R.prec[Math.min(i, j) + "-" + Math.max(i, j)];
+     if (p && p.ha === ha && R.t - p.t < T15){ return p.autore === ha ? { cede: ha, regola: 15, base } : base; }
+     const h0 = prua16(ha);

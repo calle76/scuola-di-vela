@@ -77,3 +77,9 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 42 | **Coach, terza mano:** la finestra di «altre barche» con una scuffia, perdita detta due volte | `PROPOSTA-COACH-2.md` §8; oss. 131 | **Fatto nella 1.3.52 (24 nov 2026)**, con in più la scuffia prima del via |
 | 41, 6 | **Chiudere la scheda a metà regata può non salvare il ritiro** (`collaudo_torneo` C11 in Firefox: 4, poi 1, poi 1 tornei su 40): causa nota, la simulazione alla chiusura dura troppo. **Fatta il 24 nov (1.3.53)** | `PROPOSTA-RITIRO-PROVVISORIO.md`; oss. 86 | Opus |
 | 81 | **Bolina e virata con poco vento** | `PROPOSTA-VELA-E-RAMPA-81.md`, `PROPOSTA-BOLINA-POCO-VENTO.md` | **Chiusa da Ale il 25 nov 2026 come limite noto**, motore invariato («sì, chiudila come limite noto») |
+
+## Chiusa il 25 novembre 2026 (Ale: «35 chiudi»)
+
+| # | Cosa | Dove | Mod. |
+| --- | --- | --- | --- |
+| 35 | **Messaggio «Contatto» coperto da un altro:** misurato il 25 nov sulle vostre registrazioni (`tests/misura_messaggi_coperti.py`, 44 file): i messaggi sulle colpe del giocatore (contatto, boa toccata, partenza anticipata) coperti prima di 2,6 s sono **0 su 9**; coperti 4 su 13 di «Contatto: penalità a …» (colpa del rivale), 1 entro 1 s, di solito da «Partenza!». Su GitHub la nota del collaudo compare 1 volta su 14 (Firefox, 22 nov), ma il collaudo conta i testi diversi: due contatti uguali di fila gli sembrano uno, quindi non prova una copertura. **Proposta: chiudere; decide Ale** | `CHANGELOG.md` 1.3.8 | Sonnet |

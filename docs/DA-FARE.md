@@ -13,7 +13,7 @@
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** versione A fatta nella 1.3.49 (colpa, semaforo, zona disegnata, lezione 25). **Versione B (rivali che danno spazio): proposta e misura fatte il 24 nov, consiglio «non ora»** (7 momenti utili in 90 regate), si decide con Z7 (`PROPOSTA-REGOLA-18-B.md`). Z7: rifare `conta_boa_zona.py` sulle prime regate di Ale e Lucio con la 18 | `PROPOSTA-REGOLA-18.md` | Opus |
-| 4B | **Rivali che virano e orzano addosso (versione B), variante x4:** terza misura fatta il 25 nov sulla 1.3.55 (2400 regate lunghe, due browser, criteri scritti prima): **passa tutto** (contatti in tutto −3%, fuori linea −22%, contatti al via −97%, non arrivati −3%) **tranne M1 in Firefox** (−44% contro −50%; −49% insieme). Spenta. **Decide Ale: accenderla dichiarando M1 non passato, o chiudere** | `PROPOSTA-COPPIE.md` §16; `sperimentale/coppie-4b-3/` | Opus |
+| 4B | **Rivali che virano e orzano addosso (versione B), variante x4:** terza misura fatta il 25 nov sulla 1.3.55 (2400 regate lunghe, due browser, criteri scritti prima): **passa tutto** (contatti in tutto −3%, fuori linea −22%, contatti al via −97%, non arrivati −3%) **tranne M1 in Firefox** (−44% contro −50%; −49% insieme). Spenta. Ale aveva detto sì (25 nov), ma la x4 misurata usava anche la regola 18 nella guida; senza la 18 M1 è −47% e −48% (non passa in nessun browser), il resto passa. **Decide Ale (§17)** | `PROPOSTA-COPPIE.md` §16-17; `sperimentale/coppie-4b-3/` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via
 
@@ -29,7 +29,6 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 35 | **Messaggio «Contatto» coperto da un altro:** misurato il 25 nov sulle vostre registrazioni (`tests/misura_messaggi_coperti.py`, 44 file): i messaggi sulle colpe del giocatore (contatto, boa toccata, partenza anticipata) coperti prima di 2,6 s sono **0 su 9**; coperti 4 su 13 di «Contatto: penalità a …» (colpa del rivale), 1 entro 1 s, di solito da «Partenza!». Su GitHub la nota del collaudo compare 1 volta su 14 (Firefox, 22 nov), ma il collaudo conta i testi diversi: due contatti uguali di fila gli sembrano uno, quindi non prova una copertura. **Proposta: chiudere; decide Ale** | `CHANGELOG.md` 1.3.8 | Sonnet |
 | 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa. Provato il 25 nov (Firefox 150): fra 74 forme di codice, quel testo esatto esce solo da `(a || b).t`, `(c ? a : b).t` e simili, e nel codice della 1.2.27 e di oggi non ce n'è nessuna (0 su 246 `.t` nella 1.2.27): causa ancora ignota | `CHANGELOG.md` 1.2.28 | — |
 | 8, 18 | **Suoni:** boa poco forte e sartiame in `collaudo_suoni_si_sentono` (il bordo si sposta fra un giro e l'altro). **Sartiame giudicato a orecchio da Ale il 23 nov: resta l'originale** (`DECISIONI.md`); dal 24 nov il collaudo la soglia la riporta e basta. Resta la boa | `CHANGELOG.md` 1.2.12 | Sonnet |
 

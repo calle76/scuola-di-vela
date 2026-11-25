@@ -369,3 +369,36 @@ Uscita intera in `sperimentale/coppie-4b-3/terza_x4_1.3.55.txt`, righe grezze ne
 - Coppie dopo il via 161 → 87. Contatti col pilota 762 → 737. Principianti ed esperti: i non arrivati si spostano in versi opposti nei due browser (esperti 208 → 231 in Chromium, 228 → 177 in Firefox): è rumore.
 - Contatti vicino alla boa (12,6 m): 7 → 14 in tutto, pochi casi ma raddoppiati; da guardare se si accende, perché tocca la regola 18.
 - **Decide Ale:** accenderla dichiarando M1 non passato in Firefox, o lasciarla spenta e chiudere. Il codice è già nel gioco, spento, più una riga (`variante_x4_1516_dopo_il_via_1.3.55.patch`).
+
+## 17. «4B sì» (Ale, 25 nov mattina) e un pezzo che la misura del §16 conteneva senza dirlo: la regola 18
+
+**Trovato accendendola, prima di chiudere la versione.** I rivali decidono chi cede con `chiCede1516`, che dalla 1.3.49 contiene anche la **regola 18** (`debito18`). Quindi la x4 del §16, misurata sulla 1.3.55, faceva usare ai rivali anche lo spazio alla boa: è un pezzo della versione B della voce 49, che Ale non ha approvato e che non gli era stato detto (errore mio: non avevo guardato cosa era entrato in `chiCede1516` dopo la 1.3.48). Il codice acceso è identico alla x4 misurata (12 regate su 12); togliendo la 18 dalla guida cambiano 11 regate su 33.
+
+**Cosa si accende, se la misura regge:** x4 con le sole regole 15-16 nelle decisioni dei rivali (`chiCede1516(b, o, true)` salta il debito della 18). Colpa al contatto e semaforo restano con la 18, come oggi.
+
+**Misura, scritta prima di guardarne i risultati:** stessi semi del §16, stessa base (le righe «off» già fatte), solo le 1200 regate della variante senza la 18. **Semi già guardati**, quindi non è una conferma indipendente: si controlla che togliere un pezzo non cambi il giudizio. Criteri e soglie del §16, non cambiati.
+- **Se passa tutto quello che passava la x4** (M1 in Firefox a parte, già dichiarato): si accende nella 1.3.56.
+- **Se peggiora un criterio che passava:** non si accende e decide Ale.
+- Si riportano anche i contatti entro 12,6 m dalla boa (x4: 7 → 14).
+
+### Esito del §17 (25 nov, 1200 regate, 0 errori di pagina): **M1 non passa in nessuno dei due browser, la 4B non si accende; decide Ale**
+
+Uscita in `sperimentale/coppie-4b-3/terza_x4_senza_18.txt`; picco 64 °C (Chromium) e 68 °C (Firefox).
+
+| | x4 con la 18 (§16) | x4 senza la 18 | criterio |
+| --- | --- | --- | --- |
+| M1 Chromium | 116 → 53 (−54%) | 116 → 61 (**−47%**) | −50% |
+| M1 Firefox | 105 → 59 (**−44%**) | 105 → 55 (**−48%**) | −50% |
+| M1 insieme | 221 → 112 (−49%) | 221 → 116 (**−48%**) | |
+| M2 insieme | 108 → 3 | 108 → 3 | −30%, passa |
+| N1 contatti in tutto | −3,3% (al 95% +1,2%) | −2,8% (al 95% +1,8%) | passa |
+| N2 fuori linea | −22% | −22% | passa |
+| N3 non arrivati | −3,0% (al 95% +2,1%) | −3,9% (al 95% +1,2%) | passa |
+| M4 arrivo mediano | +0,4% / +0,4% | +0,5% / +0,6% | passa |
+| soglie vecchie | non arrivati Chromium no | tutte sì | riportate |
+| contatti entro 12,6 m dalla boa | 7 → 14 | 7 → 13 | riportati |
+
+- M1 in Chromium, che passava, ora non passa: per la regola scritta nel §17 **non si accende**. Fra le due varianti M1 cambia di +8 in Chromium (ricampionando i tornei, 5-95%: +3 … +14) e di −4 in Firefox (−8 … 0): versi opposti, quindi l'effetto della 18 su M1 non è chiaro; insieme è −49% e −48%.
+- **La regola 18 nella guida non spiega i contatti vicino alla boa** (14 e 13): era un sospetto, non confermato.
+- M1 vale circa −48% in tutte e due le varianti: poco sotto la soglia, e non sembra che un'altra misura la cambierebbe. Non se ne rifanno.
+- **Scelta di Ale:** accendere la variante senza la 18 (quella descritta quando ha detto «4B sì») con M1 non passato in nessuno dei due browser; accendere quella con la 18 (M1 non passa solo in Firefox, ma è un pezzo della 49 B); o lasciarla spenta. Patch: `4b_accesa_senza_18_1.3.56.patch`.
