@@ -402,3 +402,5 @@ Uscita in `sperimentale/coppie-4b-3/terza_x4_senza_18.txt`; picco 64 °C (Chromi
 - **La regola 18 nella guida non spiega i contatti vicino alla boa** (14 e 13): era un sospetto, non confermato.
 - M1 vale circa −48% in tutte e due le varianti: poco sotto la soglia, e non sembra che un'altra misura la cambierebbe. Non se ne rifanno.
 - **Scelta di Ale:** accendere la variante senza la 18 (quella descritta quando ha detto «4B sì») con M1 non passato in nessuno dei due browser; accendere quella con la 18 (M1 non passa solo in Firefox, ma è un pezzo della 49 B); o lasciarla spenta. Patch: `4b_accesa_senza_18_1.3.56.patch`.
+
+**Scelta di Ale (25 nov: «ok come consigli»): accesa la variante senza la 18, nella 1.3.56**, con M1 non passato in nessuno dei due browser. Da riguardare: i contatti entro 12,6 m dalla boa (7 → 13), sulle prossime regate di Ale e Lucio (Z7 della voce 49).

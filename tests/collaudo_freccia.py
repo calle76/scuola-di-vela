@@ -120,7 +120,7 @@ async def main():
         # ---- F5: stessa regata col pilota, con e senza la freccia nuova ----
         tmp = tempfile.mkdtemp(); subprocess.run(f"git -C {ROOT} archive {RIF} index.html js | tar -x -C {tmp}", shell=True, check=True)
         VECCHIA = pathlib.Path(tmp, "index.html").as_uri() + "#collaudo"
-        CORSA = """async ([seme]) => { const sv = __sv, dt = 1 / 60; sv.fast(0); __seed(seme); sv.simTime = 0; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change'));
+        CORSA = """async ([seme]) => { const sv = __sv, dt = 1 / 60; sv.fast(0); if (sv.manovre) sv.manovre(false); /* 1.3.56: voce 4B, la guida cambia apposta */ __seed(seme); sv.simTime = 0; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change'));
           sv.openItem(['r', seme % 4]); __seed(seme); const R = sv.R; let k = 0; while (R.t < 150){ sv.pilota(dt); sv.run(dt, 1); if (k++ % 30 === 0) sv.draw(0.016); }
           return R.boats.map(b => [b.S.x, b.S.y, b.S.h, b.S.u, b.leg, b.fin].join(',')).join('|'); }"""
         uguali, n5 = 0, 0

@@ -75,7 +75,7 @@ async def torneo_r3(b, url, seme, attesa=0):
     firme = []; T = RV = None
     for k in range(4):
         ctx, pg, errs = await pagina(b, url=url)
-        await pg.evaluate("(m) => { if (__sv.marca) __sv.marca(m); }", R3_MARCA)   # dalla 1.3.50 l'ultima regata cambia apposta se un rivale marca: qui si misura solo lo storico (la marcatura la misura collaudo_marcatura.py)
+        await pg.evaluate("(m) => { if (__sv.marca) __sv.marca(m); if (__sv.manovre) __sv.manovre(false); }", R3_MARCA)   # dalla 1.3.50 l'ultima regata cambia apposta se un rivale marca: qui si misura solo lo storico (la marcatura la misura collaudo_marcatura.py)
         if k: await pg.evaluate("([T, RV]) => { __sv.fast(0); __sv.store = 'scuolaVelaSim.v1'; progress.torneo = T; progress.rivali = RV; __sv.torApri(); }", [T, RV])
         else: await apri(pg, seme)
         if attesa: await pg.wait_for_timeout(attesa)

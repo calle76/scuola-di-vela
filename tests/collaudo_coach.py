@@ -110,6 +110,7 @@ def vpol(twa, tws_ms):   # interpolazione bilineare sulla tabella, fatta qui
 async def regate(br, base, n):
     pg = await br.new_page(viewport={"width": 1360, "height": 650}); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     await pg.goto(base + "#collaudo"); await pg.wait_for_timeout(500)
+    await pg.evaluate("() => { if (__sv.manovre) __sv.manovre(false); }")   # 1.3.56: la guida dei rivali cambia apposta (voce 4B): K1 la confronta col riferimento a 4B spenta
     nk = 3 if LUNGO else 4   # con le regate lunghe il torneo ha 3 regate
     return pg, errs, [(k, s) for s in range(2601, 2601 + (n + nk - 1) // nk) for k in range(nk)][:n]
 
