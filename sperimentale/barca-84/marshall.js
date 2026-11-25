@@ -1,6 +1,6 @@
 // Voce 84: Marshall (ISBS): meno raddrizzata, quanta VMG si perde. Uso: node marshall.js
 const { motore } = require("./banco84.js"), KN = 1.943844, R = Math.PI / 180;
-const F = { vela: 1, a0: 2, w: 8, par: .105, AR: 6.1, b1: 40, b2: 60, gz: 1, dz: 0, k08: 32, flat: .9, hT: 3, tw: .186, k0: 7 / 7.92, cdn: 1.32, fg: .08, appDW: .0026, boat: { mass: 160, sailorMass: 80, hikeArm: .956, zCE: 3, sailArea: 7.92 } };
+const F = JSON.parse(require("fs").readFileSync(__dirname + "/candidato.json"))[1].P;
 for (const [n, P, m0] of [["oggi", {}, 75], ["candidato", F, 80]]) for (const kn of [10, 12, 14, 16]){ let r = [];
   for (const d of [0, 119, 178]){ const Q = JSON.parse(JSON.stringify(P)); Q.boat = Q.boat || {}; Q.boat.hikeArm = (Q.boat.hikeArm || 1) - d / (m0 * 9.81); const { step } = motore(Q); let b = null;
     for (let a = 38; a <= 56; a += 1) for (let sh = 0; sh <= .4; sh += .02){ const S = { x:0,y:0,h:0,u:1.5,vl:0,r:0 }; for (let t = 0; t < 40; t += .05){ S.h = 0; step(S, { sheet: sh, tiller: 0 }, { twd: a, tws: kn / KN }, .05); } if (Math.abs(S.heel) > 60) continue; const v = S.u * Math.cos(a * R) * KN; if (!b || v > b.v) b = { v, a, u: S.u * KN }; } r.push(b); }

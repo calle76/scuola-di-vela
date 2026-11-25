@@ -4,13 +4,13 @@
   Binns9 -15.5 -11.8 -13.2 -14.3 | Binns12 -2.3 -2.0 -1.4 -0.9 -0.1 | F121 -11 -12 -12 -5 | 3,2n 0.89 (-15.2%)
   virata imposta 3,2n -1.74 m (prima +0.28, min 59%)  11n -3.35 (prima +0.18; F109 -4,39) lascando: -3.92 (min 40%, senza lascare 44%; F109 51%)
   12n 90/110/135/180: 7.18 6.75 5.68 4.67 | poppa Day -10 -8 -9
-  virata freccia 6n 4.0s 55% (u 3.1, sb 5→9), 8n 3.3s 53% (u 3.9, sb 5→12), 10n 2.9s 50% (u 4.5, sb 5→18), 12n 2.7s 46% (u 5.1, sb 5→26), 14n 2.6s 42% (u 5.5, sb 11→30), 16n 2.9s 34% (u 5.3, sb 25→30)
-  raffica 10→16/18/20 senza/lascando 37/19  52/28  65/38 | fermo 0-15° max -0.86 -1.56 -2.21 | 6n a 20/25/30/35° -0.96 -0.31 0.70 1.60
-## CANDIDATO F
+  virata freccia 6n 4.0s 55% (u 3.1, sb 5→9), 8n 3.3s 53% (u 3.9, sb 5→12), 10n 2.9s 50% (u 4.5, sb 5→18), 12n 2.7s 46% (u 5.1, sb 5→26), 14n 2.6s 42% (u 5.5, sb 11→30), 16n 2.9s 34% (u 5.3, sb 25→30), 18n 3.7s 16% (u 5.1, sb 34→34), 20n MAI -54% (u 3.8, sb 59→59)
+  raffica 10→16/18/20 senza/lascando 37/19  52/28  65/38 | fermo 0-15° max -0.86 -1.56 -2.21 | ferma→2 nodi a 60°, 6/10 nodi 7.0/2.9 s | 6n a 20/25/30/35° -0.96 -0.31 0.70 1.60
+## CANDIDATO I (smorzamento 0,1; piatta e svergolata insieme, poi svergola fino a 1)
   B1 si  B2 NO  B3 si  B4 si  B5 si  B6 si  B7 NO  B7b si  vir16 si  raff18 si  morto si
-  Day 6n -1.0% (44°, sb 1°, fuori 49%)  10n -0.2% (41°, sb 4°, fuori 100%)  15n +1.5% (43°, sb 8°, fuori 100%) | 20n 3.55
-  Binns9 +0.7 -0.8 -3.6 -5.1 | Binns12 +0.2 -1.1 -1.1 -0.9 +0.1 | F121 +10 +6 +3 +2 | 3,2n 1.11 (+5.4%)
-  virata imposta 3,2n -1.11 m (prima +0.57, min 69%)  11n -1.45 (prima +0.53; F109 -4,39) lascando: -2.15 (min 49%, senza lascare 58%; F109 51%)
+  Day 6n -1.8% (45°, sb 1°, fuori 49%)  10n -0.6% (41°, sb 4°, fuori 100%)  15n -0.4% (44°, sb 4°, fuori 100%) | 20n 3.80
+  Binns9 +0.2 -1.1 -3.8 -5.2 | Binns12 -0.2 -1.3 -1.3 -1.0 -0.0 | F121 +8 +5 +3 +2 | 3,2n 1.09 (+3.6%)
+  virata imposta 3,2n -1.14 m (prima +0.57, min 69%)  11n -1.55 (prima +0.53; F109 -4,39) lascando: -2.23 (min 49%, senza lascare 57%; F109 51%)
   12n 90/110/135/180: 7.31 6.85 5.86 5.05 | poppa Day -3 -2 -2
-  virata freccia 6n 3.1s 70% (u 3.7, sb 1→9), 8n 2.6s 67% (u 4.5, sb 1→16), 10n 2.4s 65% (u 5.1, sb 4→21), 12n 2.3s 63% (u 5.2, sb 4→25), 14n 2.3s 60% (u 5.3, sb 4→30), 16n 2.3s 57% (u 5.5, sb 12→40)
-  raffica 10→16/18/20 senza/lascando 36/21  54/31  69/42 | fermo 0-15° max -0.34 -0.64 -0.84 | 6n a 20/25/30/35° 0.89 1.77 2.48 2.99
+  virata freccia 6n 3.1s 70% (u 3.7, sb 1→9), 8n 2.6s 67% (u 4.5, sb 1→16), 10n 2.4s 65% (u 5.0, sb 4→21), 12n 2.3s 62% (u 5.2, sb 4→25), 14n 2.3s 59% (u 5.3, sb 4→30), 16n 2.4s 54% (u 5.3, sb 4→37), 18n 2.7s 35% (u 5.1, sb 4→43), 20n 4.8s 2% (u 4.7, sb 4→42)
+  raffica 10→16/18/20 senza/lascando 31/20  44/28  56/37 | fermo 0-15° max -0.28 -0.40 -0.43 | ferma→2 nodi a 60°, 6/10 nodi 8.5/4.8 s | 6n a 20/25/30/35° 0.37 0.97 2.31 2.91

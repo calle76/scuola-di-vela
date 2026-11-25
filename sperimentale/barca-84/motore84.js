@@ -129,8 +129,8 @@ function tab84(T, x, c){ if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T
 const liscio84 = t => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
 const svergola84 = fl => V84.tw * (1 - fl) / (1 - V84.flMin);
 function forma84(h){ return Math.sign(h) * 9.81 * BOAT.mass * tab84(V84.gz, Math.abs(h), 1); }
-function vela84(al, A, lf, fl){ const V = V84, k0 = V.k0, t = liscio84((A - V.b1) / (V.b2 - V.b1)), r = Math.max(0, Math.min(1, (al - V.a0) / V.w)), be = Math.min(28, al + 9);
-  const cl1 = (al <= 19 ? tab84(V.orc, be, 1) : CL(al) * 1.347 / 1.35) * r * fl, tw = svergola84(fl);
+function vela84(al, A, lf, fl, tw){ const V = V84, k0 = V.k0, t = liscio84((A - V.b1) / (V.b2 - V.b1)), r = Math.max(0, Math.min(1, (al - V.a0) / V.w)), be = Math.min(28, al + 9);
+  const cl1 = (al <= 19 ? tab84(V.orc, be, 1) : CL(al) * 1.347 / 1.35) * r * fl;
   const cd1 = (al <= 19 ? tab84(V.orc, be, 2) : 0.033 + 1.15 * (Math.sin(al * D2R) ** 2 - Math.sin(19 * D2R) ** 2)) + V.par + cl1 * cl1 * ((1 + 8 * tw * tw) * V.ki + 0.005);
   const cd0 = CD(al) * k0 + (V.cdn - CD(90) * k0) * liscio84((al - 60) / 30), sb = al < 6 ? (V.fg + (0.2 * k0 - V.fg) * t) * (1 - al / 6) : 0;
   return [cl1 * (1 - t) + CL(al) * lf * k0 * t, cd1 * (1 - t) + cd0 * t + sb]; }
@@ -155,7 +155,7 @@ function step(S, C, E, dt){
   const ch = Math.cos((S.heel || 0) * D2R);
   const q = 0.5 * BOAT.rho * BOAT.sailArea * aws * aws * ch; // la vela inclinata prende meno vento
   const lf = Math.max(0, Math.min(1, (A - BOAT.luffA0) / BOAT.luffW)); // vento apparente troppo stretto: la vela si sgonfia (angolo morto)
-  if (S.flat === undefined) S.flat = 1; const [cl84, cd84] = vela84(alpha, A, lf, S.flat); const L = q * cl84, Dg = q * cd84; // vela che sbatte: più resistenza
+  if (S.flat === undefined) S.flat = 1; const [cl84, cd84] = vela84(alpha, A, lf, S.flat, S.tw84 || 0); const L = q * cl84, Dg = q * cd84; // vela che sbatte: più resistenza
   let push = null; // boma spinto (1b): forza e momento della vela a collo, nel riferimento della barca (x avanti, y a dritta)
   if (C.push){
     if (!S.pushSide) S.pushSide = S.boomSide;
@@ -177,7 +177,7 @@ function step(S, C, E, dt){
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   // 1.0.11: resistenza indotta, Delft (Day 2017, eq. 15) Ri = Fh² / (π·½ρ·V²·TE²), con u² + 0,4 come nello scarroccio: a bassa velocità la deriva non regge
   // la spinta laterale e la formula pura fermerebbe la barca (docs/archivio/PROPOSTA-BOLINA.md §3). TE costante: in Delft cala sbandando e cambia col Froude.
-  const Ri = BOAT.TE > 0 ? side * side * S.u * Math.abs(S.u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (S.u * S.u + 0.4) ** 2) : 0;
+  const Ri = BOAT.TE > 0 ? side * side * S.u * Math.abs(S.u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (S.u * S.u + 0.1) ** 2) : 0;
   S.u += (drive - res * heelDrag - Ri) / BOAT.mass * dt;
   // 1.0.8: nessun tetto all'indietro (docs/archivio/PROPOSTA-RETROMARCIA.md): vela che sbatte contro la resistenza della tabella, la stessa della marcia avanti
   // scarroccio: la deriva resiste molto, meno a bassa velocità
@@ -187,9 +187,13 @@ function step(S, C, E, dt){
   // sbandamento: momento sbandante della vela contro timoniere sporto fuori e forma dello scafo
   S.heel = S.heel || 0; S.heelRate = S.heelRate || 0; S.hike = S.hike === undefined ? 0.2 : S.hike;
   const phi = S.heel * D2R;
-  const mHeel = side * (BOAT.zCE - V84.zH * svergola84(S.flat)) * Math.cos(phi);
+  const mHeel = side * (BOAT.zCE - V84.zH * (S.tw84 || 0)) * Math.cos(phi);
   const rmMax = BOAT.sailorMass * 9.81 * BOAT.hikeArm;
-  const m84 = Math.max(1, Math.abs(side) / Math.max(0.3, ch) * (BOAT.zCE - V84.zH * svergola84(S.flat)) / S.flat), f84 = Math.max(V84.flMin, Math.min(1, (rmMax + V84.k08 + forma84(V84.hT)) / m84)); S.flat += (f84 - S.flat) * Math.min(1, dt / V84.flTau);
+  if (S.tw84 === undefined) S.tw84 = 0; /* vela piatta e svergolata col timoniere al limite (Day 2.3-2.4): insieme fino a 0,6 e 0,186, poi svergola ancora fino a 1 */
+  const pieno84 = Math.max(1, Math.abs(side) / Math.max(0.3, ch) / S.flat), av84 = rmMax + V84.k08 + forma84(V84.hT), tb84 = svergola84;
+  const f84 = Math.max(V84.flMin, Math.min(1, av84 / (pieno84 * (BOAT.zCE - V84.zH * tb84(S.flat)))));
+  const t84 = f84 > V84.flMin + 1e-9 ? tb84(f84) : Math.max(V84.tw, Math.min(1, (BOAT.zCE - av84 / (V84.flMin * pieno84)) / V84.zH));
+  const k84 = Math.min(1, dt / V84.flTau); S.flat += (f84 - S.flat) * k84; S.tw84 += (t84 - S.tw84) * k84;
   const hikeTarget = Math.max(0, Math.min(1, (mHeel - V84.k08) / rmMax)); // punta a tenere la barca quasi piatta
   S.hike += (hikeTarget - S.hike) * Math.min(1, dt / 0.9); // il timoniere reagisce con un certo ritardo
   const mRight = rmMax * S.hike * Math.cos(phi) + forma84(S.heel);

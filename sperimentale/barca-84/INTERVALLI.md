@@ -26,3 +26,5 @@
 ## Verifica alla cieca (scritta PRIMA del conto): Marshall, ISBS
 
 Laser in acqua, due velisti, di bolina: 119 N·m di raddrizzata in meno → −0,6 km/h (−0,32 nodi) e 2° più largo; 178 N·m in meno → −1,7 km/h (−0,92 nodi) e 6° più largo. Vento non detto. Attesa nostra: perdita di VMG della barca, con 12, 14 e 16 nodi, entro un fattore 2 da quella di Marshall (circa −9% e −26%, tenendo 5,2 nodi a 43°), nello stesso ordine (178 peggio di 119). Si fa anche con la barca di oggi.
+
+- **Dopo la ripresa della sessione (dichiarato, visto il risultato):** `reg` 0,1 al posto di 0,4 nella resistenza indotta (Day fig. 11, quota 10,5% a 5 nodi: 0,1 dà 11%, 0,2 dà 10%); svergolamento oltre 0,186 quando la vela piatta è già al minimo, fino a 1 (limite di Day §5); `dz` fra −0,1 e +0,1 (prima 0-0,15: F121 fig. 31, curva dei momenti, è più ripida della GZ usata qui). Versione «I» = vela piatta e svergolata insieme (0,186 al minimo), poi solo svergolata.

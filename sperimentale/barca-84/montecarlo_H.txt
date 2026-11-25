@@ -1,0 +1,8 @@
+170 combinazioni, criteri passati (%): B1 100  B2 14  B2senza60 88  B3 57  B4 100  B5 100  B6 63  B7b 92  vir16 74  raff18 95  vir18 44  morto 100
+tutti tranne B2: 26%; tutti con B2: 4%
+B1: 
+B2: par -0.38 mass -0.13 sailArea +0.32 
+B3: par -0.19 hT +0.17 zCE -0.26 sailorMass +0.27 
+B6: a0 -0.36 w -0.21 fg -0.15 
+raff18: par +0.17 dz -0.29 flat -0.44 hT -0.23 mass +0.15 zCE -0.23 sailArea -0.15 
+freno: 9 pause, picco 65 °C, uscita 0
