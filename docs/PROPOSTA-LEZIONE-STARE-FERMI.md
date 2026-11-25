@@ -92,3 +92,7 @@ Prova con un pilota che usa solo i tasti della scotta, alla velocità dei tasti 
 ## 8. Costo
 
 Circa mezza giornata: testi, i due esercizi, il pilota per F1-F3 e il collaudo delle lezioni.
+
+## Esito (1.3.58, 25 novembre 2026, Opus): fatte A e B
+
+Via di Ale del 25 nov. Barca rimisurata prima: numeri identici al §2. Passano F1-F5 (numeri in `CHANGELOG.md` 1.3.58). Diverso dal testo del §3: un paragrafo invece di due (pannello), strumenti ridotti, suggerimento che dice da che parte va la barca. **Punto debole:** a 50°-55° l'esercizio si supera senza toccare la scotta; F2 era scritto a 45°. L'articolo di *Sailing World* (§6) resta non letto.

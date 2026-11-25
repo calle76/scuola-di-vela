@@ -19,6 +19,7 @@ SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let 
 # (2 nov 2026: la prima stesura andava di bolina per tutto il minuto, finiva a 130 m di lato e tornando il pilota si incastrava nel comitato: 1 su 3 nei semi 1-3)
 # «boa» punta la boa finché non la tocca, si allontana 4 s al traverso e gira con la barra tutta da una parte; «tocca» punta la boa, la tocca e poi va col pilota
 # 1.2.2, gruppo C: «tardi» come il pilota fino a 15 s dal via, poi vela tutta lascata e barra al centro fino al via, poi il pilota (in C1 parte da fermo);
+# «scotta» (1.3.58, lezione 19: si comincia 30 s prima a 45°): coi soli tasti W e S, reazione 0,15-0,4 s e colpi 0,08-0,3 s dal seme, legge la velocità al decimo di nodo; dal via il pilota.
 # «fermo» non tocca niente fino al via, poi il pilota; «presto» da 8 s prima del via tiene la prua che ha e cazza (scotta automatica), dal via il pilota
 CORSA = """async ([li, pil, seme]) => {
   const sv = __sv, dt = 1 / 60, n180 = a => ((a % 360) + 540) % 360 - 180, $ = id => document.getElementById(id);
@@ -31,7 +32,8 @@ CORSA = """async ([li, pil, seme]) => {
   const inEs = { mode: sv.mode, es: !!es, obj: $("rObj").textContent, objVis: !$("rObj").hidden, lez: !$("rLez").hidden, vento: $("rWind").hidden, opz: $("bRaceOpts").hidden };
   const tieni = want => { const S = sv.S; sv.ctl.tiller = Math.max(-1, Math.min(1, n180(S.h - want) / 20 + S.r * 0.02)) * (S.u < 0 ? -1 : 1); sv.ctl.sheet = sv.autoSheet(); };
   let lato = Math.sign(n180(sv.S.h - R.mark.out)) || 1;   // le mure di partenza: si resta su queste
-  let fase = 0, tF = 0, via = false, h8 = null;
+  let fase = 0, tF = 0, via = false, h8 = null, sRnd = seme * 7919 + 1, tOff = -1e9, tSta = 0; const rndG = () => { sRnd = (sRnd * 1664525 + 1013904223) >>> 0; return sRnd / 4294967296; }, rtG = 0.15 + rndG() * 0.25;
+  const tastoG = (t, kk) => dispatchEvent(new KeyboardEvent(t, { key: kk }));
   const tMax = (def.cd || 0) + 240;
   for (let k = 0; k < 60 * (tMax + 40) && sv.mode === "race"; k++){
     const S = sv.S;
@@ -48,8 +50,10 @@ CORSA = """async ([li, pil, seme]) => {
       else if (pil === "layline" && fase === 2 && me.leg < 2) tieni(Math.atan2(R.mark.x - S.x, -(R.mark.y - S.y)) * 180 / Math.PI - lato * (d > 12 ? 75 : 90));   // gira attorno alla boa tenendola al traverso (15 nov: col pilota degli avversari a 20 m, 3 semi su 10 viravano di nuovo, voce 1b)
       else sv.pilota(dt); }
     else if (pil === "tardi"){ if (R.t < -15 || R.t >= 0) sv.pilota(dt); else { sv.ctl.sheet = 1; sv.ctl.tiller = 0; } }
+    else if (pil === "scotta"){ if (R.t >= 0){ if (tOff > -1e8){ tastoG("keyup", "w"); tastoG("keyup", "s"); tOff = -1e9; } sv.pilota(dt); }
+      else { const v = Math.round(S.u * KN * 10) / 10; if (k >= tSta){ if (v){ const kk = v < 0 ? "w" : "s"; tastoG("keydown", kk); tOff = k + Math.round((0.08 + rndG() * 0.22) * 60); tSta = tOff + Math.round(rtG * 60); } else tSta = k + Math.round(rtG * 60); } if (tOff > -1e8 && k >= tOff){ tastoG("keyup", "w"); tastoG("keyup", "s"); tOff = -1e9; } } }
     else if (pil === "fermo"){ if (R.t >= 0) sv.pilota(dt); }
-    else if (pil === "presto"){ if (R.t >= 0) sv.pilota(dt); else if (R.t >= -8){ if (h8 === null) h8 = sv.S.h; tieni(h8); } }
+    else if (pil === "presto"){ if (R.t >= 0) sv.pilota(dt); else if (def.cerchio && R.t < -8){ S.u < 0 ? ctl.sheet = Math.max(0, ctl.sheet - .27 * dt) : S.u > 0 && (ctl.sheet = Math.min(1, ctl.sheet + .27 * dt)); } else if (R.t >= -8){ if (h8 === null) h8 = sv.S.h; tieni(h8); } }
     else if (pil === "boa" || pil === "tocca"){
       if (fase === 0){ tieni(Math.atan2(R.mark.x - S.x, -(R.mark.y - S.y)) * 180 / Math.PI); if (R.need >= 1){ fase = 1; tF = R.t; } }
       else if (pil === "tocca") sv.pilota(dt);
@@ -87,7 +91,7 @@ async def pagina(b, hash_="#collaudo"):
     await pg.goto((ROOT / "index.html").as_uri() + hash_); await pg.wait_for_timeout(300)
     return ctx, pg, errs
 LEZ = {"D5": 15, "D6": 16, "D7": 17, "C1": 18, "C2": 19, "E22": 21, "E23": 22}   # 1.3.1: lezioni 22 e 23 di Deriva
-BUONO = {"D5": "pilota", "D6": "anticipo", "D7": "boa", "C1": "pilota", "C2": "fermo", "E22": "segna", "E23": "layline"}
+BUONO = {"D5": "pilota", "D6": "anticipo", "D7": "boa", "C1": "pilota", "C2": "scotta", "E22": "segna", "E23": "layline"}
 SBAGLIA = {"D5": "anticipo", "D6": "resta", "D7": "tocca", "C1": "tardi", "C2": "presto", "E22": "nosegna", "E23": "zigzag"}
 async def main():
     a = sys.argv[1:]

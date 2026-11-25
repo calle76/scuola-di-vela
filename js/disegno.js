@@ -71,6 +71,11 @@
       const a = norm180(local.twd - S.h), orza = Math.sign(a) === Math.sign(S.r);
       cls = "good"; msg = orza ? "Stai orzando: la prua va verso il vento." : "Stai poggiando: la prua si allontana dal vento.";
     }
+    if (cerchioOn() && !S.capsized){ // 1.3.58 (voce 27): stare fermi, si legge da che parte va la barca
+      const kn = S.u * KN; back = false;
+      [cls, msg] = !inCerchio(S) ? ["bad", "Sei uscito dal cerchio: premi Ricomincia."] : kn > 0.3 ? ["bad", "Vai avanti: lasca un poco."] : kn < -0.3 ? ["bad", "Vai indietro: cazza un poco."]
+        : ["good", "Fermo" + (mode === "lesson" ? " da " + Math.floor(holdT) + " s su " + FERMI_S : "") + ": continua così."];
+    }
     if (mode === "lesson" && kind === "none" && !S.capsized && !(back && st.tiller)) { $("hint").hidden = true; }
     else if (mode === "lesson" && !st.pause && st.hud) $("hint").hidden = false;
     // 1.0.2: a passo completato il suggerimento ripete quello che dice il testo di fine passo, e a 1360x650 il pannello non ci sta:
@@ -154,6 +159,7 @@
   function localToWorld(lx, ly){ const h = S.h * D2R, c = Math.cos(h), s = Math.sin(h); return [S.x + lx * c - ly * s, S.y + lx * s + ly * c]; }
 
   // ---- quadro principale ----
+  const cerchioOn = () => !!S.cerchio && (mode === "lesson" ? !stepDone : mode === "race" && !!R && !!R.es && R.t < 0); // 1.3.58: il cerchio di «Stare fermi»
   function draw(dt){
     const st = curStep();
     camZoom += ((st && st.zoom ? st.zoom : 1) * userZoom - camZoom) * Math.min(1, dt * 3);
@@ -243,6 +249,7 @@
       else if (active && mode !== "free"){ ctx.strokeStyle = "rgba(255,226,122,.8)"; ctx.lineWidth = 0.15; ctx.setLineDash([0.8, 0.8]); ctx.beginPath(); ctx.arc(m.x, m.y, 12, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
       ctx.strokeStyle = "rgba(255,255,255,.5)"; ctx.lineWidth = 0.08; ctx.beginPath(); ctx.arc(m.x, m.y, 1 + 0.15 * Math.sin(simTime * 2), 0, Math.PI * 2); ctx.stroke();
     });
+    if (cerchioOn()){ ctx.strokeStyle = "rgba(255,226,122,.9)"; ctx.lineWidth = Math.max(0.15, 1.5 / v.ppm); ctx.setLineDash([0.8, 0.8]); ctx.beginPath(); ctx.arc(S.cerchio.x, S.cerchio.y, S.cerchio.r, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
     if (mode === "race"){ drawRaceWorld(v); rotDisegna(v); layDisegna(v); } // 1.2.23: le layline in acqua (js/rotta.js) // 1.2.22: la rotta ottimale, solo a moviola aperta da «Rotta ottimale»
     drawGhost();
     if (mode === "lesson" && st) scenaBarche(st).forEach(b => drawOther(b.S, { alpha: 17, awa: -b.S.boomSide * 40 }, 0, 1)); // 1.1.9: barche di scena (lezioni D), ferme o in movimento (1.2.0)

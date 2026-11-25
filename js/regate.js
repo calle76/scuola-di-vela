@@ -204,6 +204,7 @@
     if (es && es.def.linea){ const [dx, dy, a] = es.def.linea; spots[0] = { x: dx, y: dy, s: Math.sign(a), a: Math.abs(a) }; } // 1.2.2: si parte dietro la linea, in un punto dato
     const [px, py] = fromWF(spots[0].x, spots[0].y);
     freshState(px, py, norm360(env.twd + spots[0].s * (spots[0].a || 90)), 0.35);
+    S.cerchio = es && es.def.cerchio ? { x: px, y: py, r: es.def.cerchio } : null; /* 1.3.58 (voce 27) */
     if (es && es.def.linea){ S.u = es.def.linea[3]; ctl.sheet = 1; info = step(S, ctl, local, 0); } // 1.2.2 (C2): ferma, con la vela tutta lascata che sbatte
     setGusts(rc.gusts, !!rc.tor, !!rc.lungo);
     if (rc.shifts) setShifts(Math.random() < 1 / 3 ? "pers" : "osc"); // un salto persistente una regata su tre
@@ -1401,11 +1402,11 @@
     $("rRule").hidden = !R.lastRule; $("rRule").textContent = R.lastRule || "";
     finShow();
   }
-  // 1.2.41: una riga che non sta in una riga (nome intero del rivale, arrivo, penalità e distacco) scende di uno o due gradini di carattere invece di andare a capo (scelta di Ale, 15 nov 2026; collaudo_distacchi_testo D3)
+  // 1.2.41: una riga che non sta in una riga (nome intero del rivale, arrivo, penalità e distacco) scende di uno, due o (1.3.58) tre gradini di carattere invece di andare a capo (scelta di Ale, 15 nov 2026; collaudo_distacchi_testo D3)
   function stringi(ol){
     if (ol.hidden || !ol.offsetParent) return;
     ol.style.whiteSpace = "nowrap"; const rg = document.createRange();   // larghezza del testo con un Range: in Firefox scrollWidth del <li> non vede il testo che esce
-    for (const li of ol.children) for (const c of ["", "s1", "s2"]){ li.className = li.className.replace(/ ?s[12]\b/g, "") + (c ? " " + c : ""); rg.selectNodeContents(li); if (rg.getBoundingClientRect().width <= li.clientWidth) break; }
+    for (const li of ol.children) for (const c of ["", "s1", "s2", "s3"]){ li.className = li.className.replace(/ ?s[123]\b/g, "") + (c ? " " + c : ""); rg.selectNodeContents(li); if (rg.getBoundingClientRect().width <= li.clientWidth) break; }
     ol.style.whiteSpace = "";
   }
   // ---- schermata finale (1.0.36, docs/archivio/PROPOSTA-SCHERMATA-FINALE.md) ----

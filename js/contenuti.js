@@ -549,8 +549,12 @@
   // Fonti: F25 (aspettare quasi fermi vicino alla linea con la vela che sbatte, poi accelerare per essere a piena velocità allo zero), F27 (l'attesa appena sotto la bolina;
   //   la parte sull'accelerazione non è letta: il testo non la usa), F15 26 e 29.1 (già nelle D5-D6). Ale, 17 ottobre 2026: in questa classe di barche si parte da fermi,
   //   quasi fermi e poi accelerando, non lanciati da lontano. Ipotesi nostre: C1 entro 5 s dal via a più di 3,5 nodi (soglie della proposta, scritte prima);
-  //   C2 ferma 12 m dietro il centro della linea a 60° dal vento, 10 s di preparazione, «ferma» = sotto 1 nodo al via, limite di tempo ES_C2 (scelto col pilota sui semi 1-20).
+  //   C2 ferma 12 m dietro il centro della linea a 45° dal vento (60° fino alla 1.3.57), 30 s di preparazione (10 s), «ferma» = sotto 1 nodo al via, limite di tempo ES_C2 (scelto col pilota sui semi 1-20).
   const ES_C2 = 25; // s dal via per tagliare la linea partendo da fermi; ipotesi nostra, regola scritta prima: il massimo del pilota sui semi 1-20 (16,0 s), arrotondato ai 5 s superiori, più 5 s
+  // 1.3.58 (voce 27, docs/PROPOSTA-LEZIONE-STARE-FERMI.md): stare fermi prima del via. Fonti: F25, F27, F87 (cazzare un poco se la barca va indietro: una fonte sola, scelta dichiarata).
+  //   Ipotesi nostre: 30 s, cerchio di 8 m, «fermo» = sotto 1 nodo, prua a 45° all'inizio.
+  const FERMI_S = 30, FERMI_R = 8, FERMI_KN = 1;
+  const inCerchio = S => Math.hypot(S.x - S.cerchio.x, S.y - S.cerchio.y) <= S.cerchio.r;
   const nodi = v => v.toFixed(1).replace(".", ",");
   function esTaglio(R, me, es){ // al via: anticipo e velocità; al taglio della linea: quando e a che velocità
     if (R.t >= 0 && es.ocs0 === undefined){ es.ocs0 = me.ocs; es.v0 = me.S.u * KN; }
@@ -561,7 +565,12 @@
     { title: "Aspettare vicino alla linea", ...PAUSE, zoom: 2,
       text: ["In una partenza vince chi taglia la linea subito dopo il via e già veloce. Con barche piccole e leggere come questa non si arriva lanciati da lontano: si aspetta <em>vicino alla linea</em>, quasi fermi con la vela lascata che sbatte (in questo gioco, una o due lunghezze dietro).",
              "Si aspetta con la prua appena sotto la bolina: da lì basta cazzare per partire, senza dover prima poggiare.",
-             "Da fermi la barca non va alla linea: si può aspettare il momento giusto."] },
+             "Così si può aspettare il momento giusto. Ma la barca lasciata a sé non resta ferma da sola: il prossimo passo insegna a tenerla."] },
+    { title: "Stare fermi", startFermo: 45, cerchio: FERMI_R, tiller: true, sheet: true, hud: 2,
+      text: ["Lasciata a sé, la barca va indietro e sottovento. Se vai indietro <em>cazza</em> un poco (W), se vai avanti <em>lasca</em> (S): di poco e spesso, prua appena sotto la bolina. Un po' di scarroccio resta.",
+             "Resta nel cerchio " + FERMI_S + " secondi, sotto " + FERMI_KN + " nodo. Se esci, premi Ricomincia."],
+      cond: (I, S) => !S.capsized && Math.abs(I.kn) <= FERMI_KN && inCerchio(S), hold: FERMI_S,
+      done: "Sai tenere la barca ferma con piccoli colpi di scotta." },
     { title: "Cazzare al momento giusto", ...PAUSE, zoom: 2,
       text: ["Negli ultimi secondi si cazza e la barca accelera. Se cazzi troppo presto arrivi alla linea prima del via e sei in anticipo: sale la X e devi tornare (regola 29.1). Se cazzi troppo tardi, al via sei ancora lento e le altre ti passano davanti.",
              "Il momento giusto dipende da quanto sei lontano dalla linea e da quanto vento c'è: si impara provando, guardando il conto alla rovescia."] },
@@ -579,7 +588,7 @@
              "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
       done: "Partenza buona: al via eri vicino alla linea e già veloce." },
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
-      text: ["Aspetta quasi fermo vicino alla linea (in questo gioco, una o due lunghezze dietro), con la prua appena sotto la bolina. Cazza negli ultimi secondi, per tagliare la linea subito dopo il via e già veloce, senza anticipo."] }
+      text: ["Aspetta quasi fermo vicino alla linea (in questo gioco, una o due lunghezze dietro), con la prua appena sotto la bolina. Per restare fermo gioca con la scotta: cazza un poco se vai indietro, lasca se vai avanti. Cazza negli ultimi secondi, per tagliare la linea subito dopo il via e già veloce, senza anticipo."] }
   ];
   const LC2 = [
     { title: "Partire da fermi", ...PAUSE, zoom: 2,
@@ -589,20 +598,22 @@
       text: ["Da fermo, con la prua appena sotto la bolina, cazza la vela finché i filetti sono dritti e tieni la barca piatta. Quando la barca ha preso velocità, porta la prua in bolina e vai alla linea.",
              "Se la prua è troppo vicina al vento, la vela non porta e la barca non parte: poggia un poco prima di cazzare."] },
     { title: "Parti da fermo", ...PAUSE, zoom: 2,
-      esercizio: { regata: 0, cd: 10, linea: [0, 12, 60, 0], avversari: "nessuno",
-        obiettivo: "Fermo fino al via, poi taglia la linea entro " + ES_C2 + " s",
-        brief: "Esercizio della lezione 19. Sei fermo dodici metri dietro la linea, con la vela tutta lascata, e mancano dieci secondi al via. Resta fermo fino al via: non cazzare prima. Al via cazza e parti, e taglia la linea fra la barca giuria e la boa arancione entro " + ES_C2 + " secondi. Alla fine vedi quanti secondi ti sono serviti. È un esercizio: non si salva niente.",
-        fatto: (R, me, es) => !!es.taglio && !es.ocs0 && es.v0 <= 1,
+      esercizio: { regata: 0, cd: 30, linea: [0, 12, 45, 0], cerchio: FERMI_R, avversari: "nessuno",
+        obiettivo: "Fermo nel cerchio fino al via, poi taglia la linea entro " + ES_C2 + " s",
+        brief: "Esercizio della lezione 19. Sei fermo dodici metri dietro la linea, con la vela tutta lascata, e mancano trenta secondi al via. Tieni la barca ferma fino al via, dentro il cerchio e sotto 1 nodo, giocando con la scotta come nella lezione 18. Al via cazza e parti, e taglia la linea fra la barca giuria e la boa arancione entro " + ES_C2 + " secondi. Alla fine vedi quanti secondi ti sono serviti. È un esercizio: non si salva niente.",
+        fatto: (R, me, es) => !!es.taglio && !es.ocs0 && Math.abs(es.v0) <= FERMI_KN,
         fallito: (R, me, es) => { esTaglio(R, me, es);
-          if (es.v0 > 1) return "Al via andavi già a " + nodi(es.v0) + " nodi: qui si parte da fermi.";
+          if (R.t < 0 && !inCerchio(me.S)) return "Sei uscito dal cerchio prima del via.";
+          if (R.t < 0 && Math.abs(me.S.u * KN) > FERMI_KN) return "Prima del via hai superato 1 nodo: qui si aspetta fermi.";
+          if (Math.abs(es.v0) > FERMI_KN) return "Al via andavi già a " + nodi(Math.abs(es.v0)) + " nodi: qui si parte da fermi.";
           if (es.ocs0) return "Al via eri oltre la linea: partenza anticipata.";
           return R.t > ES_C2 && !es.taglio ? "Sono passati " + ES_C2 + " secondi dal via e non hai tagliato la linea." : ""; },
         misura: esMisura },
-      text: ["Ora prova. Apri l'esercizio: sei fermo dietro la linea con la vela lascata. Resta fermo fino al via, poi cazza, prendi velocità e taglia la linea entro " + ES_C2 + " secondi.",
+      text: ["Ora prova. Apri l'esercizio: sei fermo dietro la linea con la vela lascata, e mancano trenta secondi. Tieni la barca ferma nel cerchio fino al via, giocando con la scotta, poi cazza, prendi velocità e taglia la linea entro " + ES_C2 + " secondi.",
              "L'esercizio non salva niente. Raggiunto l'obiettivo, torni qui."],
       done: "Partito da fermo: hai visto quanti secondi servono per prendere velocità." },
     { title: "Riepilogo", ...PAUSE, zoom: 2, final: true,
-      text: ["Da fermo servono alcuni secondi e qualche metro per prendere velocità. Prua appena sotto la bolina, cazza, barca piatta; quando la barca va, porta la prua in bolina."] }
+      text: ["Fino al via tieni la barca ferma giocando con la scotta. Da fermo servono alcuni secondi e qualche metro per prendere velocità. Prua appena sotto la bolina, cazza, barca piatta; quando la barca va, porta la prua in bolina."] }
   ];
 
   // ---- Deriva (1.3.1, docs/PROPOSTA-DERIVA-CIRCUITI.md): lezioni 21-23, fuori da meriti, esame e «di 25 completate» della Scuola (livello: "deriva") ----

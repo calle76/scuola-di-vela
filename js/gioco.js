@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.57"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.58"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -641,6 +641,8 @@
     S.scenaMob = st.scenaMobile ? st.scenaMobile.map(b => ({ x: S.x + b.x, y: S.y + b.y, h: b.h, h0: b.h, u: b.u, orza: b.orza, t: 0, col: b.col, label: b.label })) : null;
     // 1.1.5: la barca parte ferma nell'angolo morto, con la prua a 10° dal vento e la vela tutta lascata (lezione B2, spingere il boma)
     if (st.startIrons){ Object.assign(S, { h: norm360(env.twd + (S.boomSide < 0 ? 10 : -10)), u: 0, vl: 0, r: 0, heel: 0, heelRate: 0, capsized: false }); ctl.sheet = 1; ctl.tiller = 0; }
+    if (st.startFermo){ freshState(0, 0, norm360(env.twd - st.startFermo), 1); S.u = 0; } // 1.3.58 (voce 27): ferma a startFermo gradi dal vento, vela tutta lascata
+    S.cerchio = st.cerchio ? { x: S.x, y: S.y, r: st.cerchio } : null; // 1.3.58: il limite dell'esercizio «Stare fermi», disegnato in acqua
     if (st.shifts) setShifts(st.shifts); // 1.1.8: salti di vento nel passo (lezione B5); freshState li spegne
     if (st.startCapsized && !S.capsized){ Object.assign(S, { capsized: true, indietro: 0, capCause: "heel", capSide: S.boomSide, u: 0, vl: 0, r: 0, heel: 90, heelRate: 0, righting: 0 }); }
     base = { tacks: S.tacks, gybesV: S.gybesV, gybesC: S.gybesC, capsizes: S.capsizes, cap0: S.capsized, gapMin: 1e9, gapVirata: 1e9 };
