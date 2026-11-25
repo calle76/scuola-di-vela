@@ -65,7 +65,7 @@ Ogni parametro estratto dentro il suo intervallo. Criteri passati: **B1 100%, B4
 
 ### Cosa era sbagliato (con la fonte)
 
-1. **La vela spingeva il 12% meno.** I coefficienti ORC di Day valgono per la tela intera (circa 7,92 m²); il gioco li applica a 7,0. Controllo doppio: formula ORC sulle larghezze del disegno di classe (F119 pag. 35) = 7,92; Day corregge Flay ×1,125 dal triangolo (7,03) = 7,91. Incertezze: larghezze massime di classe, testa a occhio, manica dell'albero (forse 7,7: compresa nell'intervallo del Monte Carlo).
+1. **La vela spingeva il 12% meno.** I coefficienti ORC di Day valgono per la tela intera (circa 7,92 m²); il gioco li applica a 7,0. Formula ORC sulle larghezze del disegno di classe (F119 pag. 35) = 7,92. **Correzione (25 nov, sera, letto Flay in originale):** avevo scritto «controllo doppio» con Day, che corregge Flay ×1,125. Non è un controllo indipendente: il modello di Flay ha un triangolo di 0,1642 m² in scala 1/6, cioè **5,91 m², non 7,03** (inferitura 5,48, base 2,16: un'altra vela). Il rapporto 1,125 coincide con 7,92/7,03, ma non so su quale vela Day l'abbia calcolato; **quindi l'area 7,92 ha una fonte sola**, e il paragone «10,8 m² di portanza in galleria» detto in sessione era sbagliato (con 5,91 fa circa 9). Incertezze: larghezze massime di classe, testa a occhio, manica dell'albero (forse 7,7: compresa nell'intervallo del Monte Carlo).
 2. **La curva della vela:** tabella ORC «low lift» (Day tab. 1) letta all'incidenza + 9°, e resistenza scomposta come Day fig. 12 (scafo, albero e timoniere 0,105).
 3. **Il peso:** lo scafo è in vasca a 160 kg, la barca pesava 135 (Day: 79,5 la barca armata, 80 il timoniere).
 4. **La stabilità:** F121 fig. 31, braccio raddrizzante 0,145 m a 9° (190-230 N·m); il gioco 62.
