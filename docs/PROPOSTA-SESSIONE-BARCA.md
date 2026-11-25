@@ -38,67 +38,75 @@ B1 Day 6 nodi −5%; B2 Binns 9 nodi ±5%; B3 Binns 12 nodi ±3%; B4 Day 15 nodi
 
 Lezioni (angolo morto, raffica, scuffia), rivali, tempi, medaglie, record e stagione da rimisurare (record e medaglie azzerabili); lavoro di Opus in più sessioni. Per questo, se si fa, va **prima** della 2 e della scala dei rivali (82), che si tarano sulla barca. Le regate di Ale e Lucio per la 2 e Z7 restano utili, ma con la barca nuova i tempi andrebbero rifatti.
 
-## Esito della sessione (25 novembre 2026, `js/` non toccato)
+## Esito della sessione (25-26 novembre 2026, `js/` non toccato)
 
-**In breve:** il candidato (versione I) porta la bolina sulle fonti e toglie il nodo della virata a 16 nodi col braccio vero (3,0 m). **Non passa tutto:** B2 per 0,2 punti e solo a 60°; B8 perché restano otto numeri d'ipotesi. Per la regola scritta sopra la sessione «non passa»; decide Ale. La prima chiusura (20 minuti) era incompleta: questa è la versione dopo la ripresa, e **corregge due cose dette prima** (la virata «troppo facile» e lo svergolamento, sotto).
+Tre giri di lavoro: il primo chiuso troppo presto (20 minuti), il secondo (versione I), il terzo dopo Flay e Taylor scaricati da Ale (versione **J**, questa). **Le fonti nuove hanno ridimensionato la versione I:** l'area 7,92 era una scelta spinta e la sua «conferma doppia» non era indipendente. J usa i **valori centrali degli intervalli delle fonti**, fissati senza guardare i criteri: area 7,5 m², braccio velico 2,8 m, braccio del timoniere 0,90 m. **Non passa tutto: B2 e B8.** Decide Ale.
 
-| Criterio | Soglia | Oggi | Candidato I | |
+| Criterio | Soglia | Oggi | J | |
 |---|---|---|---|---|
-| B1 Day 6 nodi (VMG) | ±5% | −15,7% | **−1,8%** | passa |
-| B2 Binns 9 nodi, 42 / 46,5 / 55 / 60° | ±5% | −15 −12 −13 −14 | +0,2 −1,1 −3,8 **−5,2** | **no, per 0,2** |
-| B3 Binns 12 nodi | ±3% | −2,3 … −0,1 | −1,3 … 0 | passa |
-| B4 Day 15 nodi | ≤ +7% | +6,5% | −0,4% | passa |
-| B5 3,2 nodi a 45° (1,05 m/s) | −8% | −15% | +3,6% | passa (il criterio non ha un limite in alto) |
-| B6 virata 3,2 nodi | −1,22 m | −1,74 | −1,14 m (F109 −0,67) | passa (limite: −1,218) |
-| B7b VMG di poppa contro Day, 6/10/15 | ±4% | −10 −8 −9 | −3 −2 −2 | passa |
-| B7 (prima parte; sostituito da B7b) | 0,03 nodi | — | traverso 12 nodi 7,18 → 7,31, 180° 4,67 → 5,05 | no |
+| B1 Day 6 nodi (VMG) | ±5% | −15,7% | −3,6% | passa |
+| B2 Binns 9 nodi, 42 / 46,5 / 55 / 60° | ±5% | −15 −12 −13 −14 | −1,1 −2,5 **−5,7 −7,3** | **no** (Day stesso: circa −1 / −4 / −6) |
+| B3 Binns 12 nodi | ±3% | −2,3 … −0,1 | −0,6 … +0,6 | passa |
+| B4 Day 15 nodi | ≤ +7% | +6,5% | +0,6% | passa |
+| B5 3,2 nodi a 45° (1,05 m/s) | −8% | −15% | +1,2% | passa |
+| B6 virata 3,2 nodi | −1,22 m | −1,74 | −1,06 m (F109 −0,67) | passa |
+| B7b poppa contro Day 6/10/15 | ±4% | −10 −8 −9 | −3 −2 −2 | passa |
 | B8 ogni costante con fonte | sì | — | otto ipotesi | **no** |
-| Virata 16 nodi con la freccia | 5 s | 2,9 s | 2,4 s (18 nodi 2,7, 20 nodi 4,8) | passa |
-| Raffica 10→18 senza reagire | < 60° | 52° | 44° | passa |
+| Virata 16 nodi con la freccia | 5 s | 2,9 s | 2,3 s (18 nodi 2,4; 20 nodi 2,9) | passa |
+| Raffica 10→18 senza reagire | < 60° | 52° | 40° | passa |
 | Fermi a 0-15°, 30 s | < 0,3 nodi | sotto zero | sotto zero | passa |
 
-F121 (2, 3, 4, 5 nodi di barca): +8 +5 +3 +2% (oggi −11 −12 −12 −5; la tesi è ottimista). **B2 non lo passa neppure Day** a 60° (5,52 contro 5,9 nodi, −6,4%, fig. 4). Ripartizione delle resistenze in acqua (scafo/appendici/indotta) a 5 nodi: 66/24/11 (Day 67/21/11); a 10 nodi 68/17/15 (Day 66/16/18).
+La regola scritta prima della scansione («il minimo d'errore su Day e F121») sceglie invece **7,06 / 2,8 / 0,87**: lì B1 è −5,6% e B2 −9,1%, quindi **la regola, applicata alla lettera, dà un candidato che non passa B1**. Le differenze d'errore fra 7,06 e 7,5 sono piccolissime (2,63 contro 2,92 punti, dentro la precisione della lettura dei grafici): J non è peggiore per la taratura, è al centro degli intervalli. Scansione: `scansione84.txt`.
 
-### Quanto dipende dalle ipotesi (Monte Carlo, 170 combinazioni, seme 21, `montecarlo_I.txt`)
+### Il controllo che non dipende dalla taratura (`spinta_richiesta.js`)
 
-Ogni parametro estratto dentro il suo intervallo. Criteri passati: **B1 100%, B4 100%, B5 100%, angolo morto 100%, virata 16 nodi 99%, raffica 99%, B7b 95%, B3 91%, virata 18 nodi 81%, B6 58%, B2 10% (89% senza i 60°)**; tutti tranne B2 51%. Le due cose da guardare sono B6 (dipende da `a0` e `w`) e B2. Le prime due versioni provate davano 31% e 26%: il terzo tentativo è il migliore, ma **è stato scelto dopo aver visto i primi**.
+Per ogni velocità misurata: spinta che serve (vasca + appendici + indotta, quote di Day fig. 11) divisa per la pressione del vento apparente, contro la spinta delle vele.
 
-### Cosa era sbagliato (con la fonte)
+| Caso (m² di spinta) | serve | oggi | candidato 7,92 | 7,06 | Flay |
+|---|---|---|---|---|---|
+| Day 6 nodi | 3,06 | 1,10 | 3,15 | 2,81 | 2,00 |
+| F109 3,2 nodi | 2,95 | 1,40 | 3,24 | 2,89 | 2,08 |
+| Binns 9 a 46,5° | 3,80 | 2,67 | 3,71 | 3,31 | 2,58 |
+| Binns 9 a 60° | 5,69 | 3,74 | 4,86 | 4,33 | 3,57 |
+| Bethwaite 6 nodi | 3,64 | 1,12 | 3,16 | 2,82 | 2,00 |
+| GPS olimpici ~6 nodi | 3,11 | 1,88 | 3,36 | 2,99 | 2,20 |
 
-1. **La vela spingeva il 12% meno.** I coefficienti ORC di Day valgono per la tela intera (circa 7,92 m²); il gioco li applica a 7,0. Formula ORC sulle larghezze del disegno di classe (F119 pag. 35) = 7,92. **Correzione (25 nov, sera, letto Flay in originale):** avevo scritto «controllo doppio» con Day, che corregge Flay ×1,125. Non è un controllo indipendente: il modello di Flay ha un triangolo di 0,1642 m² in scala 1/6, cioè **5,91 m², non 7,03** (inferitura 5,48, base 2,16: un'altra vela). Il rapporto 1,125 coincide con 7,92/7,03, ma non so su quale vela Day l'abbia calcolato; **quindi l'area 7,92 ha una fonte sola**, e il paragone «10,8 m² di portanza in galleria» detto in sessione era sbagliato (con 5,91 fa circa 9). Incertezze: larghezze massime di classe, testa a occhio, manica dell'albero (forse 7,7: compresa nell'intervallo del Monte Carlo).
-2. **La curva della vela:** tabella ORC «low lift» (Day tab. 1) letta all'incidenza + 9°, e resistenza scomposta come Day fig. 12 (scafo, albero e timoniere 0,105).
-3. **Il peso:** lo scafo è in vasca a 160 kg, la barca pesava 135 (Day: 79,5 la barca armata, 80 il timoniere).
-4. **La stabilità:** F121 fig. 31, braccio raddrizzante 0,145 m a 9° (190-230 N·m); il gioco 62.
-5. **Vento forte:** vela piatta (fino a 0,6) e svergolata (0,186, poi di più: in Day TWIST va fino a 1) quando il timoniere è al limite. **Il nodo del braccio 3,0 era questo:** a 16 nodi la barca aveva due equilibri (6° e 44° di sbandamento).
-6. **La resistenza indotta a bassa velocità:** smorzamento 0,1 al posto di 0,4 (Day fig. 11: 10,5% a 5 nodi; 0,1 dà 11%, 0,4 dava 9%). Allarga l'angolo morto.
-7. **Poppa:** vela 1,40-1,42 a 90° (F124); deriva mezza alzata (Day fig. 11), che nel gioco diventa automatica: **semplificazione da dichiarare**.
+**La vela di oggi è debole da 2 a 3 volte col poco vento, per cinque fonti diverse.** La galleria di Flay (modello 1/6, vela che si svergola, lo scrive lui) dà meno spinta di qualunque barca in acqua: non è usabile come numero assoluto. L'area giusta sta fra 7,0 e 7,9: Binns e Bethwaite chiedono di più, F109 e GPS di meno.
 
-### Controlli nuovi (dopo la ripresa)
+### Altri controlli nuovi (Flay, Taylor)
 
-- **Virata secondo per secondo (F109 fig. 4.10-4.12 e tab. 4.1), prua e scotta come nel vero:** scarto medio delle velocità 0,052 (3,2 nodi) e 0,069 (11 nodi); oggi 0,139 e 0,138. Metri persi: −1,89 e −3,45 (F109 −0,67 e −4,39; oggi −2,71 e −6,44). **Corregge la mia prima frase «virata troppo facile»:** era il pilota con la scotta ferma, che nel vero lasca 15° per 3 s. Resta vero che con la scotta ferma e il pilota il gioco perde poco (circa 1-1,6 m a 10-14 nodi; F106: 2,1) e che `virata1b` criterio 1 è fuori a tutti e sei i venti.
-- **Il timoniere che cambia lato** (provato): non spiega niente (−3,24 → −3,23 m), e oltre 1 s di traversata fa scuffiare. Scartato.
-- **Scarroccio:** F109 5-8°, gioco 2-3° (oggi e candidato). Non corretto (deriva più debole abbassa la bolina).
-- **Bethwaite a 6 nodi** (forum, fonte indiretta, riga mai usata): bolina / traverso / lasco / poppa −10 / −20 / −30 / −31% (oggi −17 / −22 / −33 / −37). Le poppe risentono del surf (lo dice Day). Il passaggio 40-60° sta meglio a 12 nodi di traverso (+2%, contro +10/+15%).
-- **Marshall** (F125, attesa scritta prima): −119 / −178 N·m danno −9 / −26% di VMG; candidato −3/−5% e −5/−8%, oggi 0/−4% e 0/−6%. **Non passa, per nessuna delle due.**
+- **Flay fig. 27:** forza laterale al 35-39% dell'albero dal fondo dello scafo, cioè braccio 2,4-2,6 m (F121: 3,0). Con un braccio più corto serve meno coppia al timoniere: le due cose si compensano (2,8 con 0,87 ≈ 3,0 con 0,956).
+- **Flay fig. 23-24, 60°:** spinta e forza laterale col boma a 35°: le curve di oggi per le andature larghe danno la stessa spinta entro il 3% (7,0 contro 6,8 m²). Il passaggio 40-60° alla curva vecchia ha quindi un sostegno.
+- **Taylor tab. 6.1:** coppia massima statica 653-737 N·m per velisti di 77-80 kg (braccio 0,87-0,93). Tab. 1.1: barca armata 80 kg.
+- **Taylor fig. 9.7 (velista di club in acqua):** coppia del timoniere contro vento apparente: a 4,5 m/s circa 450-500 N·m (oggi 186, J 313), a 5-5,2 m/s oltre 680 (oggi 247, J 427). J più vicino, ancora sotto. Velocità del velista: fra le due barche (oggi +3/+9%, J +6/+15%: velista non di vertice).
+
+### Quanto dipende dalle ipotesi (Monte Carlo, 200 combinazioni, intervalli larghi: area 7,06-7,92, braccio 2,4-3,1, timoniere 0,87-0,956)
+
+B1 73%, B2 1% (23% senza i 60°), B3 53%, B4 92%, B5 100%, B6 84%, B7b 75%, virata 16 nodi 100%, raffica 100%, virata 18 nodi 93%, angolo morto 100%; tutti tranne B2 20%. **Con intervalli onesti la barca nuova non è «sicura» sui criteri stretti**; è però molto più vicina alle fonti della barca di oggi in quasi tutti i punti.
+
+### Virata (F109 secondo per secondo, prua e scotta come nel vero)
+
+Scarto medio delle velocità 0,046 (3,2 nodi) e 0,066 (11 nodi); oggi 0,139 e 0,138. Velocità a regime 3,2 nodi 1,06 m/s (misurato 1,06). Metri persi −1,80 e −3,45 (F109 −0,67 e −4,39; oggi −2,71 e −6,44). Col pilota e la scotta ferma la virata resta facile (circa 1-1,5 m a 10-14 nodi) e `virata1b` criterio 1 è fuori a tutti i venti.
+
+### Sul gioco (clone del repo con il motore J)
+
+- **Lezioni** (30 semi, 41 passi pratici): **6.3 «La scuffia» 9 su 29** (oggi 29 su 29): la barca resiste di più alle raffiche, la lezione va ritarata; 1.8 angolo morto 15 s (oggi 9), 6.2 raffica 15 s (oggi 7); 2.6 e 5.8 28 su 30. Gli altri passi come oggi.
+- **Fasce delle prove:** tempi del pilota −0,5 / −4 / −13 / −13 / −6% (prove 1-5); nella prova 4 spariscono i momenti col pilota fermo nel vento. **Medaglie** (10 corse invece di 30, quindi il controllo fallisce per numero): stesse proporzioni di oggi, nella prova 5 il pilota preciso prende 10 ori su 10 invece di 7. Fasce da rifare.
+- **Rivali** (96 regate più le 90 della regola 18, Chromium e Firefox, rivali non ritarati): 0 errori, arrivi 2-4% più veloci, contatti 189 → 216 (+14%), fuori linea al via 26 → 40, non arrivati 130 → 125. Il margine della partenza non li cura (provato, confermato su semi nuovi). `collaudo_regola18`: Z1 fallisce per forza (barca diversa), **Z4 fallisce: 0 contatti decisi dalla 18 in 90 regate** (oggi 2), troppo pochi casi per dire.
+- Regate lunghe: 0 scuffie dei rivali; motore: 432 casi × 6 passi, 0 non finiti.
+- `collaudo_torneo` (clone, J): C1 16 casi su 16, C2 160 regate concluse su 160 con 0 differenze, C3 30 su 30, C4 10 su 10; C11 solo l'uscita lenta R7 già nota sul PC; **fermato dal mio limite di 40 minuti a metà di C11, il resto non è misurato.**
+- Mediana dei rapporti «spinta che serve / spinta con 7,92» su tutti i casi in acqua: area circa 7,8. Comprende Binns (dato di conferma): non usata per scegliere.
 
 ### Ipotesi senza fonte (otto)
 
-`a0` 2 e `w` 8 (rampa della vela che fileggia; B6 tiene con `a0` da 2 a circa 3, non con 4); il 9° che sposta la tabella (F109 tab. 4.1: 13-19° al 62% della vela, compatibile); il passaggio 40-60° di vento apparente; il ritardo 0,9 s; la raddrizzata oltre 22,5°; l'altezza del timoniere `dz` 0; gli angoli 100-140° fra cui la deriva «si alza»; la resistenza della vela che sbatte (0,08, tenuta uguale al totale di oggi). **Ordine dei fatti, da dire:** area, 0,08, `reg` e svergolamento extra sono stati messi dopo aver visto numeri che non passavano, sempre perché una fonte o un controllo lo indicava.
+`a0` 2 e `w` 8; il 9° che sposta la tabella; il passaggio 40-60° (ora sostenuto da Flay a 60°); il ritardo 0,9 s; la raddrizzata oltre 22,5°; `dz` 0; la deriva che «si alza» fra 100° e 140°; la vela che sbatte 0,08. Area, braccio e timoniere hanno fonte e intervallo, e J ne prende il centro.
 
-### Cosa non convince e cosa va rimisurato
+### Correzioni di quanto detto ad Ale in questa sessione
 
-- **Lezione 6.3 «La scuffia»:** il pilota la completa 13 volte su 26 (oggi 29 su 29): la barca resiste di più, serve più vento. **6.2 raffica** 29 su 30 ma 20 s invece di 7; **1.8 angolo morto** 14 s invece di 9, **2.6** e **5.8** 28 su 30. Su 41 passi pratici, 30 semi, tutti gli altri come oggi.
-- **Rivali** (96 regate, versione I: 32 + 32 corte e 12 lunghe in Chromium, 20 corte in Firefox; semi 5301-5308, 5501-5508, 5301-5304 lunghi, 5401-5405; rivali non ritarati): 0 errori, arrivi 0,6-3,6% più veloci, contatti 99 → **124** (+25%), fuori linea al via 26 → **46**, non arrivati 130 → 125. Il margine di partenza +2 s sembrava curarli (semi 5301-5308: contatti 37 → 29, fuori 19 → 15) ma **la conferma su semi mai usati (5501-5508) no**: contatti 34 oggi, 43 senza margine, 37 con +2 s; fuori linea 11, 12, 14. Quindi il rumore è grande. Con le 90 regate di `collaudo_regola18` (semi 2801-) i contatti vanno da 90 a **80**: in tutto 186 regate, 189 → 204 (+8%), **aumento non confermato**. Regate lunghe, 0 scuffie su 334 virate, virate bloccate 5 (oggi 4 su 336); rivali sbandati oltre 12° il 4,2% del tempo (oggi 11,6%).
-- **Angolo morto:** con 6 nodi, a 20° 0,37 nodi, a 25° 0,97, a 30° 2,31 (oggi −0,96 / −0,31 / 0,70): più stretto di oggi, più largo della prima versione. Nessuna fonte lo misura.
-- Partenza da ferma più lenta col vento (2 nodi a 60°: 10 nodi 4,8 s contro 2,9; 6 nodi 8,5 contro 7,0).
-- `orziera1b`: criterio 2 fuori a 14 nodi e 90° (1,29 contro 1 °/s) e criterio 4 perché la raffica a scotta ferma non sovrasta più (barra massima 6°, soglia oltre 20°).
-- F109 a regime: +3% con 3,2 nodi e +7% con 11 (2,53 contro 2,37 m/s).
-- Conferma su Binns e F109 non cieca. Motore: 432 casi × 6 passi, 0 non finiti, stesso risultato con ogni passo. `collaudo_stare_fermi` e `collaudo_esercizi_regata` verdi sulla copia in Firefox; `collaudo_regola18` sul clone: tutto verde tranne Z1 (regate della Scuola identiche a v1.3.48: con una barca diversa non può passare). `collaudo_torneo` sul clone: interrotto da me al seme 107 (supera i 10 minuti): fino a lì nessun controllo fallito, 40 regate su 40 concluse; **il resto non è misurato**. Le medaglie e le fasce non sono provate.
-
-### Dove sono i file
-
-`sperimentale/barca-84/`: `INTERVALLI.md`, `banco84.js`, `candidato.json` (versione I), `esito_candidato.txt`, `motore84.js` (da `fa_motore84.py`), `montecarlo84.js` e i due esiti, `virata_f109.js`, `bethwaite.js`, `marshall.js`, `scomponi84.js`, `traccia16.js`. Fonti F124-F127. Pagine che rifiutano la lettura: Southampton, MDPI, core.ac.uk, Tasmania, Chalmers ODR.
+1. «Virata troppo facile» (primo giro): era il metodo; col gesto vero la barca nuova è più vicina.
+2. «Area confermata due volte» (secondo giro): falso, la vela di Flay è 5,91 m²; l'area ha una fonte sola.
+3. «Robustezza 99%» (secondo giro): con intervalli onesti è molto più bassa (sopra).
 
 ### Consiglio
 
-Fare la proposta per il motore con la versione I, **se Ale accetta due cose scritte**: B2 a 60° (−5,2; la stessa fonte fa −6,4) e le otto ipotesi. Ordine: prima le lezioni 6.2-6.3 e il vento dell'angolo morto, poi la partenza dei rivali e i contatti, poi tempi, medaglie e record (azzerabili). Se Ale non accetta, la 81 torna limite noto.
+**Non adottare un candidato preciso adesso.** Il risultato solido è che la vela di oggi è troppo debole col poco vento (cinque fonti) e che la barca deve pesare 160 kg e raddrizzare come F121; l'area esatta (7,0-7,9) e le ipotesi della vela che fileggia non sono decise dalle fonti. Se Ale vuole andare avanti: proposta per il motore con J, B2 e B8 dichiarati non passati, e prima di accenderla lezione 6.3, fasce, medaglie, partenza dei rivali. Se no: la 81 resta limite noto, con questa ricerca scritta.

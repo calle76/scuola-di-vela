@@ -1,0 +1,7 @@
+// Voce 84: coppia del timoniere di bolina contro vento apparente, confronto con Taylor 2020 fig. 9.7a (velista di club, in acqua; curva di 2° ordine letta a occhio: 200 N·m a 3,9 m/s, 400 a 4,25, 600 a 4,8, 700 a circa 5,1) e 9.7d (velocita' = 0,339 x AWS + 0,096 m/s).
+const fs = require("fs"), KN = 1.943844, R = Math.PI / 180;
+const T = [[3.9, 200], [4.25, 400], [4.8, 600], [5.1, 700]];
+for (const [n, f] of [["oggi", "js/motore.js"], ["candidato J", "sperimentale/barca-84/motore84.js"]]){ const M = new Function(fs.readFileSync(f, "utf8") + "\nreturn { step, BOAT };")(); console.log("## " + n);
+  for (const kn of [4, 5, 6, 7, 8, 9, 10]){ let b = null; for (let a = 40; a <= 50; a += 2) for (let sh = 0; sh <= .3; sh += .02){ const S = { x:0,y:0,h:0,u:1,vl:0,r:0 }; let i; for (let k = 0; k < 2400; k++){ S.h = 0; i = M.step(S, { sheet: sh, tiller: 0 }, { twd: a, tws: kn / KN }, 1 / 40); } const v = S.u * Math.cos(a * R); if (!b || v > b.v) b = { v, S, i }; }
+    const hm = b.S.hike * M.BOAT.sailorMass * 9.81 * M.BOAT.hikeArm, aws = b.i.aws; let t = null; for (let j = 1; j < T.length; j++) if (aws <= T[j][0]){ t = T[j-1][1] + (T[j][1] - T[j-1][1]) * (aws - T[j-1][0]) / (T[j][0] - T[j-1][0]); break; }
+    console.log(`  vero ${kn} nodi: apparente ${aws.toFixed(2)} m/s, coppia ${hm.toFixed(0)} N·m (Taylor ${t === null ? (aws > 5.1 ? ">700" : "<200") : t.toFixed(0)}), velocita' ${b.S.u.toFixed(2)} m/s (Taylor ${(0.339 * aws + 0.096).toFixed(2)})`); } }

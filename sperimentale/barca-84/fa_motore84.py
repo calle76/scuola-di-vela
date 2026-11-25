@@ -4,9 +4,9 @@ q = pathlib.Path(__file__).parent; s = (q / "../../js/motore.js").read_text()
 def rep(a, b):
     global s
     assert s.count(a) == 1, (s.count(a), a); s = s.replace(a, b)
-rep("mass: 135, ", "mass: 160, "); rep("sailArea: 7.0, ", "sailArea: 7.92, "); rep("zCE: 2.0, ", "zCE: 3.0, "); rep("sailorMass: 75, ", "sailorMass: 80, "); rep("hikeArm: 1.0, ", "hikeArm: 0.956, ")
+rep("mass: 135, ", "mass: 160, "); rep("sailArea: 7.0, ", "sailArea: 7.5, "); rep("zCE: 2.0, ", "zCE: 2.8, "); rep("sailorMass: 75, ", "sailorMass: 80, "); rep("hikeArm: 1.0, ", "hikeArm: 0.90, ")
 rep("// state: {x,y,h", '''/* V84: vela di bolina da tabella ORC (Day 2017 tab. 1 e fig. 12), letta all'incidenza + 9 gradi; raddrizzata dello scafo F121 fig. 31; vela piatta e svergolata col timoniere al limite (Day 2.3-2.4) */
-const V84 = { orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 2, w: 8, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.92, fg: 0.08, cdn: 1.32,
+const V84 = { orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 2, w: 8, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.5, fg: 0.08, cdn: 1.394,
   gz: [[0, 0], [4.5, 0.083], [9, 0.145], [13.5, 0.19], [18, 0.223], [22.5, 0.247], [90, 0]], k08: 32, flMin: 0.6, flTau: 0.9, hT: 3, tw: 0.186, zH: 1.867, app: [0.0049, 0.0026], dw: [100, 140] };
 function tab84(T, x, c){ if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T.length; i++) if (x <= T[i][0]) return T[i - 1][c] + (T[i][c] - T[i - 1][c]) * (x - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); return T[T.length - 1][c]; }
 const liscio84 = t => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };

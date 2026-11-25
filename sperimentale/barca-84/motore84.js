@@ -8,7 +8,7 @@ const norm360 = a => ((a % 360) + 360) % 360;
 const BOAT = {
   mass: 160,          // kg, barca + timoniere
   length: 4.2,        // m, lunghezza fuori tutto (1.0.16: la fascia d'attesa degli avversari si misura in lunghezze di barca)
-  sailArea: 7.92,      // m²
+  sailArea: 7.5,      // m²
   rho: 1.225,
   hullScale: 1,       // 1.0.6: moltiplica l'area di resistenza dello scafo misurata in vasca (HULL_DA); 1 = la vasca, solo per il laboratorio
   appDA: 0.0049,      // m², attrito di deriva e timone come area di resistenza (Day 2017, fig. 11, bolina)
@@ -21,9 +21,9 @@ const BOAT = {
   turnLen: 1.05,       // m, lunghezza efficace per la virata
   yawK: 4,            // 1/s, quanto in fretta la rotazione segue la barra (1.0.4: era nella formula)
   maxRudder: 30,
-  zCE: 3.0,           // m, altezza del centro velico
+  zCE: 2.8,           // m, altezza del centro velico
   sailorMass: 80,     // kg
-  hikeArm: 0.956,       // m, braccio massimo del timoniere sporto fuori
+  hikeArm: 0.90,       // m, braccio massimo del timoniere sporto fuori
   formK: 400,         // Nm, stabilità di forma dello scafo
   rollI: 260,         // kg·m², inerzia di rollio
   rollDamp: 520,      // smorzamento
@@ -123,7 +123,7 @@ function CL(a){ // a: angolo di incidenza (gradi, >=0)
 function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.06 + 1.15 * s * s + BOAT.sailCL2 * cl * cl; }
 
 /* V84: vela di bolina da tabella ORC (Day 2017 tab. 1 e fig. 12), letta all'incidenza + 9 gradi; raddrizzata dello scafo F121 fig. 31; vela piatta e svergolata col timoniere al limite (Day 2.3-2.4) */
-const V84 = { orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 2, w: 8, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.92, fg: 0.08, cdn: 1.32,
+const V84 = { orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 2, w: 8, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.5, fg: 0.08, cdn: 1.394,
   gz: [[0, 0], [4.5, 0.083], [9, 0.145], [13.5, 0.19], [18, 0.223], [22.5, 0.247], [90, 0]], k08: 32, flMin: 0.6, flTau: 0.9, hT: 3, tw: 0.186, zH: 1.867, app: [0.0049, 0.0026], dw: [100, 140] };
 function tab84(T, x, c){ if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T.length; i++) if (x <= T[i][0]) return T[i - 1][c] + (T[i][c] - T[i - 1][c]) * (x - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); return T[T.length - 1][c]; }
 const liscio84 = t => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };

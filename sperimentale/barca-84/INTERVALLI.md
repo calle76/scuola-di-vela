@@ -29,3 +29,10 @@ Laser in acqua, due velisti, di bolina: 119 N·m di raddrizzata in meno → −0
 
 - **Dopo la ripresa della sessione (dichiarato, visto il risultato):** `reg` 0,1 al posto di 0,4 nella resistenza indotta (Day fig. 11, quota 10,5% a 5 nodi: 0,1 dà 11%, 0,2 dà 10%); svergolamento oltre 0,186 quando la vela piatta è già al minimo, fino a 1 (limite di Day §5); `dz` fra −0,1 e +0,1 (prima 0-0,15: F121 fig. 31, curva dei momenti, è più ripida della GZ usata qui). Versione «I» = vela piatta e svergolata insieme (0,186 al minimo), poi solo svergolata.
 - **Correzione (25 nov, sera):** la «conferma indipendente» dell'area (Day su Flay ×1,125) non è indipendente: il triangolo di Flay è 5,91 m² (1/6: 0,1642 m²), non 7,03. L'area 7,92 ha una sola fonte (F119 con la formula ORC).
+
+## Intervalli allargati (25 novembre, notte, dopo Flay e Taylor; scritti prima della scansione)
+
+- `zCE` 2,4-3,1 m (Flay fig. 27: forza laterale al 35-39% dell'albero da 6 m sopra il fondo dello scafo, cioè 2,1-2,3 m, più 0,3 m di deriva: 2,4-2,6; F121 3,0). Flay ha la vela che si svergola (vang debole): probabile sottostima.
+- area 7,0-7,92 m² (nominale di classe 7,06; tela 7,92, una fonte sola; F109 e GPS chiedono meno, Binns e Bethwaite di più).
+- braccio del timoniere 0,87-0,956 m (Taylor 0,87-0,93 misurati, caviglie al centro; Day 0,956).
+- **Regola di scelta:** si sceglie la combinazione con l'errore più piccolo su Day (6, 10, 15 nodi) e F121 (4 venti), niente altro. Si conferma su Binns 9 e 12, F109 (3,2 nodi), virate. Se la migliore non passa i criteri, si dice.
