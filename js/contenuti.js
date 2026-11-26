@@ -224,7 +224,7 @@
       cond: (I, S, B) => I.gustK > 0.3 && I.twa <= 75 && I.heel < 20 && I.kn > 2 && (B.lasca || 0) >= 0.05, hold: 3, // 1.1.3: anche lascare in raffica; la barca dell'1b orzava da sola e scaricava la vela // 1.0.15: nel cuore della raffica (+30%) e di bolina; prima bastava il bordo (+12%) e si completava da solo
       done: "Ben fatto. Lascare riduce la forza sulla vela ed è la prima mossa in una raffica; stringere il vento di solito non conviene. È la tecnica principale per navigare con vento rafficato." },
     { title: "La scuffia", allow: ["capsizes"], noRight: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
-      text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: vela tutta cazzata, e in raffica non lascare."],
+      text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: poggia al traverso, vela tutta cazzata, e in raffica non lascare."],
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
       done: "In questo gioco, oltre circa 60° di sbandamento la barca si rovescia: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
     { title: "Raddrizzare", startCapsized: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",
@@ -877,6 +877,7 @@
   // 1.0.6: ritarate per la barca nuova (resistenza dalla vasca) e il pilota corretto: argento e bronzo arrotondati ai 5 s più vicini.
   // 1.0.11: ritarate per la bolina nuova (pilota 79,0 / 124,5 / 156,8 / 276,0 s, prova 5 mediana 297,8): cambiano le prove 3, 4 e 5.
   // 1.2.11 (docs/PROPOSTA-MEDAGLIE-E-NOMI.md): ritarate per la barca dell'1b sui semi 1-30 con tests/collaudo_medaglie.py --scelta; l'oro sale di 5 s finché il pilota ci sta in 25 corse su 30 in tutti e due i browser. Cambiano le prove 4 e 5.
+  // 1.3.59 (voce 84, barca M): ritarate con la stessa regola, semi 1-30, uguali in Chromium e Firefox (pilota 76,8 / 117,7 / 133,5 / 242,7 / 278,7 / 207,9 s). Cambiano le prove 2-6.
   // Dalla 0.19 l'ultima voce di marks è una linea d'arrivo (FIN_HALF m per lato, perpendicolare all'ultimo lato), non una boa da raggiungere.
   const MISSIONS = [
     { title: "Al traverso", desc: "Taglia l'arrivo con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
@@ -885,26 +886,26 @@
       marks: [{ x: 230, y: 0, label: "Arrivo" }] },
     { title: "Lasco e poppa", desc: "Raggiungi l'arrivo sottovento.", wind: 45, tws: 10, gusts: 0,
       text: "L'arrivo è sottovento: poggia passando da traverso a lasco e poppa, lascando man mano. Per arrivarci quasi sempre serve anche una strambata: cazza finché il boma è a 45° o meno, poggia finché il vento passa dall'altro lato, poi lasca. La vedrai meglio nella lezione 5.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [125, 155, 200],
+      start: { x: 0, y: 0, h: 90, sheet: 0.3 }, bands: [120, 150, 190],
       marks: [{ x: 60, y: 260, label: "Arrivo" }] },
     { title: "Risalire il vento", desc: "Raggiungi l'arrivo controvento.", wind: 180, tws: 10, gusts: 0,
       text: "L'arrivo è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [160, 200, 255],
+      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [135, 170, 215],
       marks: [{ x: 0, y: -220, label: "Arrivo" }] },
     { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
       text: "Risali di bolina fino alla boa e girala tenendola sempre alla tua sinistra, poi torna a tagliare la linea da cui sei partito, con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [290, 365, 465],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [245, 305, 390],
       marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
       text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino alla linea d'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [320, 400, 510],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [285, 355, 455],
       marks: [{ x: 0, y: -200, label: "Boa 1" }, { x: -150, y: -200, label: "Boa 2" }, { x: 0, y: 20, label: "Arrivo" }] },
     // 1.3.2, Deriva (docs/PROPOSTA-DERIVA-CIRCUITI.md D9, PROPOSTA-LIVELLO-DERIVA.md §3): due giri di penalità dovuti dal via (giri), contati come nelle regate
     // (giriPenalita, js/regate.js; F15 44.2); ogni giro non fatto all'arrivo costa GIRO_MANCA_S (scelta di Ale del 6 nov, «come nelle regate» di allora). Bande: regola di
     // docs/PROPOSTA-MEDAGLIE-E-NOMI.md §2 col pilota di tests/collaudo_medaglie.py, semi 1-30, confermate sui semi 101-130.
     { title: "I giri di penalità", desc: "Due giri di penalità da scontare, poi bolina fino alla boa e ritorno.", wind: 0, tws: 10, gusts: 0, giri: 2, livello: "deriva",
       text: "Al via hai già una penalità da scontare: due giri, come dopo un contatto con colpa. Falli subito, appena partito: ognuno è un giro intero nello stesso verso, con una virata e una strambata, senza fermarti (regola 44.2). Poi risali di bolina fino alla boa, girala lasciandola a sinistra e torna a tagliare la linea da cui sei partito. Il tempo comprende i giri; ogni giro non fatto costa 15 s all'arrivo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [240, 300, 385], // semi 1-30: mediana del pilota 235,8 s (235,3-236,5)
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [210, 265, 335], // 1.3.59, barca M: semi 1-30, mediana del pilota 207,9 s (207,7-208,1); prima [240, 300, 385] su 235,8 s
       marks: [{ x: 0, y: -150, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 

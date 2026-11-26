@@ -6,11 +6,11 @@ const norm180 = a => ((a + 180) % 360 + 360) % 360 - 180;
 const norm360 = a => ((a % 360) + 360) % 360;
 
 const BOAT = {
-  mass: 135,          // kg, barca + timoniere
+  mass: 160,          // kg, barca + timoniere (1.3.59, voce 84: Day 2017 §4, 79,5 kg pesati + 80 kg; era 135)
   length: 4.2,        // m, lunghezza fuori tutto (1.0.16: la fascia d'attesa degli avversari si misura in lunghezze di barca)
-  sailArea: 7.0,      // m²
+  sailArea: 7.92,     // m², 1.3.59: la tela intera (F119 + formula ORC); era 7,0
   rho: 1.225,
-  hullScale: 1,       // 1.0.6: moltiplica l'area di resistenza dello scafo misurata in vasca (HULL_DA); 1 = la vasca, solo per il laboratorio
+  hullScale: 0.93,    // 1.0.6: moltiplica l'area di resistenza dello scafo misurata in vasca (HULL_DA); 1.3.59: 0,93 = la vasca SSPA (F121 tab. 2), TARATURA della voce 84 (GIRO6.md)
   appDA: 0.0049,      // m², attrito di deriva e timone come area di resistenza (Day 2017, fig. 11, bolina)
   rhoW: 1025,         // kg/m³, acqua di mare
   rudderDragK: 45,
@@ -21,9 +21,9 @@ const BOAT = {
   turnLen: 1.05,       // m, lunghezza efficace per la virata
   yawK: 4,            // 1/s, quanto in fretta la rotazione segue la barra (1.0.4: era nella formula)
   maxRudder: 30,
-  zCE: 2.0,           // m, altezza del centro velico
-  sailorMass: 75,     // kg
-  hikeArm: 1.0,       // m, braccio massimo del timoniere sporto fuori
+  zCE: 2.8,           // m, altezza del centro velico (1.3.59: Flay 2,4-2,6, F121 3,0; era 2,0)
+  sailorMass: 80,     // kg (1.3.59, Day; era 75)
+  hikeArm: 0.90,      // m, braccio massimo del timoniere sporto fuori (1.3.59: Taylor 0,87-0,93; era 1,0)
   formK: 400,         // Nm, stabilità di forma dello scafo
   rollI: 260,         // kg·m², inerzia di rollio
   rollDamp: 520,      // smorzamento
@@ -108,11 +108,11 @@ function rud2Alpha(S, tiller){ // angolo effettivo della pala (gradi), stesso se
 // Sotto i 2 nodi e sopra i 9 l'area resta quella dell'estremo: lì non ci sono misure.
 const HULL_DA = [[2, 0.0125], [2.5, 0.01262], [3, 0.0132], [3.5, 0.01443], [4, 0.01567], [4.5, 0.01775], [5, 0.0207], [5.5, 0.0229],
   [6, 0.02405], [6.5, 0.02455], [7, 0.02432], [7.5, 0.02325], [8, 0.02205], [8.5, 0.02122], [9, 0.0206]]; // [nodi, m²]
-function hullDrag(u){ // N, con il segno di u (all'indietro si usa la stessa tabella)
+function hullDrag(u, app = BOAT.appDA){ // N, con il segno di u (all'indietro si usa la stessa tabella)
   const kn = Math.abs(u) * 1.943844, T = HULL_DA;
   let a = T[kn <= T[0][0] ? 0 : T.length - 1][1];
   for (let i = 1; i < T.length; i++) if (kn > T[i - 1][0] && kn <= T[i][0]){ a = T[i - 1][1] + (T[i][1] - T[i - 1][1]) * (kn - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); break; }
-  return (a * BOAT.hullScale + BOAT.appDA) * 0.5 * BOAT.rhoW * u * Math.abs(u);
+  return (a * BOAT.hullScale + app) * 0.5 * BOAT.rhoW * u * Math.abs(u);
 }
 
 function CL(a){ // a: angolo di incidenza (gradi, >=0)
@@ -121,6 +121,24 @@ function CL(a){ // a: angolo di incidenza (gradi, >=0)
   return Math.max(0.55, 1.35 - (a - 20) * 0.022);
 }
 function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.06 + 1.15 * s * s + BOAT.sailCL2 * cl * cl; }
+
+// ---- LA BARCA DELLA VOCE 84 (1.3.59, candidato M: docs/PROPOSTA-BARCA-MOTORE.md, sperimentale/barca-84/GIRO6.md) ----
+/* V84: vela di bolina da tabella ORC (Day 2017 tab. 1 e fig. 12), letta all'incidenza + 7 gradi (TARATURA su Day e F121, sesto giro);
+   raddrizzata dello scafo F121 fig. 31 fino a 22,5 gradi, oltre con la forma del 470 (F4 fig. 4); vela piatta e svergolata col timoniere al limite (Day 2.3-2.4),
+   che si appiattisce in flTau = 1,5 s (IPOTESI; fisica del velista, decisione di Ale del 26 nov: nessun interruttore); vela che fileggia da 0 gradi
+   di incidenza (Newman e Low 1984) a w = 10 (IPOTESI); resistenza della vela che sbatte fg 0,08 (F109); poppa: forza della vela da Magnander (F120, F124);
+   deriva alzata nelle portanti: attrito 0,0049 -> 0,0026 fra 100 e 140 gradi (qualitativo); smorzamento della resistenza indotta 0,1 (Day fig. 11). */
+const V84 = { orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 0, w: 10, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.92, fg: 0.08, cdn: 1.32,
+  gz: [[0, 0], [4.5, 0.083], [9, 0.145], [13.5, 0.19], [18, 0.223], [22.5, 0.247], [25, 0.263], [30, 0.263], [35, 0.252], [40, 0.24], [45, 0.212], [50, 0.185], [55, 0.15], [60, 0.115], [70, 0.046], [76, 0], [90, -0.05]], k08: 32, flMin: 0.6, flTau: 1.5, hT: 3, tw: 0.186, zH: 1.867, app: [0.0049, 0.0026], dw: [100, 140] };
+function tab84(T, x, c){ if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T.length; i++) if (x <= T[i][0]) return T[i - 1][c] + (T[i][c] - T[i - 1][c]) * (x - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); return T[T.length - 1][c]; }
+const liscio84 = t => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
+const svergola84 = fl => V84.tw * (1 - fl) / (1 - V84.flMin);
+function forma84(h){ return Math.sign(h) * 9.81 * BOAT.mass * tab84(V84.gz, Math.abs(h), 1); }
+function vela84(al, A, lf, fl, tw){ const V = V84, k0 = V.k0, t = liscio84((A - V.b1) / (V.b2 - V.b1)), r = Math.max(0, Math.min(1, (al - V.a0) / V.w)), be = Math.min(28, al + 7);
+  const cl1 = (al <= 19 ? tab84(V.orc, be, 1) : CL(al) * 1.347 / 1.35) * r * fl;
+  const cd1 = (al <= 19 ? tab84(V.orc, be, 2) : 0.033 + 1.15 * (Math.sin(al * D2R) ** 2 - Math.sin(19 * D2R) ** 2)) + V.par + cl1 * cl1 * ((1 + 8 * tw * tw) * V.ki + 0.005);
+  const cd0 = CD(al) * k0 + (V.cdn - CD(90) * k0) * liscio84((al - 60) / 30), sb = al < 6 ? (V.fg + (0.2 * k0 - V.fg) * t) * (1 - al / 6) : 0;
+  return [cl1 * (1 - t) + CL(al) * lf * k0 * t, cd1 * (1 - t) + cd0 * t + sb]; }
 
 // state: {x,y,h,u,r,boomSide,boom}  controls: {sheet 0..1, tiller -1..1 (+ = barra a dritta)}  env: {twd (da), tws m/s}
 function step(S, C, E, dt){
@@ -142,14 +160,14 @@ function step(S, C, E, dt){
   const ch = Math.cos((S.heel || 0) * D2R);
   const q = 0.5 * BOAT.rho * BOAT.sailArea * aws * aws * ch; // la vela inclinata prende meno vento
   const lf = Math.max(0, Math.min(1, (A - BOAT.luffA0) / BOAT.luffW)); // vento apparente troppo stretto: la vela si sgonfia (angolo morto)
-  const L = q * CL(alpha) * lf, Dg = q * (CD(alpha) + (alpha < 6 ? 0.2 * (1 - alpha / 6) : 0)); // vela che sbatte: più resistenza
+  if (S.flat === undefined) S.flat = 1; const [cl84, cd84] = vela84(alpha, A, lf, S.flat, S.tw84 || 0); const L = q * cl84, Dg = q * cd84; // vela che sbatte: più resistenza
   let push = null; // boma spinto (1b): forza e momento della vela a collo, nel riferimento della barca (x avanti, y a dritta)
   if (C.push){
     if (!S.pushSide) S.pushSide = S.boomSide;
     const p = S.pushSide, b = BOMA2.angle * D2R, f = [-Math.cos(awa * D2R), -Math.sin(awa * D2R)]; // f: dove va l'aria
     let n = [p * Math.sin(b), Math.cos(b)]; // normale alla vela, girata dalla parte verso cui la spinge il vento
     const fn = f[0] * n[0] + f[1] * n[1]; if (fn < 0) n = [-n[0], -n[1]];
-    const al = Math.asin(Math.min(1, Math.abs(fn))) / D2R, CN = CL(al) * Math.cos(al * D2R) + CD(al) * Math.sin(al * D2R);
+    const al = Math.asin(Math.min(1, Math.abs(fn))) / D2R, CN = V84.k0 * (CL(al) * Math.cos(al * D2R) + CD(al) * Math.sin(al * D2R));
     const Fx = q * CN * n[0], Fy = q * CN * n[1], xc = BOMA2.xMast - BOMA2.dCE * Math.cos(b), yc = p * BOMA2.dCE * Math.sin(b);
     push = { Fx, Fy, M: xc * Fy - yc * Fx }; // M > 0: la prua va a dritta
   } else if (S.pushSide) S.pushSide = 0;
@@ -157,13 +175,14 @@ function step(S, C, E, dt){
   const side = push ? push.Fy * (awa >= 0 ? -1 : 1) : L * Math.cos(A * D2R) + Dg * Math.sin(A * D2R); // spinge sottovento (col boma spinto può essere negativa)
   const pala = S.u >= RUD2.uMin && !push, a2 = pala ? rud2Alpha(S, C.tiller) : 0; // pala: il timone che stalla (sopra uMin e senza boma spinto)
   const rud = pala ? 0 : C.tiller * BOAT.maxRudder; // con la pala la barra conta solo attraverso a2
-  const res = hullDrag(S.u) * (S.u < 0 ? BOAT.backDrag : 1) +
+  const app84 = V84.app[0] + (V84.app[1] - V84.app[0]) * Math.max(0, Math.min(1, (Math.abs(norm180(E.twd - S.h)) - V84.dw[0]) / (V84.dw[1] - V84.dw[0])));
+  const res = hullDrag(S.u, app84) * (S.u < 0 ? BOAT.backDrag : 1) +
               (pala ? RUD2.dragK * S.u * S.u * Math.sin(Math.abs(a2) * D2R) ** 2 :
               BOAT.rudderDragK * S.u * Math.abs(S.u) * Math.sin(Math.abs(rud) * D2R) ** 2);
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   // 1.0.11: resistenza indotta, Delft (Day 2017, eq. 15) Ri = Fh² / (π·½ρ·V²·TE²), con u² + 0,4 come nello scarroccio: a bassa velocità la deriva non regge
   // la spinta laterale e la formula pura fermerebbe la barca (docs/archivio/PROPOSTA-BOLINA.md §3). TE costante: in Delft cala sbandando e cambia col Froude.
-  const Ri = BOAT.TE > 0 ? side * side * S.u * Math.abs(S.u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (S.u * S.u + 0.4) ** 2) : 0;
+  const Ri = BOAT.TE > 0 ? side * side * S.u * Math.abs(S.u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (S.u * S.u + 0.1) ** 2) : 0;
   S.u += (drive - res * heelDrag - Ri) / BOAT.mass * dt;
   // 1.0.8: nessun tetto all'indietro (docs/archivio/PROPOSTA-RETROMARCIA.md): vela che sbatte contro la resistenza della tabella, la stessa della marcia avanti
   // scarroccio: la deriva resiste molto, meno a bassa velocità
@@ -173,11 +192,16 @@ function step(S, C, E, dt){
   // sbandamento: momento sbandante della vela contro timoniere sporto fuori e forma dello scafo
   S.heel = S.heel || 0; S.heelRate = S.heelRate || 0; S.hike = S.hike === undefined ? 0.2 : S.hike;
   const phi = S.heel * D2R;
-  const mHeel = side * BOAT.zCE * Math.cos(phi);
+  const mHeel = side * (BOAT.zCE - V84.zH * (S.tw84 || 0)) * Math.cos(phi);
   const rmMax = BOAT.sailorMass * 9.81 * BOAT.hikeArm;
-  const hikeTarget = Math.max(0, Math.min(1, (mHeel - BOAT.formK * 0.08) / rmMax)); // punta a tenere la barca quasi piatta
+  if (S.tw84 === undefined) S.tw84 = 0; /* vela piatta e svergolata col timoniere al limite (Day 2.3-2.4): insieme fino a 0,6 e 0,186, poi svergola ancora fino a 1 */
+  const pieno84 = Math.max(1, Math.abs(side) / Math.max(0.3, ch) / S.flat), av84 = rmMax + V84.k08 + forma84(V84.hT), tb84 = svergola84;
+  const f84 = Math.max(V84.flMin, Math.min(1, av84 / (pieno84 * (BOAT.zCE - V84.zH * tb84(S.flat)))));
+  const t84 = f84 > V84.flMin + 1e-9 ? tb84(f84) : Math.max(V84.tw, Math.min(1, (BOAT.zCE - av84 / (V84.flMin * pieno84)) / V84.zH));
+  const k84 = Math.min(1, dt / V84.flTau); S.flat += (f84 - S.flat) * k84; S.tw84 += (t84 - S.tw84) * k84;
+  const hikeTarget = Math.max(0, Math.min(1, (mHeel - V84.k08) / rmMax)); // punta a tenere la barca quasi piatta
   S.hike += (hikeTarget - S.hike) * Math.min(1, dt / 0.9); // il timoniere reagisce con un certo ritardo
-  const mRight = rmMax * S.hike * Math.cos(phi) + BOAT.formK * Math.sin(2 * phi) / 2;
+  const mRight = rmMax * S.hike * Math.cos(phi) + forma84(S.heel);
   const acc = (mHeel - mRight) / BOAT.rollI - BOAT.rollDamp / BOAT.rollI * S.heelRate;
   S.heelRate += acc * dt;
   S.heel += S.heelRate / D2R * dt;

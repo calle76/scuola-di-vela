@@ -299,10 +299,10 @@ function* raffica(C){                                                    // «di
     yield C.rt;
   }
 }
-function* scuffia(C){                                                    // «vela tutta cazzata, e in raffica non lascare»
+function* scuffia(C){                                                    // «poggia al traverso, vela tutta cazzata, e in raffica non lascare» (1.3.59: prima 50°, barca M)
   yield* tieni(C, cazzaK(), () => sh() <= 0.005, 15);
   for (let n = 0; n < 5000; n++){
-    sterza(C, prua(C, 50), 4);
+    sterza(C, prua(C, 90), 4);
     yield C.rt;
   }
 }

@@ -4,6 +4,28 @@ Il motore simula una deriva singola da circa 4,2 m con una sola vela (randa) e u
 
 Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo stato della barca, `C` i comandi (`sheet` da 0 a 1, `tiller` da −1 a 1, positivo = barra a dritta), `E` il vento (`twd` direzione di provenienza in gradi, `tws` intensità in m/s). La simulazione avanza a passi di circa 1/240 di secondo.
 
+## Dalla 1.3.59: la barca M (voce 84)
+
+**Vale su quello che segue dove le cose sono diverse** (la descrizione sotto è quella della 1.1.0-1.3.58, lasciata per la storia). Proposta, decisione di Ale e numeri: `PROPOSTA-BARCA-MOTORE.md`, `sperimentale/barca-84/GIRO6.md`. Codice: `js/motore.js`, sottosezione «LA BARCA DELLA VOCE 84».
+
+| Cosa | Prima | Dalla 1.3.59 | Tipo |
+| --- | --- | --- | --- |
+| Massa barca + timoniere | 135 (75) kg | 160 (80) kg | fonte: Day §4 |
+| Area della vela | 7,0 m² | 7,92 m² (la tela intera) | fonte: F119 + formula ORC |
+| Altezza del centro velico `zCE` | 2,0 m | 2,8 m | fonte: Flay, F121 |
+| Braccio del timoniere | 1,0 m | 0,90 m | fonte: Taylor |
+| Vela di bolina | curva `CL`/`CD` | tabella ORC di Day letta all'incidenza **+ 7°** | tabella con fonte; i 7° sono **taratura** (Day e F121; controllo su Binns, F109, Semb, regate) |
+| Scafo | vasca ×1 | vasca **×0,93** (la vasca SSPA, F121 tab. 2) | **taratura** |
+| Raddrizzata dello scafo | formula | F121 fig. 31 fino a 22,5°, poi la forma del 470 (F4 fig. 4) | fonte |
+| Vela che fileggia | sul vento apparente | sull'incidenza, da 0° (Newman e Low 1984) a 10° | 0°: fonte; 10°: **ipotesi** |
+| Resistenza della vela che sbatte | 0,2 | 0,08 | fonte: F109 (0,02-0,08) |
+| Vela piatta e svergolata col timoniere al limite | no | sì (Day §2.3-2.4), in 1,5 s | il ritardo è **ipotesi**; è fisica del velista, senza interruttore (Ale, 26 nov) |
+| Poppa: forza della vela | 1,15 | Magnander (F120, F124) | fonte |
+| Deriva alzata nelle portanti | no | attrito 0,0049 → 0,0026 fra 100° e 140° | qualitativa |
+| Smorzamento della resistenza indotta | u² + 0,4 | u² + 0,1 | fonte: Day fig. 11 |
+
+**B8 riscritto da Ale (26 nov):** ogni costante ha una fonte, oppure è tarata su una parte dei dati, controllata sul resto e dichiarata come taratura. **Limiti noti:** B2 (Binns 9 nodi a 60°: −5,1%, soglia ±5); la poppa resta del 20-30% sotto le misure prese con surf e S (voci 86-88); le strambate non costano niente (voce 85); con 18 nodi la barca riparte dalla virata più piano del vero se si lasca troppo.
+
 ## Il modello, passo per passo
 
 1. **Vento apparente.** Vettore del vento reale meno vettore della velocità della barca (avanzamento più scarroccio). Se ne ricavano l'angolo `awa` rispetto alla prua (positivo = da dritta) e l'intensità `aws`.

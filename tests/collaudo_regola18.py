@@ -6,12 +6,12 @@
 #   Z3-Z5 N regate del torneo col pilota (pagina nuova per regata), registro dei contatti di #collaudo con la colpa con e senza la 18 e la distanza dalla boa:
 #      Z3 fuori dalla zona (oltre 13,6 m) la colpa non cambia, con almeno 50 contatti misurati; Z4 almeno un debito aperto e un contatto deciso dalla 18;
 #      Z5 contatti con colpa dei rivali vicino alla boa, prima e dopo (si riporta; oltre +30% la versione A non esce da sola)
-# Uso: python tests/collaudo_regola18.py [--regate 90] [--semi-da 2801] [--rif v1.3.48] [--lungo]   (BROWSER=firefox)
+# Uso: python tests/collaudo_regola18.py [--regate 90] [--semi-da 2801] [--rif v1.3.59] [--lungo]   (BROWSER=firefox)
 import asyncio, math, os, pathlib, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
-NREG = int(arg("--regate", "90")); DA = int(arg("--semi-da", "2801")); RIF = arg("--rif", "v1.3.48")
+NREG = int(arg("--regate", "90")); DA = int(arg("--semi-da", "2801")); RIF = arg("--rif", "v1.3.59")   # 1.3.59 (voce 84): la barca M cambia i tempi di tutte le regate; Z1 confronta con la prima versione che ha la stessa barca (prima v1.3.48)
 LUNGO = "--lungo" in sys.argv; NT = 3 if LUNGO else 4
 fail, casi = [], {}
 def chk(parte, ok, testo):
