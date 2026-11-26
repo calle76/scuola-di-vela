@@ -1,0 +1,17 @@
+ordine per errore di TARATURA (Day, F121); «controllo» = Binns 9/12 e F109, non usato per scegliere
+off 5 par 0.105 scafo 0.93 | taratura 3.07 controllo 2.95 | Day -4.5,-3.2,-2.8 F121 4.9,1.9,-0.4,0.1 | Binns9 -3.8,-3.1,-4.4,-4.9 Binns12 -2.8,-2.6,-1.8,-0.8,0.8 3,2n 0.4 | 20n 3.72
+off 5 par 0.09 scafo 1 | taratura 3.09 controllo 3.57 | Day -5,-3.5,-2.4 F121 4.5,1.6,-0.8,-0.2 | Binns9 -4,-3.8,-5.6,-6.7 Binns12 -2.6,-2.7,-2.3,-1.5,-0.2 3,2n 0 | 20n 3.81
+off 5 par 0.09 scafo 0.965 | taratura 3.11 controllo 2.70 | Day -3.9,-2.6,-1.3 F121 6,2.8,0.3,0.8 | Binns9 -3,-2.8,-4.5,-5.1 Binns12 -1.6,-1.8,-1.2,-0.4,1 3,2n 1.4 | 20n 3.86
+off 7 par 0.09 scafo 1 | taratura 3.16 controllo 3.39 | Day -4.6,-3.5,-2.4 F121 5.1,2,-0.4,-0.2 | Binns9 -3.7,-3.5,-5.1,-6.3 Binns12 -2.7,-2.8,-2.3,-1.5,-0.2 3,2n 0.6 | 20n 3.74
+off 7 par 0.105 scafo 0.93 | taratura 3.18 controllo 2.89 | Day -4,-3.2,-2.8 F121 5.5,2.4,0,0.1 | Binns9 -3.5,-2.9,-4,-5.1 Binns12 -2.9,-2.6,-1.9,-0.8,0.8 3,2n 1 | 20n 3.73
+off 9 par 0.09 scafo 1 | taratura 3.27 controllo 3.26 | Day -4.2,-3.5,-2.4 F121 5.7,2.5,0,-0.2 | Binns9 -3.5,-3.2,-4.7,-6 Binns12 -2.8,-2.9,-2.4,-1.5,-0.2 3,2n 1.2 | 20n 3.75
+off 7 par 0.09 scafo 0.965 | taratura 3.29 controllo 2.68 | Day -3.4,-2.6,-1.4 F121 6.6,3.3,0.7,0.8 | Binns9 -2.7,-2.5,-4.1,-5.3 Binns12 -1.8,-1.8,-1.2,-0.4,1 3,2n 2 | 20n 3.78
+off 9 par 0.105 scafo 0.93 | taratura 3.33 controllo 2.74 | Day -3.6,-3.3,-2.8 F121 6.1,2.9,0.5,0 | Binns9 -3.3,-2.6,-3.6,-4.5 Binns12 -3.1,-2.7,-1.9,-0.8,0.8 3,2n 1.6 | 20n 3.49
+off 7 par 0.105 scafo 0.965 | taratura 3.35 controllo 3.73 | Day -5.2,-4.1,-3.8 F121 4.1,1.2,-1.2,-0.8 | Binns9 -4.7,-3.8,-5.1,-6.1 Binns12 -3.8,-3.6,-2.9,-1.9,-0.4 3,2n -0.4 | 20n 3.45
+off 5 par 0.105 scafo 0.965 | taratura 3.37 controllo 3.91 | Day -5.7,-4.2,-3.8 F121 3.4,0.7,-1.6,-0.8 | Binns9 -5,-4.1,-5.5,-6.4 Binns12 -3.7,-3.5,-2.9,-1.9,-0.4 3,2n -1 | 20n 3.68
+off 5 par 0.075 scafo 1 | taratura 3.37 controllo 2.65 | Day -3.3,-1.9,0 F121 7,3.6,1,1.5 | Binns9 -2.2,-2.5,-4.5,-5.4 Binns12 -0.6,-1,-0.6,-0.1,1.2 3,2n 2.4 | 20n 3.97
+off 9 par 0.105 scafo 0.965 | taratura 3.39 controllo 3.59 | Day -4.8,-4.2,-3.8 F121 4.7,1.7,-0.7,-0.9 | Binns9 -4.4,-3.6,-4.7,-5.8 Binns12 -4,-3.7,-3,-1.9,-0.4 3,2n 0.1 | 20n 3.46
+off 11 par 0.09 scafo 1 | taratura 3.42 controllo 3.17 | Day -3.8,-3.6,-2.4 F121 6.3,2.9,0.3,-0.3 | Binns9 -3.3,-3.1,-4.5,-5.5 Binns12 -2.9,-3,-2.4,-1.6,-0.2 3,2n 1.7 | 20n 3.52
+off 13 par 0.09 scafo 1 | taratura 3.49 controllo 3.19 | Day -3.8,-3.6,-2.4 F121 6.5,3,0.3,-0.3 | Binns9 -3.2,-3.1,-4.5,-5.5 Binns12 -3.1,-3,-2.5,-1.6,-0.2 3,2n 1.9 | 20n 3.53
+off 9 par 0.09 scafo 0.965 | taratura 3.49 controllo 2.54 | Day -3,-2.6,-1.4 F121 7.2,3.7,1.1,0.7 | Binns9 -2.5,-2.2,-3.7,-4.8 Binns12 -1.9,-1.9,-1.3,-0.5,1 3,2n 2.6 | 20n 3.79
+freno: 0 pause, picco 41 °C, uscita 0

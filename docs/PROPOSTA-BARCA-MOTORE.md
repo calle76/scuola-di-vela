@@ -2,7 +2,16 @@
 
 Scritta il 26 novembre 2026, **prima del via**: niente codice in `js/`. La ricerca è in `PROPOSTA-SESSIONE-BARCA.md` §Esito e `sperimentale/barca-84/` (`INTERVALLI.md`, `RICERCA-K.md`). Il motore pronto è `sperimentale/barca-84/motore84.js`, scritto da `fa_motore84.py` partendo da `js/motore.js`.
 
-## Cosa cambia (modello più semplice che passa le fonti)
+## Aggiornamento del 26 novembre sera: candidato M (sesto giro, `sperimentale/barca-84/GIRO6.md`)
+
+Dopo la rilettura (VMG sulla rotta) e il via di Ale a tarare («adattare la barca alla realtà, anche senza fonti»), **il candidato proposto è M** = K con due tarature dichiarate e una curva con fonte:
+- spostamento fra tabella ORC e incidenza del boma **7°** invece di 9° (taratura su Day e F121);
+- scafo **×0,93** (la vasca SSPA, F121 tab. 2; taratura);
+- raddrizzata oltre 22,5° con la **forma del 470** (F4 fig. 4).
+
+Col metro sulla rotta M passa B1 (−4,0%), B3, B4, B5, B6, B7b e i tre criteri di gioco; **B2 no per 0,1 punti** (−5,1% a 60°). Controlli non usati per tarare: virate di Semb con 14 nodi uguali alla misura (92% / 7,6 s), regate GPS (VMG di bolina uguale alle medie di regata). Sul gioco: medaglie OK, torneo come K, regola 18 Z4 ora passa, lezione 6.3 da rifare. **B8 andrebbe riscritto** («costanti con fonte, o tarate su una parte dei dati e controllate sul resto»): decisione di Ale. `fa_motore84.py` scrive M.
+
+## Cosa cambia (modello più semplice che passa le fonti; tabella del candidato K, per M vedi sopra)
 
 | Cosa | Oggi | Proposta | Fonte o ipotesi |
 |---|---|---|---|
@@ -66,5 +75,8 @@ Misure del 26 novembre sul clone del repo: due varianti con l'appiattimento a 1,
 - Le lezioni si ritoccano dopo, sulla barca scelta (6.3: scuffia da sola 5 volte su 30).
 
 ## Decisione di Ale
+
+**Ora (sesto giro):** accendere M, con B2 (0,1 punti) e la nuova B8 dichiarati, o tenere la barca di oggi. Il testo che segue riguarda K.
+
 
 Accendere (con B2 e B8 non passati dichiarati) o tenere la barca di oggi come limite noto. Se si accende: il **candidato K** (area 7,92, appiattimento 1,5 s, vela che sbatte da 0° a 10°), già scritto da `fa_motore84.py` in `motore84.js`.

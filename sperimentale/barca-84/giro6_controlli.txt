@@ -1,0 +1,27 @@
+## M (rotta)
+  B1 si  B2 NO  B3 si  B4 si  B5 si  B6 si  B7 NO  B7b si  vir16 si  raff18 si  morto si
+  Day 6n -4.0% (45°, sb 1°, fuori 48%)  10n -3.2% (41°, sb 4°, fuori 100%)  15n -2.8% (44°, sb 4°, fuori 100%) | 20n 3.73
+  Binns9 -3.5 -2.9 -4.0 -5.1 | Binns12 -2.9 -2.6 -1.9 -0.8 +0.8 | F121 +6 +2 +0 +0 | 3,2n 1.06 (+1.0%)
+  virata imposta 3,2n -1.06 m (prima +0.59, min 71%)  11n -1.34 (prima +0.55; F109 -4,39) lascando: -1.94 (min 53%, senza lascare 59%; F109 51%)
+  12n 90/110/135/180: 7.70 7.13 5.96 5.12 | poppa Day -1 -1 -0
+  virata freccia 6n 3.0s 71% (u 3.7, sb 1→7), 8n 2.5s 69% (u 4.6, sb 1→12), 10n 2.3s 67% (u 5.2, sb 4→15), 12n 2.3s 65% (u 5.3, sb 4→19), 14n 2.3s 62% (u 5.4, sb 4→23), 16n 2.3s 58% (u 5.6, sb 4→27), 18n 2.4s 49% (u 5.5, sb 4→31), 20n 3.0s 3% (u 5.2, sb 4→31)
+  raffica 10→16/18/20 senza/lascando 37/22  51/31  65/42 | fermo 0-15° max -0.22 -0.31 -0.32 | ferma→2 nodi a 60°, 6/10 nodi 8.4/4.8 s | 6n a 20/25/30/35° 0.37 1.18 2.38 2.98
+  Semb 14 nodi: uscita 92% media 89% 80% 7.6 s (misura 92 / 86 / 7,6)
+  Semb 18 nodi: uscita 71% media 79% 80% 9.6 s (misura 92 / 86 / 7,6)
+  regate 6 nodi (Pan e Sun, medie: bolina 3.7, VMG 2.5, poppa 3.3, lasco 4.2): barca bolina 3.69, VMG 2.54, VMG poppa 2.92, lasco 110° 4.11
+  regate 10 nodi (Pan e Sun, medie: bolina 4.5, VMG 3.2, poppa 4.7, lasco 5.8): barca bolina 4.80, VMG 3.50, VMG poppa 4.51, lasco 110° 5.95
+  regate 15 nodi (Pan e Sun, medie: bolina 4.9, VMG 3.7, poppa 7.8, lasco 9.1): barca bolina 5.41, VMG 3.70, VMG poppa 6.28, lasco 110° 9.28
+## M5 (rotta)
+  B1 si  B2 si  B3 si  B4 si  B5 si  B6 si  B7 NO  B7b si  vir16 si  raff18 si  morto si
+  Day 6n -4.5% (44°, sb 1°, fuori 46%)  10n -3.2% (41°, sb 4°, fuori 100%)  15n -2.8% (44°, sb 4°, fuori 100%) | 20n 3.72
+  Binns9 -3.8 -3.1 -4.4 -4.9 | Binns12 -2.8 -2.6 -1.8 -0.8 +0.8 | F121 +5 +2 -0 +0 | 3,2n 1.05 (+0.4%)
+  virata imposta 3,2n -1.08 m (prima +0.58, min 71%)  11n -1.39 (prima +0.55; F109 -4,39) lascando: -2.03 (min 52%, senza lascare 59%; F109 51%)
+  12n 90/110/135/180: 7.70 7.13 5.96 5.12 | poppa Day -1 -1 -0
+  virata freccia 6n 3.0s 71% (u 3.7, sb 1→7), 8n 2.5s 69% (u 4.6, sb 1→12), 10n 2.3s 67% (u 5.2, sb 4→16), 12n 2.3s 65% (u 5.3, sb 4→19), 14n 2.3s 62% (u 5.4, sb 4→23), 16n 2.3s 58% (u 5.6, sb 4→27), 18n 2.4s 49% (u 5.5, sb 4→31), 20n 2.8s 4% (u 5.3, sb 4→31)
+  raffica 10→16/18/20 senza/lascando 37/22  51/30  65/41 | fermo 0-15° max -0.23 -0.32 -0.34 | ferma→2 nodi a 60°, 6/10 nodi 8.4/4.8 s | 6n a 20/25/30/35° 0.38 1.25 2.38 2.96
+  Semb 14 nodi: uscita 92% media 89% 80% 7.6 s (misura 92 / 86 / 7,6)
+  Semb 18 nodi: uscita 73% media 80% 80% 9.4 s (misura 92 / 86 / 7,6)
+  regate 6 nodi (Pan e Sun, medie: bolina 3.7, VMG 2.5, poppa 3.3, lasco 4.2): barca bolina 3.67, VMG 2.53, VMG poppa 2.92, lasco 110° 4.11
+  regate 10 nodi (Pan e Sun, medie: bolina 4.5, VMG 3.2, poppa 4.7, lasco 5.8): barca bolina 4.80, VMG 3.50, VMG poppa 4.51, lasco 110° 5.95
+  regate 15 nodi (Pan e Sun, medie: bolina 4.9, VMG 3.7, poppa 7.8, lasco 9.1): barca bolina 5.41, VMG 3.69, VMG poppa 6.28, lasco 110° 9.28
+freno: 0 pause, picco 46 °C, uscita 0
