@@ -76,6 +76,10 @@ Misure del 26 novembre sul clone del repo: due varianti con l'appiattimento a 1,
 
 ## Decisione di Ale
 
+**26 novembre 2026, «sì, sì, a»:** (1) **si accende M**; (2) **B8 diventa** «ogni costante ha una fonte, oppure è tarata su una parte dei dati, controllata sul resto e dichiarata come taratura»; (3) **la vela che si appiattisce da sola con la raffica è fisica del velista** (come l'uscita fuori bordo), non un aiuto: nessun interruttore. B2 (−5,1% a 60°, 0,1 punti oltre la soglia) resta scritto come limite noto. Da fare nella fermata 2: motore da `fa_motore84.py`, lezione 6.3, fasce dei tempi e medaglie, impronte (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`), soglia Z1 della regola 18, lezioni 5.8 / 6.2 / 2.6 da guardare, versione nuova.
+
+**Prima (superato):**
+
 **Ora (sesto giro):** accendere M, con B2 (0,1 punti) e la nuova B8 dichiarati, o tenere la barca di oggi. Il testo che segue riguarda K.
 
 
