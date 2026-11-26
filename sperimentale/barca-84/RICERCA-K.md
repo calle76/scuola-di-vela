@@ -92,3 +92,13 @@ Numeri in `docs/PROPOSTA-BARCA-MOTORE.md` §«Sul gioco». In breve: medaglie tu
 
 - **Laschi: K coincide con le regate.**
 - **Poppa: le regate vanno più forte** (+15 / +6 / +27%). Schutt (F109 cap. 3, fig. 3.18, vento 12 nodi a 6 m): andando dritti VMG circa 2,5 m/s (4,9 nodi), con le «S» circa 3,0 m/s (5,8 nodi, +19%); «in regata quasi nessuno va dritto in poppa, salvo col vento molto debole». K a 12 nodi fa 5,10: **vicino a chi va dritto**. La differenza con le regate è tecnica (S, onde, pompaggio permesso col vento forte), che il gioco non ha: possibile voce futura, non è la barca.
+
+## 10. Sbandamento di bolina (F121 §4.3-4.4 e §6)
+
+Pennanen: a 2 nodi di velocità conviene sbandare di 10-15° sottovento (meno superficie bagnata), da 3 nodi in su conviene andare dritti, poi un piccolo sbandamento dà momento raddrizzante in più («i velisti accettano qualche grado»). K: 1° con 6 nodi di vento, 4° da 10 a 15 nodi; con vento debolissimo va dritto, perché nel gioco lo sbandamento non cambia la resistenza dello scafo. **Limite minore** (Pennanen: con vento debolissimo le differenze di velocità sono molto piccole).
+
+## Restano aperti (fine del quarto giro)
+
+- Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento, raddrizzata oltre 22,5°: senza misura (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).
+- **Da scaricare a mano (il sito blocca i programmi):** «Multi-Sensor System for Analysis of Maneuver Performance in Olympic Sailing», Applied Sciences 15 (2025) 8629, https://doi.org/10.3390/app15158629: un ILCA 7 con sensori su timone, albero e sbandamento; può dare virate e raffiche misurate.
+- Poppa con le S e le onde: tecnica che il gioco non ha (possibile voce futura).
