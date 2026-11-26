@@ -207,7 +207,7 @@ TESTS=(
 nota() {
     case "$1" in
         "polare.js") echo "confronta a mano con circa 5,2 nodi a 45°, 6,3 a 90°, 4,5 a 180° con 10 nodi (dalla 1.3.59, barca M della voce 84; 1.1.0-1.3.58: 4,6 / 6,0 / 4,1)" ;;
-        "raffiche_e_virate.js") echo "virata riuscita in circa 3,2 s da 3,9 nodi e in circa 6,6 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 61° (scuffia) con la scotta fissa e 62° (scuffia) col boma a 21° (dalla 1.3.59, barca M; 1.1.0-1.3.58: 3,9 / 7,5 / 65° / 52°)" ;;
+        "raffiche_e_virate.js") echo "virata riuscita in circa 3,2 s da 3,9 nodi e in circa 6,4 s da 1,9 nodi, fallita da fermi; raffica a 20 nodi senza reagire 61° (scuffia) con la scotta fissa e 62° (scuffia) col boma a 21° (dalla 1.3.60, barca M che riparte da ferma; 1.1.0-1.3.58: 3,9 / 7,5 / 65° / 52°)" ;;
         "collaudo_regole.py") echo "riga «ESITO: OK» (regole 10, 11, 12 e 13 nell'1b: 24 casi a mano dal regolamento, virata, e le due regole di sempre nell'1a)" ;;
         "collaudo_semaforo.py") echo "riga «ESITO: OK» (semaforo di precedenza: 16 regate dell'1b, colore uguale alla penalità, impostazione spenta, 1a senza semaforo)" ;;
         "collaudo_contatto_vero.py") echo "riga «ESITO: OK» (contatto fra gli scafi nell'1b: 8 coppie a mano nei due livelli, 6 regate col pilota nell'1a e nell'1b, 0 sovrapposizioni senza contatto, nessun contatto con gli scafi a più di 5 cm)" ;;

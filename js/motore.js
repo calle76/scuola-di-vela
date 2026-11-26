@@ -130,6 +130,9 @@ function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.0
    deriva alzata nelle portanti: attrito 0,0049 -> 0,0026 fra 100 e 140 gradi (qualitativo); smorzamento della resistenza indotta 0,1 (Day fig. 11). */
 const V84 = { orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 0, w: 10, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.92, fg: 0.08, cdn: 1.32,
   gz: [[0, 0], [4.5, 0.083], [9, 0.145], [13.5, 0.19], [18, 0.223], [22.5, 0.247], [25, 0.263], [30, 0.263], [35, 0.252], [40, 0.24], [45, 0.212], [50, 0.185], [55, 0.15], [60, 0.115], [70, 0.046], [76, 0], [90, -0.05]], k08: 32, flMin: 0.6, flTau: 1.5, hT: 3, tw: 0.186, zH: 1.867, app: [0.0049, 0.0026], dw: [100, 140] };
+/* 1.3.60: smorzamento della resistenza indotta: 0,1 di Day (fig. 11, barca in movimento) solo sopra 1,5 m/s; da ferma 0,3, con una rampa fra 0,3 e 1,5 m/s.
+   TARATURA (R1 e R3 di docs/PROPOSTA-RIPARTENZA.md): con 0,1 anche da ferma la deriva frenava quanto spingeva la vela cazzata e la barca restava a 0,4 nodi. */
+const rif84 = u => 0.1 + 0.2 * (1 - Math.max(0, Math.min(1, (Math.abs(u) - 0.3) / 1.2)));
 function tab84(T, x, c){ if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T.length; i++) if (x <= T[i][0]) return T[i - 1][c] + (T[i][c] - T[i - 1][c]) * (x - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); return T[T.length - 1][c]; }
 const liscio84 = t => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
 const svergola84 = fl => V84.tw * (1 - fl) / (1 - V84.flMin);
@@ -182,7 +185,7 @@ function step(S, C, E, dt){
   const heelDrag = 1 + Math.pow(Math.abs(S.heel || 0) / 30, 2) * 0.6;
   // 1.0.11: resistenza indotta, Delft (Day 2017, eq. 15) Ri = Fh² / (π·½ρ·V²·TE²), con u² + 0,4 come nello scarroccio: a bassa velocità la deriva non regge
   // la spinta laterale e la formula pura fermerebbe la barca (docs/archivio/PROPOSTA-BOLINA.md §3). TE costante: in Delft cala sbandando e cambia col Froude.
-  const Ri = BOAT.TE > 0 ? side * side * S.u * Math.abs(S.u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (S.u * S.u + 0.1) ** 2) : 0;
+  const Ri = BOAT.TE > 0 ? side * side * S.u * Math.abs(S.u) / (Math.PI * 0.5 * BOAT.rhoW * BOAT.TE * BOAT.TE * (S.u * S.u + rif84(S.u)) ** 2) : 0;
   S.u += (drive - res * heelDrag - Ri) / BOAT.mass * dt;
   // 1.0.8: nessun tetto all'indietro (docs/archivio/PROPOSTA-RETROMARCIA.md): vela che sbatte contro la resistenza della tabella, la stessa della marcia avanti
   // scarroccio: la deriva resiste molto, meno a bassa velocità

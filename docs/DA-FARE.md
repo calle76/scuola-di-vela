@@ -12,6 +12,7 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
+| 89 | **Lezione 18 «Stare fermi» con la barca M** (trovato il 26 nov): con M la barca ferma con la vela lascata non scarroccia fuori dal cerchio di 8 m, quindi il passo si supera senza toccare la scotta (`collaudo_stare_fermi` F2, già nella 1.3.59). Da ripensare l'esercizio sulla barca nuova (proposta) | `PROPOSTA-RIPARTENZA.md` §Esito | Sonnet |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** versione A fatta nella 1.3.49 (colpa, semaforo, zona disegnata, lezione 25). **Versione B (rivali che danno spazio): proposta e misura fatte il 24 nov, consiglio «non ora»** (7 momenti utili in 90 regate), si decide con Z7 (`PROPOSTA-REGOLA-18-B.md`). Z7: rifare `conta_boa_zona.py` sulle prime regate di Ale e Lucio con la 18; dalla 1.3.56 (4B accesa) guardare anche i contatti entro 12,6 m dalla boa, col pilota 7 → 13, e `collaudo_avversari1b` scenario 5 (tre rivali alla boa: 9-10 → 7 su 10) | `PROPOSTA-REGOLA-18.md` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via

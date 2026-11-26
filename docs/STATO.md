@@ -2,7 +2,9 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 26 novembre 2026, notte (gioco alla **1.3.59**, tag `v1.3.59`; la barca M, voce 84).*
+*Aggiornato: 26 novembre 2026, notte (gioco alla **1.3.60**, tag `v1.3.60`; la barca M che riparte da ferma).*
+
+- **1.3.60 (via di Ale):** la barca M della 1.3.59 da ferma con la vela cazzata non ripartiva (regata di Ale del 26 nov: 50 s fermo al via). Corretto lo smorzamento della resistenza indotta alle basse velocità (taratura); sopra 2,9 nodi M identica. R1, R2, R3, R5 ok; **R4 no** (a 25° dal vento la barca avanza: già nella 1.3.59). **Trovato:** «Stare fermi» (lezione 18) si supera senza toccare la scotta con M (voce 89). La misura dei rivali con M (voce 2) va rilanciata sulla 1.3.60. `PROPOSTA-RIPARTENZA.md`.
 
 ## Dove siamo
 

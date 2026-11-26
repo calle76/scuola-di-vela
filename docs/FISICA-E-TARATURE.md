@@ -22,7 +22,7 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | Vela piatta e svergolata col timoniere al limite | no | sì (Day §2.3-2.4), in 1,5 s | il ritardo è **ipotesi**; è fisica del velista, senza interruttore (Ale, 26 nov) |
 | Poppa: forza della vela | 1,15 | Magnander (F120, F124) | fonte |
 | Deriva alzata nelle portanti | no | attrito 0,0049 → 0,0026 fra 100° e 140° | qualitativa |
-| Smorzamento della resistenza indotta | u² + 0,4 | u² + 0,1 | fonte: Day fig. 11 |
+| Smorzamento della resistenza indotta | u² + 0,4 | u² + 0,1 sopra 2,9 nodi (Day fig. 11); dalla 1.3.60 0,3 da ferma con una rampa fra 0,6 e 2,9 nodi | Day per la barca in movimento; da ferma **taratura** (`PROPOSTA-RIPARTENZA.md`) |
 
 **B8 riscritto da Ale (26 nov):** ogni costante ha una fonte, oppure è tarata su una parte dei dati, controllata sul resto e dichiarata come taratura. **Limiti noti:** B2 (Binns 9 nodi a 60°: −5,1%, soglia ±5); la poppa resta del 20-30% sotto le misure prese con surf e S (voci 86-88); le strambate non costano niente (voce 85); con 18 nodi la barca riparte dalla virata più piano del vero se si lasca troppo.
 
