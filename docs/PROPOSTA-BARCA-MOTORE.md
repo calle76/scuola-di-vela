@@ -23,6 +23,8 @@ Scritta il 26 novembre 2026, **prima del via**: niente codice in `js/`. La ricer
 
 ## Criteri (scritti prima, invariati) e dove siamo
 
+**Attenzione (rilettura del 26 novembre, `RICERCA-K.md` §17):** tutti i numeri di bolina di questa proposta usano la VMG calcolata con la prua; Day e Binns misurano sulla rotta, scarroccio compreso. Sulla rotta K è lento del 4-6% e **non passa B1 (−5,9%), B2 e B3**. Prima del via va rifatto il conto col metro giusto e deciso, con un criterio scritto prima, quale delle due vasche usare per lo scafo.
+
 B1-B7b come in `PROPOSTA-SESSIONE-BARCA.md`. Col candidato J: passano B1, B3-B7b, virata a 16 nodi, raffica, angolo morto; **non passano B2** (−5,7 / −7,3% a 55-60°, dentro l'incertezza delle fonti: `RICERCA-K.md` §1) **e B8** (ipotesi rimaste: il 9°, raddrizzata oltre 22,5°, ritardo dell'appiattimento, ampiezza `w` della vela che fileggia). Si accende sapendolo, oppure non si accende.
 
 ## Cosa va rifatto nel gioco se si accende

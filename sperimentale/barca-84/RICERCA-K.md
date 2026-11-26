@@ -146,6 +146,28 @@ Riletto F4 cercando i punti aperti:
 
 **Tecnica d'uscita** (`virate_tecnica.js`, K, 18 nodi): Semb scrive che il velista esce un po' più giù e poi risale, Taylor che cazza dopo la virata. Uscendo 15° più larghi e lascando poco (+0,15 di scotta) per 4 s: uscita 95%, media 83%, 80% dopo 8,4 s (misura 92% / 86% / 7,6 s). Lascando di più (+0,2 / +0,3) la barca si ferma di nuovo: il margine è stretto. Quindi con vento forte la barca del gioco riparte come quella vera solo con la tecnica giusta, e perdona poco: per il giocatore è da guardare (lezioni, aiuti), non per forza un difetto della fisica.
 
+## 17. Rilettura prima del via (26 nov, richiesta di Ale): cosa era stato tralasciato
+
+**1. Il metro della VMG (il punto più grosso).** Il banco della voce 84 (`banco84.js`) calcola la VMG con la prua (u·cos dell'angolo di prua) e mette la barca a un angolo di prua dato. Day (F17: «speed, track, heel, leeway»), Binns e i GPS misurano velocità e angolo **sulla rotta**, scarroccio compreso. Il progetto lo sapeva già (`archivio/PROPOSTA-SCARROCCIO-1B.md`: «il metro di oggi non vede lo scarroccio»; `STUDIO-BARCA.md` misura sulla rotta vera), ma il banco della 84 è tornato alla prua. Con 3° di scarroccio la differenza è circa il 5%. Rimisurato (`vmg_rotta.js`):
+
+| | Day 6 / 10 / 15 | Binns 9, 42-60° | Binns 12, 42-60° |
+|---|---|---|---|
+| soglie | B1 ≥ −5, B4 ≤ +7 | B2 ±5 | B3 ±3 |
+| oggi, con la prua | −15,8 / −10,1 / +6,1 | −15,5 … −11,8 | −2,5 … −0,9 |
+| oggi, sulla rotta | −19,7 / −14,8 / +0,7 | −28,4 … −15,4 | −17,3 … −3,0 |
+| K, con la prua | −1,8 / −0,3 / +0,5 | +0,2 … −5,2 | ±0,7 |
+| **K, sulla rotta** | **−5,9** / −5,0 / −4,8 | −5,8 / −4,5 / −5,9 / −6,9 | **−5,0 / −4,7** / −3,7 / −2,6 / −1,5 |
+
+Sulla rotta **K non passa B1 (−5,9%), B2 e B3**: la barca nuova è ancora lenta del 4-6% di bolina con tutti i venti. Tutti i numeri della 84 (criteri B, scansione, Monte Carlo, tabelle della proposta) sono stati presi col metro della prua, quindi sono ottimisti di circa il 5% in bolina; il confronto fra oggi e K resta valido (stesso errore), le distanze dalle fonti no. La forma del 470 non cambia niente in bolina. **Solo per stimare la distanza (dopo aver visto il risultato, non è una scelta):** con lo scafo della vasca SSPA (×0,93, §1) e la VMG sulla rotta K dà Day −3,6 / −3,3 / −2,8, Binns 9 −2,8 … −4,5, Binns 12 −2,6 … +0,7: passerebbe B1-B3. Le due vasche vere differiscono del 5-10% (§1); quale usare va deciso con un criterio scritto prima, non guardando questi numeri.
+
+**2. Il regime lento.** Lo smorzamento della resistenza indotta `reg` 0,1 è stato scelto sulla quota di Day a 5 nodi (dichiarato), ma pesa soprattutto sotto 1-2 m/s: ripartenze dalle virate (§15: con 0,4 K esce al 75% invece del 28% con 18 nodi), partenze, angolo morto. Per quel regime ora ci sono misure (Semb F137, virate del 470 in F4, F109): andrebbe controllato lì.
+
+**3. Il timoniere che appiattisce la vela da solo** (τ 1,5 s) è un aiuto automatico che il giocatore non vede e non può spegnere (principio 3: «gli aiuti si possono disattivare»). Era scritto fra i rischi, ma non confrontato col principio. Da decidere: fisica del velista (come l'uscita fuori bordo, già automatica) o aiuto da poter spegnere.
+
+**4. Non provati con K:** strambate e poppa con vento forte (nessuna fonte numerica trovata, nessun controllo del banco); l'aiuto «scotta automatica» del giocatore dopo una virata nelle raffiche (lo stesso gesto del pilota del §15, che con 18 nodi resta fermo); i rivali dopo le virate nelle raffiche forti (il torneo è passato, ma non è un controllo mirato).
+
+**5. Già detto e confermato:** la ripartenza con vento forte chiede la tecnica giusta (§16); B8 non passa; le lezioni 6.3 e le fasce vanno rifatte.
+
 ## Restano aperti (fine del quarto giro)
 
 - Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento: senza misura; raddrizzata oltre 22,5°: ora c'è la forma del 470 (§16), da decidere se usarla (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).
