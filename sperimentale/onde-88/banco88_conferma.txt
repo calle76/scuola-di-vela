@@ -1,0 +1,36 @@
+=== banco onde, gruppo «conferma» (semi 11-20), fetch 5 km ===
+onde con 6 nodi: Hs 0.10 m, Tp 1.51 s, lunghezze 1.7/2.9/4.3/6.0/8.0 m
+onde con 7 nodi: Hs 0.12 m, Tp 1.61 s, lunghezze 2.0/3.3/4.9/6.8/9.1 m
+onde con 9 nodi: Hs 0.17 m, Tp 1.78 s, lunghezze 2.4/4.0/6.0/8.4/11.2 m
+onde con 10 nodi: Hs 0.19 m, Tp 1.86 s, lunghezze 2.7/4.4/6.6/9.2/12.2 m
+onde con 12 nodi: Hs 0.24 m, Tp 2.01 s, lunghezze 3.1/5.1/7.6/10.6/14.2 m
+onde con 15 nodi: Hs 0.32 m, Tp 2.20 s, lunghezze 3.7/6.1/9.1/12.8/17.0 m
+NO      O1 6 nodi: 45°: 3.75 → 3.58 (-4.5%); 60°: 4.36 → 4.27 (-1.9%); 90°: 4.43 → 4.43 (+0.0%); 110°: 4.14 → 4.14 (-0.1%); 135°: 3.59 → 3.54 (-1.2%); 150°: 3.10 → 3.11 (+0.5%); 180°: 2.87 → 2.88 (+0.2%)
+NO      O1 7 nodi: 45°: 4.21 → 3.96 (-5.9%); 60°: 4.80 → 4.71 (-1.9%); 90°: 4.85 → 4.85 (-0.0%); 110°: 4.62 → 4.60 (-0.3%); 135°: 4.06 → 4.01 (-1.1%); 150°: 3.55 → 3.94 (+11.1%); 180°: 3.30 → 3.42 (+3.6%)
+        9 nodi 135°: piatta 4.84, onde 4.78 (-1.2%, semi 4.77-4.80), punta mediana 5.32 (+9.8%), scuffie 0
+ok      O3 9 nodi 135°: 4.78 contro Bethwaite/Binns 6.1
+        9 nodi 150°: piatta 4.37, onde 4.36 (-0.2%, semi 4.36-4.36), punta mediana 5.15 (+17.8%), scuffie 0
+        9 nodi 180°: piatta 4.11, onde 3.79 (-7.7%, semi 3.79-3.79), punta mediana 4.63 (+12.8%), scuffie 0
+ok      O3 9 nodi 180°: 3.79 contro Bethwaite/Binns 5.5
+NO      O2 10 nodi 135°: piatta 5.19, onde 5.16 (-0.6%, semi 5.15-5.17), punta mediana 5.80 (+11.7%), scuffie 0
+NO      O2 10 nodi 150°: piatta 4.73, onde 4.71 (-0.3%, semi 4.70-4.72), punta mediana 5.61 (+18.8%), scuffie 0
+NO      O2 10 nodi 180°: piatta 4.47, onde 4.45 (-0.4%, semi 4.41-4.51), punta mediana 5.34 (+19.6%), scuffie 0
+ok      O2 12 nodi 135°: piatta 5.96, onde 6.03 (+1.3%, semi 6.03-6.04), punta mediana 6.99 (+17.4%), scuffie 0
+ok      O3 12 nodi 135°: 6.03 contro Bethwaite/Binns 8
+ok      O2 12 nodi 150°: piatta 5.42, onde 5.59 (+3.2%, semi 5.57-5.61), punta mediana 6.72 (+23.9%), scuffie 0
+ok      O2 12 nodi 180°: piatta 5.12, onde 5.49 (+7.2%, semi 5.47-5.50), punta mediana 6.56 (+28.3%), scuffie 0
+ok      O3 12 nodi 180°: 5.49 contro Bethwaite/Binns 6.7
+ok      O4 12 nodi 180°: punta mediana +28.3% (soglia +20%)
+NO      O2 15 nodi 135°: piatta 7.58, onde 7.41 (-2.3%, semi 7.33-7.47), punta mediana 8.83 (+16.4%), scuffie 0
+ok      O2 15 nodi 150°: piatta 6.62, onde 6.91 (+4.5%, semi 6.91-6.92), punta mediana 8.31 (+25.6%), scuffie 0
+NO      O2 15 nodi 180°: piatta 6.16, onde 6.01 (-2.4%, semi 6.01-6.03), punta mediana 7.22 (+17.3%), scuffie 0
+NO      O4 15 nodi 180°: punta mediana +17.3% (soglia +20%)
+NO      O5 10 nodi: VMG di poppa a prua ferma 4.510 (a 170°, piatta 4.509), pilota sull'onda 4.403 (-2.4%), scuffie 0
+NO      O5 12 nodi: VMG di poppa a prua ferma 5.487 (a 180°, piatta 5.117), pilota sull'onda 5.487 (+0.0%), scuffie 0
+NO      O5 15 nodi: VMG di poppa a prua ferma 6.049 (a 170°, piatta 6.275), pilota sull'onda 6.012 (-0.6%), scuffie 0
+ok      O6 10 nodi: VMG di bolina piatta 3.505 (41°), con le onde 3.286 (44°): perdita 6.3% (soglia 3-15%), scuffie 0
+ok      O6 15 nodi: VMG di bolina piatta 3.696 (44°), con le onde 3.238 (50°): perdita 12.4% (soglia 8-25%), scuffie 0
+NO      O7 15 nodi: VMG di bolina con le onde 3.238 (soglia 3,7)
+ok      O8 6 coppie uguali al bit; semi diversi danno tracce diverse: true
+ESITO: 24 controlli, 12 ok, non passano: O1, O2, O4, O5, O7
+freno: 0 pause, picco 48 °C, uscita 0
