@@ -310,3 +310,35 @@ Le diagnosi dei §§7-14 sono sulle regate corte della 1.2.24 e le registrazioni
 | virate in bolina | 9,1 → 5,9 | 7,1 → 5,1 | |
 
 Le virate in più spariscono quasi tutte, ma il tempo perso scende poco: erano più un segno che la causa. Nei principianti la media quasi non si muove (la mediana sì: pochi lati vanno molto peggio) e gli esperti non arrivano prima. **Non si conferma sui semi 4521-4540, non si propone.** Resta da capire che cosa valgono i 20-30 s di bolina che le virate non spiegano (angolo e regolazione dei livelli, salti non giocati: §§4-8); l'avvicinamento alla boa, qui, non è più il pezzo grosso.
+
+## 17. Misura base rifatta sulla barca M (1.3.61, 27 novembre 2026, notte; gioco invariato, Opus)
+
+La misura del §16 era sulla 1.3.55 (barca vecchia). Stesso strumento, stessi semi 4501-4520, 120 regate lunghe, Chromium, 0 errori, picco 61 °C. Righe in `sperimentale/rivali_lunghe_1-3-61_4501-4520.jsonl`, riepilogo nel `.txt` accanto. Nessuna soglia: è una diagnosi.
+
+| | principianti 1.3.55 → 1.3.61 | esperti 1.3.55 → 1.3.61 |
+| --- | --- | --- |
+| bolina persa, mediana | 64,1 → **49,2 s** (19%) | 41,8 → **29,7 s** (11%) |
+| quota della bolina sulle perdite | 76% → 69% | 73% → 66% |
+| virate in bolina (ottimale) | 9,1 (4,8) → 8,3 (3,9) | 7,1 (4,7) → 6,2 (3,7) |
+| ultimi 40 m dalla boa 1, media | 8,0 → 6,5 s | 7,3 → 4,0 s |
+| arrivo mediano | 598 → 553 s | 578 → 538 s |
+| boe toccate / non arrivati | 6 / 1 → 13 / 0 | 20 / 0 → 9 / 0 |
+
+**Virate in più e secondi persi in bolina** (regressione sui 180 lati di ogni livello): principianti r 0,48, 6,7 s per virata in più, **57%** della perdita; esperti r 0,27, 3,2 s per virata, **24%**. Restano circa 22-26 s per lato.
+
+**Angolo dei rivali sulla polare di M** (VMG da `rotta-dati.js`): la bolina migliore è a 40-45° di prua (49° con 18 nodi). Gli esperti (45-48°) perdono l'1-1,5% di VMG, i principianti (49-54°) il 4-6%: come sulla barca vecchia.
+
+#### Diagnosi «angolo e regolazione» (§7) sulle regate lunghe: `DIAGUP=42 DIAGTRIM=0`, stessi 120 semi-regata in coppia
+
+| | principianti | esperti |
+| --- | --- | --- |
+| bolina persa, media in coppia | 51,5 → 39,3 s (**−12,2 s**) | 33,7 → 32,8 s (**−0,9 s**) |
+| mediana | 49,2 → 38,2 s | 29,7 → 29,4 s |
+| virate in bolina | 8,3 → 7,7 | 6,2 → 6,0 |
+
+`sperimentale/rivali_lunghe_1-3-61_diag42_4501-4520.jsonl` e `.txt`.
+
+**Cosa vuol dire:**
+- Angolo e regolazione spiegano quasi tutta la **differenza fra i livelli** (con 42° e vela giusta i principianti vanno come gli esperti), che è voluta (`aiParams`): non si corregge.
+- **Negli esperti angolo e regolazione non contano niente.** Dei loro ~33 s per bolina, le virate in più ne spiegano circa un quarto; gli altri ~25 s (circa il 9% del lato) non sono né angolo, né regolazione, né vento coperto (2,5-2,8% del tempo), né la boa (4 s). Restano la **tattica sui salti** (da che parte e quando virare) e la parte della rotta ottimale che nessuno può avere (conosce il vento futuro).
+- **Prossimo passo proposto (non fatto):** separare le due cose con un pilota che vira sui salti col vento del posto (non quello futuro), da usare come metro raggiungibile al posto della rotta ottimale, sugli stessi semi. Se gli esperti restano a più di 10-15 s da quel metro, la guida dei bordi ha margine; se no, la voce 2 è chiusa come «rivali già vicini al possibile». **Nessuna proposta di correzione pronta.**

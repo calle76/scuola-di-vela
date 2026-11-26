@@ -1,0 +1,13 @@
+120 regate, 360 rivali, errori 0
+ principianti: 60 regate, 420 lati
+   bolina    lati  180  persi mediana   49.2 s (19.0%), media   51.4, quota 69%; virate 8.3 (ottimale 3.9), cambi di mure 8.7
+   lasco     lati  120  persi mediana   14.3 s (10.3%), media   15.0, quota 13%; virate 0.0 (ottimale 0.2), cambi di mure 0.5
+   poppa     lati  120  persi mediana   18.4 s (9.3%), media   20.1, quota 18%; virate 0.0 (ottimale 1.2), cambi di mure 3.2
+   ultimi 40 m dalla boa 1: 180 passaggi, persi media 6.5 s (mediana 3.8), virate 1.22
+   coperti 2.9% del tempo, episodi 230; non arrivati 0; taglio mediano 6.0 s; arrivo mediano 553.4 s; boe toccate 13, scuffie 0
+ esperti: 60 regate, 420 lati
+   bolina    lati  180  persi mediana   29.7 s (11.3%), media   33.7, quota 66%; virate 6.2 (ottimale 3.7), cambi di mure 6.3
+   lasco     lati  120  persi mediana    9.1 s (6.9%), media   10.4, quota 13%; virate 0.0 (ottimale 0.1), cambi di mure 0.5
+   poppa     lati  120  persi mediana   14.8 s (7.8%), media   16.2, quota 21%; virate 0.1 (ottimale 1.3), cambi di mure 2.1
+   ultimi 40 m dalla boa 1: 180 passaggi, persi media 4.0 s (mediana 1.9), virate 1.11
+   coperti 2.5% del tempo, episodi 244; non arrivati 0; taglio mediano 5.2 s; arrivo mediano 537.9 s; boe toccate 9, scuffie 0

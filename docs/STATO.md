@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026 (gioco alla **1.3.61**, tag `v1.3.61`; controllo completo della barca).*
+*Aggiornato: 27 novembre 2026, notte (gioco alla **1.3.62**, tag `v1.3.62`).*
 
-- **1.3.61 (controllo completo della barca, via di Ale):** angolo morto (a 30° dal vento 45-65% della velocità a 45°), partenza da ferma col vento forte (tetto della resistenza della deriva), **tabella delle velocità `rotta-dati.js` rigenerata** (dalla 1.3.59 rotta ottimale, Coach, layline e rivali usavano la barca vecchia). Medaglie 3, 4, 6 ritarate. Non passano: 6.3 un poco peggio, «Stare fermi» F2 (89), Coach K1/K5a (92). Nuova voce 91 (poco timone in raffica). **Misura dei rivali della voce 2 da rifare** (quella della notte usava la tabella vecchia), meglio su GitHub: sul PC 72 °C. `PROPOSTA-BARCA-1-3-61.md`, `sperimentale/barca-84/controllo/CONTROLLO.md`.
-
-- **1.3.60 (via di Ale):** la barca M della 1.3.59 da ferma con la vela cazzata non ripartiva (regata di Ale del 26 nov: 50 s fermo al via). Corretto lo smorzamento della resistenza indotta alle basse velocità (taratura); sopra 2,9 nodi M identica. R1, R2, R3, R5 ok; **R4 no** (a 25° dal vento la barca avanza: già nella 1.3.59). **Trovato:** «Stare fermi» (lezione 18) si supera senza toccare la scotta con M (voce 89). La misura dei rivali con M (voce 2) va rilanciata sulla 1.3.60. `PROPOSTA-RIPARTENZA.md`.
+- **1.3.62 (27 nov, notte):** lezione 6.3 di nuovo dentro il pannello (+8 px dalla 1.3.59); collaudi adattati alla barca M (voce 92): pannello, Deriva superata, Coach, semaforo verdi; sei confronti al bit portati alla 1.3.61. **Giro GitHub sulla 1.3.61 (run 45902670767) letto per intero:** 41 rossi, quasi tutti dalla barca M (già sulla 1.3.60; sulla 1.3.58 erano 4-6); cause in `CHANGELOG.md` 1.3.62.
+- **Voce 2 rimisurata sulla 1.3.61** (`PROPOSTA-AVVERSARI-BOLINA.md` §17): bolina persa 49 s principianti, 30 s esperti; negli esperti angolo e regolazione non contano, restano ~25 s per lato (salti). Nessuna proposta pronta.
+- **Proposte nuove, ferme per il via di Ale:** voce 89 (`PROPOSTA-STARE-FERMI-M.md`: la vela libera non porta, `V84.a0` 0 → 2°), voce 91 (`PROPOSTA-TIMONE-RAFFICA-91.md`: consiglio di riscrivere il criterio, non la barca), voce 85 (`PROPOSTA-STRAMBATE-85.md`: il timoniere che cambia lato).
+- **1.3.61 (controllo completo della barca, via di Ale):** angolo morto, partenza da ferma col vento forte, tabella delle velocità `rotta-dati.js` rigenerata. `PROPOSTA-BARCA-1-3-61.md`.
 
 ## Dove siamo
 
@@ -47,10 +48,9 @@
 
 ## Prossimi passi (27 nov)
 
-1. **Leggere per intero il giro GitHub completo sulla 1.3.61** (lanciato da Ale il 27 nov): molti rossi attesi per la barca nuova; per ognuno dire se è la barca o un problema.
-2. **Voce 2:** rifare la misura base dei rivali (`tests/misura_rivali_lunghe.py --semi 4501-4520`) sulla 1.3.61: sul PC arriva a 72 °C; scegliere con Ale se farla di notte qui o preparare un'azione su GitHub. Poi la proposta.
-3. Voci nuove della barca: 92 (collaudi da adattare, 6.3), 89 («Stare fermi»), 91 (timone in raffica), 85 (strambate).
-4. Prima regata di Ale sulla 1.3.61 (`registrazioni/regata-20261126-2254-intera.txt`): vinta, partenza a 0,1 s; nessun difetto visto.
+1. **Giro GitHub completo sulla 1.3.62** (lo lancia Ale): devono tornare verdi pannello, deriva_superata, coach, semaforo e i sei confronti al bit (regola18 Z1, regole_15_16 R3, freccia F5, storico_rivali R3, scotta_automatica A1, riquadro_bandiere Q6b).
+2. **Decisioni di Ale:** via alla 89 (a0 = 2°, cambio della barca)? 91: riscrivere il criterio 4 o cambiare la barca? 85: via al pezzo 1? Voce 2: via al metro raggiungibile (§17)? Collaudi dei giri: contare a parte le prove in cui il pilota tocca la boa (cambia il criterio)?
+3. Resto della voce 92 (elenco in `DA-FARE.md`), poi le voci della barca 89, 91, 85.
 
 ## Cosa aspetta Ale
 

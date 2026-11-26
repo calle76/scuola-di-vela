@@ -25,7 +25,7 @@ def riepilogo(f):
 if "--conta" in sys.argv: riepilogo(arg("--conta")); sys.exit()
 from playwright.async_api import async_playwright
 G = {"__file__": str(QUI / "misura_avversari_rotta.py"), "__name__": "x"}; exec((QUI / "misura_avversari_rotta.py").read_text(), G)
-js = G["js_corsa"]({k: v for k, v in os.environ.items() if k in ("OMBRA",)})
+js = G["js_corsa"]({k: v for k, v in os.environ.items() if k in ("OMBRA", "DIAGUP", "DIAGTRIM")})   # 27 nov 2026: anche le diagnosi del §7 (angolo e regolazione dei rivali)
 for a, b in (("sv.fast(0);", "sv.lungo = true; sv.fast(0);"), ("R.t < 900", "R.t < 1500"), ("return { barche, contatti };", "return { barche, contatti, tri: !!R.tri, lungo: !!R.boats && Math.max(...R.marks.map(m => Math.hypot(m.x - R.cb.x, m.y - R.cb.y))) };")):
     assert a in js, a
     js = js.replace(a, b, 1)
