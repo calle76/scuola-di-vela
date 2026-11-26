@@ -18,7 +18,7 @@ function motore(P){ let s = src0; const rep = (a, b) => { if (!s.includes(a)) th
   if (P.gz) rep("+ BOAT.formK * Math.sin(2 * phi) / 2;", "+ X.forma(S.heel);");
   if (P.k08 !== undefined) rep("BOAT.formK * 0.08)", "X.k08)");
   const X = { k08: P.k08, twB: P.twB || 0, tw2: P.tw2 || 0, restaHike: P.restaHike === undefined ? 0 : P.restaHike, tCross: P.tCross || 0, fg: P.fg === undefined ? 0.2 : P.fg, k0: P.k0 || 1, tt: A => { const t = clamp((A - P.b1) / (P.b2 - P.b1), 0, 1); return t * t * (3 - 2 * t); }, hT: P.hT || 5, hT2: P.hT2 || 9, tw: fl => (P.tw || 0) * (1 - (fl === undefined ? 1 : fl)) / (1 - (P.flMin || 0.6)), flMin: P.flMin || 0.6, flK: P.flat, flOn: P.flOn || 0.97, app0: 0.0049, app1: P.appDW, dw: P.dw || [100, 140], S: null,
-    forma: h => { const a = Math.abs(h), g = interp(GZ, a, 1); return Math.sign(h) * 9.81 * (M.BOAT.mass * g - M.BOAT.sailorMass * (P.dz || 0) * Math.sin(a * R)); },
+    forma: h => { const a = Math.abs(h), g = interp(P.gzTab || GZ, a, 1); return Math.sign(h) * 9.81 * (M.BOAT.mass * g - M.BOAT.sailorMass * (P.dz || 0) * Math.sin(a * R)); },
     vela: (al, A, CL, CD, lf, fl = 1, twS = 0) => { const k0 = P.k0 || 1, cl0 = CL(al) * lf * k0, cd0 = CD(al) * k0; // curve di oggi
       const r = clamp((al - P.a0) / P.w, 0, 1), be = Math.min(28, al + 9);
       const cl1 = (al <= 19 ? interp(ORC, be, 1) : CL(al) * 1.347 / 1.35) * r * fl, cd1 = (al <= 19 ? interp(ORC, be, 2) : 0.033 + (P.sep || 1.15) * (Math.sin(al * R) ** 2 - Math.sin(19 * R) ** 2)) + P.par + cl1 * cl1 * ((1 + 8 * (P.tw2 ? twS : X.tw(fl)) ** 2) / (Math.PI * P.AR) + 0.005);

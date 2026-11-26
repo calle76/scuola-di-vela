@@ -10,7 +10,7 @@ Scritta il 26 novembre 2026, **prima del via**: niente codice in `js/`. La ricer
 | Area della vela | 7,0 | **7,92** (candidato K) | 7,06 nominale, 7,92 tela (F119 + formula ORC); le fonti non decidono |
 | Braccio velico `zCE` | 2,0 | 2,8 | Flay 2,4-2,6, F121 3,0: centro |
 | Braccio del timoniere | 1,0 | 0,90 | Taylor 0,87-0,93, Day 0,956 |
-| Raddrizzata dello scafo | formula | curva F121 fig. 31 fino a 22,5°, poi retta a 0 a 90° | oltre 22,5° **ipotesi** |
+| Raddrizzata dello scafo | formula | curva F121 fig. 31 fino a 22,5°, poi retta a 0 a 90° | oltre 22,5° **ipotesi**; alternativa con fonte: forma del 470 (F4 fig. 4), massimo a 25-30°, VMG a 20 nodi 3,94 (`RICERCA-K.md` §16) |
 | Vela di bolina | retta fino a 20° | tabella ORC di Day (tab. 1) letta all'incidenza + 9° | il 9° **ipotesi** (appoggio parziale F109) |
 | Vela che fileggia | sul vento apparente | sull'incidenza, da 0° a 10° | 0°: Newman e Low 1984 (vele 2D sbattono a incidenza appena negativa); 10°: svergolamento (F109), scelto guardando F109 |
 | Resistenza della vela che sbatte | 0,2 | 0,08 | F109 (0,02-0,08) e bandiere F131 |
@@ -54,7 +54,7 @@ Misure del 26 novembre sul clone del repo: due varianti con l'appiattimento a 1,
 - La barca diventa più veloce col poco vento (fino al 15%): i record e le medaglie di prima non sono confrontabili (si azzerano, regola già data da Ale).
 - Il timoniere automatico che appiattisce è un aiuto in più che il giocatore non controlla.
 - Gli scarti residui (B2) e le ipotesi (B8) restano scritti come limiti noti.
-- **Con vento forte (18 nodi) la barca riparte dalla virata molto più piano di quella vera** (oggi e K; `RICERCA-K.md` §15): trovato il 26 novembre dopo questa proposta, da capire prima del via.
+- **Con vento forte (18 nodi) la barca riparte dalla virata molto più piano di quella vera** (oggi e K; `RICERCA-K.md` §15): trovato il 26 novembre dopo questa proposta. Il meccanismo (la barca orza sbandando) ha fonte (F4 eq. 6); uscendo 15° più larghi e lascando poco K riparte come la barca vera (95% / 83% / 8,4 s), lascando troppo si ferma (`RICERCA-K.md` §16): margine stretto, da guardare nelle lezioni.
 
 ## Scelte, col criterio di Ale (26 nov: «mi interessa di più il comportamento simile a quello reale» che il funzionamento di una lezione)
 

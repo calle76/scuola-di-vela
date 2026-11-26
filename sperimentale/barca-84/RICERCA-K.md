@@ -136,9 +136,19 @@ Con 14 nodi K torna con la misura su tutti e quattro i numeri, la barca di oggi 
 
 Scomposto su K con 18 nodi (`scomponi_virata.js`): smorzamento 0,4 → uscita 75%, 80% dopo 9,3 s; **braccio velico 2,0 invece di 2,8 → uscita 93%, media 88%, 80% dopo 7,5 s, come la misura**; tutti e due → 94%, 7,3 s. Il blocco viene quindi soprattutto dall'orzata dovuta allo sbandamento (spinta × braccio velico × seno dello sbandamento, nel motore dalla 1.0.46), che col braccio 2,8 vince il timone a bassa velocità. Il braccio 2,8 ha fonti per il momento sbandante (Flay, F121); usare un braccio più corto solo per l'orzata sarebbe una scelta fatta dopo aver visto la misura, da dichiarare. La barca di oggi (braccio 2,0) resta ferma per altre ragioni (vela e scafo di oggi): non indagato.
 
+## 16. Masuyama e Ogihara sul 470 (F4, copia in `fonti-pdf/sname-jst-2020-05.pdf`) e la tecnica d'uscita dalla virata
+
+Riletto F4 cercando i punti aperti:
+- **La barca che orza sbandando** è nel motore con la formula di F4 (eq. 6), verificata in galleria del vento fino a 20° di sbandamento: il meccanismo che tiene ferma la barca dopo la virata (§15) ha una fonte, non è un difetto del modello. A 1,1 m/s e 26° la vela fa girare la barca di 0,83 rad/s², la pala a 22° di 0,70: vince la vela.
+- **Raddrizzata oltre 22,5°** (fig. 4, calcolo, 470 «senza trapezio»): massimo a 25-30° (il bordo del ponte tocca l'acqua), poi cala piano, zero verso 76°. È anche la tendenza di F121 (gli aumenti fra 4,5° e 22,5° calano: 0,083 / 0,062 / 0,045 / 0,033 / 0,024, quindi il massimo è verso 28-30°). Forma del 470 scalata sul valore di F121 a 22,5° (`gz470.js`; il banco accetta ora `gzTab`): GZ 0,263 a 25-30°, 0,212 a 45°, 0,115 a 60° (K oggi: retta, 0,220 / 0,165 / 0,110). Effetto su K: Day e Binns uguali, raffica a gradino 61° invece di 65° con 20 nodi, **VMG a 20 nodi 3,94 invece di 3,63**, uscita dalla virata con 18 nodi 47% invece di 28%. Resta presa da un'altra barca, ma ha una fonte e segue F121; la retta non ne aveva.
+- **Virate misurate del 470** (fig. 5-6, vento 6,1-7 m/s): velocità 6,5-7 nodi, minimo circa 3 nodi (45%) 3-4 s dopo l'inizio, di nuovo 6 nodi circa 10 s dopo; barra fino a 45° per 2-3 s. Il 470 riparte più piano dell'ILCA 7 di Semb.
+- **Pala:** nella vasca del 470 stalla a 15° (il gioco usa 22°, fra F4 e F35): non aiuterebbe a poggiare.
+
+**Tecnica d'uscita** (`virate_tecnica.js`, K, 18 nodi): Semb scrive che il velista esce un po' più giù e poi risale, Taylor che cazza dopo la virata. Uscendo 15° più larghi e lascando poco (+0,15 di scotta) per 4 s: uscita 95%, media 83%, 80% dopo 8,4 s (misura 92% / 86% / 7,6 s). Lascando di più (+0,2 / +0,3) la barca si ferma di nuovo: il margine è stretto. Quindi con vento forte la barca del gioco riparte come quella vera solo con la tecnica giusta, e perdona poco: per il giocatore è da guardare (lezioni, aiuti), non per forza un difetto della fisica.
+
 ## Restano aperti (fine del quarto giro)
 
-- Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento, raddrizzata oltre 22,5°: senza misura (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).
+- Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento: senza misura; raddrizzata oltre 22,5°: ora c'è la forma del 470 (§16), da decidere se usarla (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).
 - **Ripartenza dopo la virata con vento forte** (§15): con 18 nodi la barca del gioco, di oggi e K, resta quasi ferma; la barca vera no. Da capire prima di accendere (sbandamento e orzata a bassa velocità, timone, smorzamento della resistenza indotta).
 - Tesi di Rossi (USP 2007, confronto col Laser, forse una curva di stabilità): il server non risponde, da riprovare.
 - Poppa con le S e le onde: tecnica che il gioco non ha (possibile voce futura).
