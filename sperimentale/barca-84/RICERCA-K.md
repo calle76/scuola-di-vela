@@ -101,6 +101,14 @@ Pennanen: a 2 nodi di velocità conviene sbandare di 10-15° sottovento (meno su
 
 13 atlete e atleti, GPS, vento misurato da un gommone: 3,1 m/s (6 nodi) e 5,0 m/s (10 nodi); velocità di bolina prima della virata 1,8-1,9 m/s (3,6 nodi) e 2,2-2,3 m/s (4,4 nodi). Radial: vela più piccola e velisti più leggeri, quindi solo un ordine di grandezza; K (vela intera) a 6 nodi fa circa 3,7 nodi di bolina. Coerente.
 
+## 12. Scarroccio (`scarroccio_k.js`, F121 fig. 11)
+
+Pennanen (CFD) usa 3,7° a 2-3 nodi di velocità, 4,0° a 4 e 4,65° a 5 nodi (angoli presi dal suo primo calcolo, non misurati); a 5 nodi la forza laterale è circa 290 N. K, con la formula di Day e le misure di deriva e pala del regolamento (`DERIVA2.q` 873, voce del 1.0.45): 2,1 / 2,5 / 2,7 / 3,2 / 3,1° con 3,2 / 6 / 8 / 11 / 15 nodi di vento, 305 N a 4,8 nodi. La CFD dà alla deriva circa il 35% di forza in meno (q equivalente circa 540). Con q 540: Day 6 nodi −3,7%, Binns 9 a 60° −6,4%, Binns 12 −1,5%: **1-2% in meno, conclusioni uguali**. Due modelli, nessuna misura in acqua: q resta 873 (coerente con Day).
+
+## 13. Barca che orza sbandando
+
+Già nel motore dalla 1.0.46 (F4 eq. 6: spinta applicata al centro velico spostato sottovento); con K (braccio 2,8) l'effetto cresce. Una barca lasciata a sé stessa in raffica tende a orzare; la scuffia a mani ferme della lezione 6.3 (9 su 30 con K) va guardata nella lezione.
+
 ## Restano aperti (fine del quarto giro)
 
 - Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento, raddrizzata oltre 22,5°: senza misura (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).
