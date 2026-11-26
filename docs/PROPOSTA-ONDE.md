@@ -83,3 +83,7 @@ Se O6 e O7 non passano insieme, si riporta e decide Ale. Il Caw non si ritocca p
 1. Il via al passo 1 (solo banco).
 2. Lo spazio d'acqua libero: 5 km per tutti (lago grande o baia), oppure un valore diverso per ogni circuito.
 3. Se l'aiuto «prendi l'onda» va fatto adesso o insieme alla voce 87 (la lezione a S).
+
+## Decisioni di Ale (26 novembre 2026)
+
+«Ok come dici tu»: **via al passo 1** (solo banco, sopra M; se M non si accende si rifà con la barca di oggi), **spazio d'acqua 5 km per tutti** (un valore per circuito solo se un giorno i circuiti avranno un luogo), **aiuto «prendi l'onda» con la voce 87**, dopo che O5 dice se timonare sull'onda rende.
