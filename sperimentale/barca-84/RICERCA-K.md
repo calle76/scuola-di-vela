@@ -81,3 +81,14 @@ Numeri in `docs/PROPOSTA-BARCA-MOTORE.md` §«Sul gioco». In breve: medaglie tu
 - Effetto: a 20 nodi la VMG della barca da 7,9 passa da 3,57 (`a0` 2) a 3,63 (`a0` 0, `w` 10); il calo a 20 nodi veniva in parte da questa ipotesi. Criteri B1-B7b invariati; virate F109 scarto 0,046 / 0,067.
 - **Candidato K** (`candidato.json`, quarta voce; `fa_motore84.py` ora scrive K): area 7,92, appiattimento 1,5 s, vela che sbatte da 0° a 10°, il resto come J.
 - **Dati GPS di regata** (Pan e Sun, Heliyon 2022, CC BY-NC-ND, 63 prove di Coppa del mondo e Tokyo 2020): velocità media di bolina, ricavata da distanza e tempo, 3,7 / 4,5 / 4,9 nodi con vento sotto 8 / 8-12 / oltre 12 nodi (i primi dieci fino a 5,0); VMG 2,5 / 3,2 / 3,7. Medie di regata (partenze, virate, aria sporca): limiti bassi, la barca in rotta va almeno così. Non distinguono 7,5 da 7,9.
+
+## 9. Le portanti contro le regate vere (`portanti_k.js`)
+
+| Vento | regate (Pan e Sun) traverso/lasco | K traverso / lasco | regate VMG poppa | K VMG poppa | oggi VMG poppa |
+|---|---|---|---|---|---|
+| sotto 8 (circa 6) | 4,2 | 4,26 / 4,06 | 3,3 | 2,87 | 2,65 |
+| 8-12 (circa 10) | 5,8 | 6,02 / 5,76 | 4,7 | 4,45 | 4,17 |
+| oltre 12 (circa 15) | 9,1 | 9,40 / 9,13 | 7,8 | 6,16 | 5,71 |
+
+- **Laschi: K coincide con le regate.**
+- **Poppa: le regate vanno più forte** (+15 / +6 / +27%). Schutt (F109 cap. 3, fig. 3.18, vento 12 nodi a 6 m): andando dritti VMG circa 2,5 m/s (4,9 nodi), con le «S» circa 3,0 m/s (5,8 nodi, +19%); «in regata quasi nessuno va dritto in poppa, salvo col vento molto debole». K a 12 nodi fa 5,10: **vicino a chi va dritto**. La differenza con le regate è tecnica (S, onde, pompaggio permesso col vento forte), che il gioco non ha: possibile voce futura, non è la barca.

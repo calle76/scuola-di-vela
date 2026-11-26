@@ -1,0 +1,5 @@
+// Voce 84, giro K: velocita' nelle portanti (traverso, lasco, VMG di poppa) contro i GPS di regata (Pan e Sun 2022). Uso: node portanti_k.js
+const { motore } = require("./banco84.js"), KN = 1.943844, R = Math.PI / 180, C = require("./candidato.json");
+const best = (step, kn, a) => { let b = 0; for (let sh = 0; sh <= 1.0001; sh += .05){ const S = { x:0,y:0,h:0,u:1,vl:0,r:0 }; for (let t = 0; t < 60; t += .05){ S.h = 0; step(S, { sheet: sh, tiller: 0 }, { twd: a, tws: kn / KN }, .05); } if (Math.abs(S.heel) < 60 && S.u > b) b = S.u; } return b * KN; };
+for (const c of [C[0], C[3]]){ const { step } = motore(c.P); console.log("## " + c.n.slice(0, 40));
+  for (const kn of [6, 10, 12, 15, 18, 20]){ const tr = best(step, kn, 90), la = Math.max(...[110, 120, 135].map(a => best(step, kn, a))); let v = 0, va = 0; for (let a = 140; a <= 180; a += 5){ const u = best(step, kn, a), x = -u * Math.cos(a * R); if (x > v){ v = x; va = a; } } console.log(`  ${kn} nodi: traverso ${tr.toFixed(2)}, lasco migliore ${la.toFixed(2)}, VMG poppa ${v.toFixed(2)} (a ${va}°)`); } }
