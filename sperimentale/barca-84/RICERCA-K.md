@@ -97,6 +97,10 @@ Numeri in `docs/PROPOSTA-BARCA-MOTORE.md` §«Sul gioco». In breve: medaglie tu
 
 Pennanen: a 2 nodi di velocità conviene sbandare di 10-15° sottovento (meno superficie bagnata), da 3 nodi in su conviene andare dritti, poi un piccolo sbandamento dà momento raddrizzante in più («i velisti accettano qualche grado»). K: 1° con 6 nodi di vento, 4° da 10 a 15 nodi; con vento debolissimo va dritto, perché nel gioco lo sbandamento non cambia la resistenza dello scafo. **Limite minore** (Pennanen: con vento debolissimo le differenze di velocità sono molto piccole).
 
+## 11. Velocità prima della virata, Laser Radial (Eiraku e altri, Japan J. Coaching Studies 27(1) 2013, accesso libero; il riassunto era F122)
+
+13 atlete e atleti, GPS, vento misurato da un gommone: 3,1 m/s (6 nodi) e 5,0 m/s (10 nodi); velocità di bolina prima della virata 1,8-1,9 m/s (3,6 nodi) e 2,2-2,3 m/s (4,4 nodi). Radial: vela più piccola e velisti più leggeri, quindi solo un ordine di grandezza; K (vela intera) a 6 nodi fa circa 3,7 nodi di bolina. Coerente.
+
 ## Restano aperti (fine del quarto giro)
 
 - Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento, raddrizzata oltre 22,5°: senza misura (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).
