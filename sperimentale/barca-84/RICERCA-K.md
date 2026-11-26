@@ -69,3 +69,7 @@ F109 tab. 4.1: angolo della vela a metà altezza (striscia al 62%) sulle barche 
 | 15 nodi | 18,5° | 22,3° |
 
 J apre il boma col vento medio come le barche vere; oggi resta chiuso fino a 15 nodi. Controllo fatto dopo aver fissato J, non usato per sceglierlo.
+
+## 7. Le due varianti sul gioco (clone, appiattimento 1,5 s): lezioni, fasce, medaglie (30 corse), regola 18, torneo completo
+
+Numeri in `docs/PROPOSTA-BARCA-MOTORE.md` §«Sul gioco». In breve: medaglie tutte OK con le fasce di oggi; torneo 26 controlli su 27 (manca solo l'uscita lenta C11 R7, già nota sul PC); regola 18 Z1 fallisce per forza, Z4 2 contatti (7,5) e 0 (7,9); lezione 6.3 23/25 (7,5) e 25/25 (7,9), ma la barca scuffia da sola 5 volte su 30.
