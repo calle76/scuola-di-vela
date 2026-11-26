@@ -73,3 +73,11 @@ J apre il boma col vento medio come le barche vere; oggi resta chiuso fino a 15 
 ## 7. Le due varianti sul gioco (clone, appiattimento 1,5 s): lezioni, fasce, medaglie (30 corse), regola 18, torneo completo
 
 Numeri in `docs/PROPOSTA-BARCA-MOTORE.md` §«Sul gioco». In breve: medaglie tutte OK con le fasce di oggi; torneo 26 controlli su 27 (manca solo l'uscita lenta C11 R7, già nota sul PC); regola 18 Z1 fallisce per forza, Z4 2 contatti (7,5) e 0 (7,9); lezione 6.3 23/25 (7,5) e 25/25 (7,9), ma la barca scuffia da sola 5 volte su 30.
+
+## 8. La vela che comincia a sbattere: fonte trovata (`a0`), e candidato K
+
+- **Newman e Low, J. Fluid Mech. 144 (1984) 445-462** (solo il riassunto, l'articolo è a pagamento): vele bidimensionali di tela impermeabile in galleria; **la vela sbatte a incidenze appena negative**, e rende al meglio a incidenze molto più alte di 0°. Bundock (tesi, Waikato 1980) tratta la tela poco tesa, non l'incidenza: non serve.
+- Su una vela vera svergolata la parte alta è più aperta e sbatte prima: la vela intera comincia a perdere spinta quando il boma arriva a circa 0° d'incidenza e la perde tutta in un intervallo pari allo svergolamento (F109: la vela a metà altezza sta 4° oltre il boma col poco vento). Quindi **`a0` = 0 (fonte)**, **`w` ≈ 10 (svergolamento, e il valore più vicino a F109 nella virata con scotta lascata: 52% contro 51%; scelto guardando F109, dichiarato)**.
+- Effetto: a 20 nodi la VMG della barca da 7,9 passa da 3,57 (`a0` 2) a 3,63 (`a0` 0, `w` 10); il calo a 20 nodi veniva in parte da questa ipotesi. Criteri B1-B7b invariati; virate F109 scarto 0,046 / 0,067.
+- **Candidato K** (`candidato.json`, quarta voce; `fa_motore84.py` ora scrive K): area 7,92, appiattimento 1,5 s, vela che sbatte da 0° a 10°, il resto come J.
+- **Dati GPS di regata** (Pan e Sun, Heliyon 2022, CC BY-NC-ND, 63 prove di Coppa del mondo e Tokyo 2020): velocità media di bolina, ricavata da distanza e tempo, 3,7 / 4,5 / 4,9 nodi con vento sotto 8 / 8-12 / oltre 12 nodi (i primi dieci fino a 5,0); VMG 2,5 / 3,2 / 3,7. Medie di regata (partenze, virate, aria sporca): limiti bassi, la barca in rotta va almeno così. Non distinguono 7,5 da 7,9.
