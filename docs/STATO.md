@@ -45,9 +45,12 @@
 - Le altre batterie del circuito **non** si simulano: la classifica a sorteggio resta (voce 52 archiviata). Niente carriera di prova. «Rifai questo tratto» e le domande sulle penalità vanno nel livello Coach dopo Deriva. Il Coach resta a «scarso» = 6° (`DECISIONI.md`).
 - Domande risposte, via non dato: aiuto «scarso/buono» (48).
 
-## Prossimi passi (giro della lista)
+## Prossimi passi (27 nov)
 
-1. Il giro è quasi finito: la 69 aspetta le immagini di Ale, la 49 B le regate alla boa (`PROPOSTA-REGOLA-18-B.md`: consiglio «non ora», 7 momenti utili in 90 regate), la 7 i suoi tempi. Poi **rivedere quello che è rimasto**: 2, poi la scala dei rivali (82).
+1. **Leggere per intero il giro GitHub completo sulla 1.3.61** (lanciato da Ale il 27 nov): molti rossi attesi per la barca nuova; per ognuno dire se è la barca o un problema.
+2. **Voce 2:** rifare la misura base dei rivali (`tests/misura_rivali_lunghe.py --semi 4501-4520`) sulla 1.3.61: sul PC arriva a 72 °C; scegliere con Ale se farla di notte qui o preparare un'azione su GitHub. Poi la proposta.
+3. Voci nuove della barca: 92 (collaudi da adattare, 6.3), 89 («Stare fermi»), 91 (timone in raffica), 85 (strambate).
+4. Prima regata di Ale sulla 1.3.61 (`registrazioni/regata-20261126-2254-intera.txt`): vinta, partenza a 0,1 s; nessun difetto visto.
 
 ## Cosa aspetta Ale
 
