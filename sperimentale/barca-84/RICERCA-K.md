@@ -109,6 +109,17 @@ Pennanen (CFD) usa 3,7° a 2-3 nodi di velocità, 4,0° a 4 e 4,65° a 5 nodi (a
 
 Già nel motore dalla 1.0.46 (F4 eq. 6: spinta applicata al centro velico spostato sottovento); con K (braccio 2,8) l'effetto cresce. Una barca lasciata a sé stessa in raffica tende a orzare; la scuffia a mani ferme della lezione 6.3 (9 su 30 con K) va guardata nella lezione.
 
+## 14. Quanto in fretta arriva la raffica (`raffica_ritardo.js`, F136)
+
+Il controllo del banco «raffica 10→18 nodi, sbandamento massimo 52°» usa un **gradino**: il vento sale tutto in un passo da 0,02 s. In mare la raffica sale in qualche secondo (nessuna misura sull'acqua trovata), e nemmeno la forza della vela segue all'istante: per le funzioni di Wagner e Küssner (riprese da Persson e altri 2024, F136) arriva al 75% dopo 4-5 semicorde percorse dal vento, cioè 0,3-0,5 s per la vela del gioco (semicorda circa 0,75 m, vento apparente 7-9 m/s). Sbandamento massimo, scotta 0,1, timone fermo, 10→16 / 18 / 20 nodi:
+
+| | gradino | ritardo 0,3 s | ritardo 0,5 s | sale in 1 s | in 2 s | in 4 s |
+|---|---|---|---|---|---|---|
+| oggi | 37 / 52 / 66° | 33 / 48 / 60° | 30 / 45 / 57° | 33 / 48 / 60° | 30 / 44 / 56° | 26 / 40 / 53° |
+| K | 38 / 52 / 65° | 32 / 45 / 56° | 28 / 40 / 50° | 31 / 43 / 54° | 23 / 33 / 43° | 14 / 19 / 23° |
+
+Il gradino è il caso peggiore e lì le due barche sono uguali; appena la raffica sale in un tempo vero, K sbanda molto meno (il timoniere esce in 0,9 s e la vela si appiattisce in 1,5 s, e fanno in tempo). Nel gioco le raffiche sono zone d'acqua con il bordo sfumato (`gioco.js`, `ventoDa`), quindi la barca le sente salire in secondi: il gradino del banco resta un controllo severo, non il comportamento che si vede giocando. Il ritardo della forza sulla vela non è nel motore (vela «quasi stazionaria», come nei programmi di previsione: Persson mostra che con le onde il modello quasi stazionario esagera la variazione della forza); con raffiche che salgono in secondi conta poco. Nessuna modifica proposta.
+
 ## Restano aperti (fine del quarto giro)
 
 - Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento, raddrizzata oltre 22,5°: senza misura (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).

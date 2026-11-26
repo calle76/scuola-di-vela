@@ -41,6 +41,7 @@ Misure del 26 novembre sul clone del repo: due varianti con l'appiattimento a 1,
 | 3,2 nodi a 45° (misura) | −15% | +1,2% | +3,6% | +3,6% |
 | VMG a 20 nodi | | 3,92 | 3,57 | 3,63 |
 | Raffica 10→18 nodi, sbandamento massimo | 52° | 50° | 52° | 52° |
+| Stessa raffica che sale in 2 s (`RICERCA-K.md` §14) | 44° | | | 33° |
 | Lezioni, 41 passi, 30 semi | | 6.3: 23/25, a mani ferme 5/30; 2.6 e 5.8 1-2 volte | 6.3: 25/25, a mani ferme 5/30; 2.6, 5.8, 6.2 1 volta | 6.3: 21/21, **a mani ferme 9/30**; 6.2 2 volte; 2.6, 5.8 1 volta |
 | Tempi del pilota preciso, prove 1-5 (s) | 79 / 124 / 159 / 286 / 302 | 79 / 119 / 137 / 249 / 285 | 79 / 119 / 137 / 248 / 285 | 79 / 119 / 136 / 248 / 285 |
 | Medaglie, 30 corse, fasce di oggi | | **tutte OK** (l'oro diventa più facile) | **tutte OK** | **tutte OK** |
