@@ -86,3 +86,4 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 | 27 | **Lezioni 18-19, stare fermi prima del via:** fatta nella 1.3.58 (25 nov, A e B) | `PROPOSTA-LEZIONE-STARE-FERMI.md` §Esito | |
 
 - **84** (chiusa il 26 nov 2026): barca M accesa nella 1.3.59 (`PROPOSTA-BARCA-MOTORE.md`, `CHANGELOG.md` 1.3.59). B2 limite noto.
+- **90** (chiusa il 27 nov 2026): angolo morto della barca M nella 1.3.61 (`PROPOSTA-ANGOLO-MORTO-M.md`, `PROPOSTA-BARCA-1-3-61.md`). A1 e A2 non passati, dichiarati.

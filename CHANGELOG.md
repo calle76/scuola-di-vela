@@ -24,6 +24,16 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.61 — Angolo morto, partenza col vento forte, tabella delle velocità (controllo completo della barca)
+
+- **Perché:** controllo completo della barca chiesto da Ale (`sperimentale/barca-84/controllo/CONTROLLO.md`) e osservazione di Ale sull'angolo morto (voce 90). Proposta e criteri T1-T5: `docs/PROPOSTA-BARCA-1-3-61.md`.
+- **Angolo morto:** la portanza della vela M si spegne col vento apparente fra 19° e 26° (taratura scelta da Claude con la regola di Ale «più simile alla realtà possibile»: il valore più severo che lascia Day e Binns entro 1 punto). A 30° dal vento la barca va al 45 / 52 / 65% della velocità a 45° (6 / 10 / 15 nodi; prima 65 / 70 / 59%).
+- **Partenza da ferma col vento forte:** la resistenza indotta della deriva al massimo il 15% della forza laterale (teoria della deriva). Con 16 nodi e vela cazzata la barca riparte (2 nodi in 3-6 s; nella 1.3.60 restava a 0,8-1,1 nodi).
+- **Tabella delle velocità `js/rotta-dati.js` rigenerata:** era ancora quella della barca vecchia dalla 1.3.59 (rotta ottimale, Coach, layline, layline e poppa dei rivali, cono d'ombra). Con 10 nodi 45° 4,6 → 5,2, 180° 4,1 → 4,5.
+- **Misure:** T1-T4 passano; Day e Binns invariati. Medaglie: prove 3, 4, 6 ritarate ([140, 175, 225], [250, 315, 400], [215, 270, 345]), conferma OK in Chromium e Firefox. **Non passano:** lezione 6.3 un poco peggio della 1.3.60 (guidando 28/30, dopo un colpo lungo 4/30); «Stare fermi» F2 (voce 89, già dalla 1.3.59); `collaudo_coach` K1 (riferimento con la barca vecchia) e K5a in 1 caso su 4 (metro del collaudo). Polare, raffiche e impronta riscritte.
+- **Trovato e messo in lista:** voce 91, in raffica con la scotta ferma serve poco timone (`orziera1b.js` criterio 4).
+- **La misura dei rivali della notte (voce 2, sulla 1.3.60) non vale:** usava la tabella vecchia per la rotta ottimale. Va rifatta.
+
 ## 1.3.60 — La barca M riparte da ferma
 
 - **Difetto della 1.3.59** (regata di Ale del 26 nov, `registrazioni/regata-20261126-2044-intera.txt`): da ferma con la vela cazzata la barca restava a 0,3-0,4 nodi per sempre (Ale ferma 50 s al via, poi scuffia, partenza a 94 s); con 20 nodi non ripartiva nemmeno lascando il 30%. **Causa:** lo smorzamento della resistenza indotta di Day (0,1) vale per la barca in movimento; da ferma la deriva frenava quanto spingeva la vela. Il banco della 84 partiva sempre in movimento.

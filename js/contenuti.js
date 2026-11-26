@@ -878,6 +878,7 @@
   // 1.0.11: ritarate per la bolina nuova (pilota 79,0 / 124,5 / 156,8 / 276,0 s, prova 5 mediana 297,8): cambiano le prove 3, 4 e 5.
   // 1.2.11 (docs/PROPOSTA-MEDAGLIE-E-NOMI.md): ritarate per la barca dell'1b sui semi 1-30 con tests/collaudo_medaglie.py --scelta; l'oro sale di 5 s finché il pilota ci sta in 25 corse su 30 in tutti e due i browser. Cambiano le prove 4 e 5.
   // 1.3.59 (voce 84, barca M): ritarate con la stessa regola, semi 1-30, uguali in Chromium e Firefox (pilota 76,8 / 117,7 / 133,5 / 242,7 / 278,7 / 207,9 s). Cambiano le prove 2-6.
+  // 1.3.61 (angolo morto e tetto della deriva, docs/PROPOSTA-BARCA-1-3-61.md): stessa regola, uguale nei due browser (pilota 76,8 / 117,7 / 135,7 / 245,6 / 281,3 / 210,3 s). Cambiano le prove 3, 4 e 6.
   // Dalla 0.19 l'ultima voce di marks è una linea d'arrivo (FIN_HALF m per lato, perpendicolare all'ultimo lato), non una boa da raggiungere.
   const MISSIONS = [
     { title: "Al traverso", desc: "Taglia l'arrivo con il vento di fianco.", wind: 270, tws: 10, gusts: 0,
@@ -890,11 +891,11 @@
       marks: [{ x: 60, y: 260, label: "Arrivo" }] },
     { title: "Risalire il vento", desc: "Raggiungi l'arrivo controvento.", wind: 180, tws: 10, gusts: 0,
       text: "L'arrivo è esattamente controvento. Bordeggia: bolina su una mura, virata con la barca lanciata, bolina sull'altra.",
-      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [135, 170, 215],
+      start: { x: 0, y: 0, h: 90, sheet: 0.2 }, bands: [140, 175, 225],
       marks: [{ x: 0, y: -220, label: "Arrivo" }] },
     { title: "Il giro di boa", desc: "Bolina all'andata, poppa al ritorno.", wind: 135, tws: 10, gusts: 0,
       text: "Risali di bolina fino alla boa e girala tenendola sempre alla tua sinistra, poi torna a tagliare la linea da cui sei partito, con il vento da dietro. Se devi strambare, cazza prima e lasca dopo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [245, 305, 390],
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [250, 315, 400],
       marks: [{ x: 0, y: -200, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] },
     { title: "Percorso nelle raffiche", desc: "Un triangolo con vento rafficato.", wind: 225, tws: 12, gusts: 1,
       text: "Tre lati: bolina fino alla boa 1, traverso fino alla boa 2, poi gran lasco fino alla linea d'arrivo. Le boe si lasciano a sinistra. Il vento è rafficato: guarda le chiazze, lasca quando entri, cazza quando escono.",
@@ -905,7 +906,7 @@
     // docs/PROPOSTA-MEDAGLIE-E-NOMI.md §2 col pilota di tests/collaudo_medaglie.py, semi 1-30, confermate sui semi 101-130.
     { title: "I giri di penalità", desc: "Due giri di penalità da scontare, poi bolina fino alla boa e ritorno.", wind: 0, tws: 10, gusts: 0, giri: 2, livello: "deriva",
       text: "Al via hai già una penalità da scontare: due giri, come dopo un contatto con colpa. Falli subito, appena partito: ognuno è un giro intero nello stesso verso, con una virata e una strambata, senza fermarti (regola 44.2). Poi risali di bolina fino alla boa, girala lasciandola a sinistra e torna a tagliare la linea da cui sei partito. Il tempo comprende i giri; ogni giro non fatto costa 15 s all'arrivo.",
-      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [210, 265, 335], // 1.3.59, barca M: semi 1-30, mediana del pilota 207,9 s (207,7-208,1); prima [240, 300, 385] su 235,8 s
+      start: { x: 0, y: 20, h: 90, sheet: 0.2 }, bands: [215, 270, 345], // 1.3.61: semi 1-30, mediana del pilota 210,3 s (210,0-210,5); 1.3.59 [210, 265, 335] su 207,9 s; prima [240, 300, 385] su 235,8 s
       marks: [{ x: 0, y: -150, label: "Boa" }, { x: 0, y: 20, label: "Arrivo" }] }
   ];
 

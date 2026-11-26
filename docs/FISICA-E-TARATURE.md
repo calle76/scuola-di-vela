@@ -18,6 +18,8 @@ Tutto il motore è nella funzione `step(S, C, E, dt)` di `index.html`: `S` è lo
 | Scafo | vasca ×1 | vasca **×0,93** (la vasca SSPA, F121 tab. 2) | **taratura** |
 | Raddrizzata dello scafo | formula | F121 fig. 31 fino a 22,5°, poi la forma del 470 (F4 fig. 4) | fonte |
 | Vela che fileggia | sul vento apparente | sull'incidenza, da 0° (Newman e Low 1984) a 10° | 0°: fonte; 10°: **ipotesi** |
+| Angolo morto (1.3.61) | — | portanza ORC spenta col vento apparente fra 19° e 26° | **taratura** (il più severo che lascia Day e Binns; Day §6.2: apparente di bolina 27-33°) |
+| Tetto della resistenza indotta (1.3.61) | — | al massimo 0,15 della forza laterale | teoria della deriva (7-15%) |
 | Resistenza della vela che sbatte | 0,2 | 0,08 | fonte: F109 (0,02-0,08) |
 | Vela piatta e svergolata col timoniere al limite | no | sì (Day §2.3-2.4), in 1,5 s | il ritardo è **ipotesi**; è fisica del velista, senza interruttore (Ale, 26 nov) |
 | Poppa: forza della vela | 1,15 | Magnander (F120, F124) | fonte |

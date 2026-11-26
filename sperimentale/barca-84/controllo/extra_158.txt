@@ -1,0 +1,29 @@
+1) PARTENZA DA FERMA: secondi per arrivare a 2 nodi (— = mai in 60 s, S = scuffia). colonne: scotta migliore / cazzata / lascata
+  4 nodi: 30°: —/—/—  40°: —/—/—  50°: 19.6/29.2/—  60°: 17.3/45.6/—  90°: 15.6/—/—  120°: 14.0/—/—  150°: —/—/—  180°: —/—/—  
+  8 nodi: 30°: —/—/—  40°: 5.0/6.2/—  50°: 4.9/6.8/—  60°: 4.6/10.1/—  90°: 3.3/7.9/—  120°: 2.5/2.5/1.8  150°: 2.1/3.1/2.3  180°: 2.3/—/2.3  
+  12 nodi: 30°: —/—/—  40°: 2.8/3.8/—  50°: 2.7/3.9/—  60°: 1.9/6.1/—  90°: 1.3/3.1/9.1  120°: 1.0/1.0/0.8  150°: 0.8/1.3/0.9  180°: 0.9/26.8/0.9  
+  16 nodi: 30°: —/—/—  40°: 2.1/5.8/—  50°: 1.0/3.8/—  60°: 0.8/7.4/—  90°: 0.8/2.3/4.0  120°: 0.5/0.5/0.4  150°: 0.4/0.7/0.4  180°: 0.4/14.9/0.4  
+  20 nodi: 30°: 11.0/—/—  40°: 4.0/—/—  50°: 0.7/—/—  60°: 0.4/—/—  90°: 0.3/12.0/2.3  120°: 0.3/0.3/0.3  150°: 0.3/0.4/0.3  180°: 0.3/—/0.3  
+2) ACCELERAZIONE (da ferma al 90% della velocità di regime, scotta migliore) e FRENATA (vela tutta lascata: metri e secondi fino a 1 nodo)
+  6 nodi: 45°: 90% in 18.6 s, ferma in 6.6 s/6.4 m   90°: 90% in 12.3 s, ferma in —   150°: 90% in 7.6 s, ferma in —   
+  12 nodi: 45°: 90% in 7.1 s, ferma in 4.0 s/5.4 m   90°: 90% in 5.7 s, ferma in —   150°: 90% in 2.8 s, ferma in —   
+  18 nodi: 45°: 90% in 5.1 s, ferma in 2.6 s/4.0 m   90°: 90% in 5.1 s, ferma in —   150°: 90% in 2.0 s, ferma in —   
+3) BOLINA alla VMG migliore: angolo, nodi, sbandamento, scarroccio, fuori bordo, vela piatta (1 = piena)
+  4 nodi: 46°, 2.2 nodi, VMG 1.50, sbandamento 4.6°, scarroccio 2.4°, fuori bordo 0.09, vela 1.00
+  6 nodi: 48°, 3.3 nodi, VMG 2.11, sbandamento 4.7°, scarroccio 2.3°, fuori bordo 0.23, vela 1.00
+  9 nodi: 46°, 4.3 nodi, VMG 2.87, sbandamento 4.8°, scarroccio 2.7°, fuori bordo 0.53, vela 1.00
+  12 nodi: 44°, 5.0 nodi, VMG 3.42, sbandamento 5.0°, scarroccio 3.4°, fuori bordo 0.90, vela 1.00
+  15 nodi: 40°, 5.2 nodi, VMG 3.82, sbandamento 5.0°, scarroccio 3.4°, fuori bordo 1.00, vela 1.00
+  18 nodi: 42°, 5.7 nodi, VMG 4.07, sbandamento 5.0°, scarroccio 2.9°, fuori bordo 0.99, vela 1.00
+  22 nodi: 50°, 6.8 nodi, VMG 4.19, sbandamento 8.5°, scarroccio 2.1°, fuori bordo 1.00, vela 1.00
+4) SCOTTA: nodi con scotta 0 / 0,2 / 0,4 / 0,6 / 0,8 / 1 (10 nodi)
+  45°: 4.5 / 3.7 / 0.5 / -0.8 / -0.8 / -0.8
+  90°: 3.0 / 4.7 / 6.0 / 4.7 / 3.0 / 2.1
+  135°: 4.4 / 4.4 / 4.4 / 4.3 / 4.6 / 4.9
+  180°: 1.8 / 2.6 / 3.3 / 3.7 / 4.0 / 4.1
+5) NUMERI: vento 0 e 30 nodi, passo 1/30 contro 1/240 (velocità di regime a 45° e 90°, 12 nodi)
+  0 nodi: 0°: 0.6n -0.0° 45°: 0.6n -0.0° 90°: 0.6n -0.0° 180°: 0.6n -0.0°  | numeri non finiti: 0
+  30 nodi: 0°: -5.6n -0.0° 45°: -1.4n 4.8° 90°: 8.0n 60.1° 180°: 5.1n -60.6°  | numeri non finiti: 0
+  45°: passo 1/30 5.123, 1/60 5.123, 1/240 5.123 nodi
+  90°: passo 1/30 7.182, 1/60 7.182, 1/240 7.182 nodi
+freno: 1 pause, picco 66 °C, uscita 0

@@ -2,7 +2,9 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 26 novembre 2026, notte (gioco alla **1.3.60**, tag `v1.3.60`; la barca M che riparte da ferma).*
+*Aggiornato: 27 novembre 2026 (gioco alla **1.3.61**, tag `v1.3.61`; controllo completo della barca).*
+
+- **1.3.61 (controllo completo della barca, via di Ale):** angolo morto (a 30° dal vento 45-65% della velocità a 45°), partenza da ferma col vento forte (tetto della resistenza della deriva), **tabella delle velocità `rotta-dati.js` rigenerata** (dalla 1.3.59 rotta ottimale, Coach, layline e rivali usavano la barca vecchia). Medaglie 3, 4, 6 ritarate. Non passano: 6.3 un poco peggio, «Stare fermi» F2 (89), Coach K1/K5a (92). Nuova voce 91 (poco timone in raffica). **Misura dei rivali della voce 2 da rifare** (quella della notte usava la tabella vecchia), meglio su GitHub: sul PC 72 °C. `PROPOSTA-BARCA-1-3-61.md`, `sperimentale/barca-84/controllo/CONTROLLO.md`.
 
 - **1.3.60 (via di Ale):** la barca M della 1.3.59 da ferma con la vela cazzata non ripartiva (regata di Ale del 26 nov: 50 s fermo al via). Corretto lo smorzamento della resistenza indotta alle basse velocità (taratura); sopra 2,9 nodi M identica. R1, R2, R3, R5 ok; **R4 no** (a 25° dal vento la barca avanza: già nella 1.3.59). **Trovato:** «Stare fermi» (lezione 18) si supera senza toccare la scotta con M (voce 89). La misura dei rivali con M (voce 2) va rilanciata sulla 1.3.60. `PROPOSTA-RIPARTENZA.md`.
 
