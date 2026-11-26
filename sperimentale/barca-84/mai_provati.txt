@@ -1,0 +1,19 @@
+## oggi
+  virata con la scotta automatica sicura, 14 nodi: minimo 32%, sbandamento max 30°, dopo 20 s 99%
+  virata con la scotta automatica sicura, 18 nodi: minimo 22%, sbandamento max 28°, dopo 20 s 98%
+  strambata 150°→150°, 10 nodi: giro 3.0 s, minimo 98%, sbandamento max 2°, dopo 20 s 100%
+  strambata 150°→150°, 15 nodi: giro 2.2 s, minimo 99%, sbandamento max 4°, dopo 20 s 100%
+  strambata 150°→150°, 20 nodi: giro 1.7 s, minimo 98%, sbandamento max 5°, dopo 20 s 100%
+## K
+  virata con la scotta automatica sicura, 14 nodi: minimo 60%, sbandamento max 20°, dopo 20 s 100%
+  virata con la scotta automatica sicura, 18 nodi: minimo 37%, sbandamento max 24°, dopo 20 s 99%
+  strambata 150°→150°, 10 nodi: giro 2.9 s, minimo 99%, sbandamento max 2°, dopo 20 s 100%
+  strambata 150°→150°, 15 nodi: giro 2.1 s, minimo 99%, sbandamento max 4°, dopo 20 s 100%
+  strambata 150°→150°, 20 nodi: giro 1.6 s, minimo 99%, sbandamento max 5°, dopo 20 s 100%
+## L
+  virata con la scotta automatica sicura, 14 nodi: minimo 61%, sbandamento max 20°, dopo 20 s 100%
+  virata con la scotta automatica sicura, 18 nodi: minimo 38%, sbandamento max 24°, dopo 20 s 99%
+  strambata 150°→150°, 10 nodi: giro 2.8 s, minimo 99%, sbandamento max 2°, dopo 20 s 100%
+  strambata 150°→150°, 15 nodi: giro 2.1 s, minimo 99%, sbandamento max 3°, dopo 20 s 100%
+  strambata 150°→150°, 20 nodi: giro 1.6 s, minimo 99%, sbandamento max 4°, dopo 20 s 100%
+freno: 0 pause, picco 46 °C, uscita 0

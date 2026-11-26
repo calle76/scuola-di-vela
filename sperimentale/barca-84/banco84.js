@@ -1,6 +1,6 @@
 // Voce 84: banco unico (copia del motore in memoria, js/ non cambia). Uso: node banco84.js '[{"n":"nome","P":{...}}]' [veloce]
 const fs = require("fs"), path = require("path"), src0 = fs.readFileSync(path.join(__dirname, "../../js/motore.js"), "utf8");
-const KN = 1.943844, R = Math.PI / 180, clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const PRUA = !!process.env.BANCO_PRUA, KN = 1.943844, R = Math.PI / 180, clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const ORC = [[0,0,.043],[7,.862,.026],[9,1.052,.023],[12,1.164,.023],[28,1.347,.033],[60,1.239,.113],[90,1.125,.383],[120,.838,.969],[150,.296,1.316],[180,-.112,1.345]];
 const GZ = [[0,0],[4.5,.083],[9,.145],[13.5,.19],[18,.223],[22.5,.247],[90,0]];
 const interp = (T, x, c) => { if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T.length; i++) if (x <= T[i][0]) return T[i-1][c] + (T[i][c] - T[i-1][c]) * (x - T[i-1][0]) / (T[i][0] - T[i-1][0]); return T[T.length-1][c]; };
@@ -32,11 +32,15 @@ const BI9 = [[42,4.65],[46.5,5.0],[55,5.6],[60,5.9]], BI12 = [[42,5.0],[46.5,5.4
 function misura(P, veloce){ const M = motore(P), { step, BOAT, RUD2, RUD2_SICURA, norm180 } = M, o = {};
   const eq = (kn, twa, sh) => { const S = { x:0,y:0,h:0,u:1,vl:0,r:0 }; let ul = 0; for (let i = 0; i < 1200; i++){ S.h = 0; step(S, { sheet: sh, tiller: 0 }, { twd: twa, tws: kn / KN }, 0.05); if (Math.abs(S.heel) > 60) return null; if (i % 100 === 99){ if (i > 300 && Math.abs(S.u - ul) < 5e-4) break; ul = S.u; } } return S; };
   const best = (kn, twa, hi = 0.5) => { let b = null, bs = 0; const prova = sh => { const s = eq(kn, twa, sh); if (s && (!b || s.u > b.u)){ b = s; bs = sh; } }; const st = hi / 10; for (let sh = 0; sh <= hi + 1e-6; sh += st) prova(sh); const c = bs; for (const d of [-.5, -.25, .25, .5]) if (c + d * st >= 0) prova(c + d * st); if (b) b.sh = bs; return b || { u: 0 }; };
-  const vmg = (kn, a0, a1, p) => { let b = null; for (let a = a0; a <= a1; a += p){ const s = best(kn, a, a > 90 ? 1 : .5), v = Math.abs(s.u * Math.cos(a * R)) * KN; if (!b || v > b.v) b = { v, a, s }; } return b; };
+  // 26 nov, quinto giro (GIRO5.md §1): VMG e angoli sulla ROTTA (prua + scarroccio), come Day, Binns e i GPS; BANCO_PRUA=1 ridà il metro vecchio (solo la prua)
+  const lee = st => Math.atan2(Math.abs(st.vl || 0), Math.max(.3, Math.abs(st.u))) / R, vera = st => Math.hypot(st.u, st.vl || 0);
+  const vmg = (kn, a0, a1, p) => { let b = null; for (let a = a0; a <= a1; a += p){ const s = best(kn, a, a > 90 ? 1 : .5), v = PRUA ? Math.abs(s.u * Math.cos(a * R)) * KN : Math.abs(vera(s) * Math.cos((a + lee(s)) * R)) * KN; if (!b || v > b.v) b = { v, a, s }; } return b; };
+  const bestR = (kn, a) => { if (PRUA) return best(kn, a); let prima = null; for (let h = a; h >= a - 10; h -= 1){ const s = best(kn, h); if (!s.u) continue; const c = { r: h + lee(s), v: vera(s), s };
+      if (c.r <= a){ if (!prima) return Object.assign({}, s, { u: c.v }); const t = (a - c.r) / (prima.r - c.r); return Object.assign({}, prima.s, { u: c.v + (prima.v - c.v) * t }); } prima = c; } return { u: 0 }; };
   o.day = [6, 10, 15].map(k => { const b = vmg(k, 36, 54, 1); return [(b.v / DAY[k] - 1) * 100, b.a, b.s.heel, b.s.hike, b.s.sh]; });
-  o.pen = PEN.map(([w, b]) => (best(w, 45).u * KN / b - 1) * 100);
-  o.b9 = BI9.map(([a, m]) => (best(9, a).u * KN / m - 1) * 100); o.b12 = BI12.map(([a, m]) => (best(12, a).u * KN / m - 1) * 100);
-  o.b5 = best(3.2, 45).u;
+  o.pen = PEN.map(([w, b]) => (bestR(w, 45).u * KN / b - 1) * 100);
+  o.b9 = BI9.map(([a, m]) => (bestR(9, a).u * KN / m - 1) * 100); o.b12 = BI12.map(([a, m]) => (bestR(12, a).u * KN / m - 1) * 100);
+  o.b5 = bestR(3.2, 45).u;
   o.v20 = vmg(20, 40, 52, 4).v;
   if (veloce === 2) return o;
   // B6 prua imposta a 3,2 nodi (10 s) e 11 nodi (5 s)

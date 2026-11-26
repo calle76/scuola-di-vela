@@ -1,0 +1,8 @@
+reg 0.05: quota indotta 5 nodi 10.9% (ammesso) | F109 scarti 0.045 + 0.066 = 0.111 | Semb 14 nodi uscita 91% media 88% 80% 7.7 s | 18 nodi uscita 8% media 64% 80% mai
+reg 0.1: quota indotta 5 nodi 10.5% (ammesso) | F109 scarti 0.045 + 0.067 = 0.112 | Semb 14 nodi uscita 92% media 89% 80% 7.6 s | 18 nodi uscita 55% media 74% 80% mai
+reg 0.15: quota indotta 5 nodi 10.2% (ammesso) | F109 scarti 0.045 + 0.067 = 0.113 | Semb 14 nodi uscita 92% media 89% 80% 7.6 s | 18 nodi uscita 64% media 77% 80% mai
+reg 0.2: quota indotta 5 nodi 9.8% (ammesso) | F109 scarti 0.045 + 0.068 = 0.114 | Semb 14 nodi uscita 92% media 89% 80% 7.6 s | 18 nodi uscita 69% media 78% 80% 9.7 s
+reg 0.25: quota indotta 5 nodi 9.5% (ammesso) | F109 scarti 0.046 + 0.069 = 0.114 | Semb 14 nodi uscita 92% media 89% 80% 7.6 s | 18 nodi uscita 72% media 79% 80% 9.5 s
+reg 0.3: quota indotta 5 nodi 9.6% (ammesso) | F109 scarti 0.046 + 0.069 = 0.115 | Semb 14 nodi uscita 92% media 89% 80% 7.5 s | 18 nodi uscita 74% media 80% 80% 9.4 s
+reg 0.4: quota indotta 5 nodi 9.0% (ammesso) | F109 scarti 0.046 + 0.070 = 0.117 | Semb 14 nodi uscita 92% media 89% 80% 7.5 s | 18 nodi uscita 77% media 81% 80% 9.2 s
+freno: 0 pause, picco 52 °C, uscita 0
