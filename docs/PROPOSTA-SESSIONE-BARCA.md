@@ -115,6 +115,15 @@ Due ragioni spingono verso 7,9, trovate dopo aver scelto J: (1) **F109 misura il
 
 Si fa a 15 nodi con raffiche e chiede di «tenere la vela tutta cazzata». Con la barca nuova il timoniere appiattisce e svergola la vela da solo (come in Day), e la barca non scuffia più a scotta ferma: la lezione va rifatta (più vento, o la vela piatta che arriva più piano). È anche una scelta di gioco: il timoniere automatico che appiattisce è un aiuto che oggi il giocatore non controlla.
 
+### Quarto giro (26 novembre, dopo il «continua» di Ale): `sperimentale/barca-84/RICERCA-K.md`
+
+- **B2:** lo scarto a 55-60° sta dentro l'incertezza delle fonti. La vasca SSPA (F121 tab. 2, scafo vero ma bloccato in assetto, peso non scritto) dà il 4-14% di resistenza in meno di quella del gioco (F16); Day §6.1 avverte che i dati di Binns possono contenere surfate in bolina larga. Con lo scafo SSPA J passerebbe B1-B5, ma è una prova fatta dopo aver visto B2: **B2 resta «non passa»**.
+- **Monte Carlo K** (scafo ×0,93-1,0, `fg` 0,02-0,08): tutti tranne B2 35% (J 20%), con B2 7% (J 0%); B3 scende a 41%: Binns 9 e Binns 12 tirano in direzioni opposte.
+- **B8, ipotesi:** `fg` ha ora un intervallo misurato (F109, virata a 11 nodi con scotta lascata: 0,02-0,08; bandiere in galleria 0-0,55); il 9° ha un appoggio parziale (F109: vela a metà altezza 13° col poco vento); deriva alzata nelle portanti e ritardo dell'appiattimento hanno solo fonti qualitative; `a0`/`w` e la raddrizzata oltre 22,5° restano senza fonte (F109 non distingue `a0`/`w`).
+- **Controllo nuovo:** a bolina J apre il boma col vento medio (16,6° a 11 nodi, F109 19° a metà altezza); oggi resta a 10,9° fino a 15 nodi.
+- **Lezione 6.3:** col ritardo dell'appiattimento a 1,5 s torna a 23/25 (2 s: 22/23), ma si completa da sola 5-7 volte su 30 (oggi 1). È una leva di gioco senza fonte numerica.
+- **Area:** Magnander normalizza su 7,06 (il suo modello piatto è circa 7,06-7,10 m² a grandezza vera); non cambia J (la poppa è fissata in forza). Fra 7,5 e 7,9 le fonti non decidono.
+
 ### Consiglio
 
 **Non adottare un candidato preciso adesso.** Il risultato solido è che la vela di oggi è troppo debole col poco vento (cinque fonti) e che la barca deve pesare 160 kg e raddrizzare come F121; l'area esatta (7,0-7,9) e le ipotesi della vela che fileggia non sono decise dalle fonti. Se Ale vuole andare avanti: proposta per il motore con J, B2 e B8 dichiarati non passati, e prima di accenderla lezione 6.3, fasce, medaglie, partenza dei rivali. Se no: la 81 resta limite noto, con questa ricerca scritta.

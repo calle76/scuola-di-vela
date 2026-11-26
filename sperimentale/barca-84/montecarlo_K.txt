@@ -1,0 +1,9 @@
+200 combinazioni, criteri passati (%): B1 96  B2 24  B2senza60 55  B3 41  B4 83  B5 100  B6 90  B7b 98  vir16 100  raff18 100  vir18 94  morto 100
+tutti tranne B2: 35%; tutti con B2: 7%
+B1: a0 -0.13 w +0.16 par -0.35 b1 -0.15 flat +0.20 twB +0.18 hullScale -0.21 zCE -0.15 sailArea +0.42 
+B2: par -0.15 hullScale -0.23 mass +0.15 sailArea +0.43 
+B3: zCE +0.38 hikeArm -0.18 
+B6: a0 -0.35 w -0.40 dz +0.18 hT -0.16 fg -0.18 sailArea -0.21 
+raff18: 
+freno: 0 pause, picco 49 °C, uscita 0
+fatto

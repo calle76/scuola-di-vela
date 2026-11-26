@@ -12,7 +12,7 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 84 | **Sessione sulla barca: fatta il 25-26 nov, motore non toccato.** Candidato J (valori centrali delle fonti); la vela di oggi è troppo debole col poco vento (cinque fonti); **non passano B2 (−7,3% a 60°) e B8**; sul gioco da rifare lezione 6.3, fasce, medaglie, partenza dei rivali. **Aspetta Ale: proposta per il motore, o limite noto** | `PROPOSTA-SESSIONE-BARCA.md` §Esito | Opus |
+| 84 | **Sessione sulla barca: fatta il 25-26 nov, motore non toccato.** Candidato J (valori centrali delle fonti); la vela di oggi è troppo debole col poco vento (cinque fonti); **non passano B2 (−7,3% a 60°) e B8**; sul gioco da rifare lezione 6.3, fasce, medaglie, partenza dei rivali. Quarto giro (26 nov) in `sperimentale/barca-84/RICERCA-K.md`. **Aspetta Ale: proposta per il motore, o limite noto** | `PROPOSTA-SESSIONE-BARCA.md` §Esito | Opus |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** versione A fatta nella 1.3.49 (colpa, semaforo, zona disegnata, lezione 25). **Versione B (rivali che danno spazio): proposta e misura fatte il 24 nov, consiglio «non ora»** (7 momenti utili in 90 regate), si decide con Z7 (`PROPOSTA-REGOLA-18-B.md`). Z7: rifare `conta_boa_zona.py` sulle prime regate di Ale e Lucio con la 18; dalla 1.3.56 (4B accesa) guardare anche i contatti entro 12,6 m dalla boa, col pilota 7 → 13, e `collaudo_avversari1b` scenario 5 (tre rivali alla boa: 9-10 → 7 su 10) | `PROPOSTA-REGOLA-18.md` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via
