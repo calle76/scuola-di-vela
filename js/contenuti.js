@@ -224,7 +224,7 @@
       cond: (I, S, B) => I.gustK > 0.3 && I.twa <= 75 && I.heel < 20 && I.kn > 2 && (B.lasca || 0) >= 0.05, hold: 3, // 1.1.3: anche lascare in raffica; la barca dell'1b orzava da sola e scaricava la vela // 1.0.15: nel cuore della raffica (+30%) e di bolina; prima bastava il bordo (+12%) e si completava da solo
       done: "Ben fatto. Lascare riduce la forza sulla vela ed è la prima mossa in una raffica; stringere il vento di solito non conviene. È la tecnica principale per navigare con vento rafficato." },
     { title: "La scuffia", allow: ["capsizes"], noRight: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "none", bigGust: true,
-      text: ["Ora il vento è più forte e le raffiche più violente. Per capire il limite, fai apposta l'errore: poggia al traverso, vela tutta cazzata, e in raffica non lascare."],
+      text: ["Ora vento e raffiche sono più forti. Per capire il limite, fai apposta l'errore: al traverso, vela tutta cazzata, in raffica non lascare."],
       cond: (I, S, B) => S.capsizes > B.capsizes, hold: 0.8,
       done: "In questo gioco, oltre circa 60° di sbandamento la barca si rovescia: ha <em>scuffiato</em>. Per una deriva capita, non è un dramma: si raddrizza." },
     { title: "Raddrizzare", startCapsized: true, tiller: true, sheet: true, hud: 3, env: { tws: 15, gusts: 2 }, hintKind: "tt",

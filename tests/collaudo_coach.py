@@ -29,7 +29,7 @@ import asyncio, json, math, os, pathlib, re, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
-NREG = int(arg("--regate", "20")); RIF = arg("--rif", "v1.3.10")   # 1.3.10: le regole 15 e 16 cambiano apposta le penalità del torneo: da qui il riferimento è la 1.3.10 (prima la 1.3.2)
+NREG = int(arg("--regate", "20")); RIF = arg("--rif", "v1.3.61")   # 1.3.10: le regole 15 e 16 cambiano apposta le penalità del torneo (riferimento 1.3.10, prima la 1.3.2); 27 nov 2026 (voce 92): la barca M (1.3.59-1.3.61) cambia apposta gli arrivi, riferimento la 1.3.61
 src = (ROOT / "tests" / "collaudo_rotta_assoluta.py").read_text().split("async def main")[0]
 A = {"__file__": str(ROOT / "tests" / "collaudo_rotta_assoluta.py")}; exec(src, A); CORSA = A["CORSA"]
 LUNGO = "--lungo" in sys.argv   # 1.3.27 (voce 66): le stesse prove sulle regate lunghe del torneo (bolina 560 m, triangolo 460 m); K1 saltato: il riferimento non ha regate lunghe
@@ -209,8 +209,11 @@ async def main():
         for twa, kn, c, D in ((45, 10, 0.3, 40), (90, 12, 0.5, 30), (150, 8, 0.2, 60), (60, 15, 0.45, 50)):
             r = await pg.evaluate("""([twa, kn, c, D]) => { const w = rotVento(R.marks[0].x, R.marks[0].y, rotRaffiche(rot.reg[0].t)), tws = w.tws, fr = [];
                 for (let i = 0; i <= D * 10; i++) fr.push({ t: rot.reg[0].t + i / 10, b: [[R.marks[0].x, R.marks[0].y, norm360(w.twd + twa), 0, 1]], c: [c, 1] });
-                const o = coaCoperto(fr)[0]; return { persi: o ? o.persi : null, tws }; }""", [twa, kn, c, D])
-            stima = D * (1 - vpol(twa, r["tws"] * (1 - c)) / vpol(twa, r["tws"]))
+                const o = coaCoperto(fr)[0], vv = fr.map(f => { const x = rotVento(R.marks[0].x, R.marks[0].y, rotRaffiche(f.t)); return [x.tws, Math.abs(norm180(f.b[0][2] - x.twd))]; });
+                return { persi: o ? o.persi : null, tws, vv }; }""", [twa, kn, c, D])
+            # 27 nov 2026 (voce 92): la stima segue il vento di ogni istante (raffiche e salti), come il Coach; prima usava il vento del primo istante,
+            # e con la barca M (velocità che cambia di più col vento a 45°) il caso a 45° usciva dal ±25% (Coach 6,5 s, stima 4,8)
+            stima = sum(0.1 * (1 - vpol(a, t * (1 - c)) / vpol(a, t)) for t, a in r["vv"][:-1])
             chk("K5a", r["persi"] is not None and abs(r["persi"] - stima) <= 0.25 * stima, f"K5a twa {twa}, quota {c}, {D} s: coach {r['persi']}, stima {stima:.2f}")
             print(f"K5a twa {twa}° quota {c} per {D} s: coach {r['persi']:.2f} s, stima {stima:.2f} s", flush=True)
         await pg.evaluate(CORSA, [0, 2602, 0]); await pg.click("#finRot"); await pg.wait_for_timeout(120)

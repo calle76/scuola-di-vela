@@ -22,7 +22,7 @@ def chk(parte, ok, testo):
     if not ok: fail.append(testo)
 
 BREV = {"done": {}, "best": {}, "clean": {}, "exam": {"superato": True, "voto": 30, "n": 34, "ripasso": []}, "brevetto": {"data": "2026-11-15"}, "dvBenvenuto": "2026-11-15"}   # 1.3.23: il benvenuto in Deriva già visto (lo controlla collaudo_carriera_file)
-RESTO = {"done": {"l20": True, "l21": True, "l22": True, "l23": True, "l24": True, "m5": True}, "best": {"m5": 230}, "clean": {"m5": True}, "quiz": {"q20": 4, "q21": 4, "q22": 5, "q23": 4, "q24": 4}, "coachVisto": True}   # 1.3.10: con la lezione 24 (indice 23); 1.3.49: con la 25 (indice 24)
+RESTO = {"done": {"l20": True, "l21": True, "l22": True, "l23": True, "l24": True, "m5": True}, "best": {"m5": 210}, "clean": {"m5": True}, "quiz": {"q20": 4, "q21": 4, "q22": 5, "q23": 4, "q24": 4}, "coachVisto": True}   # 1.3.10: con la lezione 24 (indice 23); 1.3.49: con la 25 (indice 24); 27 nov 2026 (voce 92): prova 6 a 210 s, oro con le fasce della 1.3.61 [215, 270, 345] (230 era oro con [240, 300, 385])
 def unisci(*d):
     o = {"done": {}, "best": {}, "clean": {}, "quiz": {}}
     for x in d:
