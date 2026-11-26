@@ -120,8 +120,23 @@ Il controllo del banco «raffica 10→18 nodi, sbandamento massimo 52°» usa un
 
 Il gradino è il caso peggiore e lì le due barche sono uguali; appena la raffica sale in un tempo vero, K sbanda molto meno (il timoniere esce in 0,9 s e la vela si appiattisce in 1,5 s, e fanno in tempo). Nel gioco le raffiche sono zone d'acqua con il bordo sfumato (`gioco.js`, `ventoDa`), quindi la barca le sente salire in secondi: il gradino del banco resta un controllo severo, non il comportamento che si vede giocando. Il ritardo della forza sulla vela non è nel motore (vela «quasi stazionaria», come nei programmi di previsione: Persson mostra che con le onde il modello quasi stazionario esagera la variazione della forza); con raffiche che salgono in secondi conta poco. Nessuna modifica proposta.
 
+## 15. Virate misurate di un ILCA 7 (`virate_semb.js`, F137)
+
+Semb e altri 2025 (F137, scaricato da Ale): 12 virate di bolina di un velista d'élite, Trondheim; vento di una boa di misura 9,2 m/s (circa 18 nodi), raffiche 10,4. Medie della tab. 2, finestra di 10 s centrata sulla prua al vento: entrata 2,43 m/s (4,7 nodi), uscita 92% dell'entrata, media nella finestra 86%, angolo di virata 80° (69-91), 80% della velocità d'entrata dopo 7,6 s dall'inizio della finestra (6,5-8,7), cioè circa 2,6 s dopo la prua al vento. Stesse misure sul gioco, pilota con timone a fondo (rampa del banco) e poi bolina a 45° con la scotta della regola del banco:
+
+| | uscita | media | minimo | angolo | 80% dopo |
+|---|---|---|---|---|---|
+| misura | 92% | 86% | | 80° | 7,6 s |
+| oggi, 14 nodi | 78% | 80% | 42% | 88° | 9,3 s |
+| K, 14 nodi | 91% | 88% | 61% | 89° | 7,7 s |
+| oggi, 18 nodi | 22% | 59% | 11% | 74° | mai |
+| K, 18 nodi | 28% | 68% | 18% | 84° | mai |
+
+Con 14 nodi K torna con la misura su tutti e quattro i numeri, la barca di oggi è più lenta a ripartire. **Con 18 nodi (il vento della boa) tutte e due restano quasi ferme dopo la virata**: a 1 m/s, con la vela cazzata e 25° di sbandamento, la barca orza da sola, il timone non basta a poggiare per circa 3 s e la resistenza indotta frena. Poggiando di 30° per 10 s K riparte, ma arriva all'80% circa 5 s dopo la prua al vento invece di 2,6; lascare la scotta peggiora (la vela sbatte e la barca va indietro). Lo smorzamento della resistenza indotta di K (0,1, da Day fig. 11) pesa: con 0,4 (quello di oggi) K esce al 75%. Il vento vero sulla barca non è certo: la boa è nel fiordo, e 4,7 nodi d'entrata sono pochi per 18 nodi (K a 45° fa 5,3), quindi la misura sta probabilmente fra 14 e 18 nodi. **Punto da guardare prima di accendere**: con vento forte la barca del gioco riparte dalla virata molto più piano di quella vera; il criterio della virata a 16 nodi (B, entro 5 s fino a 30° oltre il vento) non lo vedeva perché si ferma prima dell'uscita.
+
 ## Restano aperti (fine del quarto giro)
 
 - Ampiezza della vela che fileggia `w`, ritardo dell'appiattimento, raddrizzata oltre 22,5°: senza misura (cercate: nessuna curva GZ del Laser pubblicata; nessuna misura dei tempi di regolazione).
-- **Da scaricare a mano (il sito blocca i programmi):** «Multi-Sensor System for Analysis of Maneuver Performance in Olympic Sailing», Applied Sciences 15 (2025) 8629, https://doi.org/10.3390/app15158629: un ILCA 7 con sensori su timone, albero e sbandamento; può dare virate e raffiche misurate.
+- **Ripartenza dopo la virata con vento forte** (§15): con 18 nodi la barca del gioco, di oggi e K, resta quasi ferma; la barca vera no. Da capire prima di accendere (sbandamento e orzata a bassa velocità, timone, smorzamento della resistenza indotta).
+- Tesi di Rossi (USP 2007, confronto col Laser, forse una curva di stabilità): il server non risponde, da riprovare.
 - Poppa con le S e le onde: tecnica che il gioco non ha (possibile voce futura).

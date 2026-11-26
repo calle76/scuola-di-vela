@@ -42,6 +42,7 @@ Misure del 26 novembre sul clone del repo: due varianti con l'appiattimento a 1,
 | VMG a 20 nodi | | 3,92 | 3,57 | 3,63 |
 | Raffica 10→18 nodi, sbandamento massimo | 52° | 50° | 52° | 52° |
 | Stessa raffica che sale in 2 s (`RICERCA-K.md` §14) | 44° | | | 33° |
+| Virate misurate di un ILCA 7 (F137: uscita 92%, 80% dopo 7,6 s), `RICERCA-K.md` §15 | 14 nodi 78%, 9,3 s; 18 nodi resta ferma | | | 14 nodi 91%, 7,7 s; **18 nodi resta ferma** |
 | Lezioni, 41 passi, 30 semi | | 6.3: 23/25, a mani ferme 5/30; 2.6 e 5.8 1-2 volte | 6.3: 25/25, a mani ferme 5/30; 2.6, 5.8, 6.2 1 volta | 6.3: 21/21, **a mani ferme 9/30**; 6.2 2 volte; 2.6, 5.8 1 volta |
 | Tempi del pilota preciso, prove 1-5 (s) | 79 / 124 / 159 / 286 / 302 | 79 / 119 / 137 / 249 / 285 | 79 / 119 / 137 / 248 / 285 | 79 / 119 / 136 / 248 / 285 |
 | Medaglie, 30 corse, fasce di oggi | | **tutte OK** (l'oro diventa più facile) | **tutte OK** | **tutte OK** |
@@ -53,6 +54,7 @@ Misure del 26 novembre sul clone del repo: due varianti con l'appiattimento a 1,
 - La barca diventa più veloce col poco vento (fino al 15%): i record e le medaglie di prima non sono confrontabili (si azzerano, regola già data da Ale).
 - Il timoniere automatico che appiattisce è un aiuto in più che il giocatore non controlla.
 - Gli scarti residui (B2) e le ipotesi (B8) restano scritti come limiti noti.
+- **Con vento forte (18 nodi) la barca riparte dalla virata molto più piano di quella vera** (oggi e K; `RICERCA-K.md` §15): trovato il 26 novembre dopo questa proposta, da capire prima del via.
 
 ## Scelte, col criterio di Ale (26 nov: «mi interessa di più il comportamento simile a quello reale» che il funzionamento di una lezione)
 
