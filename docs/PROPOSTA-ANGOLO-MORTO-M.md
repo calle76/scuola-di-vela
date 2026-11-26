@@ -40,6 +40,6 @@ Metro controllato: per la 1.3.60 ridà i numeri del sesto giro (Day −4,0 / −
 
 **Per Ale:** (1) `a1` = 19 (stringere a 30° costa il 46-55% invece del 30-41%; Day invariato, Binns a 42° −0,9 punti; A1 e A2 dichiarati); (2) lasciare com'è, dichiarando; (3) cercare prima fonti con la velocità a 30-35° dal vento.
 
-## Decisione di Ale (26 nov): «falla più simile alla realtà possibile»
+## Decisione di Ale (26 nov): «falla più simile alla realtà possibile»; il valore lo sceglie Claude con questa regola
 
-Ricerca breve (26 nov): nessuna misura dell'ILCA a 30-35°. Unico dato vicino, qualitativo e non sicuramente sull'ILCA: un blog di tecnica (waterspeedapp.com, «Upwind angles and VMG in a dinghy») dà a 40° l'89% della velocità a 45°. Una polare teorica del forum sailingforums.com: l'ILCA non risale più stretto di 30°. **Scelta: `a1` = 19°**, il valore più severo che lascia Day e Binns entro 1 punto (A4): velocità rispetto a 45° = 45-54% a 30°, 70-82% a 35°, 89-93% a 40° (1.3.60: 59-70 / 80-84 / 91-93%). A1 e A2 restano non passati, dichiarati. Nel gioco (1.3.61) dopo la misura dei rivali della voce 2.
+Ricerca breve (26 nov): nessuna misura dell'ILCA a 30-35°. Unico dato vicino, qualitativo e non sicuramente sull'ILCA: un blog di tecnica (waterspeedapp.com, «Upwind angles and VMG in a dinghy») dà a 40° l'89% della velocità a 45°. Una polare teorica del forum sailingforums.com: l'ILCA non risale più stretto di 30°. **Scelta di Claude (non di Ale): `a1` = 19°**, il valore più severo che lascia Day e Binns entro 1 punto (A4): velocità rispetto a 45° = 45-54% a 30°, 70-82% a 35°, 89-93% a 40° (1.3.60: 59-70 / 80-84 / 91-93%). A1 e A2 restano non passati, dichiarati. Nel gioco (1.3.61) dopo la misura dei rivali della voce 2.
