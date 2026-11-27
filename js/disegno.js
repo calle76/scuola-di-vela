@@ -50,9 +50,13 @@
     if (I.tt === "lee" && I.sheet > 0.99){ cls = "good"; msg = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."; }
     /* 1.3.70 (voce 96, oss. 148): in poppa piena e oltre, fuori dalle lezioni, si dice come funziona lo strapoggio della 1.3.68 (Ale cazzava e strambava
        senza volerlo), da POPPA_SUGG gradi dal vento vero */
-    if (mode !== "lesson" && I.twa >= POPPA_SUGG){
-      if (I.sheet > 0.99){ cls = "good"; msg = "Vela tutta aperta: puoi scendere fino a 15° oltre la poppa senza strambare. Per strambare, prima cazza."; }
-      else { cls = ""; msg = "In poppa lasca tutta la scotta: così scendi fino a 15° oltre la poppa. Se cazzi, il boma passa e strambi."; }
+    /* 1.3.72 (oss. 149, regata di Ale del 27 nov alle 17:23): in strapoggio (boma dal lato da cui arriva il vento apparente) cazzare fa passare il boma ancora aperto, cioè
+       strambata violenta (sheetMax sopra 45°, detectManeuvers): due scuffie. Il pannello lo riconosce e dice di non cazzare; per strambare: orza, cazza TUTTA, poi poggia */
+    const strap = mode !== "lesson" && !S.capsized && !!S.boomSide && Math.abs(info.awa) >= 90 && Math.abs(info.awa) <= 175 && S.boomSide !== (info.awa >= 0 ? -1 : 1); /* da 5° oltre la poppa (il margine minimo del boma): a 180° esatti il lato del vento apparente oscilla */
+    if (strap){ cls = "bad"; msg = "Strapoggio: sei oltre la poppa. Non cazzare, il boma passerebbe di colpo. Per strambare: orza, cazza tutta, poi poggia."; }
+    else if (mode !== "lesson" && I.twa >= POPPA_SUGG){
+      if (I.sheet > 0.99){ cls = "good"; msg = "Vela tutta aperta: puoi scendere fino a circa 15° oltre la poppa. Per strambare: cazza tutta, poi poggia."; }
+      else { cls = ""; msg = "In poppa lasca tutta la scotta: così puoi scendere un po' oltre la poppa. Per strambare: cazza tutta, poi poggia."; }
     }
     const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
     let back = false; // 0.20.2: «all'indietro» si mostra anche nei passi a suggerimenti spenti, se il passo dà la barra

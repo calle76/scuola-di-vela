@@ -33,8 +33,9 @@ CONTRARIO = False                               # solo per la contro-prova P1: i
 NUOVO = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."
 # 1.3.70 (voce 96, oss. 148): fuori dalle lezioni, da 165° dal vento vero il pannello spiega lo strapoggio; collaudo adattato, dichiarato in CHANGELOG
 POPPA_SUGG = 165
-POPPA_LASCA = "Vela tutta aperta: puoi scendere fino a 15° oltre la poppa senza strambare. Per strambare, prima cazza."
-POPPA_CAZZA = "In poppa lasca tutta la scotta: così scendi fino a 15° oltre la poppa. Se cazzi, il boma passa e strambi."
+POPPA_LASCA = "Vela tutta aperta: puoi scendere fino a circa 15° oltre la poppa. Per strambare: cazza tutta, poi poggia."  # 1.3.72: «cazza tutta» (oss. 149)
+POPPA_CAZZA = "In poppa lasca tutta la scotta: così puoi scendere un po' oltre la poppa. Per strambare: cazza tutta, poi poggia."
+STRAPOGGIO = "Strapoggio: sei oltre la poppa. Non cazzare, il boma passerebbe di colpo. Per strambare: orza, cazza tutta, poi poggia."  # 1.3.72 (oss. 149)
 INDIETRO = "All'indietro la barra funziona al contrario: spostala verso il boma, poi centrala e cazza."                  # prua sotto 40°
 INDIETRO2 = "Stai andando all'indietro, ma la prua è fuori dall'angolo morto: centra la barra e cazza."                   # da 40° in su (isteresi: fino a 37°)
 AVANTI = "Ora vai avanti piano: barra al centro, cazza e lascia prendere velocità."                                    # testo B
@@ -145,6 +146,7 @@ TESTI = {  # caso peggiore del pannello: testo nuovo contro il piu lungo che il 
     "nuovo": NUOVO,
     "strapoggio, scotta lasca (1.3.70)": POPPA_LASCA,
     "strapoggio, scotta cazzata (1.3.70)": POPPA_CAZZA,
+    "strapoggio riconosciuto (1.3.72)": STRAPOGGIO,
     "lee attuale": "Si agita il filetto sottovento: lasca, oppure orza.",
     "raffica (1.0.9, il più lungo dei tre)": "Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, poggia e lasca un poco.",
     "sbandi con vela tutta lasca": "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco.",

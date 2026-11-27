@@ -2,7 +2,9 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, pomeriggio (gioco alla **1.3.71**, tag `v1.3.71`).*
+*Aggiornato: 27 novembre 2026, sera (gioco alla **1.3.72**, tag `v1.3.72`).*
+
+- **1.3.72 (oss. 149):** il pannello riconosce lo strapoggio («non cazzare»); il consiglio della 1.3.70 «se cazzi, strambi» portava a strambate violente e scuffie. **Oss. 150 da guardare (voce 2):** la Rossa quasi ferma 8 s dopo il via mentre cede alla Blu con mure diverse (forse la guida nuova della 1.3.71).
 
 - **1.3.71 (voce 2, caso 81):** chi cede a una barca con le mure diverse guarda gli scafi e il tempo per girare; 81 da 8 a 20 su 20, torneo invariato (bolina esperti +0,4 s, contatti 497 → 496 sui semi di conferma). **Giro «Misura» su GitHub** (`.github/workflows/misura.yml`): 450 regate lunghe in pochi minuti, da usare per le misure grandi invece del PC.
 
