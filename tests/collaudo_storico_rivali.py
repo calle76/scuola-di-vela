@@ -15,7 +15,7 @@ from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
-RIF = "v1.3.63"   # 1.3.36 (ba7c653) fino al 27 nov 2026; # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
+RIF = "v1.3.65"   # 1.3.36 (ba7c653) fino al 27 nov 2026; # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
 R3_ATTESA = int(os.environ.get("R3_ATTESA", 0)); R3_MARCA = os.environ.get("R3_MARCA") == "1"   # controprove di R3: attesa in più (il conto non deve cambiare); marcatura accesa (il conto deve scendere)
@@ -162,7 +162,7 @@ async def main():
             for url in (BASE + "#collaudo", VECCHIA):
                 f.append(await torneo_r3(b, url, seme, R3_ATTESA if url != VECCHIA else 0))
             for x, y in zip(*f): tot += 1; uguali += x == y
-        chk(tot == 20 and uguali == 20, f"R3 {uguali} regate su {tot} identiche al bit alla 1.3.63 (arrivi, penalità, giri, posizioni finali)")
+        chk(tot == 20 and uguali == 20, f"R3 {uguali} regate su {tot} identiche al bit alla 1.3.65 (arrivi, penalità, giri, posizioni finali)")
         # ---- R5: pannello ----
         for n6 in (False, True):
             ctx, pg, errs = await pagina(b); await apri(pg, 7)

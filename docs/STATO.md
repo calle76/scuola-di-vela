@@ -2,13 +2,15 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, notte fonda (gioco alla **1.3.63**, tag `v1.3.63`).*
+*Aggiornato: 27 novembre 2026, notte fonda (gioco alla **1.3.65**, tag `v1.3.65`).*
 
-- **1.3.63 (voce 89, via di Ale del 27 nov):** la vela libera non porta (`V84.a0` 0 → 1°, la proposta diceva 2: scelto dopo aver visto la bolina a 22 nodi). «Stare fermi» verde in Chromium e Firefox; polare identica; `rotta-dati.js` cambia fra 17 e 20 nodi; **non passa: lezione 6.3 guidando 16 su 99 non completate (prima 8 su 97).**
-- **Giro GitHub sulla 1.3.62 (run 45913619103) letto per intero:** tornati verdi i collaudi sistemati nella 1.3.62; Q6b rosso per un errore del collaudo (corretto, da verificare); **voce 94 nuova:** il semaforo lampeggia sulla soglia della regola 16 (difetto vero, trovato col caso di `collaudo_semaforo` in Firefox che c'era già sulla 1.3.61 e non avevo visto).
-- **Voce 2:** timoniere «miope» (vede solo il vento del momento) come metro raggiungibile (§18): esperti 10 s in media (4 di mediana) più lenti, principianti 25 s; **confermato** sui semi 4521-4540 (11,3 e 26,5 s). Proposta: chiudere la parte bolina.
-- **Voce 91 chiusa** (criterio riscritto, barca invariata). **Voce 85:** pezzo 1 provato su copia, non serve (0 scuffie con 20 nodi); resta il pezzo 2. **Voce 93 nuova** (marcatore di Ale): al lasco lascare un poco rallenta; causa trovata, proposta scritta, serve una fonte numerica.
-- **Ale ha giocato la 1.3.63 alle 00:58** (`registrazioni/regata-20261127-0058-intera.txt`, oss. 143-145).
+- **1.3.65 (voce 93):** al lasco lascare una vela troppo cazzata non fa più rallentare (forza normale dalla forma di una piastra misurata, F146); polare identica; lezione 6.3 guidando di nuovo sempre completata.
+- **1.3.64 (voce 94):** il semaforo non lampeggia più sulla soglia della regola 16 (accesa resta almeno 1 s).
+- **1.3.63 (voce 89):** la vela libera non porta, «Stare fermi» verde.
+- **Voce 85 chiusa:** la strambata a vela aperta costa già nel gioco (`tests/misura_strambata.py`: 36° con 10 nodi, scuffia 20/20 con 15); il quinto giro aveva misurato solo il motore. **Voce 91 chiusa.**
+- **Voce 2:** contro un timoniere «miope» gli esperti perdono circa 10 s per bolina (confermato su semi nuovi): proposta di chiudere la parte bolina.
+- **Regola di Ale (27 nov):** le scelte tecniche (costanti senza fonte, tempi) le fa Claude e le dichiara.
+- I 7 confronti al bit dei collaudi confrontano con la 1.3.65: **a ogni cambio di barca vanno portati alla versione nuova.**
 
 ## Dove siamo
 
@@ -31,11 +33,11 @@
 - Le altre batterie del circuito **non** si simulano: la classifica a sorteggio resta (voce 52 archiviata). Niente carriera di prova. «Rifai questo tratto» e le domande sulle penalità vanno nel livello Coach dopo Deriva. Il Coach resta a «scarso» = 6° (`DECISIONI.md`).
 - Domande risposte, via non dato: aiuto «scarso/buono» (48).
 
-## Prossimi passi (27 nov, notte)
+## Prossimi passi (27 nov, notte fonda)
 
-1. **Giro GitHub completo sulla 1.3.63** (lo lancia Ale): da verificare Q6b, stare_fermi, ricomincia, esercizi_regata; molti rossi della barca M restano (elenco in `CHANGELOG.md` 1.3.62).
-2. **Decisioni di Ale:** voce 94 (semaforo: la regola 16 accesa resta un tempo minimo? quanto?); voce 93 (cercare la fonte della piastra e correggere); voce 85 pezzo 2 (boma che viaggia, costanti senza fonte); voce 2 (se la conferma regge: chiudere la parte bolina?); collaudi dei giri (contare a parte le prove in cui il pilota tocca la boa).
-3. Voce 92 (collaudi della barca M) e la lezione 6.3.
+1. **Giro GitHub completo sulla 1.3.65** (lo lancia Ale) e lettura per intero.
+2. Voce 92 (collaudi tarati sulla barca vecchia: giri, esercizi, partenze, non partite, suggerimento a 140°, lezione 11, moto del mare, segnali B3, avversari_deriva 81/83).
+3. Voce 2: chiudere la parte bolina (proposta), poi casi 81 e 83 di Deriva.
 
 ## Cosa aspetta Ale
 

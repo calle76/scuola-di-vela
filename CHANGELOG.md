@@ -33,7 +33,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
   - L2 `polare.js` identico; `rotta-dati.js` rigenerato: 3 celle diverse su 1088, la più grande +0,4% (7 nodi, 145°).
   - L3 (il caso del marcatore): 15% 6,27; 25% 6,23; 40% 6,26; 60% 6,40; 80% 6,53; 100% 7,27 nodi. **Non passa alla lettera:** il primo passo (15 → 25%) perde ancora lo 0,6%; da lì lascare fa solo guadagnare (prima al 60% si scendeva a 5,87).
   - L4 medaglie OK (tempi del pilota −1/−2 s nelle prove 2, 4, 5, 6, oro invariato); `raffiche_e_virate.txt` identico; `impronta1b.txt` riscritto (8 corse su 25 diverse, cambio voluto); lezioni col pilota (semi 1-100): **6.3 guidando non più fallita (1.3.63: 16 su 99)**, 5.8 3 su 100 (5), caso nuovo 3.5 dopo un colpo lungo 1 su 100. `collaudo_suggerimento` rosso come prima (scotta 0,99 a 140°, voce 92).
-- **Collaudi:** nuovo `tests/misura_strambata.py` (voce 85, misura senza soglie).
+- **Collaudi:** nuovo `tests/misura_strambata.py` (voce 85, misura senza soglie). I 7 confronti al bit (`regola18` Z1, `regole_15_16` R3, `freccia` F5, `storico_rivali` R3, `scotta_automatica` A1, `riquadro_bandiere` Q6b, `coach` K1) ora confrontano con la **1.3.65** (la barca cambia qui).
 
 ## 1.3.64 — Il semaforo non lampeggia più sulla regola 16 (voce 94)
 
