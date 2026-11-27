@@ -7,7 +7,7 @@
 - **1.3.75:** sponsor col rivale dello sponsor concorrente e, al rinnovo, «migliorare il posto della stagione prima» (Ale); nel pannello «cazza (boma sotto 45°)».
 - **Giro GitHub completo sulla 1.3.71 (run 46030687708, letto per intero):** `avversari_deriva` ora passa nei due browser (tolto da `fallimenti_noti.txt`); rossi noti: `moto_mare` (ora anche Chromium, stessi numeri: 3,8 px), `giri_avversari` G12 (1 caso), `partenze` (voce noto aggiornata: richiami 0% per tutti, il criterio «esperti meno dei principianti» non può passare), `avversari1b` 5 e `regola21` K3 in Firefox. **Nuovo:** `ritiro_provvisorio` P4 in Firefox, 19 su 20, sempre il seme 6415 (anche sul PC): arrivo giusto, manca l'interruzione che la prova provoca; da guardare. Da controllare: lezioni semi 1-100 solo i noti 5.8, 6.2, 6.3.
 - **Oss. 150 (Rossa ferma dopo il via):** su 900 regate per parte (giro «Misura») i rivali fermi mentre cedono sono 2 con la guida nuova e 4 con la 1.3.70: non viene dalla 1.3.71, è un caso vecchio e raro.
-- **PC:** la ventola del processore resta a circa 795 giri/min (massimo 2300) anche a 73 °C (Ale: «non sento le ventole partire»): da guardare prima di altre misure lunghe sul PC; le misure grandi si fanno su GitHub.
+- **PC:** le ventole funzionano (Ale: col PC caldo si sentono forte; le letture a 795 giri/min erano a PC fresco, 57-61 °C). Picco di 73 °C con due collaudi di fila: sul PC un collaudo alla volta, le misure grandi su GitHub.
 
 - **1.3.74:** nel pannello «by the lee» (Ale), il nome delle fonti; nei documenti nuovi si usa questo e non «strapoggio».
 
