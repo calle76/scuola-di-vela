@@ -53,7 +53,7 @@
     /* 1.3.72 (oss. 149, regata di Ale del 27 nov alle 17:23): in strapoggio (boma dal lato da cui arriva il vento apparente) cazzare fa passare il boma ancora aperto, cioè
        strambata violenta (sheetMax sopra 45°, detectManeuvers): due scuffie. Il pannello lo riconosce e dice di non cazzare; per strambare: orza, cazza TUTTA, poi poggia */
     const strap = mode !== "lesson" && !S.capsized && !!S.boomSide && Math.abs(info.awa) >= 90 && Math.abs(info.awa) <= 175 && S.boomSide !== (info.awa >= 0 ? -1 : 1); /* da 5° oltre la poppa (il margine minimo del boma): a 180° esatti il lato del vento apparente oscilla */
-    if (strap){ cls = "bad"; msg = "Strapoggio: sei oltre la poppa. Non cazzare, il boma passerebbe di colpo. Per strambare: orza, cazza tutta, poi poggia."; }
+    if (strap){ cls = "bad"; msg = "Sei oltre la poppa, col vento dal lato del boma: non cazzare, passerebbe di colpo. Per strambare: orza, cazza tutta, poi poggia."; /* 1.3.73: niente «strapoggio» (Ale: è il nome di un evento involontario; nessuna fonte italiana sul nome) */ }
     else if (mode !== "lesson" && I.twa >= POPPA_SUGG){
       if (I.sheet > 0.99){ cls = "good"; msg = "Vela tutta aperta: puoi scendere fino a circa 15° oltre la poppa. Per strambare: cazza tutta, poi poggia."; }
       else { cls = ""; msg = "In poppa lasca tutta la scotta: così puoi scendere un po' oltre la poppa. Per strambare: cazza tutta, poi poggia."; }

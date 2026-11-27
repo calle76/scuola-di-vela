@@ -484,3 +484,9 @@ Cercati in `js/contenuti.js` (testi visibili: lezioni, quiz d'esame, glossario) 
 - Il Coach scrive solo numeri misurati sulla regata; le soglie interne (`COA_*`, `SCARSO`) non compaiono.
 **Limite:** la ricerca è per forma («numero + unità»); un numero scritto in parole («una decina», «una dozzina») l'ho cercato a parte ma non posso escludere che ne sfuggano altri. La voce 60 si chiude qui.
 
+
+## Nome della navigazione oltre la poppa (27 novembre 2026, Ale)
+
+- **Domanda di Ale:** «strapoggio» è davvero il nome di una manovra voluta? Nell'uso italiano «straorzata» e «strapoggiata» sono eventi involontari da evitare.
+- **Cosa sappiamo:** le fonti del motore sono inglesi (F109 Schutt, F120/F124 Magnander, F144 Tillerman: «sailing by the lee», navigare oltre la poppa col vento dal lato del boma). Una ricerca del 27 nov non ha trovato fonti italiane che diano un nome a questa andatura; «strapoggio» l'aveva scelto Claude senza verificarlo.
+- **Deciso:** dalla 1.3.73 nel gioco non si usa: il pannello dice «Sei oltre la poppa, col vento dal lato del boma». Nei documenti e nel codice «strapoggio» resta solo come etichetta interna. Da cercare un nome italiano scritto (manuale FIV, glossario nautico) prima di usarne uno in una lezione (voce 87).

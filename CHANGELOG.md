@@ -28,6 +28,12 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.73 — Niente «strapoggio» nel pannello
+
+- **Perché (Ale, 27 nov):** «strapoggio» non è un nome sicuro: nell'uso italiano straorzata e strapoggiata sono eventi involontari. Le fonti del motore sono inglesi («by the lee») e nessuna fonte italiana dà un nome a questa andatura (`docs/CONTENUTI-DA-VERIFICARE.md`); la parola l'aveva scelta Claude.
+- **Cosa cambia:** il suggerimento della 1.3.72 dice «Sei oltre la poppa, col vento dal lato del boma: non cazzare, passerebbe di colpo. Per strambare: orza, cazza tutta, poi poggia.» La parola non compare più nel gioco (resta nei commenti del codice e nei documenti, come etichetta interna).
+- **Collaudi:** `collaudo_suggerimento` col testo nuovo (0 pixel in eccesso a 1360x650) verde in Chromium e Firefox.
+
 ## 1.3.72 — Lo strapoggio riconosciuto nel pannello (oss. 149)
 
 - **Perché:** nella regata di Ale delle 17:23 (1.3.71) due scuffie in poppa. A 471 s, in strapoggio con la vela tutta aperta e 16,7 nodi, Ale ha cazzato come diceva il pannello della 1.3.70 («Se cazzi, il boma passa e strambi»): il boma è passato ancora aperto (scotta al 68%), strambata violenta, scuffia. A 603 s, 20° veri oltre la poppa (35° apparenti), il boma è passato da solo, ancora violenta. **Il motore fa la cosa realistica** (oltre la poppa cazzare fa passare il boma di colpo; dalla 1.3.68 la strambata è violenta se il boma passa sopra i 45°); **sbagliato era il consiglio** del pannello (1.3.70) e quello dato in chat. In più lo strumento mostra 160° sull'altro lato e non dice che si è in strapoggio.

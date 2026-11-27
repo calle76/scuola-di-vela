@@ -2,7 +2,9 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, sera (gioco alla **1.3.72**, tag `v1.3.72`).*
+*Aggiornato: 27 novembre 2026, sera (gioco alla **1.3.73**, tag `v1.3.73`).*
+
+- **1.3.73:** «strapoggio» tolto dal gioco (Ale: nome di un evento involontario; nessuna fonte italiana sul nome): il pannello dice «oltre la poppa, col vento dal lato del boma».
 
 - **1.3.72 (oss. 149):** il pannello riconosce lo strapoggio («non cazzare»); il consiglio della 1.3.70 «se cazzi, strambi» portava a strambate violente e scuffie. **Oss. 150 da guardare (voce 2):** la Rossa quasi ferma 8 s dopo il via mentre cede alla Blu con mure diverse (forse la guida nuova della 1.3.71).
 
