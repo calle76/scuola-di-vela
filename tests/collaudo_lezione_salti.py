@@ -66,7 +66,10 @@ async def main():
         conf = lambda pil: [R[("conferma", pil, s)] for s in range(2121, 2131)]
         okA, okB, okC = (sum(1 for v in conf(x) if v["esito"] == "ok") for x in "ABC")
         chk(okA >= 9, f"L1 pilota A (giusto) riesce in {okA} su 10 (almeno 9)")
-        chk(okB <= 1, f"L1 pilota B (vira sugli scarsi) riesce in {okB} su 10 (al più 1)")
+        # 27 nov 2026 (voce 92): il pilota B che vira una volta sola non ha mai trovato uno scarso prima della layline (ha fatto per caso la cosa giusta):
+        # con la barca M, che risale più in fretta, succede in 2-3 corse su 10, ed erano proprio quelle «riuscite». Contano solo le corse in cui B ha sbagliato davvero.
+        Bv = [v for v in conf("B") if v["virate"] > 1]; okB = sum(1 for v in Bv if v["esito"] == "ok")
+        chk(len(Bv) >= 5 and okB <= 1, f"L1 pilota B (vira sugli scarsi) riesce in {okB} su {len(Bv)} corse in cui ha virato su uno scarso (al più 1; ne servono almeno 5; le altre {10 - len(Bv)}: una sola virata)")
         chk(okC <= 2, f"L1 pilota C (a caso) riesce in {okC} su 10 (al più 2)")
         piu = sum(1 for s in range(2121, 2131) if R[("conferma", "A", s)]["tBoa"] is not None and (R[("conferma", "B", s)]["tBoa"] is None or R[("conferma", "A", s)]["tBoa"] < R[("conferma", "B", s)]["tBoa"]))
         chk(piu >= 8, f"L2 A arriva alla boa prima di B in {piu} su 10 (almeno 8)")

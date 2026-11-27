@@ -68,7 +68,7 @@ async def main():
             r = await pg.evaluate("""([caso]) => { const sv = __sv, R = sv.R, dt = 1 / 60, wy = b => toWF(b.S.x, b.S.y)[1]; let xPrima = false;
               while (R.t < -0.5){ sv.pilota(dt); sv.run(dt, 1); if (R.t < -1 && bandiereR().X) xPrima = true; }
               /* oltre: l'avversario 1 messo 6 m oltre la linea e tenuto fermo; nessuno: tutti 20 m dietro la linea e tenuti fermi fino allo sparo */
-              const a = R.boats[1], fermi = []; for (const b of R.boats){ if (b.me) continue; const [wx] = toWF(b.S.x, b.S.y), [px, py] = fromWF(wx, caso === 'oltre' && b === a ? -6 : 20); b.S.x = px; b.S.y = py; fermi.push([b, px, py]); }
+              const a = R.boats[1], fermi = []; for (const b of R.boats){ /* 27 nov 2026 (voce 92): anche il giocatore (prima restava dove l'aveva portato il pilota, e con la barca M a -0,5 s era già oltre: la X saliva giustamente per lui) */ const [wx] = toWF(b.S.x, b.S.y), [px, py] = fromWF(wx, caso === 'oltre' && b === a ? -6 : 20); b.S.x = px; b.S.y = py; fermi.push([b, px, py]); }
               const oltre = R.boats.filter(b => wy(b) <= 0).length; let xDopo = false, k = 0;
               while (R.t < 3){ for (const [b, px, py] of fermi){ if (R.t < 0.5 || caso === 'oltre' && b === a){ b.S.x = px; b.S.y = py; b.S.u = 0; } } sv.pilota(dt); sv.run(dt, 1); if (R.t >= 0 && R.t < 2 && bandiereR().X) xDopo = true; }
               return { xDopo, xPrima, oltre }; }""", [caso])

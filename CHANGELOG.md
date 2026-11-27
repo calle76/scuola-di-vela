@@ -24,6 +24,16 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.66 — Regate lunghe di nuovo di 9-11 minuti; collaudi adattati alla barca M (voce 92)
+
+- **Gioco:** con la barca M il bastone lungo durava meno dei 9-11 minuti decisi da Ale il 20 nov (`collaudo_percorso_lungo` P4: 8,6 in Chromium, 8,9 in Firefox; 9,36 sui semi 1-10 con lo strumento della taratura). Rifatta la taratura della 1.3.26 con lo stesso metodo (`tests/misura_percorso_lungo.py`): bolina del bastone **560 → 620 m** (semi 1-10: 9,36 → 10,26 min, come i 10,3 della taratura di allora), lato del triangolo **440 → 470 m** (9,23 → 9,77); conferma sui semi 101-110 in Chromium e Firefox: 10,85 e 9,81 min, nessuna barca non arrivata. `collaudo_percorso_lungo` verde (P4 bastone 9,4, triangolo 10,6).
+- **Collaudi (il gioco non c'entra), tutti rilanciati e verdi sul PC:**
+  - `collaudo_suggerimento`: a scotta 0,99 e 140° la vela M sta a 28-30° di incidenza, dove il gioco dice «lascando un po' vai più veloce» (stesso consiglio, fascia della 1.0.38): accettato.
+  - `collaudo_giri`: le prove in cui il pilota tocca la boa dello spillo prima del debito costruito si contano a parte (servono almeno l'80% valide); «ultimo in classifica» ammette il pari con barche squalificate o non arrivate. Sulla 1.3.65: 30 su 30 e 6 su 6 valide.
+  - `collaudo_lezione_salti` L1: il pilota B conta solo nelle corse in cui ha davvero virato su uno scarso (prima le 2-3 «riuscite» erano corse con una virata sola, cioè la scelta giusta per caso): 0 su 8.
+  - `collaudo_segnali_deriva` B3: nei casi «nessuno oltre la linea» si arretra anche il giocatore (con la barca M il pilota era già oltre a −0,5 s e la X saliva giustamente per lui).
+  - Sulla 1.3.65 verdi senza cambi: `collaudo_moto_mare` (poppa 5,5-8,7 px), `collaudo_scuffia_arrivo`.
+
 ## 1.3.65 — Al lasco, lascare una vela troppo cazzata non fa più rallentare (voce 93)
 
 - **Perché:** marcatore M1 di Ale nella regata del 27 nov alle 00:58 (oss. 145): «mi dice di lascare ma vado più forte se cazzo». Misurato: a 134° con 14 nodi, dal 15% al 60% di scotta la barca rallentava (6,27 → 5,87 nodi) e solo oltre il 75% andava più forte (7,27). C'era già con la barca vecchia. Causa: oltre lo stallo la forza normale della vela scendeva a 0,92 fra 50° e 55° di incidenza (1,33 a 85°). Proposta: `docs/PROPOSTA-LASCO-93.md`; Ale, 27 nov: «cerca tu per la 93».

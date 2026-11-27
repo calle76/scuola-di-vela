@@ -1,5 +1,5 @@
 # Regate lunghe di Deriva (1.3.26, voce 63, docs/PROPOSTA-PERCORSO-LUNGO.md; criteri L1-L3 scritti prima, soglie della proposta con la durata di Ale: 9-11 minuti).
-#   P1 per chi gioca (pagina senza #collaudo) un torneo nuovo è lungo: 3 regate, bolina 560 m, triangolo 440 m; con #collaudo resta corto finché non lo si accende
+#   P1 per chi gioca (pagina senza #collaudo) un torneo nuovo è lungo: 3 regate, bolina 620 m, triangolo 470 m (dalla 1.3.66; prima 560 e 440); con #collaudo resta corto finché non lo si accende
 #   P2 un torneo lungo intero, col pilota sul giocatore: finisce dopo 3 regate, nessuno scarto in classifica, testo «con tre regate niente scarto»
 #   P3 un torneo corto già cominciato (salvato senza n né lungo) resta di 4 regate corte, con lo scarto
 #   P4 (L1-L3) 5 semi × bastone e triangolo: durata mediana fra 9 e 11 minuti; virate dopo il via mediana almeno 4; bolina in raffica fra 20% e 40%.
@@ -36,7 +36,7 @@ async def main():
         ctx = await b.new_context(viewport={"width": 1360, "height": 650}); q = await ctx.new_page(); q.on("pageerror", lambda e: errs.append(str(e) + " @ " + str(getattr(e, "stack", ""))[:300]))
         await q.goto((ROOT / "index.html").as_uri()); await q.wait_for_timeout(400)
         r = await q.evaluate("() => { const T = torNuovo(); return { n: T.n, lungo: T.lungo, reg: T.regate.length, sv: typeof window.__sv, lati: [LATO_BAS, LATO_TRI] }; }")
-        chk("P1", r == {"n": 3, "lungo": True, "reg": 3, "sv": "undefined", "lati": [560, 440]}, f"P1 senza #collaudo: torneo nuovo {r}")
+        chk("P1", r == {"n": 3, "lungo": True, "reg": 3, "sv": "undefined", "lati": [620, 470]}, f"P1 senza #collaudo: torneo nuovo {r}")
         t = await q.evaluate("() => [LESSONS.find(L => L.steps && L.steps[0] && L.steps[0].title === 'Una serie di regate').steps[0].text[0], document.getElementById('menu').textContent]")
         chk("P5", "tre regate" in t[0] and "quattro regate" not in t[1], f"P5 lezione 21: {t[0][:70]!r}; menu senza «quattro regate» {'quattro regate' not in t[1]}")
         await ctx.close()
@@ -52,7 +52,7 @@ async def main():
         await q2.goto((ROOT / "index.html").as_uri() + "#collaudo"); await q2.wait_for_timeout(400)
         r = await q2.evaluate(TORNEO, 4242); await ctx2.close()
         print("P2:", r, flush=True)
-        chk("P2", r["n"] == 3 and r["regate"] == 3 and r["fine"] and all(x == -1 for x in r["scarti"]) and "niente scarto" in r["leg"] and [u for u, _ in r["ups"]] == [560, 440, 560],
+        chk("P2", r["n"] == 3 and r["regate"] == 3 and r["fine"] and all(x == -1 for x in r["scarti"]) and "niente scarto" in r["leg"] and [u for u, _ in r["ups"]] == [620, 470, 620],
             f"P2 torneo lungo: {r['regate']} regate, finito {r['fine']}, scarti {r['scarti']}, lati {r['ups']}")
         # P4: L1-L3
         R = []; await q.evaluate("() => { tor = null; delete progress.torneo; }")   # dopo P2: il torneo finito non deve restare in mezzo

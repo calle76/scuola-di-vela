@@ -71,7 +71,7 @@
   // 1.3.26 (voce 63, docs/PROPOSTA-PERCORSO-LUNGO.md; via di Ale del 20 nov): regate lunghe in Deriva (torneo, stagione, finale), bolina del bastone e lato del triangolo in metri,
   // misurati col pilota per 9-11 minuti (semi 1-10 di scelta, 101-110 di conferma: mediane 10,3 e 10,0 min). Accese per chi gioca; con #collaudo spente, finché i collaudi
   // scritti per le regate corte non sono adattati (__sv.lungo = true le accende: tests/collaudo_percorso_lungo.py, tests/misura_percorso_lungo.py)
-  let LUNGO = !(location.hash === "#collaudo" || location.hash === "#collaudo-lab"), LATO_BAS = 560, LATO_TRI = 440; /* triangolo da 460 a 440 m il 21 nov: stava nella metà alta dei 9-11 minuti (10,0-11,1, in Firefox fuori fascia); riconfermato sui semi 601-610 */
+  let LUNGO = !(location.hash === "#collaudo" || location.hash === "#collaudo-lab"), LATO_BAS = 620, LATO_TRI = 470; /* 1.3.66 (voce 92): con la barca M le regate lunghe duravano meno di 9 minuti (bastone 560 m: 8,6-8,9 in collaudo_percorso_lungo, 9,36 sui semi 1-10); scelti 620 e 470 m sui semi 1-10 (10,26 e 9,77 min), confermati sui 101-110 in Chromium e Firefox (10,85 e 9,81). Prima: triangolo da 460 a 440 m il 21 nov: stava nella metà alta dei 9-11 minuti (10,0-11,1, in Firefox fuori fascia); riconfermato sui semi 601-610 */
   let TRI_L = 140; // 1.0.55: lato del triangolo del torneo, in metri: il più piccolo con la mediana del pilota fra 4 e 5,5 minuti (C8: 4,03 sui semi 1-20, 4,16 sui 61-80); __sv.triL serve alla misura
   const FLEET_LOOK = [
     { name: "Rossa", hull: "#E9E4DF", sail: "#F6D5D0", sailor: "#C7362F" },

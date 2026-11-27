@@ -135,7 +135,7 @@ PASSI_INDIETRO = [(3, "Filetto sopravento", False), (3, "Filetti dritti", False)
                   (3, "Poggi e laschi", True), (3, "Orzi e cazzi", True), (4, "Da fermi", False),
                   (5, "Una virata che non riesce", True), (5, "Strambata violenta", True), (5, "Strambata controllata", True),
                   (5, "Risalire il vento", True)]
-VECCHI = ("Si agita il filetto sottovento", "troppo cazzata")
+VECCHI = ("Si agita il filetto sottovento", "troppo cazzata", "ma lascando un po' vai più veloce")   # 27 nov 2026 (voce 92): con la barca M a scotta 0,99 la vela sta a 28-30° di incidenza, nella fascia dove dalla 1.0.38 il consiglio «lasca» è detto così (js/disegno.js, «lee» con alpha fino a 30)
 PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clientHeight}"
 TESTI = {  # caso peggiore del pannello: testo nuovo contro il piu lungo che il gioco mostra gia
     "nuovo": NUOVO,
