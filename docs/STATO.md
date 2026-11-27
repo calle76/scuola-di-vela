@@ -42,7 +42,7 @@
 
 ## Prossimi passi (per la sessione nuova)
 
-1. **Voce 2, caso 81:** terza prova (§13.7 di `PROPOSTA-AVVERSARI-DERIVA.md`, patch v3 in `sperimentale/caso-81/`): casi 80-83, coppie e contatti a posto, ma bolina degli esperti +4,2 s di mediana in un gruppo di semi (soglia +2): non adottata. Aspetta Ale: cercare dove si perdono i secondi, o fermarsi. Poi l'oss. 147 (regola 16 alla boa). Vento sporco chiuso.
+1. **Voce 2, caso 81:** terza prova (§13.7 di `PROPOSTA-AVVERSARI-DERIVA.md`, patch v3 in `sperimentale/caso-81/`): casi 80-83, coppie e contatti a posto, ma bolina degli esperti +4,2 s di mediana in un gruppo di semi (soglia +2): non adottata. Dove si perdono (§13.8): +0,6 s per barca di cessione in più e +2% di virate; il resto è rumore: con 90 regate l'intervallo al 95% è circa ±12 s, la soglia di +2 s non si può verificare. Aspetta Ale: misura 5 volte più grande, o decidere sul campione di oggi. Poi l'oss. 147 (regola 16 alla boa). Vento sporco chiuso.
 2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
