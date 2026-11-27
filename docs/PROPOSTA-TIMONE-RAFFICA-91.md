@@ -36,3 +36,7 @@ Nessuna dà gradi di barra in raffica per una deriva. Dicono il meccanismo:
 Consiglio la 1: la differenza vera fra le due barche è che M non si ferma in raffica, e non c'è una misura che dica che serve più timone di così.
 
 Fonti: [Weather helm](https://en.wikipedia.org/wiki/Weather_helm), [Chalmers 546299 (ILCA 7)](https://research.chalmers.se/publication/546299/file/546299_Fulltext.pdf), [TU Delft, prove in vasca](https://repository.tudelft.nl/file/File_1ad6a777-655e-42a2-bd85-5616e37c927c), [Nauticed, raffiche e orzate](https://sailing-blog.nauticed.org/how-to-handle-wind-gusts-and-rounding-up/).
+
+## Esito (27 novembre 2026)
+
+Via di Ale alla strada 1 («vai con le varie voci», 27 nov). Barca invariata; criterio 4 di `tests/fisica/orziera1b.js` riscritto: con la scotta ferma la barra massima deve superare quella lascando (6,9° contro 3,3°, rapporto 2,1 solo riportato: una soglia scelta ora sarebbe scelta dopo aver visto il numero). Lascando sotto 10° resta. Il banco resta «FUORI» per il criterio 2 a 14 nodi al traverso (1,04 °/s, soglia 1), com'era già.

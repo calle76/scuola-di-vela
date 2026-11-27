@@ -40,9 +40,9 @@ function raffica(kn, twa, modo, lasca){
 function norm(h){ return ((h + 540) % 360) - 180; }
 console.log("Criterio 3: raffica +60% per 4 s con 10 nodi, barra al centro: quanto sale la prua (soglia almeno 5°)");
 for (const twa of [45, 90]){ const r = raffica(10, twa, "centro", 0); console.log("  " + esito(k === 0 || r.prua >= 5, `${twa}°: ${f(r.prua)}°, sbandamento max ${f(r.mH)}°`)); }
-console.log("Criterio 4: raffica 14→22 nodi di bolina, il pilota tiene la prua (soglie: scotta ferma barra oltre 20°, lascando sotto 10°)");
+console.log("Criterio 4: raffica 14→22 nodi di bolina, il pilota tiene la prua (soglie: scotta ferma più barra che lascando, lascando sotto 10°; fino al 27 nov 2026 scotta ferma oltre 20°, numero senza fonte tarato sulla barca vecchia che sbandava a 65° e si fermava: docs/PROPOSTA-TIMONE-RAFFICA-91.md)");
 const a = raffica(14, 45, "pilota", 0), b = raffica(14, 45, "pilota", 0.3);
-console.log("  " + esito(k === 0 || a.mT > 20, `scotta ferma: barra max ${f(a.mT)}°, stallo ${f(a.st, 2)} s, prua fuori al massimo ${f(a.mE)}°, sbandamento max ${f(a.mH)}°`));
+console.log("  " + esito(k === 0 || a.mT > b.mT, `scotta ferma: barra max ${f(a.mT)}° (${f(a.mT / Math.max(b.mT, 0.1), 1)} volte quella lascando, riportato), stallo ${f(a.st, 2)} s, prua fuori al massimo ${f(a.mE)}°, sbandamento max ${f(a.mH)}°`));
 console.log("  " + esito(k === 0 || b.mT < 10, `scotta lascata di 0,3: barra max ${f(b.mT)}°, stallo ${f(b.st, 2)} s, prua fuori al massimo ${f(b.mE)}°, sbandamento max ${f(b.mH)}°`));
 console.log("Altre raffiche (senza soglia), barra al centro / pilota:");
 for (const [kn, twa] of [[6, 45], [6, 90], [14, 90]]){

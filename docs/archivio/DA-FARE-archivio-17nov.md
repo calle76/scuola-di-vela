@@ -89,3 +89,4 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 - **90** (chiusa il 27 nov 2026): angolo morto della barca M nella 1.3.61 (`PROPOSTA-ANGOLO-MORTO-M.md`, `PROPOSTA-BARCA-1-3-61.md`). A1 e A2 non passati, dichiarati.
 
 - **89** (27 nov 2026): «Stare fermi» con la barca M, fatta nella 1.3.63 (vela libera che non porta, a0 = 1°). Era: **Lezione 18 «Stare fermi» con la barca M:** con M la vela tutta lascata spinge avanti piano (a 45° con 10 nodi +0,26 nodi; la 1b andava indietro a −0,86), quindi il passo si supera senza scotta. **Pr
+- **91** (27 nov 2026): poco timone in raffica con la barca M. Chiusa scegliendo la strada 1 di `PROPOSTA-TIMONE-RAFFICA-91.md`: barca invariata, criterio 4 di `orziera1b.js` riscritto (scotta ferma più barra che lascando: 6,9° contro 3,3°). Resta FUORI il criterio 2 a 14 nodi 90° (1,04 °/s, soglia 1), già prima.
