@@ -20,3 +20,13 @@ Rischio: rivali incastrati contro la giuria prima del via (la guida non sa girar
 - Letto nel codice: fuori dalla regata dei giri la giuria non respingeva **nemmeno il giocatore** (`boeToccate` gira solo con `R.giri`): nel torneo la attraversava anche lui. La correzione vale per tutte le barche in tutte le regate (il giocatore nella regata dei giri resta con `boeToccate` e la sua penalità).
 - Prima prova sul seme 2268 (regata 3): un rivale partito in anticipo tornava indietro puntando dritto sulla giuria, respinto a ogni passo, a contatto per oltre 116 s (incastrato). **Aggiunta (dichiarata, oltre la proposta):** a contatto il rivale segue il bordo della giuria dal lato più vicino alla sua prua, mai nell'angolo morto, per AGGIRA_T = 3 s (ipotesi nostra). Con l'aggiunta: a contatto 3,7 s, poi via.
 - Strumento: righe TOCCA (tocchi e secondi di fila a contatto, entro 120 s), per G1.
+
+## Esito della prima versione (ostacolo per tutti): non adottata
+
+Gioco → prova, scelta 2261-2410 / conferma 2411-2560 (450 regate ciascuno): rivali incastrati più di 10 s 0 / 1 (22 s; G1 sì); contatti 579 → 573 / 496 → 495; fuori linea 239 → 235 / 200 → 199; non arrivati 517 → 512 / 465 → 474; arrivo mediano 587,1 → 585,6 / 587,9 → 587,5 s; coppie dopo il via 35 → 36 / 28 → 26 (G2 sì). **Ma il pilota dei collaudi (la barca «Tu») resta incastrato contro la giuria 110, 115 e 26 s** sulla conferma: non sa girarle attorno, e i collaudi col pilota rischiano di bloccarsi (come l'oss. 79). Le righe «dentro la giuria» con la prova (23 e 20, quasi tutte sotto 1,5 s) sono in parte del metro: lo strumento orienta la giuria col vento locale, il gioco col vento generale.
+
+## Seconda versione (`giuria-ostacolo-rivali.patch`): solo i rivali, come nella proposta
+
+Il giocatore resta com'era. Limite noto, dichiarato: fuori dalla regata dei giri la sua barca attraversa ancora la giuria. Criteri invariati.
+
+**Regata di Lucio del 26 nov 22:07** (`registrazioni/regata-20261126-2207-intera.txt`, allenamento triangolo, 1.3.62): la Verde (Davide Lunardi) sta sopra la giuria da −52 a −31 s, a 0,6 nodi (giuria ricostruita a x −35, y 0 dal vento di 180° e dalla linea di 70 m). Le altre barche non la toccano.
