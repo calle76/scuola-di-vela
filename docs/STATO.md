@@ -42,7 +42,7 @@
 
 ## Prossimi passi (per la sessione nuova)
 
-1. **Voce 2:** aspetta Ale: cercare perché la patch del caso 81 fa peggiorare l'82 (§13.5), e riprodurre l'oss. 147 (regola 16 alla boa) sulla 1.3.69. Vento sporco chiuso.
+1. **Voce 2, caso 81:** seconda prova (§13.6 di `PROPOSTA-AVVERSARI-DERIVA.md`, patch v2 in `sperimentale/caso-81/`): criteri tutti verdi, ma «coppie dopo il via» nel torneo da 4 a 13. Passo dopo: trovare da dove vengono le coppie in più, poi adottarla. Poi l'oss. 147 (regola 16 alla boa). Vento sporco chiuso.
 2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
