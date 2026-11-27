@@ -170,3 +170,9 @@ Costanti nuove, ipotesi nostre: 3 m sopra la boa, 56° dal vento come limite di 
 | G3 raffiche | 31,6 s | 30,1 s | 30,65 s | ≤ 27 s |
 
 G4, semi 361-380, Chromium, con A (prima → dopo): penalità 169 → 174 (≤ 190), fuori linea 21 → 21 (≤ 36), ritorni di bolina 0 → 1 (soglia 0: **fuori**), urti cedendo 36 → 40, piantate 13 → 13 (≤ 12: **fuori**, come prima), boe 2 → 1, non arrivate 0. G5: barca identica; `collaudo_partenze.py` non concluso per tempo (fermato a 590 s). Firefox e conferma sui semi 421-435 non fatti, perché le soglie non sono raggiunte. Per confronto, Ale nella stessa regata è stato 29,5 s entro 40 m dalla boa. Molte virate restano perché chi arriva mure a sinistra deve passare sotto la boa e rivirare.
+
+## 12. Casi 81 e 83 sulla barca M (27 novembre 2026, mattina; gioco 1.3.67 invariato)
+
+- **Situazione:** 81 è fuori soglia dalla nascita (6 su 10, soglia 9); 83 sul PC 10 su 10, su GitHub (1.3.65) 7 su 10 in Chromium e 10 su 10 in Firefox.
+- **Prova sul caso 81, su una copia:** se chi cede non trova nessuno scarto che passi ad almeno una lunghezza (`passaggio`), lascia tutta la vela e frena (con la 1.3.63 la vela libera frena davvero). Ipotesi nostra, una sola prova. **Risultato: 81 da 6 a 0 su 10** (sempre una penalità): ferma, la barca resta sulla traiettoria dell'altra. Scartata. 80, 82 e 83 invariati.
+- **Da fare se si riprende:** guardare le 4 scene fallite una per una (dove sono le due barche quando comincia lo scarto, che rotta sceglie, perché non basta); il codice ricalcola già lo scarto a ogni istante (`cedeAvv1b`), quindi la causa del §3 («l'angolo si calcola una volta sola») non è più quella.
