@@ -1,0 +1,37 @@
+diff --git a/js/regate.js b/js/regate.js
+index 7a1ea77..ebac0ea 100644
+--- a/js/regate.js
++++ b/js/regate.js
+@@ -531,7 +531,9 @@
+       bt = t; best = { o, d };
+     }
+     if (!best){ b.cedeA = null; b.rottaU = null; b.cedeDa = null; return desired; }
+-    const o = best.o, devo = (guarda() && R.t >= 0 ? chiCede1516(b, o, true) : chiCede(b, o)).cede === b; b.cedeA = devo ? o : null; // 1.3.11: in Deriva anche le regole 15 e 16; 1.3.56: solo dopo lo sparo
++    const o = best.o, cc = guarda() && R.t >= 0 ? chiCede1516(b, o, true) : chiCede(b, o), devo = cc.cede === b; b.cedeA = devo ? o : null;
++    /* oss. 147: aveva la precedenza e la perde per le regole 15 o 16 (ha girato verso l'altra): non riparte dalla rotta che vuole (girando la boa e' la bolina, cioe' ancora verso l'altra), tiene la prua di quando ha cominciato a cedere o se ne allontana */
++    const r16 = devo && cc.base && cc.base.cede !== b; // 1.3.11: in Deriva anche le regole 15 e 16; 1.3.56: solo dopo lo sparo
+     // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
+     if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; }
+     if (b.cedeDa === null || b.cedeDa === undefined){ b.cedeDa = R.t; b.cedeH = s.h; } /* cedeH: la prua di quando è cominciato lo scarto, base fissa degli scarti di chi cede */
+@@ -539,17 +541,17 @@
+     if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = s.h; // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
+     // Deriva, fette 2 e 3 (docs/PROPOSTA-AVVERSARI-DERIVA.md): si prova lo scarto più piccolo che passa lontano da TUTTE le barche vicine. Chi cede parte dalla rotta che vuole,
+     // chi ha la precedenza dalla rotta che ha: mai dentro l'angolo morto né oltre il vento, e quindi niente ritorni di bolina a chi sta scendendo.
+-    const lato = devo ? side : (sgn(norm180(twd - b.rottaU)) || side);
+-    const rotta = devo ? (sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up) : b.rottaU;
++    const lato = r16 ? (sgn(norm180(twd - b.cedeH)) || side) : devo ? side : (sgn(norm180(twd - b.rottaU)) || side);
++    const rotta = r16 ? b.cedeH : devo ? (sgn(norm180(twd - desired)) === side ? desired : twd - side * ai.up) : b.rottaU;
+     const relB = norm180(bearingTo(s, o.S) - s.h);
+-    const prima = devo && tackOf(b) !== tackOf(o) ? -lato : (relB >= 0 ? -1 : 1); // la direzione preferita: mure diverse poggia e passa di poppa; se no, via dall'altra barca
++    const prima = devo && !r16 && tackOf(b) !== tackOf(o) ? -lato : (relB >= 0 ? -1 : 1); // la direzione preferita: mure diverse poggia e passa di poppa; se no, via dall'altra barca
+     const mk = b.leg >= 1 && b.leg <= R.marks.length ? R.marks[b.leg - 1] : null, boa = mk && mk.out !== undefined && Math.hypot(mk.x - s.x, mk.y - s.y) < 40 ? { x: mk.x, y: mk.y, ox: Math.sin(mk.out * D2R), oy: -Math.cos(mk.out * D2R) } : null;
+     let scelta = null, meglio = -1;
+     /* 1.3.71 (voce 2, caso 81, docs/PROPOSTA-AVVERSARI-DERIVA.md §13.4-13.9): dopo lo sparo, chi cede a una barca con le mure diverse prova gli scarti anche dalla prua che
+        aveva quando lo scarto è cominciato (dal traverso, partendo dalla bolina, poggiava al massimo a 110°) e li giudica con passaggioScafi. Solo fra mure diverse:
+        con le stesse mure le coppie dopo il via crescevano (28 -> 47 su 450 regate) */
+     const nuova = devo && R.t >= 0 && tackOf(b) !== tackOf(o);
+-    for (const base of nuova ? [rotta, b.cedeH] : [rotta]) for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
++    for (const base of nuova && !r16 ? [rotta, b.cedeH] : [rotta]) for (const da of r16 ? [0, ...SCARTI] : devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
+       const nd = base + dir * da, t2 = norm180(twd - nd);
+       if (sgn(t2) !== lato || Math.abs(t2) < ai.up - 2 || Math.abs(t2) > 172) continue;
+       if (Math.abs(norm180(twd - rotta)) > 100 && Math.abs(t2) < 90) continue; // chi scende non torna verso la bolina per cedere (osservazione 80)
