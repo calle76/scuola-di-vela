@@ -2,7 +2,11 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, sera tardi (gioco alla **1.3.75**, tag `v1.3.75`).*
+*Aggiornato: 27 novembre 2026, notte (gioco alla **1.3.75**, tag `v1.3.75`, invariato in questa sessione).*
+
+- **Oss. 147 lasciata così (Ale):** tre prove sulla guida dei rivali (giro «Misura», 450 regate per gruppo), nessuna confermata sui semi di conferma; caso raro (rivale penalizzato per la 16 ogni 12-17 regate, vicino alla boa ogni 30-40). Altro caso a mure uguali nella regata di Ale delle 19:35. `sperimentale/oss-147/LEGGIMI.md`.
+- **`ritiro_provvisorio` P4 Firefox:** era il collaudo (seme 6415: simulazione finita prima dell'interruzione apposta); corretto, 20 su 20 nei due browser.
+- **Regate di Ale del 27 sera** (18:03, 19:06, 19:35): nessun difetto nuovo del gioco; strambate violente col boma appena sopra 45° (scotta 49%); Rossa con 3 virate negli ultimi 20 m alla boa di bolina (voce 1b, ferma: Ale «lascia stare»); Rossa e Blu ferme alla partenza con 19-26 rinvii a testa (4B, solo annotato). Copia sul disco esterno fatta (il disco era in sola lettura: `fsck.vfat`).
 
 - **1.3.75:** sponsor col rivale dello sponsor concorrente e, al rinnovo, «migliorare il posto della stagione prima» (Ale); nel pannello «cazza (boma sotto 45°)».
 - **Giro GitHub completo sulla 1.3.71 (run 46030687708, letto per intero):** `avversari_deriva` ora passa nei due browser (tolto da `fallimenti_noti.txt`); rossi noti: `moto_mare` (ora anche Chromium, stessi numeri: 3,8 px), `giri_avversari` G12 (1 caso), `partenze` (voce noto aggiornata: richiami 0% per tutti, il criterio «esperti meno dei principianti» non può passare), `avversari1b` 5 e `regola21` K3 in Firefox. **Nuovo:** `ritiro_provvisorio` P4 in Firefox, 19 su 20, sempre il seme 6415 (anche sul PC): arrivo giusto, manca l'interruzione che la prova provoca; da guardare. Da controllare: lezioni semi 1-100 solo i noti 5.8, 6.2, 6.3.
