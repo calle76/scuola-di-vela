@@ -30,3 +30,7 @@ Gioco → prova, scelta 2261-2410 / conferma 2411-2560 (450 regate ciascuno): ri
 Il giocatore resta com'era. Limite noto, dichiarato: fuori dalla regata dei giri la sua barca attraversa ancora la giuria. Criteri invariati.
 
 **Regata di Lucio del 26 nov 22:07** (`registrazioni/regata-20261126-2207-intera.txt`, allenamento triangolo, 1.3.62): la Verde (Davide Lunardi) sta sopra la giuria da −52 a −31 s, a 0,6 nodi (giuria ricostruita a x −35, y 0 dal vento di 180° e dalla linea di 70 m). Le altre barche non la toccano.
+
+## Terza versione (`giuria-ostacolo-v3.patch`): ostacolo per tutti, e anche il pilota la aggira (Ale: «il pilota è una cosa, io o un altro giocatore siamo un'altra»)
+
+La seconda (solo rivali) è stata fermata prima della fine. Ora la giuria respinge tutte le barche in tutte le regate (il giocatore nella regata dei giri resta con `boeToccate` e la sua penalità); chi è guidato da `aiControl` (rivali e pilota dei collaudi) a contatto segue il bordo per AGGIRA_T = 3 s. Sui semi in cui il pilota restava incastrato (PC, Chromium): 2416 da 110,2 a 3,7 s, 2425 da 26,5 a 8,5 s, 2480 da 114,8 a 2,7 s. Seme 2435: Elena Zanin resta 22 s accanto alla giuria fra 62 e 80 s, quasi ferma a 27-44° dal vento (piantata mentre prova a partire), poi riparte da sola. Criteri invariati; G1 ora conta anche il pilota.
