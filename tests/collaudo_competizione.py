@@ -56,7 +56,7 @@ CORSA = """([race, seme, liv, chiave]) => {
   }
   const all = R.boats.every(b => b.fin !== null);
   // calcolo indipendente: una barca mi batte se è arrivata con tempo netto minore; chi non è arrivata non può più (R.t >= me.fin)
-  const indep = me.fin === null ? null : 1 + R.boats.filter(b => !b.me && b.fin !== null && b.fin < me.fin).length;
+  const indep = me.fin === null ? null : 1 + R.boats.filter(b => !b.me && b.fin !== null && !b.dsq && b.fin < me.fin).length; /* 27 nov 2026 (voce 92): le squalificate vanno in fondo, come nel gioco (seme 43 principianti sulla 1.3.65) */
   let race_ = null; try { race_ = (JSON.parse(localStorage.getItem("%s") || "{}").race) || null; } catch (e) {}
   return { reg, t0, fin: me.fin, arrPos, indep, rt: R.t, all, n: R.boats.length, moved, passi: n,
            saved: race_ ? race_[chiave] || null : null, chiavi: race_ ? Object.keys(race_) : [] };

@@ -87,7 +87,7 @@ TESTS=(
     "collaudo_scotta_automatica.py|py|chiaro|0||collaudo_scotta_automatica.py 101-120"
     "collaudo_cambia_vento.py|py|chiaro|0||collaudo_cambia_vento.py"
     "collaudo_regola21.py (12 prove)|py|chiaro|0||collaudo_regola21.py 12"
-    "collaudo_giri_avversari.py (120 regate)|py|chiaro|0||collaudo_giri_avversari.py 120"
+    "collaudo_giri_avversari.py (300 regate)|py|chiaro|0||collaudo_giri_avversari.py 300"   # 27 nov 2026 (voce 92): da 120 a 300 regate, perché dalla 1.3.56 (4B) i rivali si toccano meno e G4 aveva 5 casi su 10 richiesti
     "collaudo_regole.py|py|chiaro|0||collaudo_regole.py"
     "collaudo_semaforo.py|py|chiaro|0||collaudo_semaforo.py"
     "collaudo_torneo.py (veloce)|py|chiaro|0||collaudo_torneo.py --veloce"
