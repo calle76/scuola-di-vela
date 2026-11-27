@@ -14,3 +14,9 @@ Criteri (soglie nostre, scritte prima): stessa misura, scelta 2261-2410 e confer
 - G3 `collaudo_partenze` (Scuola) OK; i confronti al bit dei collaudi vanno portati alla versione nuova (cambia il moto dei rivali).
 
 Rischio: rivali incastrati contro la giuria prima del via (la guida non sa girarle attorno): G1 lo misura. Spillo e boe non sono misurati qui.
+
+## Correzione provata (`giuria-ostacolo.patch`, via di Ale del 27 nov sera)
+
+- Letto nel codice: fuori dalla regata dei giri la giuria non respingeva **nemmeno il giocatore** (`boeToccate` gira solo con `R.giri`): nel torneo la attraversava anche lui. La correzione vale per tutte le barche in tutte le regate (il giocatore nella regata dei giri resta con `boeToccate` e la sua penalità).
+- Prima prova sul seme 2268 (regata 3): un rivale partito in anticipo tornava indietro puntando dritto sulla giuria, respinto a ogni passo, a contatto per oltre 116 s (incastrato). **Aggiunta (dichiarata, oltre la proposta):** a contatto il rivale segue il bordo della giuria dal lato più vicino alla sua prua, mai nell'angolo morto, per AGGIRA_T = 3 s (ipotesi nostra). Con l'aggiunta: a contatto 3,7 s, poi via.
+- Strumento: righe TOCCA (tocchi e secondi di fila a contatto, entro 120 s), per G1.
