@@ -2,7 +2,9 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, sera (gioco alla **1.3.73**, tag `v1.3.73`).*
+*Aggiornato: 27 novembre 2026, sera (gioco alla **1.3.74**, tag `v1.3.74`).*
+
+- **1.3.74:** nel pannello «by the lee» (Ale), il nome delle fonti; nei documenti nuovi si usa questo e non «strapoggio».
 
 - **1.3.73:** «strapoggio» tolto dal gioco (Ale: nome di un evento involontario; nessuna fonte italiana sul nome): il pannello dice «oltre la poppa, col vento dal lato del boma».
 

@@ -28,6 +28,12 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.74 — «By the lee» nel pannello
+
+- **Perché (Ale, 27 nov: «chiamalo by the lee se è più corto»):** il nome che usano le fonti del motore (F109 Schutt, F144 Tillerman) e il regolamento; in italiano non c'è un termine unico (`docs/CONTENUTI-DA-VERIFICARE.md`).
+- **Cosa cambia:** «Sei «by the lee» (oltre la poppa, vento dal lato del boma): non cazzare, il boma passerebbe di colpo. Per strambare: orza, cazza tutta, poi poggia.» Nei documenti nuovi si usa «by the lee» invece di «strapoggio».
+- **Collaudi:** `collaudo_suggerimento` (0 pixel in eccesso a 1360x650) verde in Chromium e Firefox.
+
 ## 1.3.73 — Niente «strapoggio» nel pannello
 
 - **Perché (Ale, 27 nov):** «strapoggio» non è un nome sicuro: nell'uso italiano straorzata e strapoggiata sono eventi involontari. Le fonti del motore sono inglesi («by the lee») e nessuna fonte italiana dà un nome a questa andatura (`docs/CONTENUTI-DA-VERIFICARE.md`); la parola l'aveva scelta Claude.
