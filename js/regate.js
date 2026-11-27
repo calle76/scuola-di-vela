@@ -790,6 +790,7 @@
   // di chi ha la precedenza, qualunque cosa abbia fatto l'altra. T15 = 5,2 s misurato (tests/fisica/finestra.js); G16 = 10° (Ale, 16 novembre: 95° percentile
   // delle sole correzioni di rotta, 8,5-9,3°, arrotondato); PREC_VICINE = 40 m e il passo della memoria della prua, 0,25 s: ipotesi nostre.
   const T15 = 5.2, G16 = 10, PREC_VICINE = 40, PREC_PASSO = 0.25;
+  const T16_TENUTA = 1; /* 1.3.64 (voce 94): IPOTESI di Claude: piu' lunga del lampeggio (0,03-0,25 s), molto piu' corta di T15 */
   function aggiornaPrecedenze(){
     if (!R.r1516) return;
     for (const b of R.boats){
@@ -816,11 +817,14 @@
     const z = guida ? null : debito18(A, B); if (z) return { cede: z.deve, regola: 18, base, r183: z.r183 }; /* 1.3.49: regola 18 e 43.1(b), sopra le 10-16 */
     const ha = base.cede === A ? B : A, altra = base.cede, i = R.boats.indexOf(A), j = R.boats.indexOf(B), p = R.prec[Math.min(i, j) + "-" + Math.max(i, j)];
     if (p && p.ha === ha && R.t - p.t < T15){ return p.autore === ha ? { cede: ha, regola: 15, base } : base; }
-    const h0 = prua16(ha);
+    const h0 = prua16(ha), k16 = Math.min(i, j) + "-" + Math.max(i, j) + ":" + R.boats.indexOf(ha); R.r16 = R.r16 || {}; /* una memoria per ciascuna delle due barche: i rivali la chiedono dal loro punto di vista */
     if (h0 !== null && Math.abs(norm180(ha.S.h - h0)) >= G16){
       const brg = bearingTo(ha.S, altra.S);
-      if (Math.abs(norm180(brg - ha.S.h)) < Math.abs(norm180(brg - h0))) return { cede: ha, regola: 16, base };
+      if (Math.abs(norm180(brg - ha.S.h)) < Math.abs(norm180(brg - h0))){ R.r16[k16] = R.t; return { cede: ha, regola: 16, base }; }
     }
+    /* 1.3.64 (voce 94): accesa, la 16 resta almeno T16_TENUTA s per la stessa barca con la precedenza; sulla soglia di G16 si accendeva e spegneva a ogni passo
+       (semaforo che lampeggia, colpa al contatto che dipende dall'istante: collaudo_semaforo, Firefox, seme 3 esperti) */
+    const r16 = R.r16[k16]; if (r16 !== undefined && R.t - r16 >= 0 && R.t - r16 < T16_TENUTA) return { cede: ha, regola: 16, base };
     return base;
   }
   // ---- regola 18, spazio alla boa (1.3.49, versione A, docs/PROPOSTA-REGOLA-18.md; F15 18 e 43.1(b), parafrasate) ----

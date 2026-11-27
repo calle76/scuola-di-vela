@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
-RIF = "v1.3.61"   # 1.3.35 (8305615) fino al 27 nov 2026 (voce 92): dalla barca M nessuna regata può essere identica; ora guardia di non-regressione sulla 1.3.61
+RIF = "v1.3.63"   # 1.3.35 (8305615) fino al 27 nov 2026 (voce 92): dalla barca M nessuna regata può essere identica; ora guardia di non-regressione sulla 1.3.61
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
 bad = []; n_casi = 0
@@ -130,7 +130,7 @@ async def main():
                 ctx = await b.new_context(viewport={"width": 1360, "height": 650}); await ctx.add_init_script(SEME)
                 pg = await ctx.new_page(); await pg.goto(url); await pg.wait_for_timeout(300); r.append(await pg.evaluate(CORSA, [seme])); await ctx.close()
             n5 += 1; uguali += r[0] == r[1]
-        chk(n5 == 8 and uguali == 8, f"F5 {uguali} regate su {n5} identiche al bit (150 s col pilota, con disegno) alla 1.3.61")
+        chk(n5 == 8 and uguali == 8, f"F5 {uguali} regate su {n5} identiche al bit (150 s col pilota, con disegno) alla 1.3.63")
         # ---- F7: come un giocatore ----
         ctx, pg, errs = await pagina(b, "", seme=False)
         await pg.evaluate("() => { const d = document.querySelector('#livSel [data-v=deriva]'); d && d.click(); }"); await pg.click("#goTor"); await pg.wait_for_timeout(200)
