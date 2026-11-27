@@ -48,6 +48,7 @@
 | 31 | **Dalle fonti F86-F102:** cono d'ombra in poppa forse troppo lungo; idee per bolina, lezioni e circuiti. Da proporre quando si riprende la voce 2 | `FONTI-PUBBLICHE.md` F86-F102 |
 | 17 | **Pilota incastrato prima del via** (oss. 79, 1.0.64; 3 casi in 3200 corse): **non riprodotto il 27 nov** con la barca di oggi (barca puntata sul comitato a 35°-90° dal vento: tocca, scivola e va oltre; `non_partite` verdi nel giro sulla 1.3.65). Si riprende se ricompare | oss. 79 |
 | 7 | **Oro della prova 5** (315/395/505 s): aspetta i tempi della prova a mano di Ale | `CHANGELOG.md` 1.2.11-1.2.12 |
+| 95 | **Rivali e strapoggio** (Ale, 27 nov): dalla 1.3.68 il giocatore può scendere fino a circa 15° oltre la poppa senza strambare; i rivali no (poppa a 142-155°, strambano cazzando). Prima misurare se a loro conviene (non c'è velocità in più, solo strambate in meno), poi semmai insegnarlo nella loro guida (voce 2) | `PROPOSTA-STRAPOGGIO-86.md` |
 | 1b | **Avversari: virate in più vicino alla boa** (circa 1,7 per passaggio): ferma con la bolina | `PROPOSTA-LAYLINE.md` §5 |
 
 ## 5. Le fai tu, Ale
