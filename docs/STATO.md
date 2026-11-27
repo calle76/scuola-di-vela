@@ -2,8 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, notte fonda (gioco alla **1.3.65**, tag `v1.3.65`).*
+*Aggiornato: 27 novembre 2026, mattina (gioco alla **1.3.67**, tag `v1.3.67`).*
 
+- **1.3.67 (voce 18):** suono della boa a volume pieno (9,8-11,8 dB). Voce 17 non riprodotta con la barca di oggi.
+- **1.3.66 (voce 92):** regate lunghe di nuovo di 9-11 minuti (bastone 620 m, triangolo 470 m); collaudi adattati alla barca M (suggerimento, giri, lezione dei salti, segnali, lezioni, competizione).
+- **Giro GitHub sulla 1.3.65 (run 45935566969) letto per intero:** quasi tutto verde; i rossi rimasti sono nella voce 92 (equilibrio coi principianti, rivali, Firefox intermittenti).
+- **Voce 2:** caso 81 provato («chi cede frena») e scartato (6 → 0 su 10).
 - **1.3.65 (voce 93):** al lasco lascare una vela troppo cazzata non fa più rallentare (forza normale dalla forma di una piastra misurata, F146); polare identica; lezione 6.3 guidando di nuovo sempre completata.
 - **1.3.64 (voce 94):** il semaforo non lampeggia più sulla soglia della regola 16 (accesa resta almeno 1 s).
 - **1.3.63 (voce 89):** la vela libera non porta, «Stare fermi» verde.
