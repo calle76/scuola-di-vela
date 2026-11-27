@@ -2,19 +2,13 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, mattina (gioco alla **1.3.67**, tag `v1.3.67`).*
+*Aggiornato: 27 novembre 2026, fine mattina (gioco alla **1.3.68**, tag `v1.3.68`). Fine della sessione lunga del 26-27 nov.*
 
-- **1.3.67 (voce 18):** suono della boa a volume pieno (9,8-11,8 dB). Voce 17 non riprodotta con la barca di oggi.
-- **1.3.66 (voce 92):** regate lunghe di nuovo di 9-11 minuti (bastone 620 m, triangolo 470 m); collaudi adattati alla barca M (suggerimento, giri, lezione dei salti, segnali, lezioni, competizione).
-- **Giro GitHub sulla 1.3.65 (run 45935566969) letto per intero:** quasi tutto verde; i rossi rimasti sono nella voce 92 (equilibrio coi principianti, rivali, Firefox intermittenti).
-- **Voce 2:** caso 81 provato («chi cede frena») e scartato (6 → 0 su 10).
-- **1.3.65 (voce 93):** al lasco lascare una vela troppo cazzata non fa più rallentare (forza normale dalla forma di una piastra misurata, F146); polare identica; lezione 6.3 guidando di nuovo sempre completata.
-- **1.3.64 (voce 94):** il semaforo non lampeggia più sulla soglia della regola 16 (accesa resta almeno 1 s).
-- **1.3.63 (voce 89):** la vela libera non porta, «Stare fermi» verde.
-- **Voce 85 chiusa:** la strambata a vela aperta costa già nel gioco (`tests/misura_strambata.py`: 36° con 10 nodi, scuffia 20/20 con 15); il quinto giro aveva misurato solo il motore. **Voce 91 chiusa.**
-- **Voce 2:** contro un timoniere «miope» gli esperti perdono circa 10 s per bolina (confermato su semi nuovi): proposta di chiudere la parte bolina.
-- **Regola di Ale (27 nov):** le scelte tecniche (costanti senza fonte, tempi) le fa Claude e le dichiara.
-- I 7 confronti al bit dei collaudi confrontano con la 1.3.65: **a ogni cambio di barca vanno portati alla versione nuova.**
+- **Versioni di questa sessione:** 1.3.62 (pannello 6.3, collaudi), 1.3.63 (vela libera, «Stare fermi»), 1.3.64 (semaforo della regola 16), 1.3.65 (lasco: lascare non rallenta, fonte F146), 1.3.66 (regate lunghe 9-11 min: bastone 620 m, triangolo 470 m), 1.3.67 (suono della boa), 1.3.68 (strapoggio). Dettagli in `CHANGELOG.md`.
+- **Voci chiuse:** 85 (la strambata a vela aperta costava già: errore di misura del quinto giro), 86, 89, 91, 93, 94, 18; 17 non riprodotta.
+- **Voce 2:** bolina dei rivali vicina al raggiungibile (metro «miope», §18): proposta di chiuderla; caso 81 provato e scartato (§12 di `PROPOSTA-AVVERSARI-DERIVA.md`).
+- **Regola nuova di Ale (27 nov):** le scelte tecniche le fa Claude e le dichiara. **A ogni cambio di barca** si portano alla versione nuova i 7 confronti al bit dei collaudi (ora sulla 1.3.68).
+- **Giro GitHub lanciato da Ale sulla 1.3.67** (prima della 1.3.68): da leggere per intero nella sessione nuova; poi un giro sulla 1.3.68.
 
 ## Dove siamo
 
@@ -37,11 +31,12 @@
 - Le altre batterie del circuito **non** si simulano: la classifica a sorteggio resta (voce 52 archiviata). Niente carriera di prova. «Rifai questo tratto» e le domande sulle penalità vanno nel livello Coach dopo Deriva. Il Coach resta a «scarso» = 6° (`DECISIONI.md`).
 - Domande risposte, via non dato: aiuto «scarso/buono» (48).
 
-## Prossimi passi (27 nov, notte fonda)
+## Prossimi passi (per la sessione nuova)
 
-1. **Giro GitHub completo sulla 1.3.65** (lo lancia Ale) e lettura per intero.
-2. Voce 92 (collaudi tarati sulla barca vecchia: giri, esercizi, partenze, non partite, suggerimento a 140°, lezione 11, moto del mare, segnali B3, avversari_deriva 81/83).
-3. Voce 2: chiudere la parte bolina (proposta), poi casi 81 e 83 di Deriva.
+1. Leggere per intero il giro GitHub sulla 1.3.67, poi chiedere ad Ale il giro sulla 1.3.68 (strapoggio: guardare strambate, lezioni 5.x, boma in poppa, regole in poppa).
+2. Voce 92: i rossi rimasti (competizione C1, partenze, avversari1b 5, regola21 K3 e storico_frase R7 in Firefox).
+3. Voce 2: caso 81 scena per scena; vento sporco. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
+4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
 ## Cosa aspetta Ale
 
