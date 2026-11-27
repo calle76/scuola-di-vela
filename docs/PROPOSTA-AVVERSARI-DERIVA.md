@@ -176,3 +176,29 @@ G4, semi 361-380, Chromium, con A (prima → dopo): penalità 169 → 174 (≤ 1
 - **Situazione:** 81 è fuori soglia dalla nascita (6 su 10, soglia 9); 83 sul PC 10 su 10, su GitHub (1.3.65) 7 su 10 in Chromium e 10 su 10 in Firefox.
 - **Prova sul caso 81, su una copia:** se chi cede non trova nessuno scarto che passi ad almeno una lunghezza (`passaggio`), lascia tutta la vela e frena (con la 1.3.63 la vela libera frena davvero). Ipotesi nostra, una sola prova. **Risultato: 81 da 6 a 0 su 10** (sempre una penalità): ferma, la barca resta sulla traiettoria dell'altra. Scartata. 80, 82 e 83 invariati.
 - **Da fare se si riprende:** guardare le 4 scene fallite una per una (dove sono le due barche quando comincia lo scarto, che rotta sceglie, perché non basta); il codice ricalcola già lo scarto a ogni istante (`cedeAvv1b`), quindi la causa del §3 («l'angolo si calcola una volta sola») non è più quella.
+
+## 13. Proposta: caso 81 e vento sporco (27 novembre 2026, fermata 1; gioco 1.3.68 invariato)
+
+**Dopo la chiusura della parte bolina della voce 2** (Ale, 27 nov) restano il caso 81, il caso 83 e il vento sporco. L'83 nel giro sulla 1.3.68 passa in Chromium e in Firefox (run 45957380469): **non si tocca**, si riguarda solo se torna rosso.
+
+### 13.1 Caso 81: chi cede urta lo stesso
+
+- **Oggi:** 6 su 10 (soglia 9, criterio V8 del §5). La scena: una barca con la precedenza arriva al punto d'incontro fra **2 e 3,2 s**; chi cede va a 2,3 m/s. La causa del §3 («l'angolo si calcola una volta sola») non c'è più: `cedeAvv1b` ricalcola a ogni istante.
+- **Passo 1, solo misura (nessun cambio nel gioco):** per le 10 varianti, scena per scena: istante in cui chi cede comincia a scartare, rotta scelta (poggia o orza), quanto gira al secondo, distanza minima fra gli scafi, e la stessa distanza minima con le **altre due scelte** (l'altro verso, oppure vela lasciata e barra tutta da un lato) provate con la stessa fisica su una copia. Esce una tabella di 10 righe.
+- **Come si decide dopo il passo 1 (scritto ora):**
+  - se in almeno 9 varianti su 10 **una** delle scelte evita il contatto, la guida sceglie male: passo 2 = provare in `cedeAvv1b` tutte e due i versi (e la vela lasciata) e prendere quello con la distanza minima più grande, guardando avanti 3 s;
+  - se in 2 o più varianti **nessuna** scelta evita il contatto, la scena è impossibile per la barca M (non si gira abbastanza in 2 s): il collaudo chiede qualcosa che la fisica non permette. In quel caso la proposta sarà di **escludere dalla soglia le varianti impossibili**, dichiarandolo (cambio del metro, motivato dalla tabella), e non di toccare la guida.
+- **Criteri del passo 2 (soglie nostre):** 81 almeno 9 su 10 sulle varianti 0-9 e **almeno 17 su 20 sulle varianti 10-29, mai guardate** (regola dei semi); 80, 82, 83 non peggiorano; nel torneo (`misura_manovre.py --lungo`, semi già usati per la 4B) i contatti con colpa dei rivali non crescono più del 10% e il tempo di bolina degli esperti non peggiora più di 2 s.
+- **Costanti nuove:** l'orizzonte di 3 s (ipotesi nostra: il caso 81 nasce a 2-3,2 s); nessun'altra.
+- **Fonti:** nessuna sul «come scarta un timoniere»; la velocità di accostata è quella del motore (barca M), non si tocca.
+- **Rischi:** scarti più bruschi ovunque (si controlla con il torneo); impronte e confronti al bit da rifare (cambia la guida dei rivali).
+
+### 13.2 Vento sporco
+
+- **Cosa sappiamo:** nelle regate di Ale e Lucio (§15 di `PROPOSTA-AVVERSARI-BOLINA.md`) i rivali stanno nel vento coperto quasi sempre meno di 15 s a regata (massimo 69 s, una volta). Sulle regate lunghe simulate (§16-18) gli esperti perdono circa 10 s per bolina contro il «miope», e il vento coperto non è fra le cause trovate.
+- **Proposta:** **chiudere anche il vento sporco** con la stessa condizione della bolina: si riapre se nelle vostre regate un rivale resta coperto a lungo (per esempio più di 30 s di fila) e si segna col tasto M.
+
+### 13.3 Cosa serve da Ale
+
+1. Via al **passo 1 del caso 81** (solo misura, leggero).
+2. Ok a **chiudere il vento sporco** con la condizione scritta sopra.
