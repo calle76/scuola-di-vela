@@ -33,7 +33,7 @@
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
 | 22 | **«Errore interno … property "t" of undefined» in Firefox** (Lucio, 11 nov): non si riproduce; serve una nuova comparsa. Provato il 25 nov (Firefox 150): fra 74 forme di codice, quel testo esatto esce solo da `(a || b).t`, `(c ? a : b).t` e simili, e nel codice della 1.2.27 e di oggi non ce n'è nessuna (0 su 246 `.t` nella 1.2.27): causa ancora ignota | `CHANGELOG.md` 1.2.28 | — |
-| 8, 18 | **Suoni:** boa poco forte e sartiame in `collaudo_suoni_si_sentono` (il bordo si sposta fra un giro e l'altro). **Sartiame giudicato a orecchio da Ale il 23 nov: resta l'originale** (`DECISIONI.md`); dal 24 nov il collaudo la soglia la riporta e basta. Resta la boa | `CHANGELOG.md` 1.2.12 | Sonnet |
+| 8 | **Suoni:** boa più forte nella 1.3.67 (voce 18 chiusa: 9,8-11,8 dB contro la soglia di 6); sartiame giudicato da Ale il 23 nov, resta l'originale | `CHANGELOG.md` 1.3.67 | Sonnet |
 
 ## 4. In sospeso, in coda o idee
 
@@ -47,7 +47,7 @@
 | 12 | **Livello Deriva** come livello a sé (soglia del torneo, momento clou): da ripensare coi circuiti | `PROPOSTA-LIVELLO-DERIVA.md` §10 |
 | 43 | **Pilota «da giocatore»:** resta a parte; una partenza sua senza contatti, quando serve al Coach | `PROPOSTA-PILOTA-GIOCATORE.md` §8-9 |
 | 31 | **Dalle fonti F86-F102:** cono d'ombra in poppa forse troppo lungo; idee per bolina, lezioni e circuiti. Da proporre quando si riprende la voce 2 | `FONTI-PUBBLICHE.md` F86-F102 |
-| 17 | **Pilota incastrato prima del via nel torneo** (3 casi in 3200 corse): noto, da riprendere | oss. 79 |
+| 17 | **Pilota incastrato prima del via** (oss. 79, 1.0.64; 3 casi in 3200 corse): **non riprodotto il 27 nov** con la barca di oggi (barca puntata sul comitato a 35°-90° dal vento: tocca, scivola e va oltre; `non_partite` verdi nel giro sulla 1.3.65). Si riprende se ricompare | oss. 79 |
 | 7 | **Oro della prova 5** (315/395/505 s): aspetta i tempi della prova a mano di Ale | `CHANGELOG.md` 1.2.11-1.2.12 |
 | 1b | **Avversari: virate in più vicino alla boa** (circa 1,7 per passaggio): ferma con la bolina | `PROPOSTA-LAYLINE.md` §5 |
 

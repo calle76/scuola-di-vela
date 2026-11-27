@@ -24,6 +24,13 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.67 — Il suono della boa più forte (voce 18)
+
+- **Perché:** in `collaudo_suoni_si_sentono` il suono della boa era al limite (alza la banda 200-5000 Hz di 6,1-10,5 dB, soglia 6: dei tre ritagli scelti a caso uno è più debole); nei giri vecchi a volte cadeva. Il sartiame resta com'è (Ale, 23 nov).
+- **Correzione:** volume della boa da 0,8 a 1, come contatto, scuffia e raddrizzata.
+- **Misure:** `collaudo_suoni_si_sentono` sul PC: boa 9,8-11,8 dB; picco col volume «alto» −2,3/−3,9 dB (al più −0,5); casi sbagliati nessuno.
+- **Voce 17 (pilota incastrato contro il comitato, oss. 79):** non riprodotta con la barca di oggi (barca puntata sul comitato a 35°-90° dal vento: tocca, scivola e va oltre, uguale nella 1.3.66). Provata una correzione (togliere la velocità che entra nell'ostacolo): numeri identici entro i centesimi, quindi **tolta**, perché senza un caso non si vede cosa correggerebbe.
+
 ## 1.3.66 — Regate lunghe di nuovo di 9-11 minuti; collaudi adattati alla barca M (voce 92)
 
 - **Gioco:** con la barca M il bastone lungo durava meno dei 9-11 minuti decisi da Ale il 20 nov (`collaudo_percorso_lungo` P4: 8,6 in Chromium, 8,9 in Firefox; 9,36 sui semi 1-10 con lo strumento della taratura). Rifatta la taratura della 1.3.26 con lo stesso metodo (`tests/misura_percorso_lungo.py`): bolina del bastone **560 → 620 m** (semi 1-10: 9,36 → 10,26 min, come i 10,3 della taratura di allora), lato del triangolo **440 → 470 m** (9,23 → 9,77); conferma sui semi 101-110 in Chromium e Firefox: 10,85 e 9,81 min, nessuna barca non arrivata. `collaudo_percorso_lungo` verde (P4 bastone 9,4, triangolo 10,6).

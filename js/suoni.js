@@ -27,7 +27,7 @@
     scuffia:    k => sTaglio("tuffo", 1, 0.04, k.t),
     raddrizzata: k => sTaglio("scolo", 1, 0.05, k.t),
     contatto:   k => sTaglio("scafo", 1, 0.05, k.t, sMaster),
-    boa:        k => sTaglio("boa", 0.8, 0.05, k.t, sMaster),
+    boa:        k => sTaglio("boa", 1, 0.05, k.t, sMaster), /* 1.3.67 (voce 18): da 0,8 a 1 come gli altri segnali; il ritaglio più debole alzava la banda di appena 6,1 dB (soglia 6) */
     tromba:     k => sTaglio("tromba", 0.5, 0, k.t, sMaster),
     tromba_lunga: k => sTaglio("tromba_lunga", 0.5, 0, k.t, sMaster),
     arrivo:     k => sTaglio("arrivo", 0.6, 0, k.t, sMaster)
