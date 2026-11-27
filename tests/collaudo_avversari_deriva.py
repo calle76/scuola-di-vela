@@ -34,13 +34,15 @@ async def main():
     nome = os.environ.get("BROWSER", "chromium"); fall = False
     async with async_playwright() as p:
         b = await getattr(p, nome).launch(); errs = []
-        for sc in (80, 81, 82, 83):
+        a, z = (int(x) for x in os.environ.get("VARIANTI", "0-9").split("-")); casi = [int(c) for c in os.environ.get("CASI", "80,81,82,83").split(",")]  # 1.3.69: VARIANTI=10-29 per le varianti mai guardate (regola dei semi)
+        nv = z - a + 1; soglia = 9 if nv == 10 else -(-17 * nv // 20)  # soglie del §13.1: 9 su 10, 17 su 20
+        for sc in casi:
             es = []
-            for v in range(10):
+            for v in range(a, z + 1):
                 pg = await b.new_page(); pg.on("pageerror", lambda e: errs.append(str(e))); await pg.add_init_script(SEME); await pg.goto(URL); await pg.wait_for_timeout(150)
                 es.append(await pg.evaluate(SCENA, [sc, v])); await pg.close()
-            n = sum(e["ok"] for e in es); print(f"caso {sc}: {n} su 10 | {[e['dato'] for e in es]}", flush=True)
-            if n < 9: fall = True; print(f"FALLITO caso {sc}: {n} su 10 (soglia 9)", flush=True)   # riga per tests/fallimenti_noti.txt: se il numero cambia, il giro lo dice
+            n = sum(e["ok"] for e in es); print(f"caso {sc}: {n} su {nv} | {[e['dato'] for e in es]}", flush=True)
+            if n < soglia: fall = True; print(f"FALLITO caso {sc}: {n} su {nv} (soglia {soglia})", flush=True)   # riga per tests/fallimenti_noti.txt: se il numero cambia, il giro lo dice
         print("errori:", errs[:1]); await b.close()
     print("ESITO", nome, "OK" if not (fall or errs) else "FALLITO"); sys.exit(1 if fall or errs else 0)
 asyncio.run(main())

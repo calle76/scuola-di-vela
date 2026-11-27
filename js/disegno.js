@@ -673,8 +673,9 @@
   function drawWindArrows(v, trueOnly){
     const [bx, by] = toScreen(v, S.x, S.y), rr = 2.9 * v.ppm + 10;
     const scr = d => (d + (v.rot / D2R)) * D2R; // direzione mondo -> schermo
-    const tFrom = scr(local.twd), aFrom = scr(info.awFrom);
-    const tl = 25 + local.tws * 5, al = 25 + info.aws * 5;
+    const mv = rotVentoMoviola(S.x, S.y, S.h, S.u), tw = mv ? mv.tw : local, aw = mv ? mv.aw : info; /* 1.3.69: in moviola il vento dell'istante rivisto (js/rotta.js) */
+    const tFrom = scr(tw.twd), aFrom = scr(aw.awFrom);
+    const tl = 25 + tw.tws * 5, al = 25 + aw.aws * 5;
     arrow(bx + Math.sin(tFrom) * rr, by - Math.cos(tFrom) * rr, tFrom + Math.PI, tl, colors.true, "reale");
     if (!trueOnly) arrow(bx + Math.sin(aFrom) * (rr + 6), by - Math.cos(aFrom) * (rr + 6), aFrom + Math.PI, al, colors.app, "apparente");
     drawSpeedArrow(v, bx, by, rr);

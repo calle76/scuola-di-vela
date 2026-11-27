@@ -78,6 +78,7 @@ TESTS=(
     "collaudo_salti2.py|py|chiaro|0||collaudo_salti2.py"
     "collaudo_contatto_vero.py|py|chiaro|0||collaudo_contatto_vero.py"
     "collaudo_moviola.py (8 regate)|py|chiaro|0||collaudo_moviola.py 8"
+    "collaudo_frecce_moviola.py (6 regate)|py|chiaro|0||collaudo_frecce_moviola.py 6"
     "collaudo_registrazione.py (8 regate)|py|chiaro|0||collaudo_registrazione.py 8"
     "collaudo_giri.py (12 prove)|py|chiaro|0||collaudo_giri.py 12"
     "collaudo_boa.py (12 prove)|py|chiaro|0||collaudo_boa.py 12"

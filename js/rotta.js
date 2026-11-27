@@ -38,6 +38,14 @@
     return { gs, sd: a.sd + (b.sd - a.sd) * f, sim: a.sim + dt };
   }
   const rotVento = (x, y, Q) => ventoDa(Q.gs, Q.sd, Q.sim, x, y); // Q = rotRaffiche(t)
+  // 1.3.69 (domanda di Ale del 27 nov): a moviola aperta le frecce del vento sulla barca (drawWindArrows) restavano quelle dell'ultimo istante prima di «Rivedi»;
+  // ora il vento reale è quello registrato nell'istante rivisto (prima del via: quello allo sparo, il primo registrato), col cono d'ombra registrato (riv.cop), e l'apparente si ricava dalla velocità
+  // registrata (senza lo scarroccio, che la moviola non tiene). null se la moviola è chiusa o la regata non ha il vento registrato: allora restano quelle del gioco
+  function rotVentoMoviola(x, y, h, u){
+    if (!riv.on || rot.reg.length < 2) return null;
+    const w0 = rotVento(x, y, rotRaffiche(rivT0() + riv.pos)), w = Object.assign({}, w0, { tws: w0.tws * (1 - (riv.cop || 0)) }), to = (w.twd + 180) * D2R, ax = Math.sin(to) * w.tws - Math.sin(h * D2R) * u, ay = -Math.cos(to) * w.tws + Math.cos(h * D2R) * u;
+    return { tw: w, aw: { awFrom: norm360(Math.atan2(-ax, ay) / D2R), aws: Math.hypot(ax, ay) } };
+  }
 
   // ---- isocrone ----
   const ROT_TWA = []; for (let a = 30; a <= 180; a += 5) ROT_TWA.push(a); // multipli di 5: cadono sulle colonne della tabella (da 25°)

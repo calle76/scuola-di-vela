@@ -68,6 +68,7 @@
     let lo = 0, hi = fr.length - 1; while (hi - lo > 1){ const m = (lo + hi) >> 1; if (fr[m].t <= T) lo = m; else hi = m; } // ricerca binaria: la regata intera ha migliaia di copie
     const a = fr[lo], b = fr[hi], f = b.t > a.t ? clamp((T - a.t) / (b.t - a.t), 0, 1) : 0;
     const L = (p, q) => p + (q - p) * f;
+    riv.cop = a.c ? a.c[0] : 0; /* 1.3.69: il vento tolto dal cono al giocatore in questo istante, per le frecce del vento (rotVentoMoviola, js/rotta.js) */
     R.boats.forEach((bt, k) => {
       const p = a.b[k], q = b.b[k], s = bt.S, n = f < 0.5 ? p : q;
       s.x = L(p[0], q[0]); s.y = L(p[1], q[1]); s.h = p[8] !== q[8] ? n[2] : norm360(p[2] + norm180(q[2] - p[2]) * f); s.heel = L(p[3], q[3]); s.u = L(p[4], q[4]); // 1.2.22: alla scuffiata e alla raddrizzata la prua cambia di colpo, non si mescola (collaudo_moviola V1, 9,84° con la 1.2.21). 1.3.10: sbandamento e velocità erano finiti dentro questo commento dalla 1.2.22 (tests/controllo_commenti.py)

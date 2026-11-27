@@ -1,0 +1,54 @@
+diff --git a/js/regate.js b/js/regate.js
+index 9cb61ec..50c1f7d 100644
+--- a/js/regate.js
++++ b/js/regate.js
+@@ -544,13 +544,13 @@
+     const prima = devo && tackOf(b) !== tackOf(o) ? -lato : (relB >= 0 ? -1 : 1); // la direzione preferita: mure diverse poggia e passa di poppa; se no, via dall'altra barca
+     const mk = b.leg >= 1 && b.leg <= R.marks.length ? R.marks[b.leg - 1] : null, boa = mk && mk.out !== undefined && Math.hypot(mk.x - s.x, mk.y - s.y) < 40 ? { x: mk.x, y: mk.y, ox: Math.sin(mk.out * D2R), oy: -Math.cos(mk.out * D2R) } : null;
+     let scelta = null, meglio = -1;
+-    for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
+-      const nd = rotta + dir * da, t2 = norm180(twd - nd);
++    for (const base of devo ? [rotta, s.h] : [rotta]) for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){ /* 1.3.69: chi cede prova gli scarti anche dalla prua che ha (§13.4: dal traverso, partendo dalla bolina, poggiava al massimo a 110°) */
++      const nd = base + dir * da, t2 = norm180(twd - nd);
+       if (sgn(t2) !== lato || Math.abs(t2) < ai.up - 2 || Math.abs(t2) > 172) continue;
+       if (Math.abs(norm180(twd - rotta)) > 100 && Math.abs(t2) < 90) continue; // chi scende non torna verso la bolina per cedere (osservazione 80)
+       if (s.u < U_ABBRIVIO && Math.abs(t2) < ai.up + 10) continue; // lenta non orza: si pianterebbe (dalla misura: piantate al via)
+       if (boa){ const px = s.x + Math.sin(nd * D2R) * 25, py = s.y - Math.cos(nd * D2R) * 25; if (Math.hypot(px - boa.x, py - boa.y) < Math.hypot(s.x - boa.x, s.y - boa.y) - 10 && (px - boa.x) * boa.ox + (py - boa.y) * boa.oy < 0) continue; } // vicino alla boa non si taglia dalla parte interna
+-      const lib = passaggio(b, nd);
++      const lib = devo ? passaggioScafi(b, nd) : passaggio(b, nd); /* 1.3.69: chi cede guarda gli scafi e l'accostata (due lunghezze libere fra gli scafi) */
+       if (lib >= 2 * L) return nd;
+       if (lib > meglio){ meglio = lib; scelta = nd; }
+     }
+@@ -576,6 +576,32 @@
+     }
+     return min;
+   }
++  // 1.3.69 (voce 2, caso 81, docs/PROPOSTA-AVVERSARI-DERIVA.md §13.4-13.5): per chi cede. La barca gira dalla prua di adesso verso nd a ACCOSTA °/s (misurato sul
++  // motore) e poi va dritta; si guarda la distanza fra gli SCAFI (segmenti lunghi BOAT.length), a passi di PASSO_ACC s per T_CEDE s. Con passaggio() la rotta nuova
++  // si contava come già presa e si misurava fra i centri: a 2 s dall'incontro orzare e poggiare sembravano uguali (2,6-2,8 m fra i centri) e la barca orzava e urtava
++  const ACCOSTA = 25, PASSO_ACC = 0.1; // °/s misurati (25-28 nel caso 81); 0,1 s ipotesi nostra. Orizzonte T_CEDE, come passaggio()
++  function distSeg(ax, ay, bx, by, cx, cy, dx, dy){ // distanza fra i segmenti AB e CD (zero se si incrociano)
++    const pt = (px, py, qx, qy, rx, ry) => { const ex = rx - qx, ey = ry - qy, e2 = ex * ex + ey * ey, k = e2 > 1e-9 ? clamp(((px - qx) * ex + (py - qy) * ey) / e2, 0, 1) : 0; return Math.hypot(px - qx - ex * k, py - qy - ey * k); };
++    const cr = (px, py, qx, qy, rx, ry) => (qx - px) * (ry - py) - (qy - py) * (rx - px);
++    if (cr(ax, ay, bx, by, cx, cy) * cr(ax, ay, bx, by, dx, dy) < 0 && cr(cx, cy, dx, dy, ax, ay) * cr(cx, cy, dx, dy, bx, by) < 0) return 0;
++    return Math.min(pt(ax, ay, cx, cy, dx, dy), pt(bx, by, cx, cy, dx, dy), pt(cx, cy, ax, ay, bx, by), pt(dx, dy, ax, ay, bx, by));
++  }
++  function passaggioScafi(b, nd){
++    const s = b.S, u = Math.max(s.u, 1), h2 = BOAT.length / 2, dh = norm180(nd - s.h), gv = sgn(dh), tg = Math.abs(dh) / ACCOSTA;
++    let min = 1e9;
++    for (const o of R.boats){
++      if (o === b || o.fin !== null || o.dnf || o.S.capsized) continue;
++      if (Math.hypot(o.S.x - s.x, o.S.y - s.y) > D_CEDE) continue;
++      const fo = [Math.sin(o.S.h * D2R), -Math.cos(o.S.h * D2R)], uo = o.S.u;
++      let px = s.x, py = s.y;
++      for (let t = 0; t <= T_CEDE; t += PASSO_ACC){
++        const h = t < tg ? s.h + gv * ACCOSTA * t : nd, fx = Math.sin(h * D2R), fy = -Math.cos(h * D2R), qx = o.S.x + fo[0] * uo * t, qy = o.S.y + fo[1] * uo * t;
++        min = Math.min(min, distSeg(px - fx * h2, py - fy * h2, px + fx * h2, py + fy * h2, qx - fo[0] * h2, qy - fo[1] * h2, qx + fo[0] * h2, qy + fo[1] * h2));
++        px += fx * u * PASSO_ACC; py += fy * u * PASSO_ACC;
++      }
++    }
++    return min;
++  }
+ 
+   // la guida dell'avversario, la stessa nella regata e nelle due simulazioni qui sotto (startTime, glideY): se divergessero, la
+   // simulazione non sarebbe quella che succederà. Barra verso la prua d (al contrario andando all'indietro):
