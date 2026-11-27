@@ -56,3 +56,17 @@ Via di Ale («vai con le varie voci», 27 nov) a provarlo. Copia del motore dell
 | polare, raffiche e virate, `virata1b.js` | | identici |
 
 **G2 non passa** (nessuna scuffia con 20 nodi, sbandamento sotto 30°). In poppa la barca è quasi dritta e il timoniere non è fuori bordo: il suo peso e lo sbandamento al momento della strambata contano poco. **Il pezzo 1 non entra nel gioco.** Quello che fa scuffiare nella realtà, secondo le fonti del §2, è il colpo del boma e la barca che orza subito dopo: è il pezzo 2, che ha bisogno di costanti senza fonte (inerzia del boma e della vela, smorzamento). Resta da decidere con Ale se provarlo come ipotesi dichiarata.
+
+## Esito finale: la voce partiva da una misura incompleta (27 novembre 2026, notte)
+
+**Il difetto non c'è nel gioco.** Il quinto giro (`sperimentale/barca-84/GIRO5.md` §6) aveva misurato solo il motore (`js/motore.js`); la strambata del gioco ha anche la regola di `detectManeuvers` in `js/gioco.js`: con il boma oltre 45° (vela aperta) è «violenta», la velocità scende del 45% e arriva un colpo di sbandamento `GYBE_KICK` = 260 °/s × (vento / 15 nodi)^1,6 con una parte casuale (−15% … +25%). Il pezzo 2 provato sul motore lo avrebbe contato due volte: buttato.
+
+Misura nel gioco vero con la barca M (`tests/misura_strambata.py`, navigazione libera, raffiche e salti spenti, prua che gira a 5°/s da 150° a 150°, scotta ferma; 20 semi, Chromium):
+
+| vento | vela aperta (scotta 1, boma a 85°) | scotta corta (0,4, boma sotto 45°) |
+| --- | --- | --- |
+| 6 nodi | violenta 20/20, sbandamento mediano 14° (12-18), velocità minima 54% | 0/20, 1°, 90% |
+| 10 nodi | 20/20, 36° (28-47), 55% | 0/20, 2°, 88% |
+| 15 nodi | 20/20, **scuffia 20/20** | 0/20, 6°, 84%, nessuna scuffia |
+
+Va nel senso delle fonti (F112: scotta tesa e recuperata in strambata; le fonti del §2: con vento forte la strambata a vela aperta è quella che fa scuffiare). **Semplificazione dichiarata:** il passaggio fra «controllata» e «violenta» è un gradino a 45° di boma, non una crescita graduale; e con la scotta corta anche con 15 nodi non si scuffia mai. Si riprende solo se Ale e Lucio, giocando, trovano la strambata troppo facile o troppo punitiva. **La voce 86 (strapoggio) non aspetta più la 85.**
