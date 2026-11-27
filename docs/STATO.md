@@ -42,7 +42,7 @@
 
 ## Prossimi passi (per la sessione nuova)
 
-1. **Voce 2, caso 81:** seconda prova (§13.6 di `PROPOSTA-AVVERSARI-DERIVA.md`, patch v2 in `sperimentale/caso-81/`): criteri tutti verdi, ma «coppie dopo il via» nel torneo da 4 a 13. Passo dopo: trovare da dove vengono le coppie in più, poi adottarla. Poi l'oss. 147 (regola 16 alla boa). Vento sporco chiuso.
+1. **Voce 2, caso 81:** terza prova (§13.7 di `PROPOSTA-AVVERSARI-DERIVA.md`, patch v3 in `sperimentale/caso-81/`): casi 80-83, coppie e contatti a posto, ma bolina degli esperti +4,2 s di mediana in un gruppo di semi (soglia +2): non adottata. Aspetta Ale: cercare dove si perdono i secondi, o fermarsi. Poi l'oss. 147 (regola 16 alla boa). Vento sporco chiuso.
 2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
