@@ -40,3 +40,13 @@ K1 era scritto male: conta anche i contatti prima del via (90 e 86, uguali nelle
 Chi ha la precedenza (dopo lo sparo, in Deriva), con una barca vicina che deve cedergli, non gira la prua verso di lei: se la rotta voluta è almeno G147 = 5° (ipotesi nostra) più vicina alla direzione dell'altra, tiene la prua che ha. Prima, «tenere la rotta» voleva dire seguire la rotta voluta, che girando la boa è una virata verso l'altra.
 
 Criteri: gli stessi K1-K5, più **K1b, scritto prima di vedere i numeri di questa prova:** contatti con colpa di un rivale per la regola 16 dopo il via, almeno −30% sulla scelta e −20% sulla conferma. K4 sul PC, Chromium: 80, 81, 82, 83 tutti 10 su 10 (80: minimo 140-142° contro 143-150°, soglia 60°).
+
+## Esito della seconda prova: non adottata
+
+Gioco → prova. Scelta 2261-2410 (450 regate): K1 172 → 139 (−19%, **no**); **K1b 37 → 22 (−41%, sì)**; K2 579 → 516 (sì); K3 bolina esperti barca per barca mediana +0,0, media +1,2 s, M4 587,1 → 586,4 (sì); **K5 coppie dopo il via 35 → 54 (+54%, no)**: tutte fra stesse mure, in bolina da 15 a 30 (il rischio detto da Ale prima dei numeri). Conferma 2411-2560: un pezzo (2531-2540) fallito su GitHub mentre installava il browser, 420 regate contro 450: K1b 26 → 21, K5 28 → 40; non confrontabile alla pari, non serve per la decisione.
+
+I contatti per la 16 dopo il via, nel gioco, sono per metà fra mure diverse (17 su 37 e 10 su 26); le coppie sono tutte fra stesse mure.
+
+## Terza prova (`r16-v3-mure-diverse.patch`, contiene la prima)
+
+Come la seconda, ma solo fra barche con le **mure diverse** (come la 1.3.71) e per al massimo T15 = 5,2 s (la finestra della regola 16 del gioco) per la stessa barca. Criteri: gli stessi K1-K5 e K1b, soglie invariate. K4 sul PC, Chromium: 80, 81, 82, 83 tutti 10 su 10.
