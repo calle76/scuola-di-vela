@@ -3,6 +3,7 @@
   // ======================================================================
   // PANNELLO
   // ======================================================================
+  const POPPA_SUGG = 165; /* 1.3.70 (voce 96): da quanti gradi dal vento vero il pannello parla dello strapoggio; ipotesi nostra */
   function panel(){
     const st = curStep(), I = readI();
     $("iSpd").textContent = (S.u * KN).toFixed(1) + " kn";
@@ -47,6 +48,12 @@
     // oltre circa 112° di vento apparente nessuna posizione della randa dà i filetti dritti (boma al massimo a BOAT.maxBoom):
     // a scotta tutta lascata «lasca» e «troppo cazzata» sarebbero consigli sbagliati, e in poppa i filetti non si usano.
     if (I.tt === "lee" && I.sheet > 0.99){ cls = "good"; msg = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."; }
+    /* 1.3.70 (voce 96, oss. 148): in poppa piena e oltre, fuori dalle lezioni, si dice come funziona lo strapoggio della 1.3.68 (Ale cazzava e strambava
+       senza volerlo), da POPPA_SUGG gradi dal vento vero */
+    if (mode !== "lesson" && I.twa >= POPPA_SUGG){
+      if (I.sheet > 0.99){ cls = "good"; msg = "Vela tutta aperta: puoi scendere fino a 15° oltre la poppa senza strambare. Per strambare, prima cazza."; }
+      else { cls = ""; msg = "In poppa lasca tutta la scotta: così scendi fino a 15° oltre la poppa. Se cazzi, il boma passa e strambi."; }
+    }
     const to = (env.twd + 180) * D2R, ahead = windAt(S.x - Math.sin(to) * 22, S.y + Math.cos(to) * 22);
     let back = false; // 0.20.2: «all'indietro» si mostra anche nei passi a suggerimenti spenti, se il passo dà la barra
     if (S.capsized && noRight){ cls = "good"; msg = "Hai scuffiato: la barca resta rovesciata. Premi Avanti: nel passo dopo la raddrizzi."; }

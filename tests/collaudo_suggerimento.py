@@ -31,6 +31,10 @@ W, H = (int(ARGS[0]), int(ARGS[1])) if len(ARGS) > 1 else (1360, 650)
 SEMI = range(1, 21) if LUNGO else range(1, 3)   # semi fissi, decisi prima dei risultati (0.20.3)
 CONTRARIO = False                               # solo per la contro-prova P1: il pilota spinge la barra lontano dal boma
 NUOVO = "Vento da dietro: la vela è già tutta aperta. In poppa i filetti non servono."
+# 1.3.70 (voce 96, oss. 148): fuori dalle lezioni, da 165° dal vento vero il pannello spiega lo strapoggio; collaudo adattato, dichiarato in CHANGELOG
+POPPA_SUGG = 165
+POPPA_LASCA = "Vela tutta aperta: puoi scendere fino a 15° oltre la poppa senza strambare. Per strambare, prima cazza."
+POPPA_CAZZA = "In poppa lasca tutta la scotta: così scendi fino a 15° oltre la poppa. Se cazzi, il boma passa e strambi."
 INDIETRO = "All'indietro la barra funziona al contrario: spostala verso il boma, poi centrala e cazza."                  # prua sotto 40°
 INDIETRO2 = "Stai andando all'indietro, ma la prua è fuori dall'angolo morto: centra la barra e cazza."                   # da 40° in su (isteresi: fino a 37°)
 AVANTI = "Ora vai avanti piano: barra al centro, cazza e lascia prendere velocità."                                    # testo B
@@ -139,6 +143,8 @@ VECCHI = ("Si agita il filetto sottovento", "troppo cazzata", "ma lascando un po
 PH = "()=>{const p=document.querySelector('.panel');return p.scrollHeight-p.clientHeight}"
 TESTI = {  # caso peggiore del pannello: testo nuovo contro il piu lungo che il gioco mostra gia
     "nuovo": NUOVO,
+    "strapoggio, scotta lasca (1.3.70)": POPPA_LASCA,
+    "strapoggio, scotta cazzata (1.3.70)": POPPA_CAZZA,
     "lee attuale": "Si agita il filetto sottovento: lasca, oppure orza.",
     "raffica (1.0.9, il più lungo dei tre)": "Raffica in arrivo: sfruttala per accelerare. Se sbandi troppo, poggia e lasca un poco.",
     "sbandi con vela tutta lasca": "Sbandi troppo e la vela è già tutta lasca: prova a orzare un poco.",
@@ -187,10 +193,13 @@ async def main():
         print(f"senza #collaudo: typeof window.__sv = {sv_fuori}")
         if sv_fuori != "undefined": sbagliati.append(f"senza #collaudo window.__sv esiste ({sv_fuori})")
         # 1) scotta tutta lascata: dove i filetti dicono «lee» deve comparire il testo nuovo
-        n_lee = n_altro = 0
+        n_lee = n_altro = n_poppa = n_poppa_c = 0
         for twa in range(100, 185, 5):
             I, msg = await leggi(pg, twa, 1.0)
-            if I["tt"] == "lee":
+            if I["twa"] >= POPPA_SUGG - 0.5:
+                n_poppa += 1
+                if msg != POPPA_LASCA: sbagliati.append(f"scotta 1,00 a twa {I['twa']:.0f} (strapoggio): «{msg}»")
+            elif I["tt"] == "lee":
                 n_lee += 1
                 if msg != NUOVO: sbagliati.append(f"scotta 1,00 a twa {I['twa']:.0f}: «{msg}»")
             else:
@@ -203,7 +212,10 @@ async def main():
                 I, msg = await leggi(pg, twa, sh)
                 n_quasi += 1
                 if msg == NUOVO: sbagliati.append(f"scotta {sh:.2f} a twa {I['twa']:.0f}: testo nuovo con la scotta non al massimo")
-                if I["tt"] == "lee":
+                if I["twa"] >= POPPA_SUGG - 0.5:
+                    n_poppa_c += 1
+                    if msg != POPPA_CAZZA: sbagliati.append(f"scotta {sh:.2f} a twa {I['twa']:.0f} (strapoggio): «{msg}»")
+                elif I["tt"] == "lee":
                     n_quasi_lee += 1
                     if not any(v in msg for v in VECCHI): sbagliati.append(f"scotta {sh:.2f} a twa {I['twa']:.0f}: atteso il consiglio di prima, letto «{msg}»")
         # 3) suggerimento semplice (hintKind «sail»): lezione 3, passo «Poppa», vela automatica
@@ -425,11 +437,11 @@ async def main():
         # Un controllo che non misura niente passa sempre: qui i casi vanno dichiarati e devono essere quelli previsti.
         print(f"finestra {W}x{H}")
         print(f"casi misurati: scotta 1,00 con «lee» {n_lee}, scotta 1,00 con altri filetti {n_altro}, "
-              f"scotta 0,90-0,99 {n_quasi} (di cui in stallo {n_quasi_lee}), suggerimento semplice {n_sail}, sbandamento {n_sb}, raffica in arrivo {n_raf}, pannello {n_pan}")
+              f"scotta 0,90-0,99 {n_quasi} (di cui in stallo {n_quasi_lee}), strapoggio {n_poppa} e {n_poppa_c}, suggerimento semplice {n_sail}, sbandamento {n_sb}, raffica in arrivo {n_raf}, pannello {n_pan}")
         print("eccesso massimo del pannello (pixel):", peggio)
         print("casi sbagliati:", sbagliati or "nessuno")
         print("errori pagina:", errs[:5])
-        vuoto = [n for n in (n_lee, n_altro, n_quasi, n_quasi_lee, n_sail, n_sb, n_raf, n_passi, n_pan) if n == 0]
+        vuoto = [n for n in (n_lee, n_altro, n_quasi, n_quasi_lee, n_poppa, n_poppa_c, n_sail, n_sb, n_raf, n_passi, n_pan) if n == 0]
         if vuoto: print("COLLAUDO NON VALIDO: una delle misure non ha nessun caso")
         for x in nonvalido: print("COLLAUDO NON VALIDO:", x)
         if not caratteri_ok: print("COLLAUDO NON VALIDO: caratteri del gioco non caricati, i margini del pannello misurati sopra non sono attendibili")

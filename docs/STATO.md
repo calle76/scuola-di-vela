@@ -2,11 +2,13 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, mezzogiorno (gioco alla **1.3.69**, tag `v1.3.69`).*
+*Aggiornato: 27 novembre 2026, primo pomeriggio (gioco alla **1.3.70**, tag `v1.3.70`).*
+
+- **1.3.70 (27 nov, voce 96):** in poppa, fuori dalle lezioni, il pannello spiega lo strapoggio (scotta tutta lasca per scendere oltre la poppa; cazzando strambi).
 
 - **1.3.69 (27 nov):** in moviola le frecce del vento reale e apparente seguono l'istante rivisto (oss. 146; `collaudo_frecce_moviola.py`, Chromium e Firefox).
 - **Voce 2, caso 81, passo 2: non adottato** (§13.5 di `PROPOSTA-AVVERSARI-DERIVA.md`): come proposto 81 resta 6 su 10; con scafi e accostata 81 va a 10 su 10 ma 82 scende a 8 su 10. Prova in `sperimentale/caso-81/`.
-- **Regate di Ale del 27 mattina** (oss. 147-148; giocate sulla guida di prova): contatto Rossa-Blu alla boa di poppa (regola 16 mentre la Blu gira la boa, voce 2); strapoggio che «non riesce» = Ale cazzava in poppa, cioè il comando per strambare (voce 96).
+- **Regate di Ale del 27 mattina** (oss. 147-148; giocate sulla guida di prova): contatto Rossa-Blu alla boa di poppa (regola 16 mentre la Blu gira la boa, voce 2); strapoggio che «non riesce» = Ale cazzava in poppa, cioè il comando per strambare (corretto nella 1.3.70).
 
 - **Dal 27 nov push e giri GitHub li fa Claude** (solo `main` e tag, a collaudi verdi, mai `--force`; `main` protetto su GitHub dalla regola `proteggi-main`). Giro completo solo a fine blocco.
 - **Giro GitHub sulla 1.3.68 (run 45957380469, letto per intero, anche «da controllare»):** corretti nei collaudi (commit `e209993`, gioco invariato) `registro` (strambata col verso fisso, scuffia al traverso: 15/15 nei due browser) e `contatto_vero` (contatto registrato al passo dopo in una mischia a tre: metro cambiato, dichiarato). Restano: `moto_mare` Firefox (ora col seme fisso; beccheggio in poppa 3,8-4,6 px contro 4,4: solo disegno, soglia invariata), `giri_avversari` G12 Chromium (1 su 267, a 78° sul bordo della fascia esclusa), e i noti della voce 2 (`partenze`, `avversari1b` 5 Firefox, `avversari_deriva` 81; l'83 ora passa anche in Chromium), `regola21` K3 Firefox. Lezioni semi 1-100: solo i casi noti 5.8, 6.2, 6.3.
@@ -41,7 +43,6 @@
 ## Prossimi passi (per la sessione nuova)
 
 1. **Voce 2:** aspetta Ale: cercare perché la patch del caso 81 fa peggiorare l'82 (§13.5), e riprodurre l'oss. 147 (regola 16 alla boa) sulla 1.3.69. Vento sporco chiuso.
-1b. **Voce 96 (oss. 148):** una riga nel suggerimento in poppa sullo strapoggio (testo, leggero): aspetta il via.
 2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
