@@ -70,7 +70,7 @@ async def partenza(b, cd, seme):
 # lo sparo; il giocatore resta fermo. Le due regate del gioco: bastone (10 nodi costanti) e raffiche (12 nodi rafficati). Per ogni avversario:
 # oltre la linea allo sparo (e di quanti metri, a che distanza dal centro), ritardo (sparo → partenza), velocità alla partenza, se nell'ultimo
 # minuto è stato nella fascia d'attesa (da una a due lunghezze di barca dietro la linea, 4,2-8,4 m), ritorno dietro la linea se anticipata.
-# Criteri: (1) partenze con almeno un richiamo al massimo 30% (principianti) e 20% (esperti), esperti meno dei principianti; (2) ritardo
+# Criteri: (1) partenze con almeno un richiamo al massimo 30% (principianti) e 20% (esperti), esperti non più dei principianti (fino al 27 nov 2026 «meno»); (2) ritardo
 # mediano al massimo 3 s per preparazione; (3) velocità mediana alla partenza almeno 75% del regime a 50° (10 nodi 4,97 → 3,72; 12 nodi
 # 5,60 → 4,20, conto su step() del 16 ottobre 2026); (4) nessun avversario non partito entro 60 s; (6) controllo del metro: almeno metà delle
 # barche passa dalla fascia d'attesa, altrimenti NON VALIDO. Uso: --semi a-b (default 1-20; conferma 21-100), --lungo = 1-100.
@@ -135,7 +135,9 @@ async def anticipi_allo_sparo(b):
             if vel and statistics.median(vel) < VEL_MIN[reg]: fuori.append(f"(3) {nome_reg} {liv}: velocità mediana {statistics.median(vel):.2f} nodi")
             if partenze < 3 * len(SEMI_SPARO): non_valido.append(f"{nome_reg} {liv}: {partenze} partenze, previste {3 * len(SEMI_SPARO)}")
             if fascia < len(barche) / 2: non_valido.append(f"(6) {nome_reg} {liv}: solo {fascia} barche su {len(barche)} passate dalla fascia d'attesa")
-        if richiami[(reg, "esperti")] >= richiami[(reg, "principianti")]: fuori.append(f"(1) {nome_reg}: esperti {richiami[(reg, 'esperti')]:.1f}% non meno dei principianti {richiami[(reg, 'principianti')]:.1f}%")
+        # 27 nov 2026 (dichiarato, dopo aver visto i numeri): «esperti meno dei principianti» diventa «non più»: nella Scuola i richiami sono 0-1,7% per tutti
+        # (giri GitHub sulla 1.3.68 e 1.3.71) e a zero il «meno» non poteva passare; nel torneo di Deriva, misurato a parte, i rivali vanno oltre la linea nel 15-18% delle partenze
+        if richiami[(reg, "esperti")] > richiami[(reg, "principianti")]: fuori.append(f"(1) {nome_reg}: esperti {richiami[(reg, 'esperti')]:.1f}% più dei principianti {richiami[(reg, 'principianti')]:.1f}%")
     if errs: non_valido.append(f"errori della pagina: {errs[:2]}")
     print(f"tempo di calcolo: {statistics.median(ms):.2f} ms per secondo simulato (mediana, massimo {max(ms):.2f})", flush=True)
     esito = "NON VALIDO" if non_valido else ("FALLITO" if fuori else "OK")
