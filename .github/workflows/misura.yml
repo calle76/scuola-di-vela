@@ -1,0 +1,125 @@
+# Misure lunghe su GitHub Actions (27 novembre 2026, Ale: «farlo fare a GitHub?»).
+# Lancia uno script di misura (per esempio sperimentale/caso-81/misura_bolina_coppie.py) su un intervallo di semi diviso in pezzi
+# che girano insieme, sul gioco com'è e, se si indica una patch, anche sul gioco con la patch applicata (stessi semi, stessi pezzi).
+# Lo script deve accettare «--semi A-B» e stampare le sue righe sull'uscita; ogni pezzo salva la sua uscita, l'ultimo passo le unisce
+# in un allegato solo (misura-tutto), una per versione, nell'ordine dei semi. Non promuove né boccia: raccoglie numeri da far leggere a Claude.
+# Scheda Actions → «Misura» → «Run workflow»; oppure gh workflow run misura.yml -f script=... -f argomenti=... -f patch=... -f primo=... -f ultimo=...
+# Non scrive niente nel repository e non usa chiavi né password.
+name: Misura
+
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: "Script da lanciare (percorso nel repository)"
+        required: true
+      argomenti:
+        description: "Argomenti dopo --semi (per esempio: --conf m4 --lungo)"
+        default: ""
+      patch:
+        description: "Patch da provare accanto al gioco com'è (percorso; vuoto = solo il gioco com'è)"
+        default: ""
+      primo:
+        description: "Primo seme"
+        required: true
+      ultimo:
+        description: "Ultimo seme"
+        required: true
+      semi_per_pezzo:
+        description: "Semi per ogni pezzo"
+        default: "10"
+      browser:
+        description: "Browser"
+        type: choice
+        options: [chromium, firefox]
+        default: chromium
+
+permissions:
+  contents: read
+
+jobs:
+  piano:
+    name: Piano dei pezzi
+    runs-on: ubuntu-24.04
+    outputs:
+      pezzi: ${{ steps.p.outputs.pezzi }}
+    steps:
+      - id: p
+        env:
+          A: ${{ inputs.primo }}
+          Z: ${{ inputs.ultimo }}
+          K: ${{ inputs.semi_per_pezzo }}
+          PATCH: ${{ inputs.patch }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          a, z, k = int(os.environ["A"]), int(os.environ["Z"]), max(1, int(os.environ["K"]))
+          ver = ["gioco"] + (["patch"] if os.environ.get("PATCH") else [])
+          print("pezzi=" + json.dumps([{"versione": v, "primo": i, "ultimo": min(i + k - 1, z)} for v in ver for i in range(a, z + 1, k)]))
+          PY
+          cat "$GITHUB_OUTPUT"
+
+  pezzo:
+    name: ${{ matrix.versione }} ${{ matrix.primo }}-${{ matrix.ultimo }}
+    needs: piano
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.piano.outputs.pezzi) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Playwright 1.60.0 e il browser
+        run: |
+          python -m venv .venv-collaudi
+          .venv-collaudi/bin/pip install --quiet "playwright==1.60.0"
+          .venv-collaudi/bin/playwright install --with-deps ${{ inputs.browser }}
+      - name: Patch (solo per la versione «patch»)
+        if: matrix.versione == 'patch'
+        env:
+          PATCH: ${{ inputs.patch }}
+        run: git apply "$PATCH" && git diff --stat
+      - name: Misura
+        env:
+          BROWSER: ${{ inputs.browser }}
+          SCRIPT: ${{ inputs.script }}
+          ARGOMENTI: ${{ inputs.argomenti }}
+        run: |
+          mkdir -p uscite
+          # ARGOMENTI senza virgolette di proposito: sono più parole (per esempio --conf m4 --lungo)
+          .venv-collaudi/bin/python "$SCRIPT" --semi ${{ matrix.primo }}-${{ matrix.ultimo }} $ARGOMENTI 2>&1 | tee "uscite/${{ matrix.versione }}-$(printf '%06d' ${{ matrix.primo }}).txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: misura-${{ matrix.versione }}-${{ matrix.primo }}
+          path: uscite/
+          retention-days: 30
+
+  unisci:
+    name: Unisci le uscite
+    needs: pezzo
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: misura-*
+          path: pezzi
+          merge-multiple: true
+      - name: Un file per versione, nell'ordine dei semi
+        run: |
+          mkdir -p tutto
+          for v in gioco patch; do
+            ls pezzi/$v-*.txt >/dev/null 2>&1 || continue
+            for f in $(ls pezzi/$v-*.txt | sort); do echo "## pezzo $(basename "$f" .txt)"; cat "$f"; done > "tutto/$v.txt"
+            echo "$v: $(ls pezzi/$v-*.txt | wc -l) pezzi, $(wc -l < tutto/$v.txt) righe" | tee -a "$GITHUB_STEP_SUMMARY"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: misura-tutto
+          path: tutto/
+          retention-days: 30
