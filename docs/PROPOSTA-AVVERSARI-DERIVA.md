@@ -202,3 +202,11 @@ G4, semi 361-380, Chromium, con A (prima → dopo): penalità 169 → 174 (≤ 1
 
 1. Via al **passo 1 del caso 81** (solo misura, leggero).
 2. Ok a **chiudere il vento sporco** con la condizione scritta sopra.
+
+### 13.4 Esito del passo 1 (27 novembre 2026; gioco 1.3.68 invariato; Chromium, varianti 0-9, i semi del collaudo)
+
+- **Scena vera:** in tutte e 10 le varianti chi cede comincia a scartare dopo 0,27 s, gira al massimo a 25-28 °/s e **orza**: dal traverso (95° dal vento) a 67-73°, cioè prova a passare **davanti**. Riesce in 6 (incontro a 2,6-3,0 s), urta nelle 4 con l'incontro più vicino (0, 2, 6, 8: incontro a 2,0-2,3 s, contatto dopo 1,6-2,1 s).
+- **Conto geometrico (approssimazione dichiarata: velocità costante, accostata a velocità costante, l'altra barca dritta; contatto dal contorno degli scafi del gioco, `hullOverlap`):** **poggiare** (passare di poppa) con la stessa velocità di accostata e lo stesso ritardo **evita il contatto in 10 varianti su 10**; orzare lo evita solo nelle 6 riuscite. Anche partendo subito (0 s) o girando a 30 °/s, orzare urta nelle stesse 4.
+- **Quindi:** secondo la regola scritta al §13.1 vale il primo caso: **la scena è possibile, la guida sceglie male**.
+- **Perché sceglie male (letto nel codice):** `cedeAvv1b` prova gli scarti a partire dalla rotta che la barca **vuole** (di bolina, verso la boa), non da quella che **ha**: dal traverso, «bolina + 28°» è un'orzata di 22°. E `passaggio()` controlla la nuova rotta come se la barca ci fosse già sopra, senza il tempo per girare: a 2 s dall'incontro l'orzata sembra passare a più di due lunghezze ma non c'è il tempo di farla.
+- **Proposta per il passo 2 (aspetta il via):** in `passaggio()` la barca tiene la prua di adesso per il tempo dell'accostata (gradi da girare / **25 °/s**, la velocità misurata qui sul motore, non un'ipotesi) e poi segue la rotta nuova. Niente altro. Criteri quelli del §13.1 (81 almeno 9 su 10 e 17 su 20 sulle varianti 10-29 mai guardate; 80, 82, 83 non peggiorano; torneo: contatti con colpa dei rivali +10% al massimo, bolina degli esperti +2 s al massimo). Rischio in più: anche fuori dal caso 81 i rivali preferiranno passare di poppa quando l'incontro è vicino (è quello che chiede il regolamento a chi cede, quindi atteso).
