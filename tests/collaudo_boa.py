@@ -121,7 +121,8 @@ async def main():
         for o in ("m0", "pin", "cb"):
             I6.append(await pgA.evaluate("""async ([o]) => { const sv = __sv, dt = 1 / 60; const lv = document.getElementById('aiLevel'); lv.value = 'principianti'; lv.dispatchEvent(new Event('change')); __seed(7); sv.simTime = 0; sv.fast(0); sv.openItem(["r", 3]);
               const R = sv.R; while (R.t < 25){ sv.pilota(dt); sv.run(dt, 1); } const m = o === 'pin' ? R.pin : o === 'cb' ? R.cb : R.marks[0], a = R.boats[1]; a.S.x = m.x; a.S.y = m.y; a.S.u = 0; sv.run(dt, 1); return { dentro: o === 'cb' ? polySep(hullWorld(a.S), cbWorld(), a.S.x, a.S.y, R.cb.x, R.cb.y).pen > 0 : distScafoPunto(a.S, m.x, m.y) < 0.9 }; }""", [o]))
-        chk("I6 gli avversari non sono respinti: un avversario messo sopra spillo, comitato e boa resta dentro il raggio (3 prove)", metro.tutti(r["dentro"] for r in I6), str([r["dentro"] for r in I6]))
+        # 1.3.76 (giuria solida per tutti, dichiarato): il comitato respinge anche gli avversari; boa e spillo no, come prima. Ordine delle prove: boa, spillo, comitato
+        chk("I6 un avversario messo sopra boa e spillo resta dentro, sopra il comitato viene respinto (dalla 1.3.76; 3 prove)", metro.tutti([I6[0]["dentro"], I6[1]["dentro"], not I6[2]["dentro"]]), str([r["dentro"] for r in I6]))
         await ctxA.close()
         # ---- F ----
         nreg = int(os.environ.get("REGATE", "60"))

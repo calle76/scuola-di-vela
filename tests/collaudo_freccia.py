@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = (ROOT / "index.html").as_uri()
 BR = os.environ.get("BROWSER", "chromium")
-RIF = "v1.3.71"   # 1.3.35 (8305615) fino al 27 nov 2026 (voce 92): dalla barca M nessuna regata può essere identica; ora guardia di non-regressione sulla 1.3.61
+RIF = "v1.3.76"   # 1.3.35 (8305615) fino al 27 nov 2026 (voce 92): dalla barca M nessuna regata può essere identica; ora guardia di non-regressione sulla 1.3.61
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; window.__seed = v => { s = v; }; })();"""
 bad = []; n_casi = 0

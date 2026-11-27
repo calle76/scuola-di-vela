@@ -12,7 +12,7 @@ import asyncio, json, math, os, pathlib, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
-NREG = int(arg("--regate", "200")); RIF = arg("--rif", "v1.3.71") # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
+NREG = int(arg("--regate", "200")); RIF = arg("--rif", "v1.3.76") # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
 LUNGO = "--lungo" in sys.argv; NT = 3 if LUNGO else 4   # regate di un torneo
 fail, casi = [], {}
 def chk(parte, ok, testo):
