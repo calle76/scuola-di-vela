@@ -93,3 +93,4 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 - **94** (27 nov 2026): semaforo che lampeggiava sulla soglia della regola 16, corretto nella 1.3.64 (la 16 accesa resta almeno 1 s).
 - **85** (27 nov 2026): strambate vere. Chiusa: il difetto veniva da una misura del solo motore (GIRO5 §6); nel gioco la strambata a vela aperta costa già (velocità −45%, 36° con 10 nodi, scuffia 20/20 con 15). `PROPOSTA-STRAMBATE-85.md` §Esito finale, `tests/misura_strambata.py`.
 - **93** (27 nov 2026): al lasco lascare un poco rallentava; corretto nella 1.3.65 con la forma della forza normale di una piastra misurata (F146).
+- **86** (27 nov 2026): strapoggio, fatto nella 1.3.68 (boma che tiene il lato fino a 35° apparenti con la vela aperta, strambata contata al passaggio del boma).

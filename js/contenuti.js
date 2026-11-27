@@ -203,7 +203,7 @@
       text: ["La strambata è più delicata. In poppa la vela è tutta aperta: quando il vento passa dall'altro lato, il boma attraversa la barca di colpo. Se lo fa con violenza può far scuffiare la barca o colpire qualcuno in testa.",
              "Per questo la si fa <em>controllata</em>: si cazza la vela (in questo gioco finché il boma è a circa 45° dal centro barca; le scuole non sono d'accordo su quanto), si poggia finché il vento passa dall'altro lato, poi subito si lasca."] },
     { title: "Strambata violenta", allow: ["gybesV", "capsizes"], tiller: true, autoTrim: true, hud: 1, rose: true, hintKind: "none",
-      text: ["Prima vediamo cosa <em>non</em> fare. Poggia fino alla poppa e continua a poggiare con la vela tutta aperta (si regola da sola) finché il vento passa dall'altro lato."],
+      text: ["Prima vediamo cosa <em>non</em> fare. Poggia fino alla poppa e continua a poggiare con la vela tutta aperta (si regola da sola) finché il boma passa dall'altro lato."],
       cond: (I, S, B) => S.gybesV > B.gybesV, hold: 0.6,
       done: "Il boma ha attraversato la barca di colpo, la barca si è inclinata di colpo (ha <em>sbandato</em>) e ha rallentato: <em>strambata violenta</em>. Se capita senza volerlo, navigando in poppa distratti, si chiama <em>strambata involontaria</em>." },
     { title: "Strambata controllata", tiller: true, sheet: true, hud: 1, rose: true, hintKind: "none",

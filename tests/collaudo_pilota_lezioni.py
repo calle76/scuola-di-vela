@@ -277,8 +277,8 @@ function* bordeggia(C){                                                  // «a 
   }
 }
 function* strambaAperta(C){                                              // «poggia con la vela tutta aperta finché il vento passa dall'altro lato»
-  const l0 = lato(), k = poggiaK();
-  yield* tieni(C, k, () => lato() !== l0, 40);
+  const b0 = __sv.S.boomSide, k = poggiaK();   // 1.3.68 (voce 86): finché passa il boma (in strapoggio, con la vela aperta, il boma resta dalla sua parte oltre la poppa)
+  yield* tieni(C, k, () => __sv.S.boomSide !== b0, 40);
   centra();
 }
 function* strambaBene(C){                                                // «in poppa cazza fino a 45°, poggia finché il vento passa, poi lasca e regola»

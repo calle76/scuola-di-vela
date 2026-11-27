@@ -107,8 +107,9 @@ async def main():
                         r = await pg.evaluate(STRAMBATA, [kn, dir_, sd, scotta]); nb += 1
                         if r.get("cap"): scuf.append((kn, dir_, scotta, sd)); continue  # la barca scuffia nella strambata forzata (soprattutto a 15 nodi con la scotta lasca): lì non si misura il boma, si riporta
                         c = r["cambi"]
-                        if len(c) != 1 or r["tp"] is None or not (-0.01 <= c[0] - r["tp"] <= 1.5): bb.append((kn, dir_, scotta, sd, c, r["tp"]))
-        chk("B3 la prua porta il vento da +150° a −150° (e al contrario) a 5°/s con la scotta lasca e cazzata: il boma cambia lato una sola volta, entro 1,5 s dal passaggio (%d prove valide su %d; %d con scuffia escluse, di cui %d a 15 nodi; soglia: almeno 24 valide; metro cambiato dopo averlo visto, dichiarato)" % (nb - len(scuf), nb, len(scuf), sum(1 for x in scuf if x[0] == 15)), nb == 36 and nb - len(scuf) >= 24 and not bb, str(bb[:3]))
+                        lim = 1.5 if scotta < 0.5 else 8.5   # 1.3.68 (voce 86): con la scotta lasca il boma tiene il suo lato in strapoggio fino a 35° di vento apparente (7 s a 5°/s, più 1,5 s)
+                        if len(c) != 1 or r["tp"] is None or not (-0.01 <= c[0] - r["tp"] <= lim): bb.append((kn, dir_, scotta, sd, c, r["tp"]))
+        chk("B3 la prua porta il vento da +150° a −150° (e al contrario) a 5°/s con la scotta lasca e cazzata: il boma cambia lato una sola volta, entro 1,5 s dal passaggio con la scotta cazzata ed entro 8,5 s con la lasca (strapoggio, dalla 1.3.68) (%d prove valide su %d; %d con scuffia escluse, di cui %d a 15 nodi; soglia: almeno 24 valide; metro cambiato dopo averlo visto, dichiarato)" % (nb - len(scuf), nb, len(scuf), sum(1 for x in scuf if x[0] == 15)), nb == 36 and nb - len(scuf) >= 24 and not bb, str(bb[:3]))
         # ---- B5: nessun saltello altrove ----
         z = []
         for twa in (30, 60, -30):  # 150°, 120°, 210° dal vento: poppa non piena

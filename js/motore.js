@@ -63,7 +63,7 @@ const RUD2_SICURA = 35 / 45; // 1.0.25: la sola freccia porta la barra fino a 35
 // 1.0.32: raddrizzata dell'1b (docs/archivio/PROPOSTA-RADDRIZZATA.md): più lunga e con la barca al traverso, vela tutta lascata che sbatte,
 // come negli schemi di un video di allenamento (raddrizzare con la schiena al vento, 15-20 s in tutto). Fino alla 1.0.78 l'1a: 3 s e 60°.
 const RADD2 = { t: 10, tAI: 15, twa: 90 }; // secondi dal tasto A (giocatore), secondi dalla scuffia (avversari), gradi dal vento
-const BOOM_ISTERESI = 5; // 1.0.71: gradi da dietro (vento apparente a ±180°) entro i quali il boma tiene il lato che aveva; ipotesi nostra, nessuna fonte (docs/PROPOSTA-BOMA-IN-POPPA.md)
+const BOOM_ISTERESI = 35; /* 1.3.68 (voce 86, docs/PROPOSTA-STRAPOGGIO-86.md): strapoggio fino a 35 gradi di vento apparente oltre la poppa (circa 15 di vento vero) col boma dal suo lato. IPOTESI di Claude: Magnander F120/F124 misura la stessa spinta fino a 190 gradi apparenti; Schutt F109 nelle S arriva a circa 40 gradi apparenti. Prima prova con 20: a 195 gradi veri strambava ancora (scelto dopo, dichiarato); era 5 */ // 1.0.71: gradi da dietro (vento apparente a ±180°) entro i quali il boma tiene il lato che aveva; ipotesi nostra, nessuna fonte (docs/PROPOSTA-BOMA-IN-POPPA.md)
 // 1.0.26: «spingi il boma» dell'1b (docs/archivio/PROPOSTA-SPINGI-BOMA.md). Con C.push il boma resta a BOMA2.angle dalla parte
 // dove si trovava quando si è cominciato a spingere; la vela è una piastra investita dal vento (forza normale CN = CL cos α + CD sin α)
 // applicata al centro velico lungo il boma, quindi spinge indietro, di lato e fa girare la prua verso il boma. Costanti: stime senza fonte.
@@ -244,7 +244,10 @@ function step(S, C, E, dt){
   // 1.0.71 (docs/PROPOSTA-BOMA-IN-POPPA.md, osservazione 63): con il vento apparente quasi esattamente da poppa il segno di awa oscilla (onde, assetto) e il boma saltellava da un lato all'altro;
   // ora il lato cambia solo se il vento apparente è passato oltre BOOM_ISTERESI gradi da dietro. Il lato del boma non entra nelle forze (solo disegno, lato della scuffia, lato del peso dell'equipaggio).
   const latoBoma = awa >= 0 ? -1 : 1; // -1: boma a sinistra
-  S.boomSide = push ? S.pushSide : (S.boomSide && latoBoma !== S.boomSide && A > 180 - BOOM_ISTERESI) ? S.boomSide : latoBoma;
+  /* 1.3.68 (voce 86): il margine cresce con l'apertura del boma: 5 gradi col boma sotto i 45 (strambata controllata, come prima), fino a BOOM_ISTERESI col boma tutto fuori
+     (strapoggio). Chi vuole strambare cazza e il boma passa subito; chi lo tiene aperto puo' scendere oltre la poppa. */
+  const ister = 5 + (BOOM_ISTERESI - 5) * Math.max(0, Math.min(1, (sheetMax - 45) / (BOAT.maxBoom - 45)));
+  S.boomSide = push ? S.pushSide : (S.boomSide && latoBoma !== S.boomSide && A > 180 - ister) ? S.boomSide : latoBoma;
   S.boom = push ? BOMA2.angle : boom;
   S.pushing = !!push;
   return { heel: S.heel, hike: S.hike, awa, aws, alpha, awFrom, drive, side, twa: norm180(E.twd - S.h), leeway: Math.atan2(S.vl, Math.max(0.3, Math.abs(S.u))) / D2R };

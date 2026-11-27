@@ -13,7 +13,7 @@
   let S, info, base = {}, userZoom = 1, camZoom = 1, simTime = 0, curMarks = [], geo = null;
   let allowSem = [], allowTiller = false, allowSheet = false;
   const freeEnv = { twd: 0, tws: 10, gusts: 1 }; // fino alla 1.0.78 anche lv, la scelta fra la barca dell'1a e quella dell'1b (docs/PROPOSTA-PULIZIA-CODICE.md)
-  const VERSIONE = "1.3.67"; // sola fonte: menu, mare e registratore la leggono da qui
+  const VERSIONE = "1.3.68"; // sola fonte: menu, mare e registratore la leggono da qui
 
   function freshState(x, y, h, sheet){
     const twa = norm180(env.twd - h);
@@ -920,9 +920,13 @@
   function toast(text, t = 2.6){ S.toast = { text, t }; if (TOAST_LOG){ TOAST_LOG.push({ t: simTime, text }); if (TOAST_LOG.length > 200) TOAST_LOG.shift(); } }
   function detectManeuvers(){
     const twa = norm180(local.twd - S.h), side = sgn(twa), A = Math.abs(twa);
-    if (side === S.prevSide || A < 1 || A > 179) return;
-    const mure = side > 0 ? "mure a dritta" : "mure a sinistra";
-    if (A < 90){ S.tacks++; S.boomRate = 3; toast("Virata: ora " + mure); }
+    /* 1.3.68 (voce 86, docs/PROPOSTA-STRAPOGGIO-86.md): la strambata si conta quando passa il boma, non quando cambia di segno il vento vero: in strapoggio
+       (fino a BOOM_ISTERESI gradi di vento apparente oltre la poppa) il boma resta dal suo lato e non c'è strambata. Prima, a 1 grado oltre la poppa, strambata (violenta con la vela aperta) */
+    const passaBoma = S.prevBoom !== undefined && S.boomSide !== S.prevBoom && A >= 90; S.prevBoom = S.boomSide;
+    if (A >= 90 && !passaBoma){ if (A <= 179 && A >= 1) S.prevSide = side; return; }
+    if (!passaBoma && (side === S.prevSide || A < 1 || A > 179)) return;
+    const mure = (passaBoma ? -S.boomSide : side) > 0 ? "mure a dritta" : "mure a sinistra";
+    if (!passaBoma){ S.tacks++; S.boomRate = 3; toast("Virata: ora " + mure); }
     else {
       const sheetMax = BOAT.minBoom + ctl.sheet * (BOAT.maxBoom - BOAT.minBoom);
       if (sheetMax > 45){ S.gybesV++; regAdd("gybesV"); S.gybeAt = simTime; S.u *= 0.55; S.heelRate += GYBE_KICK * D2R * Math.pow(local.tws / (15 / KN), 1.6) * (0.85 + Math.random() * 0.4); // colpo del boma in gradi/s (il motore usa radianti/s); più vento, colpo più forte

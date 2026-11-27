@@ -24,6 +24,19 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.68 — Lo strapoggio (voce 86)
+
+- **Perché:** in poppa piena, appena la prua passava i 180° dal vento vero, il gioco contava una strambata (violenta con la vela aperta: velocità ×0,55, colpo, scuffia con 15 nodi), anche se il boma non si era mosso; oscillando di un grado attorno a 180° le strambate si ripetevano. Andare in strapoggio era impossibile. Proposta: `docs/PROPOSTA-STRAPOGGIO-86.md`; via di Ale del 27 nov.
+- **Le fonti:** Magnander (F120, F124): con 10° di strapoggio (vento apparente 190°) la vela spinge quanto in poppa piena. Schutt (F109): nelle S il vento apparente arriva a circa 40° oltre la poppa. **Il guadagno di VMG delle S misurato da Schutt viene dalla parte non stazionaria** (barca che gira e sbanda, vortici): il motore, a forze di regime, non lo dà, e questa versione non lo recupera.
+- **Cosa cambia:**
+  1. il boma tiene il suo lato oltre la poppa per un margine che dipende da quanto è aperto: **5°** col boma sotto i 45° (strambata controllata, come prima), fino a **35°** di vento apparente (circa 15° di vento vero) col boma tutto fuori (IPOTESI di Claude; prima prova con 20°: a 195° veri strambava ancora, scelto dopo e dichiarato);
+  2. la strambata si conta **quando passa il boma**, non quando cambia di segno il vento vero;
+  3. le forze non cambiano (simmetriche, come i dati di Magnander fino a 190°).
+- **Lezione 5.7:** «finché il vento passa dall'altro lato» → «finché il boma passa dall'altro lato».
+- **Misure (criteri S1-S5, scritti prima):** S1 polare, raffiche e virate, `rotta-dati.js` identici; `impronta1b.txt` riscritto (2 corse di strambata diverse). S2 (`tests/misura_strapoggio.py`, nuovo): a 190° e 195° dal vento vero con la vela aperta, con 6, 10 e 15 nodi, nessuna strambata, boma dalla sua parte, velocità uguale a 165-170° (per esempio 10 nodi: 4,51-4,52). S3: a 205° il boma passa da solo (con 15 nodi e la vela aperta si scuffia). S4 (`misura_strambata.py`): vela aperta violenta 20/20 (scuffia 20/20 con 15 nodi), scotta corta mai. S5: lezioni col pilota 5.7 100/100, 5.8 96/100 (prima 95-97), il resto come prima; medaglie identiche; `collaudo_lezioni`, `collaudo_pannello` verdi.
+- **Collaudi:** `collaudo_boma_poppa` B3: con la scotta lasca il boma passa entro 8,5 s (strapoggio), con la cazzata entro 1,5 s come prima; il pilota della 5.7 in `collaudo_pilota_lezioni` poggia finché passa il boma. I 7 confronti al bit portati alla 1.3.68.
+- **Da sapere (non cambiato):** per il regolamento le mure dipendono dal lato del boma; il gioco le prende dal vento vero (`tackOf`). In strapoggio le due cose possono differire: per la regola 10 vale ancora il vento vero.
+
 ## 1.3.67 — Il suono della boa più forte (voce 18)
 
 - **Perché:** in `collaudo_suoni_si_sentono` il suono della boa era al limite (alza la banda 200-5000 Hz di 6,1-10,5 dB, soglia 6: dei tre ritagli scelti a caso uno è più debole); nei giri vecchi a volte cadeva. Il sartiame resta com'è (Ale, 23 nov).

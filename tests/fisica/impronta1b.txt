@@ -13,8 +13,8 @@ virata 10 nodi freccia: ad00a8ec75997b43
 virata 10 nodi Maiusc: f76a5a198538a1e0
 virata 16 nodi freccia: 4b2fd8c190777c2e
 virata 16 nodi Maiusc: ffdc90bedb04e96d
-strambata 10 nodi: 3f07f38d54c03c4f
-strambata 16 nodi: 953a957b693dd203
+strambata 10 nodi: 77c55c99cecadf9b
+strambata 16 nodi: 56df6344816dd973
 raffica 10→18 nodi: 3319657b56bb0c1b
 raffica 10→18 nodi lascando: f0fc4de241c58d50
 raffica 10→24 nodi: dc32563f71fcfe6e
