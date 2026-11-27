@@ -2,22 +2,21 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, primo pomeriggio (gioco alla **1.3.70**, tag `v1.3.70`).*
+*Aggiornato: 27 novembre 2026, pomeriggio (gioco alla **1.3.71**, tag `v1.3.71`).*
+
+- **1.3.71 (voce 2, caso 81):** chi cede a una barca con le mure diverse guarda gli scafi e il tempo per girare; 81 da 8 a 20 su 20, torneo invariato (bolina esperti +0,4 s, contatti 497 → 496 sui semi di conferma). **Giro «Misura» su GitHub** (`.github/workflows/misura.yml`): 450 regate lunghe in pochi minuti, da usare per le misure grandi invece del PC.
 
 - **1.3.70 (27 nov, voce 96):** in poppa, fuori dalle lezioni, il pannello spiega lo strapoggio (scotta tutta lasca per scendere oltre la poppa; cazzando strambi).
 
 - **1.3.69 (27 nov):** in moviola le frecce del vento reale e apparente seguono l'istante rivisto (oss. 146; `collaudo_frecce_moviola.py`, Chromium e Firefox).
-- **Voce 2, caso 81, passo 2: non adottato** (§13.5 di `PROPOSTA-AVVERSARI-DERIVA.md`): come proposto 81 resta 6 su 10; con scafi e accostata 81 va a 10 su 10 ma 82 scende a 8 su 10. Prova in `sperimentale/caso-81/`.
-- **Regate di Ale del 27 mattina** (oss. 147-148; giocate sulla guida di prova): contatto Rossa-Blu alla boa di poppa (regola 16 mentre la Blu gira la boa, voce 2); strapoggio che «non riesce» = Ale cazzava in poppa, cioè il comando per strambare (corretto nella 1.3.70).
+- **Regate di Ale del 27 mattina** (oss. 147-148; giocate sulla guida di prova della mattina): contatto Rossa-Blu alla boa di poppa (regola 16 mentre la Blu gira la boa, voce 2); strapoggio che «non riesce» = Ale cazzava in poppa, cioè il comando per strambare (corretto nella 1.3.70).
 
 - **Dal 27 nov push e giri GitHub li fa Claude** (solo `main` e tag, a collaudi verdi, mai `--force`; `main` protetto su GitHub dalla regola `proteggi-main`). Giro completo solo a fine blocco.
 - **Giro GitHub sulla 1.3.68 (run 45957380469, letto per intero, anche «da controllare»):** corretti nei collaudi (commit `e209993`, gioco invariato) `registro` (strambata col verso fisso, scuffia al traverso: 15/15 nei due browser) e `contatto_vero` (contatto registrato al passo dopo in una mischia a tre: metro cambiato, dichiarato). Restano: `moto_mare` Firefox (ora col seme fisso; beccheggio in poppa 3,8-4,6 px contro 4,4: solo disegno, soglia invariata), `giri_avversari` G12 Chromium (1 su 267, a 78° sul bordo della fascia esclusa), e i noti della voce 2 (`partenze`, `avversari1b` 5 Firefox, `avversari_deriva` 81; l'83 ora passa anche in Chromium), `regola21` K3 Firefox. Lezioni semi 1-100: solo i casi noti 5.8, 6.2, 6.3.
-- **Voce 2: parte bolina chiusa** (Ale, 27 nov). Restano 81, 83 e vento sporco.
 
 - **Versioni di questa sessione:** 1.3.62 (pannello 6.3, collaudi), 1.3.63 (vela libera, «Stare fermi»), 1.3.64 (semaforo della regola 16), 1.3.65 (lasco: lascare non rallenta, fonte F146), 1.3.66 (regate lunghe 9-11 min: bastone 620 m, triangolo 470 m), 1.3.67 (suono della boa), 1.3.68 (strapoggio). Dettagli in `CHANGELOG.md`.
 - **Voci chiuse:** 85 (la strambata a vela aperta costava già: errore di misura del quinto giro), 86, 89, 91, 93, 94, 18; 17 non riprodotta.
-- **Voce 2:** bolina dei rivali vicina al raggiungibile (metro «miope», §18): proposta di chiuderla; caso 81 provato e scartato (§12 di `PROPOSTA-AVVERSARI-DERIVA.md`).
-- **Regola nuova di Ale (27 nov):** le scelte tecniche le fa Claude e le dichiara. **A ogni cambio di barca** si portano alla versione nuova i 7 confronti al bit dei collaudi (ora sulla 1.3.68).
+- **Regola nuova di Ale (27 nov):** le scelte tecniche le fa Claude e le dichiara. **A ogni cambio di barca** (e di guida dei rivali) si portano alla versione nuova i 7 confronti al bit dei collaudi (ora sulla 1.3.71).
 
 ## Dove siamo
 
@@ -42,7 +41,7 @@
 
 ## Prossimi passi (per la sessione nuova)
 
-1. **Voce 2, caso 81:** terza prova (§13.7 di `PROPOSTA-AVVERSARI-DERIVA.md`, patch v3 in `sperimentale/caso-81/`): casi 80-83, coppie e contatti a posto, ma bolina degli esperti +4,2 s di mediana in un gruppo di semi (soglia +2): non adottata. Dove si perdono (§13.8): +0,6 s per barca di cessione in più e +2% di virate; il resto è rumore: con 90 regate l'intervallo al 95% è circa ±12 s, la soglia di +2 s non si può verificare. Aspetta Ale: misura 5 volte più grande, o decidere sul campione di oggi. Poi l'oss. 147 (regola 16 alla boa). Vento sporco chiuso.
+1. **Voce 2:** caso 81 chiuso nella 1.3.71 (§13.9). Restano l'oss. 147 (rivale con la precedenza che gira la boa e prende la regola 16 «scostandosi» verso l'altra) e l'83 (verde ora). Vento sporco chiuso.
 2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 

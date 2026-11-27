@@ -29,7 +29,7 @@ import asyncio, json, math, os, pathlib, re, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
-NREG = int(arg("--regate", "20")); RIF = arg("--rif", "v1.3.68")   # 1.3.10: le regole 15 e 16 cambiano apposta le penalità del torneo (riferimento 1.3.10, prima la 1.3.2); 27 nov 2026 (voce 92): la barca M (1.3.59-1.3.61) cambia apposta gli arrivi, riferimento la 1.3.61
+NREG = int(arg("--regate", "20")); RIF = arg("--rif", "v1.3.71")   # 1.3.10: le regole 15 e 16 cambiano apposta le penalità del torneo (riferimento 1.3.10, prima la 1.3.2); 27 nov 2026 (voce 92): la barca M (1.3.59-1.3.61) cambia apposta gli arrivi, riferimento la 1.3.61
 src = (ROOT / "tests" / "collaudo_rotta_assoluta.py").read_text().split("async def main")[0]
 A = {"__file__": str(ROOT / "tests" / "collaudo_rotta_assoluta.py")}; exec(src, A); CORSA = A["CORSA"]
 LUNGO = "--lungo" in sys.argv   # 1.3.27 (voce 66): le stesse prove sulle regate lunghe del torneo (bolina 560 m, triangolo 460 m); K1 saltato: il riferimento non ha regate lunghe

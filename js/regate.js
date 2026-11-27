@@ -465,6 +465,7 @@
     // chi deve cedere si scosta (cedeAvv1b, qui sotto). Fino alla 1.0.78 la barca dell'1a aveva qui una regola 10 sua e uno scarto da qualsiasi barca davanti
     if (R.giri && hold && b.gDebt > 0 && !b.ocs) hold = false; // 1.2.18 (docs/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md §12, Ale): con un debito di giri non si aspetta fermi, anche a costo di rovinare la partenza
     if (!hold) desired = cedeAvv1b(b, desired, twd, side, ai);
+    b.ndCede = !hold && b.cedeA && R.t >= 0 ? desired : null; /* la rotta su cui sta cedendo: passaggioScafi la usa per prevedere questa barca */
     if (R.giri && !hold){ const sp = giroSpazioAI(b, desired, twd, ai); if (sp !== null) desired = sp; } // 1.2.18: con un debito e il gruppo vicino, si scosta il minimo che basta per avere spazio
     // 1.0.67 (docs/PROPOSTA-GIRI-AVVERSARI.md): chi ha un debito di giri e la via libera segue la sequenza dei giri al posto della rotta; le tre regole qui sotto (angolo morto, abbrivio, piantata) non valgono
     const gm = R.giri ? giroAI(b, dt, twd, ai) : null;
@@ -533,7 +534,7 @@
     const o = best.o, devo = (guarda() && R.t >= 0 ? chiCede1516(b, o, true) : chiCede(b, o)).cede === b; b.cedeA = devo ? o : null; // 1.3.11: in Deriva anche le regole 15 e 16; 1.3.56: solo dopo lo sparo
     // ha la precedenza: tiene la rotta (regole 14 e 16) fino a ULTIMO lunghezze
     if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; }
-    if (b.cedeDa === null || b.cedeDa === undefined) b.cedeDa = R.t;
+    if (b.cedeDa === null || b.cedeDa === undefined){ b.cedeDa = R.t; b.cedeH = s.h; } /* cedeH: la prua di quando è cominciato lo scarto, base fissa degli scarti di chi cede */
     if (R.t - b.cedeDa > SCARTO_MAX){ b.rottaU = null; return desired; } // nessuno scarto dura per sempre: due barche parallele e vicine si tenevano a vicenda su una rotta (misurato: 2 barche mai arrivate)
     if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = s.h; // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
     // Deriva, fette 2 e 3 (docs/PROPOSTA-AVVERSARI-DERIVA.md): si prova lo scarto più piccolo che passa lontano da TUTTE le barche vicine. Chi cede parte dalla rotta che vuole,
@@ -544,13 +545,17 @@
     const prima = devo && tackOf(b) !== tackOf(o) ? -lato : (relB >= 0 ? -1 : 1); // la direzione preferita: mure diverse poggia e passa di poppa; se no, via dall'altra barca
     const mk = b.leg >= 1 && b.leg <= R.marks.length ? R.marks[b.leg - 1] : null, boa = mk && mk.out !== undefined && Math.hypot(mk.x - s.x, mk.y - s.y) < 40 ? { x: mk.x, y: mk.y, ox: Math.sin(mk.out * D2R), oy: -Math.cos(mk.out * D2R) } : null;
     let scelta = null, meglio = -1;
-    for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
-      const nd = rotta + dir * da, t2 = norm180(twd - nd);
+    /* 1.3.71 (voce 2, caso 81, docs/PROPOSTA-AVVERSARI-DERIVA.md §13.4-13.9): dopo lo sparo, chi cede a una barca con le mure diverse prova gli scarti anche dalla prua che
+       aveva quando lo scarto è cominciato (dal traverso, partendo dalla bolina, poggiava al massimo a 110°) e li giudica con passaggioScafi. Solo fra mure diverse:
+       con le stesse mure le coppie dopo il via crescevano (28 -> 47 su 450 regate) */
+    const nuova = devo && R.t >= 0 && tackOf(b) !== tackOf(o);
+    for (const base of nuova ? [rotta, b.cedeH] : [rotta]) for (const da of devo ? SCARTI : SCARTI.slice(0, 3)) for (const dir of [prima, -prima]){
+      const nd = base + dir * da, t2 = norm180(twd - nd);
       if (sgn(t2) !== lato || Math.abs(t2) < ai.up - 2 || Math.abs(t2) > 172) continue;
       if (Math.abs(norm180(twd - rotta)) > 100 && Math.abs(t2) < 90) continue; // chi scende non torna verso la bolina per cedere (osservazione 80)
       if (s.u < U_ABBRIVIO && Math.abs(t2) < ai.up + 10) continue; // lenta non orza: si pianterebbe (dalla misura: piantate al via)
       if (boa){ const px = s.x + Math.sin(nd * D2R) * 25, py = s.y - Math.cos(nd * D2R) * 25; if (Math.hypot(px - boa.x, py - boa.y) < Math.hypot(s.x - boa.x, s.y - boa.y) - 10 && (px - boa.x) * boa.ox + (py - boa.y) * boa.oy < 0) continue; } // vicino alla boa non si taglia dalla parte interna
-      const lib = passaggio(b, nd);
+      const lib = nuova ? passaggioScafi(b, nd) : passaggio(b, nd); /* 1.3.71: due lunghezze libere fra gli scafi, con l'accostata */
       if (lib >= 2 * L) return nd;
       if (lib > meglio){ meglio = lib; scelta = nd; }
     }
@@ -573,6 +578,32 @@
       const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
       const t = w2 > 1e-6 ? clamp(-(rx * wx + ry * wy) / w2, 0, T_CEDE) : 0;
       min = Math.min(min, Math.hypot(rx + wx * t, ry + wy * t));
+    }
+    return min;
+  }
+  // 1.3.71 (voce 2, caso 81, docs/PROPOSTA-AVVERSARI-DERIVA.md §13.4-13.9): per chi cede. La barca gira dalla prua di adesso verso nd a ACCOSTA °/s (misurato sul
+  // motore) e poi va dritta; si guarda la distanza fra gli SCAFI (segmenti lunghi BOAT.length), a passi di PASSO_ACC s per T_CEDE s. Con passaggio() la rotta nuova
+  // si contava come già presa e si misurava fra i centri: a 2 s dall'incontro orzare e poggiare sembravano uguali (2,6-2,8 m fra i centri) e la barca orzava e urtava
+  const ACCOSTA = 25, PASSO_ACC = 0.1; // °/s misurati (25-28 nel caso 81); 0,1 s ipotesi nostra. Orizzonte T_CEDE, come passaggio()
+  function distSeg(ax, ay, bx, by, cx, cy, dx, dy){ // distanza fra i segmenti AB e CD (zero se si incrociano)
+    const pt = (px, py, qx, qy, rx, ry) => { const ex = rx - qx, ey = ry - qy, e2 = ex * ex + ey * ey, k = e2 > 1e-9 ? clamp(((px - qx) * ex + (py - qy) * ey) / e2, 0, 1) : 0; return Math.hypot(px - qx - ex * k, py - qy - ey * k); };
+    const cr = (px, py, qx, qy, rx, ry) => (qx - px) * (ry - py) - (qy - py) * (rx - px);
+    if (cr(ax, ay, bx, by, cx, cy) * cr(ax, ay, bx, by, dx, dy) < 0 && cr(cx, cy, dx, dy, ax, ay) * cr(cx, cy, dx, dy, bx, by) < 0) return 0;
+    return Math.min(pt(ax, ay, cx, cy, dx, dy), pt(bx, by, cx, cy, dx, dy), pt(cx, cy, ax, ay, bx, by), pt(dx, dy, ax, ay, bx, by));
+  }
+  function passaggioScafi(b, nd){
+    const s = b.S, u = Math.max(s.u, 1), h2 = BOAT.length / 2, dh = norm180(nd - s.h), gv = sgn(dh), tg = Math.abs(dh) / ACCOSTA;
+    let min = 1e9;
+    for (const o of R.boats){
+      if (o === b || o.fin !== null || o.dnf || o.S.capsized) continue;
+      if (Math.hypot(o.S.x - s.x, o.S.y - s.y) > D_CEDE) continue;
+      const uo = o.S.u, ho = o.ndCede != null ? o.ndCede : o.S.h, dho = norm180(ho - o.S.h), tgo = Math.abs(dho) / ACCOSTA, gvo = sgn(dho); /* chi sta cedendo si prevede mentre gira verso la sua rotta */
+      let px = s.x, py = s.y, qx = o.S.x, qy = o.S.y;
+      for (let t = 0; t <= T_CEDE; t += PASSO_ACC){
+        const h = t < tg ? s.h + gv * ACCOSTA * t : nd, fx = Math.sin(h * D2R), fy = -Math.cos(h * D2R), hq = t < tgo ? o.S.h + gvo * ACCOSTA * t : ho, gx = Math.sin(hq * D2R), gy = -Math.cos(hq * D2R);
+        min = Math.min(min, distSeg(px - fx * h2, py - fy * h2, px + fx * h2, py + fy * h2, qx - gx * h2, qy - gy * h2, qx + gx * h2, qy + gy * h2));
+        px += fx * u * PASSO_ACC; py += fy * u * PASSO_ACC; qx += gx * uo * PASSO_ACC; qy += gy * uo * PASSO_ACC;
+      }
     }
     return min;
   }
