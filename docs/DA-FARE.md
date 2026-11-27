@@ -12,7 +12,7 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 92 | **Collaudi da adattare alla barca M:** fatti nelle 1.3.62-1.3.66 (pannello, Deriva superata, Coach, semaforo, confronti al bit, suggerimento, giri, lezione dei salti, segnali, percorso lungo, competizione «dai tempi», `giri_avversari` a 300 regate). **Restano** (giro sulla 1.3.65, run 45935566969): `competizione` C1 (contro i principianti il pilota arriva 2° nel 46%: equilibrio, voce 2), `partenze` e `avversari1b` scenario 5 (rivali, voce 2), `avversari_deriva` 81/83 (voce 2), `regola21` K3 in Firefox (1 su 4, intermittente già sulla 1.3.56), `storico_frase` R7 in Firefox (1 frase su 232), `moto_mare` e `lezioni` L6 in Firefox (sul PC in Chromium verdi) | `CHANGELOG.md` 1.3.62-1.3.66 | Sonnet |
+| 92 | **Collaudi da adattare alla barca M:** fatti nelle 1.3.62-1.3.66 (pannello, Deriva superata, Coach, semaforo, confronti al bit, suggerimento, giri, lezione dei salti, segnali, percorso lungo, competizione «dai tempi», `giri_avversari` a 300 regate). Corretti dopo il giro sulla 1.3.68 (run 45957380469): `registro`, `contatto_vero`. **Restano** (stesso giro): `partenze`, `avversari1b` 5 (Firefox) e `avversari_deriva` 81 (rivali, voce 2), `regola21` K3 in Firefox (intermittente), `moto_mare` in Firefox (seme fisso, 3,8-4,6 px contro 4,4, solo disegno), `giri_avversari` G12 Chromium (1 su 267 sul bordo della soglia) | `CHANGELOG.md` 1.3.62-1.3.66 | Sonnet |
 | 49 | **Regola 18 (spazio alla boa) dentro Deriva:** versione A fatta nella 1.3.49 (colpa, semaforo, zona disegnata, lezione 25). **Versione B (rivali che danno spazio): proposta e misura fatte il 24 nov, consiglio «non ora»** (7 momenti utili in 90 regate), si decide con Z7 (`PROPOSTA-REGOLA-18-B.md`). Z7: rifare `conta_boa_zona.py` sulle prime regate di Ale e Lucio con la 18; dalla 1.3.56 (4B accesa) guardare anche i contatti entro 12,6 m dalla boa, col pilota 7 → 13, e `collaudo_avversari1b` scenario 5 (tre rivali alla boa: 9-10 → 7 su 10) | `PROPOSTA-REGOLA-18.md` | Opus |
 
 ## 2. Proposte scritte o da scrivere: aspettano il via
@@ -57,7 +57,7 @@
 | --- | --- |
 | 10 | **Giudizio dei suoni** all'ascolto |
 | 14 | **Copia di sicurezza fuori da GitHub:** registrazioni copiate il 25 nov sul disco esterno; da ripetere ogni tanto con `bash tests/copia_su_disco.sh` |
-| — | **Push** (`git push origin main --tags`), la domanda a Lucio sul finale (oss. 135), le pagine di `racingrulesofsailing.org` in `fonti-pdf/` |
+| — | La domanda a Lucio sul finale (oss. 135), le pagine di `racingrulesofsailing.org` in `fonti-pdf/` |
 
 ## Archivio
 

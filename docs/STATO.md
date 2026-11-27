@@ -2,13 +2,16 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, fine mattina (gioco alla **1.3.68**, tag `v1.3.68`). Fine della sessione lunga del 26-27 nov.*
+*Aggiornato: 27 novembre 2026, tarda mattina (gioco alla **1.3.68**, tag `v1.3.68`).*
+
+- **Dal 27 nov push e giri GitHub li fa Claude** (solo `main` e tag, a collaudi verdi, mai `--force`; `main` protetto su GitHub dalla regola `proteggi-main`). Giro completo solo a fine blocco.
+- **Giro GitHub sulla 1.3.68 (run 45957380469, letto per intero, anche «da controllare»):** corretti nei collaudi (commit `e209993`, gioco invariato) `registro` (strambata col verso fisso, scuffia al traverso: 15/15 nei due browser) e `contatto_vero` (contatto registrato al passo dopo in una mischia a tre: metro cambiato, dichiarato). Restano: `moto_mare` Firefox (ora col seme fisso; beccheggio in poppa 3,8-4,6 px contro 4,4: solo disegno, soglia invariata), `giri_avversari` G12 Chromium (1 su 267, a 78° sul bordo della fascia esclusa), e i noti della voce 2 (`partenze`, `avversari1b` 5 Firefox, `avversari_deriva` 81; l'83 ora passa anche in Chromium), `regola21` K3 Firefox. Lezioni semi 1-100: solo i casi noti 5.8, 6.2, 6.3.
+- **Voce 2: parte bolina chiusa** (Ale, 27 nov). Restano 81, 83 e vento sporco.
 
 - **Versioni di questa sessione:** 1.3.62 (pannello 6.3, collaudi), 1.3.63 (vela libera, «Stare fermi»), 1.3.64 (semaforo della regola 16), 1.3.65 (lasco: lascare non rallenta, fonte F146), 1.3.66 (regate lunghe 9-11 min: bastone 620 m, triangolo 470 m), 1.3.67 (suono della boa), 1.3.68 (strapoggio). Dettagli in `CHANGELOG.md`.
 - **Voci chiuse:** 85 (la strambata a vela aperta costava già: errore di misura del quinto giro), 86, 89, 91, 93, 94, 18; 17 non riprodotta.
 - **Voce 2:** bolina dei rivali vicina al raggiungibile (metro «miope», §18): proposta di chiuderla; caso 81 provato e scartato (§12 di `PROPOSTA-AVVERSARI-DERIVA.md`).
 - **Regola nuova di Ale (27 nov):** le scelte tecniche le fa Claude e le dichiara. **A ogni cambio di barca** si portano alla versione nuova i 7 confronti al bit dei collaudi (ora sulla 1.3.68).
-- **Giro GitHub lanciato da Ale sulla 1.3.67** (prima della 1.3.68): da leggere per intero nella sessione nuova; poi un giro sulla 1.3.68.
 
 ## Dove siamo
 
@@ -21,7 +24,7 @@
 ## A inizio sessione
 
 1. Leggere questa pagina e `DA-FARE.md`; `git status --short` (i file non tracciati dell'ambiente si lasciano fuori).
-2. **Chiedere ad Ale due cose:** se ha pushato, e **se i crediti sono tornati** (non si vede dai file): da quello dipende se si parte da una voce grossa o solo da lavori leggeri.
+2. **Chiedere ad Ale se i crediti sono tornati** (non si vede dai file): da quello dipende se si parte da una voce grossa o solo da lavori leggeri.
 3. Se ci sono regate nuove, o è passato tempo: ricordargli il disco esterno (`bash tests/copia_su_disco.sh`).
 4. **«Via già dato» = si può eseguire quando i crediti ci sono**; senza il via si scrive solo la proposta (le due fermate di `CLAUDE.md`).
 
@@ -33,9 +36,8 @@
 
 ## Prossimi passi (per la sessione nuova)
 
-1. Leggere per intero il giro GitHub sulla 1.3.67, poi chiedere ad Ale il giro sulla 1.3.68 (strapoggio: guardare strambate, lezioni 5.x, boma in poppa, regole in poppa).
-2. Voce 92: i rossi rimasti (competizione C1, partenze, avversari1b 5, regola21 K3 e storico_frase R7 in Firefox).
-3. Voce 2: caso 81 scena per scena; vento sporco. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
+1. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso.
+2. Voce 2: caso 81 scena per scena; vento sporco. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
 ## Cosa aspetta Ale
@@ -52,9 +54,9 @@
 
 ## Come si lavora qui
 
-- Due fermate per ogni compito: proposta, poi codice dopo il via (`METODO.md`, `CLAUDE.md`). Soglie scritte prima. I commit li faccio io (file uno per uno, mai `git add -A`), il push lo fa Ale.
+- Due fermate per ogni compito: proposta, poi codice dopo il via (`METODO.md`, `CLAUDE.md`). Soglie scritte prima. Commit e push li faccio io (file uno per uno, mai `git add -A`, mai `--force`).
 - **Come si lancia un collaudo:** `.venv-collaudi/bin/python tests/freno.py 64 55 .venv-collaudi/bin/python tests/collaudo_nome.py [argomenti]` (Firefox: `BROWSER=firefox` davanti); i test fisici `node tests/fisica/polare.js`, `raffiche_e_virate.js`, `impronta1b.js`; controlli veloci `.venv-collaudi/bin/python tests/collaudo_versione.py` e `tests/controllo_commenti.py`. In background con `run_in_background`, non con `&`; un comando per volta (i composti con `&&` a volte vengono rifiutati). Solo 18 script su 130 (per esempio `collaudo_cono.py`, `collaudo_rotta_assoluta.py`, `misura_rotta_ottimale.py`, `misura_lato_boa.py`, i guardiani) accettano `RADICE=cartella` per girare su una copia del gioco; gli altri leggono sempre `index.html` del repo.
-- `gh` legge i giri GitHub (token di sola lettura nel portachiavi; serve uscire dalla protezione dei comandi). Online: https://calle76.github.io/scuola-di-vela/ (quella dell'ultimo push).
+- `gh` legge e lancia i giri GitHub (`gh workflow run collaudi.yml`; `allowed_domains` api.github.com e github.com). I registri dei pezzi finiti si leggono anche a giro in corso: `gh api --allow-escape-sequences repos/calle76/scuola-di-vela/actions/jobs/ID/logs`. Online: https://calle76.github.io/scuola-di-vela/ (quella dell'ultimo push).
 - Per scrivere fuori dal repo (disco esterno, cartelle in `/home/callle`) serve uscire dalla protezione dei comandi: solo con percorsi esatti e con l'ok esplicito di Ale.
 - Mai `//` a metà riga in `js/` (usare `/* */`); lanciare `tests/controllo_commenti.py`.
 
