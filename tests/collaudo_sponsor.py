@@ -10,6 +10,8 @@
 #   S5 ricarica a metà contratto: uguale; «Azzera i progressi» lo cancella; un salvataggio della 1.2.39 col diritto si apre con l'offerta del gradino 3; il nazionale
 #      senza sponsor nazionale non si apre, con sì
 #   S6 le regate non cambiano: polare.js, raffiche_e_virate.js, impronta1b.js, collaudo_stagione e collaudo_nazionale (lanciati a parte)
+#   S8 (1.3.75, Ale 27 nov) al rinnovo un solo obiettivo di posto: migliorare il posto appena fatto (migl = posto, n = posto - 1, o 1); ogni «davanti a» ha lo sponsor
+#      del rivale (sp), diverso da quello dell'offerta e dello stesso gradino; almeno 10 rinnovi e 10 «davanti» controllati, 0 errori
 #   S7 lo sponsor a 1360x650 con 3 offerte, un contratto con 2 obiettivi e il Fiocco: 0 px di eccesso; Chromium e Firefox, pagina senza #collaudo; 0 errori
 import asyncio, json, os, pathlib, sys
 from playwright.async_api import async_playwright
@@ -57,7 +59,8 @@ async def main():
         # ---- S1, S2, S4: una carriera di 200 stagioni a numeri
         ctx, q = await pagina()
         await q.evaluate("() => __seed(4242)")
-        n_ob = err1 = err2 = fio_si = fio_ok = 0; viste_g = set(); passi = 0
+        n_ob = err1 = err2 = fio_si = fio_ok = 0; viste_g = set(); passi = 0; n_rin = n_dav = err8 = 0
+        NOMI = await q.evaluate("() => SP_NOMI")
         for k in range(200):
             D = await q.evaluate("() => JSON.parse(JSON.stringify(spDati()))")
             if D["offerte"]:   # si accetta un'offerta a caso
@@ -79,16 +82,27 @@ async def main():
                     base = og[:len(att)]
                     ok = base == att and len(og) >= 2 and any(o["circ"] == "zon" for o in D2["offerte"]) and min(og) >= 1
                     if not ok: err2 += 1; print(f"  S2 stagione {k}: contratto {c['g']} esiti {D2['storia'][-1]['esiti']} → offerte {og}, attese {att} (+ riempimento)", flush=True)
+                    for o in D2["offerte"]:
+                        if o.get("rinnovo"):
+                            n_rin += 1; po = [x for x in o["ob"] if x["t"] == "posto"]
+                            if len(po) != 1 or po[0].get("migl") != d["pos"] or po[0]["n"] != max(1, d["pos"] - 1): err8 += 1; print(f"  S8 stagione {k}: rinnovo dopo il {d['pos']}° → {o['ob']}", flush=True)
             else:
                 att = [2, 3] if d["pos"] <= 3 else [1, 2]; og = [o["g"] for o in D2["offerte"]]
                 passi += 1
                 if og[:2] != att: err2 += 1; print(f"  S2 prima stagione {k}: {d['pos']}° → offerte {og}, attese {att}", flush=True)
+            for o in D2["offerte"]:
+                for x in o["ob"]:
+                    if x["t"] == "davanti":
+                        n_dav += 1
+                        if not x.get("sp") or x["sp"] == o["nome"] or x["sp"] not in NOMI[o["g"]]: err8 += 1; print(f"  S8 stagione {k}: {o['nome']} gradino {o['g']} → {x}", flush=True)
             if circ == "naz" and not fio_prima:
                 if d["pos"] <= 3: fio_si += 1; fio_ok += 1 if D2.get("fiocco") else 0
                 elif D2.get("fiocco"): fio_ok -= 1000
             if circ == "zon" and not fio_prima and D2.get("fiocco"): fio_ok -= 1000
         print(f"S1: {n_ob} obiettivi ricontrollati, {err1} sbagliati; S2: {passi} passaggi di offerte, {err2} sbagliati, gradini dei contratti visti {sorted(viste_g)}; S4: nazionali fra i primi 3 {fio_si}, Fiocco offerto {fio_ok}", flush=True)
         chk("S1", n_ob >= 200 and err1 == 0, f"S1 {n_ob} obiettivi, {err1} sbagliati")
+        print(f"S8: rinnovi controllati {n_rin}, «davanti» controllati {n_dav}, sbagliati {err8}", flush=True)
+        chk("S8", n_rin >= 10 and n_dav >= 10 and err8 == 0, f"S8 rinnovi {n_rin}, davanti {n_dav}, sbagliati {err8}")
         chk("S2", passi >= 50 and err2 == 0 and viste_g == {1, 2, 3, 4}, f"S2 {passi} passaggi, {err2} sbagliati, gradini visti {sorted(viste_g)}")
         chk("S4", fio_ok == fio_si, f"S4 Fiocco lungo la carriera: {fio_ok} su {fio_si}")
         # S4 costruito: 30 nazionali in cui finisci primo in ogni tappa e 30 in cui finisci ultimo, a stato pulito
@@ -150,9 +164,9 @@ async def main():
             await ctx.close()
         # ---- S7
         pieno = {**BREV, "sponsor": {"c": {"g": 4, "circ": "naz", "nome": "Cantiere Tre Gabbiani", "durata": 2, "ob": [{"t": "posto", "n": 5}, {"t": "podio"}], "esiti": [[True, False]]},
-                 "offerte": [{"g": 4, "circ": "naz", "nome": "Cantiere Tre Gabbiani", "durata": 1, "ob": [{"t": "posto", "n": 5}, {"t": "podio"}], "rinnovo": True},
+                 "offerte": [{"g": 4, "circ": "naz", "nome": "Cantiere Tre Gabbiani", "durata": 1, "ob": [{"t": "posto", "n": 11, "migl": 12}, {"t": "podio"}], "rinnovo": True},   # 1.3.75: le frasi nuove più lunghe nel caso peggiore
                              {"g": 3, "circ": "naz", "nome": "Trasporti Maestrale Blu", "durata": 2, "ob": [{"t": "posto", "n": 10}]},
-                             {"g": 2, "circ": "zon", "nome": "Cartiera di Valle Ventosa", "durata": 1, "ob": [{"t": "posto", "n": 5}, {"t": "davanti", "r": "Tommaso Brunelli"}]}],
+                             {"g": 2, "circ": "zon", "nome": "Cartiera di Valle Ventosa", "durata": 1, "ob": [{"t": "posto", "n": 5}, {"t": "davanti", "r": "Tommaso Brunelli", "sp": "Corderia del Faro Vecchio"}]}],
                  "storia": [{"nome": "Vetreria Isola Chiara", "g": 4, "durata": 1, "esiti": [[True, True]], "esito": "tutti"}], "fiocco": True}}
         ctx, q = await pagina(pieno, hash_="")
         await q.click("#goTor"); await q.click("#stCirc"); await q.wait_for_timeout(100); await q.click("#stSponsor"); await q.wait_for_timeout(150)

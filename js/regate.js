@@ -2060,14 +2060,26 @@
     if (durata === 2) return [O[0].t === "posto" ? { t: "posto", n: O[0].n + SP_FACILE } : O[0]];
     return O;
   }
-  const spOfferta = (g, durata, k = 0, rinnovo = false) => ({ g, circ: SP_CIRC[g], nome: SP_NOMI[g][k], durata, ob: spObiettivi(g, durata), rinnovo });
+  /* 1.3.75 (Ale, 27 nov): il rivale da battere corre per lo sponsor concorrente, l'altro dello stesso gradino (spConcorrente): così l'obiettivo ha un motivo */
+  const spConcorrente = (g, nome) => SP_NOMI[g].find(n => n !== nome) || null;
+  const spConObiettivi = (o) => ({ ...o, ob: o.ob.map(x => x.t === "davanti" ? { ...x, sp: spConcorrente(o.g, o.nome) } : x) });
+  const spOfferta = (g, durata, k = 0, rinnovo = false) => spConObiettivi({ g, circ: SP_CIRC[g], nome: SP_NOMI[g][k], durata, ob: spObiettivi(g, durata), rinnovo });
   function spOfferteDa(gradini, rinnovoDi){ // gradini in ordine; sempre almeno 2 offerte e almeno una zonale
-    const o = gradini.map(g => g === rinnovoDi?.g ? { ...spOfferta(g, rinnovoDi.durata), nome: rinnovoDi.nome, rinnovo: true } : spOfferta(g, 1));
+    const o = gradini.map(g => g === rinnovoDi?.g ? spRinnovo(rinnovoDi) : spOfferta(g, 1));
     if (o.length < 2) o.push(spOfferta(o[0].g, 2, 1));
     if (!o.some(x => x.circ === "zon")) o.push(spOfferta(2, 2, 1));
     return o;
   }
-  const spTesto = (x, S) => x.t === "posto" ? `entro il ${x.n}° posto` : x.t === "podio" ? "un podio di tappa" : x.t === "ritiri" ? "nessuna tappa lasciata" : `davanti a ${x.r}`;
+  /* 1.3.75 (Ale, 27 nov): al rinnovo lo stesso sponsor chiede di migliorare il posto della stagione prima (un obiettivo «posto» con migl = il posto di allora,
+     n = migl - 1, o 1 se si era primi) al posto dell'obiettivo di posto del gradino; gli altri restano. Senza il posto di prima (salvataggi vecchi) come prima */
+  function spRinnovo(c){
+    const o = spConObiettivi({ ...spOfferta(c.g, c.durata), nome: c.nome, rinnovo: true }), p = c.posPrima;
+    if (!(p >= 1)) return o;
+    const migl = { t: "posto", n: Math.max(1, p - 1), migl: p };
+    return { ...o, ob: c.durata === 2 ? [migl] : [migl, ...o.ob.filter(x => x.t !== "posto")] };
+  }
+  const spTesto = (x, lungo) => x.t === "posto" ? (x.migl ? (x.migl === 1 ? "restare primo come la stagione scorsa" : `migliorare il ${x.migl}° posto della stagione scorsa`) : `entro il ${x.n}° posto`)
+    : x.t === "podio" ? "un podio di tappa" : x.t === "ritiri" ? "nessuna tappa lasciata" : `davanti a ${x.r}` + (lungo && x.sp ? ` (corre per ${x.sp}, concorrente)` : "");
   function spStato(x, S){ // { ok: true / false / null (ancora aperto), riga }
     const fatte = S.tappe.filter(stFatta), k = fatte.length, fine = !!S.fine, cl = k ? stClassifica(S) : [], io = cl.find(y => y.id === "*"), pos = cl.indexOf(io) + 1;
     if (x.t === "posto"){ if (!k) return { ok: null, riga: `Posto: obiettivo entro il ${x.n}°.` };
@@ -2090,7 +2102,7 @@
       D.c.esiti.push(D.c.ob.map(x => lasciata ? false : spStato(x, S).ok === true));
       if (D.c.esiti.length >= D.c.durata){ const c = D.c, tutti = c.esiti.every(e => e.every(v => v)), qualcuno = c.esiti.some(e => e.some(v => v));
         D.storia.push({ nome: c.nome, g: c.g, durata: c.durata, esiti: c.esiti, esito: tutti ? "tutti" : qualcuno ? "parte" : "nessuno" });
-        D.offerte = spOfferteDa(tutti ? [c.g, Math.min(4, c.g + 1)].filter((g, i, a) => a.indexOf(g) === i) : qualcuno ? [c.g] : [Math.max(1, c.g - 1)], tutti ? c : null);
+        D.offerte = spOfferteDa(tutti ? [c.g, Math.min(4, c.g + 1)].filter((g, i, a) => a.indexOf(g) === i) : qualcuno ? [c.g] : [Math.max(1, c.g - 1)], tutti ? { ...c, posPrima: pos } : null);
         if (!naz && pos !== null && pos <= 3 && !D.offerte.some(o => o.circ === "naz")) D.offerte.push(spOfferta(3, 1)); /* 1.3.23: fra i primi 3 dello zonale c'è sempre un'offerta nazionale (serve dalla prima stagione, con lo sponsor dall'entrata in Deriva) */
         D.c = null; }
     } else if (!D.c && !naz && !lasciata) D.offerte = spOfferteDa(pos <= 3 || progress.nazionale ? [2, 3] : [1, 2]); /* 1.3.12: anche col diritto preso prima della 1.3.9 */
@@ -2103,11 +2115,11 @@
   function spMostra(indietro){
     const D = spDati(), S = progress.stagione, c = D.c, quale = S && c && stNaz(S) === (c.circ === "naz") ? S : null;
     const righe = c ? c.ob.map(x => `<li>${quale ? spStato(x, quale).riga : "Obiettivo: " + spTesto(x) + "."}</li>`).join("") : "";
-    const contratto = c ? `<p><b>${c.nome}</b>, sponsor ${SP_GRADINO[c.g]}: circuito ${c.circ === "naz" ? "nazionale" : "zonale"}, ${c.durata === 1 ? "una stagione" : "due stagioni"}${c.durata > 1 ? ` (questa è la ${c.esiti.length + 1}ª)` : ""}. Obiettivi: ${c.ob.map(x => spTesto(x)).join("; ")}.</p><ul class="st-frasi">${righe}</ul>` : "";
+    const contratto = c ? `<p><b>${c.nome}</b>, sponsor ${SP_GRADINO[c.g]}: circuito ${c.circ === "naz" ? "nazionale" : "zonale"}, ${c.durata === 1 ? "una stagione" : "due stagioni"}${c.durata > 1 ? ` (questa è la ${c.esiti.length + 1}ª)` : ""}. Obiettivi: ${c.ob.map(x => spTesto(x, true)).join("; ")}.</p><ul class="st-frasi">${righe}</ul>` : "";
     const ultimo = D.storia.length ? D.storia[D.storia.length - 1] : null;
     const prima = ultimo ? `<p>Contratto finito con ${ultimo.nome}: obiettivi ${ultimo.esito === "tutti" ? "tutti raggiunti" : ultimo.esito === "parte" ? "raggiunti in parte" : "mancati"}.</p>` : "";
     const off = D.offerte.length ? `<p><b>Offerte</b> (ne scegli una; il circuito della stagione dopo lo decide lo sponsor):</p>` + D.offerte.map((o, i) =>
-      `<p class="sp-off">${o.nome}${o.rinnovo ? " (rinnovo)" : ""} · ${o.circ === "naz" ? "nazionale" : "zonale"} · ${o.durata === 1 ? "1 stagione" : "2 stagioni"} · ${o.ob.map(x => spTesto(x)).join("; ")} <button id="spOk${i}">Accetta</button></p>`).join("") : "";
+      `<p class="sp-off">${o.nome}${o.rinnovo ? " (rinnovo)" : ""} · ${o.circ === "naz" ? "nazionale" : "zonale"} · ${o.durata === 1 ? "1 stagione" : "2 stagioni"} · ${o.ob.map(x => spTesto(x, true)).join("; ")} <button id="spOk${i}">Accetta</button></p>`).join("") : "";
     const fiocco = D.fiocco ? `<p>Il ${SP_NOMI[4][0]} ti offre la barca col fiocco: il livello del Fiocco non c'è ancora.</p>` : "";
     const vuoto = !c && !D.offerte.length ? `<p>Nessuno sponsor ancora: le prime offerte arrivano alla fine della prima stagione zonale.</p>` : "";
     $("torBody").innerHTML = `<div class="qz-top"><h2 id="torTitle">Lo sponsor</h2><span>${c ? "contratto in corso" : D.offerte.length ? "offerte da scegliere" : ""}</span></div>
