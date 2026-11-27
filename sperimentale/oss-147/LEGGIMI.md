@@ -50,3 +50,13 @@ I contatti per la 16 dopo il via, nel gioco, sono per metà fra mure diverse (17
 ## Terza prova (`r16-v3-mure-diverse.patch`, contiene la prima)
 
 Come la seconda, ma solo fra barche con le **mure diverse** (come la 1.3.71) e per al massimo T15 = 5,2 s (la finestra della regola 16 del gioco) per la stessa barca. Criteri: gli stessi K1-K5 e K1b, soglie invariate. K4 sul PC, Chromium: 80, 81, 82, 83 tutti 10 su 10.
+
+## Esito della terza prova: non adottata. Oss. 147 lasciata così (Ale, 27 nov sera: «se non passa lascialo così»)
+
+Gioco → prova. Scelta: K1 172 → 145 (−16%, no); K1b 37 → 24 (−35%, sì); K2 579 → 539; K3 bolina esperti mediana +0,0, media +0,9 s, M4 587,1 → 586,4; K5 coppie 35 → 30 (sì). **Conferma: K1 149 → 152 (no); K1b 26 → 33 (+27%, no)**; K2 496 → 503; K3 +0,0 / +0,23 s; K5 28 → 30 (sì).
+
+**Quanto è frequente, nel gioco di oggi:** un rivale penalizzato per la regola 16 dopo il via ogni 12-17 regate del torneo (37 e 26 su 450); vicino alla boa (entro 40 m, regole 15-16) ogni 30-40 regate. Il calo della scelta non si conferma: con 25-35 casi per gruppo le tre prove non si distinguono dal rimescolamento delle regate.
+
+**Altro caso, stesse mure:** regata di Ale del 27 nov 19:35 (1.3.75), 374,8 s: la Blu sale verso la boa mure a dritta con la precedenza, poggia da 140° a 114° verso Ale che scende dopo la boa, la 16 scatta (la guida la segna «cede a Tu» da 370,4 s) e continua a poggiare: contatto, penalità alla Blu.
+
+Se si riprende: serve una misura con più casi (per esempio 1500 regate per parte) o una scena costruita apposta, prima di un'altra prova.
