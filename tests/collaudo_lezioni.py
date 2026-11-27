@@ -25,6 +25,13 @@ ATTREZZI = """() => { const sv = __sv; sv.fast(0); let seme = 1;
   L.tieni = (k, maxs) => { L.semina(); L.tasto("keydown", k); const t = L.avanza(maxs, () => sv.stepDone); L.tasto("keyup", k); return [sv.stepDone, t, L.leggi()]; };
   L.aspetta = maxs => { L.semina(); const t = L.avanza(maxs, () => sv.stepDone); return [sv.stepDone, t, L.leggi()]; };
   L.premi = (k, sec) => { L.semina(); L.tasto("keydown", k); L.avanza(sec); L.tasto("keyup", k); };
+  // 27 nov 2026 (voce 92): poggia fino ad almeno twaMin gradi dal vento (prova un verso della barra per 0,25 s e, se orza, usa l'altro)
+  L.poggia = (twaMin, maxs) => { L.semina(); const t0 = sv.readI().twa; let k = "ArrowLeft"; L.tasto("keydown", k); L.avanza(0.25); L.tasto("keyup", k);
+    if (sv.readI().twa < t0) k = "ArrowRight"; L.tasto("keydown", k); L.avanza(maxs, () => sv.readI().twa >= twaMin); L.tasto("keyup", k); L.kPoggia = k; return L.leggi(); };
+  // e poi tiene la prua fra 80° e 100° dal vento (colpi di barra di 0,25 s), come farebbe chi gioca, finché il passo non è fatto
+  L.alTraverso = maxs => { L.semina(); const kp = L.kPoggia, ko = kp === "ArrowLeft" ? "ArrowRight" : "ArrowLeft"; let t = 0;
+    while (t < maxs && !sv.stepDone){ const a = sv.readI().twa, k = a < 80 ? kp : a > 100 ? ko : null; if (k) L.tasto("keydown", k); sv.run(1/60, 15); t += 0.25; if (k) L.tasto("keyup", k); }
+    return [sv.stepDone, t, L.leggi()]; };
 }"""
 PASSI = []   # (nome, completato) di ogni passo guidato
 NUOVI = []   # controlli con esito vero/falso (1.0.2); gli altri sono tempi da leggere
@@ -88,15 +95,15 @@ async def main():
         await wait_until(pg, 8, "L5 virata (assestamento)")
         # Lezione 6: scuffia volontaria
         await pg.evaluate("__sv.openItem(['l',5])"); await pg.evaluate("__sv.showStep(2)")
-        await premi(pg, "ArrowRight", 0.6); await premi(pg, "ArrowUp", 3.0)
-        await wait_until(pg, 60, "L6 scuffia")
+        await pg.evaluate("() => L.poggia(85, 8)"); await premi(pg, "ArrowUp", 3.0)   # 27 nov 2026 (voce 92): «poggia al traverso, vela tutta cazzata» come dice la lezione dalla 1.3.59 (prima: freccia a destra 0,6 s, che con la barca M lasciava la barca di bolina a 38°)
+        stampa("L6 scuffia", await pg.evaluate("m => L.alTraverso(m)", 60))
         await pg.screenshot(path=str(OUT / "B_cap.png"))
         await pg.evaluate("__sv.showStep(3)"); await pg.evaluate('() => { L.tasto("keydown", "a"); L.tasto("keyup", "a"); }')
         await wait_until(pg, 12, "L6 raddrizzare")   # 1.1.0: la raddrizzata dell'1b dura 10 s (RADD2.t); con l'1a bastavano 8 s
         # 1.0.2 (osservazione 50): in «La scuffia» la barca resta rovesciata e A (era R) non fa niente; «Raddrizzare» parte con la barca rovesciata, anche dopo Ricomincia
         await pg.evaluate("__sv.openItem(['l',5])"); await pg.evaluate("__sv.showStep(2)")
-        await premi(pg, "ArrowRight", 0.6); await premi(pg, "ArrowUp", 3.0)
-        await wait_until(pg, 60, "L6 scuffia (di nuovo)")
+        await pg.evaluate("() => L.poggia(85, 8)"); await premi(pg, "ArrowUp", 3.0)   # 27 nov 2026 (voce 92): «poggia al traverso, vela tutta cazzata» come dice la lezione dalla 1.3.59 (prima: freccia a destra 0,6 s, che con la barca M lasciava la barca di bolina a 38°)
+        stampa("L6 scuffia (di nuovo)", await pg.evaluate("m => L.alTraverso(m)", 60))
         await pg.evaluate('() => { L.tasto("keydown", "a"); L.tasto("keyup", "a"); }'); await pg.evaluate("__sv.run(1/60, 300)"); await pg.evaluate("__sv.panel()")   # il pannello si ridisegna ogni 0,1 s: senza, si leggeva quello vecchio (giro GitHub della 1.2.11, Firefox)
         st = await pg.evaluate("({cap: __sv.S.capsized, righting: __sv.S.righting, btn: !document.getElementById('rightBtn').hidden, ov: !document.getElementById('capOverlay').hidden})")
         print("   La scuffia dopo A:", st); chk_ok(st["cap"] and not st["righting"] and not st["btn"] and not st["ov"], "L6 scuffia: A non raddrizza, pulsante e riquadro nascosti")

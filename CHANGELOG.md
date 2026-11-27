@@ -29,6 +29,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Perché:** in `collaudo_suoni_si_sentono` il suono della boa era al limite (alza la banda 200-5000 Hz di 6,1-10,5 dB, soglia 6: dei tre ritagli scelti a caso uno è più debole); nei giri vecchi a volte cadeva. Il sartiame resta com'è (Ale, 23 nov).
 - **Correzione:** volume della boa da 0,8 a 1, come contatto, scuffia e raddrizzata.
 - **Misure:** `collaudo_suoni_si_sentono` sul PC: boa 9,8-11,8 dB; picco col volume «alto» −2,3/−3,9 dB (al più −0,5); casi sbagliati nessuno.
+- **Collaudi (voce 92):** `collaudo_lezioni` L6 «La scuffia»: il pilota del collaudo poggia fino al traverso e ci resta coi colpi di barra, come dice la lezione dalla 1.3.59 (prima orzava a 38°, dove con la barca M non si scuffia). Verde in Chromium e Firefox (scuffia in 5,8-23 s). Giro GitHub sulla 1.3.65 (run 45935566969) letto per intero: rossi rimasti nell'elenco della voce 92.
 - **Voce 17 (pilota incastrato contro il comitato, oss. 79):** non riprodotta con la barca di oggi (barca puntata sul comitato a 35°-90° dal vento: tocca, scivola e va oltre, uguale nella 1.3.66). Provata una correzione (togliere la velocità che entra nell'ostacolo): numeri identici entro i centesimi, quindi **tolta**, perché senza un caso non si vede cosa correggerebbe.
 
 ## 1.3.66 — Regate lunghe di nuovo di 9-11 minuti; collaudi adattati alla barca M (voce 92)
