@@ -35,15 +35,31 @@ VAI = """
   }, 25);
 }
 """
+# 1.3.68 (voce 92): la scuffia della lezione 6 come dice la lezione dalla 1.3.59: al traverso (vento fra 80° e 100°) con la vela tutta cazzata.
+# Prima si teneva premuta la freccia su: con la barca M la barca orzava fino a piantarsi (Firefox, 27 nov: piantato 12 volte prima di scuffiare).
+TRAVERSO = """
+() => {
+  const n180 = a => ((a + 180) % 360 + 360) % 360 - 180;
+  clearInterval(window.__p3);
+  window.__p3 = setInterval(() => {
+    const sv = __sv, S = sv.S;
+    if (S.capsized){ sv.ctl.tiller = 0; clearInterval(window.__p3); return; }
+    const cur = n180(S.h - sv.twd), side = Math.sign(cur || 1);
+    sv.ctl.tiller = Math.max(-1, Math.min(1, -side * (90 - Math.abs(cur)) / 20)); sv.ctl.sheet = 0;   // stesso verso di STRAMBA: -side poggia
+  }, 25);
+}
+"""
 # poggia con la vela tutta aperta finché il vento passa dall'altra parte: strambata a vela aperta
+# 1.3.68 (voce 92): il verso in cui girare si fissa all'inizio. Prima si ricalcolava a ogni giro dal lato del vento: passata la poppa il pilota tornava
+# indietro, e con lo strapoggio (il boma tiene il lato fino a circa 15° oltre la poppa) oscillava attorno ai 180° senza strambare mai.
 STRAMBA = """
 () => {
   const D = Math.PI / 180, n180 = a => ((a + 180) % 360 + 360) % 360 - 180;
   clearInterval(window.__p2); const g0 = __sv.S.gybesV; window.__p2end = false;
+  const side = Math.sign(n180(__sv.S.h - __sv.twd) || 1);
   window.__p2 = setInterval(() => {
     const sv = __sv, S = sv.S;
     if (S.gybesV > g0 || S.capsized){ sv.ctl.tiller = 0; window.__p2end = true; clearInterval(window.__p2); return; }
-    const cur = n180(S.h - sv.twd), side = Math.sign(cur || 1);
     const err = n180(S.h - (S.h + side * 25));      // continua a girare lontano dal vento
     sv.ctl.tiller = Math.max(-1, Math.min(1, err / 20)); sv.ctl.sheet = 1;
   }, 25);
@@ -201,7 +217,7 @@ async def main():
             k = await passo(4, "Strambata violenta"); await pg.evaluate(STRAMBA); ok3 = await attendi(pg, "window.__p2end", 30); await pg.wait_for_timeout(1500); r3 = await reg(pg)
             await pg.evaluate(f"__sv.showStep({k + 1})")   # «Strambata controllata»: se la fai a vela aperta è un errore
             await pg.evaluate(STRAMBA); await attendi(pg, "window.__p2end", 30); await pg.wait_for_timeout(800); r4 = await reg(pg)
-            await passo(5, "La scuffia"); await pg.click("#c"); await pg.keyboard.down("ArrowUp"); ok5 = await attendi(pg, "__sv.S.capsized", 60); await pg.keyboard.up("ArrowUp")
+            await passo(5, "La scuffia"); await pg.evaluate(TRAVERSO); ok5 = await attendi(pg, "__sv.S.capsized", 60); await pg.evaluate("clearInterval(window.__p3)")
             r5 = await reg(pg); txt = await pg.inner_text("#lErr")
             verifica("lezione 1, piantato quando richiesto", ok1 and r1["irons"] == 0, f"passo completato {ok1} | {r1}")
             verifica("lezione 5, virata fallita richiesta", ok2 and r2["irons"] == 0, f"passo completato {ok2} | {r2}")

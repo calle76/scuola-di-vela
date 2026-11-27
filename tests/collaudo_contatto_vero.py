@@ -57,16 +57,22 @@ SIM = """([race, seme, liv]) => {
   const salva = () => R.boats.map(b => ({ x: b.S.x, y: b.S.y, h: b.S.h }));
   const out = { contatti: 0, maxDist: 0, sovrapposti: 0, vicine: 0, passi: 0, secSov: 0, maxPen: 0 }, visti = new Set();
   let prev = salva();
+  let attesa = [];   // 1.3.68 (voce 92): sovrapposizioni senza contatto viste al passo prima, da ricontrollare
   const passo = () => {
+    for (const key of attesa) if (!R.contacts[key]) out.sovrapposti++;
+    attesa = [];
     for (const key of Object.keys(R.contacts)){ const id = key + ":" + R.contacts[key]; if (visti.has(id)) continue; visti.add(id);
       const [i, j] = key.split("-").map(Number); out.contatti++; out.maxDist = Math.max(out.maxDist, clear(prev[i], prev[j])); }
     const bs = R.boats;
     for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++){
       const A = bs[i], B = bs[j]; if (A.fin !== null || B.fin !== null || A.dnf || B.dnf || A.S.capsized || B.S.capsized) continue;
       if (Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y) > 5) continue;
-      out.vicine++; if (clear(A.S, B.S) === 0 && !R.contacts[i + "-" + j]) out.sovrapposti++;
+      out.vicine++; if (clear(A.S, B.S) === 0 && !R.contacts[i + "-" + j]) attesa.push(i + "-" + j);
       const o = sv.hullOverlap(A.S, B.S); if (o){ out.secSov += dt; out.maxPen = Math.max(out.maxPen, o.pen); } }   // 1.0.41: scafi che restano sovrapposti dopo il contatto
   };
+  // 1.3.68 (voce 92, cambio del metro dopo aver visto il rosso del giro GitHub, dichiarato): una sovrapposizione conta come «senza contatto» solo se il
+  // contatto non nasce nemmeno al passo dopo. Caso trovato (regata 2, seme 3, esperti, Chromium): la spinta che separa le barche 1 e 2 porta la 2 dentro
+  // la 0 di 2,5 cm DOPO che la coppia 0-2 era già stata controllata in quel passo; il gioco registra il contatto 0-2 al passo seguente (1/240 s dopo).
   let n = 0;
   while (me.fin === null && !me.dnf && R.t < 900){ prev = salva(); sv.pilota(dt); sv.run(dt, 1); passo(); n++; }
   let k = 0; while (k++ < 240 * 300 && !R.boats.every(b => b.fin !== null || b.dnf)){ prev = salva(); sv.run(dt, 1); passo(); n++; }

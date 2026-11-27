@@ -13,8 +13,14 @@
 import asyncio, pathlib, sys, statistics
 from playwright.async_api import async_playwright
 URL = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri() + "#collaudo"
-MISURA = """([kn, rel, k]) => {
-  __sv.openItem('free'); __sv.setShifts(null); __sv.fast(0); env.twd = 0; env.tws = kn / KN;   // 1.1.0: la navigazione libera ha sempre i salti di vento: qui si misura il moto con la prua fissa rispetto al vento
+# 1.3.68 (voce 92): Math.random col seme fisso. Prima il collaudo non lo fissava e in poppa il beccheggio cambiava da un giro all'altro
+# (Firefox 4,1-8,7 px nel giro della 1.3.68, Chromium 5,5-8,7 nella 1.3.65): stesso criterio, ora ripetibile. Primo seme: SEME0 (predefinito 1).
+SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  window.__seed = v => { s = v; }; })();"""
+SEME0 = int(__import__("os").environ.get("SEME0", "1"))
+MISURA = """([kn, rel, k, seme]) => {
+  __seed(seme); __sv.openItem('free'); __sv.setShifts(null); __sv.fast(0); env.twd = 0; env.tws = kn / KN;   // 1.1.0: la navigazione libera ha sempre i salti di vento: qui si misura il moto con la prua fissa rispetto al vento
   S.x = 37 * k; S.y = -23 * k; S.h = rel; S.u = 1.5;
   const hx = [], hy = []; let ppm = 0;
   for (let n = 0; n < 1500; n++){
@@ -34,13 +40,13 @@ async def main():
     async with async_playwright() as p:
         b = await getattr(p, __import__("os").environ.get("BROWSER", "chromium")).launch(); pg = await b.new_page(viewport={"width": 1360, "height": 650})
         pg.on("pageerror", lambda e: errs.append(str(e)))
-        await pg.add_init_script("window.requestAnimationFrame = () => 0;")
+        await pg.add_init_script("window.requestAnimationFrame = () => 0;"); await pg.add_init_script(SEME)
         await pg.goto(URL); await pg.wait_for_timeout(500)
         for kn in (0, 10):
             for rel in ANDATURE:
                 r = []
                 for k in range(5):
-                    o = await pg.evaluate(MISURA, [kn, rel, k]); quadri += len(o["hx"])
+                    o = await pg.evaluate(MISURA, [kn, rel, k, SEME0 + k]); quadri += len(o["hx"])
                     r.append((max(o["hx"]) - min(o["hx"]), max(o["hy"]) - min(o["hy"]), periodo(o["hy"] if rel != 90 else o["hx"])))
                 ris[kn, rel] = r
         await b.close()
