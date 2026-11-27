@@ -36,8 +36,8 @@
 
 ## Prossimi passi (per la sessione nuova)
 
-1. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso.
-2. Voce 2: caso 81 scena per scena; vento sporco. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
+1. **Voce 2, caso 81, passo 2 (via di Ale, 27 nov, «ok sessione nuova»):** in `passaggio()` di `js/regate.js` il tempo dell'accostata (25 °/s, misurato); criteri e passo 1 al §13 di `PROPOSTA-AVVERSARI-DERIVA.md` (chi cede orza e urta in 4 scene su 10; poggiando le eviterebbe tutte). Vento sporco chiuso (si riapre con una segnalazione col tasto M).
+2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
 ## Cosa aspetta Ale
