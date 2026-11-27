@@ -97,7 +97,7 @@ async def main():
         ok = tot = salt = 0; note = []; s = 6400
         while tot < 20 and s < 6440:
             s += 1; r, z, e = await rotta(b, s, 0, 0, False, "rotto", True)
-            if r.get("salta") or r["prima"]["resto"] == 0: salt += 1; continue   # tutte arrivate prima del giocatore: niente da interrompere
+            if r.get("salta") or r["prima"]["resto"] == 0 or not r["rotto"]: salt += 1; continue   # tutte arrivate prima del giocatore, o (27 nov, seme 6415 in Firefox) simulazione finita in meno di 30 passi: niente da interrompere
             tot += 1; q = z["ris"][0][0] if z["ris"] else None; arr = int(r["prima"]["fin"] * 10 + 0.5) / 10
             bene = r["rotto"] and q and abs(q["fin"] - arr) < 0.051 and len(z["ris"]) == 1 and not e; ok += bool(bene); note += [] if bene else [(s, q, arr, e[:1])]
         chk("P4", tot == 20 and ok == 20, f"P4 chi ha finito tiene il suo arrivo: {ok} su {tot} (saltati {salt}); note {note[:2]}")
