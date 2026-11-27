@@ -46,3 +46,7 @@ Il via a cercare la fonte (Hoerner o una misura su piastra libera) e poi alla co
 - Piastra piana in canale ad acqua da 0° a 110°, forza normale e tangenziale misurate: https://arxiv.org/pdf/2302.09602
 - Piastra quadrata, Re 210 000, tutto il campo dopo lo stallo (e la nota che l'1,17 della piastra quadrata di traverso è il 9% sopra un'altra misura): https://arxiv.org/pdf/2506.18719
 - NACA TN 3361: resistenza vicino a 2,0 a 90° per allungamento infinito (https://ntrs.nasa.gov/api/citations/19930084501/downloads/19930084501.pdf). **L'allungamento conta molto** (circa 1,2 per una piastra quadrata, 2,0 per una infinita): per la vela (allungamento circa 2-3) il valore va scelto con la fonte, non a occhio.
+
+## Esito (1.3.65, 27 novembre 2026)
+
+Fatto con la fonte F146. Passano L1, L2, L4; L3 non alla lettera (primo passo −0,6%). Numeri in `CHANGELOG.md` 1.3.65.

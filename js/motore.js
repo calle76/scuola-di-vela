@@ -142,11 +142,18 @@ function tab84(T, x, c){ if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T
 const liscio84 = t => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
 const svergola84 = fl => V84.tw * (1 - fl) / (1 - V84.flMin);
 function forma84(h){ return Math.sign(h) * 9.81 * BOAT.mass * tab84(V84.gz, Math.abs(h), 1); }
+/* 1.3.65 (voce 93, docs/PROPOSTA-LASCO-93.md): forma della forza normale di una piastra dopo lo stallo, divisa per quella a 90 gradi, dalle regressioni
+   misurate in canale ad acqua (piastra di allungamento 6, Re 20 000-50 000, da 0 a 110 gradi; arXiv 2302.09602, eq. 10 e 11): cresce sempre da 30 a 90 gradi.
+   Prima, fra 45 e 65 gradi, la vela della barca dava meno forza (0,92 contro 1,32 a 90): al lasco, lascando un poco una vela troppo cazzata, la barca rallentava. */
+function cnPiastra(al){ const a = Math.min(90, al), cl = -0.44 * Math.exp(-0.47 * a) + 1.19 * Math.sin((1.74 * a + 20) * D2R), cd = 1.04 + Math.sin((1.72 * a - 70) * D2R);
+  return (cl * Math.cos(a * D2R) + cd * Math.sin(a * D2R)) / 2.0423; }
 function vela84(al, A, lf, fl, tw){ const V = V84, k0 = V.k0, t = liscio84((A - V.b1) / (V.b2 - V.b1)), r = Math.max(0, Math.min(1, (al - V.a0) / V.w)), be = Math.min(28, al + 7);
   const cl1 = (al <= 19 ? tab84(V.orc, be, 1) : CL(al) * 1.347 / 1.35) * r * fl * liscio84((A - V.a1) / V.w1);
   const cd1 = (al <= 19 ? tab84(V.orc, be, 2) : 0.033 + 1.15 * (Math.sin(al * D2R) ** 2 - Math.sin(19 * D2R) ** 2)) + V.par + cl1 * cl1 * ((1 + 8 * tw * tw) * V.ki + 0.005);
   const cd0 = CD(al) * k0 + (V.cdn - CD(90) * k0) * liscio84((al - 60) / 30), sb = al < 6 ? (V.fg + (0.2 * k0 - V.fg) * t) * (1 - al / 6) : 0;
-  return [cl1 * (1 - t) + CL(al) * lf * k0 * t, cd1 * (1 - t) + cd0 * t + sb]; }
+  let cl2 = CL(al) * lf * k0, cd2 = cd0; /* 1.3.65 (voce 93): fra lo stallo e 90 gradi la forza normale non scende sotto cdn per la forma della piastra (cnPiastra) */
+  if (al > 20 && al <= 90){ const cn = cl2 * Math.cos(al * D2R) + cd2 * Math.sin(al * D2R), mn = V.cdn * cnPiastra(al); if (cn > 1e-9 && cn < mn){ cl2 *= mn / cn; cd2 *= mn / cn; } }
+  return [cl1 * (1 - t) + cl2 * t, cd1 * (1 - t) + cd2 * t + sb]; }
 
 // state: {x,y,h,u,r,boomSide,boom}  controls: {sheet 0..1, tiller -1..1 (+ = barra a dritta)}  env: {twd (da), tws m/s}
 function step(S, C, E, dt){

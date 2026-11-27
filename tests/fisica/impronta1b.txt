@@ -1,24 +1,24 @@
 andatura 6 nodi 45°: 917d406fe462e461
 andatura 6 nodi 90°: 29f1b79c1b73a408
-andatura 6 nodi 150°: 9d69e1e750d4a7cd
+andatura 6 nodi 150°: 62468a2e7da11aa5
 andatura 10 nodi 45°: 64bedd77d3a90a47
 andatura 10 nodi 90°: 4fac49a10a87adc2
-andatura 10 nodi 150°: c5166ee82d450808
+andatura 10 nodi 150°: f2be84c39e8f6470
 andatura 16 nodi 45°: 933ce98c28ddc98f
-andatura 16 nodi 90°: fc63e769e105a414
-andatura 16 nodi 150°: c2ef72c524885812
+andatura 16 nodi 90°: 976deba082b9d02d
+andatura 16 nodi 150°: cf8bb47857660b7e
 virata 6 nodi freccia: 433d6671b41b5405
 virata 6 nodi Maiusc: 0d02a75b7d08a49c
 virata 10 nodi freccia: ad00a8ec75997b43
 virata 10 nodi Maiusc: f76a5a198538a1e0
 virata 16 nodi freccia: 4b2fd8c190777c2e
 virata 16 nodi Maiusc: ffdc90bedb04e96d
-strambata 10 nodi: 9fe43ebb8a462f64
-strambata 16 nodi: 6ee0a2b6073f6344
+strambata 10 nodi: 3f07f38d54c03c4f
+strambata 16 nodi: 953a957b693dd203
 raffica 10→18 nodi: 3319657b56bb0c1b
 raffica 10→18 nodi lascando: f0fc4de241c58d50
-raffica 10→24 nodi: 2bff9e3006e9c669
-boma spinto 10 nodi: c3c29dcd68a5cad9
+raffica 10→24 nodi: dc32563f71fcfe6e
+boma spinto 10 nodi: 346b51e977f31882
 ferma nel vento 10 nodi: 1d7980e171ba1742
 indietro 10 nodi: 7a231869132e0a4d
 salti osc 10 nodi: 7d6364f359d1d5e1
