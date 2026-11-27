@@ -87,3 +87,5 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 
 - **84** (chiusa il 26 nov 2026): barca M accesa nella 1.3.59 (`PROPOSTA-BARCA-MOTORE.md`, `CHANGELOG.md` 1.3.59). B2 limite noto.
 - **90** (chiusa il 27 nov 2026): angolo morto della barca M nella 1.3.61 (`PROPOSTA-ANGOLO-MORTO-M.md`, `PROPOSTA-BARCA-1-3-61.md`). A1 e A2 non passati, dichiarati.
+
+- **89** (27 nov 2026): «Stare fermi» con la barca M, fatta nella 1.3.63 (vela libera che non porta, a0 = 1°). Era: **Lezione 18 «Stare fermi» con la barca M:** con M la vela tutta lascata spinge avanti piano (a 45° con 10 nodi +0,26 nodi; la 1b andava indietro a −0,86), quindi il passo si supera senza scotta. **Pr

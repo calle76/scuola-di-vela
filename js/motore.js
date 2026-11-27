@@ -128,12 +128,15 @@ function CD(a){ const s = Math.sin(Math.max(0, a) * D2R), cl = CL(a); return 0.0
    che si appiattisce in flTau = 1,5 s (IPOTESI; fisica del velista, decisione di Ale del 26 nov: nessun interruttore); vela che fileggia da 0 gradi
    di incidenza (Newman e Low 1984) a w = 10 (IPOTESI); resistenza della vela che sbatte fg 0,08 (F109); poppa: forza della vela da Magnander (F120, F124);
    deriva alzata nelle portanti: attrito 0,0049 -> 0,0026 fra 100 e 140 gradi (qualitativo); smorzamento della resistenza indotta 0,1 (Day fig. 11). */
-const V84 = { a1: 19, w1: 7, riMax: 0.15, orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 0, w: 10, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.92, fg: 0.08, cdn: 1.32,
+const V84 = { a1: 19, w1: 7, riMax: 0.15, orc: [[0, 0, 0.043], [7, 0.862, 0.026], [9, 1.052, 0.023], [12, 1.164, 0.023], [28, 1.347, 0.033]], a0: 1, w: 10, par: 0.105, ki: 1 / (Math.PI * 6.1), b1: 40, b2: 60, k0: 7.0 / 7.92, fg: 0.08, cdn: 1.32,
   gz: [[0, 0], [4.5, 0.083], [9, 0.145], [13.5, 0.19], [18, 0.223], [22.5, 0.247], [25, 0.263], [30, 0.263], [35, 0.252], [40, 0.24], [45, 0.212], [50, 0.185], [55, 0.15], [60, 0.115], [70, 0.046], [76, 0], [90, -0.05]], k08: 32, flMin: 0.6, flTau: 1.5, hT: 3, tw: 0.186, zH: 1.867, app: [0.0049, 0.0026], dw: [100, 140] };
 /* 1.3.60: smorzamento della resistenza indotta: 0,1 di Day (fig. 11, barca in movimento) solo sopra 1,5 m/s; da ferma 0,3, con una rampa fra 0,3 e 1,5 m/s.
    TARATURA (R1 e R3 di docs/PROPOSTA-RIPARTENZA.md): con 0,1 anche da ferma la deriva frenava quanto spingeva la vela cazzata e la barca restava a 0,4 nodi. */
 /* 1.3.61 (docs/PROPOSTA-BARCA-1-3-61.md): angolo morto, la portanza ORC si spegne col vento apparente fra a1 = 19 e 26 gradi (TARATURA, voce 90: il valore
    piu' severo che lascia Day e Binns entro 1 punto); tetto della resistenza indotta riMax = 0,15 della forza laterale (teoria della deriva, 7-15%). */
+/* 1.3.63 (voce 89, docs/PROPOSTA-STARE-FERMI-M.md): a0 da 0 a 1 grado. Il boma libero sta a 2 gradi dal vento apparente (boom = A - 2): con a0 = 0 la vela
+   che sbatte portava ancora il 20% e la barca ferma a 45 gradi andava avanti. TARATURA scelta DOPO la prova: la proposta diceva 2, ma con 2 la bolina a 22 nodi
+   perdeva il 7,4% di VMG; con 1 la barca ferma va indietro come la 1b (-0,94 contro -0,86 nodi a 45 gradi con 10 nodi) e a 22 nodi perde il 3,6%. Nessuna fonte. */
 const rif84 = u => 0.1 + 0.2 * (1 - Math.max(0, Math.min(1, (Math.abs(u) - 0.3) / 1.2)));
 function tab84(T, x, c){ if (x <= T[0][0]) return T[0][c]; for (let i = 1; i < T.length; i++) if (x <= T[i][0]) return T[i - 1][c] + (T[i][c] - T[i - 1][c]) * (x - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); return T[T.length - 1][c]; }
 const liscio84 = t => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };

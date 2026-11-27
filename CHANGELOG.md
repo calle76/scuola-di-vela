@@ -24,6 +24,19 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
 
+## 1.3.63 — La vela libera non porta: la barca ferma torna ad andare indietro (voce 89)
+
+- **Perché:** con la barca M la vela tutta lascata spingeva ancora un poco in avanti (a 45° con 10 nodi +0,26 nodi), quindi «Stare fermi» (lezione 18) si superava senza toccare la scotta (`collaudo_stare_fermi` F2 rosso dalla 1.3.59). Proposta: `docs/PROPOSTA-STARE-FERMI-M.md`; via di Ale del 27 nov («vai con le varie voci, in autonomia»).
+- **Cosa cambia:** `V84.a0` da 0 a **1 grado** (la vela comincia a portare da 1° di incidenza; il boma libero sta a 2°). **Diverso dalla proposta (2°), scelto dopo aver visto i numeri:** con 2° la bolina a 22 nodi perdeva il 7,4% di VMG (3,63 → 3,36); con 1° il 3,6% (3,50) e la barca ferma va indietro come la 1b (−0,94 nodi a 45° con 10 nodi; 1b −0,86). Nessuna fonte per l'uno o l'altro.
+- **Misure (criteri S1-S5 della proposta):**
+  - S1 `polare.js` identico (fino a 15 nodi). **`rotta-dati.js` non identico:** rigenerato, cambiano 36 velocità, oltre lo 0,5% solo fra 17 e 20 nodi (la più grande +7,8% a 20 nodi e 40°).
+  - S2 `collaudo_stare_fermi`: F1 20 su 20 (semi 1-20 e 21-40), **F2 da 0 a 20 su 20** (senza scotta esce dal cerchio dopo 24,8 s), F4, F5 verdi in Chromium e Firefox. A 50° e 55° senza scotta si supera ancora (riportato, come nella 1.3.58).
+  - S3 banco: indietro a 45° con 6, 10 e 14 nodi; pilota della scotta 180 su 180.
+  - S4 medaglie: tempi del pilota identici (prove 1-6, ESITO OK). `raffiche_e_virate.txt` (raffica «lascando» ±1°, «col boma a 21°» +1-2°) e `impronta1b.txt` riscritti. Lezioni col pilota (semi 1-100, stessa macchina): **6.3 guidando non completata 16 volte su 99 (1.3.62: 8 su 97): non passa**; a mani ferme 3 → 1, dopo un colpo lungo 8 → 4; gli altri passi entro ±2.
+  - S5 `collaudo_esercizi_regata` tutto verde (C2 10 su 10; anche D5, C1 ed E3, rossi nel giro sulla 1.3.61); `collaudo_ricomincia` verde (R1: «Stare fermi» non si completa più a mani ferme).
+  - In più: angolo morto (`angolo_morto.js`), la barra mossa di continuo esce 41 volte su 4860 (1.3.61: 172; 1.3.58: 41); bolina con 18 nodi VMG 3,76 (3,77); ripartenza da ferma come prima.
+- **Da sapere:** fermarsi con la vela lascata vicino alla boa ora costa di più (regata di Ale del 27 nov, oss. 144).
+
 ## 1.3.62 — Lezione 6.3 di nuovo dentro il pannello; collaudi adattati alla barca M (voce 92)
 
 - **Perché:** il giro GitHub completo sulla 1.3.61 (run 45902670767, letto per intero il 27 nov) aveva 41 rossi in 8 pezzi; sulla 1.3.58 (run 45798944446, prima della barca M) erano 4-6. Quasi tutti vengono dalla barca M (1.3.59) e c'erano già nel giro sulla 1.3.60 (run 45890886453).

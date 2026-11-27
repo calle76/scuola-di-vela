@@ -62,3 +62,7 @@ La forma è quella della barca 1b (indietro fino a 55°, avanti a 60°), un po' 
 ## 6. Cosa serve da Ale
 
 Il via ad a0 = 2 nel motore (1.3.62), oppure no e si cambia solo il testo della lezione (la barca resta quella che avanza piano: il passo andrebbe ripensato da capo).
+
+## Esito (1.3.63, 27 novembre 2026, Opus)
+
+Fatto con **a0 = 1°** invece di 2° (scelto dopo aver visto la bolina a 22 nodi: −7,4% con 2°, −3,6% con 1°). Passano S2, S3, S5; S1 solo per la polare (`rotta-dati.js` cambia fra 17 e 20 nodi); **S4 non passa per la lezione 6.3** (guidando 16 su 99 non completate, prima 8 su 97). Numeri in `CHANGELOG.md` 1.3.63.
