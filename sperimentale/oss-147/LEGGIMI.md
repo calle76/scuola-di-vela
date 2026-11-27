@@ -19,3 +19,24 @@ Torneo lungo, giro «Misura» su GitHub, `misura_r16.py --conf m4 --lungo`, Chro
 - **K3:** bolina degli esperti, barca per barca, mediana al massimo +2 s; arrivo mediano dei rivali (M4) al massimo +2 s.
 - **K4:** casi 80-83 di `collaudo_avversari_deriva.py` almeno 9 su 10 (con la prova, PC, Chromium: 10, 10, 10, 10).
 - **K5:** coppie dopo il via al massimo +20%.
+
+## Esito della prima prova (`r16-prua-di-adesso.patch`): non adottata
+
+Giro «Misura», Chromium, 450 regate per gruppo (il gioco dà gli stessi numeri in due giri: misura ripetibile). Gioco → prova:
+
+| | Scelta 2261-2410 | Conferma 2411-2560 | Soglia |
+| --- | --- | --- | --- |
+| K1 rivale colpevole per 15-16 | 172 → 151 (−12%) | 149 → 152 (+2%) | −40% / −25%: **no** |
+| di cui dopo il via, per la 16 | 37 → 24 | 26 → 27 | (non scritto prima) |
+| K2 contatti | 579 → 546 | 496 → 515 (+3,8%) | +10%: sì |
+| K3 bolina esperti barca per barca | mediana +0,0, media +0,6 s | +0,0, +0,25 s | +2 s: sì |
+| K3 M4 (mediana delle mediane dei pezzi) | 587,1 → 586,2 | 587,9 → 588,3 | +2 s: sì |
+| K5 coppie dopo il via | 35 → 33 | 28 → 35 (+25%) | +20%: **no** |
+
+K1 era scritto male: conta anche i contatti prima del via (90 e 86, uguali nelle due versioni), dove la correzione non agisce. Soglia lasciata com'è. Causa del fallimento: la correzione agisce quando la 16 è già scattata, a virata fatta.
+
+## Seconda prova (`r16-v2-non-girare-verso.patch`, contiene anche la prima)
+
+Chi ha la precedenza (dopo lo sparo, in Deriva), con una barca vicina che deve cedergli, non gira la prua verso di lei: se la rotta voluta è almeno G147 = 5° (ipotesi nostra) più vicina alla direzione dell'altra, tiene la prua che ha. Prima, «tenere la rotta» voleva dire seguire la rotta voluta, che girando la boa è una virata verso l'altra.
+
+Criteri: gli stessi K1-K5, più **K1b, scritto prima di vedere i numeri di questa prova:** contatti con colpa di un rivale per la regola 16 dopo il via, almeno −30% sulla scelta e −20% sulla conferma. K4 sul PC, Chromium: 80, 81, 82, 83 tutti 10 su 10 (80: minimo 140-142° contro 143-150°, soglia 60°).
