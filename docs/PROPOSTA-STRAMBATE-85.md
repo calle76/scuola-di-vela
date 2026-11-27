@@ -42,3 +42,17 @@ Chi stramba veloce, con poca scotta lasca e con la barra dolce sente meno vento 
 Il via al pezzo 1 (timoniere che cambia lato), e se vuole fin da ora anche il pezzo 2. È prima della 86 (strapoggio).
 
 Fonti: [ILCA, Lasers in Strong Wind](https://ilcasailing.org/lasers-in-strong-wind/), [ILCA, Gybing for Lasers](https://ilcasailing.org/gybing-for-lasers/), [Yachting NZ, Laser Heavy Wind](https://www.yachtingnz.org.nz/sites/default/files/2018-10/coaches%20and%20officials%20-%20Resources%20-%20Laser%20Heavy%20Wind.pdf), [National 12, gybing in strong winds](https://national12.org/hints/coaching/coaching_gybing.shtml), [Y&Y forum](https://www.yachtsandyachting.com/Forum/printer_friendly_posts.asp?TID=9540), [Southampton, strambata di uno yacht](https://eprints.soton.ac.uk/176485/). Le pagine non sono state lette per intero: prima del codice vanno lette e messe in `FONTI-PUBBLICHE.md`.
+
+## Esito del pezzo 1 (27 novembre 2026, notte; solo su una copia, gioco invariato)
+
+Via di Ale («vai con le varie voci», 27 nov) a provarlo. Copia del motore della 1.3.63 con: (a) alla strambata (boma che cambia lato con vento apparente oltre 90°) lo sbandamento cambia segno, perché resta quello della barca mentre il lato sottovento si scambia (nel motore lo sbandamento è sempre misurato verso il boma: era un secondo motivo per cui la strambata non costava niente); (b) il timoniere passa da sottovento (−1) a sopravento (+1) in `T_LATO` = 1 s (ipotesi). Banco `stramba.js` (in scratchpad, non nel repo), strambata 150° → 150°, 20 semi per caso, timoniere «buono» (gira deciso, scotta corta) e «cattivo» (gira piano, scotta lasca di 0,3):
+
+| | 1.3.63 | pezzo 1 |
+| --- | --- | --- |
+| 20 nodi, buono: scuffie, sbandamento max mediano | 0/20, 2° | 0/20, 1° |
+| 20 nodi, cattivo | 0/20, 6° | 0/20, 4° |
+| 15 nodi, cattivo | 0/20, 4° | 0/20, 3° |
+| 6 e 10 nodi | 0/20, 0-2° | identico |
+| polare, raffiche e virate, `virata1b.js` | | identici |
+
+**G2 non passa** (nessuna scuffia con 20 nodi, sbandamento sotto 30°). In poppa la barca è quasi dritta e il timoniere non è fuori bordo: il suo peso e lo sbandamento al momento della strambata contano poco. **Il pezzo 1 non entra nel gioco.** Quello che fa scuffiare nella realtà, secondo le fonti del §2, è il colpo del boma e la barca che orza subito dopo: è il pezzo 2, che ha bisogno di costanti senza fonte (inerzia del boma e della vela, smorzamento). Resta da decidere con Ale se provarlo come ipotesi dichiarata.

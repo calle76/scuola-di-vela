@@ -29,6 +29,27 @@ js = G["js_corsa"]({k: v for k, v in os.environ.items() if k in ("OMBRA", "DIAGU
 for a, b in (("sv.fast(0);", "sv.lungo = true; sv.fast(0);"), ("R.t < 900", "R.t < 1500"), ("return { barche, contatti };", "return { barche, contatti, tri: !!R.tri, lungo: !!R.boats && Math.max(...R.marks.map(m => Math.hypot(m.x - R.cb.x, m.y - R.cb.y))) };")):
     assert a in js, a
     js = js.replace(a, b, 1)
+# 27 nov 2026 (voce 2, PROPOSTA-AVVERSARI-BOLINA.md §18): MIOPE=1 aggiunge, per la prima bolina di ogni rivale, il tempo di un timoniere «miope» che vede solo il vento
+# nel suo punto e in quel momento (niente vento futuro): ogni secondo prende l'angolo con la velocità migliore verso la boa (tabella del gioco, scarroccio compreso)
+# su tutte e due le mure, e vira se le altre mure rendono più della virata (T_VIR) ripagata in MIOPE_H secondi. Mira a 5 m dalla boa lungo l'uscita (cancello del gioco).
+MIOPE_JS = """const miope = (a, mk, H) => { const c = rotCancBoa(mk), ux = Math.sin(mk.out * D2R), uy = -Math.cos(mk.out * D2R), gx = mk.x + 5 * ux, gy = mk.y + 5 * uy;
+    let x = a.x, y = a.y, t = a.t, s = 0, debt = 0, vir = 0;
+    const vmc = (w, riga, ss) => { const br = Math.atan2(gx - x, -(gy - y)); let b = { v: -1e9 }; for (let n = 0; n < ROT_TWA.length; n++){ const [v, lee] = riga[n], cc = (w.twd - ss * (ROT_TWA[n] + lee)) * D2R, m = v * Math.cos(cc - br); if (m > b.v) b = { v: m, c: cc, vel: v }; } return b; };
+    for (; t < a.t + 900; t += 1){ const w = rotVento(x, y, rotRaffiche(t)), riga = rotRiga(w.tws), A = vmc(w, riga, 1), B = vmc(w, riga, -1);
+      if (!s) s = A.v >= B.v ? 1 : -1; else { const cur = s > 0 ? A : B, oth = s > 0 ? B : A; if (oth.v - cur.v > oth.v * T_VIR / H){ s = -s; debt += T_VIR; vir++; } }
+      const k = s > 0 ? A : B, mv = Math.max(0, 1 - debt); debt = Math.max(0, debt - 1);
+      const q = { x: x + Math.sin(k.c) * k.vel * mv, y: y - Math.cos(k.c) * k.vel * mv }, fr = c({ x, y }, q);
+      if (fr !== null) return { t: t + fr - a.t, vir }; x = q.x; y = q.y; }
+    return null; };
+  """
+if os.environ.get("MIOPE") == "1":
+    H = os.environ.get("MIOPE_H", "60")
+    a = "  const barche = ai.map(i => ({"
+    assert a in js, a
+    js = js.replace(a, "  " + MIOPE_JS + a, 1)
+    a = "    lati: sv.rotLatiBarca(i)"
+    assert a in js, a
+    js = js.replace(a, "    miope: (sv.rot.barche[i] && sv.rot.barche[i].taglio) ? miope(sv.rot.barche[i].taglio, R.marks[0], " + H + ") : null,\n" + a, 1)
 GIOCO = pathlib.Path(os.environ.get("RADICE") or QUI.parent); a, b_ = arg("--semi").split("-")
 
 async def main():

@@ -342,3 +342,23 @@ La misura del §16 era sulla 1.3.55 (barca vecchia). Stesso strumento, stessi se
 - Angolo e regolazione spiegano quasi tutta la **differenza fra i livelli** (con 42° e vela giusta i principianti vanno come gli esperti), che è voluta (`aiParams`): non si corregge.
 - **Negli esperti angolo e regolazione non contano niente.** Dei loro ~33 s per bolina, le virate in più ne spiegano circa un quarto; gli altri ~25 s (circa il 9% del lato) non sono né angolo, né regolazione, né vento coperto (2,5-2,8% del tempo), né la boa (4 s). Restano la **tattica sui salti** (da che parte e quando virare) e la parte della rotta ottimale che nessuno può avere (conosce il vento futuro).
 - **Prossimo passo proposto (non fatto):** separare le due cose con un pilota che vira sui salti col vento del posto (non quello futuro), da usare come metro raggiungibile al posto della rotta ottimale, sugli stessi semi. Se gli esperti restano a più di 10-15 s da quel metro, la guida dei bordi ha margine; se no, la voce 2 è chiusa come «rivali già vicini al possibile». **Nessuna proposta di correzione pronta.**
+
+## 18. Il metro raggiungibile: un timoniere «miope» (27 novembre 2026, notte; gioco 1.3.63, invariato per la misura)
+
+Via di Ale («vai con le varie voci», 27 nov) al prossimo passo del §17.
+
+- **Il metro:** `MIOPE=1` in `tests/misura_rivali_lunghe.py`. Per la prima bolina di ogni rivale, dal suo taglio della linea, un timoniere che vede **solo il vento nel suo punto e in quel momento** (con raffiche e salti, ma non il futuro), naviga sulla tabella del gioco (scarroccio compreso): ogni secondo prende l'angolo con la velocità migliore verso la boa sulle due mure, e vira se le altre mure rendono più della virata (`T_VIR` = 2 s) ripagata in H secondi. Mira a 5 m dalla boa lungo l'uscita (cancello del gioco). Non ha traffico, coni d'ombra, regole, né la fisica delle manovre oltre ai 2 s: è un vantaggio sui rivali.
+- **H scelto sul seme 4500 (prova, fuori dalla misura):** 60 s → 38-44 virate e più lento dei rivali (soglia troppo bassa); 15 → 307 s; **6 → 287 s, 11 virate**; 4 → 289; 3 → 305; 2 → 336. Preso H = 6.
+- **Misura, semi 4501-4520 (120 regate, 360 rivali, 0 errori, picco 64 °C; `sperimentale/rivali_lunghe_1-3-63_miope6_4501-4520.jsonl`), prima bolina:**
+
+| | principianti | esperti |
+| --- | --- | --- |
+| rivali, media | 312,9 s | 298,6 s |
+| **miope**, media | 288,2 s | 288,4 s |
+| rotta ottimale, media | 264,2 s | 263,6 s |
+| rivali − miope: media (mediana) | 24,7 s (25,3) | **10,2 s (4,1)** |
+| lati in cui i rivali battono il miope | 43 su 180 | 81 su 180 |
+| virate: miope / rivali | 11,4 / 8,4 | 11,5 / 6,7 |
+
+- **Cosa vuol dire:** dei circa 35 s che gli esperti perdono sulla rotta ottimale, circa 24 s li perde anche un timoniere che vede il vento del momento: sono il prezzo del non conoscere il futuro. Agli esperti restano circa 10 s in media (4 di mediana) sul metro raggiungibile, che ha anche vantaggi suoi. Con la regola scritta al §17 (più di 10-15 s = margine) gli esperti **stanno sul bordo basso: la guida dei bordi ha poco margine**. I principianti a 25 s sono la differenza di livello voluta (§17).
+- **Da fare:** conferma sui semi 4521-4540, mai guardati (regola dei semi). Se regge, la parte «bolina» della voce 2 si propone ad Ale come chiusa; restano i casi 81 e 83 di Deriva e l'uscita dal vento sporco.
