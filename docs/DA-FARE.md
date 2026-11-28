@@ -10,7 +10,7 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 92 | **Collaudi rossi rimasti dopo la barca M:** `avversari1b` 5 (Firefox), `moto_mare` (solo disegno), `giri_avversari` G12 (sul bordo della soglia), `regola21` K3 (Firefox, a volte) | `STATO.md`, `CHANGELOG.md` 1.3.62-66 | Sonnet |
+| 92 | **Collaudi rossi rimasti:** `avversari1b` scenario 5 in Firefox (7 su 10: un rivale non gira la boa in tempo, guida), `suoni_si_sentono` H5 a volte, `regola21` K3 (Firefox, a volte). `moto_mare` e G12 corretti il 28 nov | `CHANGELOG.md` 1.3.81 | Opus |
 | 99 | **Oss. 155:** colpa per la regola 15 al giocatore quando a girare è l'altra, e Blu che sbaglia il giro della boa 1: riprodurre, poi correggere | `OSSERVAZIONI-GIOCANDO.md` 155 | Opus |
 | 100 | **Regola 17:** non è nel gioco (un rivale che supera da sottovento e orza oltre la rotta propria non ha colpa per la 17). Prima contare nelle regate simulate quanti contatti ci cadrebbero, poi proposta | `archivio/PROPOSTA-REGOLA-17.md` §C, `sperimentale/regola-17/LEGGIMI.md` | Opus |
 | 101 | **Oss. 156:** la marcatura è annunciata dal Coach ma quasi non succede: o marca di più (anche da dietro, o più lontano) o si dice solo quando comincia. Da decidere nel brainstorming | `PROPOSTA-MARCATURA.md`, oss. 156 | Opus |

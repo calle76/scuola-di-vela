@@ -6,7 +6,7 @@
 
 ## Dove siamo
 
-- **Pomeriggio del 28:** 1.3.81 (scritta del vento 10 px più in basso); voce 92: corretti `moto_mare` e G12, restano `avversari1b` 5 (Firefox, guida dei rivali) e H5 dei suoni a volte; da 4 regate di Ale nascono oss. 155-156 e voci 99-101. Poi Ale vuole: correggere gli errori (Opus), quindi brainstorming sul seguito (sessione nuova, Opus).
+- **Pomeriggio del 28:** 1.3.81 (scritta del vento 10 px più in basso); voce 92: corretti `moto_mare` e G12 (confermato su GitHub, run 46159097046), restano `avversari1b` 5 (Firefox, guida dei rivali) e H5 dei suoni a volte; dalle regate di Ale (3 di torneo coi principianti e 1 di Allenamento con gli esperti, 15:24: Ale 2°, nessun contatto suo, due rivali partiti in anticipo; segno M da non registrare) nascono oss. 155-156 e voci 99-101. Poi Ale vuole: correggere gli errori (Opus), quindi brainstorming sul seguito (sessione nuova, Opus).
 - **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
 - **Ultime versioni:** 1.3.76-77 barca della giuria solida per tutti (`sperimentale/giuria/LEGGIMI.md`); 1.3.78-80 la Blu ora vede chi le sta quasi parallelo e ha la precedenza (voce 98, oss. 154; effetto piccolo nel torneo; regola 17 non entrata; `sperimentale/regola-17/LEGGIMI.md`).
 - **Giro GitHub completo sulla 1.3.80** (run 46138924562, letto per intero). Rossi già noti: `moto_mare` (solo disegno, due browser), `giri_avversari` G12 (1 segmento su 270-290, due browser), `avversari1b` scenario 5 in Firefox (7 su 10). `suoni_si_sentono` H5 rosso una volta, verde rilanciato. Da controllare: C11 2,42 s, lezioni 5.8, 6.2, 6.3 (casi noti).
@@ -17,7 +17,7 @@
 
 - **Voce 82:** ordine e scala, ricambio dei rivali sì o no, 3 nomi, poi il via.
 - **Regate di Ale e Lucio** (Deriva, Allenamento, rivali esperti): tipo A bastone, sul punteggio, 4 barche, 2 a testa (voce 2); tipo B triangolo, giri, 6 barche, 3 a testa (regola 18, Z7). Tasto M sui momenti alla boa, scaricare dopo ogni regata (restano le ultime 5), a mano una riga per ogni M e chi ha giocato.
-- **Lucio:** il finale dell'oss. 135 e rileggere la lezione 11.
+- **Lucio:** il finale dell'oss. 135 e rileggere la lezione 11 (testo del messaggio dato ad Ale il 28 nov).
 - **Fonti:** le pagine utili di https://www.racingrulesofsailing.org/ (regole 11, 15, 16, 18) in `fonti-pdf/`.
 - **Disco esterno:** `bash tests/copia_su_disco.sh` (ultima il 25 nov).
 - **Idea di Ale non in lista (25 nov):** i rivali guardano l'ingaggio, non solo la distanza, prima di virare.
