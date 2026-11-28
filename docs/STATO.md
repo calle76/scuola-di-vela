@@ -2,11 +2,12 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 28 novembre 2026 (gioco alla **1.3.81**, tag `v1.3.81`). La pagina di prima del riordino, intera: `archivio/STATO-28nov.md`.*
+*Aggiornato: 28 novembre 2026 sera (gioco alla **1.3.82**, tag `v1.3.82`). La pagina di prima del riordino, intera: `archivio/STATO-28nov.md`.*
 
 ## Dove siamo
 
-- **Pomeriggio del 28:** 1.3.81 (scritta del vento 10 px più in basso); voce 92: corretti `moto_mare` e G12 (confermato su GitHub, run 46159097046), restano `avversari1b` 5 (Firefox, guida dei rivali) e H5 dei suoni a volte; dalle regate di Ale (3 di torneo coi principianti e 1 di Allenamento con gli esperti, 15:24: Ale 2°, nessun contatto suo, due rivali partiti in anticipo; segno M da non registrare) nascono oss. 155-156 e voci 99-101. Poi Ale vuole: correggere gli errori (Opus), quindi brainstorming sul seguito (sessione nuova, Opus).
+- **Sera del 28 (correzione degli errori, Opus):** 1.3.82, voce 99 (oss. 155): la colpa per la 15 va a chi muove l'altra di lato, non alla più veloce (900 regate: colpa del pilota per la 15 −10%, contatti −1%); la Blu che scende 14 m sotto la boa dopo aver ceduto resta così (prova non passata). Voce 92: causa dello scenario 5 di `avversari1b` in Firefox trovata, correzione 9 su 10 ma rivali non arrivati +7/+4 su 900: decide Ale. Voce 100: la regola 17 cambierebbe la colpa in 1 contatto su 900 regate, mai del giocatore: non conviene. Prossimo: brainstorming sul seguito (sessione nuova, Opus).
+- **Pomeriggio del 28:** 1.3.81 (scritta del vento); voce 92: corretti `moto_mare` e G12; dalle regate di Ale nascono oss. 155-156 e voci 99-101.
 - **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
 - **Ultime versioni:** 1.3.76-77 barca della giuria solida per tutti (`sperimentale/giuria/LEGGIMI.md`); 1.3.78-80 la Blu ora vede chi le sta quasi parallelo e ha la precedenza (voce 98, oss. 154; effetto piccolo nel torneo; regola 17 non entrata; `sperimentale/regola-17/LEGGIMI.md`).
 - **Giro GitHub completo sulla 1.3.80** (run 46138924562, letto per intero). Rossi già noti: `moto_mare` (solo disegno, due browser), `giri_avversari` G12 (1 segmento su 270-290, due browser), `avversari1b` scenario 5 in Firefox (7 su 10). `suoni_si_sentono` H5 rosso una volta, verde rilanciato. Da controllare: C11 2,42 s, lezioni 5.8, 6.2, 6.3 (casi noti).
@@ -15,6 +16,7 @@
 
 ## Cosa aspetta Ale
 
+- **Due decisioni dalla sera del 28:** voce 92 (accettare la correzione dello scenario 5 con +7/+4 non arrivati su 900 regate, o lasciare il collaudo rosso in Firefox) e voce 100 (chiudere la regola 17).
 - **Voce 82:** ordine e scala, ricambio dei rivali sì o no, 3 nomi, poi il via.
 - **Regate di Ale e Lucio** (Deriva, Allenamento, rivali esperti): tipo A bastone, sul punteggio, 4 barche, 2 a testa (voce 2); tipo B triangolo, giri, 6 barche, 3 a testa (regola 18, Z7). Tasto M sui momenti alla boa, scaricare dopo ogni regata (restano le ultime 5), a mano una riga per ogni M e chi ha giocato.
 - **Lucio:** il finale dell'oss. 135 e rileggere la lezione 11 (testo del messaggio dato ad Ale il 28 nov).
@@ -34,7 +36,7 @@
 - Due fermate per ogni compito (`METODO.md`, `CLAUDE.md`), soglie scritte prima. Commit e push li faccio io (file uno per uno, mai `git add -A` né `--force`). Le scelte tecniche le fa Claude e le dichiara. **Si fa il giro di tutta `DA-FARE.md`, poi si guarda cosa resta.**
 - **Collaudo:** `.venv-collaudi/bin/python tests/freno.py 64 55 .venv-collaudi/bin/python tests/collaudo_nome.py` (Firefox: `BROWSER=firefox` davanti). Veloci: `node tests/fisica/polare.js`, `raffiche_e_virate.js`, `impronta1b.js`, `tests/collaudo_versione.py`, `tests/controllo_commenti.py`. In background con `run_in_background`, un comando per volta.
 - Con `#collaudo` le regate restano corte (serve `--lungo`); apertura e corsa in un solo `evaluate`, pagina nuova per regata. Solo alcuni script accettano `RADICE=cartella` (copia del gioco); gli altri leggono `index.html` del repo.
-- A ogni cambio della guida dei rivali i confronti al bit dei collaudi passano alla versione nuova (ora `v1.3.80`).
+- A ogni cambio della guida dei rivali i confronti al bit dei collaudi passano alla versione nuova (ora `v1.3.82`).
 - **GitHub:** `gh workflow run collaudi.yml` (`allowed_domains` github.com e api.github.com); registri di un pezzo: `gh api --allow-escape-sequences repos/calle76/scuola-di-vela/actions/jobs/ID/logs`. Online: https://calle76.github.io/scuola-di-vela/
 - Scrivere fuori dal repo solo con percorsi esatti e l'ok di Ale. Mai `//` a metà riga in `js/`.
 

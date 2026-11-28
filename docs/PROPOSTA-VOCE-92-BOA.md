@@ -18,3 +18,11 @@ Dopo il punto 2 (`b.p2`) la regola torna a valere, ma con margine 0 invece di `P
 - **C2** `collaudo_avversari1b.py` intero, Chromium e Firefox: tutti gli scenari almeno 9 su 10.
 - **C3** il caso del §12 (seme 28, regata 2, esperti, Chromium, `tests/esplora.py 28 28`): la Verde arriva.
 - **C4** torneo lungo, giro «Misura», stessi semi della voce 99: rivali non arrivati non in aumento, arrivo mediano entro ±2 s.
+
+## Esito (28 nov 2026): non adottata (C4 non passa)
+
+- **C1** Firefox scenario 5: 9 su 10 (prima 7). La variante 2 resta senza giro per un'altra causa: per scendere al punto 2 la guida usa il ramo «bersaglio in poppa» con le abbattute a tempo, e nel collaudo il bordo non scade mai (`boardMax` 999): la Blu va di lasco fino a 40 m a sinistra prima di tornare.
+- **C2** `collaudo_avversari1b.py` intero: Chromium 10/10 in tutti gli scenari; Firefox 10/10, scenario 5 9/10.
+- **C3** `esplora.py 28 28`: la Verde della regata 2 arriva.
+- **C4** giro «Misura» (run 46165684057 e 46165691339, insieme alla correzione (a) della voce 99, contro la 1.3.81): rivali non arrivati **507 → 514 e 466 → 470** (soglia: non in aumento), **non passa**; arrivo mediano +1,6 e +1,0 s, contatti −1,8% e −0,4%. Con la sola (a) (voce 99, A5): 507 → 513 e 466 → 464; la parte della voce 92 aggiunge +1 e +6.
+- Il codice è in `sperimentale/voce-99/v99-e-92.patch` (con la (a)). Scelta per Ale: lasciarla così (scenario 5 rosso in Firefox, 7 su 10) o accettare il piccolo aumento dei non arrivati.

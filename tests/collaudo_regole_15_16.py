@@ -12,7 +12,7 @@ import asyncio, json, math, os, pathlib, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
-NREG = int(arg("--regate", "200")); RIF = arg("--rif", "v1.3.80") # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
+NREG = int(arg("--regate", "200")); RIF = arg("--rif", "v1.3.82") # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
 LUNGO = "--lungo" in sys.argv; NT = 3 if LUNGO else 4   # regate di un torneo
 fail, casi = [], {}
 def chk(parte, ok, testo):
@@ -69,6 +69,15 @@ async def main():
             f = min(1, (t - 2) / 2); x0, y0 = 3.5, 3.5; x1, y1 = -2.1 - 1.4, -2.1 + 1.4
             return (x0 + (x1 - x0) * f, y0 + (y1 - y0) * f, 315)
         await caso("15f affiancamento da dietro sottovento, contatto 1 s dopo", scena(20, lambda t: (0, 0, 315), Bf, uA=2, uB=3), "B", 15)
+        # 1.3.82 (voce 99, oss. 155, docs/PROPOSTA-VOCE-99.md, criterio A2): affiancate con le stesse mure (a dritta, di poppa), la sopravento diventa l'altra senza manovre
+        f_ = lambda h: (math.sin(math.radians(h)), -math.cos(math.radians(h))); n_ = lambda h: (math.cos(math.radians(h)), math.sin(math.radians(h)))
+        # 15g: A dritta a 200° (3 m/s); B più lenta (2,5 m/s) a 270°, 4 m avanti e 3 m a sinistra della prua di A, le attraversa la prua: la precedenza passa ad A per il moto di B → niente 15
+        def Ag(t): return (3 * t * f_(200)[0], 3 * t * f_(200)[1], 200)
+        def Bg(t): return (4 * f_(200)[0] - 3 * n_(200)[0] + 2.5 * t * f_(270)[0], 4 * f_(200)[1] - 3 * n_(200)[1] + 2.5 * t * f_(270)[1], 270)
+        await caso("15g l'altra, più lenta, attraversa la prua di chi va dritto", scena(6, Ag, Bg, uA=3, uB=2.5), "B", 11)
+        # 15h: A più lenta (2 m/s) gira la prua da 220° a 190° in mezzo secondo sopra B (3 m/s, ferma a 220°, 3 m avanti e 1 m a sinistra): la precedenza passa ad A per la sua rotazione → 15
+        await caso("15h chi gira la prua sopra l'altra, più veloce, prende la precedenza", scena(8, lambda t: (0, 0, gira(220, 190, 1, 1.5)(t)),
+                   lambda t: (3 * f_(220)[0] - n_(220)[0], 3 * f_(220)[1] - n_(220)[1], 220), uA=2, uB=3), "A", 15)
         # ---- regola 16 (A mure a dritta con la precedenza da più di T; B mure a sinistra che passa a poppa, a 8 m in direzione 190°)
         Bp = lambda t: (8 * math.sin(math.radians(190)), -8 * math.cos(math.radians(190)), 45)
         await caso("16a poggiata verso chi passa a poppa (16.2)", scena(40, lambda t: (0, 0, gira(315, 280, 7, 9)(t)), Bp), "A", 16)

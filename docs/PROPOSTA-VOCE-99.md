@@ -17,7 +17,7 @@ Fra due barche affiancate con le stesse mure, quando la sopravento diventa l'alt
 **Criteri (soglie nostre):**
 
 - **A1** la scena dell'oss. 155 ripassata: al 397,48 s la colpa non è di Ale (attesa: Blu, regola 11). Chromium e Firefox.
-- **A2** due casi a mano nuovi in `collaudo_regole_15_16.py`: (15g) B, più lenta, attraversa la prua di A che va dritta: niente 15 per A; (15h) A, più lenta, gira la prua sopra B che va dritta e prende la precedenza: 15 per A (con la regola di prima il caso 15h dava «nessuna 15»).
+- **A2** due casi a mano nuovi in `collaudo_regole_15_16.py`: (15g) B, più lenta, attraversa la prua di A che va dritta: niente 15 per A; (15h) A, più lenta, gira la prua sopra B che va dritta e prende la precedenza: 15 per A (con la regola di prima il caso 15h darebbe «nessuna 15», per costruzione: A è la più lenta; non misurato).
 - **A3** tutti i casi R1 di prima restano com'erano (R1 è scritto prima, nessuno cambia esito).
 - **A4** la Scuola non cambia (R3) e i veloci (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js`) restano identici.
 - **A5** effetto nelle regate del torneo, lungo, giro «Misura» su GitHub, 150 + 150 semi (scelta 2261-2410, conferma 2411-2560), stessi semi col gioco com'è e con la patch: si riportano contatti per regola e colpa del pilota. **Soglie:** contatti in tutto non oltre +5%; colpa del pilota per la 15 non in aumento; arrivo mediano dei rivali entro ±2 s.
@@ -35,3 +35,11 @@ Fra due barche affiancate con le stesse mure, quando la sopravento diventa l'alt
 - **B3** torneo lungo, giro «Misura», stessi semi di A5: arrivo mediano dei rivali entro ±2 s, contatti non oltre +5%, rivali non arrivati non in aumento.
 
 **Esito B1 (28 nov, Chromium, varianti 0-19): non passa.** Punto 2 vicino (3 m a sinistra, 7 m sotto, entro 3 m): giro mediano **16,9 s** (da 23,5), massimo 18,1, tutte girano, nessuna boa toccata; soglia 15 s. Seconda prova, dichiarata dopo aver visto il primo numero (2 m a sinistra, 5 m sotto, entro 2 m, su una copia): mediana 16,5 s ma una variante a 48,5 s. Il tempo che resta è la risalita dopo il punto 2, non la discesa. **Non adottata**; la prova è in `sperimentale/voce-99/v99-a-e-b.patch` (con la (a)). Conferma (varianti 20-39) non lanciata: inutile dopo un no in scelta.
+
+## Esito della correzione (a) (28 nov 2026): adottata nella 1.3.82
+
+- **A1** scena dell'oss. 155: al contatto cede la Blu (regola 11), autore del cambio la Blu. Chromium e Firefox.
+- **A2-A3** `collaudo_regole_15_16.py`: R1 19 casi su 19 (17 di prima e 15g, 15h), Chromium e Firefox; R3 Scuola 12 su 12 identiche alla 1.3.80.
+- **A4** `polare.js`, `raffiche_e_virate.js` identiche; `impronta1b.js` 25 corse identiche.
+- **A5** giro «Misura» (run 46163454685 e 46163462386, 450 + 450 regate lunghe): contatti 543 → 534 (−1,7%) e 466 → 462 (−0,9%); colpa del pilota 162 → 154 e 142 → 134, per la 15: 62 → 56 e 46 → 41; arrivo mediano +0,7 e +0,9 s; contatti per la 15: 172 → 160 e 140 → 135. Passa.
+- **Da sapere:** cambiando l'autore cambia anche la guida dei rivali (usa `chiCede1516`). `esplora.py 28 28`: nella regata 103 esperti (sequenza intera nella stessa pagina) Pietro Gallo non arriva prima che si chiuda la regata; con la 1.3.81 arrivava. Da sola, la stessa regata arriva. Caso singolo di traiettoria diversa (giri di penalità alla partenza, ultimo tratto di lasco 137 m di lato); il conto dei non arrivati su 900 regate è nel giro della voce 92.

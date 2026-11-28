@@ -14,4 +14,15 @@ Si riportano anche i limiti larghi: gli stessi contatti senza la condizione su `
 
 ## Strumento
 
-`misura_r100.py` (copia di `sperimentale/regola-17/misura_r17.py` con `lat0` e `sopra` nelle righe CONT), giro «Misura», `--conf m4 --lungo`, patch `sperimentale/voce-100/dprop.patch`, semi 2261-2560 (450 + 450 regate).
+`misura_r100.py` (copia di `sperimentale/regola-17/misura_r17.py` con `lat0` e `sopra` nelle righe CONT), giro «Misura», `--conf m4 --lungo`, patch `sperimentale/voce-100/conto-su-1382.patch` (la correzione (a) della voce 99, la prova della voce 92 e la riga `b.dProp`; `dprop.patch` è la sola riga, sulla 1.3.81), semi 2261-2560 (450 + 450 regate).
+
+## Esito (28 nov 2026, run 46165684057 e 46165691339, gioco con la patch `conto-su-1382.patch`: la 1.3.82 più la prova della voce 92, poi non adottata)
+
+| | Semi 2261-2410 (450 regate) | Semi 2411-2560 (450 regate) |
+| --- | --- | --- |
+| contatti in tutto | 533 | 464 |
+| tetto (senza la condizione sulla rotta propria) | 21 | 28 |
+| casi 17 | 1 | 4 |
+| di cui con la colpa oggi al pilota | 0 | 0 |
+
+Nei casi 17 la colpa oggi è già della sottovento in 4 casi su 5 (per la 15 o la 16); solo 1 su 5 andrebbe dalla sopravento alla sottovento. Nel «tetto» la sottovento sta quasi sempre **sotto** la sua rotta propria (gradi negativi: sta cedendo o poggiando), non sopra. **Soglia (1 caso con colpa al pilota ogni 30 regate): 0 su 900. Non vale la pena** fare la parte «penalità» della regola 17: cambierebbe la colpa in circa 1 contatto ogni 900 regate.

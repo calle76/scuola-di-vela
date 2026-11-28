@@ -10,9 +10,8 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
-| 92 | **Collaudi rossi rimasti:** `avversari1b` scenario 5 in Firefox (7 su 10: un rivale non gira la boa in tempo, guida), `suoni_si_sentono` H5 a volte, `regola21` K3 (Firefox, a volte). `moto_mare` e G12 corretti il 28 nov | `CHANGELOG.md` 1.3.81 | Opus |
-| 99 | **Oss. 155:** colpa per la regola 15 al giocatore quando a girare è l'altra, e Blu che sbaglia il giro della boa 1: riprodurre, poi correggere | `OSSERVAZIONI-GIOCANDO.md` 155 | Opus |
-| 100 | **Regola 17:** non è nel gioco (un rivale che supera da sottovento e orza oltre la rotta propria non ha colpa per la 17). Prima contare nelle regate simulate quanti contatti ci cadrebbero, poi proposta | `archivio/PROPOSTA-REGOLA-17.md` §C, `sperimentale/regola-17/LEGGIMI.md` | Opus |
+| 92 | **Collaudi rossi rimasti:** `avversari1b` scenario 5 in Firefox (7 su 10): causa trovata e correzione provata (9 su 10) ma rivali non arrivati +7 e +4 su 900 regate: **Ale decide** se accettarla; `suoni_si_sentono` H5 a volte, `regola21` K3 (Firefox, a volte) | `PROPOSTA-VOCE-92-BOA.md` | Opus |
+| 100 | **Regola 17: misurata, non conviene** (1 contatto su 900 regate cambierebbe colpa, mai del giocatore). **Ale:** chiuderla? | `sperimentale/voce-100/LEGGIMI.md` | — |
 | 101 | **Oss. 156:** la marcatura è annunciata dal Coach ma quasi non succede: o marca di più (anche da dietro, o più lontano) o si dice solo quando comincia. Da decidere nel brainstorming | `PROPOSTA-MARCATURA.md`, oss. 156 | Opus |
 | 49 | **Regola 18:** versione A fatta (1.3.49); la B (rivali che danno spazio) «non ora», si decide con Z7 sulle regate di Ale e Lucio | `PROPOSTA-REGOLA-18.md`, `-18-B.md` | Opus |
 

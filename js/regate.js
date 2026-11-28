@@ -844,10 +844,22 @@
       const A = bs[i], B = bs[j], key = i + "-" + j;
       if (A.fin !== null || B.fin !== null || A.dnf || B.dnf || Math.hypot(A.S.x - B.S.x, A.S.y - B.S.y) > PREC_VICINE){ delete R.prec[key]; continue; }
       const base = chiCede(A, B), ha = base.cede === A ? B : A, p = R.prec[key];
-      if (!p){ R.prec[key] = { ha, t: -1e9, autore: null }; continue; }
-      if (p.ha !== ha){ const autore = A.manovra !== B.manovra ? (A.manovra ? A : B) : A.manovra ? null : (A.S.u >= B.S.u ? A : B);
-        R.prec[key] = { ha, t: R.t, autore }; }
+      if (!p){ R.prec[key] = { ha, t: -1e9, autore: null, reg: base.regola }; continue; }
+      if (p.ha !== ha){ const autore = A.manovra !== B.manovra ? (A.manovra ? A : B) : A.manovra ? null : V99 && p.reg === 11 && base.regola === 11 ? autoreLato(A, B) : (A.S.u >= B.S.u ? A : B);
+        R.prec[key] = { ha, t: R.t, autore, reg: base.regola }; }
+      else p.reg = base.regola;
     }
+  }
+  /* 1.3.82 (voce 99, oss. 155, docs/PROPOSTA-VOCE-99.md): affiancate con le stesse mure, la sopravento diventa l'altra senza manovre: l'autore e' chi ha portato B
+     dall'altro lato della prua di A (la prua con cui chiCede guarda i lati). Moto di lato di B: velocita' per il seno della differenza delle prue; rotazione di A: velocita'
+     angolare della prua sull'ultimo mezzo secondo della sua storia (scelta nostra) per la distanza di B lungo la prua di A. Prima: sempre la piu' veloce, anche quando
+     era l'altra ad attraversarle la prua (contatto del 28/11 14:34, 397,5 s). V99 = false: come fino alla 1.3.81 */
+  let V99 = true;
+  function autoreLato(A, B){
+    const hA = A.S.h * D2R, rx = B.S.x - A.S.x, ry = B.S.y - A.S.y, lungo = Math.abs(rx * Math.sin(hA) - ry * Math.cos(hA));
+    const s = A.storiaH || []; let w = 0;
+    for (let k = s.length - 1; k >= 0; k--) if (R.t - s[k][0] >= 0.5){ w = norm180(A.S.h - s[k][1]) * D2R / (R.t - s[k][0]); break; }
+    return Math.abs(B.S.u * Math.sin((B.S.h - A.S.h) * D2R)) >= Math.abs(w) * lungo ? B : A;
   }
   function prua16(b){ const s = b.storiaH; if (!s || !s.length) return null; for (const [t, h] of s) if (R.t - t <= T15 + 1e-9) return h; return s[s.length - 1][1]; }
   // come chiCede, più le regole 15 e 16 nelle regate di Deriva; .base è la precedenza di base (10-13). guida (1.3.56): le decisioni dei rivali, senza la regola 18 (versione B della voce 49, a parte)

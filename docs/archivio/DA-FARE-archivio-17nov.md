@@ -102,3 +102,5 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 **Chiuse il 28 novembre:** 8 (suoni) e 10 (giudizio all'ascolto): Ale, «l'ascolto mi sembra buono».
 
 **Chiusa il 28 novembre:** 66 (dopo le regate lunghe): giocando le raffiche si sentono (Ale). La misura del 20 novembre (+0,2/+0,6 nodi in raffica, soglia +0,6 non passata) non è stata rifatta con la barca di oggi. `PROPOSTA-PERCORSO-LUNGO.md`.
+
+**Chiusa il 28 novembre:** 99 (oss. 155): colpa per la regola 15 ora a chi muove l'altra di lato (1.3.82, `PROPOSTA-VOCE-99.md`); la Blu che scende al punto 2 dopo aver ceduto alla boa resta così (correzione provata, non passa; causa prima la voce 49 B).

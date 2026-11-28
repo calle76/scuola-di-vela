@@ -6,6 +6,15 @@ I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a 
 
 **Nomi dei livelli:** fino alla 1.0.46 queste voci chiamano spesso «livello 2» la barca dell'1b; nelle più vecchie «livello 2» è anche il fiocco, che oggi è il livello 3 (`docs/archivio/VISIONE-LIVELLI-E-CARRIERA.md` §2).
 
+## 1.3.82 — La colpa per la regola 15 a chi ha davvero manovrato (voce 99, oss. 155)
+
+- **Perché (Ale, regata 28/11 14:34, 397,5 s):** colpa ad Ale per la regola 15 quando era la Blu ad attraversargli la prua. Quando la precedenza passa da una barca all'altra senza cambi di mure né virate, il gioco dava l'«autore» del cambio sempre alla più veloce.
+- **Riprodotto** ripassando nel gioco le posizioni registrate (`sperimentale/voce-99/riproduci155.py`): stesso esito del file. Il cambio è fra «Ale sopravento» e «Ale sottovento» (regola 11), e lo fa il moto di lato della Blu: con la prua di Ale tenuta ferma avviene lo stesso.
+- **Cosa cambia (`aggiornaPrecedenze`, `autoreLato`, `js/regate.js`):** fra barche affiancate con le stesse mure, quando la sopravento diventa l'altra senza manovre, l'autore è chi ha portato l'altra dall'altro lato della prua di riferimento: si confrontano il moto di lato dell'una e la rotazione della prua dell'altra (sull'ultimo mezzo secondo, scelta nostra). Gli altri casi restano alla più veloce. `V99 = false` torna alla 1.3.81. Vale per la colpa e per la guida dei rivali (regate di Deriva).
+- **Misurato** (`docs/PROPOSTA-VOCE-99.md`, criteri scritti prima): scena dell'oss. 155 ora colpa alla Blu (Chromium e Firefox); `collaudo_regole_15_16` R1 19 su 19 con i due casi nuovi 15g e 15h, Scuola identica; 900 regate lunghe sul giro «Misura»: contatti −1,7% e −0,9%, colpa del pilota per la 15 da 62 a 56 e da 46 a 41, arrivo dei rivali +0,7 e +0,9 s. `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici.
+- **Non entrate:** la Blu che dopo aver ceduto alla boa scende 14 m sotto (punto 2 più vicino: giro da 23,5 a 16,9 s, soglia 15 s, no); la correzione dello scenario 5 di `collaudo_avversari1b` in Firefox (voce 92: 9 su 10, ma rivali non arrivati in aumento, +7 e +4 su 900 regate). Voce 100: la regola 17 cambierebbe la colpa in 1 contatto su 900 regate, mai del pilota: non conviene (`sperimentale/voce-100/LEGGIMI.md`).
+- **Collaudi:** i sette confronti al bit (`coach`, `freccia`, `regole_15_16`, `regola18`, `riquadro_bandiere`, `scotta_automatica`, `storico_rivali`) passano alla 1.3.82, come a ogni cambio della guida dei rivali.
+
 ## 1.3.81 — La scritta del vento un po' più in basso
 
 - **Perché (Ale, 28 novembre, foto `Nord.png`):** con la bussola girata con la N in basso, la lettera toccava la scritta del vento.
