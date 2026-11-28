@@ -11,7 +11,7 @@ import asyncio, math, os, pathlib, subprocess, sys, tempfile
 from playwright.async_api import async_playwright
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 arg = lambda n, d=None: sys.argv[sys.argv.index(n) + 1] if n in sys.argv else d
-NREG = int(arg("--regate", "90")); DA = int(arg("--semi-da", "2801")); RIF = arg("--rif", "v1.3.77")   # 1.3.59 (voce 84): la barca M cambia i tempi di tutte le regate; Z1 confronta con la prima versione che ha la stessa barca (prima v1.3.48) # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
+NREG = int(arg("--regate", "90")); DA = int(arg("--semi-da", "2801")); RIF = arg("--rif", "v1.3.78")   # 1.3.59 (voce 84): la barca M cambia i tempi di tutte le regate; Z1 confronta con la prima versione che ha la stessa barca (prima v1.3.48) # 27 nov 2026 (voce 92): dalla barca M (1.3.59-1.3.61) nessuna regata può essere identica a una versione di prima; riferimento la 1.3.61: ora è solo una guardia di non-regressione (la prova della funzione è stata fatta quando è nata)
 LUNGO = "--lungo" in sys.argv; NT = 3 if LUNGO else 4
 fail, casi = [], {}
 def chk(parte, ok, testo):

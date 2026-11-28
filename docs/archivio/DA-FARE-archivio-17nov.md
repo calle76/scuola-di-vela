@@ -94,3 +94,7 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 - **85** (27 nov 2026): strambate vere. Chiusa: il difetto veniva da una misura del solo motore (GIRO5 §6); nel gioco la strambata a vela aperta costa già (velocità −45%, 36° con 10 nodi, scuffia 20/20 con 15). `PROPOSTA-STRAMBATE-85.md` §Esito finale, `tests/misura_strambata.py`.
 - **93** (27 nov 2026): al lasco lascare un poco rallentava; corretto nella 1.3.65 con la forma della forza normale di una piastra misurata (F146).
 - **86** (27 nov 2026): strapoggio, fatto nella 1.3.68 (boma che tiene il lato fino a 35° apparenti con la vela aperta, strambata contata al passaggio del boma).
+
+## Chiusa il 28 novembre 2026
+
+- **Voce 98 (chi supera da dietro sottovento, regole 17 e 14; oss. 154), chiusa nella 1.3.78:** la guida dei rivali non vedeva una barca quasi parallela (momento dei centri più vicini oltre 15 s). Ora chi ha la precedenza di base conta subito una barca a meno di 6,3 m che si avvicina. `collaudo_regola17.py` nuovo; misure in `CHANGELOG.md` 1.3.78 e `sperimentale/regola-17/LEGGIMI.md`. La regola 17 non è entrata (non serviva nel caso).

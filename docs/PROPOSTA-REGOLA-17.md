@@ -46,3 +46,10 @@ Il nuovo `collaudo_regola17.py` (Chromium e Firefox). Se B cambia la guida: i 7 
 ## Fonti
 
 F15 (World Sailing, RRS 2025-2028): regole 11, 12, 14, 15, 17 e definizione di rotta propria, lette nella copia locale il 28 novembre 2026.
+
+## Esito (28 novembre 2026, via di Ale del mattino: «vai in autonomia»)
+
+- **Passo A, causa:** non erano gli scarti a fallire. In `cedeAvv1b` un'altra barca conta solo se il momento dei centri più vicini cade entro `T_CEDE` = 15 s. Lucio e la Blu, quasi paralleli e alla stessa velocità, avevano quel momento a 18-37 s, e gli scafi si toccano prima (centri a 3,2 m). La Blu non vedeva Lucio. Dettagli in `sperimentale/regola-17/LEGGIMI.md`.
+- **Criterio 1 e la scena:** la scena scritta qui («dietro») dava 1 contatto su 20 col gioco di oggi, cioè non distingueva. Aggiunta una scena «affiancata»; la velocità del giocatore è legata a quella del rivale e il seme si fissa prima di aprire la regata (scelte fatte dopo aver visto i numeri, dichiarate nel LEGGIMI). Vento solo 10 nodi (il collaudo non può cambiarlo, semplificazione dichiarata).
+- **B adottata nella 1.3.78, solo per chi ha la precedenza di base (B2):** criteri 1-5 tutti passati, sui semi di scelta e su quelli di conferma. La prima prova (B1, anche per chi cede) non passava l'arrivo mediano (+2,3 s) e le coppie in conferma (+26,9%). Numeri in `CHANGELOG.md` 1.3.78.
+- **C (regola 17) non fatta:** in questo caso era rispettata e la scena non ha mostrato casi in cui serva.
