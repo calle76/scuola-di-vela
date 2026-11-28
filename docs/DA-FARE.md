@@ -29,7 +29,6 @@
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
 | 22 | **«Errore interno … property "t"» in Firefox** (Lucio): causa ignota, serve che ricompaia | `CHANGELOG.md` 1.2.28 | — |
-| 8 | **Suoni:** boa alzata (1.3.67), sartiame resta l'originale; resta il giudizio all'ascolto (voce 10) | `CHANGELOG.md` 1.3.67 | Sonnet |
 
 ## 4. In sospeso o idee
 
@@ -54,6 +53,5 @@
 
 | # | Cosa |
 | --- | --- |
-| 10 | **Giudizio dei suoni** all'ascolto |
 | 14 | **Copia fuori da GitHub:** `bash tests/copia_su_disco.sh` ogni tanto |
 | — | Domanda a Lucio sul finale (oss. 135); pagine di `racingrulesofsailing.org` in `fonti-pdf/` |

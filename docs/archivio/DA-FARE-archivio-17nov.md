@@ -98,3 +98,5 @@ Il gioco sta diventando una carriera contro rivali che si conoscono. Il mio cons
 ## Chiusa il 28 novembre 2026
 
 - **Voce 98 (chi supera da dietro sottovento, regole 17 e 14; oss. 154), chiusa nella 1.3.78-1.3.80:** la guida dei rivali non vedeva una barca quasi parallela (momento dei centri più vicini oltre 15 s). Ora chi ha la precedenza di base conta subito una barca con le stesse mure a meno di 6,3 m che si avvicina, a più di 40 m da linea e boa, non verso chi sconta (1.3.79-1.3.80). `collaudo_regola17.py` nuovo; misure in `CHANGELOG.md` 1.3.78 e `sperimentale/regola-17/LEGGIMI.md`. La regola 17 non è entrata (non serviva nel caso).
+
+**Chiuse il 28 novembre:** 8 (suoni) e 10 (giudizio all'ascolto): Ale, «l'ascolto mi sembra buono».
