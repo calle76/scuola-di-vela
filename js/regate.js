@@ -526,17 +526,18 @@
     const s = b.S, L = BOAT.length, vx = Math.sin(s.h * D2R) * s.u, vy = -Math.cos(s.h * D2R) * s.u;
     if (b.virando) return desired; // a virata in corso la si finisce
     let best = null, bt = 1e9;
+    const mk98 = b.leg >= 1 && b.leg <= R.marks.length ? R.marks[b.leg - 1] : null, lontano98 = b.leg >= 1 && (!mk98 || Math.hypot(mk98.x - s.x, mk98.y - s.y) >= 40); /* 1.3.79: la regola della voce 98 vale lasciata la linea e lontano dalla boa da girare (40 m, la distanza di «vicino alla boa» qui sotto): alla boa tre rivali insieme non giravano piu' entro 60 s (collaudo_avversari1b, scenario 5) */
     for (const o of R.boats){ // la barca col contatto più vicino nel tempo: chi passa a meno di due lunghezze entro T_CEDE s
       if (o === b || o.fin !== null || o.dnf || o.S.capsized) continue;
       const rx = o.S.x - s.x, ry = o.S.y - s.y, d = Math.hypot(rx, ry); if (d > D_CEDE) continue;
       const wx = Math.sin(o.S.h * D2R) * o.S.u - vx, wy = -Math.cos(o.S.h * D2R) * o.S.u - vy, w2 = wx * wx + wy * wy;
       const t = w2 > 1e-6 ? Math.max(0, -(rx * wx + ry * wy) / w2) : 0; // fra quanti secondi si è più vicini
       if (b.leg === 0 && d > L && -(rx * wx + ry * wy) / d < V_AVV && !(o === b.cedeA && t > 0)) continue; // 1.1.1: in partenza due barche che non si avvicinano (per esempio parallele alla stessa velocità) non si cedono: prima si cedevano
-      /* voce 98 (docs/PROPOSTA-REGOLA-17.md, oss. 154; F15 regola 14): nelle regate di Deriva, dopo lo sparo, una barca a meno di ULTIMO lunghezze che si avvicina conta subito per chi ha la precedenza,
+      /* voce 98 (docs/PROPOSTA-REGOLA-17.md, oss. 154; F15 regola 14): nelle regate di Deriva, dopo lo sparo, lasciata la linea e lontano dalla boa (1.3.79: in partenza la Blu del seme 11 dei salti finiva in poppa e non partiva), una barca a meno di ULTIMO lunghezze che si avvicina conta subito per chi ha la precedenza,
          anche se il momento dei centri piu' vicini e' oltre T_CEDE: due barche quasi parallele si toccano con i centri ancora a 3 m, 15-35 s prima di quel momento */
-      const vic = V98 && guarda() && R.t >= 0 && d < ULTIMO * L && rx * wx + ry * wy < 0 && chiCede(b, o).cede !== b, tt = vic ? 0 : t; /* solo chi ha la precedenza di base (10-13): chiCede non scrive niente, chiCede1516 si' (R.r16) */
+      const vic = V98 && guarda() && R.t >= 0 && lontano98 && d < ULTIMO * L && rx * wx + ry * wy < 0 && chiCede(b, o).cede !== b, tt = vic ? 0 : t; /* solo chi ha la precedenza di base (10-13): chiCede non scrive niente, chiCede1516 si' (R.r16) */
       if (tt >= bt || (!vic && (t > T_CEDE || (Math.hypot(rx + wx * t, ry + wy * t) > 2 * L && !(o === b.cedeA && t > 0))))) continue; // chi sta già cedendo continua finché non si allontanano: altrimenti appena poggiato la previsione dice «passi», 
-      bt = tt; best = { o, d };
+      bt = tt; best = { o, d, vic };
     }
     if (!best){ b.cedeA = null; b.rottaU = null; b.cedeDa = null; return desired; }
     const o = best.o, devo = (guarda() && R.t >= 0 ? chiCede1516(b, o, true) : chiCede(b, o)).cede === b; b.cedeA = devo ? o : null; // 1.3.11: in Deriva anche le regole 15 e 16; 1.3.56: solo dopo lo sparo
@@ -544,7 +545,7 @@
     if (!devo && best.d > ULTIMO * L){ b.rottaU = null; return desired; }
     if (b.cedeDa === null || b.cedeDa === undefined){ b.cedeDa = R.t; b.cedeH = s.h; } /* cedeH: la prua di quando è cominciato lo scarto, base fissa degli scarti di chi cede */
     if (R.t - b.cedeDa > SCARTO_MAX){ b.rottaU = null; return desired; } // nessuno scarto dura per sempre: due barche parallele e vicine si tenevano a vicenda su una rotta (misurato: 2 barche mai arrivate)
-    if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = s.h; // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
+    if (devo) b.rottaU = null; else if (b.rottaU === null || b.rottaU === undefined) b.rottaU = best.vic ? desired : s.h; /* 1.3.79: con la regola della voce 98 si parte dalla rotta voluta; dalla prua di adesso, gia' poggiata, gli scarti si sommavano (non_partite salti, seme 11: la Blu in poppa piena lontano dalla linea) */ // la rotta di quando è cominciato lo scarto: rifatto da quella di adesso, a ogni istante si sommerebbe
     // Deriva, fette 2 e 3 (docs/PROPOSTA-AVVERSARI-DERIVA.md): si prova lo scarto più piccolo che passa lontano da TUTTE le barche vicine. Chi cede parte dalla rotta che vuole,
     // chi ha la precedenza dalla rotta che ha: mai dentro l'angolo morto né oltre il vento, e quindi niente ritorni di bolina a chi sta scendendo.
     const lato = devo ? side : (sgn(norm180(twd - b.rottaU)) || side);

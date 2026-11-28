@@ -70,3 +70,12 @@ B1 non passa (arrivo +2,2/+2,3 s contro +2; coppie +26,9% in conferma).
 Casi 80-83 con B2: 10, 10, 10, 10 su 10. Scuola: `impronta1b.js` 25 corse identiche, `polare.js` e `raffiche_e_virate.js` identiche alla 1.3.77 carattere per carattere. **B2 passa tutti i criteri ed è nella 1.3.78.**
 
 **Cosa resta:** i contatti dopo un sorpasso da sottovento calano (71 → 50, 53 → 47) ma non spariscono. Nel torneo il giocatore pilota non tiene una prua fissa, e chi supera da dietro (regola 12, prima di affiancarsi) non usa ancora la regola nuova: con B1 la usava, ma costava tempo e coppie. La regola 17 (rotta propria di chi supera da sottovento) non è entrata: nell'oss. 154 era rispettata e la scena non mostra casi in cui serva.
+
+## 1.3.79: la regola solo lontano da linea e boe (`v98-1379.patch`, sopra la 1.3.78)
+
+Il giro completo sulla 1.3.78 (run 46120775438) ha dato due rossi nuovi in Chromium, tutti e due causati dalla 1.3.78 (confronto con la 1.3.77 sugli stessi semi):
+
+- `collaudo_non_partite` salti, seme 11, principianti, 5 minuti: la Blu non parte entro 60 s. Traccia: cede alla Rossa (prua 246°), poi ha la precedenza e lo scarto parte dalla prua già poggiata (232°, 128° dal vento). La regola della poppa (oss. 85, `GYBE_MIN`) vede una strambata che non c'è e per 10 s la tiene a 172° dal vento.
+- `collaudo_avversari1b` scenario 5 (tre rivali alla boa): 10 → 8 su 10.
+
+La regola ora vale solo con `leg >= 1` e a più di 40 m dalla boa da girare; lo scarto parte dalla rotta voluta. Misure contro la 1.3.77 (run 46126322329 e 46126325088): tutti i criteri passano (numeri in `CHANGELOG.md` 1.3.79). **Effetto nel torneo non chiaro:** contatti dopo un sorpasso da sottovento 71 → 55 (scelta) e 53 → 54 (conferma). La scena lo mostra (14 e 11 → 0 su 20), il torneo no: lì molti di quei contatti sono vicino alla linea o alle boe, dove ora la regola non vale, oppure il colpevole è il pilota che stringe.
