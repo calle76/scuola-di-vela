@@ -1,6 +1,6 @@
 # Proposta: saturazione del timone (Scuola di vela, dalla 0.21.2)
 
-> **Archiviato il 13 ottobre 2026.** Prova non adottata: il gioco resta con il timone della 0.21.2. Il codice della prova è sul ramo `prova-saturazione`. Seguito in `../PROPOSTA-RESISTENZA-SCAFO.md`.
+> **Archiviato il 13 ottobre 2026.** Prova non adottata: il gioco resta con il timone della 0.21.2. Il codice della prova è sul ramo `prova-saturazione`. Seguito in `PROPOSTA-RESISTENZA-SCAFO.md`.
 
 Stato: **proposta, non implementata.** Scritta il 13 ottobre 2026 in una sessione di sola lettura: nessun file del repository è stato modificato. Le misure sono state fatte su una copia in memoria del motore (`step()` letto da `index.html`, riga 441 sostituita in memoria).
 

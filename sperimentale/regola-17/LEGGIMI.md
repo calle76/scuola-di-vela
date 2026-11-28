@@ -1,6 +1,6 @@
 # Voce 98: chi supera da sottovento (regole 17 e 14), oss. 154
 
-28 novembre 2026. Proposta: `docs/PROPOSTA-REGOLA-17.md`. Via di Ale il 28 nov mattina («vai in autonomia»).
+28 novembre 2026. Proposta: `docs/archivio/PROPOSTA-REGOLA-17.md`. Via di Ale il 28 nov mattina («vai in autonomia»).
 
 ## Passo A: la causa
 

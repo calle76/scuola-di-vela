@@ -54,7 +54,7 @@ Del 7 ottobre 2026 (sera). Problema misurato dall'utente: l'arrivo della prova 1
 
 ## 0.19.2 — tasto vista (Q) e linea d'arrivo a scacchi
 
-Del 7 ottobre 2026. Parte B di `docs/PROPOSTA-LINEA-E-VISTA.md`, approvata col tasto Q invece di V; osservazioni 13 e 14.
+Del 7 ottobre 2026. Parte B di `docs/archivio/PROPOSTA-LINEA-E-VISTA.md`, approvata col tasto Q invece di V; osservazioni 13 e 14.
 
 - **Linea d'arrivo e scritta «Arrivo».** La linea d'arrivo delle prove, e quella delle regate dopo il via, è a scacchi bianchi e neri: due file di quadretti di 3 px sullo schermo a ogni zoom (prima della linea attiva, nelle prove 4 e 5, è a metà trasparenza). Prima del via la linea di partenza delle regate resta tratteggiata. La scritta («Arrivo», e «Linea di partenza» in regata) è una pillola scura semitrasparente con testo bianco in Barlow Semi Condensed 700 a 14 px, a misura fissa sullo schermo, con una bandierina a scacchi accanto ad «Arrivo». Sta accanto alla boa verso cui punta la freccia fuori schermo, se punta alla linea, altrimenti a quella più vicina alla barca; prova tre posizioni (oltre la boa, sopra, sotto) e prende la prima che non copre la barca né le boe (e la barca giuria) e, se la boa è sullo schermo, resta dentro lo schermo. Si disegna solo dopo che `document.fonts.load` ha caricato Barlow 600 e 700. Testi, linea e taglio non cambiano.
 - **Perché la scritta di prima sembrava diversa.** Nel codice «Arrivo» aveva lo stesso carattere delle etichette delle boe (`600 13px "Barlow Semi Condensed"`), non un carattere sbagliato: era però più sottile e più piccola delle altre scritte sul mare con sfondo (700), bianca senza sfondo sopra le increspature, e il gioco non aspettava mai il caricamento dei caratteri, quindi finché Barlow non è caricato il canvas usa un carattere di sistema senza avvisare. Quale delle due cose si vedesse sul PC dell'utente non si può verificare nella sandbox, dove Google Fonts non si carica.
@@ -81,7 +81,7 @@ Del 7 ottobre 2026. Il tasto «vista», già previsto per la parte B della propo
 
 ## 0.19 — linea d'arrivo nelle prove
 
-Del 7 ottobre 2026. Decisione di settembre (osservazione 13). Proposta, banco e decisioni: `docs/PROPOSTA-LINEA-E-VISTA.md`; la parte B (tasto «vista») è rimandata alla 0.19.1.
+Del 7 ottobre 2026. Decisione di settembre (osservazione 13). Proposta, banco e decisioni: `docs/archivio/PROPOSTA-LINEA-E-VISTA.md`; la parte B (tasto «vista») è rimandata alla 0.19.1.
 
 - **Cosa cambia.** In tutte le prove l'arrivo non è più una boa da raggiungere entro 12 m, ma una **linea fra due boe piccole**: centrata dove prima c'era la boa d'arrivo, perpendicolare all'ultimo lato, larga 24 m (12 per lato, `FIN_HALF`, ipotesi nostra). Il cronometro si ferma all'istante esatto del taglio (interpolato fra due passi). Conta solo il taglio dal lato del percorso verso l'arrivo, fra le due boe comprese; passando fuori dagli estremi compare «Fuori dalla linea: passa tra le due boe», senza errore nel registro. Le boe non fanno da ostacolo e toccarle non è punito, come nelle regate. Conta il centro della barca: nella realtà la prua, circa 2 m prima (dichiarato).
 - **Prove 1-3:** nessuna linea di partenza, il cronometro parte all'avvio come prima. **Prove 4 e 5:** la barca nasce sulla linea, che è partenza e arrivo come in regata; le boe restano da girare a sinistra, e il passaggio sulla linea prima del giro di boa non conta. Lezione 5, navigazione libera e regate invariate.
@@ -167,7 +167,7 @@ Del 7 ottobre 2026. Decisione di settembre (osservazione 13). Proposta, banco e 
 
 ## 0.18 — registratore di sessione
 
-Del 5 ottobre 2026. Proposta, confronto delle tre vie e decisioni: `docs/PROPOSTA-REGISTRATORE.md`.
+Del 5 ottobre 2026. Proposta, confronto delle tre vie e decisioni: `docs/archivio/PROPOSTA-REGISTRATORE.md`.
 
 - **Cosa fa.** Nelle impostazioni (⚙) c'è la casella «Registra la sessione», **spenta a ogni apertura della pagina** (non viene salvata). Da accesa:
   - il gioco annota eventi, messaggi, tasti e lo stato della barca una volta al secondo;

@@ -1,8 +1,8 @@
 # Rapporto: prova della saturazione del timone (ramo `prova-saturazione`)
 
-> **Archiviato il 13 ottobre 2026.** Prova non adottata: il gioco resta con il timone della 0.21.2. Il codice della prova è sul ramo `prova-saturazione`. Seguito in `../PROPOSTA-RESISTENZA-SCAFO.md`.
+> **Archiviato il 13 ottobre 2026.** Prova non adottata: il gioco resta con il timone della 0.21.2. Il codice della prova è sul ramo `prova-saturazione`. Seguito in `PROPOSTA-RESISTENZA-SCAFO.md`.
 
-Del 13 ottobre 2026. Segue `docs/PROPOSTA-SATURAZIONE-TIMONE.md` (la proposta, con modello, misure preliminari e decisioni). Qui c'è cosa è stato fatto sul ramo e cosa hanno detto i collaudi.
+Del 13 ottobre 2026. Segue `docs/archivio/PROPOSTA-SATURAZIONE-TIMONE.md` (la proposta, con modello, misure preliminari e decisioni). Qui c'è cosa è stato fatto sul ramo e cosa hanno detto i collaudi.
 
 Tipi delle affermazioni:
 - **[codice]** = letto nel codice;
@@ -47,7 +47,7 @@ La vecchia riga 441, ora righe 442-446:
 - La riga «la prua poggia da sola» (`if (A < 36 && Math.abs(S.u) < 0.5) …`) era la 443 e ora è la **448**, invariata.
 - Non cambiano: `turnLen` (1,05), `maxRudder` (30) e la resistenza della barra angolata.
 
-### 1.2 `docs/PROPOSTA-SATURAZIONE-TIMONE.md`
+### 1.2 `docs/archivio/PROPOSTA-SATURAZIONE-TIMONE.md`
 
 - **§3 riscritto: F4 è l'unica fonte.** Masuyama e Ogihara, «Science of the 470 Sailing Performance», *Journal of Sailing Technology* 5(1), 2020, pp. 20-46: il timone lavora bene fino a circa ±15°. È una sola barca, una deriva a due, non quella del gioco.
 - La frase «un lavoro CFD: stallo a 30-35°» **non è una fonte**:
@@ -225,7 +225,7 @@ Sul ramo `prova-saturazione`:
 
 ```
 git add index.html
-git add docs/PROPOSTA-SATURAZIONE-TIMONE.md
+git add docs/archivio/PROPOSTA-SATURAZIONE-TIMONE.md
 git add docs/RAPPORTO-PROVA-SATURAZIONE.md
 git add docs/RICERCA-DATI-IMBARDATA.md
 git add docs/PIANO-GENERALE.md

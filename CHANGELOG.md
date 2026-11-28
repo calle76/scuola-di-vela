@@ -22,8 +22,8 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Caso 81, misura grande e quarta prova (voce 2)** (27 novembre 2026; §13.8-13.9): la terza prova su 450 regate passa la bolina (+1,3 s) ma le coppie dopo il via crescono da 28 a 47; la quarta (`scafi-e-accostata-v4.patch`, solo fra mure diverse) passa tutto ed è entrata nella 1.3.71.
 - **Caso 81, terza prova (voce 2)** (`sperimentale/caso-81/scafi-e-accostata-v3.patch`, 27 novembre 2026 sera; §13.7): casi 80-83 verdi anche sulle varianti mai guardate e in Firefox, coppie e contatti come il gioco; ma la bolina degli esperti +4,2 s di mediana sui semi 2201-2230 (soglia +2) e l'arrivo mediano +2,9 s sui semi di conferma: non adottata.
 - **Caso 81, seconda prova (voce 2)** (`sperimentale/caso-81/scafi-e-accostata-v2.patch`, 27 novembre 2026 pomeriggio; §13.6): casi 80-83 tutti verdi anche sulle varianti mai guardate (81 da 8 a 20 su 20), torneo lungo con gli stessi contatti (94) e arrivo mediano −1,6 s; ma le «coppie dopo il via» da 4 a 13 e i contatti dopo una virata da 8 a 14: non ancora adottata.
-- **Voci 4B e 3 insieme: rivali che non virano addosso e coppie che si liberano** (`sperimentale/coppie-4b-3/voce3_e_4b.patch`, 23 novembre 2026; `docs/PROPOSTA-COPPIE.md` §15): non adottate, `js/` identico alla 1.3.46. Su 1440 regate del torneo (semi 2201-2230) la voce 3 da sola passa tutto tranne K1 (11 coppie dopo il via contro 10, base 18); la 4B da sola tutto tranne le barche fuori dalla linea (39 contro 38); insieme vanno peggio. Seconda misura (23 nov, mattina) su semi nuovi corti e su regate lunghe (`misura_manovre.py --lungo`): la voce 3 non toglie le coppie (−18/−21% e 0%); la 4B fa partire in anticipo molte barche per colpa delle regole 15-16 usate dai rivali prima del via (variante x4 in patch a parte). `tests/misura_manovre.py` ora apre una pagina nuova per regata, conta le coppie dopo il via e accetta `--lungo`; `tests/collaudo_menu.py` M4 conta 8 esercizi in regata (dalla 1.3.45; era rosso nel giro GitHub 45095888548).
-- **Virata rollata (voce 73, passo B)** (`sperimentale/virata-rollata-73/rollata.patch`, 22 novembre 2026; `docs/PROPOSTA-BARCA-73.md` §4 ed esito): non adottato. Tasto X, sbandamento col lato fisso e vento apparente del rollio, costanti fissate prima (20°, 0,8 s). Con poco vento non serve: persi 0,66-0,69 lunghezze contro ≤ 0,35 di soglia (senza X 0,68); serve di più col vento medio, al contrario delle fonti; anticipare il gesto rende più del momento giusto. Diagnosi: anche la sola raddrizzata vale al massimo 0,12 lunghezze con 4-6 nodi. Passano velocità a fine virata, virata senza gesto uguale, polare identica. Seconda prova coi numeri di F109 (Schutt 2017, Laser in acqua; `rollata_v2.patch`): guadagno 0,9 m con 3,2 nodi contro 3,0 m misurati; Terza prova con la spinta dei vortici nella raddrizzata, tenuta entro la regola 42.3(b) (`rollata_v3.patch`): con poco vento 1,7 m persi in meno, ma tre criteri su nove non passano. La virata normale, misurata con la prua girata come in F109, è vicina al vero col vento medio e perde circa 1 m in più col poco vento (in parte il limite noto della bolina): nessun cambio.
+- **Voci 4B e 3 insieme: rivali che non virano addosso e coppie che si liberano** (`sperimentale/coppie-4b-3/voce3_e_4b.patch`, 23 novembre 2026; `docs/archivio/PROPOSTA-COPPIE.md` §15): non adottate, `js/` identico alla 1.3.46. Su 1440 regate del torneo (semi 2201-2230) la voce 3 da sola passa tutto tranne K1 (11 coppie dopo il via contro 10, base 18); la 4B da sola tutto tranne le barche fuori dalla linea (39 contro 38); insieme vanno peggio. Seconda misura (23 nov, mattina) su semi nuovi corti e su regate lunghe (`misura_manovre.py --lungo`): la voce 3 non toglie le coppie (−18/−21% e 0%); la 4B fa partire in anticipo molte barche per colpa delle regole 15-16 usate dai rivali prima del via (variante x4 in patch a parte). `tests/misura_manovre.py` ora apre una pagina nuova per regata, conta le coppie dopo il via e accetta `--lungo`; `tests/collaudo_menu.py` M4 conta 8 esercizi in regata (dalla 1.3.45; era rosso nel giro GitHub 45095888548).
+- **Virata rollata (voce 73, passo B)** (`sperimentale/virata-rollata-73/rollata.patch`, 22 novembre 2026; `docs/archivio/PROPOSTA-BARCA-73.md` §4 ed esito): non adottato. Tasto X, sbandamento col lato fisso e vento apparente del rollio, costanti fissate prima (20°, 0,8 s). Con poco vento non serve: persi 0,66-0,69 lunghezze contro ≤ 0,35 di soglia (senza X 0,68); serve di più col vento medio, al contrario delle fonti; anticipare il gesto rende più del momento giusto. Diagnosi: anche la sola raddrizzata vale al massimo 0,12 lunghezze con 4-6 nodi. Passano velocità a fine virata, virata senza gesto uguale, polare identica. Seconda prova coi numeri di F109 (Schutt 2017, Laser in acqua; `rollata_v2.patch`): guadagno 0,9 m con 3,2 nodi contro 3,0 m misurati; Terza prova con la spinta dei vortici nella raddrizzata, tenuta entro la regola 42.3(b) (`rollata_v3.patch`): con poco vento 1,7 m persi in meno, ma tre criteri su nove non passano. La virata normale, misurata con la prua girata come in F109, è vicina al vero col vento medio e perde circa 1 m in più col poco vento (in parte il limite noto della bolina): nessun cambio.
 
 - **Avversari che virano sulla layline di dritta** (`sperimentale/avversari-layline-dritta/layline-dritta.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md` §13-14): non adottato. Scatta in 630-644 passaggi su 720, ma sui semi 1431-1460 peggiora tutto: ultimi 40 m dalla boa 1 da 11,1 a 12,8-13,0 s persi, arrivo mediano da 199,4 a 201,9-202,9 s, boa toccata da 22 a 44-55. La patch si applica sulla 1.2.24 con `git apply`.
 - **Avversari in bolina che virano sugli scarsi** (`sperimentale/avversari-bolina-scarsi/scarsi.patch`, 10 novembre 2026; `docs/PROPOSTA-AVVERSARI-BOLINA.md`): non adottato. Migliora arrivo, virate e contatti, ma la soglia del tempo perso in bolina (−15%) non passa: −14,6% al meglio sui semi 1191-1220. La seconda prova dichiarata (media del vento di 30 o 120 s, semi 1251-1280) va peggio: −5% e −2,5%, contatti +35% e +54%. La patch si applica sulla 1.2.24 con `git apply`.
@@ -32,14 +32,14 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 - **Perché (giro completo sulla 1.3.79, run 46127393349, cinque pezzi su otto: gli altri tre li ha annullati il giro programmato delle 9:35):** due rossi nuovi in Firefox, tutti e due causati dalla regola della 1.3.78 (confronto con la 1.3.77 sugli stessi semi, sul PC). (1) `collaudo_giri` D2: col seme 405 la Blu mure a dritta, con la precedenza su due barche mure a sinistra, si scostava e ne nascevano due contatti (27,2 e 28,4 s) che nella 1.3.77 non c'erano; poi il contatto costruito dalla scena non dava penalità. Fra mure diverse chi ha la precedenza deve tenere la rotta, perché chi cede conta su quello (regola 16). (2) `collaudo_regola21` K4: sempre col seme 405 la storia dei primi 25 s cambiava già a 10-15 m dalla linea, e il giocatore non arrivava a scontare (8 casi su 10 con la 21.2 invece di 10).
 - **Cosa cambia:** la regola della 1.3.78 vale solo fra barche con le stesse mure (il caso dell'oss. 154), non verso una barca che sconta o torna dietro la linea (regola 21: tocca a lei stare lontano), e anche a 40 m o più dalla linea di partenza e arrivo, oltre che dalla boa. Nessuna costante nuova.
-- **Misure (criteri di `docs/PROPOSTA-REGOLA-17.md`, rispetto alla 1.3.77; giro «Misura», 450 regate per gruppo, run 46136864120 e 46136866725):** contatti 574 → 543 (−5,4%) e 498 → 466 (−6,4%); con colpa del pilota 175 → 162 e 148 → 142; arrivo mediano +0,1 e −1,6 s; bolina degli esperti barca per barca +0,0 e +0,0 s; coppie dopo il via 35 → 24 e 26 → 22; fuori linea 231 → 231 e 194 → 194. Contatti dopo un sorpasso da sottovento 71 → 66 e 53 → 50: nel torneo l'effetto è piccolo. Sul PC: `collaudo_regola17` 0 contatti in tutte le scene; Firefox: `collaudo_regola21` K4 10 su 10 con la 21.2 e `collaudo_giri` D2 verde (5 casi); `collaudo_avversari1b` 10 su 10 in ogni scenario; `collaudo_non_partite` salti 0 su 360; casi 80-83 10 su 10.
+- **Misure (criteri di `docs/archivio/PROPOSTA-REGOLA-17.md`, rispetto alla 1.3.77; giro «Misura», 450 regate per gruppo, run 46136864120 e 46136866725):** contatti 574 → 543 (−5,4%) e 498 → 466 (−6,4%); con colpa del pilota 175 → 162 e 148 → 142; arrivo mediano +0,1 e −1,6 s; bolina degli esperti barca per barca +0,0 e +0,0 s; coppie dopo il via 35 → 24 e 26 → 22; fuori linea 231 → 231 e 194 → 194. Contatti dopo un sorpasso da sottovento 71 → 66 e 53 → 50: nel torneo l'effetto è piccolo. Sul PC: `collaudo_regola17` 0 contatti in tutte le scene; Firefox: `collaudo_regola21` K4 10 su 10 con la 21.2 e `collaudo_giri` D2 verde (5 casi); `collaudo_avversari1b` 10 su 10 in ogni scenario; `collaudo_non_partite` salti 0 su 360; casi 80-83 10 su 10.
 - **Collaudi:** i 7 confronti al bit ora confrontano con la 1.3.80.
 
 ## 1.3.79 — La regola della 1.3.78 solo lontano da linea e boe
 
 - **Perché (giro completo sulla 1.3.78, run 46120775438):** due rossi nuovi in Chromium, tutti e due per la 1.3.78 (confronto con la 1.3.77 sugli stessi semi). (1) `collaudo_non_partite` salti: la Blu del seme 11 (principianti, 5 minuti) non parte entro 60 s. Cinque secondi dopo lo sparo cede alla Rossa, poi ha la precedenza e lo scarto parte dalla prua già poggiata: arriva a 128° dal vento, la regola della poppa contro le strambate (oss. 85) vede una strambata che non c'è e per 10 s la tiene a 172°, lontano dalla linea. Nella 1.3.77 partiva a 13 s. (2) `collaudo_avversari1b` scenario 5 (tre rivali alla boa insieme): 10 → 8 su 10 in Chromium (Firefox 7 → 8); una barca non girava entro 60 s.
 - **Cosa cambia:** la regola della 1.3.78 vale solo lasciata la linea di partenza (`leg >= 1`) e a più di 40 m dalla boa da girare (la stessa distanza di «vicino alla boa» che la guida usa già negli scarti); vicino alla boa conta la regola 18. Con questa regola lo scarto di chi ha la precedenza parte dalla rotta che vuole, non dalla prua di adesso. Nessuna costante nuova; la partenza è di nuovo identica alla 1.3.77.
-- **Misure (criteri di `docs/PROPOSTA-REGOLA-17.md`, rispetto alla 1.3.77; giro «Misura», 450 regate per gruppo, run 46126322329 e 46126325088):** contatti 574 → 526 (−8,4%) e 498 → 473 (−5,0%) (soglia +5%); con colpa del pilota 175 → 153 e 148 → 138; arrivo mediano −0,6 e +1,2 s (soglia +2); bolina degli esperti barca per barca +0,0 e +0,0 s; coppie dopo il via 35 → 28 e 26 → 24; fuori linea 231 → 231 e 194 → 194. Contatti dopo un sorpasso da sottovento 71 → 55 e 53 → 54: nel torneo l'effetto non è chiaro (la scena lo mostra, il torneo no). Sul PC: `collaudo_regola17` 0 contatti in tutte le scene (varianti 0-19 e 20-39), `collaudo_non_partite` salti 0 su 360, `collaudo_avversari1b` 10 su 10 in ogni scenario (Firefox scenario 5: 7 su 10, come la 1.3.77), casi 80-83 10 su 10. Il gioco della 1.3.78 ha dato le stesse uscite in due giri «Misura».
+- **Misure (criteri di `docs/archivio/PROPOSTA-REGOLA-17.md`, rispetto alla 1.3.77; giro «Misura», 450 regate per gruppo, run 46126322329 e 46126325088):** contatti 574 → 526 (−8,4%) e 498 → 473 (−5,0%) (soglia +5%); con colpa del pilota 175 → 153 e 148 → 138; arrivo mediano −0,6 e +1,2 s (soglia +2); bolina degli esperti barca per barca +0,0 e +0,0 s; coppie dopo il via 35 → 28 e 26 → 24; fuori linea 231 → 231 e 194 → 194. Contatti dopo un sorpasso da sottovento 71 → 55 e 53 → 54: nel torneo l'effetto non è chiaro (la scena lo mostra, il torneo no). Sul PC: `collaudo_regola17` 0 contatti in tutte le scene (varianti 0-19 e 20-39), `collaudo_non_partite` salti 0 su 360, `collaudo_avversari1b` 10 su 10 in ogni scenario (Firefox scenario 5: 7 su 10, come la 1.3.77), casi 80-83 10 su 10. Il gioco della 1.3.78 ha dato le stesse uscite in due giri «Misura».
 - **Collaudi:** i 7 confronti al bit ora confrontano con la 1.3.79.
 
 ## 1.3.78 — Chi ha la precedenza vede chi gli si stringe addosso
@@ -47,7 +47,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 - **Perché (oss. 154, regata di Lucio del 28/11 00:05, voce 98):** al lasco, mure a dritta, la Blu supera Lucio da dietro sottovento, prende la precedenza (regola 11) e resta a meno di 5 m da lui per 10 s senza girare di un grado, fino al contatto. Colpa a Lucio giusta, ma la Blu doveva provare a evitarlo (regola 14). **Causa (letta nel file e riprodotta con una copia del gioco segnata):** in `cedeAvv1b` un'altra barca conta solo se il momento in cui i centri sono più vicini cade entro 15 s (`T_CEDE`). Lucio e la Blu andavano quasi paralleli e quasi alla stessa velocità, e quel momento era a 18-37 s; gli scafi però si toccano prima, coi centri ancora a 3,2 m. La guida della Blu rispondeva «nessuna barca da guardare».
 - **Cosa cambia:** nelle regate di Deriva, dopo lo sparo, per un rivale che ha la precedenza di base (regole 10-13) una barca a meno di 1,5 lunghezze (6,3 m fra i centri) che si avvicina conta subito, e lui prova gli scarti che già aveva (15°, 28°, 45°, prima lontano dall'altra). Nessuna costante nuova. La Scuola non cambia. La regola 17 non entra nel gioco: in questo caso la Blu andava verso la boa, quindi la 17 era rispettata.
 - **Collaudo nuovo, `collaudo_regola17.py`** (due scene da 20 varianti, il giocatore tiene una prua fissa che converge sul rivale, velocità legata a quella del rivale). Contatti su 20, 1.3.77 → 1.3.78: rivale affiancato 14 → 0 (varianti 0-19) e 11 → 0 (20-39, mai guardate); rivale da dietro (la scena della proposta) 1 → 0 e 4 → 0. Uguali in Firefox (varianti 0-19). Le scelte fatte sulla scena dopo aver visto i numeri sono dichiarate in `sperimentale/regola-17/LEGGIMI.md`.
-- **Misure (criteri di `docs/PROPOSTA-REGOLA-17.md`, scritti prima; giro «Misura», 450 regate del torneo lungo per gruppo, scelta 2261-2410 e conferma 2411-2560):** contatti 574 → 511 (−11,0%) e 498 → 472 (−5,2%) (soglia +5%); con colpa del pilota 175 → 146 e 148 → 137; arrivo mediano dei rivali +1,7 e +1,5 s (soglia +2); bolina degli esperti barca per barca, mediana +0,0 e +0,0 s; coppie dopo il via 35 → 26 e 26 → 24 (soglia +20%); fuori linea allo sparo 231 → 233 e 194 → 194 (soglia +10%). Contatti dopo un sorpasso da sottovento 71 → 50 e 53 → 47. Casi 80-83 di `collaudo_avversari_deriva` 10 su 10 ciascuno.
+- **Misure (criteri di `docs/archivio/PROPOSTA-REGOLA-17.md`, scritti prima; giro «Misura», 450 regate del torneo lungo per gruppo, scelta 2261-2410 e conferma 2411-2560):** contatti 574 → 511 (−11,0%) e 498 → 472 (−5,2%) (soglia +5%); con colpa del pilota 175 → 146 e 148 → 137; arrivo mediano dei rivali +1,7 e +1,5 s (soglia +2); bolina degli esperti barca per barca, mediana +0,0 e +0,0 s; coppie dopo il via 35 → 26 e 26 → 24 (soglia +20%); fuori linea allo sparo 231 → 233 e 194 → 194 (soglia +10%). Contatti dopo un sorpasso da sottovento 71 → 50 e 53 → 47. Casi 80-83 di `collaudo_avversari_deriva` 10 su 10 ciascuno.
 - **Prima prova, non adottata (`sperimentale/regola-17/v98.patch`):** la stessa regola anche per chi deve cedere. Arrivo mediano +2,3 e +2,2 s (soglia +2) e coppie dopo il via 26 → 33 in conferma (+26,9%, soglia +20%).
 - **Collaudi:** i 7 confronti al bit ora confrontano con la 1.3.78.
 
@@ -148,7 +148,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.65 — Al lasco, lascare una vela troppo cazzata non fa più rallentare (voce 93)
 
-- **Perché:** marcatore M1 di Ale nella regata del 27 nov alle 00:58 (oss. 145): «mi dice di lascare ma vado più forte se cazzo». Misurato: a 134° con 14 nodi, dal 15% al 60% di scotta la barca rallentava (6,27 → 5,87 nodi) e solo oltre il 75% andava più forte (7,27). C'era già con la barca vecchia. Causa: oltre lo stallo la forza normale della vela scendeva a 0,92 fra 50° e 55° di incidenza (1,33 a 85°). Proposta: `docs/PROPOSTA-LASCO-93.md`; Ale, 27 nov: «cerca tu per la 93».
+- **Perché:** marcatore M1 di Ale nella regata del 27 nov alle 00:58 (oss. 145): «mi dice di lascare ma vado più forte se cazzo». Misurato: a 134° con 14 nodi, dal 15% al 60% di scotta la barca rallentava (6,27 → 5,87 nodi) e solo oltre il 75% andava più forte (7,27). C'era già con la barca vecchia. Causa: oltre lo stallo la forza normale della vela scendeva a 0,92 fra 50° e 55° di incidenza (1,33 a 85°). Proposta: `docs/archivio/PROPOSTA-LASCO-93.md`; Ale, 27 nov: «cerca tu per la 93».
 - **Fonte:** F146 (piastra misurata in canale ad acqua, arXiv 2302.09602): la forza normale cresce sempre da 30° a 90°. **Correzione:** fra 20° e 90° di incidenza la forza normale della vela non scende sotto `cdn` (1,32, già della barca M) per la forma della piastra; il rapporto portanza/resistenza resta quello di prima. Oltre 90° nessun cambio (la prima prova, applicata anche lì, portava la poppa da 4,5 a 6,4 nodi: scartata).
 - **Misure (criteri L1-L4 della proposta, scritti prima):**
   - L1 da 10 e 14 nodi a 100°, 120°, 134°, 150°, scotta a passi di 0,1: cali oltre l'1% prima della scotta migliore **6 → 0**.
@@ -167,7 +167,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.63 — La vela libera non porta: la barca ferma torna ad andare indietro (voce 89)
 
-- **Perché:** con la barca M la vela tutta lascata spingeva ancora un poco in avanti (a 45° con 10 nodi +0,26 nodi), quindi «Stare fermi» (lezione 18) si superava senza toccare la scotta (`collaudo_stare_fermi` F2 rosso dalla 1.3.59). Proposta: `docs/PROPOSTA-STARE-FERMI-M.md`; via di Ale del 27 nov («vai con le varie voci, in autonomia»).
+- **Perché:** con la barca M la vela tutta lascata spingeva ancora un poco in avanti (a 45° con 10 nodi +0,26 nodi), quindi «Stare fermi» (lezione 18) si superava senza toccare la scotta (`collaudo_stare_fermi` F2 rosso dalla 1.3.59). Proposta: `docs/archivio/PROPOSTA-STARE-FERMI-M.md`; via di Ale del 27 nov («vai con le varie voci, in autonomia»).
 - **Cosa cambia:** `V84.a0` da 0 a **1 grado** (la vela comincia a portare da 1° di incidenza; il boma libero sta a 2°). **Diverso dalla proposta (2°), scelto dopo aver visto i numeri:** con 2° la bolina a 22 nodi perdeva il 7,4% di VMG (3,63 → 3,36); con 1° il 3,6% (3,50) e la barca ferma va indietro come la 1b (−0,94 nodi a 45° con 10 nodi; 1b −0,86). Nessuna fonte per l'uno o l'altro.
 - **Misure (criteri S1-S5 della proposta):**
   - S1 `polare.js` identico (fino a 15 nodi). **`rotta-dati.js` non identico:** rigenerato, cambiano 36 velocità, oltre lo 0,5% solo fra 17 e 20 nodi (la più grande +7,8% a 20 nodi e 40°).
@@ -192,7 +192,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.61 — Angolo morto, partenza col vento forte, tabella delle velocità (controllo completo della barca)
 
-- **Perché:** controllo completo della barca chiesto da Ale (`sperimentale/barca-84/controllo/CONTROLLO.md`) e osservazione di Ale sull'angolo morto (voce 90). Proposta e criteri T1-T5: `docs/PROPOSTA-BARCA-1-3-61.md`.
+- **Perché:** controllo completo della barca chiesto da Ale (`sperimentale/barca-84/controllo/CONTROLLO.md`) e osservazione di Ale sull'angolo morto (voce 90). Proposta e criteri T1-T5: `docs/archivio/PROPOSTA-BARCA-1-3-61.md`.
 - **Angolo morto:** la portanza della vela M si spegne col vento apparente fra 19° e 26° (taratura scelta da Claude con la regola di Ale «più simile alla realtà possibile»: il valore più severo che lascia Day e Binns entro 1 punto). A 30° dal vento la barca va al 45 / 52 / 65% della velocità a 45° (6 / 10 / 15 nodi; prima 65 / 70 / 59%).
 - **Partenza da ferma col vento forte:** la resistenza indotta della deriva al massimo il 15% della forza laterale (teoria della deriva). Con 16 nodi e vela cazzata la barca riparte (2 nodi in 3-6 s; nella 1.3.60 restava a 0,8-1,1 nodi).
 - **Tabella delle velocità `js/rotta-dati.js` rigenerata:** era ancora quella della barca vecchia dalla 1.3.59 (rotta ottimale, Coach, layline, layline e poppa dei rivali, cono d'ombra). Con 10 nodi 45° 4,6 → 5,2, 180° 4,1 → 4,5.
@@ -203,23 +203,23 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 ## 1.3.60 — La barca M riparte da ferma
 
 - **Difetto della 1.3.59** (regata di Ale del 26 nov, `registrazioni/regata-20261126-2044-intera.txt`): da ferma con la vela cazzata la barca restava a 0,3-0,4 nodi per sempre (Ale ferma 50 s al via, poi scuffia, partenza a 94 s); con 20 nodi non ripartiva nemmeno lascando il 30%. **Causa:** lo smorzamento della resistenza indotta di Day (0,1) vale per la barca in movimento; da ferma la deriva frenava quanto spingeva la vela. Il banco della 84 partiva sempre in movimento.
-- **Correzione** (via di Ale, `docs/PROPOSTA-RIPARTENZA.md`): smorzamento 0,3 da ferma, 0,1 sopra 2,9 nodi, rampa in mezzo (`rif84`, taratura su R1 e R3). Con 12 nodi e vela cazzata la barca arriva a 5 nodi in 20 s; con 20 nodi a 4,9 lascando un poco. Sopra i 30° dal vento la polare è identica alla 1.3.59, tranne 15 nodi a 30° (0,2 → 3,2, era bloccata); virata da 1,9 nodi 6,6 → 6,4 s; da 0,4 nodi fallisce ancora. Riferimenti della fisica riscritti.
+- **Correzione** (via di Ale, `docs/archivio/PROPOSTA-RIPARTENZA.md`): smorzamento 0,3 da ferma, 0,1 sopra 2,9 nodi, rampa in mezzo (`rif84`, taratura su R1 e R3). Con 12 nodi e vela cazzata la barca arriva a 5 nodi in 20 s; con 20 nodi a 4,9 lascando un poco. Sopra i 30° dal vento la polare è identica alla 1.3.59, tranne 15 nodi a 30° (0,2 → 3,2, era bloccata); virata da 1,9 nodi 6,6 → 6,4 s; da 0,4 nodi fallisce ancora. Riferimenti della fisica riscritti.
 - **Criteri:** R1, R2, R3, R5 passano; **R4 no** (con la prua a 25° dal vento tenuta dritta la barca fa 1,4-1,6 nodi; già 1,3 nella 1.3.59: è la vela di M). Medaglie: tempi identici alla 1.3.59, OK. Lezione 6.3: 30/30, a mani ferme 0, dopo un colpo lungo 1 su 30 (1.3.59: 2 e 8). 41 passi col pilota, semi 1-3: niente da guardare.
 - **Trovato e non corretto (già nella 1.3.59):** `collaudo_stare_fermi` F2: con la barca M ferma e la vela lascata la barca non esce dal cerchio, quindi «Stare fermi» si supera senza toccare la scotta. Va rivista la lezione.
 
 ## 1.3.59 — La barca nuova (voce 84, candidato M)
 
-- **Perché** (via di Ale del 26 nov, «sì, sì, a»; `docs/PROPOSTA-BARCA-MOTORE.md`, `sperimentale/barca-84/GIRO6.md`): la vela di prima spingeva 2-3 volte meno del vero col poco vento (cinque fonti), la bolina era del 10-16% lenta (voce 81). **Si accende M:** 160 kg, 7,92 m², centro velico 2,8 m, braccio del timoniere 0,90 m, vela di bolina dalla tabella ORC di Day all'incidenza + 7° (taratura), scafo ×0,93 (vasca SSPA, taratura), raddrizzata F121 e del 470, vela che fileggia da 0° a 10°, vela che si appiattisce e svergola da sola in 1,5 s col timoniere al limite (fisica del velista: nessun interruttore), poppa e deriva alzata nuove. `js/motore.js` = `sperimentale/barca-84/motore84.js` scritto da `fa_motore84.py`, più i commenti. Tabella con fonti e tarature in `docs/FISICA-E-TARATURE.md` (in cima).
+- **Perché** (via di Ale del 26 nov, «sì, sì, a»; `docs/archivio/PROPOSTA-BARCA-MOTORE.md`, `sperimentale/barca-84/GIRO6.md`): la vela di prima spingeva 2-3 volte meno del vero col poco vento (cinque fonti), la bolina era del 10-16% lenta (voce 81). **Si accende M:** 160 kg, 7,92 m², centro velico 2,8 m, braccio del timoniere 0,90 m, vela di bolina dalla tabella ORC di Day all'incidenza + 7° (taratura), scafo ×0,93 (vasca SSPA, taratura), raddrizzata F121 e del 470, vela che fileggia da 0° a 10°, vela che si appiattisce e svergola da sola in 1,5 s col timoniere al limite (fisica del velista: nessun interruttore), poppa e deriva alzata nuove. `js/motore.js` = `sperimentale/barca-84/motore84.js` scritto da `fa_motore84.py`, più i commenti. Tabella con fonti e tarature in `docs/FISICA-E-TARATURE.md` (in cima).
 - **Criteri della voce 84** (banco, sesto giro): passano B1, B3-B7b, virate di Semb, regate GPS; **B2 no per 0,1 punti** (Binns 9 nodi a 60°: −5,1%, soglia ±5), limite noto. **B8 riscritto da Ale:** costanti con fonte, o tarate su una parte dei dati, controllate sul resto e dichiarate.
 - **Polare** (10 nodi): 45° 4,6 → 5,2 nodi, 90° 6,0 → 6,3, 180° 4,1 → 4,5. **Virate:** da 3,9 nodi 3,9 → 3,2 s, da 1,9 nodi 7,5 → 6,6 s. **Raffica 10 → 20 nodi** senza reagire: 65° → 61° (scuffia), col boma a 21° 52° → 62° (ora scuffia anche così). Riferimenti `polare.txt`, `raffiche_e_virate.txt`, `impronta1b.txt` riscritti (cambio voluto).
 - **Lezione 6.3 «La scuffia»:** con M la barca regge di più e la lezione non riusciva 9 volte su 28. Il testo ora chiede di **poggiare al traverso** con la vela tutta cazzata (sul banco, a prua ferma con 15 nodi e raffica a 27, M scuffia solo al traverso; di bolina arriva a 45-46°); il pilota delle lezioni punta a 90° invece di 50°. Soglie scritte prima: guidando almeno 28 su 30, a mani ferme al massimo 2. **Misura (semi 1-30):** guidando 28 su 28 (le altre 2 completate da sole), a mani ferme 2 su 30 (al limite); **dopo un colpo lungo 8 su 30** (la barca vecchia 9 su 100): la barca scuffia da sola più spesso, non coperto dalle soglie.
-- **Medaglie ritarate** (regola di `docs/PROPOSTA-MEDAGLIE-E-NOMI.md` §2, semi 1-30, uguale in Chromium e Firefox): pilota preciso 76,8 / 117,7 / 133,5 / 242,7 / 278,7 / 207,9 s (prima circa 79 / 124 / 159 / 286 / 302 / 236). Bande: prova 1 [80, 100, 130] invariata; 2 [125, 155, 200] → [120, 150, 190]; 3 [160, 200, 255] → [135, 170, 215]; 4 [290, 365, 465] → [245, 305, 390]; 5 [320, 400, 510] → [285, 355, 455]; 6 [240, 300, 385] → [210, 265, 335]. **Conferma, semi 101-130:** M3a-M3d tutte OK in Chromium (oro del preciso 30 su 30 in ogni prova; il pilota con errori 0 ori, nelle prove 5 e 6 tutti bronzi); Firefox M3a e M3d OK, ESITO OK.
+- **Medaglie ritarate** (regola di `docs/archivio/PROPOSTA-MEDAGLIE-E-NOMI.md` §2, semi 1-30, uguale in Chromium e Firefox): pilota preciso 76,8 / 117,7 / 133,5 / 242,7 / 278,7 / 207,9 s (prima circa 79 / 124 / 159 / 286 / 302 / 236). Bande: prova 1 [80, 100, 130] invariata; 2 [125, 155, 200] → [120, 150, 190]; 3 [160, 200, 255] → [135, 170, 215]; 4 [290, 365, 465] → [245, 305, 390]; 5 [320, 400, 510] → [285, 355, 455]; 6 [240, 300, 385] → [210, 265, 335]. **Conferma, semi 101-130:** M3a-M3d tutte OK in Chromium (oro del preciso 30 su 30 in ogni prova; il pilota con errori 0 ori, nelle prove 5 e 6 tutti bronzi); Firefox M3a e M3d OK, ESITO OK.
 - **Collaudi adattati:** `collaudo_regola18.py` Z1 confronta con `v1.3.59` (la prima con la barca M; prima `v1.3.48`); `collaudo_pilota_lezioni.py` 6.3 al traverso; `lancia_tutti.sh` valori attesi di `polare.js` e `raffiche_e_virate.js`.
 - **Sul gioco (misure del sesto giro sulla copia del repo con M, `GIRO6.md`):** torneo completo come prima (C11 R7 rosso noto); regola 18 Z4 ora passa (5 contatti decisi dalla 18); lezioni 5.8 strambata non completata guidando 3 su 30, 6.2 1, 2.6 1: da guardare nel giro completo. **Record e medaglie salvati non sono più confrontabili** (si azzerano, regola di Ale).
 
 ## 1.3.58 — Stare fermi prima del via (voce 27); la riga lunga della classifica
 
-- **Novità** (osservazione di Lucio, 13 nov; via di Ale del 25 nov, A e B; `docs/PROPOSTA-LEZIONE-STARE-FERMI.md`): lezione 18, passo nuovo «Stare fermi» (ferma a 45°, vela lascata, 10 nodi costanti: 30 s entro 8 m, sotto 1 nodo, coi colpi di scotta); lezione 19, l'esercizio comincia 30 s prima del via a 45° (prima 10 s a 60°) e fino al via si sta nel cerchio sotto 1 nodo. Cerchio in acqua e suggerimento («Vai indietro: cazza un poco»). Riepiloghi aggiornati. La fisica non cambia. **Una fonte sola (F87, blog) per «cazza un poco se vai indietro»:** scelta dichiarata. Costanti nostre: 30 s, 8 m, 1 nodo, 45°.
+- **Novità** (osservazione di Lucio, 13 nov; via di Ale del 25 nov, A e B; `docs/archivio/PROPOSTA-LEZIONE-STARE-FERMI.md`): lezione 18, passo nuovo «Stare fermi» (ferma a 45°, vela lascata, 10 nodi costanti: 30 s entro 8 m, sotto 1 nodo, coi colpi di scotta); lezione 19, l'esercizio comincia 30 s prima del via a 45° (prima 10 s a 60°) e fino al via si sta nel cerchio sotto 1 nodo. Cerchio in acqua e suggerimento («Vai indietro: cazza un poco»). Riepiloghi aggiornati. La fisica non cambia. **Una fonte sola (F87, blog) per «cazza un poco se vai indietro»:** scelta dichiarata. Costanti nostre: 30 s, 8 m, 1 nodo, 45°.
 - **Misure (soglie della proposta, non cambiate):** la barca ferma è identica a quella del 13 novembre. F1 pilota coi tasti della scotta 20 su 20 e 20 su 20 (semi 1-20, 21-40), Firefox 20 su 20; scarroccio 3,1 m. F2 senza toccare la scotta 0 su 20 (caso unico, deterministico), fuori dal cerchio dopo 26,8 s. F3 lezione 19: 20 su 20, 20 su 20, Firefox 20 su 20; linea tagliata entro 14,3-18,1 s (semi 1-20, limite 25). F4 0 px (il primo testo sforava di 36 px: accorciato, e strumenti da 3 a 2). F5 `polare`, `raffiche_e_virate`, `impronta1b` identici.
 - **Limite trovato:** poggiando a 50° o 55° senza toccare la scotta l'esercizio della lezione 18 si supera lo stesso (6,1 e 3,1 m): la proposta misurava solo 45°. Soglie e cerchio non cambiati.
 - **Classifica:** un terzo gradino di carattere (`stringi`, `.s3`) per le righe che restavano a capo: nome lungo con penalità e distacco, nelle regate lunghe fino a 11 nomi su 20, ora 0 su 20 in quattro testi, Chromium e Firefox; `collaudo_distacchi_testo` verde nei due (era rosso in Firefox sul giro 1.3.56).
@@ -227,14 +227,14 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.57 — Nelle registrazioni il vento dei rivali e le attese della 4B
 
-- **Perché** (via di Ale del 25 nov, «ok aggiungi»; `docs/PROPOSTA-REGISTRAZIONI-RICCHE.md`, seconda aggiunta): servono alle regate che Ale e Lucio giocheranno per la voce 2 e Z7.
+- **Perché** (via di Ale del 25 nov, «ok aggiungi»; `docs/archivio/PROPOSTA-REGISTRAZIONI-RICCHE.md`, seconda aggiunta): servono alle regate che Ale e Lucio giocheranno per la voce 2 e Z7.
 - **Nel file adesso:** `V t nome tws coperta%` (vento vero nel punto di ogni rivale, una riga al secondo) e `D t nome virata|partenza N` (il rivale rimanda per la 4B). Tipi di riga nuovi; B ed E come prima. `js/registratore.js`; in `js/regate.js` il contatore `rinvioVia`, che la simulazione non legge.
 - **Misure, `collaudo_registrazioni_ricche`** (H1-H5 scritti prima, 6 regate lunghe): H1 identiche alla 1.3.56, 6 su 6 (Chromium; in Firefox non misurato); H2 rinvii uguali nel file 6 su 6 (Chromium 74 virate e 78 partenze, Firefox 48 e 189); H3 0 righe V diverse su 14574 (Firefox 14547), distanza massima 1,02 s; H4 pezzo 572 KB, intero 1651 KB. Con 6 barche (una regata, triangolo e giri): pezzo 862 KB, intero 2178 KB (soglie 1024 e 2560). H5: `scene_strane` e `conta_boa_zona` identici con e senza le righe nuove; **`analizza_sessione` no, cambia solo il numero «Righe»**, che conta tutte le righe del file.
 - **Non regressione:** `polare`, `raffiche_e_virate`, `impronta1b` identici; `collaudo_registratore`, `_registratore_barche` (26841 righe B, 0 diverse) e `_nomi_rivali` verdi. I primi due al secondo lancio: al primo una pagina o un clic oltre 30 s, forse per le pause del freno (causa non verificata).
 
 ## 1.3.56 — I rivali guardano prima di virare e di partire (voce 4B)
 
-- **Novità** (via di Ale del 25 nov: «4B sì», poi «ok come consigli» sulla variante senza la regola 18; `docs/PROPOSTA-COPPIE.md` §15-17): nelle regate di Deriva un rivale a cui scade il bordo prova la rotta dopo la virata e, con una barca a meno di 2 lunghezze, aspetta, al massimo 4 s in tutto; prima di partire aspetta mezzo secondo alla volta, mai oltre lo sparo. Dopo lo sparo decide chi cede anche con le regole 15 e 16. **Non con la regola 18** (versione B della voce 49, non decisa): `chiCede1516(…, guida)` la salta; colpa al contatto e semaforo non cambiano. Era scritta e spenta dalla 1.3.11. Si spegne con `MANOVRE` (`js/regate.js`).
+- **Novità** (via di Ale del 25 nov: «4B sì», poi «ok come consigli» sulla variante senza la regola 18; `docs/archivio/PROPOSTA-COPPIE.md` §15-17): nelle regate di Deriva un rivale a cui scade il bordo prova la rotta dopo la virata e, con una barca a meno di 2 lunghezze, aspetta, al massimo 4 s in tutto; prima di partire aspetta mezzo secondo alla volta, mai oltre lo sparo. Dopo lo sparo decide chi cede anche con le regole 15 e 16. **Non con la regola 18** (versione B della voce 49, non decisa): `chiCede1516(…, guida)` la salta; colpa al contatto e semaforo non cambiano. Era scritta e spenta dalla 1.3.11. Si spegne con `MANOVRE` (`js/regate.js`).
 - **Misure** (600 regate lunghe per configurazione e per browser, Chromium 4001-4200, Firefox 4201-4400, pilota al posto del giocatore; insieme, spenta → accesa): contatti dopo una virata del rivale 221 → 116, contatti al via 108 → 3, contatti in tutto 1305 → 1269 (−2,8%, al 95% +1,8%), rivali fuori linea 633 → 493, non arrivati 1184 → 1138, arrivo mediano +0,5/+0,6%. **Non passa M1** (contatti dopo una virata almeno −50%): −47% in Chromium, −48% in Firefox. Contatti entro 12,6 m dalla boa 7 → 13: pochi, causa ignota, da riguardare. I semi erano già visti con la variante che usava anche la 18.
 - **Il gioco acceso è quello misurato:** 21 regate su 21 identiche.
 - **Collaudi adattati:** `collaudo_coach` K1, `collaudo_freccia` F5 e `collaudo_storico_rivali` R3 confrontano col codice di prima: spengono la 4B (come la marcatura). K1 spegne la 4B per tutto `collaudo_coach`.
@@ -242,7 +242,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.55 — Scegliere i rivali nell'Allenamento (voce 83)
 
-- **Novità** (via di Ale del 24 nov, «Ok 83»; `docs/PROPOSTA-ALLENAMENTO.md`, «Scegliere i rivali»): nel riquadro dell'Allenamento «Scegli i rivali» apre l'elenco dei 20; fino a 3 nomi, 5 con 6 barche; i posti liberi si sorteggiano. La scelta resta finché la pagina è aperta (`js/regate.js`: `allSel.chi`, `allScelti`, `allScegliMostra`). La guida non cambia. **Semplificazioni:** il carattere (prudente, normale, aggressiva) resta della barca; il record non si separa per rivali; scegliendo un nazionale mai visto, i tratti dei dieci nazionali nascono lì e restano.
+- **Novità** (via di Ale del 24 nov, «Ok 83»; `docs/archivio/PROPOSTA-ALLENAMENTO.md`, «Scegliere i rivali»): nel riquadro dell'Allenamento «Scegli i rivali» apre l'elenco dei 20; fino a 3 nomi, 5 con 6 barche; i posti liberi si sorteggiano. La scelta resta finché la pagina è aperta (`js/regate.js`: `allSel.chi`, `allScelti`, `allScegliMostra`). La guida non cambia. **Semplificazioni:** il carattere (prudente, normale, aggressiva) resta della barca; il record non si separa per rivali; scegliendo un nazionale mai visto, i tratti dei dieci nazionali nascono lì e restano.
 - **Misure:** `collaudo_allenamento` A7 nuovo, Chromium e Firefox: S1 40 scelte su 40, S3 16 regate su 16, S4 cambiano solo `done`, `best` e i tratti mai nati, S5 0 px a 1360x650 e 1360x768, S6 OK. S2: senza scelte la regata preparata è identica alla 1.3.54, 20 semi su 20 (Chromium); A1 40 su 40 e A2 16 su 16 (Chromium). A7 corre sulle regate corte. `polare`, `raffiche_e_virate`, `impronta1b` identici.
 
 ## 1.3.54 — L'albo d'oro della finale (voce 82, tappa 2); la registrazione scrive il livello vero
@@ -272,7 +272,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.51 — L'allenamento al posto delle due regate di Deriva (voce 36)
 
-- **Perché** (Ale, 16 nov): le regate dei salti e dei giri di Deriva avevano meno cose del torneo, quindi allenarsi lì non era allenarsi per il torneo. Proposta e criteri: `docs/PROPOSTA-ALLENAMENTO.md`, via del 16 novembre.
+- **Perché** (Ale, 16 nov): le regate dei salti e dei giri di Deriva avevano meno cose del torneo, quindi allenarsi lì non era allenarsi per il torneo. Proposta e criteri: `docs/archivio/PROPOSTA-ALLENAMENTO.md`, via del 16 novembre.
 - **Cosa c'è:** in Deriva, gioco libero e carriera, la voce «Allenamento»: una regata singola fatta come una del torneo (stesso codice: vento con raffiche e salti, cono d'ombra, regole 15, 16 e 18, rivali con nome e doti, finestra d'arrivo). Si scelgono percorso, penalità, 4 o 6 barche, rivali principianti o esperti; «I rivali» mostra le schede. In regata ci sono «Ricomincia» e «Cambia vento», mai nel torneo. A fine regata: posto, tempo, penalità, i punti che avresti preso in un torneo.
 - **Come è fatto** (`js/regate.js`, sottosezione nuova «allenamento»): un torneo di una regata (`allen`) che non entra in `progress.torneo`; `startRace("a")`, `R.all`.
 - **Cosa salva:** il record del tempo per percorso e numero di barche (`ra.b4`, `ra.b6`, `ra.t4`, `ra.t6`) e `progress.done.ra`. Niente storico dei rivali, meriti, stagione o punti di Deriva. **Scelta nostra, non scritta nella proposta:** con una penalità sul punteggio, o da squalificati, il tempo non vale per il record (altrimenti converrebbe non rispettare le precedenze). Gli aiuti «layline» e «scarso/buono» messi su «regate» valgono anche nell'allenamento.
@@ -322,7 +322,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.46 — Registrazioni delle regate più ricche: semaforo, colpa dei contatti, dopo l'arrivo (voce 55)
 
-- **Perché** (osservazioni 135-136, `docs/PROPOSTA-REGISTRAZIONI-RICCHE.md`): per capire una situazione raccontata da Lucio («ero in mezzo a due barche, il semaforo rosso») il file non bastava.
+- **Perché** (osservazioni 135-136, `docs/archivio/PROPOSTA-REGISTRAZIONI-RICCHE.md`): per capire una situazione raccontata da Lucio («ero in mezzo a due barche, il semaforo rosso») il file non bastava.
 - **Nel file adesso:** `E t semaforo rosso|giallo|verde|spento Nome` a ogni cambio di colore o di barca (calcolato anche quando il semaforo è spento sullo schermo; nell'intestazione `semaforo=sì|no`); `contatto_barche A B colpa C regola N`; **dopo il proprio arrivo** la registrazione continua finché arrivano tutti o per al più 60 s (`REG_DOPO`, ipotesi nostra), e si chiude prima se esci dalla regata, apri la rotta ottimale o scarichi il file (sempre «arrivo»). La riga F del posto alla chiusura conta anche chi arriva dopo con un tempo corretto migliore.
 - **Codice:** `js/registratore.js`; in `js/regate.js` il gioco si annota con quale barca è calcolato il semaforo (`R.semB`) e la colpa di ogni contatto (`R.contColpa`), che la simulazione non legge.
 - **`collaudo_registrazioni_ricche.py`** (nuovo, G1-G5 scritti prima; 6 regate lunghe del torneo col pilota): G1 arrivi e posizioni finali identici alla 1.3.45 in 6 su 6; G2 semaforo del file uguale a quello visto in 6 su 6 (170 cambi); G3 7 contatti, tutti con la colpa (non confrontata con la riga Q, come chiedeva la soglia: misurato solo in parte); G4 dopo l'arrivo giusto in 6 su 6; G5 pezzo più grande 553 KB, file intero 1535 KB (soglie 1024 e 2560). **Detto com'è:** nella prima prova G2 e G4 non passavano per due difetti del collaudo (contava i cambi del semaforo dopo la chiusura del file; pretendeva righe dopo l'arrivo anche quando si arriva ultimi) e per una scelta del registratore (scriveva solo i cambi di colore, non quelli di barca: ora anche quelli).
@@ -330,7 +330,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.45 — Lezione 11 rifatta: due venti diversi e l'esercizio col vento persistente (voce 79)
 
-- **Perché** (`docs/PROPOSTA-LEZIONE-11.md`; Ale, 22 nov: «non ho capito le basi»): nella sua regata il vento girava sempre a destra e lui ha virato sullo scarso come col vento che oscilla. La lezione diceva il vento persistente in una riga e insegnava un riflesso solo, «quando sei scarso, vira».
+- **Perché** (`docs/archivio/PROPOSTA-LEZIONE-11.md`; Ale, 22 nov: «non ho capito le basi»): nella sua regata il vento girava sempre a destra e lui ha virato sullo scarso come col vento che oscilla. La lezione diceva il vento persistente in una riga e insegnava un riflesso solo, «quando sei scarso, vira».
 - **La lezione ora ha 9 passi (prima 6):** «Un esempio» dice che lo scarso si legge anche sopra la bussola; «Vira sugli scarsi» senza le eccezioni; **«Due venti diversi»** (nuovo: oscillante e persistente, le due regole opposte, come si riconoscono dal numero della Prua); «In regata» com'era; **«Vira sullo scarso»** con la riga «scarso / buono» sopra la bussola al posto del suggerimento «vira adesso»; **«Vai verso il salto»** (nuovo esercizio in regata: vento persistente che gira a destra di 0,12°/s, partenza 200 m sotto la boa e 120 m a sinistra, layline disegnate, riga sempre accesa; riesce chi arriva a 15 m dalla boa con al più 2 virate e nessuna virata più di 20 m prima della layline); **«Vicino alla boa»** (nuovo); riepilogo nuovo. Tre domande nuove nel quiz. Fonti: F41 e la seconda fonte trovata il 23 nov (F113, F114).
 - **Codice:** `js/contenuti.js` (lezione, `SALTO_ES`, `saltoEsFallito`), `js/regate.js` (`def.salto`: vento persistente fisso nell'esercizio), `js/rotta.js` (`layVisibile`: le layline nell'esercizio che le chiede, negli altri esercizi no come prima), `js/disegno.js` (`scarsoVisibile`: la riga nel passo con `scarsoRiga` e nell'esercizio con `def.scarso`; tolto il vecchio suggerimento `scarsoHint`). Regate, torneo e altre lezioni: stessi conti di prima.
 - **`collaudo_lezione_salti.py`** (nuovo, criteri L1-L4 della proposta): tre piloti, A «giusto», B «vira sugli scarsi», C «a caso». **Prima stesura dell'esercizio non passata:** con la partenza proprio sotto la boa la layline arrivava dopo circa 60 s, con lo scarso appena a 7°, e B riusciva 9 volte su 10 (semi 2111-2120); A più veloce di B solo 1 volta su 10. Spostata la partenza 120 m a sinistra (soglie invariate) e conferma su un gruppo di semi nuovo, 2121-2130: A riesce 10 su 10, B 0, C 0; A arriva alla boa prima di B 10 volte su 10 (mediana 123 s contro 157); riga giusta in 7557 controlli su 7557 (Chromium).
@@ -339,7 +339,7 @@ Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non tocca
 
 ## 1.3.44 — Raffiche rare meno forti nelle regate lunghe (voce 78)
 
-- **Perché** (`docs/PROPOSTA-RAFFICHE-VERE.md`, misura del 22 nov contro le stazioni NOAA, F105): nelle regate lunghe la raffica tipica era come in mare, le rare un po' troppo forti (99° del fattore di raffica con 2 minuti 1,40 contro 1,27 della baia BUZM3; con 8 minuti 1,59 contro 1,49 della boa 44005). Venivano dalle raffiche sovrapposte, che si sommavano per intero (fino a 23,6 nodi locali con 12 di media).
+- **Perché** (`docs/archivio/PROPOSTA-RAFFICHE-VERE.md`, misura del 22 nov contro le stazioni NOAA, F105): nelle regate lunghe la raffica tipica era come in mare, le rare un po' troppo forti (99° del fattore di raffica con 2 minuti 1,40 contro 1,27 della baia BUZM3; con 8 minuti 1,59 contro 1,49 della boa 44005). Venivano dalle raffiche sovrapposte, che si sommavano per intero (fino a 23,6 nodi locali con 12 di media).
 - **Correzione** (`js/gioco.js`, `ventoDa`): solo nelle regate lunghe (raffiche come zone), la raffica più forte conta tutta e le altre sovrapposte per 0,3 (`RAFF_SOMMA`, ipotesi nostra). Le regate corte, le lezioni e le prove non cambiano (stessi conti, stesso ordine).
 - **Misure** (soglie R1-R5 scritte prima): copia in Node del campo di raffiche (`sperimentale/raffiche-78/campo_raffiche.js`, controllata contro la misura nel browser: 1,09 / 1,14 / 1,20 / 1,39 contro 1,09 / 1,14 / 1,19 / 1,40). Scelta sui semi 1-200 fra tre varianti (somma che satura: 99° 1,32, non passa; metà delle altre: 1,30 sui semi di scelta ma 1,31 sulla conferma 1001-1200, non confermata; 0,3 delle altre: 1,27), confermata sui semi 2001-2200: con 2 minuti mediana 1,13 (oggi 1,14), 99° 1,27 (oggi 1,39); con 8 minuti mediana 1,23, 99° 1,36 (oggi 1,61).
 
@@ -441,7 +441,7 @@ Da dove viene: Ale, 21 novembre: «che senso ha fare un confronto con una media 
 
 ## 1.3.28 — Il Coach durante la regata (voce 65)
 
-Da dove viene: idea di Ale del 20 novembre («il coach che appare con diverse espressioni durante le lunghe regate per dare consigli e commenti»), risposta alle domande («se acceso suggerisce cosa sarebbe meglio fare», per coerenza con «Scuola di vela»; anche «scarso/buono»), via del 20 novembre. `docs/PROPOSTA-COACH-IN-REGATA.md`.
+Da dove viene: idea di Ale del 20 novembre («il coach che appare con diverse espressioni durante le lunghe regate per dare consigli e commenti»), risposta alle domande («se acceso suggerisce cosa sarebbe meglio fare», per coerenza con «Scuola di vela»; anche «scarso/buono»), via del 20 novembre. `docs/archivio/PROPOSTA-COACH-IN-REGATA.md`.
 
 - **Cosa fa.**
   - **Dove e quando:** nelle regate di Deriva (torneo, stagione, finale, regate di Deriva; non negli esercizi), un riquadro in alto a sinistra sul mare col volto (contento, serio, arrabbiato) e una frase per 6 s. Si spegne nelle impostazioni («Il Coach durante la regata», visibile in regata).
@@ -511,7 +511,7 @@ Da dove viene: risposte di Ale del 20 novembre (62: «la scelta più semplice»;
 
 ## 1.3.24 — La rotta ottimale gira la boa come il gioco (voce 50)
 
-Da dove viene: il controllo scritto e lasciato spento nella 1.3.23 (R3 non passava). Ora acceso. `docs/PROPOSTA-ROTTA-GIRO-BOA.md` §Esito.
+Da dove viene: il controllo scritto e lasciato spento nella 1.3.23 (R3 non passava). Ora acceso. `docs/archivio/PROPOSTA-ROTTA-GIRO-BOA.md` §Esito.
 
 - **La causa di R3:** il primo controllo guardava solo il punto in cui la rotta taglia la semiretta della boa, e vietava anche i passaggi **sopra la boa entrati dal lato interno**. Il gioco quelli non li conta (`roundCheck` salta i punti entro 1,5 m dalla boa e ignora quelli a più di 90° da `out`). La rotta doveva allargarsi e, per come le isocrone tengono i punti, arrivava alla boa fino a 19 s dopo. **Trovata con un confronto punto per punto.** Una prima diagnosi era sbagliata: in una pagina nuova la stessa regata viene diversa da quella della misura, e la rotta guardata era davvero sbagliata per il gioco.
 - **Il controllo ora segue la regola di `roundCheck` lungo ogni ramo della rotta.** Ogni punto ricorda l'ultimo stato visto fuori da 1,5 m (lato < 0, ≥ 0, oltre 90°). Il passo che va da < 0 a ≥ 0 non si fa, finché il ramo non ha già girato la boa (`.giu`). Vicino alla boa ogni passo si guarda in 8 pezzi (`ROT_PEZZI`). I punti a più di 8 m dalla boa e dalla sua retta (`ROT_LONTANO`) saltano il controllo: nessun passo da lì può fare un giro. Il lato finisce appena oltre la linea (`ROT_OLTRE`, 2% del passo). Costanti nostre.
@@ -548,7 +548,7 @@ Da dove viene: l'elenco di `docs/CONTENUTI-DA-VERIFICARE.md` (ultima sezione, 17
 
 ## 1.3.21 — Scelte del gioco dichiarate nelle lezioni (voce 9)
 
-Da dove viene: `docs/PROPOSTA-SCELTE-DICHIARATE.md` (13 novembre), via di Ale il 17 novembre («ok a tutte, se ne abbiamo già parlato dovrebbe andare bene»). Principio 4: le semplificazioni si dichiarano. **Solo testi** in `js/contenuti.js` e nel glossario; nessun numero del motore cambia.
+Da dove viene: `docs/archivio/PROPOSTA-SCELTE-DICHIARATE.md` (13 novembre), via di Ale il 17 novembre («ok a tutte, se ne abbiamo già parlato dovrebbe andare bene»). Principio 4: le semplificazioni si dichiarano. **Solo testi** in `js/contenuti.js` e nel glossario; nessun numero del motore cambia.
 
 - **Lezione 5 (strambata controllata):** «(in questo gioco finché il boma è a circa 45° dal centro barca; le scuole non sono d'accordo su quanto)». L'istruzione dell'esercizio resta com'era.
 - **Lezione 3:** i filetti «in questo gioco» uno per lato, rosso a sinistra e verde a destra, «sulle vele vere stanno anche sul bordo d'uscita e hanno colori diversi»; il traverso dice «nel gioco il boma sta a una quarantina di gradi» (anche nella spiegazione della domanda d'esame).
@@ -581,7 +581,7 @@ Da dove viene: Ale, 16 novembre sera. La lezione 11 su scarso e buono «non si c
 
 ## 1.3.16 — Stagione con un amico: i file valgono fra versioni, e si riprende dal proprio file
 
-Da dove viene: il 16 novembre Ale ha trovato in Chrome la stagione con un amico ricominciata (era alla tappa 3, sulla 1.3.12). Non è stato il gioco: nessuna versione cancella la stagione, sono stati i dati del browser. Restavano però due problemi veri (`docs/PROPOSTA-STAGIONE-FILE.md`, via di Ale del 16 novembre; la scelta D1 l'ha lasciata a Claude: la ripresa vale anche in carriera).
+Da dove viene: il 16 novembre Ale ha trovato in Chrome la stagione con un amico ricominciata (era alla tappa 3, sulla 1.3.12). Non è stato il gioco: nessuna versione cancella la stagione, sono stati i dati del browser. Restavano però due problemi veri (`docs/archivio/PROPOSTA-STAGIONE-FILE.md`, via di Ale del 16 novembre; la scelta D1 l'ha lasciata a Claude: la ripresa vale anche in carriera).
 
 - **I file dell'amico non dipendono più dalla versione del gioco.** Prima un file di un'altra versione era rifiutato («aggiornate il gioco tutti e due»). Ora nel file c'è la «forma della stagione» (`ST_FORMA = 1`): cambia solo se cambia il modo in cui un codice diventa tappe, venti, batterie e rivali, e dalla 1.2.37 non è mai cambiato. I file vecchi, senza forma, valgono 1: entrano anche quelli della 1.3.12.
 - **«Riprendi dal mio file»** nella finestra «Stagione con un amico». Rifà la stagione dal codice e dal ruolo scritti nel proprio file e ci rimette i propri arrivi; poi si carica il file dell'amico come sempre. Non tornano il torneo della tappa lasciata a metà (si rifà) e i contatti con i rivali (servono alla frase «ti sei toccato con…»). Il file scrive ora anche le tappe lasciate; una stagione ripresa da un file vecchio, senza quel dato, non conta come «senza ritiri» (in carriera non dà «Deriva superata per merito»). Si rifiutano: il file con 4 tappe (stagione finita), quello senza tappe corse e quello con gli arrivi che non tornano con la batteria. Il pulsante c'è solo quando non c'è una stagione in corso.
@@ -614,7 +614,7 @@ Due richieste di Ale del 16 novembre. Le regate non cambiano.
 
 ## 1.3.13 — Il Coach, seconda mano
 
-`docs/PROPOSTA-COACH-2.md`, via di Ale il 16 novembre. Le regate non cambiano: il Coach legge soltanto.
+`docs/archivio/PROPOSTA-COACH-2.md`, via di Ale il 16 novembre. Le regate non cambiano: il Coach legge soltanto.
 
 - **«C'erano altre barche» esce meno.** Una finestra è «affollata» solo se le altre barche (entro 3 lunghezze, o un cono) ci sono state per almeno 20 secondi su 60; i primi 15 secondi dopo il taglio della linea non contano. Prima bastava un secondo. Quando la finestra non è affollata, la stessa perdita la dice «qui hai perso di più».
 - **«Hai virato N volte vicino alla boa» esce da 3 virate** (prima, di fatto, da 4). Con 2 il Coach tace: una virata in più costa circa 2 s.
@@ -637,7 +637,7 @@ Revisione del codice delle versioni 1.3.0-1.3.11 (`docs/PER-FABLE.md` §2). Le r
 
 ## 1.3.11 — Rivali che guardano prima di manovrare: scritti, ma spenti
 
-Versione B di `docs/PROPOSTA-REGOLE-15-16.md` (voce 4). **Nel gioco non cambia niente:** la guida nuova dei rivali è scritta e collaudabile, ma resta spenta (`MANOVRE = false`) finché la misura non dice che si può accendere. Con la versione B spenta le regate del torneo sono identiche al bit alla 1.3.10.
+Versione B di `docs/archivio/PROPOSTA-REGOLE-15-16.md` (voce 4). **Nel gioco non cambia niente:** la guida nuova dei rivali è scritta e collaudabile, ma resta spenta (`MANOVRE = false`) finché la misura non dice che si può accendere. Con la versione B spenta le regate del torneo sono identiche al bit alla 1.3.10.
 
 - **Cosa fa, quando è accesa** (solo nelle regate di Deriva):
   - prima della virata a tempo il rivale prova la rotta dopo la virata; con una barca a meno di 2 lunghezze rimanda di 1 s, al più `RINVIO_MAX` s in tutto;
@@ -660,7 +660,7 @@ Versione B di `docs/PROPOSTA-REGOLE-15-16.md` (voce 4). **Nel gioco non cambia n
 
 ## 1.3.10 — Regole 15 e 16 nelle regate di Deriva, col semaforo giallo e la lezione 24
 
-Prima versione della proposta unica `docs/PROPOSTA-REGOLE-15-16.md` (via di Ale del 16 novembre notte; G = 10° e lezione senza esercizio, come consigliato). Cambia la decisione del 23 ottobre: le regole 15 e 16, rimandate «al livello dopo», entrano in Deriva. La Scuola resta con le regole 10-13.
+Prima versione della proposta unica `docs/archivio/PROPOSTA-REGOLE-15-16.md` (via di Ale del 16 novembre notte; G = 10° e lezione senza esercizio, come consigliato). Cambia la decisione del 23 ottobre: le regole 15 e 16, rimandate «al livello dopo», entrano in Deriva. La Scuola resta con le regole 10-13.
 
 - **Regola 15:** chi prende la precedenza con una sua manovra (una virata finita, un affiancamento da dietro) ha torto se tocca l'altra entro 5,2 s. È il tempo per scansarsi misurato con la barca del gioco il 23 ottobre.
 - **Regola 16:** chi ha la precedenza da almeno 5,2 s e negli ultimi 5,2 s ha girato la prua di almeno 10° verso l'altra ha torto. La 16.2 è un caso di questa.
@@ -705,7 +705,7 @@ Prima versione della proposta unica `docs/PROPOSTA-REGOLE-15-16.md` (via di Ale 
 
 ## 1.3.9 — Gli sponsor a contratto, col giudizio dopo ogni tappa
 
-Tappa 4 del piano di chiusura di Deriva (`docs/PROPOSTA-SPONSOR.md`, via di Ale del 15 novembre; giudizio leggero chiesto da Ale la sera stessa). Solo in carriera. Fatta nella notte, in autonomia.
+Tappa 4 del piano di chiusura di Deriva (`docs/archivio/PROPOSTA-SPONSOR.md`, via di Ale del 15 novembre; giudizio leggero chiesto da Ale la sera stessa). Solo in carriera. Fatta nella notte, in autonomia.
 
 - **Quattro gradini**, ognuno con due sponsor dai nomi inventati, cercati uno per uno (nessun riscontro esatto; scartati «Officina Nautica Bassamarea» e «Caffè della Lanterna Verde», che somigliavano a ditte vere):
   1. **zonale piccolo:** Ferramenta del Molo Nuovo, Oleificio Capo Sereno;
@@ -753,7 +753,7 @@ Tappa 4 del piano di chiusura di Deriva (`docs/PROPOSTA-SPONSOR.md`, via di Ale 
 
 ## 1.3.7 — La finale
 
-Tappa 3 del piano di chiusura di Deriva (`docs/PROPOSTA-FINALE.md`, via di Ale del 15 novembre 2026). Fatta nella notte del 15 novembre, in autonomia.
+Tappa 3 del piano di chiusura di Deriva (`docs/archivio/PROPOSTA-FINALE.md`, via di Ale del 15 novembre 2026). Fatta nella notte del 15 novembre, in autonomia.
 
 - **La finale del circuito, a Baia delle Sette Vele** (posto inventato: una ricerca non trova nessuna regata con questo nome; il nome lo deve controllare Ale). Si apre dal riquadro del torneo, col pulsante «La finale»:
   - **chi c'è:** tu e i 5 rivali meglio piazzati del nazionale appena finito, salvati alla fine del nazionale; nel gioco libero, se un nazionale non c'è, i 5 nazionali con più doti;
@@ -794,7 +794,7 @@ Dalla prova di Ale del 15 novembre: «arrivato ultimo e scuffiato, il coach era 
 
 ## 1.3.5 — Deriva in carriera: punti propri e «Deriva superata»
 
-Ultima versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre; criteri D2, D3, D6, D8, D10).
+Ultima versione della cornice di Deriva (`docs/archivio/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre; criteri D2, D3, D6, D8, D10).
 
 - **In carriera ci sono i due livelli.** Senza l'attestato il pulsante «Deriva» è spento («si apre con l'attestato della Scuola»); con l'attestato Deriva contiene lezioni 21-23, la prova dei giri, le regate dei salti e dei giri, il **torneo con la stagione**, e il **libretto di Deriva**. Il torneo lascia la Scuola: prima stava fra le sue regate, spento fino all'attestato.
 - **Punti di Deriva**, propri, in quattro aree; quelli della Scuola non contano. Si ricalcolano dai progressi, quindi ripetere senza migliorare non dà punti.
@@ -843,7 +843,7 @@ Ultima versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, via
 
 ## 1.3.3 — Il coach nella moviola
 
-Quarta versione della cornice di Deriva, al posto del «momento clou» (`docs/PROPOSTA-COACH.md`, via di Ale del 15 novembre 2026; nome «Coach», senza nome proprio, e coach indipendente dal tasto V, scelte dello stesso giorno).
+Quarta versione della cornice di Deriva, al posto del «momento clou» (`docs/archivio/PROPOSTA-COACH.md`, via di Ale del 15 novembre 2026; nome «Coach», senza nome proprio, e coach indipendente dal tasto V, scelte dello stesso giorno).
 
 - A regata finita, aprendo **Rotta ottimale**, sopra la legenda c'è il **Coach**: un cerchio con la «C» (il volto arriva quando Ale lo crea) e **al massimo tre frasi**, le più pesanti in secondi. Ogni frase ha un numero misurato e un momento: cliccandola, la moviola salta lì (5 s prima).
 - Le frasi possibili:
@@ -876,7 +876,7 @@ Quarta versione della cornice di Deriva, al posto del «momento clou» (`docs/PR
 
 ## 1.3.2 — Deriva: la prova dei giri di penalità, con le medaglie
 
-Terza versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, criterio D9; `PROPOSTA-LIVELLO-DERIVA.md` §3). Lavoro fatto in autonomia su richiesta di Ale.
+Terza versione della cornice di Deriva (`docs/archivio/PROPOSTA-DERIVA-CIRCUITI.md`, criterio D9; `PROPOSTA-LIVELLO-DERIVA.md` §3). Lavoro fatto in autonomia su richiesta di Ale.
 
 - **Prova 6, «I giri di penalità»**, nel menu di Deriva dopo le lezioni 21-23. Al via si devono già due giri, come dopo un contatto con colpa: vanno fatti subito, ognuno un giro intero nello stesso verso con una virata e una strambata, senza fermarsi (regola 44.2). Poi bolina fino alla boa a 170 m, lasciata a sinistra, e ritorno alla linea. Il tempo comprende i giri; **ogni giro non fatto costa 15 s** all'arrivo (scelta di Ale del 6 novembre) e toglie la stella.
 - Nel pannello della prova una riga dice quanti giri mancano («Giri da fare: 2») e diventa verde quando la penalità è scontata.
@@ -910,7 +910,7 @@ Terza versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, crit
 
 ## 1.3.1 — Deriva: lezioni 21, 22 e 23, con ripassi, glossario ed esercizi
 
-Seconda versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`). Nel menu di Deriva (gioco libero) c'è ora la colonna «Deriva» con tre lezioni e i loro ripassi; in carriera Deriva resta nascosta.
+Seconda versione della cornice di Deriva (`docs/archivio/PROPOSTA-DERIVA-CIRCUITI.md`). Nel menu di Deriva (gioco libero) c'è ora la colonna «Deriva» con tre lezioni e i loro ripassi; in carriera Deriva resta nascosta.
 
 - **Lezione 21, «Come funziona il torneo»** (solo teoria): punti bassi, scarto dopo la quarta regata, penalità sul punteggio nelle regate 1 e 2 e giri nelle 3 e 4, finestra d'arrivo (nel gioco metà del tempo della prima: detto come scelta del gioco). Fonti: F15, appendice A e regola 44.3, parafrasate. Ripasso di 4 domande.
 - **Lezione 22, «Rivedi la tua regata»**: il tasto O, Rivedi, la rotta ottimale (anche la migliore in assoluto, V), le regate registrate. Solo il gioco, nessuna affermazione nautica. **Esercizio in regata:** sotto la boa, segnare un momento con O e girare la boa. Ripasso di 4 domande.
@@ -932,7 +932,7 @@ Seconda versione della cornice di Deriva (`docs/PROPOSTA-DERIVA-CIRCUITI.md`). N
 
 ## 1.3.0 — Menu a due livelli: «La scuola» e «Deriva» (alfa della cornice di Deriva)
 
-Tappa 2 del piano di chiusura di Deriva, prima versione (`docs/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre 2026). Nessun contenuto nuovo: le voci che ci sono già cambiano posto.
+Tappa 2 del piano di chiusura di Deriva, prima versione (`docs/archivio/PROPOSTA-DERIVA-CIRCUITI.md`, via di Ale del 15 novembre 2026). Nessun contenuto nuovo: le voci che ci sono già cambiano posto.
 
 - **Nel gioco libero**, in alto accanto a «Gioco libero / Carriera», due pulsanti nuovi: **«La scuola»** e **«Deriva»**. La Scuola ha lezioni e prove, le regate a bastone e nelle raffiche, la navigazione libera, ripassi ed esame. Deriva ha le regate nei salti di vento e con i giri di penalità e il torneo (dal suo riquadro anche la stagione zonale o nazionale). Il livello scelto resta nel browser, anche tornando al menu da una regata.
 - **In carriera il menu non cambia:** Deriva resta nascosta finché la cornice non è pronta (decisione 4 del piano; si accende con la 1.3.3, costante `DERIVA_IN_CARRIERA`).
@@ -969,7 +969,7 @@ Fisica identica: `polare.js`, `raffiche_e_virate.js`, `impronta1b.js`.
 
 ## 1.2.40 — Rotta ottimale in assoluto, a richiesta
 
-Voce 26 di `DA-FARE.md`, tappa 1 di `PIANO-CHIUSURA-DERIVA.md`; `docs/PROPOSTA-ROTTA-ASSOLUTA.md` §8-9 e §10 (esito); via di Ale del 14 novembre notte.
+Voce 26 di `DA-FARE.md`, tappa 1 di `PIANO-CHIUSURA-DERIVA.md`; `docs/archivio/PROPOSTA-ROTTA-ASSOLUTA.md` §8-9 e §10 (esito); via di Ale del 14 novembre notte.
 
 - **Nella vista «Rotta ottimale», una terza traccia, viola: la migliore in assoluto,** dallo sparo e dal punto migliore della linea fino all'arrivo, con un segno nel punto ideale e una freccia con la direzione. Nel testo: dove partire (metri dallo spillo, mure), i tempi dallo sparo della viola, della verde e tuoi, i secondi persi in partenza e dopo. Considera la barca già lanciata e ignora le altre barche, e lo dice.
 - **Calcolo:** 7 punti della linea, uno ogni 10 m; per ognuno la rotta fino alla boa 1 col calcolo della verde; dal migliore, la rotta intera.
@@ -980,7 +980,7 @@ Voce 26 di `DA-FARE.md`, tappa 1 di `PIANO-CHIUSURA-DERIVA.md`; `docs/PROPOSTA-R
 
 ## 1.2.39 — Il circuito nazionale
 
-Voce 38 di `DA-FARE.md`, passo 2; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre («come consigli tu»).
+Voce 38 di `DA-FARE.md`, passo 2; `docs/archivio/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre («come consigli tu»).
 
 - **Stagione nazionale:** nella finestra della stagione si sceglie il circuito, zonale o nazionale. Al nazionale si è in 12: tu, i dieci rivali nazionali (Chiara Benedetti … Riccardo Bassi) e il primo degli altri del tuo ultimo zonale. Quattro tappe in posti inventati, due batterie da 6: la tua corre il torneo a 6 barche contro 5 rivali, l'altra a numeri. Punti 1-12, stessa classifica, stesse frasi.
 - **Rivali più forti:** per ogni area 4 doti, 4 medie e 2 difetti (allo zonale 3-4-3).
@@ -991,19 +991,19 @@ Voce 38 di `DA-FARE.md`, passo 2; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 1
 
 ## 1.2.38 — Regate a 6 barche (di prova)
 
-Voce 38 di `DA-FARE.md`, passo 1; `docs/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre sera: «via come consigli tu».
+Voce 38 di `DA-FARE.md`, passo 1; `docs/archivio/PROPOSTA-NAZIONALE.md`; via di Ale del 14 novembre sera: «via come consigli tu».
 
 - **Torneo a 6 barche, di prova:** nel gioco libero, nella finestra del torneo, «Barche in acqua: 4 · 6, di prova». Con 6 corri contro 5 rivali; servirà al circuito nazionale (passo 2). Tutte le altre regate restano a 4.
 - **Due barche nuove:** viola e grigia.
 - **Partenza con più di 4 barche:** la zona dietro la linea va da un capo all'altro della linea (±35 m) ed è 6 m più profonda. Il ripiego, se le barche non trovano posto, è su due file a 20 m. Con 4 barche niente cambia.
 - **Finestre:** tabella del torneo a 6 righe; con 5 rivali i pulsanti delle schede mostrano il cognome.
 - **Corretto:** il messaggio di un contatto fra due rivali diceva «penalità alla Pietro Gallo» (dalla 1.2.33).
-- **Collaudo nuovo** `tests/collaudo_sei_barche.py`; `tests/misura_etichette.py` con `SEI=1`. Misure: `docs/PROPOSTA-NAZIONALE.md`, Esito.
+- **Collaudo nuovo** `tests/collaudo_sei_barche.py`; `tests/misura_etichette.py` con `SEI=1`. Misure: `docs/archivio/PROPOSTA-NAZIONALE.md`, Esito.
 - **Chiusa con un criterio che non passa, per scelta di Ale** («A, chiudi la 1.2.38»): N2 chiedeva 0 contatti nei primi 25 s. Con 6 barche sono 34 regate su 100, ma con 4 barche erano già 16 su 100: per coppia di barche la frequenza è la stessa. È un difetto vecchio della guida prima del via (voci 4 e 17 di `DA-FARE.md`).
 
 ## 1.2.37 — La stagione con un amico
 
-Voce 36 di `DA-FARE.md`; `docs/PROPOSTA-STAGIONE-ZONALE.md`, «Lucio dodicesimo»; via di Ale del 14 novembre sera: «ok vai con Lucio dodicesimo».
+Voce 36 di `DA-FARE.md`; `docs/archivio/PROPOSTA-STAGIONE-ZONALE.md`, «Lucio dodicesimo»; via di Ale del 14 novembre sera: «ok vai con Lucio dodicesimo».
 
 - **Stagione con un amico** (finestra della stagione, «Con un amico»): chi crea riceve un codice, per esempio `7K2M9Q-E`, e l'amico lo scrive in «Ho un codice». Dal codice escono, uguali nelle due pagine, le tappe, i venti, il gruppo dei 10 rivali con le loro doti, le batterie e i rivali di ogni tappa con carattere e numeri di guida. Le regate non sono identiche al bit: raffiche e salti si sorteggiano durante la regata.
 - **Siete in 12:** batteria gialla, chi ha creato e 3 rivali; bianca, l'amico e 3 rivali; arancione, 4 rivali a numeri. In acqua non vi incontrate.
@@ -1011,18 +1011,18 @@ Voce 36 di `DA-FARE.md`; `docs/PROPOSTA-STAGIONE-ZONALE.md`, «Lucio dodicesimo�
 - **File sbagliati rifiutati** con un messaggio: altra stagione, altra versione, il tuo stesso file, file rovinato.
 - **Limiti:** niente fantasma dell'amico; una tappa si può rifare lasciando la stagione e rientrando col codice; se ti ritiri da una tappa sei ultimo della tua batteria.
 - **La stagione da solo non cambia.** La classifica del circuito ha le righe un po' più basse, per far stare 12 righe nei 650 px.
-- **Collaudo nuovo** `tests/collaudo_stagione_amico.py`. Misure: `docs/PROPOSTA-STAGIONE-ZONALE.md`, Esito di Lucio dodicesimo.
+- **Collaudo nuovo** `tests/collaudo_stagione_amico.py`. Misure: `docs/archivio/PROPOSTA-STAGIONE-ZONALE.md`, Esito di Lucio dodicesimo.
 
 ## 1.2.36 — La stagione del circuito zonale
 
-Voce 37 di `DA-FARE.md`; `docs/PROPOSTA-STAGIONE-ZONALE.md`; via di Ale del 14 novembre sera («ok B ora e A al nazionale», «ok come consigli tu»).
+Voce 37 di `DA-FARE.md`; `docs/archivio/PROPOSTA-STAGIONE-ZONALE.md`; via di Ale del 14 novembre sera («ok B ora e A al nazionale», «ok come consigli tu»).
 
 - **Stagione di 4 tappe**, dalla finestra del torneo (pulsante «Stagione (4 tappe)»): Lago delle Ginestre, Golfo dei Gabbiani, Baia del Faro, Isola dei Pini, posti inventati. Ogni tappa è un torneo come prima, contro i 3 rivali della tua batteria. Il torneo singolo resta com'è, quando non c'è una stagione in corso.
 - **Batterie:** a ogni tappa la flotta del circuito (tu e i 10 rivali) si divide in tre batterie, gialla (la tua, 4 barche), bianca (4) e arancione (3), sorteggiate all'inizio. Nella tua entrano prima i rivali che non hai ancora incontrato: in una stagione li incontri tutti. Le altre due batterie corrono «a numeri»: l'ordine si estrae uno per volta, con un peso dato dalle doti di partenza e di bolina (B = 0,2). La tua batteria resta nell'ordine vero del torneo.
 - **Classifica del circuito** (pulsante «Il circuito»): punti = posto nella tappa, da 1 a 11, nessuno scarto. Accanto, chi ha vinto ogni batteria e al massimo tre frasi su fatti contati: bestia nera, contatti, lotta per il primo posto, in forma, sempre davanti. I primi 3 a fine stagione hanno «diritto al nazionale», per ora solo scritto e salvato. Nella scheda di ogni rivale c'è la sua posizione nel circuito.
 - **Solo classifica e racconto:** la guida dei rivali e le regate non cambiano.
 - **Salvataggio** con i progressi, separato fra carriera e gioco libero; «Azzera i progressi» lo cancella. Se cambia la versione del gioco la stagione resta e la tappa in corso ricomincia.
-- **Collaudo nuovo** `tests/collaudo_stagione.py`. Misure: `docs/PROPOSTA-STAGIONE-ZONALE.md`, Esito.
+- **Collaudo nuovo** `tests/collaudo_stagione.py`. Misure: `docs/archivio/PROPOSTA-STAGIONE-ZONALE.md`, Esito.
 
 ## 1.2.35 — I rivali si leggono in un posto solo, e si capiscono
 
@@ -1040,14 +1040,14 @@ Osservazione di Ale del 14 novembre, giocando il torneo; via: «fallo dopo la 1.
 
 ## 1.2.34 — Le scritte sopra le barche non coprono le barche
 
-Voce 34 di `DA-FARE.md`, nota di Ale del 13 novembre («a volte quelle scritte coprono le barche»); `docs/PROPOSTA-ETICHETTE-BARCHE.md`; via di Ale del 14 novembre: «via all 34».
+Voce 34 di `DA-FARE.md`, nota di Ale del 13 novembre («a volte quelle scritte coprono le barche»); `docs/archivio/PROPOSTA-ETICHETTE-BARCHE.md`; via di Ale del 14 novembre: «via all 34».
 
 - **La scritta sopra un avversario** (colore, o cognome nel torneo) sta sopra la barca come prima, ma se lì copre lo scafo di un'altra barca, compresa la tua, scende sotto. Se anche sotto copre qualcosa, resta sopra e diventa trasparente.
 - **Niente sfarfallio:** dopo un cambio di posto la scritta resta ferma almeno 1 s di regata. Se nel frattempo copre una barca, è trasparente.
 - **Da lontano** (tasti 1-2, rotella, moviola): distanza dalla barca e lettere in proporzione alla vista, fino a 10 px (scelta A di Ale). Da vicino niente cambia.
 - **Solo disegno:** le regate non cambiano.
 - **Collaudo nuovo** `tests/collaudo_etichette.py`, con la misura `tests/misura_etichette.py`: 20 regate fisse del torneo, controllando le scritte mentre il gioco le disegna.
-- **Misure:** vedi `docs/PROPOSTA-ETICHETTE-BARCHE.md`, Esito.
+- **Misure:** vedi `docs/archivio/PROPOSTA-ETICHETTE-BARCHE.md`, Esito.
 - **Chiusa con un criterio sotto soglia, per scelta di Ale** (14 novembre, «chiudi. proviamo così»): da lontano le scritte vicine alla barca giusta sono l'88,6% contro una soglia del 90% (la 1.2.33 era al 45,1%). Con due barche a meno di 4 lunghezze la scritta tocca anche la vicina. L'iniziale da lontano resta una strada possibile, non fatta.
 
 ## 1.2.33 — I rivali del torneo hanno un nome, e anche tu
@@ -1070,22 +1070,22 @@ Primo passo della carriera a circuiti (voci 28 e 30 di `DA-FARE.md`; `docs/PROPO
 
 ## 1.2.32 — Rotta ottimale più leggibile
 
-Voce 32 di `DA-FARE.md`, osservazione 122 (`docs/PROPOSTA-ROTTA-LEGGIBILE.md`; via di Ale del 13 novembre: il filo e la barra nascosta, non lo zoom né le linee più grosse).
+Voce 32 di `DA-FARE.md`, osservazione 122 (`docs/archivio/PROPOSTA-ROTTA-LEGGIBILE.md`; via di Ale del 13 novembre: il filo e la barra nascosta, non lo zoom né le linee più grosse).
 
 - **Il filo dello stesso istante.** Nella rotta ottimale, ogni minuto dal tuo taglio della linea, un filo bianco unisce dove eri tu e dove saresti stato con la rotta ottimale nello stesso istante, col minuto scritto accanto («1:00», «2:00»). Si vede a colpo d'occhio dove il distacco cresce e dove cala.
 - **«Allarga la mappa (B)».** Solo con la rotta ottimale aperta, un pulsante nella barra della moviola, o il tasto B, nasconde la barra laterale del gioco e la mappa prende tutta la finestra; lo stesso pulsante o B la rimettono, e chiudendo la rotta torna sempre. Lo schermo intero del browser resta F11, come prima.
 - **Punti all'istante esatto.** I punti ogni 30 s ora stanno all'istante giusto: prima si prendeva il primo punto registrato dopo quell'istante, fino a circa 1 s più tardi sulla rotta ottimale, che ha un punto al secondo. Così fili e punti coincidono.
 - **Collaudo nuovo** `tests/collaudo_rotta_leggibile.py`: le 4 regate del torneo, giocatore col pilota, rotta ottimale aperta dalla schermata finale; controlla i fili (posizioni ricalcolate per conto suo), la barra nascosta e rimessa (B, pulsante, Esc, Chiudi), che B non faccia niente fuori dalla rotta e lo spazio a 1360x650.
-- **Misure:** vedi `docs/PROPOSTA-ROTTA-LEGGIBILE.md` §«Esito».
+- **Misure:** vedi `docs/archivio/PROPOSTA-ROTTA-LEGGIBILE.md` §«Esito».
 
 ## 1.2.31 — I rivali del torneo hanno doti e difetti
 
-Secondo passo della voce 23 (`docs/PROPOSTA-TRATTI-RIVALI.md` §8-12; via di Ale del 13 novembre: tratti detti subito, come qualità a parole e non come gradi; «chi è meno bravo è più lento nelle manovre, meno preciso», provato e tolto). Solo nel torneo.
+Secondo passo della voce 23 (`docs/archivio/PROPOSTA-TRATTI-RIVALI.md` §8-12; via di Ale del 13 novembre: tratti detti subito, come qualità a parole e non come gradi; «chi è meno bravo è più lento nelle manovre, meno preciso», provato e tolto). Solo nel torneo.
 
 - **Due aree per rivale** (`aiTratti`, `js/regate.js`): partenza e bolina. Ognuna è sorteggiata da sola: dote, media o difetto, una volta su tre. Partenza (`startM`) e bolina (`up` e `trim`) hanno fasce larghe il doppio di prima attorno allo stesso centro, così la differenza si vede in acqua. La media della flotta resta quella della 1.2.30.
 - **Dove si leggono:** nella presentazione del torneo, prima di ogni regata e sulla scheda dei rivali; si dicono solo le aree fuori dalla media («parte bene; di bolina va larga»), oppure «nella media». Frasi senza genere, che vanno bene anche coi nomi propri della 1.2.32. Un torneo salvato prima della 1.2.31 continua senza tratti.
 - **Provati e tolti:** le raffiche (un rivale che lascia in ritardo: con le raffiche del torneo non si vede, §9), la poppa (l'angolo vicino ai 170° conta poco: non si vede nemmeno con le fasce doppie, §10-11) e le manovre (prontezza e precisione del timone, idea di Ale: nel gioco cambiano l'arrivo di pochi secondi e in nessuna direzione chiara, §12-14).
-- **Misure:** vedi `docs/PROPOSTA-TRATTI-RIVALI.md` §9-13.
+- **Misure:** vedi `docs/archivio/PROPOSTA-TRATTI-RIVALI.md` §9-13.
 
 ## 1.2.30 — La scheda dei rivali nel torneo
 
@@ -1099,7 +1099,7 @@ Primo passo della scheda dei rivali (`docs/PROPOSTA-SCHEDA-RIVALI.md`; risposte 
 
 ## 1.2.29 — La lezione sulle raffiche non dice più di orzare per scaricare
 
-Dal foglio di un velista e dalla ricerca di fonti scritte (`docs/PROPOSTA-LEZIONE-RAFFICA.md`, `docs/FONTI-PUBBLICHE.md` F79-F84): quattro articoli letti per intero dicono che la prima mossa in raffica è lascare e che stringere il vento durante la raffica non conviene (uno orza solo dopo, per ri-trimmare). Solo testi, nessun numero del motore cambia:
+Dal foglio di un velista e dalla ricerca di fonti scritte (`docs/archivio/PROPOSTA-LEZIONE-RAFFICA.md`, `docs/FONTI-PUBBLICHE.md` F79-F84): quattro articoli letti per intero dicono che la prima mossa in raffica è lascare e che stringere il vento durante la raffica non conviene (uno orza solo dopo, per ri-trimmare). Solo testi, nessun numero del motore cambia:
 
 - **Lezione «Assorbire una raffica»** (`js/contenuti.js`): tolto «di bolina puoi anche orzare leggermente», aggiunto «Non stringere il vento: guadagni poco e perdi velocità»; la frase di fine passo dice che lascare è la prima mossa e che stringere il vento di solito non conviene.
 - **Domanda d'esame sulla raffica** (stesso file): la spiegazione non dice più che si può orzare per scaricare.
@@ -1115,7 +1115,7 @@ Segnalato da Ale con tre foto (registrazioni di Lucio, Firefox, torneo 11 novemb
 
 ## 1.2.27 — Un avversario non rimbalza più per sempre vicino alla boa
 
-Trovato dall'esploratore sulla 1.2.25 (seme 28, regata 2 della Scuola, esperti, Chromium: Verde non arriva in 756 s). Compare dalla 1.2.24 (fino alla 1.2.23 arriva a 395 s), ma la causa è più vecchia: `docs/PROPOSTA-BOA-PIANTATA.md` §12-13.
+Trovato dall'esploratore sulla 1.2.25 (seme 28, regata 2 della Scuola, esperti, Chromium: Verde non arriva in 756 s). Compare dalla 1.2.24 (fino alla 1.2.23 arriva a 395 s), ma la causa è più vecchia: `docs/archivio/PROPOSTA-BOA-PIANTATA.md` §12-13.
 - **Causa:** Verde, a sinistra della boa 1, è mandato al punto 2 (sotto e a sinistra) da `sopraDaSinistra`; a meno di 8 m dal punto 2 torna al punto 0; da lì `sopraDaSinistra` scatta di nuovo e lo rimanda al punto 2. Rimbalza ogni 5-10 s per tutta la regata.
 - **Correzione:** `sopraDaSinistra` vale una volta sola per boa (`b.p2`, azzerato al cambio di boa). 3 righe in `js/regate.js`.
 - **Misura:** K1 passa (seme 28: Verde arriva a 388,7 s). Su 153 corse (semi 1-9, tutte le regate della Scuola e del torneo, principianti e esperti): nessuna barca che arrivava ora non arriva (K2), non arrivate 3 e 3, 28 avversari su 459 cambiano arrivo (18 più veloci, 10 più lenti; mediana −1 s, da −33 a +23 s; K4). Il campione è più piccolo del previsto (1-40): le misure si sono fermate a 73 °C del processore, oltre il limite scelto.
@@ -1136,7 +1136,7 @@ Segnalata da Ale: nella lezione non si capiva cosa spiegasse e l'esercizio non s
 - **Il testo prima di ogni regata del torneo lo spiega.**
 - **Scuola, prove, lezioni e regate del menu non cambiano.**
 
-**Com'è fatto** (`docs/PROPOSTA-CONO-D-OMBRA.md`; fonti F75 e F76):
+**Com'è fatto** (`docs/archivio/PROPOSTA-CONO-D-OMBRA.md`; fonti F75 e F76):
 - Il cono parte da chi copre e va sottovento lungo il suo vento apparente, girato di 5° verso poppa.
 - Vento tolto sull'asse: 54% vicinissimo, 38% a un'altezza d'albero, 29% a due, zero a 10 lunghezze di barca. Di lato finisce a una lunghezza.
 - Una vela che sbatte fa poca ombra, una barca scuffiata nessuna. Fra più barche vale l'ombra più forte.
@@ -1163,7 +1163,7 @@ Segnalata da Ale: nella lezione non si capiva cosa spiegasse e l'esercizio non s
 - **Le layline in acqua** sono lunghe metà della bolina invece di 1,3 volte (osservazione 110). Nella vista della rotta ottimale restano lunghe.
 - **La registrazione** scrive anche l'impostazione «layline» (osservazione 111).
 
-- **Diagnosi** (`docs/PROPOSTA-AVVERSARI-ROTTA.md` §1; strumento nuovo `tests/misura_avversari_rotta.py`, con la rotta ottimale lato per lato, `rotLatiBarca`): sui semi 1101-1130, 720 avversari, la bolina pesa il 64% del tempo perso, la poppa il 15%, il lasco verso l'arrivo il 14%.
+- **Diagnosi** (`docs/archivio/PROPOSTA-AVVERSARI-ROTTA.md` §1; strumento nuovo `tests/misura_avversari_rotta.py`, con la rotta ottimale lato per lato, `rotLatiBarca`): sui semi 1101-1130, 720 avversari, la bolina pesa il 64% del tempo perso, la poppa il 15%, il lasco verso l'arrivo il 14%.
 - **Correzione** (§2, `js/regate.js`): in poppa l'angolo della VMG migliore della polare (`vmgPoppa`), più la differenza personale di ogni barca, solo dopo il via (`DOWN_E` 0°).
 - **`collaudo_layline.py` P4:** con le linee lunghe metà, nella pagina senza `#collaudo` i pixel gialli sono 430 con le linee e 299 senza (con la 1.2.23 erano 485 e 225). Il controllo chiedeva 150 di differenza: abbassato a 80, perché le linee più corte disegnano meno pixel. È un cambio di soglia dopo aver visto il numero, quindi lo si dice qui.
 - **Misure** (le 4 regate del torneo, principianti ed esperti, 240 regate per gruppo):
@@ -1206,7 +1206,7 @@ Sotto c'è un riassunto: i secondi persi in bolina e in poppa (o nei laschi), pi
 
 Il testo dice sempre che la rotta è «col senno di poi»: conosce il vento prima che arrivi e ignora le altre barche. Il nome è quello tecnico dei programmi di rotta (*routing*); Ale l'aveva chiamata «strada migliore».
 
-- **Come** (`docs/PROPOSTA-ROTTA-OTTIMALE.md`, `js/rotta.js`, `js/rotta-dati.js`):
+- **Come** (`docs/archivio/PROPOSTA-ROTTA-OTTIMALE.md`, `js/rotta.js`, `js/rotta-dati.js`):
   - durante la regata si registrano raffiche, salto e tempo del gioco ogni 0,5 s, solo in lettura; `windAt` ora passa da `ventoDa`, che rifà il vento da uno stato registrato con gli stessi conti;
   - a regata finita si calcolano le isocrone con la polare della barca del gioco (`tests/fisica/polare_tabella.js`, velocità di equilibrio e scarroccio da 4 a 20 nodi);
   - una virata costa 2 s, misurati con `tests/fisica/costo_manovre.js` (1,9-2,7 s); un'abbattuta 1 s, un minimo nostro, perché nel gioco strambare quasi non costa (0,0 s misurati).
@@ -1241,7 +1241,7 @@ Il testo dice sempre che la rotta è «col senno di poi»: conosce il vento prim
 **Cosa vedi:** nel torneo il vento è sempre quello di un campo di regata vero, con raffiche e salti insieme, a 10 o 12 nodi. Le regate si distinguono per il formato: la 1 e la 2 con la penalità sul punteggio (bastone e triangolo), la 3 e la 4 con i giri di penalità (bastone e triangolo). Chi arriva senza aver fatto i giri è squalificato: prende i punti di chi non arriva e in tabella c'è «Sq». Un torneo lasciato a metà con la versione di prima si chiude senza punti, come a ogni cambio di versione.
 
 - **Perché** (decisioni di Ale del 9 novembre, `DECISIONI.md`): il torneo non è didattico, quindi la fisica c'è tutta; il tipo di gara lo dice il formato, e il torneo si amplia con le regate coi giri. Le regate a tema fuori dal torneo restano didattiche, una cosa alla volta.
-- **Come** (`docs/PROPOSTA-TORNEO-AMPLIATO.md`, `js/regate.js`, sezione torneo):
+- **Come** (`docs/archivio/PROPOSTA-TORNEO-AMPLIATO.md`, `js/regate.js`, sezione torneo):
   - si accendono insieme i generatori di raffiche e salti che esistevano già, senza costanti nuove;
   - le regate coi giri sono la regata dei giri di sempre;
   - `R.punti` distingue la penalità sul punteggio;
@@ -1260,7 +1260,7 @@ Il testo dice sempre che la rotta è «col senno di poi»: conosce il vento prim
 **Cosa vedi:** alla prima boa l'avversario che arriva mure a dritta poco a destra della boa, e di bolina ci passerebbe sopra, non vira più verso il punto di passaggio per poi rivirare fermo: tiene la bolina, passa la boa e poggia. Meno barche ferme vicino alla boa (osservazioni 90, 103, 109).
 
 - **Causa:** alla boa 1 l'avversario puntava prima un punto a destra e sopra la boa (punto 0) e solo dopo quello oltre la boa. Chi arrivava vicino alla boa ma appena fuori dalle regole che fanno saltare il punto 0 virava verso di esso; a metà virata il bersaglio passava al punto oltre la boa e la barca rivirava senza velocità: 3-9 s ferma, anche all'indietro. La regola «sul bordo» non vedeva il caso perché guarda la retta verso il punto oltre la boa, più poggiata della bolina.
-- **Correzione** (`docs/PROPOSTA-BOA-PIANTATA.md` §8; solo la guida degli avversari, `js/regate.js`): il «giro diretto». Chi è mure a dritta, a destra della boa 1 ed entro 15 m da lei (`R_DIR`), e di bolina passerebbe almeno 3 m sopra la boa (`M_DIR`), punta subito oltre la boa tenendo la bolina finché non l'ha superata. Le costanti `SOPRA_M` e `PASSO_SX` danno un nome a numeri che c'erano già, con gli stessi valori.
+- **Correzione** (`docs/archivio/PROPOSTA-BOA-PIANTATA.md` §8; solo la guida degli avversari, `js/regate.js`): il «giro diretto». Chi è mure a dritta, a destra della boa 1 ed entro 15 m da lei (`R_DIR`), e di bolina passerebbe almeno 3 m sopra la boa (`M_DIR`), punta subito oltre la boa tenendo la bolina finché non l'ha superata. Le costanti `SOPRA_M` e `PASSO_SX` danno un nome a numeri che c'erano già, con gli stessi valori.
 - **Misure** (`tests/misura_boa_avversari.py`, le 6 regate del torneo, principianti ed esperti, giocatore guidato dal pilota, 360 regate per gruppo di semi):
   - **Scelta**, semi 861-890, 6 combinazioni: fermate entro 40 m dalla boa 65 → 21; con margine 2 m la boa viene toccata 74-78 volte contro 59 (soglia 64), quindi scartato.
   - **Conferma**, semi 891-920 mai usati: fermate 70 → 30 (soglia ≤35); passaggi con 3 o più virate 340 → 314; mediana dei secondi vicino alla boa 26,5 → 26,1 s; boa toccata 49 → 49; boe sbagliate e non arrivate 0 → 0; contatti dopo il via 259 → 253.
@@ -1273,7 +1273,7 @@ Il testo dice sempre che la rotta è «col senno di poi»: conosce il vento prim
 **Cosa vedi:** prima della partenza gli avversari non restano più fermi a scivolare verso l'estremità sinistra della linea. Chi si accorge di essere scivolato troppo, con almeno 40 s al via, gira dietro e torna su. Allo sparo meno barche oltre lo spillo e meno partenze in ritardo (osservazioni 93, 96, 100, 108, 109).
 
 - **Causa:** l'attesa si fermava dove capitava appena l'abbrivio bastava ad arrivare alla linea; da lì, mure a dritta con la vela che sbatte, la barca scivolava a sinistra di circa 10 m al minuto e nessuna regola la riportava indietro. Al via la fetta 4 le faceva poi poggiare ancora più fuori per prendere abbrivio.
-- **Correzione** (`docs/PROPOSTA-PARTENZA-ESTREMITA.md`, parte A; solo la guida degli avversari, `js/regate.js`): se il punto dove la barca taglierebbe la linea partendo adesso cade più a sinistra di 25 m dal centro e mancano più di 40 s, torna al suo punto di ritrovo e rifà l'avvicinamento. La parte B (giro in poppa al via) non è servita ed è tolta.
+- **Correzione** (`docs/archivio/PROPOSTA-PARTENZA-ESTREMITA.md`, parte A; solo la guida degli avversari, `js/regate.js`): se il punto dove la barca taglierebbe la linea partendo adesso cade più a sinistra di 25 m dal centro e mancano più di 40 s, torna al suo punto di ritrovo e rifà l'avvicinamento. La parte B (giro in poppa al via) non è servita ed è tolta.
 - **Misure** (`tests/misura_partenza_estremita.py`, giocatore fermo, principianti ed esperti, 1-3-5 minuti):
   - **Regate del torneo**, semi 681-760, 2880 regate, decisive per la scelta di Ale del 9 novembre: oltre l'estremità allo sparo 14,3% → 2,0%; anticipate 1,8% → 2,0%; mediana del taglio 2,10 → 1,93 s; tagli dopo 10 s 1154 → 620; contatti fra −60 e +20 s 1040 → 1104 (+6,2%, soglia +10%; intervallo al 95% da −1,2% a +14,1%).
   - **Controllo sulla Scuola** (bastone e raffiche, 960 regate): contatti +3,5%, anticipate 0,6% → 0,3%.
@@ -1287,7 +1287,7 @@ Il testo dice sempre che la rotta è «col senno di poi»: conosce il vento prim
 
 ## 1.2.18 — Gli avversari scontano i giri subito, anche prima del via; giri non fatti: squalifica per tutti
 
-Osservazione 99 (regata di Ale delle 10:03): in gruppo gli avversari non trovavano mai acqua libera per i giri. Proposta, due versioni e misure: `docs/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md`. Decisioni di Ale dell'8 novembre in `DECISIONI.md`.
+Osservazione 99 (regata di Ale delle 10:03): in gruppo gli avversari non trovavano mai acqua libera per i giri. Proposta, due versioni e misure: `docs/archivio/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md`. Decisioni di Ale dell'8 novembre in `DECISIONI.md`.
 
 - **Prima, un errore corretto:** il «22% di avversari arrivati con giri non fatti» scritto con la 1.2.16 contava anche il giocatore; il numero giusto era 5% (1.2.15) e 4% (1.2.17).
 - **Giri appena possibile, anche prima del via** (`giroAI`): anche nell'ultimo mezzo minuto e a costo di rovinare la partenza (Ale: «scontare i giri senza rovinare una partenza non è una penalità»). Con un debito la barca non resta ferma in attesa sulla linea.
@@ -1299,7 +1299,7 @@ Osservazione 99 (regata di Ale delle 10:03): in gruppo gli avversari non trovava
 
 ## 1.2.17 — L'orologio dei giri di penalità
 
-Richiesta di Ale (8 novembre 2026): al posto della riga piccola «Giro in corso…», un orologio che ricordi la penalità e mostri il giro. Proposta e criteri: `docs/PROPOSTA-OROLOGIO-GIRI.md`.
+Richiesta di Ale (8 novembre 2026): al posto della riga piccola «Giro in corso…», un orologio che ricordi la penalità e mostri il giro. Proposta e criteri: `docs/archivio/PROPOSTA-OROLOGIO-GIRI.md`.
 
 - **Orologio nel riquadro delle penalità** (in alto a destra, sul mare): c'è sempre quando hai giri da fare, anche prima del via; un anello rosso che si riempie di verde nel verso in cui giri, da quando il giro comincia davvero; al centro i giri fatti su quelli della penalità («0/2», «1/2»). Se il giro si interrompe torna rosso. Tolta la riga «Giro in corso: …°…».
 - **Il riquadro si disegna per ultimo:** la scritta della linea («Arrivo», «Linea di partenza») e la freccia fuori schermo gli passavano sopra (trovato dal collaudo nuovo).
@@ -1308,7 +1308,7 @@ Richiesta di Ale (8 novembre 2026): al posto della riga piccola «Giro in corso�
 
 ## 1.2.16 — I giri di penalità contano anche se lenti; giri non fatti: squalifica
 
-Osservazione 98 (regata di Ale delle 10:03, 8 novembre 2026): Ale ha fatto un giro intero, con virata e strambata, in 23 s, e il gioco non l'ha contato perché un giro doveva stare in 20 s. Il regolamento (44.2, F15 e F39; commento di Perry, F74 nuova) chiede i giri «prontamente», senza limiti in secondi. Proposta e misure: `docs/PROPOSTA-GIRI-GIOCATORE.md`.
+Osservazione 98 (regata di Ale delle 10:03, 8 novembre 2026): Ale ha fatto un giro intero, con virata e strambata, in 23 s, e il gioco non l'ha contato perché un giro doveva stare in 20 s. Il regolamento (44.2, F15 e F39; commento di Perry, F74 nuova) chiede i giri «prontamente», senza limiti in secondi. Proposta e misure: `docs/archivio/PROPOSTA-GIRI-GIOCATORE.md`.
 
 - **Giri di penalità del giocatore** (`giriPenalita`): niente più finestra di 20 s. Un giro comincia quando la prua gira; riparte da capo se torna indietro di oltre 20° o se per più di 8 s non gira di almeno 20° (`GIRO_SOSTA`, `GIRO_AVANZA`, ipotesi nostre). Conta a 360° con una virata e una strambata fatte durante il giro. Sul file di Ale il giro da 135 a 158 s conta: penalità scontata a 227 s invece che a 240 s. `GIRO_AVANZA` era 5° nella prima prova, poi portato a 20° (Ale, 8 novembre): con 5° la barca a barra al centro, che scivola di 0,5-2°/s, sembrava girare ancora.
 - **Riquadro delle penalità** (in alto a destra, sul mare): «Giro in corso: 180° di 360° · virata sì · strambata no». Messaggio quando un giro si interrompe. Nella riga della regola: «…senza fermarti».
@@ -1316,18 +1316,18 @@ Osservazione 98 (regata di Ale delle 10:03, 8 novembre 2026): Ale ha fatto un gi
 - **Lezione 20, «I giri di penalità»:** testo nuovo (niente tempo massimo, non fermarsi, il riquadro, la squalifica); la consegna dell'esercizio dice «senza fermarti a metà».
 - **Collaudi:** `collaudo_giri.py` con le parti nuove E3, L2-L5, M1 e K1 riscritto (un cerchio vero del pilota attorno alla boa conta come giro, come nella realtà: al massimo 3 regate su 30, ognuno controllato come giro vero). Tutti verdi in Chromium (L2 giri da 27 s contati 10/10; L3-L4 su 9 prove valide su 10: nella decima la barca si pianta prima di finire il giro). Verdi anche in Firefox. Correzioni del collaudo durante il lavoro, dichiarate nella proposta §11-13; la sosta delle prove L3-L4 si conta da quando la barca smette davvero di girare, perché con la barra al centro ruota ancora per inerzia, e allora gira (scelta A di Ale). `collaudo_regola21`, `collaudo_riquadro_bandiere`, `collaudo_pannello`, `collaudo_pannello_lezioni`, `collaudo_esercizi_regata` verdi; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici; le altre regate identiche al bit (F1).
 - **Strumento nuovo:** `tests/misura_giri_giocatore.py` rifà il conto dei giri sul file di una regata (regola di prima e regola nuova); controllato sugli eventi del gioco.
-- **Osservazioni nuove 96-99** (regate di Ale dell'8 novembre) e proposta coppie chiusa senza correzione (§12): vedi `docs/OSSERVAZIONI-GIOCANDO.md` e `docs/PROPOSTA-COPPIE.md`.
+- **Osservazioni nuove 96-99** (regate di Ale dell'8 novembre) e proposta coppie chiusa senza correzione (§12): vedi `docs/OSSERVAZIONI-GIOCANDO.md` e `docs/archivio/PROPOSTA-COPPIE.md`.
 
 ## 1.2.15 — Gli avversari nuovi anche online (il lavoro del ramo `deriva`)
 
 Decisione di Ale, 7 novembre 2026: portare online la guida nuova degli avversari, per giocare in due (Ale e Lucio) e avere più regate da misurare. Il livello Deriva non c'è ancora: entra solo la guida, che vale per tutte le regate, anche quelle della Scuola. La barca non cambia (`polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici). I salvataggi non cambiano formato.
 
 - **Avversari** (`docs/PROPOSTA-AVVERSARI-DERIVA.md` §10-11): chi cede sceglie lo scarto più piccolo che passa lontano da tutte le barche vicine; chi scende non torna di bolina per cedere; niente strambate a raffica; al via chi taglierebbe oltre lo spillo stringe o cambia mure; al giro di boa chi ci arriva senza virare punta già il punto oltre la boa. Misure, prima → dopo, semi mai usati: penalità 332 → 162, fuori linea 62 → 24, ritorni di bolina 18 → 0. Restano fuori soglia i contatti prima del via e le piantate brevi.
-- **Boe dal lato sbagliato** (difetto che c'era già, reso più frequente dalla guida nuova; `docs/PROPOSTA-DERIVA-SU-MAIN.md` §6): chi arrivava da sinistra della boa puntava il punto oltre la boa passandole sopra, cioè dal lato sbagliato. Ora passa prima sotto. Boe sbagliate, pilota e avversari, 160 regate: semi 1-40 da 19 a 2 (`main` 12), conferma semi 41-80 2 (`main` 9).
+- **Boe dal lato sbagliato** (difetto che c'era già, reso più frequente dalla guida nuova; `docs/archivio/PROPOSTA-DERIVA-SU-MAIN.md` §6): chi arrivava da sinistra della boa puntava il punto oltre la boa passandole sopra, cioè dal lato sbagliato. Ora passa prima sotto. Boe sbagliate, pilota e avversari, 160 regate: semi 1-40 da 19 a 2 (`main` 12), conferma semi 41-80 2 (`main` 9).
 - **Registrazioni:** pulsante «Scarica l'ultima regata»; il menu non tiene più le regate chiuse entro 2 s.
 - **Provata e tolta:** azzerare l'orologio dello scarto solo dopo 5 s di via libera (il pilota cedeva 60 s accanto a Rossa e chiudeva fuori tempo): le penalità salivano fino al +15%. Il caso resta, spiegato, fra i fallimenti noti di `collaudo_moviola`.
 - **Collaudi sistemati:** `collaudo_impronta.py` chiedeva la barca «livello 2», che dalla 1.1.0 non c'è più, e dava sempre «non valido»; `collaudo_giri_avversari.py` G12 esclude i casi sulla soglia della guida (1,5 m/s, 80°) e il giro usa 60 regate invece di 40, perché con meno contatti i doppi giri erano meno dei 15 chiesti dal metro; `collaudo_registratore_barche.py` per la barca ferma costruita prende un avversario che sta navigando; `collaudo_moviola.py` non confronta la prua di una barca scuffiata (alla raddrizzata cambia di colpo); `collaudo_fantasma.py` aspetta 600 s di gioco invece di 24 s d'orologio: nel giro GitHub del 7 novembre (Chromium) due barche risultavano «bloccate» a regata non finita, mentre qui 80 corse su 80 arrivano tutte (la più lenta a 291 s).
-- **Strumenti nuovi** (`docs/PROPOSTA-REGATE-VERE.md`): `tests/scene_strane.py` e `tests/rigioca_regata.py` misurano gli avversari sulle regate vere scaricate da chi gioca; `misura_strambate.py`, `misura_prima_del_via.py`.
+- **Strumenti nuovi** (`docs/archivio/PROPOSTA-REGATE-VERE.md`): `tests/scene_strane.py` e `tests/rigioca_regata.py` misurano gli avversari sulle regate vere scaricate da chi gioca; `misura_strambate.py`, `misura_prima_del_via.py`.
 
 ## 1.2.14 — «La barca» in ordine: niente usato prima di averlo spiegato
 
@@ -1385,7 +1385,7 @@ Dalla prova della Scuola (6 novembre 2026, `docs/OSSERVAZIONI-GIOCANDO.md` 87-89
 
 ## 1.2.11 — La Scuola si chiude: medaglie ritarate e nomi al posto dei numeri
 
-`docs/PROPOSTA-MEDAGLIE-E-NOMI.md`, soglie committate prima del codice (129e859). Ale, 4 novembre: «puoi continuare senza chiedere autorizzazioni»; i nomi sono le sue decisioni del 30 ottobre.
+`docs/archivio/PROPOSTA-MEDAGLIE-E-NOMI.md`, soglie committate prima del codice (129e859). Ale, 4 novembre: «puoi continuare senza chiedere autorizzazioni»; i nomi sono le sue decisioni del 30 ottobre.
 
 **Medaglie** (nessun numero della barca cambia): la regola di sempre, oro = mediana del pilota ai 5 s superiori, argento ×1,25, bronzo ×1,6, più una aggiunta: l'oro sale di 5 s finché il pilota ci sta in 25 corse su 30. Scelte sui semi 1-30:
 - **Prova 4:** da 280/350/450 a **290/365/465**. Prima l'oro il pilota non lo prendeva mai (285,8 s).
@@ -1411,7 +1411,7 @@ Dalla prova della Scuola (6 novembre 2026, `docs/OSSERVAZIONI-GIOCANDO.md` 87-89
 
 ## 1.2.10 — Anche Z, il boma e tutti i suoni brevi con registrazioni vere
 
-`docs/PROPOSTA-SUONI-FINE.md` §7. Ale, 4 novembre, dopo aver giocato la 1.2.9: non lo convincono il tasto Z e il boma in virata; poi: «sì, trova tutti i suoni». Soglie committate prima del codice (d1fda44).
+`docs/archivio/PROPOSTA-SUONI-FINE.md` §7. Ale, 4 novembre, dopo aver giocato la 1.2.9: non lo convincono il tasto Z e il boma in virata; poi: «sì, trova tutti i suoni». Soglie committate prima del codice (d1fda44).
 
 **Cosa cambia** (tutti CC0 da Freesound, F51-F59; numeri **ipotesi nostre**, a orecchio):
 - **Z:** tela vera, un giro di 8 s da un lenzuolo pesante scosso, che segue il vento. Non è una vela: semplificazione dichiarata.
@@ -1441,7 +1441,7 @@ Dalla prova della Scuola (6 novembre 2026, `docs/OSSERVAZIONI-GIOCANDO.md` 87-89
 
 ## 1.2.9 — I suoni finiti: vento vero, sciabordio, sartiame, scricchiolio, gorgoglio, gabbiani
 
-`docs/PROPOSTA-SUONI-FINE.md`. Ale, 4 novembre: «procedi pure completando i suoni nel gioco, non chiedere autorizzazioni». Proposta e soglie committate prima del codice (08cebb3), poi tutto di seguito.
+`docs/archivio/PROPOSTA-SUONI-FINE.md`. Ale, 4 novembre: «procedi pure completando i suoni nel gioco, non chiedere autorizzazioni». Proposta e soglie committate prima del codice (08cebb3), poi tutto di seguito.
 
 **Cosa cambia** (tutti CC0 da Freesound, F44-F50; numeri e curve sono **ipotesi nostre**, a orecchio; nessuna registrazione è di una deriva, semplificazione dichiarata):
 - **Il vento** ora è registrato: più forte, più chiaro e un po' più veloce col vento apparente.
@@ -1500,7 +1500,7 @@ Ale, 3 novembre sera, dopo aver ascoltato le registrazioni del gioco vero nella 
 
 ## 1.2.7 — La vela e l'acqua con suoni registrati
 
-`docs/PROPOSTA-SUONI-REGISTRATI.md`. Ale, 3 novembre, dopo aver ascoltato le prove: «sì, vai con la fermata 2». Prima versione su `main` dopo l'unione.
+`docs/archivio/PROPOSTA-SUONI-REGISTRATI.md`. Ale, 3 novembre, dopo aver ascoltato le prove: «sì, vai con la fermata 2». Prima versione su `main` dopo l'unione.
 
 **Cosa cambia:**
 - **La vela che sbatte** ora sono colpi veri di tela: i 16 colpi della registrazione Freesound 377492 (CC0, F42). Ne parte uno a caso alla volta (7 su 10 forti), con altezza ±5% e volume da −4 a +2 dB. Al secondo ne partono 1 + 0,35 × vento apparente in nodi, con l'intervallo fra uno e l'altro a caso.
@@ -1525,7 +1525,7 @@ Ale, 3 novembre sera, dopo aver ascoltato le registrazioni del gioco vero nella 
 
 ## Proposta (fermata 1): la vela e l'acqua con suoni registrati (3 novembre 2026, nessuna versione nuova)
 
-`docs/PROPOSTA-SUONI-REGISTRATI.md`. Ale, dopo aver giocato la 1.2.5: il mare è un fruscio piatto, la vela che sbatte un ticchettio irreale. Proposti due suoni CC0 da Freesound: i 16 colpi di tela di 377492 (vela) e la prua di 852108 (acqua), scritti in un file `js/suoni-dati.js` (circa 230 KB). Provato che un suono scritto in un `.js` si decodifica da file locale in Chromium e Firefox. Pagina d'ascolto in `sperimentale/suoni-registrati/ascolto.html`, che non entra nel repository (pagina e file audio restano sul computer di Ale). Nessun codice del gioco cambiato.
+`docs/archivio/PROPOSTA-SUONI-REGISTRATI.md`. Ale, dopo aver giocato la 1.2.5: il mare è un fruscio piatto, la vela che sbatte un ticchettio irreale. Proposti due suoni CC0 da Freesound: i 16 colpi di tela di 377492 (vela) e la prua di 852108 (acqua), scritti in un file `js/suoni-dati.js` (circa 230 KB). Provato che un suono scritto in un `.js` si decodifica da file locale in Chromium e Firefox. Pagina d'ascolto in `sperimentale/suoni-registrati/ascolto.html`, che non entra nel repository (pagina e file audio restano sul computer di Ale). Nessun codice del gioco cambiato.
 
 ## Il ramo `pulizia` entra in `main` (3 novembre 2026, nessuna versione nuova: online va la 1.2.6)
 
@@ -1554,7 +1554,7 @@ Verdi anche: `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici al ri
 
 ## 1.2.5 — I suoni (ramo `pulizia`)
 
-`docs/PROPOSTA-SUONI.md`, prima fetta; Ale, 2 novembre: «accesi bassi, vai avanti». Il gioco non è più muto.
+`docs/archivio/PROPOSTA-SUONI.md`, prima fetta; Ale, 2 novembre: «accesi bassi, vai avanti». Il gioco non è più muto.
 
 **Come:** i suoni li genera il browser (Web Audio), senza file. Un file nuovo, `js/suoni.js`, a ogni fotogramma **legge** lo stato del gioco e suona quando un numero cambia: non chiama la simulazione e non usa `Math.random` (ha un generatore suo). Partono dopo il primo tasto o clic, tacciono nel menu, nella moviola e con la finestra nascosta; in un browser senza audio si gioca muti.
 
@@ -1590,7 +1590,7 @@ Lanciato a mano da Ale, Chromium e Firefox: **un solo fallito**, `collaudo_linea
 
 ## 1.2.4 — Il menu nuovo: tutte le 20 lezioni, in tre gruppi (ramo `pulizia`)
 
-`docs/PROPOSTA-MENU.md`, bozza A scelta da Ale il 2 novembre («va bene la A»). **Da questa versione le 14 lezioni nuove si vedono**, e con loro l'esame da 34 domande e le 19 voci nuove del glossario.
+`docs/archivio/PROPOSTA-MENU.md`, bozza A scelta da Ale il 2 novembre («va bene la A»). **Da questa versione le 14 lezioni nuove si vedono**, e con loro l'esame da 34 domande e le 19 voci nuove del glossario.
 
 **Il menu.**
 - La Scuola ha **tre schede**: 1 · La barca (11 voci), 2 · Vento e raffiche (5), 3 · Regole e partenze (9), ognuna con il conto delle voci fatte. Le voci sono numerate da 1 a 25 di seguito. Il menu apre la scheda della prima voce da fare e, tornando da una lezione o da una prova, quella della voce appena aperta.
@@ -1624,7 +1624,7 @@ Lanciato a mano da Ale, Chromium e Firefox: **un solo fallito**, `collaudo_linea
 
 ## 1.2.3 — Esame e glossario con le lezioni nuove (ramo `pulizia`)
 
-`docs/PROPOSTA-ESAME-E-GLOSSARIO.md`, approvata da Ale il 2 novembre («sì perfetto»). Finché le 14 lezioni nuove restano nascoste nel menu, **per chi gioca non cambia niente**; tutto entra da solo quando il menu nuovo le mostrerà.
+`docs/archivio/PROPOSTA-ESAME-E-GLOSSARIO.md`, approvata da Ale il 2 novembre («sì perfetto»). Finché le 14 lezioni nuove restano nascoste nel menu, **per chi gioca non cambia niente**; tutto entra da solo quando il menu nuovo le mostrerà.
 
 **Esame.**
 - Le lezioni nuove danno **1 domanda ciascuna**, presa dalle 4 del loro campo `esame` (la banca le legge dalla lezione, non le copia). Le 6 lezioni di oggi restano 4-3-4-3-3-3.
@@ -1649,7 +1649,7 @@ Lanciato a mano da Ale, Chromium e Firefox: **un solo fallito**, `collaudo_linea
 
 ## 1.2.2 — Lezioni C1 e C2: le partenze, con l'esercizio in regata (ramo `pulizia`)
 
-Gruppo C di `docs/PROPOSTA-LEZIONI-SCUOLA.md` §4, con il meccanismo B della 1.2.1 (`docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, via di Ale del 1 novembre). Le lezioni restano nascoste nel menu, come le altre nuove.
+Gruppo C di `docs/archivio/PROPOSTA-LEZIONI-SCUOLA.md` §4, con il meccanismo B della 1.2.1 (`docs/archivio/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, via di Ale del 1 novembre). Le lezioni restano nascoste nel menu, come le altre nuove.
 
 **Le due lezioni** (testi parafrasati; quiz ed esame di 4 domande come le altre):
 - **C1 «Partenza in velocità»:** si aspetta vicino alla linea, una o due lunghezze dietro, quasi fermi con la vela che sbatte e la prua appena sotto la bolina; negli ultimi secondi si cazza, per tagliare la linea subito dopo il via e già veloci. Cazzando troppo presto si è in anticipo (29.1), troppo tardi si parte lenti. Fonti: F25 (attesa quasi fermi e piena velocità allo zero), F27 (attesa appena sotto la bolina: la sola parte confermata, la parte sull'accelerazione non è letta e il testo non la usa), conferma di Ale del 17 ottobre (in questa classe si parte da fermi, non lanciati da lontano). Esercizio: regata a bastone da solo, un minuto di preparazione; vale se tagli la linea **entro 5 s dal via a più di 3,5 nodi**, senza anticipo (soglie della proposta, scritte prima).
@@ -1676,7 +1676,7 @@ Gruppo C di `docs/PROPOSTA-LEZIONI-SCUOLA.md` §4, con il meccanismo B della 1.2
 
 ## 1.2.1 — La regata come esercizio di una lezione: lezioni D5-D7 (ramo `pulizia`)
 
-Meccanismo B di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale il 1 novembre. Le lezioni restano nascoste nel menu, come le altre nuove.
+Meccanismo B di `docs/archivio/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale il 1 novembre. Le lezioni restano nascoste nel menu, come le altre nuove.
 
 **Il meccanismo.** Un passo di lezione con il campo `esercizio` mostra il pulsante «Apri l'esercizio», che apre una regata in modo «esercizio»:
 - **lo stato di partenza e l'obiettivo sono separati**, come chiesto da Ale (così il coach potrà riusarlo partendo da un'istantanea del registratore). Stato di partenza: regata, avversari, preparazione, e in più (`boa`) la barca messa vicino alla boa a regata già partita. Obiettivo: una frase nel pannello, `fatto` e `fallito`, letti a ogni passo;
@@ -1720,7 +1720,7 @@ Primo giro notturno partito da solo sul ramo `pulizia` (GitHub l'ha avviato alle
 
 ## 1.2.0 — Barche di scena che si muovono: esercizi delle lezioni D1-D3 (ramo `pulizia`)
 
-Meccanismo A di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale: «la 1 è la simulazione di un evento, un copione».
+Meccanismo A di `docs/archivio/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da Ale: «la 1 è la simulazione di un evento, un copione».
 
 **Campo nuovo dei passi, `scenaMobile`:** barche che vanno dritte a velocità costante, oppure orzano piano in un momento scritto nel passo. Non hanno fisica né guida, e non si scansano mai. Il contatto si calcola sui contorni veri degli scafi, con la stessa funzione delle regate (`polySep`). Ricomincia rimette tutto com'era all'inizio. Le regate non sono toccate.
 
@@ -1755,7 +1755,7 @@ Meccanismo A di `docs/PROPOSTA-ESERCIZI-REGOLAMENTO-E-PARTENZE.md`, approvato da
 
 ## 1.1.9 — Gruppo D, prima parte: lezioni D1-D4 sul regolamento (nascoste nel menu, ramo `pulizia`)
 
-Le prime quattro delle sette lezioni sul regolamento (`docs/PROPOSTA-LEZIONI-2A.md`, approvata il 31 ottobre): D1 «Mure opposte», D2 «Stesse mure», D3 «Chi vira cede», D4 «Evitare il contatto». Sono `LESSONS[11]`-`LESSONS[14]`, con `nascosta: true` e `gruppo: "D"`.
+Le prime quattro delle sette lezioni sul regolamento (`docs/archivio/PROPOSTA-LEZIONI-2A.md`, approvata il 31 ottobre): D1 «Mure opposte», D2 «Stesse mure», D3 «Chi vira cede», D4 «Evitare il contatto». Sono `LESSONS[11]`-`LESSONS[14]`, con `nascosta: true` e `gruppo: "D"`.
 
 **Fonti:** le regole 10-16, le definizioni (libera dietro e avanti, sovrapposte, sopravento e sottovento, tenersi lontano) e la regola 43.1(c), rilette oggi nel PDF di F15. Le regole sono parafrasate, con il numero.
 
@@ -1871,7 +1871,7 @@ Seconda lezione del gruppo B, ottava nel gioco (`LESSONS[7]`, `nascosta: true`).
 
 ## 1.1.4 — Lezione B1 «Il timone che stalla» (nascosta nel menu, ramo `pulizia`)
 
-Prima lezione del gruppo B (`docs/PROPOSTA-LEZIONI-SCUOLA.md`). Come ha deciso Ale il 1 novembre, **non compare nel menu** finché non arriva il menu nuovo: nel gioco è la settima lezione (`LESSONS[6]`, `nascosta: true`). Il libretto, i meriti, il ripasso e il pulsante del quiz la ignorano. Quiz ed esame stanno nella lezione e si collegano col menu.
+Prima lezione del gruppo B (`docs/archivio/PROPOSTA-LEZIONI-SCUOLA.md`). Come ha deciso Ale il 1 novembre, **non compare nel menu** finché non arriva il menu nuovo: nel gioco è la settima lezione (`LESSONS[6]`, `nascosta: true`). Il libretto, i meriti, il ripasso e il pulsante del quiz la ignorano. Quiz ed esame stanno nella lezione e si collegano col menu.
 
 **Fonti lette prima del testo** (`docs/archivio/PROPOSTA-STALLO-TIMONE.md` §1, §9, §10), e scritte nel codice sopra la lezione:
 - F4 (vasca, modellino del 470): la forza della pala cresce fino a circa 15° e poi resta uguale, mentre la resistenza continua a crescere. Nelle virate vere la barra arriva a 45°, e accompagnarla è il modo più ragionevole.
@@ -1902,7 +1902,7 @@ Prima lezione del gruppo B (`docs/PROPOSTA-LEZIONI-SCUOLA.md`). Come ha deciso A
 
 ## 1.1.3 — Lezioni, gruppo A, prima parte: i cinque passi che la barca dell'1b rompeva (ramo `pulizia`)
 
-Prima fetta di `docs/PROPOSTA-LEZIONI-SCUOLA.md`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
+Prima fetta di `docs/archivio/PROPOSTA-LEZIONI-SCUOLA.md`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
 
 **La causa, misurata.** Dal traverso, con la barra al centro e la vela che si regola da sola, la barca dell'1b orza da sola di circa 0,8° al secondo, già con 4-6° di sbandamento. È la barca orziera della 1.0.46 (fonte F4). In 30 s passa da 90° a 67° dal vento:
 - nei passi 2.4 «Barra sottovento: si orza», 3.2 «Bolina» e 5.2 «Prepararsi a virare» entrava da sola nel settore della bolina;
@@ -1983,7 +1983,7 @@ Il giro su GitHub della 1.1.1 ha trovato un peggioramento vero: con la correzion
 
 ## 1.1.1 — Gli avversari dell'1b partono (ramo `pulizia`)
 
-Da `docs/PROPOSTA-PARTENZE-1B.md`, con il via di Ale (scelta A, 1 novembre 2026). Si cambia solo la guida degli avversari, in `js/regate.js`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
+Da `docs/archivio/PROPOSTA-PARTENZE-1B.md`, con il via di Ale (scelta A, 1 novembre 2026). Si cambia solo la guida degli avversari, in `js/regate.js`. La fisica non cambia: `impronta1b.js` identica al bit, `polare.js` e `raffiche_e_virate.js` identici.
 
 **Il difetto.** Con la 1.1.0 alcuni avversari non partivano entro 60 s dallo sparo (criterio (4) di `collaudo_partenze.py`). Misurato qui, in Chromium, sulle quattro regate: principianti ed esperti, 60/180/300 s di preparazione, semi 1-20, cioè 1440 barche. Le barche non partite erano **25 su 1440**: 6 nel bastone, 6 nelle raffiche, 5 nei salti, 8 nei giri. Sulla 1.0.78 bastone e raffiche avevano 0, ma la regata dei giri, già dell'1b, ne aveva già **8 su 360**: il difetto c'era da prima e nessun collaudo lo guardava.
 
@@ -2029,7 +2029,7 @@ Il primo giro completo su GitHub sul ramo `pulizia` (Chromium e Firefox, 65 coll
 
 ## 1.1.0 — Pulizia del codice: resta solo la barca dell'1b (ramo `pulizia`)
 
-Primo passo della riorganizzazione in «La scuola» e «Deriva» (`docs/PROPOSTA-RIORGANIZZAZIONE.md` §5, passo 2; proposta e misura 0 in `docs/PROPOSTA-PULIZIA-CODICE.md`). **Sta nel ramo `pulizia`, non in `main`:** lezioni e prove sono state provate con la barca dell'1a, e con l'1b alcune cose non vanno (misura 0). Il ramo entra in `main` insieme alle lezioni riscritte (passo 3), così il gioco online non cambia prima.
+Primo passo della riorganizzazione in «La scuola» e «Deriva» (`docs/archivio/PROPOSTA-RIORGANIZZAZIONE.md` §5, passo 2; proposta e misura 0 in `docs/archivio/PROPOSTA-PULIZIA-CODICE.md`). **Sta nel ramo `pulizia`, non in `main`:** lezioni e prove sono state provate con la barca dell'1a, e con l'1b alcune cose non vanno (misura 0). Il ramo entra in `main` insieme alle lezioni riscritte (passo 3), così il gioco online non cambia prima.
 
 **Cosa cambia per chi gioca:**
 - Lezioni, prove, navigazione libera e tutte le regate usano la barca dell'1b: la barra arriva a 35° con la sola freccia e a 45° con Maiusc, la pala può stallare, Z spinge il boma, la raddrizzata dura 10 s.
@@ -2133,7 +2133,7 @@ Effetto collaterale, già nella scelta A: in regata la nota «N contatti senza c
 
 ## 1.0.76 — La moviola rivede tutta la regata, partenza compresa
 
-Da `docs/PROPOSTA-MOVIOLA-INTERA.md`, con il via di Ale del 1 novembre 2026 e i due consigli: partenza inclusa, ← → di 5 s. Osservazione 73.
+Da `docs/archivio/PROPOSTA-MOVIOLA-INTERA.md`, con il via di Ale del 1 novembre 2026 e i due consigli: partenza inclusa, ← → di 5 s. Osservazione 73.
 
 **Cosa cambia per chi gioca**
 - «Rivedi» mostra **tutta la regata**: dalle bandiere a −5 minuti all'arrivo o al ritiro. Fino alla 1.0.75 mostrava pezzi di 18 s, solo dopo lo sparo, al massimo 12.
@@ -2225,13 +2225,13 @@ Gli avversari non cambiano: hanno un conto loro, `gDebt`. Il motore e la fisica 
 
 ## Collaudi, 1 novembre 2026 — i collaudi su GitHub Actions (nessuna versione nuova, il gioco non cambia)
 
-- Nuovo `.github/workflows/collaudi.yml` (`docs/PROPOSTA-COLLAUDI-SU-GITHUB.md`, fermata 2). Di notte (circa alle 3, solo se nelle ultime 24 ore c'è stato un commit su `main`) o a mano dalla scheda Actions, lancia `tests/lancia_tutti.sh` con Chromium e Firefox in 8 pezzi che girano insieme: Node 20.19.2, Python 3.13 e Playwright 1.60.0, come sul PC.
+- Nuovo `.github/workflows/collaudi.yml` (`docs/archivio/PROPOSTA-COLLAUDI-SU-GITHUB.md`, fermata 2). Di notte (circa alle 3, solo se nelle ultime 24 ore c'è stato un commit su `main`) o a mano dalla scheda Actions, lancia `tests/lancia_tutti.sh` con Chromium e Firefox in 8 pezzi che girano insieme: Node 20.19.2, Python 3.13 e Playwright 1.60.0, come sul PC.
 - `tests/lancia_tutti.sh --parte K/N`: lancia solo un pezzo; i collaudi lunghi si distribuiscono a turno fra i pezzi. Provato con `--dry-run`: 4 pezzi da 16, che insieme danno esattamente i 64 collaudi. Senza l'opzione il giro è come prima.
 - Criteri G1-G6 ancora da misurare: serve il primo giro su GitHub, che parte la notte dopo il push di Ale, oppure subito se lo lancia a mano.
 
 ## Collaudi, 1 novembre 2026 — il «test dei test» (nessuna versione nuova, il gioco non cambia)
 
-Da `docs/PROPOSTA-TEST-DEI-TEST.md` (fermata 1 del 31 ottobre, via di Ale per tutto: A, B e C, in sessione notturna autonoma). Toccati solo `tests/` e i documenti; `index.html` e `js/` identici.
+Da `docs/archivio/PROPOSTA-TEST-DEI-TEST.md` (fermata 1 del 31 ottobre, via di Ale per tutto: A, B e C, in sessione notturna autonoma). Toccati solo `tests/` e i documenti; `index.html` e `js/` identici.
 
 - **A. Conteggio dei casi.** Nuovo `tests/metro.py`: `metro.tutti()` e `metro.nessuno()` sono falsi con zero casi. I 97 `all(...)` di 25 collaudi chiari sono diventati `metro.tutti(...)`; a fine collaudo una riga `METRO:`. Giro di verifica sui 31 lanci toccati: nessun controllo sotto il minimo, falliti solo i tre noti (virate2, competizione misura, torneo misura), con i numeri di prima. Lanciati con zero prove, 5 collaudi su 5 cadono (`collaudo_regola21.py` non usa il numero di prove: misura su griglie fisse, l'etichetta «12 prove» in `lancia_tutti.sh` è solo un nome).
 - **B. Da ambigui a chiari: 59 su 64** (prima 46). `polare.js` e `raffiche_e_virate.js` confrontati carattere per carattere con `tests/fisica/polare.txt` e `raffiche_e_virate.txt` (nuovo `tests/fisica/confronta.js`; uscite identiche alla 1.0.70); pannello (un pixel di eccesso basta), strambata, registro, fantasma, schermate, giro di boa, regate e lezioni con la riga `ESITO:` e il codice d'uscita. Restano ambigui 5 (pilota delle lezioni ×2, competizione da tastiera, partenze, fasce).
@@ -2240,7 +2240,7 @@ Da `docs/PROPOSTA-TEST-DEI-TEST.md` (fermata 1 del 31 ottobre, via di Ale per tu
 
 ## 1.0.73 — Scotta automatica (aiuto attivabile)
 
-Da `docs/PROPOSTA-SCOTTA-AUTOMATICA.md`, con le tre risposte di Ale del 31 ottobre 2026 «come consigli tu». Casella **«Scotta automatica»** nelle impostazioni (⚙), **spenta all'inizio**, che vale solo nelle prove e nella navigazione libera (non nelle regate e nei tornei; le lezioni restano com'erano: i loro passi con `autoTrim` usano la regola semplice). Con la casella accesa la scotta segue la regola già nel gioco (`|vento apparente| − 17°`) più una **lasca per la sbandata** (costanti ipotesi nostre, `AUTO_HEEL0 = 12°`, `AUTO_K = 1,5` gradi di boma per grado di sbandata oltre; scelte prima di misurare e non toccate dopo). I tasti della scotta (frecce su/giù) e il cursore la spengono, con un avviso. **Una prova fatta con la scotta automatica si completa ma non vale record, medaglia né stella** (il testo lo dice). Motore e fisica non cambiano.
+Da `docs/archivio/PROPOSTA-SCOTTA-AUTOMATICA.md`, con le tre risposte di Ale del 31 ottobre 2026 «come consigli tu». Casella **«Scotta automatica»** nelle impostazioni (⚙), **spenta all'inizio**, che vale solo nelle prove e nella navigazione libera (non nelle regate e nei tornei; le lezioni restano com'erano: i loro passi con `autoTrim` usano la regola semplice). Con la casella accesa la scotta segue la regola già nel gioco (`|vento apparente| − 17°`) più una **lasca per la sbandata** (costanti ipotesi nostre, `AUTO_HEEL0 = 12°`, `AUTO_K = 1,5` gradi di boma per grado di sbandata oltre; scelte prima di misurare e non toccate dopo). I tasti della scotta (frecce su/giù) e il cursore la spengono, con un avviso. **Una prova fatta con la scotta automatica si completa ma non vale record, medaglia né stella** (il testo lo dice). Motore e fisica non cambiano.
 
 Collaterali: la riga «La barra torna al centro da sola» perde la spiegazione lunga (resta nel suggerimento al passaggio del mouse) e il vuoto fra le righe del dialogo passa da 4 a 2 px, perché la riga nuova non ci stava a 1360×650 (eccesso 25 px, poi 13, ora 0). Il registratore scrive anche `scotta_automatica=sì/no` fra le impostazioni.
 
@@ -2262,7 +2262,7 @@ Misurato: `collaudo_segnali.py` tutto verde in Firefox e in Chromium (G2: 12 reg
 
 ## 1.0.71 — Il boma non saltella più con il vento in poppa
 
-Osservazione 63 di Ale (`docs/PROPOSTA-BOMA-IN-POPPA.md`, via di Ale del 31 ottobre 2026). Tocca una riga del motore (`js/motore.js`, lato del boma); le forze non cambiano.
+Osservazione 63 di Ale (`docs/archivio/PROPOSTA-BOMA-IN-POPPA.md`, via di Ale del 31 ottobre 2026). Tocca una riga del motore (`js/motore.js`, lato del boma); le forze non cambiano.
 
 - **Causa e rimedio.** Il lato del boma era il segno dell'angolo del vento apparente: con il vento esattamente da poppa il segno oscillava (onde, assetto) e il boma saltellava. Ora il lato cambia solo se il vento apparente è passato oltre **5°** da dietro (`BOOM_ISTERESI`, ipotesi nostra, nessuna fonte). Il lato del boma non entra nelle forze: serve al disegno, al lato della scuffia e al lato del peso dell'equipaggio.
 - **Prima, sul motore di prima** (B1, 20 semi 1-20, prua a 180° dal vento vero per 60 s, barca 1b): cambi di lato del boma senza salti di vento **18 a 6 nodi, 95 a 10, 330 a 15**; con i salti **1 a 6 nodi, 32,5 a 10 (massimo 51)**; a 15 nodi con i salti 10 prove su 20 scuffiano e tra le altre la mediana è 316,5. **Sulla 1a il difetto non si riproduce: 0 cambi in tutti i venti** (l'ho visto solo sulla 1b).
@@ -2275,7 +2275,7 @@ Osservazione 63 di Ale (`docs/PROPOSTA-BOMA-IN-POPPA.md`, via di Ale del 31 otto
 
 ## 1.0.70 — Il riquadro delle bandiere e delle penalità, l'avviso «sei oltre la linea», un mare e un pannello più puliti
 
-Dalle osservazioni di Ale sulla 1.0.68 e dalle sue richieste del 31 ottobre 2026 (`docs/PROPOSTA-RIQUADRO-BANDIERE.md`). Il riquadro vale solo nella «Regata con i giri di penalità»; il motore non è toccato.
+Dalle osservazioni di Ale sulla 1.0.68 e dalle sue richieste del 31 ottobre 2026 (`docs/archivio/PROPOSTA-RIQUADRO-BANDIERE.md`). Il riquadro vale solo nella «Regata con i giri di penalità»; il motore non è toccato.
 
 - **Riquadro in due pezzi, in alto ai lati del mare** (non in un angolo né sotto l'orologio, per scelta di Ale; dove prima c'erano la spia della registrazione, il vento e la bussola): a **sinistra** le bandiere esposte in grande (44 × 30 px, nome sotto) con una riga che dice cosa significano, visibili 10 s dopo ogni cambio e la X finché c'è; a **destra** la X, la penalità («Penalità: 2 giri da fare · fatti 1», il motivo, «Stai scontando: lascia strada», «Penalità scontata» per 6 s) e l'avviso. Il disegno delle bandiere è uno solo (`drawBandiera`), usato anche dalla barca giuria. I messaggi al centro restano come prima (un messaggio lungo può coprire per qualche secondo il pezzo di destra: è disegnato sopra).
 - **Avviso «Oltre la linea: torna dietro»** prima dello sparo, quando il centro della barca è oltre la linea (lo stesso test che decide la X allo sparo). Si spegne dai Suggerimenti. Che la X non compaia se si passa la linea e si torna dietro prima dello sparo non è un difetto: regola 29.1.
@@ -2288,7 +2288,7 @@ Dalle osservazioni di Ale sulla 1.0.68 e dalle sue richieste del 31 ottobre 2026
 
 ## 1.0.69 — Il menu a 1360×650 non scorre più
 
-Corregge un difetto della 1.0.61-1.0.65 trovato dal giro dei collaudi del 30-31 ottobre (`docs/PROPOSTA-MENU-1360X650.md`, rimedio R2, scelto da Ale).
+Corregge un difetto della 1.0.61-1.0.65 trovato dal giro dei collaudi del 30-31 ottobre (`docs/archivio/PROPOSTA-MENU-1360X650.md`, rimedio R2, scelto da Ale).
 
 - **Causa:** la descrizione della regata dei giri (184 caratteri) andava a capo su più righe nel menu, e ogni fetta del 2a l'aveva allungata. A 1360×650 la pagina scorreva di 68 px.
 - **Cosa cambia:** la descrizione è su una riga («Livello 2: due giri se lasci male la strada, uno se tocchi una boa; bandiere sulla giuria.») e il `padding` delle righe del menu passa da 6 a 4 px. Nessun altro testo cambia; il motore non è toccato.
@@ -2308,7 +2308,7 @@ Seguito della 1.0.67, per una domanda di Ale (31 ottobre 2026): la regola 44.2 (
 
 ## 1.0.67 — Livello 2a, fetta 5: i giri di penalità anche per gli avversari
 
-Quinta fetta del 2a (`docs/PROPOSTA-GIRI-AVVERSARI.md`, F15 44.1 e 44.2), con le risposte di Ale del 31 ottobre 2026: giri **dopo lo sparo**, «semplificata e dichiarata». Solo nella «Regata con i giri di penalità»; 1a, 1b, torneo e le altre regate non cambiano (verificato al bit).
+Quinta fetta del 2a (`docs/archivio/PROPOSTA-GIRI-AVVERSARI.md`, F15 44.1 e 44.2), con le risposte di Ale del 31 ottobre 2026: giri **dopo lo sparo**, «semplificata e dichiarata». Solo nella «Regata con i giri di penalità»; 1a, 1b, torneo e le altre regate non cambiano (verificato al bit).
 
 - **Cosa cambia.** Un avversario colpevole di un contatto non prende più +15 s: ha un debito di **due giri** (`b.gDebt`). Dopo lo sparo, in regata, con **nessuna altra barca a meno di 4 lunghezze** e lontano (25 m) da boe e, sull'ultimo lato, dalla linea d'arrivo, comincia a girare; se un'altra barca arriva a meno di **2 lunghezze** sospende, il giro in corso si perde e riparte da zero. Il giro è una sequenza di prue rispetto al vento (sempre **orzando per prima**, quindi nello stesso verso: bolina dall'altra parte del vento, poppa larga, strambata, bolina di partenza); un giro è fatto con 360° nello stesso verso, una virata e una strambata, contate dalla barca stessa (gli avversari non hanno i contatori del giocatore). Barra, scotta e motore sono quelli di sempre: il costo in tempo esce dal motore. Nel codice: `giroAI`, `giroLibero`, `giroLontano`, `giriMancantiAI` in `js/regate.js`; tre regole della guida (angolo morto, abbrivio, piantata) non valgono mentre gira.
 - **Regola 21.2 per loro.** Mentre gira ha `sconta = true`: `chiCede` fa cedere lui a chi non sconta, con la regola nel messaggio. Se scontano tutti e due valgono le regole 10-13.
@@ -2320,7 +2320,7 @@ Quinta fetta del 2a (`docs/PROPOSTA-GIRI-AVVERSARI.md`, F15 44.1 e 44.2), con le
 
 ## 1.0.66 — Livello 2a, fetta 4: chi sconta la penalità lascia strada (21.2) e chi torna dopo il via anticipato pure (21.1)
 
-Quarta fetta del 2a (`docs/PROPOSTA-REGOLA-21-2.md`, F15 21.1 e 21.2), con le due risposte di Ale (31 ottobre 2026: «come proponi tu»: la 21.1 insieme, soglia 120°). Solo nella «Regata con i giri di penalità»; le altre regate non cambiano.
+Quarta fetta del 2a (`docs/archivio/PROPOSTA-REGOLA-21-2.md`, F15 21.1 e 21.2), con le due risposte di Ale (31 ottobre 2026: «come proponi tu»: la 21.1 insieme, soglia 120°). Solo nella «Regata con i giri di penalità»; le altre regate non cambiano.
 
 - **21.2.** Il giocatore «sta scontando» quando ha un debito aperto e negli ultimi 20 s la prua ha ruotato di almeno **120°** nello stesso verso (più di una virata, circa 90°); resta così finché il debito non è estinto o finché passano 20 s senza finire un giro. Se sta scontando e l'altra barca no, **cede lui**, con la regola 21.2 nel messaggio («stavi scontando una penalità e dovevi lasciare strada a chi non la scontava»): la Sezione A (10-13) fra le due non vale, come nel regolamento. Un contatto mentre si sconta dà altri due giri.
 - **21.1.** Dopo lo sparo, una barca ancora oltre la linea (`ocs`) che deve tornare lascia strada a una che non lo è. Vale per tutte le barche, **avversari compresi**: nella regata dei giri chi deve tornare cede e chi ha la precedenza tiene la rotta (la guida degli avversari usa `chiCede`), quindi la loro guida cambia lì e non altrove. Se sono entrambe oltre la linea, o una sconta e l'altra torna, nessuna è «quella che non lo fa» e valgono le regole 10-13.
@@ -2332,7 +2332,7 @@ Quarta fetta del 2a (`docs/PROPOSTA-REGOLA-21-2.md`, F15 21.1 e 21.2), con le du
 
 ## 1.0.65 — Livello 2a, fetta 3: le bandiere della partenza (classe, P, X, blu)
 
-Terza fetta del 2a (`docs/PROPOSTA-SEGNALI-PARTENZA.md`, fetta 3; F15 26 e 29.1), per decisione di Ale (31 ottobre 2026) di seguito. Vale **solo nella «Regata con i giri di penalità»**: le altre regate, 1a compresa, non cambiano né nel gioco né nello schermo (verificato al pixel). Le lezioni sulle bandiere vengono dopo, dentro la riorganizzazione.
+Terza fetta del 2a (`docs/archivio/PROPOSTA-SEGNALI-PARTENZA.md`, fetta 3; F15 26 e 29.1), per decisione di Ale (31 ottobre 2026) di seguito. Vale **solo nella «Regata con i giri di penalità»**: le altre regate, 1a compresa, non cambiano né nel gioco né nello schermo (verificato al pixel). Le lezioni sulle bandiere vengono dopo, dentro la riorganizzazione.
 
 - **Le bandiere sulla barca giuria.** Con 5 minuti la sequenza del regolamento: bandiera di classe a −5, P a −4, P ammainata a −1, classe ammainata al via. Con 3 minuti una sequenza breve (classe a −3, P a −2, P giù a −1) e con 1 minuto solo la classe: sono ipotesi nostre, dichiarate. Dopo il via c'è la bandiera blu (la linea è d'arrivo). La **X** (richiamo individuale) sale allo sparo se una barca è oltre la linea e scende quando è tornata dietro la linea, o dopo 4 minuti al massimo. Le bandiere sono quattro riquadri sul ponte; la bandiera di classe è nostra (bianca con una vela blu), la P (blu con quadrato bianco) e la X (bianca con croce blu) sono quelle internazionali.
 - **Messaggi** che seguono le bandiere («Avviso: alzata la bandiera di classe, partenza tra N minuti», «Preparatorio: alzata la bandiera P», «Un minuto: ammainata la P»); 30 e 10 secondi come prima. Il gioco non ha suoni: lo dice il testo della regata. Nel registratore l'evento `bandiere`.
@@ -2352,7 +2352,7 @@ Ale (31 ottobre 2026, giocando la 1.0.63): «ho provato a schiantarmi sulla barc
 
 ## 1.0.63 — Livello 2a, fetta 2b: boe e barca dei giudici sono ostacoli per il giocatore
 
-Ale (30 ottobre 2026): «se tocco una boa o la barca dei giudici non mi scontro?». Dalla 1.0.62 la penalità c'era ma la barca passava attraverso. Criteri e soglie scritti prima in `docs/PROPOSTA-LIVELLO-2A.md` (fetta 2b). Solo nella «Regata con i giri di penalità» e solo per il giocatore.
+Ale (30 ottobre 2026): «se tocco una boa o la barca dei giudici non mi scontro?». Dalla 1.0.62 la penalità c'era ma la barca passava attraverso. Criteri e soglie scritti prima in `docs/archivio/PROPOSTA-LIVELLO-2A.md` (fetta 2b). Solo nella «Regata con i giri di penalità» e solo per il giocatore.
 
 - **Ostacolo fermo.** Spillo, barca dei giudici e boe (anche quelle che in quel momento non danno penalità) non si attraversano: lo scafo che entra nel raggio (0,9 m, comitato 2,0 m) viene spinto fuori lungo la retta fra i centri, a ogni passo, fino a 0,05 m oltre il raggio; al primo passo del tocco perde il 40% della velocità, come nel contatto fra barche. La penalità (un giro) resta quella della 1.0.62 e spetta solo alle boe che contano. L'oggetto non si sposta; gli avversari non sono respinti (come prima, passano attraverso).
 - **Misure** (`tests/collaudo_boa.py`, parte I, 30 prove): scafo messo sopra lo spillo, il comitato e la boa (sia dove contano sia dove no) **respinto fuori dal raggio 30 su 30 per ciascuno dei cinque casi** (distanza minima 0,99 m con raggio 0,9; 2,08 m con raggio 2,0); velocità dopo il primo passo **0,595 di prima in 150 casi su 150** (soglia 0,61); respingimento senza effetti sul debito (spillo e comitato sul lato 1: nessun debito; gli altri: +1); **scafo lanciato contro l'oggetto da 12 m, 12 direzioni, 3 e 5 m/s, 72 lanci: mai attraversato** (distanza minima 0,90 m); avversario messo sopra l'oggetto: non respinto (3 su 3). Gli altri criteri della 1.0.62 (A-E, H) restano verdi con le stesse soglie.
@@ -2363,7 +2363,7 @@ Ale (30 ottobre 2026): «se tocco una boa o la barca dei giudici non mi scontro?
 
 ## 1.0.62 — Livello 2a, fetta 2: un giro di penalità per la boa toccata
 
-Seconda fetta del regolamento del livello 2a (`docs/PROPOSTA-LIVELLO-2A.md`, F15 regole 31 e 44.1), per decisione di Ale (30 ottobre 2026) fatta di seguito. Vale solo nella «Regata con i giri di penalità» e solo per il giocatore; le altre regate e gli avversari non cambiano.
+Seconda fetta del regolamento del livello 2a (`docs/archivio/PROPOSTA-LIVELLO-2A.md`, F15 regole 31 e 44.1), per decisione di Ale (30 ottobre 2026) fatta di seguito. Vale solo nella «Regata con i giri di penalità» e solo per il giocatore; le altre regate e gli avversari non cambiano.
 
 - **Il tocco.** La boa è un cerchio di 0,9 m (come disegnata), la barca del comitato di 2,0 m; si tocca quando il contorno dello scafo (lo stesso dei contatti) arriva al raggio. Le boe **non sono ostacolo** in questa versione (lo diventano per il giocatore nella 1.0.63): ci si passa attraverso, il tocco è solo la penalità. Un tocco vale **una volta** finché lo scafo non si allontana di 3 m dal bordo. Costa **un giro** (`giriDebito(1)`), che si somma ai due di un contatto; il resto dei giri è quello della 1.0.61.
 - **Quali boe contano.** Spillo e comitato durante il conto alla rovescia, fino al via e sull'ultimo lato; la boa del lato in corso; dal secondo lato in poi anche la boa da cui il lato parte. Messaggio, riga delle regole e voce nell'elenco dicono «regola 31»; nel registratore l'evento `boa_toccata`; «Rivedi» ne fa uno spezzone.
@@ -2373,7 +2373,7 @@ Seconda fetta del regolamento del livello 2a (`docs/PROPOSTA-LIVELLO-2A.md`, F15
 
 ## 1.0.61 — Livello 2a, fetta 1: i giri di penalità al posto dei 15 secondi
 
-Prima fetta del regolamento del livello 2a (`docs/PROPOSTA-LIVELLO-2A.md`, F15 regole 44.1 e 44.2), per decisione di Ale (30 ottobre 2026) fatta di seguito, senza le due fermate. **Gli avversari dell'1b non si toccano** (stessa decisione).
+Prima fetta del regolamento del livello 2a (`docs/archivio/PROPOSTA-LIVELLO-2A.md`, F15 regole 44.1 e 44.2), per decisione di Ale (30 ottobre 2026) fatta di seguito, senza le due fermate. **Gli avversari dell'1b non si toccano** (stessa decisione).
 
 - **Una regata nuova, in fondo all'elenco:** «Regata con i giri di penalità» (barca dell'1b, tre avversari, vento 10 nodi, flag `giri`). Come «Regata nei salti di vento» resta fuori da meriti e carriera; le altre regate non cambiano.
 - **Il debito.** Un contatto con colpa del giocatore non dà più +15 s ma un debito di **due giri**; ogni colpa nuova ne aggiunge due e azzera la finestra, perché i giri contano dopo l'infrazione. Un giro è fatto quando, negli ultimi 20 s, la prua ha ruotato di almeno 360° nello stesso verso (senza tornare indietro di più di 20° dal picco) e ci sono state almeno una virata e una strambata. Un giro nel verso opposto al precedente fa ricominciare il conto. Una scuffia azzera la finestra. La riga delle regole nel pannello dice quanti giri mancano (nessun pixel in più).
@@ -2426,12 +2426,12 @@ Firefox, alla ricarica della pagina (F5), rimette caselle e menu come li aveva l
 
 ## 1.0.55 — torneo dell'1b con percorsi misti: bastone, triangolo, bastone, triangolo
 
-Tappa T2 del torneo (`docs/PROPOSTA-TORNEI-1B.md` §8, scelta di Ale del 27 ottobre 2026): le regate 1 e 3 restano a bastone (140 m), le regate 2 e 4 sono a **triangolo equilatero** di lato **140 m** con due boe da lasciare a sinistra (regola 27.1: il percorso lo sceglie il comitato). La «Regata a bastone» dell'1a e la «Regata nei salti di vento» non cambiano. Il percorso dipende solo dal numero della regata: nessun numero a caso in più.
+Tappa T2 del torneo (`docs/archivio/PROPOSTA-TORNEI-1B.md` §8, scelta di Ale del 27 ottobre 2026): le regate 1 e 3 restano a bastone (140 m), le regate 2 e 4 sono a **triangolo equilatero** di lato **140 m** con due boe da lasciare a sinistra (regola 27.1: il percorso lo sceglie il comitato). La «Regata a bastone» dell'1a e la «Regata nei salti di vento» non cambiano. Il percorso dipende solo dal numero della regata: nessun numero a caso in più.
 
 **Cosa cambia in `js/regate.js`:** il percorso è una lista di boe (`R.marks`; `R.mark` resta la prima); i lati diventano 1 = verso la boa 1, 2 = verso la boa 2, 3 = verso l'arrivo (a bastone 1 e 2 come prima); al cambio di lato il giro riparte da zero (`rnd`, `rndA`, `rp`). Boa 2 in (−0,866·L, −0,5·L) in coordinate del vento, semiretta del giro a vento − 90°. Avversari: i tre punti di passaggio della boa 1 ruotati di 90° attorno alla boa 2. Strada per i distacchi: sul triangolo lungo il lato, ma nell'ultimo lato la strada che manca alla linea in direzione del vento portata a L (la proiezione sul lato arrivava a L fino a 8 s prima del traguardo: D1 sul triangolo 5 regate su 13, dopo la correzione 16 su 16). Disegno: due boe con «Boa 1 / Boa 2 · lasciala a sinistra» e un anello sulla boa da girare. Testi del torneo e dell'introduzione riscritti. `registratore.js`: il giro sbagliato vale per ogni boa. `avvio.js`: aggancio `__sv.triL` per la misura.
 
 **Misurato:** L scelto con la regola scritta prima (la più piccola con la mediana del pilota fra 4 e 5,5 minuti): semi 1-20 L=140 4,03 min, 170 4,82, 200 5,42, 230 6,19; conferma sui semi 61-80 con L=140 4,16 min (L=170 4,74). Avversari: 160 barche su 160 arrivate a L=140 (semi 1-20 e 61-80), giri sbagliati 1 su 161 passaggi e 0 su 160 (0,6% e 0%). Non-regressione: `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici; `arrivi_regate.py`: 20 regate e 9 introduzioni identiche al bit, regate 1 e 3 dei due tornei identiche (arrivi, penalità, punteggi), le regate 2 e 4 cambiano per costruzione.
-**Altri collaudi:** `collaudo_triangolo.py` (nuovo, semi 1-20): T2h 16 casi su 16; D1 sul triangolo 16 su 16 (peggiore 1,8 s); T2e boe, anello e pannello 0 px; T2f «lato 2» e «lato 3» nel file e analizzatore senza errori. **Fuori soglia, riportato com'è:** T2b come scritto (distacchi a ogni boa entro 3 s, 100%): 129 su 168 (dopo il via 39/60, boa 1 60/60, boa 2 30/48; segno giusto 160/168; errore massimo 15,9 s); causa nota, la strada resta ferma tra l'abeam e la fine del giro (`docs/PROPOSTA-TORNEI-1B.md` §8.8). `collaudo_torneo.py`: tutto verde tranne R7 (uscita dal menu 2,71 s contro 2, limite noto tenuto da Ale); `collaudo_distacchi.py` OK (D1 conferma 94%, D2 303/303); `collaudo_versione.py` e `collaudo_pannello.py` (0 px). Da lanciare sul PC di Ale: `tests/lancia_tutti.sh --veloce`, `collaudo_impronta.py` (disegno) e la prova giocando.
+**Altri collaudi:** `collaudo_triangolo.py` (nuovo, semi 1-20): T2h 16 casi su 16; D1 sul triangolo 16 su 16 (peggiore 1,8 s); T2e boe, anello e pannello 0 px; T2f «lato 2» e «lato 3» nel file e analizzatore senza errori. **Fuori soglia, riportato com'è:** T2b come scritto (distacchi a ogni boa entro 3 s, 100%): 129 su 168 (dopo il via 39/60, boa 1 60/60, boa 2 30/48; segno giusto 160/168; errore massimo 15,9 s); causa nota, la strada resta ferma tra l'abeam e la fine del giro (`docs/archivio/PROPOSTA-TORNEI-1B.md` §8.8). `collaudo_torneo.py`: tutto verde tranne R7 (uscita dal menu 2,71 s contro 2, limite noto tenuto da Ale); `collaudo_distacchi.py` OK (D1 conferma 94%, D2 303/303); `collaudo_versione.py` e `collaudo_pannello.py` (0 px). Da lanciare sul PC di Ale: `tests/lancia_tutti.sh --veloce`, `collaudo_impronta.py` (disegno) e la prova giocando.
 
 ## Pulizia di `js/regate.js` prima del T2 (27 ottobre 2026, senza nuova versione: resta la 1.0.54)
 
@@ -2439,7 +2439,7 @@ Il gioco non cambia. `js/regate.js` 69 310 → 70 312 byte (più righe, i commen
 
 ## 1.0.54 — classifica del pannello: distacchi in parole
 
-- **Cosa è cambiato** (`docs/PROPOSTA-DISTACCHI-IMMEDIATI.md`, dal punto 7 del check di Ale; «facciamo le cose più semplici e che funzionino», 27 ottobre 2026): accanto a ogni barca il pannello dice «12 s avanti» o «12 s dietro» al posto di «+12 s» / «−12 s»; se il distacco arrotondato è zero dice «alla pari» (prima «0 s»). Il calcolo non cambia. Solo testo: tutte le regate, anche l'1a.
+- **Cosa è cambiato** (`docs/archivio/PROPOSTA-DISTACCHI-IMMEDIATI.md`, dal punto 7 del check di Ale; «facciamo le cose più semplici e che funzionino», 27 ottobre 2026): accanto a ogni barca il pannello dice «12 s avanti» o «12 s dietro» al posto di «+12 s» / «−12 s»; se il distacco arrotondato è zero dice «alla pari» (prima «0 s»). Il calcolo non cambia. Solo testo: tutte le regate, anche l'1a.
 - **Un cambio non previsto, dichiarato:** nella riga della barca che naviga verso l'arrivo «in poppa verso l'arrivo» diventa «verso l'arrivo». Con «davanti» e il nome lungo la riga andava a capo (169 letture su 3108 con 42 px invece di 21, in barche con penalità); con il nome corto 7 letture; con anche «avanti» al posto di «davanti» 0 letture. Il testo vecchio non andava mai a capo. «Verso l'arrivo» è anche più giusto per il triangolo del T2, dove gli ultimi lati non saranno in poppa.
 - **Misure** (`tests/collaudo_distacchi_testo.py`, nuovo; 18 regate guidate dal pilota, semi 1-6, e 3 tornei): **3108 righe con distacco confrontate**, tutte uguali all'atteso; 1284 righe senza distacco, nessuna con il testo del distacco; righe a capo 0. Le soglie D1-D4 della proposta sono quelle scritte prima; D3 è passato solo dopo i due cambi di testo qui sopra (prima 169, poi 7 letture a capo: nessuna soglia cambiata).
 - **Non regressione:** motore e base non toccati; `polare.js` e `raffiche_e_virate.js` identici.
@@ -2452,7 +2452,7 @@ Il gioco non cambia. `js/regate.js` 69 310 → 70 312 byte (più righe, i commen
 
 ## 1.0.52 — il registratore di sessione registra tutte le barche
 
-- **Cosa è cambiato** (`docs/PROPOSTA-REGISTRATORE-TUTTE-LE-BARCHE.md`, via di Ale del 26 ottobre 2026: tutte le regate, con «cede a…»; dal check di Ale sulla 1.0.47): con la registrazione accesa, in ogni regata (1a, 1b e torneo) il file ha, per ogni avversario, una riga `B` al secondo (nome, posizione, prua, nodi, angolo al vento, lato, stato: partenza anticipata, scuffiata, arrivata, non arrivata, in partenza, `cede:Nome`). Eventi nuovi: `avv_fermo` (sotto 0,5 nodi per 5 s di gioco dopo il via, con lato e posizione) e `avv_riparte` (sopra 1 nodo), `avv_lato`, `avv_arrivo`, `avv_ocs`, `avv_scuffia`, `avv_penalita`, `avv_boa_lato_sbagliato` (la stessa condizione che mostra «boa girata dal lato sbagliato» nel pannello) e `contatto_barche` per ogni contatto fra due barche qualsiasi, avversari compresi; righe `Q` col motivo di ogni penalità (la voce dell'elenco a fine regata). Formato 2; `tests/analizza_sessione.py` legge anche il formato 1 e per ogni avversario scrive righe, secondi fermo, contatti, penalità e secondi passati a cedere. Solo lettura (nessuna chiamata a `Math.random`, nessuna scrittura nello stato del gioco): `js/registratore.js` (nuova `sesAltre`), `analizza_sessione.py`, versione. Motore, barca e regate non toccati.
+- **Cosa è cambiato** (`docs/archivio/PROPOSTA-REGISTRATORE-TUTTE-LE-BARCHE.md`, via di Ale del 26 ottobre 2026: tutte le regate, con «cede a…»; dal check di Ale sulla 1.0.47): con la registrazione accesa, in ogni regata (1a, 1b e torneo) il file ha, per ogni avversario, una riga `B` al secondo (nome, posizione, prua, nodi, angolo al vento, lato, stato: partenza anticipata, scuffiata, arrivata, non arrivata, in partenza, `cede:Nome`). Eventi nuovi: `avv_fermo` (sotto 0,5 nodi per 5 s di gioco dopo il via, con lato e posizione) e `avv_riparte` (sopra 1 nodo), `avv_lato`, `avv_arrivo`, `avv_ocs`, `avv_scuffia`, `avv_penalita`, `avv_boa_lato_sbagliato` (la stessa condizione che mostra «boa girata dal lato sbagliato» nel pannello) e `contatto_barche` per ogni contatto fra due barche qualsiasi, avversari compresi; righe `Q` col motivo di ogni penalità (la voce dell'elenco a fine regata). Formato 2; `tests/analizza_sessione.py` legge anche il formato 1 e per ogni avversario scrive righe, secondi fermo, contatti, penalità e secondi passati a cedere. Solo lettura (nessuna chiamata a `Math.random`, nessuna scrittura nello stato del gioco): `js/registratore.js` (nuova `sesAltre`), `analizza_sessione.py`, versione. Motore, barca e regate non toccati.
 - **Misure** (`tests/collaudo_registratore_barche.py`, nuovo; 20 regate: 7 a bastone 1a, 7 nei salti di vento 1b, 6 del torneo, principianti ed esperti). **G1** stato finale identico al bit con e senza registrazione: 20 su 20. **G2** 27 423 righe `B` confrontate con i valori veri (posizione, prua, nodi, lato): 0 diverse; righe `B` = 3 × righe `S`. **G3** contatti registrati 82 = penalità assegnate 82 (conteggio indipendente: penalità e punti sommati sulle barche); costruiti a 1 m 10 su 10, a 12 m nessun evento 10 su 10. **G4** barche ferme registrate 11 = episodi veri 11 (contati qui dalle velocità vere, stessa isteresi); costruiti (barca tenuta a zero per 8 s e rilasciata) 10 su 10. **G5** `analizza_sessione.py` su tutti i 20 file: riassunto del gioco uguale a quello ricalcolato. **G7** pagina vera senza `#collaudo`, torneo dal menu: righe `B` di Blu, Rossa e Verde. Non regressione: `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` senza differenze; `collaudo_registratore.py` parti a, c ed e tutte OK.
 - **G6 (dimensione): metro corretto, dichiarato.** Soglia: al massimo 20 kB per minuto. La prima versione del collaudo divideva per `R.t`, che non conta il conto alla rovescia (180 s) mentre le righe sì: su 2 regate di 6 dava 20,1 e 20,6 kB al minuto (fuori). Corretto il denominatore nei minuti davvero registrati: massimo **11,2 kB al minuto** su 20 regate. **Con il vecchio metro il massimo sarebbe 21,2 (fuori soglia)**; la soglia non è stata toccata, ma la stima della fermata 1 (9 kB al minuto) era troppo bassa: sono righe `B` di tre avversari più la `S`, i tasti e i suggerimenti.
 - **Un caso del collaudo scartato e dichiarato:** un caso costruito su 10 (contatto a 1 m, caso 8) aveva già le due barche in contatto per conto loro: l'evento non poteva nascere. Il collaudo ora riconosce il caso e cambia seme (1 volta su 10).
@@ -2466,14 +2466,14 @@ Il gioco non cambia. `js/regate.js` 69 310 → 70 312 byte (più righe, i commen
 
 ## 1.0.50 — torneo dell'1b: la regata lasciata a metà vale come ritiro
 
-- **Cosa è cambiato** (`docs/PROPOSTA-RITIRO-A-META.md`, decisione di Ale del 26 ottobre 2026, via dello stesso giorno): nella regata del torneo, uscire dal menu o lasciare la pagina (chiusura, ricarica) dal clic su «Corri la regata» conta come «Ritirati dalla regata»: il giocatore prende 5 punti, gli avversari finiscono la regata in simulazione, il risultato si salva e il torneo va avanti. Prima la regata si rifaceva da capo, quindi una regata andata male si poteva ripetere. Dal menu c'è un avviso («Uscire dalla regata? Conta come ritirata»); alla chiusura della pagina nessun avviso. Chi ha già finito la regata, o l'ha già ritirata col pulsante, non cambia: nessun secondo risultato. Codice: `torEsci` e `torEsciOk` in `regate.js`, `showMenu` e il pulsante «Menu» in `gioco.js`, evento `pagehide` in `avvio.js`. Motore e barca non toccati.
+- **Cosa è cambiato** (`docs/archivio/PROPOSTA-RITIRO-A-META.md`, decisione di Ale del 26 ottobre 2026, via dello stesso giorno): nella regata del torneo, uscire dal menu o lasciare la pagina (chiusura, ricarica) dal clic su «Corri la regata» conta come «Ritirati dalla regata»: il giocatore prende 5 punti, gli avversari finiscono la regata in simulazione, il risultato si salva e il torneo va avanti. Prima la regata si rifaceva da capo, quindi una regata andata male si poteva ripetere. Dal menu c'è un avviso («Uscire dalla regata? Conta come ritirata»); alla chiusura della pagina nessun avviso. Chi ha già finito la regata, o l'ha già ritirata col pulsante, non cambia: nessun secondo risultato. Codice: `torEsci` e `torEsciOk` in `regate.js`, `showMenu` e il pulsante «Menu» in `gioco.js`, evento `pagehide` in `avvio.js`. Motore e barca non toccati.
 - **Misure** (`collaudo_torneo.py`, nuovo C11; C3 non contiene più la chiusura a metà). 10 tornei: uscita dal menu a 1, 40, 150 e 300 s dal clic su «Corri» **40 su 40**; pagina lasciata negli stessi momenti **40 su 40**; torneo concluso dopo l'uscita **80 su 80**; uscita a metà della quarta regata **20 su 20**; nessun doppio risultato (regata ritirata o arrivata, poi uscita) **20 su 20**. **R7 FUORI soglia: uscita dal menu al massimo 2,51 s contro 2 s attesi** (soglia non toccata; è la simulazione degli avversari fino in fondo, nel caso peggiore a 1 s dal via; misurata nell'ambiente di Claude Code, sul PC di Ale può essere diversa).
 - **Limiti dichiarati:** (1) se il browser viene ucciso senza `pagehide` (blocco del PC, batteria) l'uscita non si registra e la regata si ricorre da capo come prima; (2) il collaudo lascia la pagina con una navigazione (`about:blank`), perché in Chromium senza interfaccia `page.close()` da solo **non** fa partire `pagehide` (misurato): la chiusura vera della scheda nel browser di Ale non è provata qui; (3) nessun avviso del browser alla chiusura della scheda (Ale: va bene così, una riga in `avvio.js` se servisse).
 - **Non regressione:** `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` girano senza differenze (`motore.js` e `base.js` non toccati: `git diff` vuoto).
 
 ## 1.0.49 — avversari dell'1b: chi deve cedere cede, chi ha la precedenza tiene la rotta
 
-- **Cosa è cambiato** (`docs/PROPOSTA-AVVERSARI-1B.md`, via di Ale del 26 ottobre 2026): nell'1b la guida degli avversari (e il pilota dei collaudi, che la usa) chiede a `chiCede` chi deve cedere, per la barca che si avvicinerà di più entro 15 s e a meno di due lunghezze: chi deve cedere poggia (mure diverse) o si scosta (stesse mure; se non può orzare, poggia), e continua finché non si allontanano; chi ha la precedenza tiene la rotta fino a 1,5 lunghezze. Mai dentro l'angolo morto. Prima del via e nell'1a la guida è quella di prima. Penalità visibili: messaggio quando si toccano due avversari (1b) ed elenco di tutte le penalità col motivo nella schermata finale (1a e 1b). Testo della regola 13 detto di un avversario: «finché non era» (diceva «eri»).
+- **Cosa è cambiato** (`docs/archivio/PROPOSTA-AVVERSARI-1B.md`, via di Ale del 26 ottobre 2026): nell'1b la guida degli avversari (e il pilota dei collaudi, che la usa) chiede a `chiCede` chi deve cedere, per la barca che si avvicinerà di più entro 15 s e a meno di due lunghezze: chi deve cedere poggia (mure diverse) o si scosta (stesse mure; se non può orzare, poggia), e continua finché non si allontanano; chi ha la precedenza tiene la rotta fino a 1,5 lunghezze. Mai dentro l'angolo morto. Prima del via e nell'1a la guida è quella di prima. Penalità visibili: messaggio quando si toccano due avversari (1b) ed elenco di tutte le penalità col motivo nella schermata finale (1a e 1b). Testo della regola 13 detto di un avversario: «finché non era» (diceva «eri»).
 - **Misure** (`tests/misura_avversari.py`, nuovo, e `tests/collaudo_avversari1b.py`, nuovo; tabella completa nella proposta, §10). Semi 41-60 mai guardati, regata nei salti di vento, 120 barche: piantate avendo la precedenza 16 → 1, piantate 36 → 2, arrivo medio 405,4 → 407,9 s (ok); **penalità 73 → 97 (soglia 70, FUORI)**; boe sbagliate 1 → 1 (soglia 0, FUORI). Scenari: 4 su 5 a 10/10, **tre barche alla boa 7/10 (soglia 9, FUORI)**; lo scenario 2 non distingue (dichiarato).
 - **1a identica:** regate 0 e 1, 80 corse carattere per carattere; `polare.js`, `raffiche_e_virate.js`, `impronta1b.js` identici. `collaudo_regole.py`, `collaudo_contatto_vero.py`, `collaudo_salti2.py`, `collaudo_torneo.py --veloce` OK; **`collaudo_semaforo.py` FALLITO** per 1 contatto su 37 (probabile fine di una virata in quell'istante, non verificato).
 
@@ -2490,14 +2490,14 @@ Il gioco non cambia. `js/regate.js` 69 310 → 70 312 byte (più righe, i commen
 
 ## 1.0.47 — pulizia: la barca si chiama «1a» e «1b»
 
-- **Pulizia dopo il congelamento della barca dell'1b** (`docs/PROPOSTA-PULIZIA-1B.md`, decisioni di Ale del 23 ottobre 2026). Il gioco fa le stesse cose; cambiano solo tre testi che il giocatore vede: nelle impostazioni «Barca: livello 1 / livello 2 (prova)» diventa «1a / 1b» (e il suggerimento «Livello 2, in prova: …» diventa «Barca dell'1b: …»); nel menu e nell'introduzione della «Regata nei salti di vento» «Barca del livello 2» diventa «Barca dell'1b». La barca non è più «in prova»: è congelata.
+- **Pulizia dopo il congelamento della barca dell'1b** (`docs/archivio/PROPOSTA-PULIZIA-1B.md`, decisioni di Ale del 23 ottobre 2026). Il gioco fa le stesse cose; cambiano solo tre testi che il giocatore vede: nelle impostazioni «Barca: livello 1 / livello 2 (prova)» diventa «1a / 1b» (e il suggerimento «Livello 2, in prova: …» diventa «Barca dell'1b: …»); nel menu e nell'introduzione della «Regata nei salti di vento» «Barca del livello 2» diventa «Barca dell'1b». La barca non è più «in prova»: è congelata.
 - **Solo commenti:** «livello 2» → «1b» e «livello 1» → «1a» nei commenti di `motore.js`, `gioco.js`, `regate.js`; intestazione della mappa «BARCA DELL'1B (nel codice lv 2; 1.0.24-1.0.46)». I nomi nel codice (`lv2`, `S.lv === 2`, `RUD2`, `BOMA2`, `SALTI2`, `RADD2`) restano: circa 100 punti, nessun guadagno per chi gioca. 77 rimandi ai documenti spostati in `docs/archivio/` corretti nei commenti di `js/` e `tests/`, 0 rimasti. «Brevetto di livello 1» ed «Esame · livello 1» non sono toccati: parlano del livello 1, non della barca.
 - **`lancia_tutti.sh`:** entrano `collaudo_raddrizzata.py`, `collaudo_virate2.py` e `collaudo_distacchi.py`, solo fra i lunghi (il giro `--veloce` non si allunga). `collaudo_virate2.py` fallisce da sempre (avversari oltre la bolina + 15° nel 15-17% delle virate, soglia 5%): è scritto accanto.
 - **Misure:** `polare.js`, `raffiche_e_virate.js` e `impronta1b.js` identici alla 1.0.46 carattere per carattere. Impronta del gioco (riferimento della 1.0.46 del 23 ottobre, 67 scene): 64 identiche, 3 diverse (menu, «Regata nei salti di vento» con principianti ed esperti); dentro, **6 valori diversi su 5081, tutti i due testi nuovi**, nessuno stato di barca. L'impronta non vede la finestra delle impostazioni: misurata a parte a 1360×650 senza `#collaudo`, non scorre (prima e dopo 0 px) ed è più bassa, 524 px invece di 580, perché la scelta «Barca», più corta, sta sulla riga del vento. Verdi: `collaudo_versione.py`, `collaudo_pannello.py` 1360×650 (0 px), `collaudo_esame.py` e `collaudo_quiz.py` (0 px), `collaudo_timone2.py` e `collaudo_raddrizzata.py` (usano la scelta «Barca»). Codice 325 539 → 325 737 byte.
 
 ## 1.0.46 — la barca dell'1b orziera sbandando
 
-- **Cosa è cambiato** (`docs/PROPOSTA-ORZIERA-1B.md`, scelta 1 di Ale): nella barca dell'1b, sbandando, la spinta della vela applicata al centro velico spostato sottovento fa girare la prua verso il vento: momento `spinta · zCE · sin(sbandamento)`, F4 eq. 6, diviso per `Izz` (`js/motore.js`, ramo `lv2`). Nullo a barca dritta, sbandata sopravento poggia. Nessuna costante nuova (`zCE` 2,0 m e `Izz` 200 già nel motore). Lasciato fuori, dichiarato: lo scafo sbandato che orza da solo (F4 senza numeri). Ricerca: Day 2017 e l'inferitura della vela dicono che `zCE` vero è probabilmente 2,5-2,8 m (effetto più debole del vero del 25-40%): passo separato, decide Ale.
+- **Cosa è cambiato** (`docs/archivio/PROPOSTA-ORZIERA-1B.md`, scelta 1 di Ale): nella barca dell'1b, sbandando, la spinta della vela applicata al centro velico spostato sottovento fa girare la prua verso il vento: momento `spinta · zCE · sin(sbandamento)`, F4 eq. 6, diviso per `Izz` (`js/motore.js`, ramo `lv2`). Nullo a barca dritta, sbandata sopravento poggia. Nessuna costante nuova (`zCE` 2,0 m e `Izz` 200 già nel motore). Lasciato fuori, dichiarato: lo scafo sbandato che orza da solo (F4 senza numeri). Ricerca: Day 2017 e l'inferitura della vela dicono che `zCE` vero è probabilmente 2,5-2,8 m (effetto più debole del vero del 25-40%): passo separato, decide Ale.
 - **Criteri** (`tests/fisica/orziera1b.js`, nuovo): (1) 1a identica: `polare.js`, `raffiche_e_virate.js`, `retromarcia.js`, `angolo_morto.js`, `bolina.js` carattere per carattere, **ok**. (2) Barra al centro a vento costante, prua che sale al massimo 1 °/s nei primi 10 s: 0,23-0,69 °/s, **FUORI con 14 nodi al traverso, 1,06 °/s** (senza il termine 0,33). (3) Raffica +60% con 10 nodi a barra al centro, almeno 5°: 12,9° di bolina, 16,4° al traverso, **ok**. (4) Raffica 14→22 nodi di bolina, il pilota tiene la prua: scotta ferma barra a fondo (35°, stallo 0,9 s, prua fuori 16°), lascando 3,7°, **ok**. (5) Virata dell'1b (`virata1b.js`): **FUORI a 16 nodi**, minima 34% contro 35% (era 36%); gli altri venti ok. (6) 80 regate del torneo col pilota (`misura_scarroccio.py` ora conta anche contatti e scuffie, semi 1-20): tempo medio pilota 204,0 → 204,8 s (+0,4%), avversari 197,5 → 197,8 s; boe sbagliate 3 → 1; **non arrivate 0 → 1** (il pilota dei collaudi, seme 14 regata 4: 3 scuffie e una boa sbagliata), quindi fuori come scritto; penalità per contatto 289 → 229; scuffie 71 → 73 (tutte del pilota).
 - **Sensibilità** (`node orziera1b.js k`): con `zCE` 2,6 m (×1,3) o `Izz` 130 (×1,54) il criterio 2 al traverso con 14 nodi va a 1,23 e 1,35 °/s; con `Izz` 300 (×0,67) la raffica forte non porta più la barra a fondo (15°, criterio 4 fuori); con `zCE` 1,8 m tutto dentro.
 - **Nel browser:** `collaudo_versione.py`, `collaudo_torneo.py --veloce` e `--giocatore`, `collaudo_contatto_vero.py`, `collaudo_raddrizzata.py`, `collaudo_salti2.py` OK; `collaudo_timone2.py` fallito una volta con 8 collaudi in parallelo (il solito fotogramma in più, barra 0,853) e OK da solo. **`collaudo_semaforo.py` FALLITO anche da solo:** 2 contraddizioni su 27 contatti, nessuna è un errore del gioco. (a) Tre barche ammassate: semaforo rosso verso la Verde, la più vicina, giusto; urto con la Blu, che doveva cedere, penalità alla Blu, giusto: il collaudo confronta anche quando le barche sono diverse. (b) Al passo prima dell'urto la Blu era a 8 mm dalla linea che decide chi è sopravento (regola 11) e l'ha passata nel passo: è un caso al confine come quelli che il collaudo esclude già sotto i 5 cm, ma per l'altro confine. Le traiettorie cambiano per la barca orziera, e questi casi prima non capitavano nei semi 1-8. **Collaudo corretto (decisione di Ale, dopo aver visto i due casi, quindi non alla cieca):** si confrontano solo i contatti con la barca su cui era calcolato il semaforo (gli altri si riportano a parte) e il margine di 5 cm vale anche per il confine della regola 11. Dopo: 1.0.46 OK (0 contraddizioni, 1 al confine, 1 con un'altra barca, 26 confrontati), 1.0.45 OK (23 confrontati); con i colori del semaforo invertiti apposta FALLITO con 25 contraddizioni: il metro misura.
@@ -2505,7 +2505,7 @@ Il gioco non cambia. `js/regate.js` 69 310 → 70 312 byte (più righe, i commen
 
 ## 1.0.45 — lo scarroccio dell'1b viene da deriva e pala
 
-- **Cosa è cambiato** (`docs/PROPOSTA-SCARROCCIO-1B.md`, scelta 1 di Ale): nella barca dell'1b lo scarroccio si calcola come in Day 2017, eq. 11-12 (F17): deriva e pala sono due ali che reggono la spinta laterale, con le misure delle regole di classe (F37), barca dritta, scia della deriva sulla pala a zero. Costante nuova `DERIVA2` (`q` 873 = ½·ρ·K, `K` 1,70 m², dalle misure; `u0` 0,307 m/s, ipotesi: da ferma la barca scarroccia come nell'1a). La formula di prima (`foilK`, senza fonte) resta all'1a. Non è una taratura.
+- **Cosa è cambiato** (`docs/archivio/PROPOSTA-SCARROCCIO-1B.md`, scelta 1 di Ale): nella barca dell'1b lo scarroccio si calcola come in Day 2017, eq. 11-12 (F17): deriva e pala sono due ali che reggono la spinta laterale, con le misure delle regole di classe (F37), barca dritta, scia della deriva sulla pala a zero. Costante nuova `DERIVA2` (`q` 873 = ½·ρ·K, `K` 1,70 m², dalle misure; `u0` 0,307 m/s, ipotesi: da ferma la barca scarroccia come nell'1a). La formula di prima (`foilK`, senza fonte) resta all'1a. Non è una taratura.
 - **Scarroccio di bolina** (`tests/fisica/scarroccio1b.js`, nuovo; VMG sulla rotta vera): 2,3 / 2,4 / 3,2 / 2,9° con 5 / 6 / 10 / 15 nodi (prima 2,1 / 2,3 / 2,1 / 1,6°). **VMG** 1,83 / 2,13 / 3,09 / 3,84 nodi, da −0,5% a −3,0% (criterio 2: al massimo −4%, **ok**). Il banco ridà la riga «Day» della proposta al decimo e al centesimo (criterio 1, ok); la prima tabella della proposta comprendeva l'effetto dello sbandamento, che il modello lascia fuori come scritto: 0,1° di differenza. Con 10 nodi al traverso 1,0° (prima 0,5°), velocità al traverso 5,98 nodi (prima 6,01). Sensibilità col 470 misurato in vasca (F35, `node scarroccio1b.js 470`): 3,0-4,0°.
 - **Il metro della bolina:** `bolina.js` e `PROPOSTA-BOLINA.md` calcolano la VMG con la sola prua, senza scarroccio: sulla rotta vera la VMG dell'1a è circa il 3% più bassa (2,16 / 3,18 / 3,96 invece di 2,25 / 3,29 / 4,07). L'1a è congelata: non cambia, è scritto nei documenti.
 - **Regate dell'1b** (`tests/misura_scarroccio.py`, nuovo: 20 tornei col pilota, semi 1-20, 80 regate, 320 barche): tempo medio del pilota 202,5 → 204,0 s (+0,7%), degli avversari 195,6 → 197,5 s (+1,0%); non arrivate 2 → 0, boe sbagliate 4 → 3 (criterio 5, ok).
@@ -2514,7 +2514,7 @@ Il gioco non cambia. `js/regate.js` 69 310 → 70 312 byte (più righe, i commen
 
 ## 1.0.44 — la pala dell'1b frena come una pala della sua taglia
 
-- **Ricontrollo di pala e deriva prima di congelare la barca** (richiesta di Ale, `docs/PROPOSTA-PALA-DERIVA-1B.md`), con le misure delle regole di classe di una deriva singola da 4,2 m (F37, usate con citazione per decisione di Ale) e il modello delle appendici di Day 2017 (F17). Confermati `TE` (0,80 contro circa 0,83 m) e `appDA` (0,0049 contro 0,0044-0,0048 m²); `yawG` 1,5 dentro la fascia fisica 1,1-4,0 (larga perché l'inerzia è una stima). **Lo scarroccio del gioco è circa la metà** di quello che danno deriva e pala (1,6-1,9° contro 2,4-4,1° di bolina): passo separato, deciso da Ale, con la sua fermata 1.
+- **Ricontrollo di pala e deriva prima di congelare la barca** (richiesta di Ale, `docs/archivio/PROPOSTA-PALA-DERIVA-1B.md`), con le misure delle regole di classe di una deriva singola da 4,2 m (F37, usate con citazione per decisione di Ale) e il modello delle appendici di Day 2017 (F17). Confermati `TE` (0,80 contro circa 0,83 m) e `appDA` (0,0049 contro 0,0044-0,0048 m²); `yawG` 1,5 dentro la fascia fisica 1,1-4,0 (larga perché l'inerzia è una stima). **Lo scarroccio del gioco è circa la metà** di quello che danno deriva e pala (1,6-1,9° contro 2,4-4,1° di bolina): passo separato, deciso da Ale, con la sua fermata 1.
 - **Cosa è cambiato:** `dragK` da 184 a **117** (solo barca dell'1b): la frenata della pala misurata in F4 sulla pala del 470 (0,169 m²) riportata alla pala di questa barca (0,107 m²). Non è una taratura.
 - **Virata col gesto da tastiera** (`tests/fisica/virata1b.js`), sola freccia: 4,0 / 3,2 / 2,8 / 2,6 / 2,5 / 2,7 s con 6 / 8 / 10 / 12 / 14 / 16 nodi, minima 55 / 54 / 51 / 47 / 44 / **36%**: criterio 1 della 1.0.43 **ok su tutti i venti** (a 16 nodi era 34%). Numeri già visti nell'anteprima della proposta: non è una prova alla cieca. Sensibilità con tutta la pala in acqua (0,129 m², `dragK` 141): stessi tempi, minima uguale o 1 punto sotto.
 - **Collaudi di fisica:** `polare.js`, `raffiche_e_virate.js`, `retromarcia.js`, `angolo_morto.js`, `boma2.js` identici alla 1.0.43. `salti2.js` **di nuovo tutto nelle soglie** (S1 taratura 4,5 → 8,8%, conferma 9,4%). `timone2.js`: C3 0,31 rad/m (fuori come nella 1.0.43), C4 fuori a 6 nodi (5,25 s), C5 a 16 nodi 34% (col suo gesto), C1 fuori come prima; giri di penalità 10 nodi 11,0 s con la freccia.
@@ -2522,7 +2522,7 @@ Il gioco non cambia. `js/regate.js` 69 310 → 70 312 byte (più righe, i commen
 
 ## 1.0.43 — virata dell'1b più agile
 
-- **Richiesta di Ale** (23 ottobre 2026): la barca dell'1b è lenta in virata con la sola freccia. Prima di congelarla (servirà a 1b, 2a e 2b) e prima delle regole 15 e 16, che ora diventano la 1.0.44 (la loro finestra di tempo dipende dalla barca). Proposta, misure e strade in `docs/PROPOSTA-VIRATA-1B.md`; Ale ha scelto la strada A (solo fisica).
+- **Richiesta di Ale** (23 ottobre 2026): la barca dell'1b è lenta in virata con la sola freccia. Prima di congelarla (servirà a 1b, 2a e 2b) e prima delle regole 15 e 16, che ora diventano la 1.0.44 (la loro finestra di tempo dipende dalla barca). Proposta, misure e strade in `docs/archivio/PROPOSTA-VIRATA-1B.md`; Ale ha scelto la strada A (solo fisica).
 - **Cosa è cambiato:** nella barca dell'1b l'acqua frena meno lo scafo che ruota, `hullKq` da 600 a **400** (`js/motore.js`, solo il ramo dell'1b). Regola fissata prima: il valore più basso con la virata della sola freccia fra 2,5 e 3,5 s (F4 3,4 s, video 3,3 s), minima 35-60% e prua non oltre 60°, con 10 e 14 nodi; 300 dava 2,4 s con 14 nodi, più rapida delle fonti. `tests/fisica/virata1b.js` (`griglia` rifà la scelta).
 - **Virata col gesto da tastiera** (barra al centro a 30° oltre il vento), sola freccia / Maiusc: 6 nodi 4,5 → **4,0 s** / 3,6 → 3,2 s; 10 nodi 3,2 → **2,9 s** / 2,5 → 2,3 s; 14 nodi 2,9 → **2,5 s** / 2,2 → 2,0 s. Velocità minima più alta (10 nodi: 44 → 49%). Prua dopo la virata 39-40° con la freccia, 43-46° con Maiusc (non va oltre). Barca lenta al traverso (1,5 nodi, 3 s di barra): 70 → 76° con la freccia, 85 → 94° con Maiusc. Giri di penalità più corti (10 nodi: 12,4 → 11,2 s freccia, 10,0 → 8,7 s Maiusc).
 - **Conferma sui venti mai usati (6, 8, 12, 16): FUORI a 16 nodi**, minima 34% contro la soglia del 35% (prima 27%, già fuori). Gli altri tre venti nelle soglie.
@@ -2602,7 +2602,7 @@ Del 20 ottobre 2026, dal giro `lancia_tutti.sh --veloce` di Ale sulla 1.0.34 (20
 
 ## 1.0.34 — torneo dell'1b, prima tappa (T1)
 
-Del 20 ottobre 2026, dalla fermata 1 di `docs/PROPOSTA-TORNEI-1B.md` con le decisioni di Ale. **La fisica non cambia; le regate dell'1a, le lezioni e le prove sono identiche al bit** (impronta: cambia solo il menu).
+Del 20 ottobre 2026, dalla fermata 1 di `docs/archivio/PROPOSTA-TORNEI-1B.md` con le decisioni di Ale. **La fisica non cambia; le regate dell'1a, le lezioni e le prove sono identiche al bit** (impronta: cambia solo il menu).
 
 - **Torneo dell'1b** nel riquadro «Regate» del menu: 4 regate a bastone con la barca completa dell'1b, contro gli stessi tre avversari (stesso livello e stesso carattere per tutta la serie). Vento: 10 nodi costanti, raffiche, salti di vento, e la quarta sorteggiata fra le tre; direzione a caso, fissata all'inizio del torneo.
 - **Punteggio del regolamento** (F15, appendice A): 1 punto al primo, 2 al secondo e così via; chi non arriva o si ritira prende 5 (iscritti + 1); dopo la quarta regata si scarta la peggiore (a parità, la più vecchia); parità della serie con A8.1 e A8.2. Tabella della serie fra una regata e l'altra.
@@ -2618,7 +2618,7 @@ Del 20 ottobre 2026, dalla fermata 1 di `docs/PROPOSTA-TORNEI-1B.md` con le deci
 
 ## 1.0.33 — distacchi in secondi nella classifica delle regate
 
-Del 19 ottobre 2026, richiesta di Ale (`docs/PROPOSTA-DISTACCHI.md`). Tutte le regate; fisica e arrivi identici.
+Del 19 ottobre 2026, richiesta di Ale (`docs/archivio/PROPOSTA-DISTACCHI.md`). Tutte le regate; fisica e arrivi identici.
 
 - Nella classifica del pannello, accanto a ogni barca, i secondi da te: positivi se è davanti, negativi se è dietro. Sono un tempo vero: quanti secondi fa quella barca era alla tua altezza (strada fatta nella direzione del vento, senza le penalità). Dopo il tuo arrivo, le differenze dei tempi d'arrivo.
 - All'arrivo il risultato dice anche i secondi dalla barca davanti e dalla prima: «3° su 4 in 4 min 34 s, a 57 s dalla Rossa, a 74 s dalla Blu (prima)».
@@ -2627,7 +2627,7 @@ Del 19 ottobre 2026, richiesta di Ale (`docs/PROPOSTA-DISTACCHI.md`). Tutte le r
 
 ## 1.0.32 — livello 2: raddrizzata più lunga, al traverso
 
-Del 19 ottobre 2026, dal video di un allenatore portato da Ale (`docs/PROPOSTA-RADDRIZZATA.md`). **Solo la barca del livello 2; il livello 1 è identico al bit.**
+Del 19 ottobre 2026, dal video di un allenatore portato da Ale (`docs/archivio/PROPOSTA-RADDRIZZATA.md`). **Solo la barca del livello 2; il livello 1 è identico al bit.**
 
 - Premuto A, la barca si tira su in **10 s** (prima 3) e torna dritta **al traverso** (prima 60° dal vento), ferma, con la **vela tutta lascata** che sbatte: si cazza e si riparte. Gli avversari del livello 2 restano rovesciati 15 s (prima 5) e ripartono al traverso del vento vero.
 - Fonte: un video divulgativo (raddrizzare con la schiena al vento, vela che sbatte libera, 15-20 s in tutto); il traverso è letto dagli schemi. Da confermare con altre fonti.
@@ -2636,7 +2636,7 @@ Del 19 ottobre 2026, dal video di un allenatore portato da Ale (`docs/PROPOSTA-R
 
 ## 1.0.31 — livello 2: la prua non va più oltre la bolina dopo la virata
 
-Del 19 ottobre 2026, dalle registrazioni di Ale del 18 ottobre. Proposta, revisione in chat e misure in `docs/PROPOSTA-VIRATE-AVVERSARI.md`. **Il livello 1 è identico al bit.**
+Del 19 ottobre 2026, dalle registrazioni di Ale del 18 ottobre. Proposta, revisione in chat e misure in `docs/archivio/PROPOSTA-VIRATE-AVVERSARI.md`. **Il livello 1 è identico al bit.**
 
 - **Il difetto:** nella barca del livello 2, dopo la virata, la prua girava ancora di 20-45° con la barra al centro (14 virate su 21 di Ale oltre 65° dal vento, 4 in poppa) e gli avversari arrivavano a 97-111° dal vento in quasi ogni virata (97% nel browser). Causa: la rotazione la frenava solo la pala, che a fine virata va piano e stalla.
 - `js/motore.js`, solo il ramo del livello 2: la pala sente anche l'acqua che le arriva di lato perché la poppa ruota (V² = u² + (r·xR)², idea della revisione in chat), e l'acqua frena lo scafo che ruota (`hullKq` 600, `Izz` 200: stime, non tarate); `yawG` da 0,6 a 1,5 con la regola di scelta della 1.0.24.
@@ -2663,7 +2663,7 @@ Del 17 ottobre 2026. **Il gioco non cambia**: in `js/` cambiano solo commenti e 
 
 ## 1.0.28 — livello 2 in prova: i salti di vento
 
-Del 17 ottobre 2026. Proposta, fonti, misure e storia del modello in `docs/PROPOSTA-SALTI-VENTO.md`.
+Del 17 ottobre 2026. Proposta, fonti, misure e storia del modello in `docs/archivio/PROPOSTA-SALTI-VENTO.md`.
 
 - **Fonti** (divulgative, coerenti): in regata il vento oscilla di circa 10-20° ogni 3,5-8 minuti; si vira sugli scarsi; sotto i 2 minuti di periodo non conviene; se il ciclo è più lungo della bolina il salto è persistente e si va verso la parte da cui ruota il vento.
 - **Misura che ha deciso la proposta:** con la bolina di oggi (140 m, circa 90 s) virare sui salti dà al più il 2-4%; con una bolina di 300 m e salti di ±15° ogni 2-3 minuti il 10-12%.
@@ -2685,7 +2685,7 @@ Del 17 ottobre 2026, decisione di Ale: «il tasto R è da lasciare libero, perch
 
 ## 1.0.26 — livello 2 in prova: «spingi il boma» (Z)
 
-Del 17 ottobre 2026, richiesta di Ale (tasto Z). Proposta, fonti e misure in `docs/PROPOSTA-SPINGI-BOMA.md`.
+Del 17 ottobre 2026, richiesta di Ale (tasto Z). Proposta, fonti e misure in `docs/archivio/PROPOSTA-SPINGI-BOMA.md`.
 
 - **Fonti:** la manovra la descrivono allo stesso modo US Sailing, una guida per una deriva in singolo, una classe di catamarani e la federazione australiana (boma spinto fuori, barra dalla stessa parte, la barca va all'indietro e la prua gira verso il boma, al traverso si molla, si centra la barra e si cazza). Nessuna fonte dà numeri. Regolamento: 21.3 (chi va all'indietro spingendo una vela si tiene lontano), 42.3(f) (si può rallentare muovendo la barra).
 - **Motore, solo per la barca del livello 2** (`BOMA2` in `js/motore.js`): con Z tenuto il boma resta a 80° dalla parte dove si trova; la vela è una piastra investita dal vento, applicata lungo il boma, quindi spinge indietro, di lato e fa girare la prua verso il boma. Quattro costanti nuove, tutte stime senza fonte. È il primo momento delle vele nel motore e vale solo col boma spinto.
@@ -2697,7 +2697,7 @@ Del 17 ottobre 2026, richiesta di Ale (tasto Z). Proposta, fonti e misure in `do
 
 ## 1.0.25 — livello 2 in prova: la freccia fino a 35°, Maiusc fino a 45°
 
-Del 17 ottobre 2026, idea di Ale giocando la 1.0.24 (osservazione 56: «nessun'altra conseguenza»). `docs/PROPOSTA-STALLO-TIMONE.md` §9.
+Del 17 ottobre 2026, idea di Ale giocando la 1.0.24 (osservazione 56: «nessun'altra conseguenza»). `docs/archivio/PROPOSTA-STALLO-TIMONE.md` §9.
 
 - Con la barca del livello 2 la barra va sempre veloce come nel livello 1; **la sola freccia si ferma a 35°**, **Maiusc + freccia arriva a 45°**. 35° è una regola del gioco, senza fonte. Il motore non cambia.
 - **Misure:** con 45° la virata è più rapida a tutti i venti (C2 ok ovunque); con Maiusc da subito si perdono più punti di velocità con 5 venti su 6 (C1 fuori con 16 nodi); freccia, pausa e poi Maiusc è la virata migliore con 10 e 14 nodi (accompagnare la barra, che nasce dal motore). Restano fuori C3 ovunque, C4 e C8 con 6 nodi. Nel browser la perdita in più con Maiusc è piccola e con 15 nodi si inverte: dipende da come si molla la barra. Le soglie nuove sono state scritte dopo aver visto le tabelle in chat: dichiarato.
@@ -2706,7 +2706,7 @@ Del 17 ottobre 2026, idea di Ale giocando la 1.0.24 (osservazione 56: «nessun'a
 
 ## 1.0.24 — il timone del livello 2, in prova
 
-Del 17 ottobre 2026. Primo pezzo della fisica del livello 2 (decisioni di Ale: vale solo per il livello 2, il livello 1 resta identico; barra lenta con la freccia, veloce con Maiusc). Proposta, revisione in chat, letture delle fonti e tutte le misure in `docs/PROPOSTA-STALLO-TIMONE.md`.
+Del 17 ottobre 2026. Primo pezzo della fisica del livello 2 (decisioni di Ale: vale solo per il livello 2, il livello 1 resta identico; barra lenta con la freccia, veloce con Maiusc). Proposta, revisione in chat, letture delle fonti e tutte le misure in `docs/archivio/PROPOSTA-STALLO-TIMONE.md`.
 
 - **Fonti nuove:** F4 (Masuyama e Ogihara 2020) letta per intero, con le virate misurate di un 470 (figure 5 e 6, lette sulla griglia); F35, calcolo al computer del timone del 470 (stallo a 30-35°). In F4 i 5 e 12 kgf sono resistenza della barra, non forza laterale.
 - **Motore, solo per la barca del livello 2** (`RUD2` in `js/motore.js`): la pala sente l'angolo effettivo, stalla oltre 22° (la forza resta, la resistenza cresce), la rotazione nasce dalla forza della pala, la barra arriva a 45°. Sotto 0,5 m/s e all'indietro resta il timone di sempre.
@@ -2717,7 +2717,7 @@ Del 17 ottobre 2026. Primo pezzo della fisica del livello 2 (decisioni di Ale: v
 
 ## 1.0.23 — la barca balla sull'acqua
 
-Del 17 ottobre 2026, idea di Ale giocando («una barchetta così navigando è molto poco ferma… dall'alto sembra una nave»). **Solo disegno: il motore non cambia** (impronta: 4.049 voci di stato su 4.049 identiche; cambiano solo le immagini del mare). Proposta, decisioni di Ale ed esito in `docs/PROPOSTA-MOTO-SUL-MARE.md`.
+Del 17 ottobre 2026, idea di Ale giocando («una barchetta così navigando è molto poco ferma… dall'alto sembra una nave»). **Solo disegno: il motore non cambia** (impronta: 4.049 voci di stato su 4.049 identiche; cambiano solo le immagini del mare). Proposta, decisioni di Ale ed esito in `docs/archivio/PROPOSTA-MOTO-SUL-MARE.md`.
 
 - **Onda corta solo disegnata**, che arriva da dove arriva il vento: di lato la barca rolla, di prua e di poppa beccheggia; contro le onde il ritmo è più fitto (1,6 s di bolina contro 4,4 in poppa con 10 nodi). Da ferma balla fino al doppio. Ampiezze e periodo sono **ipotesi nostre senza fonte** (5° di rollio con 15 nodi), dichiarate in `FISICA-E-TARATURE.md`.
 - **Lo scafo si inclina con lo sbandamento** (sopravento compare la carena) e **la scuffia si vede cadere**: l'albero arriva sull'acqua in 0,6 s, con uno spruzzo. Prima la barca passava di colpo da sbandata a sdraiata.
@@ -2754,7 +2754,7 @@ Del 17 ottobre 2026, decisione di Ale. **Cambiano solo testi e domande** (`js/co
 
 ## 1.0.19 — l'acqua dentro la raffica si vede di più
 
-Del 17 ottobre 2026. **Cambia solo il disegno dell'acqua dentro le chiazze delle raffiche** (`js/disegno.js`); motore, avversari e testi invariati. Voce 4b della ROADMAP, idea di Ale. Proposta, fonti, criteri scritti prima di provare ed esito in `docs/PROPOSTA-INCRESPATURE.md`.
+Del 17 ottobre 2026. **Cambia solo il disegno dell'acqua dentro le chiazze delle raffiche** (`js/disegno.js`); motore, avversari e testi invariati. Voce 4b della ROADMAP, idea di Ale. Proposta, fonti, criteri scritti prima di provare ed esito in `docs/archivio/PROPOSTA-INCRESPATURE.md`.
 
 - **Cosa cambia:** dentro le chiazze (`gustAt > 0,04`) si disegna un **secondo strato di increspature**, fino al doppio dei trattini nel cuore, sfumato a zero sul bordo; questi trattini hanno uno **scorrimento proprio**, quello del vento della raffica più forte in acqua, così la trama slitta visibilmente dove il vento è più forte. Fuori dalle raffiche non cambia niente, e restano tutti i freni di prima (dissolvenza sotto zoom 0,5, niente increspature sotto 0,35, salto oltre 2500 celle).
 - **Fonti** (F31-F34): la chiazza scura è l'increspatura capillare che riflette la luce in modo diverso, e **chiazze con increspature più ravvicinate indicano più vento**: la densità è il segnale. **Non è sostenuto da fonti** che la trama debba *scorrere* più in fretta: è plausibile (il vento locale trascina le onde capillari) e resta un **aiuto visivo dichiarato**.
@@ -2763,7 +2763,7 @@ Del 17 ottobre 2026. **Cambia solo il disegno dell'acqua dentro le chiazze delle
 - **Due passi falsi, corretti per strada:** accorciare i trattini (`1 + 0,6k` invece di `1 + 2k`, per seguire le fonti sulla densità) **peggiorava** il contrasto (da +267% a +226%): la lunghezza è rimasta quella di prima. E la densità scalata su `gk` puro aggiungeva **un solo trattino** quasi invisibile, perché nel gioco le raffiche arrivano a `k ≈ 0,4` e non a 1: ora si scala su 0,4 (costante nuova, ipotesi nostra).
 - **Controlli:** `collaudo_vista.py` tutto OK (161 casi, nessuno sbagliato, compresi i controlli delle increspature ai vari zoom); `polare.js` e `raffiche_e_virate.js` identici carattere per carattere (il motore non è stato toccato); schermate in `tests/output/increspature/` (`prima-*` e `dopo2-*`), **giudizio sull'aspetto di Ale, giocando**: lo scorrimento più veloce in una schermata ferma non si può vedere.
 - **Collaudi (nessun cambio al gioco):** `collaudo_carriera_intera.py` ora guida le lezioni con il **pilota delle lezioni** invece della sua tabella di 14 passi, e `collaudo_pilota_lezioni.py` è diventato importabile (guardia `__main__`). Il limite dichiarato di quel collaudo (18 passi su 32 saltati con l'aggancio) **non c'è più**: una carriera intera, da zero all'attestato, con **32 passi su 32 guidati e completati**, 0 saltati; prove 1-4 finite in 79,0 / 124,4 / 156,5 / 282,2 s; **ESITO OK**. Criterio I4 riscritto sui conteggi nuovi (prima controllava la tabella che non c'è più).
-- **`collaudo_giro_boa.py`, prova 3 « linea d'arrivo »:** non finiva dal 16 ottobre (finiva l'11), con il pilota fermo 6-10 m prima del traguardo; il diario la chiamava «difetto vecchio del collaudo» dalla 1.0.10. Il pilota ora aggiunge un punto 25 m oltre il traguardo, sulla direzione da cui arriva (`docs/PROPOSTA-PROVA3.md`): la prova 3 finisce 3 volte su 3 (156-157 s). Nessun cambio al gioco.
+- **`collaudo_giro_boa.py`, prova 3 « linea d'arrivo »:** non finiva dal 16 ottobre (finiva l'11), con il pilota fermo 6-10 m prima del traguardo; il diario la chiamava «difetto vecchio del collaudo» dalla 1.0.10. Il pilota ora aggiunge un punto 25 m oltre il traguardo, sulla direzione da cui arriva (`docs/archivio/PROPOSTA-PROVA3.md`): la prova 3 finisce 3 volte su 3 (156-157 s). Nessun cambio al gioco.
 - **`collaudo_registro.py` tornato a 15 su 15** (era 14 su 15, con verifiche diverse a seconda del giro): (1) «partenza anticipata» fermava la barca oltre la linea con la prua nel vento, ma con la retromarcia senza tetto (1.0.8, `backDrag` nella 1.0.13) una barca piantata scivola all'indietro a 1,1 m/s e in 40 s rientrava dietro la linea prima dello sparo: ora il pilota continua a bolinare verso il largo; (2) «contatto» insegue l'avversario più vicino fino a un contatto, e dalla 1.0.17 gli avversari si scansano meglio anche dal giocatore: la finestra di inseguimento passa da 30 a 60 secondi reali. Nessun cambio al gioco; tre giri completi su tre a 15 su 15.
 - **`collaudo_competizione.py --tastiera` tornato valido (parte 5 delle partenze, aperta dalla 1.0.11):** in solitaria il pilota da tastiera passava sette minuti reali a 41-48° dal vento, all'indietro a 0,5 nodi, e non arrivava mai. Non era la fisica (il motore fa girare una barca che va all'indietro a 41° con la barra a fondo, da una parte o dall'altra, in 5 s): il pilota rimbalzava fra due regole contraddittorie. Allo sparo il rilevamento della linea gli faceva scegliere la mura opposta a quella su cui era fermo, e per cambiare mura da fermi la virata non riesce; la regola «piantata» lo riportava sulle mure di prima. Ora, sotto i 3 nodi e con la mura sbagliata, poggia prima con la scotta regolata e poi vira. **Due giri completi su due: ESITO OK** (con gli avversari quarto in 452 e 420 s, in solitaria arrivato in 423 e 458 s senza salvare nessun piazzamento). Provate tre varianti su una copia: senza l'inversione della barra in retromarcia si pianta nel vento; con la vela lascata resta a 95° a 2,2 nodi per sempre; solo con la scotta regolata funziona. Nessun cambio al gioco.
 - **Passo 5.8 «Strambata controllata», 4 non completati su 100: non è un difetto del gioco.** Il pilota preciso strambava con la scotta a 0,53, cioè un boma a 49° (9° + 0,53 × 76°), mentre il gioco chiede 45° o meno (`sheetMax > 45` in `js/gioco.js`) e chiama violenta ogni strambata oltre: il pilota legge il boma con qualche grado d'errore, il giocatore vero ha il numero sotto il cursore della scotta. Il pilota impreciso scuffia 52 volte su 100 nel passo, ma lo faceva già nella 1.0.10 (56) e nella 1.0.13 (52): comportamento di chi strambo male, non una regressione.
@@ -2771,7 +2771,7 @@ Del 17 ottobre 2026. **Cambia solo il disegno dell'acqua dentro le chiazze delle
 
 ## 1.0.18 — il riquadro dice cosa fare se parti in anticipo
 
-Del 17 ottobre 2026. **Cambia solo il riquadro delle regate** (una frase in `js/regate.js`); motore, avversari e pannello invariati. Chiude le parti 2, 4 e 6 del compito partenze (`docs/PROPOSTA-PARTENZE.md` §9).
+Del 17 ottobre 2026. **Cambia solo il riquadro delle regate** (una frase in `js/regate.js`); motore, avversari e pannello invariati. Chiude le parti 2, 4 e 6 del compito partenze (`docs/archivio/PROPOSTA-PARTENZE.md` §9).
 
 - **Riquadro:** aggiunta la frase «Se tagli prima dello zero vieni richiamato: torna dietro la linea e riparti subito, non c'è nessuna attesa da scontare» (regola 29.1, F15). Durante la regata i messaggi c'erano già («Partenza anticipata! Torna dietro la linea», la scritta gialla sul mare e «Sei tornato dietro la linea: ora riparti»): mancava l'avviso **prima** di partire. Testo scelto da Ale, facile da cambiare: sta in un punto solo.
 - **Parte 2, estremi della linea: chiusa senza modifiche.** Nelle misure della 1.0.16 e della 1.0.17 (oltre 3.600 partenze di avversari) **nessuno ha tagliato fuori dagli estremi** e nessuno è rimasto fuori senza partire; il punto d'attesa spostato di lato, pensato per il taglio, risolve anche questo. Il punto d'attesa è per costruzione entro due metri dagli estremi.
@@ -2781,7 +2781,7 @@ Del 17 ottobre 2026. **Cambia solo il riquadro delle regate** (una frase in `js/
 
 ## 1.0.17 — gli avversari si evitano anche quando devono orzare
 
-Del 17 ottobre 2026. **Cambia solo come gli avversari evitano le altre barche** (`js/regate.js`, due righe); barca, partenza e testi invariati. Parte 3 del compito partenze: proposta, criteri scritti prima di provare, varianti scartate ed esito in `docs/PROPOSTA-PARTENZE.md` §8.
+Del 17 ottobre 2026. **Cambia solo come gli avversari evitano le altre barche** (`js/regate.js`, due righe); barca, partenza e testi invariati. Parte 3 del compito partenze: proposta, criteri scritti prima di provare, varianti scartate ed esito in `docs/archivio/PROPOSTA-PARTENZE.md` §8.
 
 - **Il difetto, misurato:** lo scarto per evitare veniva **riscritto** dalla regola «la prua desiderata non deve mai finire nell'angolo morto». Su 40 regate complete: annullato (ne resta meno di un terzo) nel **39%** degli istanti in cui una barca stava scartando, ridotto in un altro 12%; e in **83 contatti su 88** nei dieci secondi prima c'era uno scarto annullato. Le barche si vedevano, provavano a evitarsi e venivano rimesse in rotta di collisione.
 - **Ora:** chi sta evitando può orzare **anche dentro l'angolo morto** (perde velocità, come nella realtà; se si pianta riparte con la regola che già c'era), e il cono in cui guarda le altre barche passa da **60° a 90°** dalla prua, perché i contatti misurati hanno le prue a **93°** in mediana: chi arriva di fianco prima non veniva nemmeno considerato.
@@ -2792,7 +2792,7 @@ Del 17 ottobre 2026. **Cambia solo come gli avversari evitano le altre barche** 
 
 ## 1.0.16 — gli avversari aspettano sulla linea e partono quando serve
 
-Del 17 ottobre 2026. **Cambia la partenza degli avversari** (`js/regate.js`) e il consiglio del riquadro delle regate; la barca del giocatore non cambia. Proposta, criteri (scritti prima di provare) ed esito in `docs/PROPOSTA-PARTENZE.md`.
+Del 17 ottobre 2026. **Cambia la partenza degli avversari** (`js/regate.js`) e il consiglio del riquadro delle regate; la barca del giocatore non cambia. Proposta, criteri (scritti prima di provare) ed esito in `docs/archivio/PROPOSTA-PARTENZE.md`.
 
 - **Il difetto (dalla 1.0.6):** gli avversari frenavano a 7 m fissi dalla linea e partivano a una velocità stimata fissa (1,9 m/s). Con la barca della vasca, che scivola 10-11 m invece di 5-6, l'**83%** era oltre la linea allo sparo (era il 22-32% fino alla 1.0.4) e il ritardo mediano al via era di 6-15 s. Il salto era passato inosservato perché il collaudo controllava solo che le anticipate rientrassero entro 60 s.
 - **Ora, senza nessun numero in metri scritto a mano:**
@@ -2808,11 +2808,11 @@ Del 17 ottobre 2026. **Cambia la partenza degli avversari** (`js/regate.js`) e i
 - **Misure** (`collaudo_partenze.py`, criteri del §3; semi 1-20 per scegliere, **21-100 mai guardati per confermare**; 2880 partenze di avversari nella conferma): partenze con almeno un richiamo **6,7% principianti e 5,4% esperti** a bastone, **4,6% e 3,8%** nelle raffiche (soglie 30% e 20%, esperti meno dei principianti); ritardo mediano al via **0,9-2,2 s** (soglia 3) con 1, 3 e 5 minuti; velocità mediana al taglio **4,65-5,33 nodi** (soglie 3,72 e 4,20); **nessun avversario non partito entro 60 s** e nessuno rimasto anticipato (prima della correzione del rientro erano 37 su 720); nessuna anticipata fuori dagli estremi; **718-719 barche su 720 passate dalla fascia d'attesa**, cioè il metro ha misurato davvero. Esito del collaudo **OK** sui semi di conferma; sui semi 1-20 l'unico criterio fuori era «esperti meno dei principianti» nelle raffiche, pari a 3,3% contro 3,3%, che con 80 semi si separa.
 - **Costo di calcolo:** 3,1 ms per secondo simulato (massimo 5,8), con tre avversari che simulano sé stessi.
 - **Controlli:** `polare.js` e `raffiche_e_virate.js` identici carattere per carattere a quelli della 1.0.15; regate a bastone e nelle raffiche (semi 1-6) 18 arrivi su 18 e nessuna BLOCCATA, mediana 201 s e 188 s; pannello a 1360×650 eccesso 0 px e riquadro delle istruzioni 0 px su 6 misure. **Non misurati in questa versione:** contatti fra avversari (restano le penalità, parte 3 del compito) e `collaudo_competizione.py`.
-- **Restano aperte le altre parti** del compito partenze (estremi della linea, contatti, rientro dopo l'anticipo, pilota da tastiera all'indietro, C1 della competizione): `docs/PROPOSTA-PARTENZE.md` §5.
+- **Restano aperte le altre parti** del compito partenze (estremi della linea, contatti, rientro dopo l'anticipo, pilota da tastiera all'indietro, C1 della competizione): `docs/archivio/PROPOSTA-PARTENZE.md` §5.
 
 ## 1.0.15 — la raffica da assorbire arriva davvero
 
-Del 16 ottobre 2026. **Cambia il passo 6.2 «Assorbire una raffica»** (lezione 6); testo e motore invariati. Proposta ed esito in `docs/PROPOSTA-CORREZIONI-PASSI.md` §5-6.
+Del 16 ottobre 2026. **Cambia il passo 6.2 «Assorbire una raffica»** (lezione 6); testo e motore invariati. Proposta ed esito in `docs/archivio/PROPOSTA-CORREZIONI-PASSI.md` §5-6.
 
 - **Il difetto:** il passo si completava a mani ferme 16 volte su 20 (pilota, semi 1-20), perché bastava il bordo di una raffica moderata (+12%) e la barca restava sotto i 20° da sola.
 - **Ora:** una raffica media garantita (+45%, `bigGust: 0.45`), che nasce 45 m sopravento sulla strada della barca; la condizione vale solo nel cuore della raffica (almeno +30%) e di bolina (entro 75° dal vento). Costanti ipotesi nostre, senza fonte. La raffica forte del 6.3 resta identica.
@@ -2822,7 +2822,7 @@ Del 16 ottobre 2026. **Cambia il passo 6.2 «Assorbire una raffica»** (lezione 
 
 ## 1.0.14 — orzare fino a un terzo della strada
 
-Del 16 ottobre 2026. **Cambia solo il testo del passo 2.4 «Barra sottovento: si orza»** (lezione 2). Proposta ed esito in `docs/PROPOSTA-CORREZIONI-PASSI.md` §3.
+Del 16 ottobre 2026. **Cambia solo il testo del passo 2.4 «Barra sottovento: si orza»** (lezione 2). Proposta ed esito in `docs/archivio/PROPOSTA-CORREZIONI-PASSI.md` §3.
 
 - **Il difetto (dalla 0.16):** il testo diceva di fermarsi con la lancetta «a metà strada tra il rosso e l'orizzontale», circa 65°, ma il passo accetta da 43° a 67°: chi legge la lancetta con qualche grado di errore la supera.
 - **Ora:** «a un terzo della strada», circa 57°, al centro della finestra; come dice già il passo 2.5. Condizione e motore invariati.
@@ -2831,7 +2831,7 @@ Del 16 ottobre 2026. **Cambia solo il testo del passo 2.4 «Barra sottovento: si
 
 ## 1.0.13 — la retromarcia un po' più lenta
 
-Del 16 ottobre 2026, decisione di Ale. Esito in `docs/PROPOSTA-CORREZIONI-PASSI.md` §2.
+Del 16 ottobre 2026, decisione di Ale. Esito in `docs/archivio/PROPOSTA-CORREZIONI-PASSI.md` §2.
 
 - **Retromarcia** (`js/motore.js`): costante nuova `backDrag` = 1,5, che moltiplica la resistenza dello scafo quando la barca va all'indietro (specchio di poppa e pala al contrario). **Ipotesi, nessuna fonte.** Massimo all'indietro con la prua al vento e la barra al centro: con 10 nodi da 2,33 a **1,99 nodi**, con 15 da 3,40 a **2,96**, con 20 da 4,30 a **3,79**. Non cambia quanto presto parte (con 10 nodi −0,5 nodi dopo 1,6 s, come prima). Cursore nuovo nel laboratorio (da 1 a 4).
 - **Passo 1.9 «Ripartire»:** nessun cambio (strada A di Ale). La barca esce da sola dall'angolo morto per una regola senza fonte (`ironsYaw`); toglierla renderebbe il passo impossibile senza il comando «spingi il boma» (livello 2). Osservazione 45 chiusa come semplificazione dichiarata.
@@ -2839,7 +2839,7 @@ Del 16 ottobre 2026, decisione di Ale. Esito in `docs/PROPOSTA-CORREZIONI-PASSI.
 
 ## 1.0.12 — orzare fino al rosso, non fino a fermarsi
 
-Del 16 ottobre 2026. **Cambia solo il testo del passo 1.8 «Orzare e l'angolo morto»** (lezione 1); motore e condizione del passo invariati. Proposta ed esito in `docs/PROPOSTA-CORREZIONI-PASSI.md` §1.
+Del 16 ottobre 2026. **Cambia solo il testo del passo 1.8 «Orzare e l'angolo morto»** (lezione 1); motore e condizione del passo invariati. Proposta ed esito in `docs/archivio/PROPOSTA-CORREZIONI-PASSI.md` §1.
 
 - **Il difetto (dalla 1.0.11):** il testo diceva di tenere la freccia «finché la barca non si ferma quasi del tutto». Con la vela che stringe di più la barca arriva al vento più veloce e, tenendo la barra, vira: il pilota completava il passo 0 volte su 80.
 - **Ora:** «Quando la prua è quasi nel vento (la lancetta della rosa entra nel rosso), rilascia», più una frase scelta da Ale: chi tiene troppo vira e preme *Ricomincia*.
@@ -2848,7 +2848,7 @@ Del 16 ottobre 2026. **Cambia solo il testo del passo 1.8 «Orzare e l'angolo mo
 
 ## 1.0.11 — la resistenza indotta e la vela che stringe
 
-Del 16 ottobre 2026. **La barca cambia di bolina.** Proposta (due stesure, revisione in chat sul testo completo di Day 2017), scelta di Ale (variante 9° / 22°), criteri ed esito in `docs/PROPOSTA-BOLINA.md`.
+Del 16 ottobre 2026. **La barca cambia di bolina.** Proposta (due stesure, revisione in chat sul testo completo di Day 2017), scelta di Ale (variante 9° / 22°), criteri ed esito in `docs/archivio/PROPOSTA-BOLINA.md`.
 
 - **Cosa cambia nel motore** (`js/motore.js`):
   - **resistenza indotta:** la spinta laterale ora frena, con la formula di Delft usata da Day 2017 (eq. 15): `Ri = side²·u·|u| / (π·½ρ·TE²·(u² + 0,4)²)`. Costante nuova `TE` = 0,80 m (ipotesi: dà il 14% di Day con 10 nodi). Il termine 0,4 è lo stesso dello scarroccio: senza, la barca non ripartiva da ferma;
@@ -2890,7 +2890,7 @@ Del 16 ottobre 2026. **La barca cambia di bolina.** Proposta (due stesure, revis
 
 ## 1.0.10 — il perno del segnavento vicino alla punta
 
-Del 16 ottobre 2026, da un'osservazione di Ale. **Cambia solo il disegno.** Proposta ed esito in `docs/PROPOSTA-DISEGNO-VELA.md`, ultime sezioni.
+Del 16 ottobre 2026, da un'osservazione di Ale. **Cambia solo il disegno.** Proposta ed esito in `docs/archivio/PROPOSTA-DISEGNO-VELA.md`, ultime sezioni.
 
 - **Il difetto (dalla prima versione):** il segnavento era attaccato alla testa d'albero al 70% della lunghezza verso la punta, cioè col perno più vicino alla coda. Un segnavento vero gira come una banderuola: la coda, più grande, va sottovento, quindi il perno sta verso la punta.
 - **Ora** la punta sporge 0,3 sopravento dal perno e la coda 0,7 sottovento; stessa lunghezza, stessa direzione. Con la barca sbandata un pallino scuro segna il perno in testa d'albero: senza, sbandando sopravento la freccia sembrava staccata dall'albero (Ale). I testi (lezione 4, glossario) non cambiano: la punta indica ancora da dove arriva il vento apparente.
@@ -2899,7 +2899,7 @@ Del 16 ottobre 2026, da un'osservazione di Ale. **Cambia solo il disegno.** Prop
 
 ## 1.0.9 — le raffiche secondo l'andatura
 
-Del 16 ottobre 2026 (osservazione 52). **Cambiano solo i testi:** il motore è lo stesso. Proposta, fonti, decisioni di Ale ed esito in `docs/PROPOSTA-RAFFICHE-PORTANTI.md`.
+Del 16 ottobre 2026 (osservazione 52). **Cambiano solo i testi:** il motore è lo stesso. Proposta, fonti, decisioni di Ale ed esito in `docs/archivio/PROPOSTA-RAFFICHE-PORTANTI.md`.
 
 - **Il difetto.** Al lasco e al gran lasco, in raffica, il pannello diceva di lascare anche con la vela già lascata, e con la vela tutta lasca diceva di orzare a qualunque andatura: al traverso e al lasco è il consiglio sbagliato.
 - **Ora il suggerimento dipende dall'andatura** (confini del pannello: bolina fino a 75°, traverso e lasco fino a 135°, poi gran lasco e poppa):
@@ -2917,7 +2917,7 @@ Del 16 ottobre 2026 (osservazione 52). **Cambiano solo i testi:** il motore è l
 
 ## 1.0.8 — la retromarcia senza tetto
 
-Del 16 ottobre 2026. **Scelta di Ale:** la barca all'indietro è una barca lasciata andare con la vela che sventola. Proposta, criteri ed esito in `docs/PROPOSTA-RETROMARCIA.md`; ricerca in `docs/RICERCA-RETROMARCIA.md`.
+Del 16 ottobre 2026. **Scelta di Ale:** la barca all'indietro è una barca lasciata andare con la vela che sventola. Proposta, criteri ed esito in `docs/archivio/PROPOSTA-RETROMARCIA.md`; ricerca in `docs/RICERCA-RETROMARCIA.md`.
 
 - **Cosa cambia nel motore.** Tolto il tetto `backMax` (1,2 m/s, cioè 2,3 nodi), che non aveva una fonte: anche dal laboratorio. All'indietro la barca va solo per la spinta della vela che sbatte, contro la resistenza della tabella della vasca (misurata con la prua avanti: semplificazione dichiarata). **Nessun freno di poppa** in più: non ci sono numeri. Nessuna costante nuova.
 - **Misure** (nuovo banco `tests/fisica/retromarcia.js`):
@@ -2931,7 +2931,7 @@ Del 16 ottobre 2026. **Scelta di Ale:** la barca all'indietro è una barca lasci
 
 ## 1.0.7 — la vela disegnata come un triangolo, attaccata alla testa d'albero
 
-Del 16 ottobre 2026 (osservazione 41). **Cambia solo il disegno:** la fisica è la stessa. Proposta, scelta di Ale ed esito in `docs/PROPOSTA-DISEGNO-VELA.md`.
+Del 16 ottobre 2026 (osservazione 41). **Cambia solo il disegno:** la fisica è la stessa. Proposta, scelta di Ale ed esito in `docs/archivio/PROPOSTA-DISEGNO-VELA.md`.
 
 - **Il difetto.** Vista dall'alto, la parte alta della randa era lunga quanto il boma: un cuneo largo anche in cima. Inoltre, sbandando, l'albero disegnato finiva a 5,5 × seno dello sbandamento sottovento, la cima della vela solo a 2,6 × seno, e il segnavento restava alla base dell'albero: la vela sembrava attaccata a qualcos'altro.
 - **Ora** la randa è un triangolo: base sul boma (appena gonfia), balumina dalla fine del boma alla penna (gonfia sottovento), penna in **testa d'albero**. Albero, penna e segnavento stanno nello stesso punto: sbandando, l'albero si sdraia e si porta dietro vela e segnavento. Le stecche partono dalla balumina; i filetti restano esattamente dove erano. Il gonfiore della balumina (1,6 × grasso + svergolamento) è una scelta a occhio, senza fonte. L'etichetta «randa» punta al centro del triangolo.
@@ -2940,7 +2940,7 @@ Del 16 ottobre 2026 (osservazione 41). **Cambia solo il disegno:** la fisica è 
 
 ## 1.0.6 — la resistenza dello scafo misurata in vasca
 
-Del 16 ottobre 2026. **La barca cambia:** è più veloce e vira meglio. Proposta (due stesure, due revisioni in chat), criteri ed esito in `docs/PROPOSTA-VELOCITA.md`. Scelta di Ale: si tara la barca **condotta bene**.
+Del 16 ottobre 2026. **La barca cambia:** è più veloce e vira meglio. Proposta (due stesure, due revisioni in chat), criteri ed esito in `docs/archivio/PROPOSTA-VELOCITA.md`. Scelta di Ale: si tara la barca **condotta bene**.
 
 - **Cosa cambia nel motore.** La resistenza dello scafo non è più `hullK1`·u + `hullK2`·u² + `hullK4`·u⁴ (4, 12, 0,9), che frenava da 1,45 a 2,5 volte il vero. Ora è una **tabella misurata in vasca** su uno scafo da 4,2 m (F16, F17 fig. 2, letta a occhio), da 2 a 9 nodi, più l'attrito di deriva e timone (`appDA` 0,0049 m², F17 fig. 11). Sotto i 2 nodi e sopra i 9 l'area resta quella dell'estremo (nessuna misura). `hullK1`, `hullK2`, `hullK4` non esistono più; nel laboratorio ci sono `hullScale` (1 = la vasca) e `appDA`.
 - **Errore trovato dalla chat nella prima stesura:** il «+20% per deriva e timone» era una lettura sbagliata di Day 2017. Quel 20% vale solo di bolina, e per il 14% è resistenza indotta, che nel motore non c'è.
@@ -3003,7 +3003,7 @@ Del 16 ottobre 2026. **Il gioco appare identico al pixel**, ma non chiede più n
 
 ## 1.0.4 — il laboratorio della barca
 
-Del 16 ottobre 2026. **Il gioco normale non cambia** (impronta identica al bit). Proposta, limiti misurati, criteri ed esito in `docs/PROPOSTA-LABORATORIO.md`.
+Del 16 ottobre 2026. **Il gioco normale non cambia** (impronta identica al bit). Proposta, limiti misurati, criteri ed esito in `docs/archivio/PROPOSTA-LABORATORIO.md`.
 
 - **Cos'è.** Aprendo la pagina con `#lab` in fondo all'indirizzo compare una finestra con 15 cursori sui valori della barca: velocità, virata, marcia indietro, ripartenza dall'angolo morto. Si apre e si chiude col tasto L. Serve a provare valori diversi a confronto con i video, prima dei compiti sulla barca. Non compare nel menu.
 - **Con `#lab` il gioco non salva niente:** record, medaglie, fantasmi, lezioni, quiz, esame, carriera. I progressi si leggono come sempre; quello che si fa resta in memoria fino a quando si ricarica la pagina. In alto c'è l'avviso «LABORATORIO · *profilo* · niente salvataggi».
@@ -3020,7 +3020,7 @@ Del 16 ottobre 2026. **Il gioco normale non cambia** (impronta identica al bit).
 
 ## 1.0.3 — il codice diviso in file
 
-Del 16 ottobre 2026. **Il gioco non cambia:** stesso comportamento, stessi testi, stesse immagini, misurato al bit. Proposta, criteri e decisione in `docs/PROPOSTA-DIVISIONE-CODICE.md`: manutenzione decisa da Claude Code, prima del laboratorio e delle correzioni della barca.
+Del 16 ottobre 2026. **Il gioco non cambia:** stesso comportamento, stessi testi, stesse immagini, misurato al bit. Proposta, criteri e decisione in `docs/archivio/PROPOSTA-DIVISIONE-CODICE.md`: manutenzione decisa da Claude Code, prima del laboratorio e delle correzioni della barca.
 
 - **Com'è fatto adesso.** `index.html` contiene stile e struttura della pagina (30 KB, era 244). Il codice è in `js/`, otto file caricati in ordine come script classici: `motore.js` 6 KB, `base.js` 1, `contenuti.js` 55, `gioco.js` 57, `regate.js` 35, `disegno.js` 45, `registratore.js` 15, `avvio.js` 4. Il gioco si apre ancora con un doppio clic, senza server. Il codice è **spostato, non riscritto**: i file uniti, nell'ordine, danno esattamente il testo che stava dentro il blocco unico, che è stato tolto. L'unica aggiunta sono due righe di intestazione per file. **Uno scostamento dalla proposta:** il pannello sta in `disegno.js` e non in `gioco.js`, perché nel file stava fra le regate e il disegno, e così l'ordine resta quello di prima.
 - **Nomi globali:** 292 nomi diventano globali; nessuno coincide con un nome che il browser usa già (controllato su una pagina vuota di Chromium).
@@ -3046,7 +3046,7 @@ Del 16 ottobre 2026. **Il gioco non cambia:** stesso comportamento, stessi testi
 
 ## Dopo la 1.0.2 (lavori che non cambiano il gioco)
 
-- **Pilota completo delle lezioni** (16 ottobre 2026; proposta, revisione in chat ed esito in `docs/PROPOSTA-PILOTA-LEZIONI.md`). Collaudo nuovo `tests/collaudo_pilota_lezioni.py`: tutti i 32 passi pratici, percorsi dall'inizio come un giocatore, con tre misure («a mani ferme», «guidando», «dopo un colpo lungo»). `index.html` non è cambiato. Messa a punto sui semi 1-20 (solo il pilota: sette correzioni dichiarate), conferma sui semi 21-100 senza toccarlo: «guidando» completa 2.558 corse su 2.560. Trovati, e **non corretti** (ogni caso diventerà una proposta):
+- **Pilota completo delle lezioni** (16 ottobre 2026; proposta, revisione in chat ed esito in `docs/archivio/PROPOSTA-PILOTA-LEZIONI.md`). Collaudo nuovo `tests/collaudo_pilota_lezioni.py`: tutti i 32 passi pratici, percorsi dall'inizio come un giocatore, con tre misure («a mani ferme», «guidando», «dopo un colpo lungo»). `index.html` non è cambiato. Messa a punto sui semi 1-20 (solo il pilota: sette correzioni dichiarate), conferma sui semi 21-100 senza toccarlo: «guidando» completa 2.558 corse su 2.560. Trovati, e **non corretti** (ogni caso diventerà una proposta):
   - **«Ripartire»:** la barca esce da sola dall'angolo morto in 80 corse su 80 (osservazione 45); dopo un colpo lungo il passo è già fatto in 27 su 80.
   - **«Barra sottovento»:** già fatto dopo un colpo lungo in 3 su 80, che è l'osservazione 49 riprodotta; in più il bersaglio del testo (circa 65°) sta a 2° dal bordo della finestra (67°).
   - **«Accelerando»:** ai primi filetti dritti la barca va a 3,7 nodi; ne servono più di 4.

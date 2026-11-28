@@ -4,7 +4,7 @@
 
 ## 0.24 — esame in carriera, ripassi dopo l'esame, attestato
 
-Del 14 ottobre 2026. Fetta 5 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §13). In `index.html` cambiano:
+Del 14 ottobre 2026. Fetta 5 di `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §13). In `index.html` cambiano:
 - la costante `VERSIONE` e gli stili (pulsante spento, attestato, `@media print`);
 - un riquadro nuovo `#attest`;
 - `renderEsito()`, la fine del ripasso e la scelta del suggerimento in `meriti()`;
@@ -44,7 +44,7 @@ Del 14 ottobre 2026. Fetta 5 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e 
 
 ## 0.23 — libretto dei meriti
 
-Del 14 ottobre 2026. Fetta 4 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §12). In `index.html` cambiano la costante `VERSIONE`, otto righe di stile, la tabella `MERITI` con le funzioni `meriti()` e `librettoHtml()`, una riga del menu e l'aggancio `__sv`, che ora espone `meriti`. Nel salvataggio non si scrive niente di nuovo. `step()`, lezioni, prove, regate, avversari ed esame non si toccano.
+Del 14 ottobre 2026. Fetta 4 di `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e decisioni nel §12). In `index.html` cambiano la costante `VERSIONE`, otto righe di stile, la tabella `MERITI` con le funzioni `meriti()` e `librettoHtml()`, una riga del menu e l'aggancio `__sv`, che ora espone `meriti`. Nel salvataggio non si scrive niente di nuovo. `step()`, lezioni, prove, regate, avversari ed esame non si toccano.
 
 - **Libretto, solo in carriera,** nel terzo riquadro del menu, al posto di «In arrivo» (che resta nel gioco libero):
   - quattro barre (Abilità, Conoscenza, Competizione, Esperienza), con una tacca al minimo e il numero «punti / massimo»;
@@ -87,7 +87,7 @@ Del 14 ottobre 2026. Fetta 4 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (proposta e 
 
 ## 0.22 — bivio gioco libero / carriera
 
-Del 14 ottobre 2026. Fetta 3 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (§7; proposta di dettaglio e decisioni nel §11). In `index.html` cambiano la costante `VERSIONE`, due righe di stile, il caricamento di progressi e fantasmi, l'intestazione del menu, «Azzera i progressi» e la funzione nuova `setModo`. `step()`, lezioni, prove, regate, avversari ed esame non si toccano.
+Del 14 ottobre 2026. Fetta 3 di `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (§7; proposta di dettaglio e decisioni nel §11). In `index.html` cambiano la costante `VERSIONE`, due righe di stile, il caricamento di progressi e fantasmi, l'intestazione del menu, «Azzera i progressi» e la funzione nuova `setModo`. `step()`, lezioni, prove, regate, avversari ed esame non si toccano.
 
 - **Selettore «Gioco libero | Carriera»** nell'intestazione del menu, accanto a «Glossario» (stile `.seg`, lo stesso delle impostazioni). C'è solo nel menu, quindi non si cambia modalità a metà di una prova. In carriera il menu per ora è identico a quello del gioco libero: libretto, esame salvato e attestato arrivano con le fette 4 e 5.
 - **Salvataggi separati.** Gioco libero: `scuolaVelaSim.v1` e `scuolaVelaGhost.v1`, come prima. Carriera: `scuolaVelaCarriera.v1` e `scuolaVelaGhostCarriera.v1`, che partono vuoti (niente importazione). L'ultima modalità scelta resta in `scuolaVelaModo`; se manca, o se il browser non salva, si parte in gioco libero. Tutto il resto del gioco scrive già in `progress` e `ghosts`, quindi non è cambiato.
@@ -171,7 +171,7 @@ Del 13 ottobre 2026. Osservazione 28 di `docs/OSSERVAZIONI-GIOCANDO.md`, decisio
 
 ## 0.21 — piazzamento salvato e taratura della Competizione
 
-Del 12 ottobre 2026. Fetta 2 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (§7). In `index.html` cambiano tre punti: la costante `VERSIONE`, il salvataggio del piazzamento in fondo a `updateRace` e il pilota sostituto nell'aggancio `__sv`, che esiste solo con `#collaudo`. `step()` è identica byte per byte alla 0.20.3 (3.726 byte); le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere (329 e 364 caratteri). Non toccati: `step`, `BOAT`, `bands`, `MISSIONS`, `aiControl`, `aiParams`, `targetOf`, `startSpots`, `startRace`, `raceLegs`, `contacts`, `ranking`, `QUIZ`, `openQuiz`, il testo di fine regata, record, stelle, fantasmi e `KEYV`.
+Del 12 ottobre 2026. Fetta 2 di `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (§7). In `index.html` cambiano tre punti: la costante `VERSIONE`, il salvataggio del piazzamento in fondo a `updateRace` e il pilota sostituto nell'aggancio `__sv`, che esiste solo con `#collaudo`. `step()` è identica byte per byte alla 0.20.3 (3.726 byte); le uscite di `polare.js` e `raffiche_e_virate.js` sono identiche carattere per carattere (329 e 364 caratteri). Non toccati: `step`, `BOAT`, `bands`, `MISSIONS`, `aiControl`, `aiParams`, `targetOf`, `startSpots`, `startRace`, `raceLegs`, `contacts`, `ranking`, `QUIZ`, `openQuiz`, il testo di fine regata, record, stelle, fantasmi e `KEYV`.
 
 - **Piazzamento salvato (decisione di Ale: strada B minima).** All'arrivo di una regata con avversari il gioco salva `progress.race[chiave] = { pos, n, pulita }`, con chiave `recK("r"+i) + ":" + livello` (per esempio `r0.2:principianti`, `r1.2:esperti`). Il campo `race` si crea se manca, come `quiz`. Con «nessuno» non si salva niente. Record, stelle e fantasmi restano con la chiave di prima, quindi non si azzera niente; il record dei tempi resta mescolato fra i livelli (annotato in `ROADMAP.md`, «Dopo la 1.0»).
 - **Piazzamento definitivo.** Non si salva all'istante dell'arrivo: lì `ranking()` mette dietro chi non è ancora arrivato, anche se poi arriverà con un tempo netto migliore (`fin = R.t + pen`). Si salva quando tutte le barche sono arrivate, oppure quando `R.t` raggiunge il mio `fin`: da lì in poi chi taglia la linea ha per forza un tempo netto non migliore del mio. Di solito succede subito; con una penalità si aspettano al massimo i secondi della penalità. «Pulita» si legge al mio arrivo (`regTotal() === 0`).
@@ -229,7 +229,7 @@ Del 12 ottobre 2026. Fetta 2 di `docs/PROPOSTA-ESAME-E-BREVETTO.md` (§7). In `i
   5. le due regate in parallelo, per stare nei 12 minuti a tentativo.
 - **Durate** (sandbox): `--veloce` 8 s; misura completa 6 min 22 s; `--tastiera` 12 min.
 - `tests/lancia_tutti.sh`: tre righe nuove: veloce (esito chiaro, sempre), misura (esito chiaro, lunga, saltata con `--veloce`) e tastiera (da controllare, lunga). Controllato con `bash -n`.
-- **Documenti:** `docs/COLLAUDI.md`, `docs/ROADMAP.md` («Dopo la 1.0»: testo «N° su 4» ottimistico con le penalità, record dei tempi mescolato fra i livelli), `docs/PROPOSTA-ESAME-E-BREVETTO.md` (decisione B minima, esito della fetta 2).
+- **Documenti:** `docs/COLLAUDI.md`, `docs/ROADMAP.md` («Dopo la 1.0»: testo «N° su 4» ottimistico con le penalità, record dei tempi mescolato fra i livelli), `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (decisione B minima, esito della fetta 2).
 - **Prove a mano di Ale (12 ottobre 2026).** Regata a bastone, preparazione 1 minuto, solo `r0.2:principianti`.
   - Con «nessuno»: arrivato, in `progress.race` niente. **Superata.**
   - Principianti, 4° non pulita: salvato `{pos 4, n 4, pulita false}`.
@@ -284,7 +284,7 @@ Del 12 ottobre 2026. Solo collaudi: **il gioco non cambia**. In `index.html` cam
   | PC, 6 giri della suite identici | 333,3 s | 19 | 353,6 s |
   | Sandbox, 5 giri della prova 5 | 333,4 s | 21 / 18 / 20 / 20 / 20 | 354,4 / 354,6 / — / 353,6 / 353,7 s |
 
-  Prove 1-3 uguali dappertutto. Nella sandbox la prova 5 cambia da un giro all'altro nonostante il seme fisso; la causa non è verificata. Scelta di Ale: i valori di riferimento sono quelli del suo PC, con una nota sulla sandbox, in `docs/COLLAUDI.md`, `tests/lancia_tutti.sh` e `docs/PROPOSTA-ESAME-E-BREVETTO.md`.
+  Prove 1-3 uguali dappertutto. Nella sandbox la prova 5 cambia da un giro all'altro nonostante il seme fisso; la causa non è verificata. Scelta di Ale: i valori di riferimento sono quelli del suo PC, con una nota sulla sandbox, in `docs/COLLAUDI.md`, `tests/lancia_tutti.sh` e `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md`.
 - **Partenze anticipate, nuovo criterio (decisione di Ale).** Il vecchio conteggio di `collaudo_partenze.py` contava gli avversari ancora segnati come anticipati circa 60 s dopo il via, in tempo reale e senza seme. A quel punto chi è partito presto è già tornato dietro la linea, quindi non contava le partenze anticipate allo sparo. Il numero «0 su 90 con gli esperti» della 0.17 veniva da lì.
   - **Etichetta rinominata** in «ancora segnate come anticipate a +60 s», calcolo invariato. Le uscite salvate prima di questa correzione dicono «partenze anticipate» (riepilogo) e «anticipate» (righe delle singole partenze).
   - **Nuova parte «anticipi allo sparo»**, sempre lanciata, anche con `--veloce`:
@@ -354,7 +354,7 @@ Dell'11 ottobre 2026, dalle registrazioni di Ale `sessione-20261011-1041.txt` (l
     - sotto 1 nodo da 70° in giù, dopo 6-19 s.
 
     Il passo comincia al traverso dopo «Ricomincia» e quando ci si torna da un passo di pausa.
-- **Passo 5.5 «Risalire il vento»: l'arrivo è una linea**, come nelle prove dalla 0.19. **Rivista la decisione della 0.19** («Lezione 5 invariata», `docs/PROPOSTA-LINEA-E-VISTA.md`).
+- **Passo 5.5 «Risalire il vento»: l'arrivo è una linea**, come nelle prove dalla 0.19. **Rivista la decisione della 0.19** («Lezione 5 invariata», `docs/archivio/PROPOSTA-LINEA-E-VISTA.md`).
   - La linea è 110 m controvento dal punto in cui comincia il passo, 12 m per lato (`FIN_HALF`), perpendicolare alla direzione dalla partenza del passo all'arrivo.
   - Usa la stessa `finCross` delle prove, al posto della distanza di 12 m dalla boa. Passando fuori dagli estremi compare il messaggio «Fuori dalla linea: passa tra le due boe».
   - Testi: «L'arrivo è controvento: non puoi puntarlo direttamente», «Raggiungilo a zig-zag…», «Arrivo tagliato. La scia…».
@@ -493,7 +493,7 @@ Dell'11 ottobre 2026. **Il motore non cambia**: il blocco di `step()` è identic
 
 ## 0.20 — l'esame su tutte le lezioni, come prova nel gioco libero
 
-Del 10 ottobre 2026. Prima fetta del traguardo 1.0 (`docs/PROPOSTA-ESAME-E-BREVETTO.md`, §7). Nessuna modifica alla fisica, ai testi delle lezioni, al ripasso né a `sperimentale/`.
+Del 10 ottobre 2026. Prima fetta del traguardo 1.0 (`docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md`, §7). Nessuna modifica alla fisica, ai testi delle lezioni, al ripasso né a `sperimentale/`.
 
 - **Pulsante «Esame su tutte le lezioni» acceso** nel riquadro «Ripasso ed esame» del menu («20 domande, ne servono 16»). Il riquadro «In arrivo» dice ora solo «I tornei, altri tipi di barca.»
 - **Banca minima di 26 domande** (`ESAME`, raggruppata per lezione come il ripasso): lezione 1 5, lezione 2 4, lezione 3 5, lezioni 4-6 4 ciascuna. Ogni domanda porta il titolo del passo di lezione da cui nasce. Le 29 domande del ripasso restano separate e non entrano nell'esame. Regole dei testi: nessuna cifra, niente precedenze e regole di regata, niente dubbi specifici di `CONTENUTI-DA-VERIFICARE.md`, niente testi che stanno solo nel pannello o nel glossario. La giusta è la risposta più lunga in 4 domande su 26 (15%; soglia 30%).

@@ -39,7 +39,7 @@ tests/lancia_tutti.sh --parallelo 3    # fino a 3 collaudi insieme (default: 1, 
 
 Funziona da qualunque cartella, non installa niente e controlla da solo che il venv dei collaudi e Node ci siano: se manca il venv salta i collaudi Python e dice di lanciare `tests/prepara_ambiente.sh`; se manca Node salta `polare.js` e `raffiche_e_virate.js`. Per ciascun collaudo stampa una riga con l'esito:
 
-- **OK** o **FALLITO**: per i collaudi «chiari», che escono con 1 se e solo se qualcosa non va. Dal 1 novembre 2026 («test dei test», `docs/PROPOSTA-TEST-DEI-TEST.md`) sono 59 su 64 (60 su 65 dalla 1.0.75, con `collaudo_cambia_vento.py`); la tabella con l'esito di ciascuno è in testa a `tests/lancia_tutti.sh` (campo «chiaro»/«ambiguo»).
+- **OK** o **FALLITO**: per i collaudi «chiari», che escono con 1 se e solo se qualcosa non va. Dal 1 novembre 2026 («test dei test», `docs/archivio/PROPOSTA-TEST-DEI-TEST.md`) sono 59 su 64 (60 su 65 dalla 1.0.75, con `collaudo_cambia_vento.py`); la tabella con l'esito di ciascuno è in testa a `tests/lancia_tutti.sh` (campo «chiaro»/«ambiguo»).
 - **DA CONTROLLARE**: per i 5 rimasti «ambigui» (`collaudo_pilota_lezioni.py` veloce e semi 1-100, `collaudo_competizione.py --tastiera`, `collaudo_partenze.py`, `collaudo_fasce.py`: misure o elenchi di casi noti che cambiano), che stampano numeri o righe da confrontare a mano con l'esito atteso di questa pagina (il codice di uscita, in questi script, non dice se il risultato è giusto, solo se lo script è andato in errore). Lo script indica cosa guardare.
 - **SALTATO**: per `--veloce` (collaudi lunghi: `collaudo_registro.py`, `collaudo_giro_boa.py`, `collaudo_registratore.py`, `collaudo_competizione.py` misura e tastiera) o per un ambiente non pronto.
 
@@ -304,7 +304,7 @@ Le regate usano il tempo accelerato, e ogni collaudo dura da pochi secondi a qua
 
 ## Il metro dei collaudi e le controprove (dal 1 novembre 2026)
 
-Da `docs/PROPOSTA-TEST-DEI-TEST.md`. Tre cose per sapere se un collaudo verde vuol dire qualcosa.
+Da `docs/archivio/PROPOSTA-TEST-DEI-TEST.md`. Tre cose per sapere se un collaudo verde vuol dire qualcosa.
 
 **1. Nessun controllo vero a zero casi.** `tests/metro.py` dà `metro.tutti(prove, minimo=1)` e `metro.nessuno(prove, minimo=1)`: come `all()` e `not any()`, ma falsi se le prove sono meno del minimo. Tutti gli `all(...)` dei collaudi chiari sono diventati `metro.tutti(...)`. A fine collaudo una riga `METRO:` dice quanti controlli a conteggio ci sono stati e quanti casi al minimo e al massimo; se uno è sotto il minimo lo nomina. **Chi scrive un controllo nuovo usa `metro.tutti`, non `all`.**
 

@@ -25,7 +25,7 @@ I tre nuovi hanno **una sola causa**, trovata e misurata: la descrizione della �
 
 ## 2. Il menu che scorre di 68 px: bisezione
 
-Il collaudo del quiz (9 secondi) lanciato su ogni versione: 1.0.60 verde; **1.0.61 +29 px** (la voce nuova); 1.0.62 +49 (descrizione più lunga); **1.0.65 +68 px** (descrizione ancora più lunga); 1.0.66-1.0.68 uguali. Prove in una copia temporanea: descrizione di una riga → 10 px; **una riga più `padding` delle righe da 6 a 4 px → 0 px, collaudi verdi**; descrizione vuota → 0 px. Dettagli, rimedi (R1-R4) e criteri nella proposta `docs/PROPOSTA-MENU-1360X650.md` (commit `7f4e4a7`). **Serve la scelta di Ale.**
+Il collaudo del quiz (9 secondi) lanciato su ogni versione: 1.0.60 verde; **1.0.61 +29 px** (la voce nuova); 1.0.62 +49 (descrizione più lunga); **1.0.65 +68 px** (descrizione ancora più lunga); 1.0.66-1.0.68 uguali. Prove in una copia temporanea: descrizione di una riga → 10 px; **una riga più `padding` delle righe da 6 a 4 px → 0 px, collaudi verdi**; descrizione vuota → 0 px. Dettagli, rimedi (R1-R4) e criteri nella proposta `docs/archivio/PROPOSTA-MENU-1360X650.md` (commit `7f4e4a7`). **Serve la scelta di Ale.**
 
 ## 3. Il giro interrotto delle 19:22 e il carico
 

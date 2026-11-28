@@ -72,7 +72,7 @@ J apre il boma col vento medio come le barche vere; oggi resta chiuso fino a 15 
 
 ## 7. Le due varianti sul gioco (clone, appiattimento 1,5 s): lezioni, fasce, medaglie (30 corse), regola 18, torneo completo
 
-Numeri in `docs/PROPOSTA-BARCA-MOTORE.md` §«Sul gioco». In breve: medaglie tutte OK con le fasce di oggi; torneo 26 controlli su 27 (manca solo l'uscita lenta C11 R7, già nota sul PC); regola 18 Z1 fallisce per forza, Z4 2 contatti (7,5) e 0 (7,9); lezione 6.3 23/25 (7,5) e 25/25 (7,9), ma la barca scuffia da sola 5 volte su 30.
+Numeri in `docs/archivio/PROPOSTA-BARCA-MOTORE.md` §«Sul gioco». In breve: medaglie tutte OK con le fasce di oggi; torneo 26 controlli su 27 (manca solo l'uscita lenta C11 R7, già nota sul PC); regola 18 Z1 fallisce per forza, Z4 2 contatti (7,5) e 0 (7,9); lezione 6.3 23/25 (7,5) e 25/25 (7,9), ma la barca scuffia da sola 5 volte su 30.
 
 ## 8. La vela che comincia a sbattere: fonte trovata (`a0`), e candidato K
 
