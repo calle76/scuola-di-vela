@@ -2,37 +2,13 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina sola. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/STATO-storico-novembre.md`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 27 novembre 2026, notte (gioco alla **1.3.75**, tag `v1.3.75`, invariato in questa sessione).*
+*Aggiornato: 28 novembre 2026, mattina (gioco alla **1.3.77**, tag `v1.3.77`). Le righe fino al 27 novembre sono in `archivio/STATO-storico-novembre.md`, in fondo.*
 
-- **Oss. 147 lasciata così (Ale):** tre prove sulla guida dei rivali (giro «Misura», 450 regate per gruppo), nessuna confermata sui semi di conferma; caso raro (rivale penalizzato per la 16 ogni 12-17 regate, vicino alla boa ogni 30-40). Altro caso a mure uguali nella regata di Ale delle 19:35. `sperimentale/oss-147/LEGGIMI.md`.
-- **Partenze anticipate:** `collaudo_partenze` verde (criterio (1) «esperti non più dei principianti», dichiarato: nella Scuola i richiami sono 0-1,7%). Nel torneo il 15-18% dei rivali è oltre la linea allo sparo; nelle regate vere (F147, 5908 partenze contate su 21 classifiche) il 2,0% resta OCS/UFD/BFD in classifica (campionati 2,6%, circolo 0,2%), ma chi torna non si vede: confronto non alla pari, nessun cambio. Se si riprende: contare nel gioco i rivali che non tornano.
-- **`ritiro_provvisorio` P4 Firefox:** era il collaudo (seme 6415: simulazione finita prima dell'interruzione apposta); corretto, 20 su 20 nei due browser.
-- **Regate di Ale del 27 sera** (18:03, 19:06, 19:35): nessun difetto nuovo del gioco; strambate violente col boma appena sopra 45° (scotta 49%); Rossa con 3 virate negli ultimi 20 m alla boa di bolina (voce 1b, ferma: Ale «lascia stare»); Rossa e Blu ferme alla partenza con 19-26 rinvii a testa (4B, solo annotato). Copia sul disco esterno fatta (il disco era in sola lettura: `fsck.vfat`).
-
-- **1.3.75:** sponsor col rivale dello sponsor concorrente e, al rinnovo, «migliorare il posto della stagione prima» (Ale); nel pannello «cazza (boma sotto 45°)».
-- **Giro GitHub completo sulla 1.3.71 (run 46030687708, letto per intero):** `avversari_deriva` ora passa nei due browser (tolto da `fallimenti_noti.txt`); rossi noti: `moto_mare` (ora anche Chromium, stessi numeri: 3,8 px), `giri_avversari` G12 (1 caso), `partenze` (voce noto aggiornata: richiami 0% per tutti, il criterio «esperti meno dei principianti» non può passare), `avversari1b` 5 e `regola21` K3 in Firefox. **Nuovo:** `ritiro_provvisorio` P4 in Firefox, 19 su 20, sempre il seme 6415 (anche sul PC): arrivo giusto, manca l'interruzione che la prova provoca; da guardare. Da controllare: lezioni semi 1-100 solo i noti 5.8, 6.2, 6.3.
-- **Oss. 150 (Rossa ferma dopo il via):** su 900 regate per parte (giro «Misura») i rivali fermi mentre cedono sono 2 con la guida nuova e 4 con la 1.3.70: non viene dalla 1.3.71, è un caso vecchio e raro.
-- **PC:** le ventole funzionano (Ale: col PC caldo si sentono forte; le letture a 795 giri/min erano a PC fresco, 57-61 °C). Picco di 73 °C con due collaudi di fila: sul PC un collaudo alla volta, le misure grandi su GitHub.
-
-- **1.3.74:** nel pannello «by the lee» (Ale), il nome delle fonti; nei documenti nuovi si usa questo e non «strapoggio».
-
-- **1.3.73:** «strapoggio» tolto dal gioco (Ale: nome di un evento involontario; nessuna fonte italiana sul nome): il pannello dice «oltre la poppa, col vento dal lato del boma».
-
-- **1.3.72 (oss. 149):** il pannello riconosce lo strapoggio («non cazzare»); il consiglio della 1.3.70 «se cazzi, strambi» portava a strambate violente e scuffie. **Oss. 150 da guardare (voce 2):** la Rossa quasi ferma 8 s dopo il via mentre cede alla Blu con mure diverse (forse la guida nuova della 1.3.71).
-
-- **1.3.71 (voce 2, caso 81):** chi cede a una barca con le mure diverse guarda gli scafi e il tempo per girare; 81 da 8 a 20 su 20, torneo invariato (bolina esperti +0,4 s, contatti 497 → 496 sui semi di conferma). **Giro «Misura» su GitHub** (`.github/workflows/misura.yml`): 450 regate lunghe in pochi minuti, da usare per le misure grandi invece del PC.
-
-- **1.3.70 (27 nov, voce 96):** in poppa, fuori dalle lezioni, il pannello spiega lo strapoggio (scotta tutta lasca per scendere oltre la poppa; cazzando strambi).
-
-- **1.3.69 (27 nov):** in moviola le frecce del vento reale e apparente seguono l'istante rivisto (oss. 146; `collaudo_frecce_moviola.py`, Chromium e Firefox).
-- **Regate di Ale del 27 mattina** (oss. 147-148; giocate sulla guida di prova della mattina): contatto Rossa-Blu alla boa di poppa (regola 16 mentre la Blu gira la boa, voce 2); strapoggio che «non riesce» = Ale cazzava in poppa, cioè il comando per strambare (corretto nella 1.3.70).
-
-- **Dal 27 nov push e giri GitHub li fa Claude** (solo `main` e tag, a collaudi verdi, mai `--force`; `main` protetto su GitHub dalla regola `proteggi-main`). Giro completo solo a fine blocco.
-- **Giro GitHub sulla 1.3.68 (run 45957380469, letto per intero, anche «da controllare»):** corretti nei collaudi (commit `e209993`, gioco invariato) `registro` (strambata col verso fisso, scuffia al traverso: 15/15 nei due browser) e `contatto_vero` (contatto registrato al passo dopo in una mischia a tre: metro cambiato, dichiarato). Restano: `moto_mare` Firefox (ora col seme fisso; beccheggio in poppa 3,8-4,6 px contro 4,4: solo disegno, soglia invariata), `giri_avversari` G12 Chromium (1 su 267, a 78° sul bordo della fascia esclusa), e i noti della voce 2 (`partenze`, `avversari1b` 5 Firefox, `avversari_deriva` 81; l'83 ora passa anche in Chromium), `regola21` K3 Firefox. Lezioni semi 1-100: solo i casi noti 5.8, 6.2, 6.3.
-
-- **Versioni di questa sessione:** 1.3.62 (pannello 6.3, collaudi), 1.3.63 (vela libera, «Stare fermi»), 1.3.64 (semaforo della regola 16), 1.3.65 (lasco: lascare non rallenta, fonte F146), 1.3.66 (regate lunghe 9-11 min: bastone 620 m, triangolo 470 m), 1.3.67 (suono della boa), 1.3.68 (strapoggio). Dettagli in `CHANGELOG.md`.
-- **Voci chiuse:** 85 (la strambata a vela aperta costava già: errore di misura del quinto giro), 86, 89, 91, 93, 94, 18; 17 non riprodotta.
-- **Regola nuova di Ale (27 nov):** le scelte tecniche le fa Claude e le dichiara. **A ogni cambio di barca** (e di guida dei rivali) si portano alla versione nuova i 7 confronti al bit dei collaudi (ora sulla 1.3.71).
+- **1.3.76 (regata di Lucio del 26 nov):** la barca della giuria è solida per tutti (rivali, giocatori, pilota dei collaudi); prima i rivali la attraversavano. **1.3.77:** chi la tocca gira verso dove vuole andare (prima del via verso l'interno della linea); la Verde del seme 15 (Scuola, raffiche, Firefox) di nuovo parte. Misure in `CHANGELOG.md` e `sperimentale/giuria/LEGGIMI.md`: contatti, partenze anticipate, arrivo dei rivali e coppie invariati entro le soglie, sui semi di scelta e di conferma.
+- **Voce 97 (spillo e boe attraversabili dai rivali):** due prove per renderli solidi, non adottate (rivali incollati alla boa più di 10 s in 4-6 casi per gruppo contro una soglia di 2; una volta +13,6% di partenze anticipate). In lista.
+- **Giro GitHub completo sulla 1.3.77 (run 46105782276):** letto per intero. Rossi, tutti già visti sulla 1.3.76 e con gli stessi numeri: `moto_mare` (beccheggio in poppa, solo disegno, nei due browser), `giri_avversari` G12 (1 segmento su 275 e su 287, nei due browser), `avversari1b` scenario 5 in Firefox (7 su 10). Noto: `virate2`. **Verdi ora anche in Firefox: `partenze` e `non_partite` (bastone, salti, raffiche).** `boa` verde. Da controllare: solo tempi (`torneo` C11 uscita dal menu 2,09-2,13 s contro 2 s, `riquadro_bandiere` Q7) e lezioni semi 1-100 coi casi noti 5.8 (4 su 100) e 6.2 (2 su 100).
+- **Fermi o lasciati così (Ale):** oss. 147 (tre prove, nessuna confermata); voce 87 ferma con la 88 (onde). Partenze anticipate: fonte F147 (2% OCS nelle classifiche vere), nessun cambio; `collaudo_partenze` verde col criterio dichiarato «esperti non più dei principianti».
+- **Dal 27 nov push e giri GitHub li fa Claude** (solo `main` e tag, mai `--force`). A ogni cambio della guida dei rivali i 7 confronti al bit dei collaudi passano alla versione nuova (ora `v1.3.77`). Le scelte tecniche le fa Claude e le dichiara.
 
 ## Dove siamo
 
@@ -58,7 +34,7 @@
 ## Prossimi passi (per la sessione nuova)
 
 1. **Voce 2:** caso 81 chiuso nella 1.3.71 (§13.9). Restano l'oss. 147 (rivale con la precedenza che gira la boa e prende la regola 16 «scostandosi» verso l'altra) e l'83 (verde ora). Vento sporco chiuso.
-2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 87 (lezione «andare a S», ora possibile ma senza guadagno di velocità).
+2. Voce 92: i rossi rimasti (sopra); `moto_mare` e G12 sono sul filo, peso basso. Voce 97 (spillo e boe) se si riprende con un modo nuovo.
 4. Da Ale, solo gusto: voce 82 (rivali che cambiano negli anni, nomi), voce 69 (immagini del Coach), regate con gli esperti (voce 49, Z7).
 
 ## Cosa aspetta Ale
