@@ -489,7 +489,10 @@
     // piantata nell'angolo morto: poggia e lascia sbattere la vela finché riparte
     const irons = A < ironsA && s.u < 0.6; // 44°: tra 40° e 44° una barca ferma restava sospesa senza ripartire; in partenza resta 40° (con 44° poggia troppo presto vicino alla linea), salvo chi torna dietro la linea dopo una partenza anticipata
     if (irons && gm === null) desired = twd - side * 80;
-    if (b.aggiraT > R.t) desired = b.aggiraH; /* 1.3.76: a contatto con la barca del comitato le gira attorno (giuriaOstacolo) */
+    /* 1.3.76: a contatto con la barca del comitato le gira attorno (giuriaOstacolo). 1.3.77: fra i due versi del bordo e l'allontanarsi dritto prende la direzione piu' vicina alla rotta che vuole
+       (prima: alla prua che aveva; seme 15 della Scuola nelle raffiche, Firefox: la Verde finiva in poppa lontano dalla linea e non partiva entro 60 s), mai nell'angolo morto */
+    if (b.aggiraT > R.t){ const cand = [b.aggiraN + 90, b.aggiraN - 90, b.aggiraN].filter(h => Math.abs(norm180(twd - h)) >= ai.up), ref = b.leg === 0 && b.aggiraRef != null ? b.aggiraRef : desired; /* prima di partire (o tornando dopo una partenza anticipata) attorno alla giuria si va verso l'interno della linea: la Verde arrivava da fuori della linea, oltre la giuria, e ci sbatteva contro */
+      desired = cand.length ? cand.reduce((m, h) => Math.abs(norm180(h - ref)) < Math.abs(norm180(m - ref)) ? h : m) : b.aggiraN; }
     muoviTimone(b.ctl, s, desired, ai, dt);
     let sheet = sheetFor(b.info, ai);
     if ((hold && !abbrivio) || irons) sheet = 1; // 1.1.1 (docs/PROPOSTA-PARTENZE-1B.md, B1): per prendere abbrivio la vela si regola; con la vela che sbatte la barca dell'1b
@@ -1074,10 +1077,7 @@
       let st = statoOggetto(b.S, "cb", R.cb, 0);
       if (b.urtoCb && st.d > 0.3) b.urtoCb = false;
       if (!st.urta) continue;
-      /* il bordo dal lato piu' vicino alla prua, mai nell'angolo morto */
-      const hn = Math.atan2(st.nx, -st.ny) / D2R, twd = windAt(b.S.x, b.S.y).twd, up = b.ai ? b.ai.up : 45, ok = h => Math.abs(norm180(twd - h)) >= up;
-      const t1 = hn + 90, t2 = hn - 90, [a1, a2] = Math.abs(norm180(t1 - b.S.h)) <= Math.abs(norm180(t2 - b.S.h)) ? [t1, t2] : [t2, t1];
-      b.aggiraH = ok(a1) || !ok(a2) ? a1 : a2; b.aggiraT = R.t + AGGIRA_T;
+      b.aggiraN = Math.atan2(st.nx, -st.ny) / D2R; b.aggiraT = R.t + AGGIRA_T; b.aggiraRef = bearingTo(R.cb, R.pin); /* la direzione per uscirne: il verso del bordo lo sceglie aiControl */
       if (b.me && R.giri) continue; /* la spinge boeToccate */
       if (!b.urtoCb){ b.urtoCb = true; b.S.u *= 0.6; }
       for (let k = 0; k < 12 && st.urta; k++){ b.S.x += st.nx * st.push; b.S.y += st.ny * st.push; st = statoOggetto(b.S, "cb", R.cb, 0); }
