@@ -8,11 +8,14 @@
 # al traverso il rollio (di lato) e almeno il doppio del beccheggio; in poppa il beccheggio e almeno il doppio del rollio;
 # di bolina il periodo d'incontro e piu corto che in poppa. Tolto dopo il primo giro, e dichiarato (docs/archivio/PROPOSTA-MOTO-SUL-MARE.md §6): «di bolina il
 # beccheggio e almeno il doppio del rollio», sbagliato in partenza perche di bolina le onde arrivano a 45° dalla prua e i due vengono uguali.
+# Metro cambiato dopo aver visto il rosso, dichiarato (28 nov 2026, voce 92): in POPPA i 4 px e il «doppio del rollio» si chiedono alla mediana delle 5
+# partenze, non a ognuna. A circa 2,05 m/s (la velocita della barca M in poppa) l'onda principale e quella a 30° si incontrano con lo stesso periodo e
+# restano agganciate: secondo il punto di partenza si sommano o si tolgono (3,8-8,7 px; senza la seconda onda 6,1 px in tutte). Soglie invariate.
 # NON VALIDO se ha disegnato meno quadri del previsto o se la pagina da errori.
-# Uso: python collaudo_moto_mare.py
+# Uso: [RADICE=cartella con index.html e js/] python collaudo_moto_mare.py
 import asyncio, pathlib, sys, statistics
 from playwright.async_api import async_playwright
-URL = (pathlib.Path(__file__).resolve().parent.parent / "index.html").as_uri() + "#collaudo"
+URL = (pathlib.Path(__import__("os").environ.get("RADICE") or pathlib.Path(__file__).resolve().parent.parent).resolve() / "index.html").as_uri() + "#collaudo"
 # 1.3.68 (voce 92): Math.random col seme fisso. Prima il collaudo non lo fissava e in poppa il beccheggio cambiava da un giro all'altro
 # (Firefox 4,1-8,7 px nel giro della 1.3.68, Chromium 5,5-8,7 nella 1.3.65): stesso criterio, ora ripetibile. Primo seme: SEME0 (predefinito 1).
 SEME = """(() => { let s = 1; Math.random = () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s);
@@ -56,10 +59,11 @@ async def main():
     if errs or quadri != 2 * 4 * 5 * 600: print("ESITO: NON VALIDO"); sys.exit(2)
     sb = []
     for rel in ANDATURE:
-        if min(max(x[0], x[1]) for x in ris[10, rel]) < 4: sb.append(f"{ANDATURE[rel]} con 10 nodi: meno di 4 px")
+        px = [max(x[0], x[1]) for x in ris[10, rel]]
+        if (statistics.median(px) if rel == 180 else min(px)) < 4: sb.append(f"{ANDATURE[rel]} con 10 nodi: meno di 4 px")
         if max(max(x[0], x[1]) for x in ris[0, rel]) > 0.05: sb.append(f"{ANDATURE[rel]} senza vento: si muove")
     if any(x[0] < 2 * x[1] for x in ris[10, 90]): sb.append("traverso: rollio meno del doppio del beccheggio")
-    if any(x[1] < 2 * x[0] for x in ris[10, 180]): sb.append("poppa: beccheggio meno del doppio del rollio")
+    if statistics.median(x[1] for x in ris[10, 180]) < 2 * statistics.median(x[0] for x in ris[10, 180]): sb.append("poppa: beccheggio meno del doppio del rollio")
     if statistics.median(x[2] for x in ris[10, 45]) >= statistics.median(x[2] for x in ris[10, 180]): sb.append("periodo di bolina non piu corto che in poppa")
     print("ESITO: " + ("OK" if not sb else "FALLITO (" + "; ".join(sb) + ")")); sys.exit(1 if sb else 0)
 

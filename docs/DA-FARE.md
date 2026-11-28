@@ -11,6 +11,8 @@
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
 | 92 | **Collaudi rossi rimasti dopo la barca M:** `avversari1b` 5 (Firefox), `moto_mare` (solo disegno), `giri_avversari` G12 (sul bordo della soglia), `regola21` K3 (Firefox, a volte) | `STATO.md`, `CHANGELOG.md` 1.3.62-66 | Sonnet |
+| 99 | **Oss. 155:** colpa per la regola 15 al giocatore quando a girare è l'altra, e Blu che sbaglia il giro della boa 1: riprodurre, poi correggere | `OSSERVAZIONI-GIOCANDO.md` 155 | Opus |
+| 100 | **Regola 17:** non è nel gioco (un rivale che supera da sottovento e orza oltre la rotta propria non ha colpa per la 17). Prima contare nelle regate simulate quanti contatti ci cadrebbero, poi proposta | `archivio/PROPOSTA-REGOLA-17.md` §C, `sperimentale/regola-17/LEGGIMI.md` | Opus |
 | 49 | **Regola 18:** versione A fatta (1.3.49); la B (rivali che danno spazio) «non ora», si decide con Z7 sulle regate di Ale e Lucio | `PROPOSTA-REGOLA-18.md`, `-18-B.md` | Opus |
 
 ## 2. Proposte scritte: aspettano il via o una decisione
