@@ -229,7 +229,7 @@ Del 12 ottobre 2026. Fetta 2 di `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (§
   5. le due regate in parallelo, per stare nei 12 minuti a tentativo.
 - **Durate** (sandbox): `--veloce` 8 s; misura completa 6 min 22 s; `--tastiera` 12 min.
 - `tests/lancia_tutti.sh`: tre righe nuove: veloce (esito chiaro, sempre), misura (esito chiaro, lunga, saltata con `--veloce`) e tastiera (da controllare, lunga). Controllato con `bash -n`.
-- **Documenti:** `docs/COLLAUDI.md`, `docs/ROADMAP.md` («Dopo la 1.0»: testo «N° su 4» ottimistico con le penalità, record dei tempi mescolato fra i livelli), `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (decisione B minima, esito della fetta 2).
+- **Documenti:** `docs/COLLAUDI.md`, `docs/archivio/ROADMAP.md` («Dopo la 1.0»: testo «N° su 4» ottimistico con le penalità, record dei tempi mescolato fra i livelli), `docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md` (decisione B minima, esito della fetta 2).
 - **Prove a mano di Ale (12 ottobre 2026).** Regata a bastone, preparazione 1 minuto, solo `r0.2:principianti`.
   - Con «nessuno»: arrivato, in `progress.race` niente. **Superata.**
   - Principianti, 4° non pulita: salvato `{pos 4, n 4, pulita false}`.

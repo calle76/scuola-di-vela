@@ -2,7 +2,7 @@
 
 ## Scopo e principi
 
-La Scuola di vela è un simulatore didattico per imparare la vela su una deriva. Il carteggio e il mare aperto sono previsti come espansione o gioco a parte (vedi `ROADMAP.md`). Queste decisioni guidano tutto il resto:
+La Scuola di vela è un simulatore didattico per imparare la vela su una deriva. Il carteggio e il mare aperto sono previsti come espansione o gioco a parte (vedi `archivio/ROADMAP.md`). Queste decisioni guidano tutto il resto:
 
 1. **Simulatore prima che gioco.** La fisica deve essere plausibile, perché quello che si impara deve valere anche in barca: vento apparente, filetti, barra invertita, abbrivio, sbandamento, scuffia.
 2. **Tutto sempre giocabile.** Nessuna lezione, prova o regata va sbloccata: deve essere sempre possibile provare al volo una cosa specifica. Un'eventuale modalità carriera, con progressione e barche da conquistare, sarà una modalità separata con un salvataggio suo.

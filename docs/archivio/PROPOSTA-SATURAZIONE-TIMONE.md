@@ -289,7 +289,7 @@ La prova 5 **non è riprodotta**: l'emulazione non ha le raffiche. Il −3,8 s �
 - `docs/DUBBI-E-RICERCHE.md`, riga 67;
 - `docs/MANUALE-bozza.md`, righe 104 e 120;
 - `docs/RICERCA-DATI-IMBARDATA.md`, riga 39;
-- `docs/PIANO-GENERALE.md`, righe 45, 211 e 265;
+- `docs/archivio/PIANO-GENERALE.md`, righe 45, 211 e 265;
 - `docs/COLLAUDI.md`: risultati attesi di `raffiche_e_virate.js` («virata riuscita in circa 4 s» diventa «circa 2,8 s»; a 1,9 nodi riesce).
 
 ---

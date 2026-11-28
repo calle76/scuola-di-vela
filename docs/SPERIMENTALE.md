@@ -1,6 +1,6 @@
 # Prototipi sperimentali (`sperimentale/`)
 
-Aggiornato al 4 ottobre 2026. Regole di lavoro per gli esperimenti di fisica che vivono fuori dal gioco. Oggi c'è un solo prototipo, quello del fiocco; la sua storia e le sue misure sono in `FISICA-E-TARATURE.md`, le fonti in `FONTI-PUBBLICHE.md`, il disegno dei livelli in `VISIONE-LIVELLI-E-CARRIERA.md`.
+Aggiornato al 4 ottobre 2026. Regole di lavoro per gli esperimenti di fisica che vivono fuori dal gioco. Oggi c'è un solo prototipo, quello del fiocco; la sua storia e le sue misure sono in `FISICA-E-TARATURE.md`, le fonti in `FONTI-PUBBLICHE.md`, il disegno dei livelli in `archivio/VISIONE-LIVELLI-E-CARRIERA.md`.
 
 ## A cosa servono
 

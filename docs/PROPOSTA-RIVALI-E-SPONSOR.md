@@ -68,7 +68,7 @@ Due gruppi: valori da cambiare nell'IA attuale e capacità nuove. **[da verifica
 | Rischio al giro di boa | Quanto si avvicina alla boa e agli altri | Valore |
 | Leggere le raffiche | Va dove entra il vento | Campo di vento esteso |
 | Coprire e uscire da una copertura | Toglie vento a chi è sottovento, o sa liberarsi | Cono d'ombra (c'è dalla 1.2.25) e un'IA che reagisca |
-| Scegliere le mosse in partenza | Cerca la posizione, non solo aspetta | Modello nuovo (`ROADMAP.md`, F30) |
+| Scegliere le mosse in partenza | Cerca la posizione, non solo aspetta | Modello nuovo (`archivio/ROADMAP.md`, F30) |
 | Marcare il giocatore | Reagisce a come navighi | IA che osserva gli altri |
 
 Tre principi per scegliere i tratti, **[proposta]**:

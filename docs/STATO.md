@@ -9,7 +9,7 @@
 - **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
 - **Ultime versioni:** 1.3.76-77 barca della giuria solida per tutti (`sperimentale/giuria/LEGGIMI.md`); 1.3.78-80 la Blu ora vede chi le sta quasi parallelo e ha la precedenza (voce 98, oss. 154; effetto piccolo nel torneo; regola 17 non entrata; `sperimentale/regola-17/LEGGIMI.md`).
 - **Giro GitHub completo sulla 1.3.80** (run 46138924562, letto per intero). Rossi già noti: `moto_mare` (solo disegno, due browser), `giri_avversari` G12 (1 segmento su 270-290, due browser), `avversari1b` scenario 5 in Firefox (7 su 10). `suoni_si_sentono` H5 rosso una volta, verde rilanciato. Da controllare: C11 2,42 s, lezioni 5.8, 6.2, 6.3 (casi noti).
-- **Riordino dei documenti (28 nov):** fatti lista, stato, proposte e `README.md`. Restano, col via di Ale: documenti di fondo superati (`ROADMAP`, `VISIONE`, `PIANO-GENERALE`, `PER-FABLE` e simili) e `CHANGELOG.md` vecchio in archivio. Chiuse le voci 8, 10 e 66.
+- **Riordino dei documenti (28 nov):** fatti lista, stato, proposte, `README.md` e documenti superati (ora in `archivio/`). Resta solo, volendo, il `CHANGELOG.md` vecchio in archivio. Chiuse le voci 8, 10 e 66.
 - **Fermi o lasciati così (Ale):** oss. 147; oss. 150 (rara); voce 87 con la 88 (onde); partenze anticipate (fonte F147).
 
 ## Cosa aspetta Ale

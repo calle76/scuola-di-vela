@@ -2,7 +2,7 @@
 
 **Stato: via di Ale il 16 novembre 2026; fatto e misurato (fermata 2). Esito al §8: G1, G3, G5 e G7 passano; G2 e G6 no; G4 no sui semi di scelta e sì su quelli di conferma.**
 
-15 novembre 2026, gioco alla 1.3.11. Solo documento: nessun codice del gioco né dei collaudi è stato toccato. Chiesta da `PER-FABLE.md` §3.
+15 novembre 2026, gioco alla 1.3.11. Solo documento: nessun codice del gioco né dei collaudi è stato toccato. Chiesta da `archivio/PER-FABLE.md` §3.
 
 ## 1. Il problema
 

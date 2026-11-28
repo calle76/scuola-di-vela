@@ -1,6 +1,6 @@
 # Difetti messi apposta: chi se ne accorge
 
-15 novembre 2026, gioco alla 1.3.11. Chiesto da `PER-FABLE.md` §1. Nessun difetto è entrato nel gioco: ognuno vive solo in una copia (`tests/output/controprove/…`), fatta da `tests/controprove.py`.
+15 novembre 2026, gioco alla 1.3.11. Chiesto da `archivio/PER-FABLE.md` §1. Nessun difetto è entrato nel gioco: ognuno vive solo in una copia (`tests/output/controprove/…`), fatta da `tests/controprove.py`.
 
 ## Come si è misurato
 
@@ -38,7 +38,7 @@ I collaudi rossi sono rossi **per la ragione giusta**: in ogni riga il controllo
 
 ## Note sui verdi
 
-1. **M1 e `collaudo_penalita_testo`: non è un buco.** Quel collaudo controlla che il testo dica «N penalità (+X pt)», non che i punti siano sommati. Era sbagliata l'attesa nella tabella di `PER-FABLE.md`, non il collaudo. La somma la sorveglia `collaudo_torneo`, e la vede.
+1. **M1 e `collaudo_penalita_testo`: non è un buco.** Quel collaudo controlla che il testo dica «N penalità (+X pt)», non che i punti siano sommati. Era sbagliata l'attesa nella tabella di `archivio/PER-FABLE.md`, non il collaudo. La somma la sorveglia `collaudo_torneo`, e la vede.
 2. **M3: nessuno lo vede, e con ogni probabilità non lo vedrebbe nemmeno un giocatore.** Il difetto toglie la condizione «almeno una strambata» dal conto dei giri. Ma una barca che gira di 360° nello stesso verso passa per forza da poppa, quindi stramba sempre: lo dice già `collaudo_giri` (D0: «rotazione di 360° senza virata e senza strambata: non esiste»). La condizione nel codice è una cintura di sicurezza che oggi non scatta mai. Vedi la proposta P1.
 3. **M4 e `collaudo_registro`: buco piccolo.** Il suo caso «contatto» conta i contatti e controlla che penalità e registro coincidano; il contatto che gli capita è senza colpa del giocatore sia prima sia dopo il difetto (0 penalità in tutti e due). Il difetto lo vedono già due collaudi; vedi la proposta P2.
 4. **M7 e la prova neutra del Coach: la controprova non partiva.** `collaudo_coach.py` in una copia si ferma dopo 1 secondo, per due ragioni che non c'entrano col difetto: prende il codice di riferimento con `git archive` dalla cartella in cui si trova (nella copia non c'è), e `controprove.py` non copia la cartella `img/` coi volti (K10 li vuole caricati). Per avere il risultato ho corretto le due cose **solo nelle copie** e lanciato il collaudo a mano, prima col difetto e poi senza. Vedi la proposta P3.

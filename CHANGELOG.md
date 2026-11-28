@@ -4,7 +4,7 @@ I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a 
 
 **Le versioni dalla 0.1 alla 0.19.5 sono in `docs/archivio/CHANGELOG-0.1-0.19.md`** (spostate il 13 ottobre 2026), **quelle dalla 0.20 alla 0.24 in `docs/archivio/CHANGELOG-0.20-0.24.md`** (spostate il 16 ottobre 2026); testo invariato. I rimandi degli altri documenti a «`CHANGELOG.md`, 0.2x» si trovano lì. **Dal 23 ottobre 2026 le proposte finite stanno in `docs/archivio/`**: qui sotto sono citate col percorso di allora (`docs/PROPOSTA-…`).
 
-**Nomi dei livelli:** fino alla 1.0.46 queste voci chiamano spesso «livello 2» la barca dell'1b; nelle più vecchie «livello 2» è anche il fiocco, che oggi è il livello 3 (`docs/VISIONE-LIVELLI-E-CARRIERA.md` §2).
+**Nomi dei livelli:** fino alla 1.0.46 queste voci chiamano spesso «livello 2» la barca dell'1b; nelle più vecchie «livello 2» è anche il fiocco, che oggi è il livello 3 (`docs/archivio/VISIONE-LIVELLI-E-CARRIERA.md` §2).
 
 ## Sperimentale
 
@@ -626,7 +626,7 @@ Due richieste di Ale del 16 novembre. Le regate non cambiano.
 
 ## 1.3.12 — Cinque difetti piccoli trovati rileggendo le 1.3.x
 
-Revisione del codice delle versioni 1.3.0-1.3.11 (`docs/PER-FABLE.md` §2). Le regate non cambiano.
+Revisione del codice delle versioni 1.3.0-1.3.11 (`docs/archivio/PER-FABLE.md` §2). Le regate non cambiano.
 
 - **Sponsor, salvataggi di prima della 1.3.9 con una stagione in corso** (difetto medio, provato in una pagina vera). Chi aveva già il diritto al nazionale e una stagione a metà restava senza offerte e col nazionale chiuso. Causa: finire la stagione, o aprire «Lo sponsor», creava uno sponsor vuoto, e l'offerta del gradino 3 arrivava solo a chi lo sponsor non l'aveva affatto. Ora uno sponsor vuoto (senza contratto, senza offerte, senza storia) non ferma l'offerta.
 - **Stesso caso, prime offerte:** chi ha già il diritto al nazionale riceve i gradini 2 e 3 anche se la stagione zonale che stava finendo non è fra le prime 3.

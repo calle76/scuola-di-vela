@@ -164,7 +164,7 @@ Quattro video informali (trascrizioni automatiche incollate da Ale, non viste n�
 
 ## 6. Livelli, ruoli e carriera
 
-Decisioni ancora aperte (vedi `VISIONE-LIVELLI-E-CARRIERA.md` e `ROADMAP.md`):
+Decisioni ancora aperte (vedi `archivio/VISIONE-LIVELLI-E-CARRIERA.md` e `archivio/ROADMAP.md`):
 
 - Gli aiuti (barra che torna al centro, «gira la prua», suggerimenti) valgono per i meriti in carriera?
 - Rosa dei candidati dell'equipaggio: profili, quanto cambiano, valore del tetto del bonus.

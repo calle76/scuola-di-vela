@@ -49,7 +49,7 @@ Ogni livello ha tre traguardi, decisi **prima** di cominciare la produzione:
 - **beta:** l'elenco dei contenuti che devono esserci;
 - **uscita:** taratura fatta, collaudi verdi, prova a mano, tag.
 
-**Proposta per l'1b [da decidere con Ale]**, dall'ordine di `ROADMAP.md`:
+**Proposta per l'1b [da decidere con Ale]**, dall'ordine di `archivio/ROADMAP.md`:
 - *1b alfa:* avversari con la barca dell'1b, torneo T2, replay semplice, menu, attestato e brevetto dell'1b;
 - *1b beta:* lezioni brevi dell'1b scritte e giocabili;
 - *1b uscita:* tempi delle medaglie, collaudi, prova a mano di Ale e di Lucio.

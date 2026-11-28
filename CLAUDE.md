@@ -10,7 +10,7 @@ Progetto personale e non commerciale: un simulatore didattico di vela, in un'uni
   Le intestazioni `// ====` (sezioni) e `// ---- … ----` (sottosezioni) sono la mappa: chi aggiunge una parte nuova le aggiorna. Una riga eseguita al caricamento di un file non vede le funzioni dei file caricati dopo: il codice nuovo che deve partire all'avvio va in `avvio.js`.
 - Sul metodo: `docs/METODO.md` (fasi, traguardi, revisione a fine tappa); `docs/DECISIONI.md` (decisioni prese e quanto costa cambiarle) prima di aprire un livello o una proposta grossa, e ogni decisione nuova di Ale ci va con una riga.
 - Sul prototipo del fiocco: `docs/SPERIMENTALE.md`, `docs/FISICA-E-TARATURE.md`, `docs/FONTI-PUBBLICHE.md`, `docs/CONTENUTI-DA-VERIFICARE.md`.
-- Su livelli, ruoli e carriera: `docs/VISIONE-LIVELLI-E-CARRIERA.md` e `docs/ROADMAP.md`.
+- Su livelli, ruoli e carriera: vale `docs/IL-GIOCO.md`. Il disegno di prima, superato in parte, è in `docs/archivio/` (`VISIONE-LIVELLI-E-CARRIERA.md`, `ROADMAP.md`): si apre solo per le idee sui livelli futuri.
 - Lo stato corrente sta nei documenti, non qui: non fidarti di quello che ricordi.
 - **Tenere brevi i file che si leggono all'inizio** (Ale e Claude, 17 novembre 2026): a fine lavoro **si sostituisce** la sezione «Dove siamo» di `docs/STATO.md` (una pagina, circa 6 KB) invece di aggiungere paragrafi in cima; le voci chiuse di `docs/DA-FARE.md` si tolgono e vanno in `docs/archivio/`; una voce è una riga, il dettaglio sta nella proposta o nell'osservazione.
 

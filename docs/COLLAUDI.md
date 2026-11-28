@@ -122,7 +122,7 @@ Da eseguire nella cartella `tests`. Le immagini finiscono in `tests/output/`.
 - I noti che ora passano compaiono in una riga a parte: la loro voce va tolta.
 - Per scrivere una voce nuova: `.venv-collaudi/bin/python tests/noti.py righe <file di uscita>`.
 
-**Proposta (31 ottobre 2026, da approvare, nessuna modifica a `lancia_tutti.sh`):** le «misure» lunghe (`torneo (misura)` 34 min, `distacchi` 18, `competizione (misura)` 15) si lanciano solo quando cambiano torneo, avversari o competizione; il giro di tutti i giorni è `--veloce --parallelo 3` (49 collaudi in 24 minuti, stessi esiti del sequenziale: `GIRO-30-OTT-1.0.68.md`); `collaudo_quiz.py` (9 s) dopo ogni modifica al menu o alle descrizioni delle regate.
+**Proposta (31 ottobre 2026, da approvare, nessuna modifica a `lancia_tutti.sh`):** le «misure» lunghe (`torneo (misura)` 34 min, `distacchi` 18, `competizione (misura)` 15) si lanciano solo quando cambiano torneo, avversari o competizione; il giro di tutti i giorni è `--veloce --parallelo 3` (49 collaudi in 24 minuti, stessi esiti del sequenziale: `archivio/GIRO-30-OTT-1.0.68.md`); `collaudo_quiz.py` (9 s) dopo ogni modifica al menu o alle descrizioni delle regate.
 
 | Script | Cosa verifica | Esito atteso |
 | --- | --- | --- |

@@ -64,12 +64,12 @@ La vecchia riga 441, ora righe 442-446:
 Ciascuna è sostituita da «*(Riga tolta il 13 ottobre 2026: nessuna fonte rintracciabile, probabile origine IA.)*»:
 - `docs/RICERCA-DATI-IMBARDATA.md`, riga 22: «Un lavoro CFD contraddice: stallo a 30–35°…»;
 - `docs/RICERCA-DATI-IMBARDATA.md`, riga 23: «Timonata normale in bolina: 2–5°; oltre 8° è troppa…»;
-- `docs/PIANO-GENERALE.md`, riga 211: «Contraddizione aperta: stallo… a circa 15° (F4) contro 30-35° (CFD)…».
+- `docs/archivio/PIANO-GENERALE.md`, riga 211: «Contraddizione aperta: stallo… a circa 15° (F4) contro 30-35° (CFD)…».
 
 **La stessa idea resta in tre punti, non toccati (da decidere):**
 - `docs/RICERCA-DATI-IMBARDATA.md:24`: «plausibile solo se lo stallo vero è 30–35°»;
-- `docs/PIANO-GENERALE.md:45`: «Stallo del timone (15° contro 30-35°)»;
-- `docs/PIANO-GENERALE.md:265`: «Contraddizione sullo stallo del timone (15° contro 30-35°)».
+- `docs/archivio/PIANO-GENERALE.md:45`: «Stallo del timone (15° contro 30-35°)»;
+- `docs/archivio/PIANO-GENERALE.md:265`: «Contraddizione sullo stallo del timone (15° contro 30-35°)».
 
 ---
 
@@ -228,7 +228,7 @@ git add index.html
 git add docs/archivio/PROPOSTA-SATURAZIONE-TIMONE.md
 git add docs/RAPPORTO-PROVA-SATURAZIONE.md
 git add docs/RICERCA-DATI-IMBARDATA.md
-git add docs/PIANO-GENERALE.md
+git add docs/archivio/PIANO-GENERALE.md
 ```
 
 `.codex/` e `.gitmodules` vanno lasciati fuori. Niente `git add -A` né `git add .`.

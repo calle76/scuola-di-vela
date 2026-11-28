@@ -1,6 +1,6 @@
 # Fonti pubbliche consultate
 
-Aggiornato al 7 ottobre 2026. È il registro delle fonti usate per tarare e giustificare la fisica e i contenuti. L'elenco delle affermazioni ancora da controllare resta in `CONTENUTI-DA-VERIFICARE.md`; le semplificazioni del motore in `FISICA-E-TARATURE.md`; il disegno dei livelli in `VISIONE-LIVELLI-E-CARRIERA.md`.
+Aggiornato al 7 ottobre 2026. È il registro delle fonti usate per tarare e giustificare la fisica e i contenuti. L'elenco delle affermazioni ancora da controllare resta in `CONTENUTI-DA-VERIFICARE.md`; le semplificazioni del motore in `FISICA-E-TARATURE.md`; il disegno dei livelli in `archivio/VISIONE-LIVELLI-E-CARRIERA.md`.
 
 ## Regole d'uso
 
