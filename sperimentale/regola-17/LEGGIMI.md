@@ -79,3 +79,14 @@ Il giro completo sulla 1.3.78 (run 46120775438) ha dato due rossi nuovi in Chrom
 - `collaudo_avversari1b` scenario 5 (tre rivali alla boa): 10 → 8 su 10.
 
 La regola ora vale solo con `leg >= 1` e a più di 40 m dalla boa da girare; lo scarto parte dalla rotta voluta. Misure contro la 1.3.77 (run 46126322329 e 46126325088): tutti i criteri passano (numeri in `CHANGELOG.md` 1.3.79). **Effetto nel torneo non chiaro:** contatti dopo un sorpasso da sottovento 71 → 55 (scelta) e 53 → 54 (conferma). La scena lo mostra (14 e 11 → 0 su 20), il torneo no: lì molti di quei contatti sono vicino alla linea o alle boe, dove ora la regola non vale, oppure il colpevole è il pilota che stringe.
+
+## 1.3.80: solo stesse mure, non verso chi sconta, lontano anche dalla linea (`v98-1380.patch`, sopra la 1.3.79)
+
+Dal giro sulla 1.3.79 (cinque pezzi su otto; gli altri li ha annullati il giro programmato) due rossi nuovi in Firefox, causati dalla regola (confronto con la 1.3.77 sul PC, seme 405):
+
+- `collaudo_giri` D2: la Blu mure a dritta, con la precedenza su due barche mure a sinistra, si scostava; due contatti nuovi (27,2 e 28,4 s). Fra mure diverse chi ha la precedenza tiene la rotta (regola 16). → solo stesse mure.
+- `collaudo_regola21` K4: la storia si separava già a 10-15 m dalla linea, subito dopo il via; il giocatore non arrivava a scontare. → anche a 40 m o più dalla linea. In più la regola non vale verso chi sconta o torna dietro la linea (regola 21); da sola questa parte non bastava per il seme 405.
+
+Misure contro la 1.3.77 (run 46136864120 e 46136866725): tutti i criteri passano. Contatti dopo un sorpasso da sottovento 71 → 66 e 53 → 50: nel torneo l'effetto è piccolo; la scena resta 14 e 11 → 0.
+
+**In tutto, quattro versioni:** B1 (anche chi cede: arrivo e coppie fuori soglia), B2 = 1.3.78 (giro: non partite e boa), 1.3.79 (giro: D2 e K4), 1.3.80. Ogni limite viene da un caso visto nel giro, con la causa letta nella traccia.
