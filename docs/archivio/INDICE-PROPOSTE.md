@@ -135,3 +135,4 @@ Proposte di voci chiuse, superate o lasciate ferme senza una voce in `../DA-FARE
 | [`PROPOSTA-VIRATA-1B.md`](PROPOSTA-VIRATA-1B.md) | la virata della barca dell'1b (freccia agile, Maiusc che frena da veloce) | — | 1.0.43 |
 | [`PROPOSTA-VIRATE-AVVERSARI.md`](PROPOSTA-VIRATE-AVVERSARI.md) | la prua che va oltre la bolina dopo la virata (livello 2), giocatore e avversari | Fermata 2: cosa è stato fatto e cosa è uscito (19 ottobre 2026, versione 1.0.31, non ancora committa | 1.0.31 |
 | [`PROPOSTA-VOLUME-ZOOM.md`](PROPOSTA-VOLUME-ZOOM.md) | il volume dei suoni segue lo zoom, via il tasto del volume | — | — |
+| [`PROPOSTA-PERCORSO-LUNGO.md`](PROPOSTA-PERCORSO-LUNGO.md) | regate più lunghe e raffiche che si sentono | Esito (20 novembre 2026, notte; versione 1.3.26) | 1.3.26 |

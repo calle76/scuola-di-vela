@@ -2,7 +2,7 @@
 
 **L'ordine lo decide Ale.** **Una voce, una riga:** il dettaglio sta nella proposta o nell'osservazione indicata. Le voci fatte si tolgono (restano nel `CHANGELOG.md` e in `archivio/`). Testo lungo di prima del riordino: `archivio/DA-FARE-lunga-28nov.md`.
 
-**Regola di Ale (22 nov): prima ciò su cui si tarano le altre voci.** Ordine: avversari 2 → 74 → 49 → Coach 69, 66 → medaglie e tempi (7).
+**Regola di Ale (22 nov): prima ciò su cui si tarano le altre voci.** Ordine: avversari 2 → 74 → 49 → Coach 69 → medaglie e tempi (7).
 **Regola di Ale (17 nov):** i «via» grossi tutti insieme quando tornano i crediti. Le voci sugli avversari si misurano sulle regate del torneo; la Scuola basta che non peggiori.
 **Mod.:** Opus per motore, guida dei rivali, fisica e cause; Sonnet per testi, collaudi, proposte, correzioni piccole.
 
@@ -21,7 +21,6 @@
 | 74 | **Storico dei rivali:** fatti passo 1, frase del Coach, marcatura; resta (consigliata) la riga a fine torneo | `PROPOSTA-STORICO-RIVALI.md`, `PROPOSTA-MARCATURA.md` | Opus |
 | 82 | **Rivali che crescono:** misurata, alcune soglie non passano; aspetta scala, ricambio, nomi e via | `PROPOSTA-RIVALI-CHE-CRESCONO.md` | Opus |
 | 69 | **Più espressioni del Coach:** quali e quando si decide con Ale, le immagini le fa Ale | `PROPOSTA-COACH-ESPRESSIONI.md` | Sonnet |
-| 66 | **Dopo le regate lunghe:** resta solo che in raffica la barca guadagna poco (+0,2/+0,6 nodi); il resto chiuso o lasciato così | `PROPOSTA-PERCORSO-LUNGO.md` §Esito | Opus |
 | 88 | **Onde nel motore: ferma** (il banco non passa); serve una misura vera di una deriva in onda | `PROPOSTA-ONDE.md`, `sperimentale/onde-88/BANCO-ONDE.md` | Opus |
 
 ## 3. Da guardare

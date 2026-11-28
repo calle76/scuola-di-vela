@@ -481,7 +481,7 @@ Da dove viene: idea di Ale del 20 novembre («il coach che appare con diverse es
 
 ## 1.3.26 — Regate lunghe in Deriva: circa 10 minuti, tre regate per torneo, raffiche come zone (voce 63)
 
-Da dove viene: `docs/PROPOSTA-PERCORSO-LUNGO.md` e le risposte di Ale del 20 novembre (solo Deriva; 9-11 minuti; tre regate per tappa e per torneo; «VIA col lavoro autonomo»).
+Da dove viene: `docs/archivio/PROPOSTA-PERCORSO-LUNGO.md` e le risposte di Ale del 20 novembre (solo Deriva; 9-11 minuti; tre regate per tappa e per torneo; «VIA col lavoro autonomo»).
 
 - **Lati:** nel torneo, nella stagione e nella finale la bolina del bastone passa da 140 a **560 m** e il lato del triangolo da 140 a **460 m** (`LATO_BAS`, `LATO_TRI`). Misurati col pilota per stare a metà dei 9-11 minuti. La Scuola e le altre regate di Deriva (salti di vento, giri) non cambiano.
 - **Tre regate per torneo** (`TOR_N_LUNGO`): bastone a punti, triangolo a punti, bastone coi giri. **Con tre regate niente scarto**, che resta dalla quarta regata (scelta mia, di solito lo scarto parte da 4 regate: da guardare con Ale). Ogni torneo si ricorda come è nato (`T.n`, `T.lungo`): **un torneo già cominciato resta di 4 regate corte**. Testi: lezione 21, riepilogo, glossario «Scarto», riquadro del torneo, menu, benvenuto.
