@@ -1,0 +1,10 @@
+--- a/js/regate.js	2026-11-28 17:12:41.177974320 +0100
++++ b/js/regate.js	2026-11-28 17:12:41.181974402 +0100
+@@ -464,6 +464,7 @@
+       if (tk && !vicino && (sgn(dd) === tk ? Math.abs(dd) > 172 : R.t - (b.tGybe ?? -1e9) < GYBE_MIN || Math.abs(dd) > 172)) desired = twd - tk * 172; }
+     // chi deve cedere si scosta (cedeAvv1b, qui sotto). Fino alla 1.0.78 la barca dell'1a aveva qui una regola 10 sua e uno scarto da qualsiasi barca davanti
+     if (R.giri && hold && b.gDebt > 0 && !b.ocs) hold = false; // 1.2.18 (docs/PROPOSTA-GIRI-AVVERSARI-GRUPPO.md §12, Ale): con un debito di giri non si aspetta fermi, anche a costo di rovinare la partenza
++    b.dProp = desired; /* voce 100, solo misura: la rotta propria prima di cedere */
+     if (!hold) desired = cedeAvv1b(b, desired, twd, side, ai);
+     b.ndCede = !hold && b.cedeA && R.t >= 0 ? desired : null; /* la rotta su cui sta cedendo: passaggioScafi la usa per prevedere questa barca */
+     if (R.giri && !hold){ const sp = giroSpazioAI(b, desired, twd, ai); if (sp !== null) desired = sp; } // 1.2.18: con un debito e il gruppo vicino, si scosta il minimo che basta per avere spazio
