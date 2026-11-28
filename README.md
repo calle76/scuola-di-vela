@@ -1,105 +1,92 @@
 # Scuola di vela
 
-Un simulatore didattico per imparare a governare una piccola barca a vela (una deriva). Il carteggio e la navigazione in mare aperto sono previsti come espansione a parte. È un progetto personale e non commerciale, nato per studiare la vela partendo da zero.
+Un simulatore didattico per imparare a governare una piccola barca a vela (una deriva in singolo) e per fare le prime regate. È un progetto personale e non commerciale, nato per studiare la vela partendo da zero. Prima viene la simulazione, poi il gioco.
 
-Il gioco è una pagina sola, `index.html`, con il codice nella cartella `js/`: si apre in un browser recente senza installare nulla.
+**Si gioca qui:** https://calle76.github.io/scuola-di-vela/ — su computer, con la tastiera (non è fatto per il telefono).
 
-> **Attenzione.** Il «Brevetto della Scuola di vela» e tutti i contenuti del gioco non hanno alcun valore legale e non sostituiscono un corso di vela né la patente nautica. I contenuti tecnici sono in fase di verifica: vedi [`docs/CONTENUTI-DA-VERIFICARE.md`](docs/CONTENUTI-DA-VERIFICARE.md).
+> **Attenzione.** L'attestato e tutti i contenuti del gioco non hanno alcun valore legale e non sostituiscono un corso di vela né la patente nautica. Nessuna persona esperta li ha controllati: le verifiche si fanno su fonti scritte e video, e diverse cose sono semplificate o ancora da confermare (vedi [`docs/CONTENUTI-DA-VERIFICARE.md`](docs/CONTENUTI-DA-VERIFICARE.md)).
 
-## Come si gioca
+## Cosa contiene
 
-- **In locale:** scarica il repository (servono `index.html` e le cartelle `js/` e `fonts/`) e apri `index.html` con il browser (doppio clic). Con lo zoom lontano Firefox su Linux può rallentare; Chrome è più fluido. Per avere Chrome a schermo intero anche dove F11 non regge: `google-chrome --kiosk --user-data-dir="$HOME/.config/scuola-vela-chrome" "file://$HOME/scuola-di-vela/index.html"` (si esce con Alt+F4).
-- **Online:** se il repository ha GitHub Pages attivo, il gioco è all'indirizzo `https://<utente>.github.io/<nome-repository>/`.
+**La scuola**, il primo livello:
 
-Il gioco è pensato per computer con tastiera. Non è ottimizzato per telefono.
+- 20 lezioni in tre gruppi (la barca; vento e raffiche; regole e partenze), ognuna con il suo ripasso;
+- 5 prove a tempo con medaglie oro, argento e bronzo;
+- regate contro tre barche guidate dal computer o contro il proprio «fantasma»;
+- navigazione libera, esame finale (34 domande, ne servono 28) e glossario.
 
-### Cosa contiene
+**Deriva**, il secondo livello, con la stessa barca:
 
-| Sezione | Contenuto |
+- lezioni 21-25 (il torneo, rivedere la regata, la layline, la precedenza, lo spazio alla boa) e la prova dei giri di penalità;
+- allenamento: una regata singola, scegliendo percorso, penalità, numero di barche e rivali;
+- torneo di tre regate, stagione del circuito zonale e nazionale (anche con un amico, scambiandosi un file) e una finale;
+- un Coach che dà suggerimenti in regata, la moviola per rivederla e la rotta ottimale a regata finita;
+- alcune regole di precedenza in più, il cono d'ombra delle vele e gli sponsor in carriera.
+
+**Gioco libero o carriera.** Nel gioco libero è tutto aperto. In carriera ci sono i meriti, l'attestato della scuola (senza valore legale) e poi Deriva. I due salvataggi sono separati.
+
+## Come si gioca in locale
+
+Scarica il repository (servono `index.html` e le cartelle `js/`, `fonts/` e `img/`) e apri `index.html` con un browser recente: non si installa nulla. Con lo zoom lontano Firefox su Linux può rallentare; Chrome è più fluido. Per Chrome a schermo intero:
+
+```
+google-chrome --kiosk --user-data-dir="$HOME/.config/scuola-vela-chrome" "file://$HOME/scuola-di-vela/index.html"
+```
+
+(si esce con Alt+F4; cambia il percorso se la cartella è altrove).
+
+## Comandi
+
+| Tasto | Cosa fa |
 | --- | --- |
-| Navigazione libera | Vento, forza e raffiche a scelta, nessun obiettivo. |
-| Lezioni 1–6 | La barca e il vento; il timone; andature e filetti; vento reale e apparente; virata e strambata; raffiche e scuffia. |
-| Prove 1–5 | Traverso, lasco e poppa, risalire il vento, giro di boa, percorso nelle raffiche. Fasce di tempo oro, argento e bronzo. |
-| Regate | Regata a bastone e regata nelle raffiche, contro tre avversari guidati dal computer o in solitaria contro il proprio fantasma. |
-| Ripasso | 29 domande a scelta multipla sulle sei lezioni. |
-| Esame | 20 domande estratte da una banca separata dai ripassi; servono 16 risposte giuste. |
-| Gioco libero e carriera | Due salvataggi separati. In carriera il libretto conta i meriti (abilità, conoscenza, competizione, esperienza), dice cosa manca e suggerisce cosa fare; con i meriti e l'esame superato si ottiene l'attestato della scuola, stampabile e **senza valore legale**. |
-| Registro degli errori | Scuffie, strambate a vela aperta, barca piantata nel vento, boe girate dal lato sbagliato, contatti e partenze irregolari: contati durante lezioni, prove e regate. ★ nel menu per le prove e regate completate senza errori. |
-| Glossario | 45 termini nautici con definizione. |
-
-Tutto è sempre accessibile: nessuna lezione o regata va sbloccata, nemmeno in carriera.
-
-**Stato:** versione 1.0.3 (16 ottobre 2026), la 1.0 con correzioni e manutenzione: il livello 1 giocabile dall'inizio alla fine, ancora da rifinire (vedi `docs/ROADMAP.md`). Il livello 2 sarà dedicato alle regole di regata e di precedenza, sulla stessa barca. Le correzioni della barca (resistenza dello scafo, timone), delle regole di regata e del disegno vengono nelle versioni 1.x: vedi `docs/ROADMAP.md`.
-
-### Comandi
-
-| Tasto | Azione |
-| --- | --- |
-| ← → | Muovono la barra del timone (nelle impostazioni si può scegliere «girano la prua», più semplice) |
-| ↑ ↓ | Cazza e lasca la scotta |
+| ← → | Barra del timone. Si spinge dalla parte opposta a quella in cui si vuole girare; nelle impostazioni si può scegliere «girano la prua», più facile |
+| Maiusc + freccia | Barra fino in fondo |
 | Spazio | Barra al centro |
-| A | Raddrizza la barca dopo una scuffia (fino alla 1.0.26 era R) |
-| Invio | Parte dopo aver letto le istruzioni di una prova o di una regata |
-| W S | Cazza e lasca con i pulsanti della lezione 1 (anche ↑ ↓) |
-| Rotella o + − | Zoom |
+| ↑ ↓ (o W S) | Cazza e lasca la scotta |
+| Z (tenuto) | Spinge il boma fuori |
+| A | Raddrizza la barca dopo una scuffia |
+| Q (tenuto) | Vista del campo |
+| 1 2, rotella | Zoom avanti e indietro |
+| Invio | Parte, dopo le istruzioni |
+| M | Segna un momento nel file della registrazione |
+| O | In regata, segna un momento da rivedere nella moviola |
 
-Il menu principale è diviso in riquadri: Scuola (lezioni e prove nell'ordine consigliato), Regate, Navigazione libera, Ripasso ed esame.
-
-In basso a sinistra ci sono l'indicatore di sbandamento e la rosa dell'angolo morto (vento sempre in alto, settore rosso di 40° per lato); la freccia verde mostra la direzione in cui la barca si muove davvero. Le impostazioni si aprono con il pulsante ⚙ in alto a destra. Su uno schermo piccolo conviene il tasto F11 (schermo intero).
-
-La barra funziona come nella realtà: si spinge dalla parte opposta a quella in cui si vuole girare la prua. Una freccia gialla sulla prua mostra da che parte la barca sta girando davvero.
-
-## Struttura del repository
-
-```
-index.html                         la pagina del gioco (stile e struttura)
-js/                                il codice: motore fisico, contenuti, gioco, regate, disegno, registratore, avvio
-README.md                          questo file
-CHANGELOG.md                       storia delle versioni e dei difetti corretti
-LICENSE                            licenza
-tests/                             collaudi automatici (browser) e della fisica (Node.js)
-sperimentale/                      prototipi fuori dal gioco (oggi: il fiocco)
-```
-
-Documenti in `docs/`, divisi per uso:
-
-```
-Come è fatto il gioco
-  PROGETTO.md                      principi, architettura del codice, decisioni
-  FISICA-E-TARATURE.md             modello fisico, costanti e risultati delle tarature
-  COLLAUDI.md                      come rilanciare i collaudi automatici
-  SPERIMENTALE.md                  regole per i prototipi in sperimentale/
-  MANUALE-bozza.md                 cosa il gioco insegna, simula bene o semplifica
-
-Fonti e verifiche (non c'è una persona esperta: valgono fonti scritte e video)
-  FONTI-PUBBLICHE.md               fonti usate, con quello che dicono
-  CONTENUTI-DA-VERIFICARE.md       affermazioni nautiche del gioco da confermare
-  DUBBI-E-RICERCHE.md              domande aperte e ricerche da fare
-  SCHEDATURA-FONTI.md              schede dei PDF e dei video consultati
-  docs/archivio/RICERCA-DATI-IMBARDATA.md        ricerca sui dati per un motore dinamico
-  REGOLE-DI-REGATA.md              regolamento di regata vero a confronto con il gioco
-
-Dove si va
-  ROADMAP.md                       cosa fare dopo, in ordine di priorità
-  PIANO-GENERALE.md                piano dei livelli fino alla 1.0 (bozza)
-  VISIONE-LIVELLI-E-CARRIERA.md    visione di livelli, ruoli e carriera
-  OSSERVAZIONI-GIOCANDO.md         diario delle prove di gioco
-
-Proposte aperte
-  docs/archivio/PROPOSTA-RESISTENZA-SCAFO.md     prossimo compito di fisica: resistenza dello scafo
-  docs/archivio/PROPOSTA-LABORATORIO.md          pannello nascosto per provare profili della barca
-  docs/archivio/PROPOSTA-ESAME-E-BREVETTO.md     esame e brevetto (in parte fatta nella 0.20 e 0.21)
-
-archivio/                          proposte chiuse o prove non adottate, tenute per memoria
-```
+Le impostazioni si aprono col pulsante ⚙: aiuti (suggerimenti, frecce del vento, semaforo delle precedenze, scotta automatica e altri), vista, suoni.
 
 ## Salvataggi
 
-Progressi, record, punteggi dei quiz e «fantasmi» sono salvati nel browser (`localStorage`), separatamente per ogni indirizzo: la versione aperta in locale e quella su GitHub Pages hanno salvataggi diversi.
+Progressi, record e fantasmi stanno nel browser, separati per ogni indirizzo: la copia in locale e quella online hanno salvataggi diversi. La carriera si può salvare in un file e ricaricare. Le regate vengono registrate nel browser e si possono scaricare.
+
+## Cartelle e documenti
+
+```
+index.html, js/      il gioco
+fonts/, img/         caratteri e immagini
+tests/               collaudi automatici nel browser e prove della fisica (Node.js)
+sperimentale/        prototipi e misure fuori dal gioco
+docs/                documenti
+CHANGELOG.md         storia delle versioni e dei difetti corretti
+```
+
+I documenti principali:
+
+| Documento | Cosa dice |
+| --- | --- |
+| [`docs/STATO.md`](docs/STATO.md) | A che punto è il lavoro |
+| [`docs/DA-FARE.md`](docs/DA-FARE.md) | Cosa resta da fare |
+| [`docs/IL-GIOCO.md`](docs/IL-GIOCO.md) | Com'è fatto il gioco, in una pagina |
+| [`docs/PROGETTO.md`](docs/PROGETTO.md) | Principi |
+| [`docs/FISICA-E-TARATURE.md`](docs/FISICA-E-TARATURE.md) | Modello fisico e tarature |
+| [`docs/FONTI-PUBBLICHE.md`](docs/FONTI-PUBBLICHE.md) | Fonti usate |
+| [`docs/COLLAUDI.md`](docs/COLLAUDI.md) | Come rilanciare i collaudi |
+
+Le proposte ancora aperte sono in `docs/`; quelle chiuse in `docs/archivio/`, con un [indice](docs/archivio/INDICE-PROPOSTE.md).
 
 ## Crediti
 
-- Caratteri tipografici: Barlow Semi Condensed (© 2017 The Barlow Project Authors) e Source Serif 4 (© 2014 The Source Serif 4 Project Authors), licenza SIL Open Font License 1.1. Dalla 1.0.5 i file stanno nella cartella `fonts/`, con il testo delle licenze; sono quelli distribuiti da Google Fonts, non modificati.
+- Caratteri: Barlow Semi Condensed (© 2017 The Barlow Project Authors) e Source Serif 4 (© 2014 The Source Serif 4 Project Authors), licenza SIL Open Font License 1.1; file e testi delle licenze in `fonts/`.
+- Suoni della vela e dell'acqua: registrazioni di Freesound con licenza CC0 1.0 (autori e indirizzi in `docs/FONTI-PUBBLICHE.md`, F42 e F43).
+- Immagini del Coach: realizzate con strumenti di intelligenza artificiale.
 - Progetto sviluppato con l'aiuto di Claude (Anthropic).
 
 ## Licenza
