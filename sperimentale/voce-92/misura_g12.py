@@ -6,7 +6,7 @@ QUI = pathlib.Path(__file__).resolve()
 TESTS = QUI.parents[2] / "tests"
 sys.path.insert(0, str(TESTS))
 ns = {"__file__": str(TESTS / "collaudo_giri_avversari.py"), "__name__": "g12"}
-exec((TESTS / "collaudo_giri_avversari.py").read_text(), ns)
+exec((TESTS / "collaudo_giri_avversari.py").read_text().replace("\nasyncio.run(main())", ""), ns)   # senza l'avvio del collaudo
 
 async def main():
     a, z = map(int, sys.argv[sys.argv.index("--semi") + 1].split("-"))
