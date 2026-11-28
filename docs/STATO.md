@@ -10,13 +10,13 @@
 - **Pomeriggio del 28:** 1.3.81 (scritta del vento); voce 92: corretti `moto_mare` e G12; dalle regate di Ale nascono oss. 155-156 e voci 99-101.
 - **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
 - **Ultime versioni:** 1.3.76-77 barca della giuria solida per tutti (`sperimentale/giuria/LEGGIMI.md`); 1.3.78-80 la Blu ora vede chi le sta quasi parallelo e ha la precedenza (voce 98, oss. 154; effetto piccolo nel torneo; regola 17 non entrata; `sperimentale/regola-17/LEGGIMI.md`).
-- **Giro GitHub completo sulla 1.3.80** (run 46138924562, letto per intero). Rossi già noti: `moto_mare` (solo disegno, due browser), `giri_avversari` G12 (1 segmento su 270-290, due browser), `avversari1b` scenario 5 in Firefox (7 su 10). `suoni_si_sentono` H5 rosso una volta, verde rilanciato. Da controllare: C11 2,42 s, lezioni 5.8, 6.2, 6.3 (casi noti).
+- **Giro GitHub completo sulla 1.3.82** (run 46166677252, letto per intero): unico rosso `avversari1b` scenario 5 in Firefox (7 su 10, voce 92, decide Ale). Da controllare, casi noti: C11 2,12 s e Q7 (tempi), lezioni 5.8 (4/100) e 6.2 (2/100). Verdi `moto_mare`, G12, `regola21`, `suoni_si_sentono`. Proposta nuova: banco delle precedenze (voce 102, con regola 17 e zig-zag dei rivali).
 - **Riordino dei documenti (28 nov):** fatti lista, stato, proposte, `README.md` e documenti superati (ora in `archivio/`). Resta solo, volendo, il `CHANGELOG.md` vecchio in archivio. Chiuse le voci 8, 10 e 66.
 - **Fermi o lasciati così (Ale):** oss. 147; oss. 150 (rara); voce 87 con la 88 (onde); partenze anticipate (fonte F147).
 
 ## Cosa aspetta Ale
 
-- **Due decisioni dalla sera del 28:** voce 92 (accettare la correzione dello scenario 5 con +7/+4 non arrivati su 900 regate, o lasciare il collaudo rosso in Firefox) e voce 100 (chiudere la regola 17).
+- **Due decisioni dalla sera del 28:** voce 92 (accettare la correzione dello scenario 5 con +7/+4 non arrivati su 900 regate, o lasciare il collaudo rosso in Firefox) (voce 100, regola 17: si riguarda col banco delle precedenze, voce 102).
 - **Voce 82:** ordine e scala, ricambio dei rivali sì o no, 3 nomi, poi il via.
 - **Regate di Ale e Lucio** (Deriva, Allenamento, rivali esperti): tipo A bastone, sul punteggio, 4 barche, 2 a testa (voce 2); tipo B triangolo, giri, 6 barche, 3 a testa (regola 18, Z7). Tasto M sui momenti alla boa, scaricare dopo ogni regata (restano le ultime 5), a mano una riga per ogni M e chi ha giocato.
 - **Lucio:** il finale dell'oss. 135 e rileggere la lezione 11 (testo del messaggio dato ad Ale il 28 nov).

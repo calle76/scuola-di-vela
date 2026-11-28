@@ -11,7 +11,7 @@
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
 | 92 | **Collaudi rossi rimasti:** `avversari1b` scenario 5 in Firefox (7 su 10): causa trovata e correzione provata (9 su 10) ma rivali non arrivati +7 e +4 su 900 regate: **Ale decide** se accettarla; `suoni_si_sentono` H5 a volte, `regola21` K3 (Firefox, a volte) | `PROPOSTA-VOCE-92-BOA.md` | Opus |
-| 100 | **Regola 17: misurata, non conviene** (1 contatto su 900 regate cambierebbe colpa, mai del giocatore). **Ale:** chiuderla? | `sperimentale/voce-100/LEGGIMI.md` | — |
+| 100 | **Regola 17: misurata, non conviene** (1 contatto su 900 regate cambierebbe colpa, mai del giocatore). Si riguarda col banco (voce 102, famiglia F3s) prima di chiuderla | `sperimentale/voce-100/LEGGIMI.md`, `PROPOSTA-BANCO-PRECEDENZE.md` | — |
 | 101 | **Oss. 156:** la marcatura è annunciata dal Coach ma quasi non succede: o marca di più (anche da dietro, o più lontano) o si dice solo quando comincia. Da decidere nel brainstorming | `PROPOSTA-MARCATURA.md`, oss. 156 | Opus |
 | 49 | **Regola 18:** versione A fatta (1.3.49); la B (rivali che danno spazio) «non ora», si decide con Z7 sulle regate di Ale e Lucio | `PROPOSTA-REGOLA-18.md`, `-18-B.md` | Opus |
 
@@ -19,6 +19,7 @@
 
 | # | Cosa | Dove | Mod. |
 | --- | --- | --- | --- |
+| 102 | **Banco delle precedenze** (idea di Ale, 28 nov): migliaia di scene piccole, pagelle di comportamento e giuria, file come le regate; da discutere nel brainstorming, poi sessione nuova | `PROPOSTA-BANCO-PRECEDENZE.md` | Opus |
 | 2 | **Avversari:** bolina, vento sporco e caso 81 chiusi; oss. 147 e 150 lasciate così. Si riapre se nelle regate di Ale e Lucio gli esperti sono troppo facili | `PROPOSTA-AVVERSARI-BOLINA.md` §17-18, `-DERIVA.md` §13 | Opus |
 | 74 | **Storico dei rivali:** fatti passo 1, frase del Coach, marcatura; resta (consigliata) la riga a fine torneo | `PROPOSTA-STORICO-RIVALI.md`, `PROPOSTA-MARCATURA.md` | Opus |
 | 82 | **Rivali che crescono:** misurata, alcune soglie non passano; aspetta scala, ricambio, nomi e via | `PROPOSTA-RIVALI-CHE-CRESCONO.md` | Opus |
