@@ -6,6 +6,12 @@ I difetti sono riportati con la causa, perché ricordare come sono nati aiuta a 
 
 **Nomi dei livelli:** fino alla 1.0.46 queste voci chiamano spesso «livello 2» la barca dell'1b; nelle più vecchie «livello 2» è anche il fiocco, che oggi è il livello 3 (`docs/archivio/VISIONE-LIVELLI-E-CARRIERA.md` §2).
 
+## 1.3.81 — La scritta del vento un po' più in basso
+
+- **Perché (Ale, 28 novembre, foto `Nord.png`):** con la bussola girata con la N in basso, la lettera toccava la scritta del vento.
+- **Cosa cambia:** la scritta del vento, e la R della registrazione sulla stessa riga, 10 px più in basso. La bussola non si muove. Solo disegno.
+- **Collaudi:** `collaudo_aiuto_scarso.py` misura la scritta del vento alla nuova altezza. Voce 92: `collaudo_moto_mare.py` in poppa usa la mediana delle 5 partenze (soglie invariate, controprova fallita come deve). `collaudo_giri_avversari.py` G12: variazione dall'angolo col segno e casi esclusi quando la soglia si passa fra il campione di prima e quello della scelta (dai campioni del giro «Misura», run 46152918663 e 46152921581: erano i soli 2 casi su 642).
+
 ## Sperimentale
 
 Prove che **non sono versioni del gioco**: vivono in `sperimentale/` e non toccano `index.html`. Verificato a ogni passo che, per una barca a una vela sola, polare, virate e raffiche restino identiche a quelle del gioco.

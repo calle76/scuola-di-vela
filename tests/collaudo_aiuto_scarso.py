@@ -44,7 +44,7 @@ S4 = """() => { const sv = __sv, dt = 1 / 60; sv.fast(0); __seed(1530); sv.opt.s
   ctx.save(); ctx.font = font(600, 14); const tw = ctx.measureText(windTesto()).width, cx = W - 16 - tw / 2, cy = H - 18 - 16 - 26 - 4; ctx.restore();
   while (R.t < 400){ sv.pilota(dt); sv.run(dt, 1); if (R.t > 0 && Math.round(R.t * 60) % 30 === 0){ __scritte.length = 0; sv.draw(dt);
     for (const s of __scritte){ n++; const basso = s.y + 4, alto = s.y - 14, sinistra = s.x - s.w / 2, destra = s.x + s.w / 2;
-      const daN = cy - 26 - 9 - 7, daFondo = cy - 30, venSu = H - 18 - 14;
+      const daN = cy - 26 - 9 - 7, daFondo = cy - 30, venSu = H - 8 - 14;   /* 1.3.81: la scritta del vento sta 10 px più in basso */
       pegg = Math.min(pegg, daN - basso, daFondo - basso, venSu - basso); if (sinistra < 0 || destra > W) pegg = -1; } } }
   return [n, pegg]; }"""
 SOLO = os.environ.get("SOLO", "")

@@ -776,7 +776,7 @@
   function drawWindBox(v){
     ctx.save(); ctx.font = font(600, 14); ctx.fillStyle = "rgba(255,255,255,.9)"; ctx.textAlign = "right"; ctx.textBaseline = "alphabetic";
     const t = windTesto();
-    ctx.fillText(t, W - 16, H - 18); windX = W - 16 - ctx.measureText(t).width; // 1.0.70: il vento sta in basso a destra con la bussola sopra e la R a fianco, tutto in uno spazio raccolto, dove c'erano «Q vista» e «1 / 2 zoom» (tolte: sono comandi che si conoscono); «da» non c'è più, al suo posto la R rossa della registrazione (registratore.js)
+    ctx.fillText(t, W - 16, H - 8); /* 1.3.81: 10 px piu' in basso (Ale): con la N in basso la bussola toccava la scritta */ windX = W - 16 - ctx.measureText(t).width; // 1.0.70: il vento sta in basso a destra con la bussola sopra e la R a fianco, tutto in uno spazio raccolto, dove c'erano «Q vista» e «1 / 2 zoom» (tolte: sono comandi che si conoscono); «da» non c'è più, al suo posto la R rossa della registrazione (registratore.js)
     ctx.restore();
   }
 

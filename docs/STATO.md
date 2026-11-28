@@ -2,10 +2,11 @@
 
 **Da leggere per primo, in ogni sessione e in ogni chat.** Una pagina. **A fine lavoro si SOSTITUISCE «Dove siamo», non si aggiunge sopra** (la storia sta in `CHANGELOG.md` e in `archivio/`). Le cose da fare sono in `DA-FARE.md`.
 
-*Aggiornato: 28 novembre 2026 (gioco alla **1.3.80**, tag `v1.3.80`). La pagina di prima del riordino, intera: `archivio/STATO-28nov.md`.*
+*Aggiornato: 28 novembre 2026 (gioco alla **1.3.81**, tag `v1.3.81`). La pagina di prima del riordino, intera: `archivio/STATO-28nov.md`.*
 
 ## Dove siamo
 
+- **Pomeriggio del 28:** 1.3.81 (scritta del vento 10 px più in basso); voce 92: corretti `moto_mare` e G12, restano `avversari1b` 5 (Firefox, guida dei rivali) e H5 dei suoni a volte; da 4 regate di Ale nascono oss. 155-156 e voci 99-101. Poi Ale vuole: correggere gli errori (Opus), quindi brainstorming sul seguito (sessione nuova, Opus).
 - **Il gioco:** Scuola chiusa come contenuti; Deriva con lezioni 21-25, torneo di 3 regate lunghe, stagione, finale, sponsor, regole 15-16 e 18, Coach. Com'è fatto: `IL-GIOCO.md`.
 - **Ultime versioni:** 1.3.76-77 barca della giuria solida per tutti (`sperimentale/giuria/LEGGIMI.md`); 1.3.78-80 la Blu ora vede chi le sta quasi parallelo e ha la precedenza (voce 98, oss. 154; effetto piccolo nel torneo; regola 17 non entrata; `sperimentale/regola-17/LEGGIMI.md`).
 - **Giro GitHub completo sulla 1.3.80** (run 46138924562, letto per intero). Rossi già noti: `moto_mare` (solo disegno, due browser), `giri_avversari` G12 (1 segmento su 270-290, due browser), `avversari1b` scenario 5 in Firefox (7 su 10). `suoni_si_sentono` H5 rosso una volta, verde rilanciato. Da controllare: C11 2,42 s, lezioni 5.8, 6.2, 6.3 (casi noti).
